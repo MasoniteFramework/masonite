@@ -7,9 +7,12 @@ if sys.argv[1] == 'controller':
         print '\033[95m'+sys.argv[2] + ' Controller Exists!' + '\033[0m'
     else:
         f = open('app/http/controllers/' + sys.argv[2] + '.py', 'w+')
+        f.write("''' A Module Description '''\n")
         f.write('from app.http.providers.view import view\n\n')
-        f.write('class ' + sys.argv[2] + '():\n')
-        f.write('\tpass')
+        f.write('class ' + sys.argv[2] + '(object):\n\n')
+        f.write("    ''' Class Docstring Description '''\n")
+        f.write('    def __init__(self):\n')
+        f.write('        pass\n')
 
         print '\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m'
 

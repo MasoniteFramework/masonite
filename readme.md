@@ -4,7 +4,7 @@
 
 ```
     $ git clone http://github.com/josephmancuso/python-framework.git
-    $ pip install gunicorn
+    $ python craft install
     $ python craft serve
 ```
 

@@ -27,3 +27,7 @@ if sys.argv[1] == 'view':
 if sys.argv[1] == 'serve':
     from subprocess import call
     call(["gunicorn", "-w 1", "mine:app"])
+
+if sys.argv[1] == 'install':
+    from subprocess import call
+    call(["pip", "install", "-r", "requirements.txt"])

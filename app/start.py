@@ -12,7 +12,7 @@ def app(environ, start_response):
         router = Route(environ)
         # routes = [route.get('/uouo', lambda: 'mario'), route.get('/boo', 'im a ghost')]
 
-        routes = importlib.import_module('views.view').routes
+        routes = importlib.import_module('routes.web').routes
 
         for route in routes:
             print(route.route)

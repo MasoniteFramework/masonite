@@ -1,7 +1,7 @@
 import os
-from app.http.providers.routes import Route
 import importlib
-
+from app.http.providers.routes import Route
+from config import app
 
 def app(environ, start_response):
         os.environ.setdefault('REQUEST_METHOD', environ['REQUEST_METHOD'])

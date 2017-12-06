@@ -12,6 +12,14 @@ if (sys.argv[1] == 'make:controller'):
 
         print('\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m')
 
+if (sys.argv[1] == 'make:view'):
+    if (os.path.isfile('resources/templates/' + sys.argv[2] + '.blade.html')):
+        print('\033[95m'+sys.argv[2] + ' View Exists!' + '\033[0m')
+    else:
+        file = open('resources/templates/' + sys.argv[2] + '.blade.html', 'w+')
+        print('\033[92m' + sys.argv[2] + ' View Created Successfully!' + '\033[0m')
+
+
 if (sys.argv[1] == 'serve'):
     from subprocess import call
     call(["gunicorn", "-w 1", "mine:app"])

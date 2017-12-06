@@ -1,7 +1,7 @@
 import os
 import sys
 
-if (sys.argv[1] == 'make:controller'):
+if (sys.argv[1] == 'controller'):
     if (os.path.isfile('app/http/controllers/' + sys.argv[2] + '.py')):
         print('\033[95m'+sys.argv[2] + ' Controller Exists!' + '\033[0m')
     else:
@@ -12,7 +12,7 @@ if (sys.argv[1] == 'make:controller'):
 
         print('\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m')
 
-if (sys.argv[1] == 'make:view'):
+if (sys.argv[1] == 'view'):
     if (os.path.isfile('resources/templates/' + sys.argv[2] + '.blade.html')):
         print('\033[95m'+sys.argv[2] + ' View Exists!' + '\033[0m')
     else:

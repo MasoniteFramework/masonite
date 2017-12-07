@@ -30,3 +30,21 @@ def serve():
 def install():
     from subprocess import call
     call(["pip", "install", "-r", "requirements.txt"])
+
+def model():
+    if not os.path.isfile('app/' + sys.argv[2] + '.py'):
+        f = open('app/' + sys.argv[2] + '.py', 'w+')
+
+        f.write("''' A " + sys.argv[2] + " Database Module '''\n")
+        f.write('from peewee import *\n')
+        f.write('from config import database\n\n')
+        f.write("db = database.engines['default']\n\n")
+        f.write("class "+sys.argv[2]+"(Model):\n    ")
+        f.write("# column = charField()\n\n")
+        f.write("    class Meta:\n")
+        f.write("        database = db\n\n")
+        f.write("db.connect()\n")
+
+        print '\033[92mModel Created Successfully!\033[0m'
+    else:
+        print '\033[95mModel Already Exists!\033[0m'

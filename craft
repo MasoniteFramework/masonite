@@ -7,9 +7,8 @@ found = False
 
 for key, provider in enumerate(app.providers):
     if hasattr(importlib.import_module(provider), sys.argv[1]):
-        print '\033[92mexecuting ...\033[0m'
+        print '\033[92mExecuting Command ...\033[0m'
         getattr(importlib.import_module(provider), sys.argv[1])()
-        print '\033[92mdone\033[0m'
         found = True
         break
 

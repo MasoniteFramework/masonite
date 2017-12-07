@@ -1,33 +1,17 @@
 ''' Assists in common framework tasks like making controllers and running the server '''
-import os
+import importlib
 import sys
+from config import app
 
-if sys.argv[1] == 'controller':
-    if os.path.isfile('app/http/controllers/' + sys.argv[2] + '.py'):
-        print '\033[95m'+sys.argv[2] + ' Controller Exists!' + '\033[0m'
-    else:
-        f = open('app/http/controllers/' + sys.argv[2] + '.py', 'w+')
-        f.write("''' A Module Description '''\n")
-        f.write('from app.http.providers.view import view\n\n')
-        f.write('class ' + sys.argv[2] + '(object):\n')
-        f.write("    ''' Class Docstring Description '''\n\n")
-        f.write('    def __init__(self):\n')
-        f.write('        pass\n')
+found = False
 
-        print '\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m'
+for key, provider in enumerate(app.providers):
+    if hasattr(importlib.import_module(provider), sys.argv[1]):
+        print '\033[92mexecuting ...\033[0m'
+        getattr(importlib.import_module(provider), sys.argv[1])()
+        print '\033[92mdone\033[0m'
+        found = True
+        break
 
-if sys.argv[1] == 'view':
-    if os.path.isfile('resources/templates/' + sys.argv[2] + '.blade.html'):
-        print '\033[95m'+sys.argv[2] + ' View Exists!' + '\033[0m'
-    else:
-        f = open('resources/templates/' + sys.argv[2] + '.blade.html', 'w+')
-        print '\033[92m' + sys.argv[2] + ' View Created Successfully!' + '\033[0m'
-
-
-if sys.argv[1] == 'serve':
-    from subprocess import call
-    call(["gunicorn", "-w 1", "mine:app"])
-
-if sys.argv[1] == 'install':
-    from subprocess import call
-    call(["pip", "install", "-r", "requirements.txt"])
+if not found:
+    print '\033[95mCommand Not Available\033[0m'

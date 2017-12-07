@@ -36,3 +36,22 @@ debug = True
 '''
 
 url = 'http://localhost'
+
+'''
+|--------------------------------------------------------------------------
+| Providers List
+|--------------------------------------------------------------------------
+|
+| This providers list is used to add functionality to this project. You
+| can add modules to this list which will import them when the command
+| line is ran. Add modules here with function which can be picked up
+| by the command line. For example: when you add a module with the 
+| function 'auth' then that function will become available when
+| you run: python craft vendor function_name_here
+|
+'''
+
+providers = [
+    'app.providers.helpers',
+    'app.providers.auth',
+]

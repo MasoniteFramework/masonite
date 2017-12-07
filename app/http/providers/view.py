@@ -4,13 +4,12 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 
 def view(template = 'index', dictionary = {}):
-    file = open('./resources/templates/'+ template + '.blade.html', 'r')
     env = Environment(
         loader=PackageLoader('resources', 'templates'),
         autoescape=select_autoescape(['html', 'xml'])
     )
 
-    return env.get_template(template + '.blade.html').render()
+    return env.get_template(template + '.html').render(dictionary)
 
     # Blade Template Engine
     # file = file.read()

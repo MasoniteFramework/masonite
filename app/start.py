@@ -2,6 +2,8 @@ import os
 import importlib
 from app.http.providers.routes import Route
 from config import app
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 def app(environ, start_response):
     os.environ.setdefault('REQUEST_METHOD', environ['REQUEST_METHOD'])
@@ -19,7 +21,6 @@ def app(environ, start_response):
             data = 'Route not found'
 
     data = bytes(data)
-    # data = bytes(route.get(environ['PATH_INFO']))
 
     start_response("200 OK", [
         ("Content-Type", "text/html; charset=utf-8"),

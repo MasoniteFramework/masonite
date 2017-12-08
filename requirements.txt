@@ -1,1 +1,5 @@
-gunicorn
+gunicorn==19.7.1
+peewee==2.10.2
+Jinja2==2.10
+MySQL-python==1.2.5
+python-dotenv

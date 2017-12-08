@@ -1,5 +1,6 @@
 ''' A Module Description '''
 from app.http.providers.view import view
+from config import app
 
 class WelcomeController(object):
     ''' Class Docstring Description '''
@@ -10,4 +11,4 @@ class WelcomeController(object):
     @staticmethod
     def show():
         ''' Show Welcome Template '''
-        return view('welcome')
+        return view('welcome', {'app': app})

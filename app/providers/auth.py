@@ -18,7 +18,5 @@ def auth():
                     "app/http/controllers/RegisterController.py")
 
     # move templates
-    shutil.copyfile("kernal/auth/templates/login.blade.html",
-                    "resources/templates/login.blade.html")
-    shutil.copyfile("kernal/auth/templates/register.blade.html",
-                    "resources/templates/register.blade.html")
+    shutil.copytree("kernal/auth/templates/auth",
+                    "resources/templates/auth")

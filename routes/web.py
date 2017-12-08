@@ -3,5 +3,5 @@ from app.http.providers.routes import Get
 from app.http.controllers.WelcomeController import WelcomeController
 
 routes = [
-    Get().route('/home', WelcomeController().show())
+    Get().route('/', WelcomeController().show())
 ]

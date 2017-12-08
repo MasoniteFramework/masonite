@@ -9,4 +9,4 @@ class RegisterController(object):
 
     @staticmethod
     def show():
-        return view('register')
+        return view('auth/register')

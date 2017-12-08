@@ -9,4 +9,4 @@ class LoginController(object):
 
     @staticmethod
     def show():
-        return view('login')
+        return view('auth/login')

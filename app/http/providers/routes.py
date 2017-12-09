@@ -3,7 +3,6 @@ from app.http.providers.request import Request
 class Route():
 
     def __init__(self, environ):
-        request = Request()
         self.url = environ['PATH_INFO']
 
     def get(self, route, output):

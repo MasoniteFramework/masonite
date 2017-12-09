@@ -8,7 +8,6 @@ class WelcomeController(object):
     def __init__(self):
         pass
 
-    @staticmethod
-    def show():
+    def show(self, request):
         ''' Show Welcome Template '''
         return view('welcome', {'app': app})

@@ -3,7 +3,7 @@ from app.http.providers.view import view
 from config import app
 
 class WelcomeController(object):
-    ''' Class Docstring Description '''
+    ''' Controller for welcoming the user '''
 
     def __init__(self):
         pass

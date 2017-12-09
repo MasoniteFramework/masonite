@@ -1,0 +1,2 @@
+- all contributions MUST be ran through a linter like Pylint
+- Open a pull request with your changes and a repository contributor will review them

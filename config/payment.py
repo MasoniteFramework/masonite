@@ -1,5 +1,17 @@
+''' Payments configuration file '''
 import os
 
+'''
+|--------------------------------------------------------------------------
+| Payment Driver
+|--------------------------------------------------------------------------
+|
+| This is the default payment processor. Setting this driver will make
+| all forms of payment processing packages grab the respective info
+| from the processors dictionary.
+|
+| drivers supported: stripe
+'''
 driver = 'stripe'
 
 processors = {

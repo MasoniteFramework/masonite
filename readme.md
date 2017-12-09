@@ -2,7 +2,7 @@
 
 ### The Framework For Web Crafters
 
-### Installation:
+#### Installation:
 
 ```
     $ git clone http://github.com/josephmancuso/python-framework.git

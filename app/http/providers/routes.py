@@ -13,10 +13,34 @@ class Route():
 class Get():
 
     def __init__(self):
-        pass
+        self.method_type = 'GET'
+        self.continueroute = True
 
     def route(self, route, output):
         self.output = output
         self.route = route
         return self
-        
+
+    def middleware(self, middleware):
+        if middleware:
+            self.continueroute = True
+        else:
+            self.continueroute = False
+        return self
+
+class Post():
+    def __init__(self):
+        self.method_type = 'POST'
+        self.continueroute = True
+
+    def route(self, route, output):
+        self.output = output
+        self.route = route
+        return self
+
+    def middleware(self, middleware):
+        if middleware:
+            self.continueroute = True
+        else:
+            self.continueroute = False
+        return self

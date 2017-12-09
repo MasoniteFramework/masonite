@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 def controller():
     if os.path.isfile('app/http/controllers/' + sys.argv[2] + '.py'):
@@ -31,6 +32,11 @@ def install():
     from subprocess import call
     call(["pip", "install", "-r", "requirements.txt"])
 
+    # create the .env file if it does not exist
+
+    if not os.path.isfile('.env'):
+        shutil.copy('.env-example', '.env')
+
 def model():
     if not os.path.isfile('app/' + sys.argv[2] + '.py'):
         f = open('app/' + sys.argv[2] + '.py', 'w+')
@@ -51,7 +57,7 @@ def model():
 
 def migrate():
     import importlib
-    import shutil
+    
     from app.Migrations import Migrations
     
     module = importlib.import_module('databases.migrations')

@@ -23,11 +23,13 @@ def app(environ, start_response):
     routes = routes.web.routes
 
     for route in routes:
-        if route.route == router.url:
+        
+        if route.route == router.url and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
+            print route.method_type + ' Route: ' + route.route
             data = router.get(route.route, route.output(Request(environ)))
             break
         else:
-            data = 'Route not found'
+            data = 'Route not found. Error 404'
 
     data = bytes(data)
 

@@ -3,3 +3,4 @@ peewee==2.10.2
 Jinja2==2.10
 MySQL-python==1.2.5
 python-dotenv
+stripe==1.75.3

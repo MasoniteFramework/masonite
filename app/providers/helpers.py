@@ -113,3 +113,16 @@ def startmigration():
     f.write("engine.create_table(" + sys.argv[2] + ", True)\n\n")
 
     print '\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m'
+
+def deploy():
+    import subprocess
+    from config import app
+    output = subprocess.Popen(['heroku', 'git:remote', '-a', app.name.lower()], stdout=subprocess.PIPE).communicate()[0]
+    if not output:
+        create_app = raw_input(
+            "App doesn't exist, would you like to craft one? [y/n]")  # Python 2
+        if 'y' in create_app:
+            subprocess.call(['heroku', 'create', app.name.lower()])
+            subprocess.call(['python', 'craft', 'deploy'])
+    
+    subprocess.call(['git', 'push', 'heroku', 'master'])

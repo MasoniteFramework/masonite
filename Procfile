@@ -1,1 +1,1 @@
-web: gunicorn app.start
+web: gunicorn mine:app

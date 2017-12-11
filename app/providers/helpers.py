@@ -46,10 +46,9 @@ def model():
         f.write('from config import database\n\n')
         f.write("db = database.engines['default']\n\n")
         f.write("class "+sys.argv[2]+"(Model):\n    ")
-        f.write("# column = charField()\n\n")
+        f.write("# column = CharField(default='')\n\n")
         f.write("    class Meta:\n")
-        f.write("        database = db\n\n")
-        f.write("db.connect()\n")
+        f.write("        database = db\n")
 
         print '\033[92mModel Created Successfully!\033[0m'
     else:
@@ -101,7 +100,9 @@ def makemigration():
 
     print '\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m'
 
-def startmigration():
+def modelmigration():
+    from app.Migrations import Migrations
+    import subprocess
     f = open('databases/migrations/automatic_migration_for_' + sys.argv[2] + '.py', 'w+')
     f.write("''' A Migration File '''\n")
     f.write('from playhouse.migrate import *\n')
@@ -111,6 +112,11 @@ def startmigration():
     f.write("migrator = MySQLMigrator(engine)\n\n")
     f.write("engine.drop_table(" + sys.argv[2] + ", True)\n")
     f.write("engine.create_table(" + sys.argv[2] + ", True)\n\n")
+
+    Migrations.create(migration='automatic_migration_for_' + sys.argv[2] + '.py')
+
+    if '--model' in sys.argv:
+        subprocess.call('python craft model ' + sys.argv[2], shell=True)
 
     print '\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m'
 

@@ -21,15 +21,28 @@ def app(environ, start_response):
     router = Route(environ)
     import routes.web
     routes = routes.web.routes
+    request = Request(environ)
 
     for route in routes:
         
         if route.route == router.url and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
             print route.method_type + ' Route: ' + route.route
-            data = router.get(route.route, route.output(Request(environ)))
+            data = router.get(route.route, route.output(request))
             break
         else:
             data = 'Route not found. Error 404'
+
+    if data == 'Route not found. Error 404':
+        # look at the API routes files
+        import routes.api
+        routes = routes.api.routes
+
+        for route in routes:
+            data = route.fetch(request).output
+            if data:
+                break
+            else:
+                data = 'Route not found. Error 404'
 
     data = bytes(data)
 

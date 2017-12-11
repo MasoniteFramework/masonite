@@ -80,7 +80,6 @@ class Api():
             # if GET /api/user
             if self.exclude_list:
                 for attribute in self.exclude_list:
-                    print 'deleting ' + attribute
                     delattr(self.model_obj, attribute)
             query = self.model_obj.select().order_by(self.model_obj.name).dicts()
             self.output =  json.dumps({'rows': list(query)})
@@ -92,8 +91,6 @@ class Api():
             # if POST /api/user
             proxy = self.model_obj()
             for field in request.all():
-                print field
-                print request.input(field)
                 setattr(proxy, field, request.input(field))
             proxy.save()
             self.output = json.dumps(model_to_dict(proxy))

@@ -38,9 +38,13 @@ def app(environ, start_response):
         routes = routes.api.routes
 
         for route in routes:
-            data = route.fetch(request).output
-            if data:
-                break
+            
+            if route.url in router.url:
+                data = route.fetch(request).output
+                if data:
+                    break
+                else:
+                    data = 'Route not found. Error 404'
             else:
                 data = 'Route not found. Error 404'
 

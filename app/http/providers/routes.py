@@ -96,9 +96,10 @@ class Api():
             self.output = json.dumps(model_to_dict(proxy))
         elif match_url and request.method == 'DELETE':
             # if DELETE /api/user
+            get = self.model_obj.get(self.model_obj.id == match_url.group(1))
             query = self.model_obj.delete().where(self.model_obj.id == match_url.group(1))
             query.execute()
-            self.output = json.dumps({'message': 'deleted'})
+            self.output = json.dumps(model_to_dict(get))
         elif match_update_url and request.method == 'POST':
             # if POST /api/user/1/update
             proxy = self.model_obj.get(self.model_obj.id == match_update_url.group(1))
@@ -109,7 +110,6 @@ class Api():
             self.output = json.dumps(model_to_dict(proxy))
         else:
             self.output = None
-        # if /api/user and POST
         return self
 
     def exclude(self, exclude_list):

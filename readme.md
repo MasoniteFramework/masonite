@@ -1,7 +1,9 @@
 ## Python Framework
 
 ### The Framework For Web Crafters
-
+<img src="https://img.shields.io/badge/python-2.7-blue.svg" alt="Python Version">
+Please read full documentation:
+[Documentation Wiki](https://github.com/josephmancuso/python-framework/wiki)  
 #### Installation:
 
 ```

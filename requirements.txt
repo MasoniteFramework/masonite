@@ -4,3 +4,4 @@ Jinja2==2.10
 MySQL-python==1.2.5
 python-dotenv
 stripe==1.75.3
+passlib==1.7.1

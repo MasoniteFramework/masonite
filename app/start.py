@@ -3,14 +3,8 @@ import re
 from app.http.providers.routes import Route
 from app.http.providers.request import Request
 from dotenv import load_dotenv, find_dotenv
-from config.auth import AUTH
-# load all .env information into environment
+
 load_dotenv(find_dotenv())
-
-# print Users.get(Users.id == 1).name
-print AUTH['model'].get(AUTH['model'].id == 1)
-
-
 
 def app(environ, start_response):
     ''' Framework Engine '''

@@ -1,11 +1,11 @@
 ''' Assists in common framework tasks like making controllers and running the server '''
 import importlib
 import sys
-from config import app
+from config import application
 
 found = False
 
-for key, provider in enumerate(app.providers):
+for key, provider in enumerate(application.providers):
     if hasattr(importlib.import_module(provider), sys.argv[1]):
         print '\033[92mExecuting Command ...\033[0m'
         getattr(importlib.import_module(provider), sys.argv[1])()

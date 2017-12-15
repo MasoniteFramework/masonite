@@ -9,6 +9,7 @@ class Request(object):
         self.path = environ['PATH_INFO']
         parsed = parse_qs(environ['QUERY_STRING'])
         self.params = parsed
+        self.url_params = None
 
     def input(self, param):
         if self.has(param):
@@ -22,4 +23,13 @@ class Request(object):
         if param in self.params:
             return True
             
+        return False
+
+    def set_params(self, params):
+        self.url_params = params
+        return self
+
+    def param(self, parameter):
+        if self.url_params[parameter]:
+            return self.url_params[parameter]
         return False

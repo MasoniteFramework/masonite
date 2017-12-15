@@ -1,10 +1,16 @@
 import os
+import re
 from app.http.providers.routes import Route
 from app.http.providers.request import Request
 from dotenv import load_dotenv, find_dotenv
-
+from config.auth import AUTH
 # load all .env information into environment
 load_dotenv(find_dotenv())
+
+# print Users.get(Users.id == 1).name
+print AUTH['model'].get(AUTH['model'].id == 1)
+
+
 
 def app(environ, start_response):
     ''' Framework Engine '''
@@ -24,9 +30,47 @@ def app(environ, start_response):
     request = Request(environ)
 
     for route in routes:
-        
-        if route.route == router.url and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
-            print route.method_type + ' Route: ' + route.route
+        split_given_route = route.route.split('/')
+
+        url_list = []
+        regex = '^'
+        for regex_route in split_given_route:
+            if '@' in regex_route:
+                if ':int' in regex_route:
+                    regex += '(\d+)'
+                elif ':string' in regex_route:
+                    regex += '([a-zA-Z]+)'
+                else:
+                    # default
+                    regex += '(\w+)'
+                regex += '\/'
+
+                # append the variable name passed @(variable):int to a list
+                url_list.append(
+                    regex_route.replace('@', '').replace(':int', '').replace(':string', '')
+                )
+            else:
+                regex += regex_route + '\/'
+
+        regex += '$'
+        if route.route.endswith('/'):
+            matchurl = re.compile(regex.replace('\/\/$', '\/$'))
+        else:
+            matchurl = re.compile(regex.replace('\/$', '$'))
+
+        try:
+            parameter_dict = {}
+            for index, value in enumerate(matchurl.match(router.url).groups()):
+                parameter_dict[url_list[index]] = value
+            request.set_params(parameter_dict)
+        except AttributeError:
+            pass
+
+
+        print request.url_params
+
+        if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
+            print route.method_type + ' Route: ' + router.url
             data = router.get(route.route, route.output(request))
             break
         else:
@@ -38,7 +82,6 @@ def app(environ, start_response):
         routes = routes.api.routes
 
         for route in routes:
-            
             if route.url in router.url:
                 data = route.fetch(request).output
                 if data:

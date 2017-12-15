@@ -1,4 +1,3 @@
-import re
 from jinja2 import Template
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -8,7 +7,7 @@ def view(template = 'index', dictionary = {}):
         loader=PackageLoader('resources', 'templates'),
         autoescape=select_autoescape(['html', 'xml'])
     )
-
+    
     return env.get_template(template + '.html').render(dictionary)
 
     # Blade Template Engine

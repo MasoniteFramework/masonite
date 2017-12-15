@@ -1,6 +1,6 @@
 ''' A Module Description '''
 from app.http.providers.view import view
-from config import app
+from config import application
 
 class WelcomeController(object):
     ''' Controller for welcoming the user '''
@@ -10,4 +10,4 @@ class WelcomeController(object):
 
     def show(self, request):
         ''' Show Welcome Template '''
-        return view('welcome', {'app': app})
+        return view('welcome', {'app': application})

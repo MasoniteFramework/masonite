@@ -26,7 +26,7 @@ def view():
 
 def serve():
     from subprocess import call
-    call(["gunicorn", "-w 1", "mine:app"])
+    call(["gunicorn", "-w 2", "mine:application"])
 
 def install():
     from subprocess import call

@@ -7,8 +7,8 @@ def auth():
     f.write('\nfrom app.http.controllers.LoginController import LoginController\n')
     f.write('from app.http.controllers.RegisterController import RegisterController\n')
     f.write('\nroutes = routes + [\n    ')
-    f.write("Get().route('/login', LoginController().show()),\n    ")
-    f.write("Get().route('/register', RegisterController().show())\n")
+    f.write("Get().route('/login', LoginController().show),\n    ")
+    f.write("Get().route('/register', RegisterController().show)\n")
     f.write(']')
 
     # move controllers

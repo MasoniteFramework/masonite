@@ -7,6 +7,6 @@ class RegisterController(object):
     def __init__(self):
         pass
 
-    @staticmethod
-    def show():
+    def show(self, request):
+        ''' Show the registration page '''
         return view('auth/register')

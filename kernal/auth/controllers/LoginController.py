@@ -7,6 +7,6 @@ class LoginController(object):
     def __init__(self):
         pass
 
-    @staticmethod
-    def show():
+    def show(self, request):
+        ''' Return the login page '''
         return view('auth/login')

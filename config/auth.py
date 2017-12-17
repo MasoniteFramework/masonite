@@ -3,5 +3,5 @@ from app.Users import Users
 
 AUTH = {
     'model': Users,
-    'driver': 'database'
+    'driver': 'cookie'
 }

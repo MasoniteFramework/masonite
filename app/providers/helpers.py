@@ -126,9 +126,19 @@ def deploy():
     output = subprocess.Popen(['heroku', 'git:remote', '-a', application.name.lower()], stdout=subprocess.PIPE).communicate()[0]
     if not output:
         create_app = raw_input(
-            "App doesn't exist, would you like to craft one? [y/n]: ")  # Python 2
+            "\n\033[92mApp doesn't exist for this account. Would you like to craft one?\033[0m \n\n[y/n] > ")  # Python 2
         if 'y' in create_app:
             subprocess.call(['heroku', 'create', application.name.lower()])
-            subprocess.call(['python', 'craft', 'deploy'])
+            if '--local' in sys.argv:
+                subprocess.call(['python', 'craft', 'deploy', '--local'])
+            elif '--current' in sys.argv:
+                subprocess.call(['python', 'craft', 'deploy', '--current'])
+            else:
+                subprocess.call(['python', 'craft', 'deploy'])
     else:
-        subprocess.call(['git', 'push', 'heroku', 'master'])
+        if '--local' in sys.argv:
+            subprocess.call(['git', 'push', 'heroku', 'master:master'])
+        elif '--current' in sys.argv:
+            subprocess.call(['git', 'push', 'heroku', 'HEAD:master'])
+        else:
+            subprocess.call(['git', 'push', 'heroku', 'master'])

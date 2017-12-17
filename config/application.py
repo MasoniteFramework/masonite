@@ -29,9 +29,7 @@ debug = True
 | Application URL
 |--------------------------------------------------------------------------
 |
-| This URL is used by the console to properly generate URLs when using
-| the Artisan command line tool. You should set this to the root of
-| your application so that it is used when running Artisan tasks.
+| Currently not in use. Will add documentation at a later date
 |
 '''
 
@@ -45,9 +43,9 @@ url = 'http://localhost'
 | This providers list is used to add functionality to this project. You
 | can add modules to this list which will import them when the command
 | line is ran. Add modules here with function which can be picked up
-| by the command line. For example: when you add a module with the 
+| by the command line. For example: when you add a module with the
 | function 'auth' then that function will become available when
-| you run: python craft vendor function_name_here
+| you run: python craft auth
 |
 '''
 

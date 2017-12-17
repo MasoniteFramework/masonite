@@ -2,6 +2,7 @@ import os
 import re
 from app.http.providers.routes import Route
 from app.http.providers.request import Request
+import Cookie
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -90,5 +91,7 @@ def app(environ, start_response):
     start_response("200 OK", [
         ("Content-Type", "text/html; charset=utf-8"),
         ("Content-Length", str(len(data)))
-    ])
+    ] + request.get_cookies())
+
+    
     return iter([data])

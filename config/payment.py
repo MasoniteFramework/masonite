@@ -15,6 +15,17 @@ import os
 
 DRIVER = 'stripe'
 
+'''
+|--------------------------------------------------------------------------
+| Payment Processors
+|--------------------------------------------------------------------------
+|
+| This will list the processors thay your project will require. New
+| processors can be added simply and third party libraries can
+| use this information.
+|
+'''
+
 PROCESSORS = {
     'stripe' : {
         'key': os.environ.get('STRIPE_PUBLISHABLE'),

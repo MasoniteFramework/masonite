@@ -1,1 +1,1 @@
-# where any email servers should be
+''' Where any email servers should be '''

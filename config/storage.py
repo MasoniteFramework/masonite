@@ -11,7 +11,7 @@
 | You may have multiple aliases of the same name
 |
 | Example will be the static assets folder at /storage/static
-| and an alias of <img src="/static/image.png"
+| and an alias of <img src="/static/image.png">
 |
 '''
 

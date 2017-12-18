@@ -123,12 +123,12 @@ def modelmigration():
 def deploy():
     import subprocess
     from config import application
-    output = subprocess.Popen(['heroku', 'git:remote', '-a', application.name.lower()], stdout=subprocess.PIPE).communicate()[0]
+    output = subprocess.Popen(['heroku', 'git:remote', '-a', application.NAME.lower()], stdout=subprocess.PIPE).communicate()[0]
     if not output:
-        create_app = raw_input(
+        create_app = input(
             "\n\033[92mApp doesn't exist for this account. Would you like to craft one?\033[0m \n\n[y/n] > ")  # Python 2
         if 'y' in create_app:
-            subprocess.call(['heroku', 'create', application.name.lower()])
+            subprocess.call(['heroku', 'create', application.NAME.lower()])
             if '--local' in sys.argv:
                 subprocess.call(['python', 'craft', 'deploy', '--local'])
             elif '--current' in sys.argv:

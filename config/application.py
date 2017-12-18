@@ -9,7 +9,7 @@
 |
 '''
 
-name = 'testlocal'
+NAME = 'testlocal'
 
 '''
 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ name = 'testlocal'
 |
 '''
 
-debug = True
+DEBUG = True
 
 '''
 |--------------------------------------------------------------------------
@@ -33,7 +33,7 @@ debug = True
 |
 '''
 
-url = 'http://localhost'
+URL = 'http://localhost'
 
 '''
 |--------------------------------------------------------------------------
@@ -49,7 +49,7 @@ url = 'http://localhost'
 |
 '''
 
-providers = [
+PROVIDERS = [
     'app.providers.helpers',
     'app.providers.auth',
 ]

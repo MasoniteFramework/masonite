@@ -3,14 +3,14 @@ import importlib
 import sys
 from config import application
 
-found = False
+FOUND = False
 
-for key, provider in enumerate(application.providers):
+for key, provider in enumerate(application.PROVIDERS):
     if hasattr(importlib.import_module(provider), sys.argv[1]):
         print('\033[92mExecuting Command ...\033[0m')
         getattr(importlib.import_module(provider), sys.argv[1])()
-        found = True
+        FOUND = True
         break
 
-if not found:
+if not FOUND:
     print('\033[95mCommand Not Available\033[0m')

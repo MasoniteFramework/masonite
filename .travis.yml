@@ -6,5 +6,6 @@ python:
   - "3.6"
   - "3.7-dev"  # 3.7 development branch
 # command to install dependencies
-before_script: python craft install
+install: 
+  - python craft install
 script: pytest

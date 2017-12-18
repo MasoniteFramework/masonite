@@ -1,10 +1,7 @@
 ''' Authentication Class '''
-import Cookie
 from config import auth
 from random import randint
 import uuid
-
-from passlib.hash import pbkdf2_sha256
 
 
 class Auth(object):
@@ -35,7 +32,7 @@ class Auth(object):
                 model.token = token
                 model.save()
                 self.request.cookie('token', token)
-                print 'it matches up'
+                print('it matches up')
                 return model
         except Exception as exception:
             raise exception

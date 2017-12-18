@@ -4,7 +4,7 @@ import shutil
 
 def controller():
     if os.path.isfile('app/http/controllers/' + sys.argv[2] + '.py'):
-        print '\033[95m' + sys.argv[2] + ' Controller Exists!' + '\033[0m'
+        print('\033[95m' + sys.argv[2] + ' Controller Exists!' + '\033[0m')
     else:
         f = open('app/http/controllers/' + sys.argv[2] + '.py', 'w+')
         f.write("''' A Module Description '''\n")
@@ -14,15 +14,15 @@ def controller():
         f.write('    def __init__(self):\n')
         f.write('        pass\n')
 
-        print '\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m'
+        print('\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m')
 
 def view():
     
     if os.path.isfile('resources/templates/' + sys.argv[2] + '.html'):
-        print '\033[95m' + sys.argv[2] + ' View Exists!' + '\033[0m'
+        print('\033[95m' + sys.argv[2] + ' View Exists!' + '\033[0m')
     else:
         f = open('resources/templates/' + sys.argv[2] + '.html', 'w+')
-        print '\033[92m' + sys.argv[2] + ' View Created Successfully!' + '\033[0m'
+        print('\033[92m' + sys.argv[2] + ' View Created Successfully!' + '\033[0m')
 
 def serve():
     from subprocess import call
@@ -30,7 +30,7 @@ def serve():
 
 def install():
     from subprocess import call
-    call(["pip", "install", "-r", "requirements.txt"])
+    call(["pip3", "install", "-r", "requirements.txt"])
 
     # create the .env file if it does not exist
 
@@ -50,9 +50,9 @@ def model():
         f.write("    class Meta:\n")
         f.write("        database = db\n")
 
-        print '\033[92mModel Created Successfully!\033[0m'
+        print('\033[92mModel Created Successfully!\033[0m')
     else:
-        print '\033[95mModel Already Exists!\033[0m'
+        print('\033[95mModel Already Exists!\033[0m')
 
 def migrate():
     import importlib
@@ -67,13 +67,13 @@ def migrate():
         importlib.import_module('databases.migrations.automatic_migration_for_Migrations')
     for name in Migrations.select().where(Migrations.batch == 0):
         migration_name = name.migration[:-3]
-        print migration_name
+        print(migration_name)
         importlib.import_module('databases.migrations.' + migration_name)
-        print 'Migration Successful'
+        print('Migration Successful')
         exists = True
 
     if not exists:
-        print 'No Migrations Exists'
+        print('No Migrations Exists')
     
 def makemigration():
     from app.Migrations import Migrations
@@ -98,7 +98,7 @@ def makemigration():
     Migrations.create(migration=sys.argv[2] + '.py')
 
 
-    print '\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m'
+    print('\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m')
 
 def modelmigration():
     from app.Migrations import Migrations
@@ -118,7 +118,7 @@ def modelmigration():
     if '--model' in sys.argv:
         subprocess.call('python craft model ' + sys.argv[2], shell=True)
 
-    print '\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m'
+    print('\033[92mMigration ' + sys.argv[2] + '.py Created Successfully!' + '\033[0m')
 
 def deploy():
     import subprocess

@@ -1,9 +1,10 @@
 gunicorn==19.7.1
 peewee==2.10.2
 Jinja2==2.10
-MySQL-python==1.2.5
-python-dotenv
+PyMySQL==0.7.11
+python-dotenv==0.7.1
 stripe==1.75.3
 passlib==1.7.1
 python-slugify==1.2.4
 whitenoise==3.3.1
+bcrypt==3.1.4

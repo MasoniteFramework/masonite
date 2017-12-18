@@ -1,9 +1,7 @@
 from config import database
-
+from packages.auth.Authenticatable import Authenticatable
 from peewee import *
 from playhouse.fields import PasswordField
-
-from packages.auth.Authenticatable import Authenticatable
 
 db = database.engines['default']
 

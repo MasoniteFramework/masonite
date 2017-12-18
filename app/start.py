@@ -2,7 +2,6 @@ import os
 import re
 from app.http.providers.routes import Route
 from app.http.providers.request import Request
-import Cookie
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -62,10 +61,10 @@ def app(environ, start_response):
             pass
 
 
-        print request.url_params
+        print(request.url_params)
 
         if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
-            print route.method_type + ' Route: ' + router.url
+            print(route.method_type + ' Route: ' + router.url)
             data = router.get(route.route, route.output(request))
             break
         else:
@@ -86,7 +85,7 @@ def app(environ, start_response):
             else:
                 data = 'Route not found. Error 404'
 
-    data = bytes(data)
+    data = bytes(data, 'utf-8')
 
     start_response("200 OK", [
         ("Content-Type", "text/html; charset=utf-8"),

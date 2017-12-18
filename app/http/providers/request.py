@@ -1,7 +1,6 @@
 import os
-from urlparse import urlparse, parse_qs
-import shelve
-import Cookie
+from urllib.parse import parse_qs
+from http import cookies
 
 class Request(object):
 
@@ -51,7 +50,7 @@ class Request(object):
         # return None
 
         if 'HTTP_COOKIE' in self.environ:
-            grab_cookie = Cookie.SimpleCookie(self.environ['HTTP_COOKIE'])
+            grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
             if provided_cookie in grab_cookie:
                 return grab_cookie[provided_cookie].value
 

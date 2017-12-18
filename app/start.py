@@ -1,8 +1,12 @@
+''' Start of Application. This function is the gunicorn server '''
+
 import os
 import re
-from app.http.providers.routes import Route
+
+from dotenv import find_dotenv, load_dotenv
+
 from app.http.providers.request import Request
-from dotenv import load_dotenv, find_dotenv
+from app.http.providers.routes import Route
 
 load_dotenv(find_dotenv())
 
@@ -13,44 +17,44 @@ def app(environ, start_response):
 
     # if this is a post request
     if environ['REQUEST_METHOD'] == 'POST':
-        l = int(environ.get('CONTENT_LENGTH')) if environ.get(
+        get_post_params = int(environ.get('CONTENT_LENGTH')) if environ.get(
             'CONTENT_LENGTH') else 0
-        body = environ['wsgi.input'].read(l) if l > 0 else ''
+        body = environ['wsgi.input'].read(get_post_params) if get_post_params > 0 else ''
         environ['QUERY_STRING'] = body
 
     router = Route(environ)
     import routes.web
-    routes = routes.web.routes
+    routes = routes.web.ROUTES
     request = Request(environ)
 
     for route in routes:
-        split_given_route = route.route.split('/')
+        split_given_route = route.route_url.split('/')
 
         url_list = []
         regex = '^'
         for regex_route in split_given_route:
             if '@' in regex_route:
                 if ':int' in regex_route:
-                    regex += '(\d+)'
+                    regex += r'(\d+)'
                 elif ':string' in regex_route:
-                    regex += '([a-zA-Z]+)'
+                    regex += r'([a-zA-Z]+)'
                 else:
                     # default
-                    regex += '(\w+)'
-                regex += '\/'
+                    regex += r'(\w+)'
+                regex += r'\/'
 
                 # append the variable name passed @(variable):int to a list
                 url_list.append(
                     regex_route.replace('@', '').replace(':int', '').replace(':string', '')
                 )
             else:
-                regex += regex_route + '\/'
+                regex += regex_route + r'\/'
 
         regex += '$'
-        if route.route.endswith('/'):
-            matchurl = re.compile(regex.replace('\/\/$', '\/$'))
+        if route.route_url.endswith('/'):
+            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
         else:
-            matchurl = re.compile(regex.replace('\/$', '$'))
+            matchurl = re.compile(regex.replace(r'\/$', r'$'))
 
         try:
             parameter_dict = {}
@@ -92,5 +96,5 @@ def app(environ, start_response):
         ("Content-Length", str(len(data)))
     ] + request.get_cookies())
 
-    
+
     return iter([data])

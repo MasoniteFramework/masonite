@@ -1,12 +1,11 @@
 ''' Authentication Class '''
-from config import auth
-from random import randint
 import uuid
 
+from config import auth
 
 class Auth(object):
     ''' This class will be used to authenticate users based on the config/auth.py file '''
-    
+
     def __init__(self, request):
         self.request = request
 
@@ -16,8 +15,9 @@ class Auth(object):
             return auth.AUTH['model'].get(
                 auth.AUTH['model'].token == self.request.get_cookie('token')
             )
-        except:
+        except Exception as exception:
             pass
+
         return False
 
     def login(self, name, password):

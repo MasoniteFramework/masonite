@@ -1,4 +1,3 @@
-import os
 from urllib.parse import parse_qs
 from http import cookies
 

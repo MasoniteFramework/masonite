@@ -17,11 +17,11 @@ def controller():
         print('\033[92m' + sys.argv[2] + ' Created Successfully!' + '\033[0m')
 
 def view():
-    
+
     if os.path.isfile('resources/templates/' + sys.argv[2] + '.html'):
         print('\033[95m' + sys.argv[2] + ' View Exists!' + '\033[0m')
     else:
-        f = open('resources/templates/' + sys.argv[2] + '.html', 'w+')
+        open('resources/templates/' + sys.argv[2] + '.html', 'w+')
         print('\033[92m' + sys.argv[2] + ' View Created Successfully!' + '\033[0m')
 
 def serve():
@@ -44,7 +44,7 @@ def model():
         f.write("''' A " + sys.argv[2] + " Database Module '''\n")
         f.write('from peewee import *\n')
         f.write('from config import database\n\n')
-        f.write("db = database.engines['default']\n\n")
+        f.write("db = database.ENGINES['default']\n\n")
         f.write("class "+sys.argv[2]+"(Model):\n    ")
         f.write("# column = CharField(default='')\n\n")
         f.write("    class Meta:\n")
@@ -59,7 +59,7 @@ def migrate():
     
     from app.Migrations import Migrations
     
-    module = importlib.import_module('databases.migrations')
+    importlib.import_module('databases.migrations')
 
     exists = False
 
@@ -83,7 +83,7 @@ def makemigration():
     f.write('from config import database\n')
     f.write('from app.Migrations import Migrations\n')
     f.write('import os\n\n')
-    f.write("engine = database.engines['default']\n")
+    f.write("engine = database.ENGINES['default']\n")
     f.write("migrator = MySQLMigrator(engine)\n\n")
     f.write("class " + sys.argv[3] + "(Model):\n    ")
     f.write("pass\n\n")
@@ -108,7 +108,7 @@ def modelmigration():
     f.write('from playhouse.migrate import *\n')
     f.write('from app.' + sys.argv[2] + ' import ' + sys.argv[2] + '\n\n')
     f.write('from config import database\n\n')
-    f.write("engine = database.engines['default']\n")
+    f.write("engine = database.ENGINES['default']\n")
     f.write("migrator = MySQLMigrator(engine)\n\n")
     f.write("engine.drop_table(" + sys.argv[2] + ", True)\n")
     f.write("engine.create_table(" + sys.argv[2] + ", True)\n\n")

@@ -1,78 +1,87 @@
-from app.http.providers.request import Request
+''' Module for the Routing System '''
 import json
 import re
 from playhouse.shortcuts import model_to_dict
 
 class Route():
+    ''' Loads the environ '''
 
     def __init__(self, environ):
         self.url = environ['PATH_INFO']
 
-    def get(self, route, output = None):
-        # if (self.url == route):
+    def get(self, route, output=None):
+        ''' Returns the output '''
         return output
-        # return None
 
 class Get():
+    ''' Class for specifying GET requests '''
 
     def __init__(self):
         self.method_type = 'GET'
         self.continueroute = True
+        self.output = False
+        self.route_url = None
 
     def route(self, route, output):
+        ''' The model route given by the developer '''
         self.output = output
-        self.route = route
+        self.route_url = route
         return self
 
     def middleware(self, middleware):
-        if middleware:
-            self.continueroute = True
-        else:
-            self.continueroute = False
+        ''' Blocking middleware '''
+        self.continueroute = bool(middleware)
         return self
 
 class Post():
+    ''' Class for specifying POST requests '''
+
     def __init__(self):
         self.method_type = 'POST'
         self.continueroute = True
+        self.output = False
+        self.route_url = None
 
     def route(self, route, output):
+        ''' Loads the route into the class '''
         self.output = output
-        self.route = route
+        self.route_url = route
         return self
 
     def middleware(self, middleware):
-        if middleware:
-            self.continueroute = True
-        else:
-            self.continueroute = False
+        ''' Blocking middleware '''
+        self.continueroute = bool(middleware)
         return self
 
 class Api():
     ''' API class docstring '''
-    def __init__(self):  
+    def __init__(self):
         self.method_type = 'POST'
         self.continueroute = True
         self.url = False
         self.exclude_list = False
+        self.output = False
+        self.model_obj = None
 
     def route(self, route):
+        ''' Loads the route into the class '''
         self.url = route
         return self
 
     def model(self, model):
-        # set the default route url
+        ''' Loads the model into the class '''
         if not self.url:
             self.url = '/api/' +model.__name__.lower()
-            print 'the route is ' + self.url
+            print('the route is ' + self.url)
 
         self.model_obj = model
         return self
 
     def fetch(self, request):
+        ''' Fetch the API from the model '''
         # regex for /api/users/1
-        matchregex = re.compile("^\/\w+\/\w+\/(\d+)")
-        updateregex = re.compile("^\/\w+\/\w+\/(\d+)/update")
+        matchregex = re.compile(r"^\/\w+\/\w+\/(\d+)")
+        updateregex = re.compile(r"^\/\w+\/\w+\/(\d+)/update")
         match_url = matchregex.match(request.path)
         match_update_url = updateregex.match(request.path)
 
@@ -82,7 +91,7 @@ class Api():
                 for attribute in self.exclude_list:
                     delattr(self.model_obj, attribute)
             query = self.model_obj.select().order_by(self.model_obj.name).dicts()
-            self.output =  json.dumps({'rows': list(query)})
+            self.output = json.dumps({'rows': list(query)})
         elif match_url and request.method == 'GET':
             # if GET /api/user/1
             query = self.model_obj.get(self.model_obj.id == match_url.group(1))
@@ -113,5 +122,6 @@ class Api():
         return self
 
     def exclude(self, exclude_list):
+        ''' Exclude columns from the model '''
         self.exclude_list = exclude_list
         return self

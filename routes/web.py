@@ -2,6 +2,6 @@
 from app.http.providers.routes import Get, Post
 from app.http.controllers.WelcomeController import WelcomeController
 
-routes = [
+ROUTES = [
     Get().route('/', WelcomeController().show),
 ]

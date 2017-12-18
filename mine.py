@@ -1,5 +1,4 @@
-import os
-import sys
+''' Pulls in the gunicorn application '''
 from whitenoise import WhiteNoise
 from app.start import app
 from config import storage

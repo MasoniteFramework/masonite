@@ -1,10 +1,10 @@
-from peewee import *
+''' Billable Model which can be added to a user model to charge users '''
+from peewee import Model, CharField
 import stripe
-import os
 from config import payment
 
-if payment.driver is 'stripe':
-    stripe.api_key = payment.processors['stripe']['secret']
+if payment.DRIVER == 'stripe':
+    stripe.api_key = payment.PROCESSORS['stripe']['secret']
 
 class Billable(Model):
     ''' Billable model used for model extensions '''
@@ -23,6 +23,6 @@ class Billable(Model):
 
         query = self.update(
             stripe_token=token,
-            payment_processor=payment.driver,
+            payment_processor=payment.DRIVER,
             stripe_customer_id=charge.id).where(self.id == self.id)
         query.execute()

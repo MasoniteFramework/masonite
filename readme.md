@@ -1,7 +1,10 @@
 ## Python Framework
 
 ### The Framework For Web Crafters
-<img src="https://img.shields.io/badge/python-3.6-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/LaraPyFramework/Lobby](https://badges.gitter.im/LaraPyFramework/Lobby.svg)](https://gitter.im/LaraPyFramework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<img src="https://img.shields.io/badge/python-3.6-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/LaraPyFramework/Lobby](https://badges.gitter.im/LaraPyFramework/Lobby.svg)](https://gitter.im/LaraPyFramework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/python-framework.svg" alt="Python Version"> <img src="https://img.shields.io/github/issues/josephmancuso/python-framework.svg" alt="Python Version">
+
+
+
 
 Documentation: [Found Here](https://github.com/josephmancuso/python-framework/wiki)
 

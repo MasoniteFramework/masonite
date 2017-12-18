@@ -64,9 +64,6 @@ def app(environ, start_response):
         except AttributeError:
             pass
 
-
-        print(request.url_params)
-
         if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
             print(route.method_type + ' Route: ' + router.url)
             data = router.get(route.route, route.output(request))
@@ -77,7 +74,7 @@ def app(environ, start_response):
     if data == 'Route not found. Error 404':
         # look at the API routes files
         import routes.api
-        routes = routes.api.routes
+        routes = routes.api.ROUTES
 
         for route in routes:
             if route.url in router.url:

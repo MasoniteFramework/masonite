@@ -32,7 +32,6 @@ class Auth(object):
                 model.token = token
                 model.save()
                 self.request.cookie('token', token)
-                print('it matches up')
                 return model
         except Exception as exception:
             raise exception

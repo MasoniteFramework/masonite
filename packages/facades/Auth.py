@@ -12,9 +12,12 @@ class Auth(object):
     def user(self):
         ''' Returns the model specified in the auth.py configuration '''
         try:
-            return auth.AUTH['model'].get(
-                auth.AUTH['model'].token == self.request.get_cookie('token')
-            )
+            if self.request.get_cookie('token'):
+                return auth.AUTH['model'].get(
+                    auth.AUTH['model'].token == self.request.get_cookie('token')
+                )
+            
+            return False
         except Exception as exception:
             pass
 
@@ -37,3 +40,7 @@ class Auth(object):
             raise exception
 
         return False
+
+    def logout(self):
+        self.request.cookie('token', '; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+        return self

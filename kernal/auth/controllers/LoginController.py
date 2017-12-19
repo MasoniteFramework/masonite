@@ -1,5 +1,8 @@
 ''' A Module Description '''
 from app.http.providers.view import view
+from packages.facades.Auth import Auth
+from config import application
+
 
 class LoginController(object):
     ''' Class Docstring Description '''
@@ -9,4 +12,15 @@ class LoginController(object):
 
     def show(self, request):
         ''' Return the login page '''
-        return view('auth/login')
+        return view('auth/login', {'app': application, 'Auth': Auth(request)})
+
+    def store(self, request):
+        if Auth(request).login(request.input('username'), request.input('password')):
+            request.redirect('/home')
+        else:
+            request.redirect('/login')
+        return 'check terminal'
+
+    def logout(self, request):
+        Auth(request).logout()
+        return request.redirect('/login')

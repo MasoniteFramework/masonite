@@ -1,48 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'auth/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-</head>
-
-<body>
-    {% include 'auth/nav.html' %}
-    <br>
-
-    <div class="row">
-        <div class="col-xs-4 col-xs-offset-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="">Username</label>
-                        <input type="text" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Email</label>
-                        <input type="text" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Password</label>
-                        <input type="text" class="form-control">
-                    </div>
-
-                    <div class="form-group text-center">
-                        <button class="btn btn-success">Register</button>
-                    </div>
-
-                </div>
+{% block content %}
+<div class="col-xs-4 col-xs-offset-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Register</div>
+        <div class="panel-body">
+        <form action="/register" method="POST">
+        
+            <div class="form-group">
+                <label for="">Username</label>
+                <input type="text" name="name" class="form-control">
             </div>
+
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="email" name="email" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="">Password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-success">Register</button>
+            </div>
+        </form>
         </div>
     </div>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

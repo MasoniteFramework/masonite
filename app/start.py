@@ -20,7 +20,7 @@ def app(environ, start_response):
         get_post_params = int(environ.get('CONTENT_LENGTH')) if environ.get(
             'CONTENT_LENGTH') else 0
         body = environ['wsgi.input'].read(get_post_params) if get_post_params > 0 else ''
-        environ['QUERY_STRING'] = body
+        environ['QUERY_STRING'] = body.decode('utf-8')
 
     router = Route(environ)
     import routes.web

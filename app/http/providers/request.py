@@ -78,4 +78,4 @@ class Request(object):
     def redirect(self, route):
         ''' Redirect the user based on the route specified '''
         self.redirect_url = route
-        return self
+        return 'redirecting ...'

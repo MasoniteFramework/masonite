@@ -96,7 +96,6 @@ def app(environ, start_response):
     else:
         start_response("302 OK", [
             ('Location', request.redirect_url)
-        ])
-
+        ] + request.get_cookies())
 
     return iter([data])

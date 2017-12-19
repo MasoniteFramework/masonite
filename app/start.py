@@ -88,10 +88,15 @@ def app(environ, start_response):
 
     data = bytes(data, 'utf-8')
 
-    start_response("200 OK", [
-        ("Content-Type", "text/html; charset=utf-8"),
-        ("Content-Length", str(len(data)))
-    ] + request.get_cookies())
+    if not request.redirect_url:
+        start_response("200 OK", [
+            ("Content-Type", "text/html; charset=utf-8"),
+            ("Content-Length", str(len(data)))
+        ] + request.get_cookies())
+    else:
+        start_response("302 OK", [
+            ('Location', request.redirect_url)
+        ])
 
 
     return iter([data])

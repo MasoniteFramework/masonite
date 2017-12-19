@@ -20,6 +20,7 @@ class Request(object):
         self.environ = environ
         self.params = parse_qs(environ['QUERY_STRING'])
         self.url_params = None
+        self.redirect_url = False
 
     def input(self, param):
         ''' Returns either the FORM_PARAMS during a POST request
@@ -73,3 +74,8 @@ class Request(object):
                 return grab_cookie[provided_cookie].value
 
         return None
+
+    def redirect(self, route):
+        ''' Redirect the user based on the route specified '''
+        self.redirect_url = route
+        return self

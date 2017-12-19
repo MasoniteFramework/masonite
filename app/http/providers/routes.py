@@ -87,10 +87,16 @@ class Api():
 
         if self.url == request.path and request.method == 'GET':
             # if GET /api/user
-            if self.exclude_list:
-                for attribute in self.exclude_list:
-                    delattr(self.model_obj, attribute)
             query = self.model_obj.select().order_by(self.model_obj.name).dicts()
+
+            # remove passwords from models if they exist
+            for model in list(query):
+                for exclude in self.exclude_list:
+                    if model[exclude]:
+                        del model[exclude]
+
+                
+
             self.output = json.dumps({'rows': list(query)})
         elif match_url and request.method == 'GET':
             # if GET /api/user/1

@@ -86,6 +86,14 @@ def app(environ, start_response):
             else:
                 data = 'Route not found. Error 404'
 
+    if request.redirect_route:
+        for route in routes:
+            if route.named_route == request.redirect_route:
+                print(route.method_type + ' Named Route: ' + router.url)
+                data = router.get(route.route, route.output(request))
+                request.redirect_url = route.route_url
+
+
     data = bytes(data, 'utf-8')
 
     if not request.redirect_url:

@@ -22,9 +22,10 @@ class Get():
         self.continueroute = True
         self.output = False
         self.route_url = None
+        self.named_route = None
 
     def route(self, route, output):
-        ''' The model route given by the developer. 
+        ''' The model route given by the developer.
             The output parameter is a controller and method
         '''
 
@@ -49,6 +50,10 @@ class Get():
     def middleware(self, middleware):
         ''' Blocking middleware '''
         self.continueroute = bool(middleware)
+        return self
+
+    def name(self, name):
+        self.named_route = name
         return self
 
 class Post():

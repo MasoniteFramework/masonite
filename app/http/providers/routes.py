@@ -2,6 +2,7 @@
 import json
 import re
 from playhouse.shortcuts import model_to_dict
+import importlib
 
 class Route():
     ''' Loads the environ '''
@@ -23,8 +24,25 @@ class Get():
         self.route_url = None
 
     def route(self, route, output):
-        ''' The model route given by the developer '''
-        self.output = output
+        ''' The model route given by the developer. 
+            The output parameter is a controller and method
+        '''
+
+        if isinstance(output, str):
+            mod = output.split('@')
+
+            # import the module
+            module = importlib.import_module('app.http.controllers.' + mod[0])
+
+            # get the controller from the module
+            controller = getattr(module, 'WelcomeController')
+
+            # get the view from the controller
+            view = getattr(controller(), mod[1])
+            self.output = view
+        else:
+            self.output = output
+
         self.route_url = route
         return self
 
@@ -44,7 +62,21 @@ class Post():
 
     def route(self, route, output):
         ''' Loads the route into the class '''
-        self.output = output
+
+        if isinstance(output, str):
+            mod = output.split('@')
+
+            # import the module
+            module = importlib.import_module('app.http.controllers.' + mod[0])
+
+            # get the controller from the module
+            controller = getattr(module, 'WelcomeController')
+
+            # get the view from the controller
+            view = getattr(controller(), mod[1])
+            self.output = view
+        else:
+            self.output = output
         self.route_url = route
         return self
 

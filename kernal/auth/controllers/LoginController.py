@@ -1,6 +1,6 @@
 ''' A Module Description '''
 from masonite.view import view
-from packages.facades.Auth import Auth
+from masonite.facades.Auth import Auth
 from config import application
 
 

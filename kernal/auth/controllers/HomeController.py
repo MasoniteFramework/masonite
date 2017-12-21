@@ -1,7 +1,7 @@
 ''' A Module Description '''
 from masonite.view import view
 from config import application
-from packages.facades.Auth import Auth
+from masonite.facades.Auth import Auth
 
 class HomeController(object):
     ''' Class Docstring Description '''

@@ -1,9 +1,9 @@
 ''' A User Model '''
+from masonite.auth.Authenticatable import Authenticatable
 from peewee import CharField
 from playhouse.fields import PasswordField
 
 from config import database
-from packages.auth.Authenticatable import Authenticatable
 
 db = database.ENGINES['default']
 

@@ -14,7 +14,7 @@ from app.Users import Users
 | like 'email' to 'user' to easily switch which column will
 | be authenticated.
 |
-| @see packages.facades.Auth
+| @see masonite.facades.Auth
 |
 '''
 

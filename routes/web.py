@@ -1,7 +1,6 @@
 ''' Web Routes '''
-from app.http.providers.routes import Get, Post
-from app.http.controllers.WelcomeController import WelcomeController
+from masonite.routes import Get, Post
 
 ROUTES = [
-    Get().route('/', WelcomeController().show),
+    Get().route('/', 'WelcomeController@show').name('home'),
 ]

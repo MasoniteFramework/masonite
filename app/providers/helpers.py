@@ -8,7 +8,7 @@ def controller():
     else:
         f = open('app/http/controllers/' + sys.argv[2] + '.py', 'w+')
         f.write("''' A Module Description '''\n")
-        f.write('from app.http.providers.view import view\n\n')
+        f.write('from masonite.view import view\n\n')
         f.write('class ' + sys.argv[2] + '(object):\n')
         f.write("    ''' Class Docstring Description '''\n\n")
         f.write('    def __init__(self):\n')

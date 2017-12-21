@@ -1,5 +1,5 @@
 ''' API Routes '''
-from app.http.providers.routes import Api
+from masonite.routes import Api
 from app.Users import Users
 
 ROUTES = [

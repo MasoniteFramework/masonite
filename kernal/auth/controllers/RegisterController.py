@@ -1,5 +1,5 @@
 ''' A Module Description '''
-from app.http.providers.view import view
+from masonite.view import view
 from packages.facades.Auth import Auth
 from config import application
 from config import auth

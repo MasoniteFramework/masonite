@@ -1,7 +1,6 @@
 ''' A Module Description '''
-from app.http.providers.view import view
+from masonite.view import view
 from config import application
-from packages.facades.Auth import Auth
 
 class WelcomeController(object):
     ''' Controller for welcoming the user '''

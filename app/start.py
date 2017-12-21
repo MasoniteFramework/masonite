@@ -5,8 +5,8 @@ import re
 
 from dotenv import find_dotenv, load_dotenv
 
-from app.http.providers.request import Request
-from app.http.providers.routes import Route
+from masonite.request import Request
+from masonite.routes import Route
 
 load_dotenv(find_dotenv())
 

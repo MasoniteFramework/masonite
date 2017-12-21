@@ -105,15 +105,17 @@ def modelmigration():
     import subprocess
     f = open('databases/migrations/automatic_migration_for_' + sys.argv[2] + '.py', 'w+')
     f.write("''' A Migration File '''\n")
-    f.write('from playhouse.migrate import *\n')
-    f.write('from app.' + sys.argv[2] + ' import ' + sys.argv[2] + '\n\n')
+    f.write('import os\n\n')
+    f.write('from app.Migrations import Migrations\n')
+    f.write('from app.' + sys.argv[2] + ' import ' + sys.argv[2] + '\n')
     f.write('from config import database\n\n')
-    f.write("engine = database.ENGINES['default']\n")
-    f.write("migrator = MySQLMigrator(engine)\n\n")
-    f.write("engine.drop_table(" + sys.argv[2] + ", True)\n")
-    f.write("engine.create_table(" + sys.argv[2] + ", True)\n\n")
 
-    Migrations.create(migration='automatic_migration_for_' + sys.argv[2] + '.py')
+    f.write("ENGINE = database.ENGINES['default']\n\n")
+    f.write("ENGINE.drop_table(" + sys.argv[2] + ", True)\n")
+    f.write("ENGINE.create_table(" + sys.argv[2] + ", True)\n\n")
+    f.write("QUERY = Migrations.update(batch=1).where(\n    ")
+    f.write("Migrations.migration == os.path.basename(__file__))\n")
+    f.write("QUERY.execute()\n")
 
     if '--model' in sys.argv:
         subprocess.call('python craft model ' + sys.argv[2], shell=True)

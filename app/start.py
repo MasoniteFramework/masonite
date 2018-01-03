@@ -3,12 +3,30 @@
 import os
 import re
 
+import sass
 from dotenv import find_dotenv, load_dotenv
-
 from masonite.request import Request
 from masonite.routes import Route
 
+from config import application, storage
+
 load_dotenv(find_dotenv())
+
+matches = []
+
+for files in storage.SASSFILES['importFrom']:
+    for root, dirnames, filenames in os.walk(os.path.join(application.BASE_DIRECTORY, files)):
+        for filename in filenames:
+            if filename.endswith(('.sass', '.scss')) and not filename.startswith('_'):
+                matches.append(os.path.join(root, filename))
+
+for filename in matches:
+    with open(filename) as f:
+        compiled_sass = sass.compile(string=f.read(), include_paths=storage.SASSFILES['includePaths'])
+        name = filename.split('/')[-1].replace('.scss', '').replace('.sass', '')
+    write_file = os.path.join(application.BASE_DIRECTORY, storage.SASSFILES['compileTo'] + '/{0}.css'.format(name))
+    with open(write_file, 'w') as r:
+        r.write(compiled_sass)
 
 def app(environ, start_response):
     ''' Framework Engine '''

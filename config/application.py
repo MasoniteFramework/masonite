@@ -8,6 +8,7 @@
 | any other location as required by the application or its packages.
 |
 '''
+import os
 
 NAME = 'Masonite'
 
@@ -42,7 +43,7 @@ URL = 'http://localhost'
 |
 | This providers list is used to add functionality to this project. You
 | can add modules to this list which will import them when the command
-| line is ran. Add modules here with function which can be picked up
+| line is ran. Add modules here with a function which can be picked up
 | by the command line. For example: when you add a module with the
 | function 'auth' then that function will become available when
 | you run: python craft auth
@@ -53,3 +54,25 @@ PROVIDERS = [
     'app.providers.helpers',
     'app.providers.auth',
 ]
+
+'''
+|--------------------------------------------------------------------------
+| Base Directory
+|--------------------------------------------------------------------------
+|
+| TODO
+|
+'''
+
+BASE_DIRECTORY = os.getcwd()
+
+'''
+|--------------------------------------------------------------------------
+| Static Root
+|--------------------------------------------------------------------------
+|
+| TODO
+|
+'''
+
+STATIC_ROOT = os.path.join(BASE_DIRECTORY, 'storage')

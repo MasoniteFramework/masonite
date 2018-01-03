@@ -6,12 +6,12 @@
 
 
 
-Documentation: [Found Here](https://github.com/josephmancuso/python-framework/wiki)
+Documentation: [Found Here](https://github.com/josephmancuso/masonite/wiki)
 
 #### Installation:
 
 ```
-    $ git clone http://github.com/josephmancuso/python-framework.git
+    $ git clone http://github.com/josephmancuso/masonite.git
     $ python craft install
     $ python craft serve
 ```

@@ -1,6 +1,6 @@
 ## Become apart of the crafting movement!
 
-Masonite is an exciting new framework which bases a lot of its workflow off of the [Laravel](https://laravel.com) framework and tries to be an all inclusive framework as well. Masonite includes features like: 
+Masonite is an exciting new framework which bases a lot of its workflow off of the [Laravel](https://laravel.com) framework and tries to be an all inclusive framework as well. Masonite includes features like
 
 - A similar manual migration system
 - Stripe support out of the box

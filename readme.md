@@ -6,7 +6,7 @@
 
 
 
-Documentation: [Found Here](https://github.com/josephmancuso/masonite/wiki)
+Documentation: [Found Here](http://masonite.docsforcode.com)
 
 #### Installation:
 

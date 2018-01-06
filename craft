@@ -5,12 +5,32 @@ from config import application
 
 FOUND = False
 
+# First Check Providers
 for key, provider in enumerate(application.PROVIDERS):
     if hasattr(importlib.import_module(provider), sys.argv[1]):
         print('\033[92mExecuting Command ...\033[0m')
         getattr(importlib.import_module(provider), sys.argv[1])()
         FOUND = True
         break
+
+# Check Third Party Packages
+try:
+    if len(sys.argv) > 3:
+        module = importlib.import_module(
+            sys.argv[1] + ".commands." + sys.argv[2])
+        command = getattr(module, sys.argv[3])
+    elif len(sys.argv) > 2:
+        module = importlib.import_module(sys.argv[1] + ".commands." + sys.argv[2])
+        command = getattr(module, sys.argv[2])
+    else:
+        module = importlib.import_module(
+            sys.argv[1] + ".commands." + sys.argv[1])
+        command = getattr(module, sys.argv[1])
+
+    command()
+    FOUND = True
+except Exception as e:
+    print(e)
 
 if not FOUND:
     print('\033[95mCommand Not Available\033[0m')

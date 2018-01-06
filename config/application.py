@@ -50,10 +50,7 @@ URL = 'http://localhost'
 |
 '''
 
-PROVIDERS = [
-    'app.providers.helpers',
-    'app.providers.auth',
-]
+PROVIDERS = []
 
 '''
 |--------------------------------------------------------------------------

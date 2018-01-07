@@ -7,7 +7,7 @@ Documentation: [Found Here](http://masonite.docsforcode.com)
 
 ## About Masonite
 
-Masonite is a Python web application framework that strives for elegant and beautiful syntax. We make building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web application from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web application by:
+Masonite is a Python web application framework that strives for elegant and beautiful syntax. We make building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web applications from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web applications by:
 
 * Having a simple routing engine
 * An extremely powerful command line helper called `craft` commands

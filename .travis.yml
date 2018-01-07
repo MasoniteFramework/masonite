@@ -6,6 +6,7 @@ python:
   - "3.6"
   - "3.7-dev"  # 3.7 development branch
 # command to install dependencies
-install: 
-  - python craft install
+install:
+  - pip install masonite-cli
+  - craft install
 script: pytest

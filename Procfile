@@ -1,1 +1,1 @@
-web: gunicorn mine:application
+web: gunicorn wsgi:application

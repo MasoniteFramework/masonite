@@ -64,7 +64,7 @@ Once that is cloned we need to add the pip dependencies. You can run `pip3 insta
 
 **NOTE: Python craft commands are essentially wrappers around common mundane tasks. Read the docs about the craft command tool to learn more**
 
-This will install all the required dependencies to run this framework. Now we can run the gunicorn server by simply running `gunicorn -w 2 mine:application` or the `craft` command:
+This will install all the required dependencies to run this framework. Now we can run the gunicorn server by simply running `gunicorn -w 2 wsgi:application` or the `craft` command:
 
     $ craft serve
 

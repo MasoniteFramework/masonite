@@ -36,7 +36,7 @@ class Get():
             module = importlib.import_module('app.http.controllers.' + mod[0])
 
             # get the controller from the module
-            controller = getattr(module, 'WelcomeController')
+            controller = getattr(module, mod[0])
 
             # get the view from the controller
             view = getattr(controller(), mod[1])
@@ -75,7 +75,7 @@ class Post():
             module = importlib.import_module('app.http.controllers.' + mod[0])
 
             # get the controller from the module
-            controller = getattr(module, 'WelcomeController')
+            controller = getattr(module, mod[0])
 
             # get the view from the controller
             view = getattr(controller(), mod[1])

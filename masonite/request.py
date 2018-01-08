@@ -54,7 +54,7 @@ class Request(object):
         ''' Retrieves the param from the URL.
             The "parameter" parameter in this method should be the name of the @variable
             passed into the url in web.py '''
-        if self.url_params[parameter]:
+        if parameter in self.url_params:
             return self.url_params[parameter]
         return False
 

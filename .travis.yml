@@ -9,4 +9,4 @@ python:
 install:
   - pip install masonite-cli
   - craft install
-script: pytest
+script: python -m pytest

@@ -1,7 +1,6 @@
 ''' Module for the Routing System '''
 import json
 import re
-from playhouse.shortcuts import model_to_dict
 import importlib
 
 class Route():
@@ -124,42 +123,44 @@ class Api():
 
         if self.url == request.path and request.method == 'GET':
             # if GET /api/user
-            query = self.model_obj.select().order_by(self.model_obj.name).dicts()
 
-            # remove passwords from models if they exist
-            for model in list(query):
-                for exclude in self.exclude_list:
-                    if model[exclude]:
-                        del model[exclude]
+            model = self.model_obj
+            model.__hidden__ = self.exclude_list
 
-                
+            query = model.all()
 
-            self.output = json.dumps({'rows': list(query)})
+            self.output = query.to_json()
         elif match_url and request.method == 'GET':
             # if GET /api/user/1
-            query = self.model_obj.get(self.model_obj.id == match_url.group(1))
-            self.output = json.dumps(model_to_dict(query))
+            # query = self.model_obj.get(self.model_obj.id == match_url.group(1))
+            model = self.model_obj.find(match_url.group(1))
+            if model:
+                self.output = model.to_json()
+            else:
+                self.output = []
         elif self.url == request.path and request.method == 'POST':
             # if POST /api/user
             proxy = self.model_obj()
             for field in request.all():
                 setattr(proxy, field, request.input(field))
             proxy.save()
-            self.output = json.dumps(model_to_dict(proxy))
+            self.output = proxy.to_json()
         elif match_url and request.method == 'DELETE':
-            # if DELETE /api/user
-            get = self.model_obj.get(self.model_obj.id == match_url.group(1))
-            query = self.model_obj.delete().where(self.model_obj.id == match_url.group(1))
-            query.execute()
-            self.output = json.dumps(model_to_dict(get))
+            # if DELETE /api/user/1
+            get = self.model_obj.find(match_url.group(1))
+            if get:
+                query = get.delete()
+                self.output = get.to_json()
+            else:
+                self.output = []
         elif match_update_url and request.method == 'POST':
             # if POST /api/user/1/update
-            proxy = self.model_obj.get(self.model_obj.id == match_update_url.group(1))
+            proxy = self.model_obj.find(match_update_url.group(1))
             for field in request.all():
                 setattr(proxy, field, request.input(field))
             proxy.save()
-            proxy = self.model_obj.get(self.model_obj.id == match_update_url.group(1))
-            self.output = json.dumps(model_to_dict(proxy))
+            proxy = self.model_obj.find(match_update_url.group(1))
+            self.output = proxy.to_json()
         else:
             self.output = None
         return self

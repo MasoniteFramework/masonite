@@ -9,9 +9,6 @@ masonite/auth/Authenticatable.py
 masonite/auth/__init__.py
 masonite/cashier/Billable.py
 masonite/cashier/__init__.py
-masonite/commands/__init__.py
-masonite/commands/auth.py
-masonite/commands/checkit.py
 masonite/extensions/SlugField.py
 masonite/extensions/__init__.py
 masonite/facades/Auth.py

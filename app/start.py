@@ -12,7 +12,7 @@ from masonite.storage import Storage
 # Load environment variable from .env file
 load_dotenv(find_dotenv())
 
-# Run once and only once the application has started
+# Run once and only once the server is ran
 Storage().compile_sass()
 
 def app(environ, start_response):
@@ -34,6 +34,7 @@ def app(environ, start_response):
     # Instantiate the Request object
     request = Request(environ)
 
+    # Check all http routes
     for route in routes:
         # Compiles the given route to regex
         regex = router.compile_route_to_regex(route)
@@ -59,6 +60,7 @@ def app(environ, start_response):
         else:
             data = 'Route not found. Error 404'
 
+    ## Check all API Routes
     if data == 'Route not found. Error 404':
         # look at the API routes files
         import routes.api
@@ -74,6 +76,7 @@ def app(environ, start_response):
             else:
                 data = 'Route not found. Error 404'
 
+    ## Set redirection if a route has been called to redirect to
     if request.redirect_route:
         for route in routes:
             if route.named_route == request.redirect_route:
@@ -84,12 +87,15 @@ def app(environ, start_response):
 
     data = bytes(data, 'utf-8')
 
+
     if not request.redirect_url:
+        # Normal HTTP response
         start_response("200 OK", [
             ("Content-Type", "text/html; charset=utf-8"),
             ("Content-Length", str(len(data)))
         ] + request.get_cookies())
     else:
+        # Redirection
         start_response("302 OK", [
             ('Location', request.redirect_url)
         ] + request.get_cookies())

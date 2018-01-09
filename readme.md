@@ -33,7 +33,7 @@ Go to `http://127.0.0.1:8000/`
 
 ## Contributing
 
-Please read the CONTRIBUTING file in this repo and then please post or view open issues
+Please read the CONTRIBUTING file in this repo and then please post or view open issues. Development will be on the current releasing branch so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
 
 ## License
 

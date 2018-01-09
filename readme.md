@@ -1,7 +1,7 @@
 # Masonite
 
 ## The Framework For Web Crafters
-<img src="https://img.shields.io/badge/python-3.2+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/LaraPyFramework/Lobby](https://badges.gitter.im/LaraPyFramework/Lobby.svg)](https://gitter.im/LaraPyFramework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> <img src="https://img.shields.io/github/issues/josephmancuso/masonite.svg" alt="Issues"> [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
+<img src="https://img.shields.io/badge/python-3.2+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> <img src="https://img.shields.io/github/issues/josephmancuso/masonite.svg" alt="Issues"> [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
 
 Documentation: [Found Here](http://masonite.docsforcode.com)
 

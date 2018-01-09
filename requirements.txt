@@ -8,5 +8,5 @@ bcrypt==3.1.4
 pytest==3.3.1
 libsass==0.13.4
 orator==0.9.7
-masonite==0.2.0
+masonite==0.2.1
 masonite-cli

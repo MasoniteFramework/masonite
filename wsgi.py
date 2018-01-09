@@ -7,3 +7,4 @@ application = WhiteNoise(app, root='storage/static')
 
 for location, alias in storage.STATICFILES.items():
     application.add_files(location, prefix=alias)
+    

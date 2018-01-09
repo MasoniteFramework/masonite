@@ -6,13 +6,24 @@ from orator import DatabaseManager, Model
 
 load_dotenv(find_dotenv())
 
+'''
+|--------------------------------------------------------------------------
+| Database Settings
+|--------------------------------------------------------------------------
+|
+| Set connection database settings here as a dictionary. Follow the
+| format below to create additional connection settings.
+|
+| @see Orator migrations documentation for more info
+|
+'''
 databases = {
     'mysql': {
-        'driver': 'mysql',
-        'host': 'localhost',
-        'database': 'masonite',
-        'user': 'root',
-        'password': '',
+        'driver': os.environ.get('DB_DRIVER'),
+        'host': os.environ.get('DB_HOST'),
+        'database': os.environ.get('DB_DATABASE'),
+        'user': os.environ.get('DB_USERNAME'),
+        'password': os.environ.get('DB_PASSWORD'),
         'prefix': ''
     }
 }

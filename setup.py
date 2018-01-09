@@ -12,7 +12,6 @@ setup(
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
     url='https://github.com/josephmancuso/masonite',  # use the URL to the github repo
-    # I'll explain this in a second
     download_url='',
     keywords=['python web framework', 'python3'],  # arbitrary keywords
     classifiers=[],

@@ -7,12 +7,62 @@ class Route():
     ''' Loads the environ '''
 
     def __init__(self, environ):
+        self.environ = environ
         self.url = environ['PATH_INFO']
+        self.url_list = []
 
     def get(self, route, output=None):
         ''' Returns the output '''
         return output
+    
+    def set_post_params(self):
+        ''' If the route is a Post, swap the QUERY_STRING '''
+        get_post_params = int(self.environ.get('CONTENT_LENGTH')) if self.environ.get(
+            'CONTENT_LENGTH') else 0
+        body = self.environ['wsgi.input'].read(
+            get_post_params) if get_post_params > 0 else ''
 
+        return body.decode('utf-8')
+
+    def is_post(self):
+        ''' Check to see if the current request is a POST request '''
+        if self.environ['REQUEST_METHOD'] == 'POST':
+            return True
+        
+        return False
+
+    def compile_route_to_regex(self, route):
+        # Split the route
+        split_given_route = route.route_url.split('/')
+
+        # compile the provided url into regex
+        url_list = []
+        regex = '^'
+        for regex_route in split_given_route:
+            if '@' in regex_route:
+                if ':int' in regex_route:
+                    regex += r'(\d+)'
+                elif ':string' in regex_route:
+                    regex += r'([a-zA-Z]+)'
+                else:
+                    # default
+                    regex += r'(\w+)'
+                regex += r'\/'
+
+                # append the variable name passed @(variable):int to a list
+                url_list.append(
+                    regex_route.replace('@', '').replace(
+                        ':int', '').replace(':string', '')
+                )
+            else:
+                regex += regex_route + r'\/'
+
+        self.url_list = url_list
+        regex += '$'
+        return regex
+
+    def generated_url_list(self):
+        return self.url_list
 class Get():
     ''' Class for specifying GET requests '''
 

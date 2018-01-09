@@ -5,6 +5,64 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Getting Started
+
+The framework has four main parts.
+
+* This official repository where most work will be done primarily in release branches
+* The josephmancuso/masonite-core repository where all masonite packages live.
+    * This is where the `from masonite ...` module lives. 
+* The josephmancuso/masonite-cli repository where the `craft` command lives
+* The josephmancuso/masonite-starter repository where the project is built when `craft new` is ran
+    * This repository will be updated based on this repository. It's basically just this repo stripped down
+    
+### Geting this repository up and running to be edited
+
+This repo is simple and will be able to be installed following the installation instruction in the README.
+
+* Fork the josephmancuso/masonite repo.
+* Clone that repo into your computer:
+    * `git clone your-username/masonite`
+* Checkout the current release branch (example: `v030`)
+* You should now be on a `v030` local branch.
+* run `git pull origin v030` to get the current release version.
+* From there simply create your feature branches (`change-default-orm`), make your desired changes.
+* Push to your origin repository:
+    * `git push origin change-default-orm`
+* Open a pull request and follow the PR process below
+
+### Editing the masonite-core repository 
+
+The trick to this is that we need it to be pip installed and then quickly editable until we like it, and then pushed back to the repo for a PR. Do this only if you want to make changes to the core masonite package
+
+To do this just:
+
+* Fork the josephmancuso/masonite-core repo,
+* Clone that repo into your computer:
+    * `git clone your-username/masonite-core`
+* Activate your masonite virtual environment (optional)
+    * Go to where you installed masonite and activate the environment
+* While inside the virtual environment, cd into the directory you installed masonite-core
+* Run `pip install --editable .` from inside the masonite-core directory. This will install masonite as a pip package but also keep a reference to the folder so you can make changes freely to masonite-core while not having to worry about continuously reinstalling it.
+* Any changes you make to this package just push it to your feature branch on your fork and follow the PR process below.
+
+### Editing the masonite-cli repository (`craft` commands)
+
+Craft commands make up a large part of the workflow for Masonite. Follow these instructions to get the masonite-cli package on your computer and editable.
+
+* Fork the josephmancuso/masonite-cli repo,
+* Clone that repo into your computer:
+    * `git clone your-username/masonite-cli`
+* Activate your masonite virtual environment (optional)
+    * Go to where you installed masonite and activate the environment
+* While inside the virtual environment, cd into the directory you installed masonite-cli
+* Run `pip install --editable .` from inside the masonite-cli directory. This will install masonite-cli (which contains the craft commands) as a pip package but also keep a reference to the folder so you can make changes freely to craft commands while not having to worry about continuously reinstalling it.
+* Any changes you make to this package just push it to your feature branch on your fork and follow the PR process below.
+
+## Editing the josephmancuso/masonite-starter repository
+
+This repository is the repository where `craft new project_name` will install from. It takes the zip of the repository, unzips it and renames the folder to the project name. This repository is not directly editable by contributors as it's a pretty static repo that is only updated on josephmancuso/masonite releases. We will take the contents of this repo, strip it down (remove .travis and docs/ stuff) data and leave only the core project.
+
 ## Pull Request Process
 
 1. Ensure any changes are well commented and any configuration files that are added have a flagpole comment on the

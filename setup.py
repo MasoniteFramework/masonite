@@ -7,7 +7,7 @@ setup(
               'masonite.extensions',
               'masonite.facades',
              ],  # this must be the same as the name above
-    version='0.2.0',
+    version='0.2.1',
     description='The core for the python framework',
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',

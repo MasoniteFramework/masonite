@@ -20,8 +20,8 @@ class Storage(object):
                 compiled_sass = sass.compile(
                     string=f.read(), include_paths=storage.SASSFILES['includePaths']
                 )
-                name = filename.split('/')[-1].replace('.scss', '').replace('.sass', '')
-                write_file = os.path.join(application.BASE_DIRECTORY,
-                                      storage.SASSFILES['compileTo'] + '/{0}.css'.format(name))
+                name = filename.split(os.sep)[-1].replace('.scss', '').replace('.sass', '')
+                write_file = os.path.join(os.path.join(application.BASE_DIRECTORY, 
+                    storage.SASSFILES['compileTo']), '{0}.css'.format(name))
             with open(write_file, 'w') as r:
                 r.write(compiled_sass)

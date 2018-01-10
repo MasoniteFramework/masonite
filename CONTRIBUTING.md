@@ -18,6 +18,8 @@ The framework has four main parts.
     
 ### Geting this repository up and running to be edited
 
+[You can read about how the framework flows, works and architectural concepts here](http://masonite.docsforcode.com/docs/2.-Architecture-Concepts)
+
 This repo is simple and will be able to be installed following the installation instruction in the README.
 
 * Fork the josephmancuso/masonite repo.

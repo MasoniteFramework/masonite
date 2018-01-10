@@ -1,12 +1,12 @@
 In part 2 we'll start our actual blog application. In this tutorial we'll do 3 things:
 
 * Migrate our database
-* Create a `Blog` model
 * Migrate our `Blog` model into the database
+* Create a `Blog` model
 
 ## Setting up our migrations
 
-So to setup our migrations we will have to setup our database credentials. When we ran `python craft install`, not only did we install our dependencies but we also created a new `.env` file which contains all of our sensitive application information
+To setup our migrations we will have to setup our database credentials. When we ran `craft install`, not only did we install our dependencies but we also created a new `.env` file which contains all of our sensitive application information
 
 {danger} Do not commit your `.env` file into source control. Your `.env` file is in `.gitignore` by default
 
@@ -14,81 +14,80 @@ Lets change our database settings in our `.env` file. Open up this file and chan
 
 Once your credentials are correct we can migrate our database. 
 
-Masonite comes with 2 models which can be migrated over. The first is a `Migrations` model which masonite uses to keep track of which migrations need to be migrated and which haven't. The second model is a `Users` model which contains basic user information. These models can be expanded later on but for now the default values are good enough.
+Masonite comes with 1 migraton which creates a users table for you. **Keep in mind that migrations and models are completely separated in Masonite. You do not need to create a model before making a migration. All models take the form of the tables they are attached to.**
 
-To migrate these two models in we can just run:
+To migrate our migrations just run
 
 ```
-python craft migrate
+$ craft migrate
 ```
-
-{alert} This command will migrate these two models in. Running this command again will yield a "No Migrations Exists" message which means that all migrations are up to date and non exist to be migrated.
 
 ## Creating our Blog model
 
 Because Masonite uses a more manual approach to migrations that we will get to later on, there are several types of migrations we should be aware of. 
 
-`model migrations` are migrations based off of a model. Because of this, we need to make the model first before we create a model migration.
+A `migration` in Masonite is a way to change your database tables at a lower level than Django's models. This is great because it removes all magic from model migrations which ironically speeds development by making it very hard to mess up migration trees. Many developers encounter major problems with Django as Django attempts to guess what the developer is doing by comparing past and present models.
 
-`make migrations` are more manual migrations which will create a migration file to be editing by the developer before the `migrate` command is ran. This manual approach has been far better in my experience and removes the finger crossing before migrations are ran because it removes a lot of the "magic" of database migrations.
-
-In our example here we will create a `model migrations` and therefore need to make our Blog model first.
+In our example here we will create a blog migration.
 
 Let's go ahead and use a `craft` command to create our model:
 
 ```
-python craft model Blog
+craft migration create_blog_table --create blogs
 ``` 
 
-This will create a `Blog` class inside `app/Blog.py` as well as import anything needed to get our model started.
+This will create a `blogs` migration which we can use to create our `blogs` table.
 
-{alert} Masonite uses a single class per file structure so everytime a model is created, it is put it in own respective file inside the `app/` directory.
-
-Lets go into our `Blog` model and see what was creatied. We should see a structure similiar to:
+Lets create a simple title and body in our blogs table. In our `up()` function of our migration file. Our schema migrations should look like:
 
 ```python
-''' A Blog Database Module '''
-from peewee import *
-from config import database
-
-db = database.ENGINES['default']
-
-class Blog(Model):
-    # column = CharField(default='')
-
-    class Meta:
-        database = db
+table.increments('id')
+table.string('title')
+table.text('body')
+table.timestamps()
 ```
+
+Our whole `up()` function should look like:
+
+```python
+def up(self):
+    """
+    Run the migrations.
+    """
+    with self.schema.create('blogs') as table:
+        table.increments('id')
+        table.string('title')
+        table.text('body')
+        table.timestamps()
+```
+
+That's it! We can now migrate this into our database:
+
+    $ craft migrate
+
+## Creating our Model
+
+Now that we have a `blogs` table in our database we can now make a model for it. To make a blog just run:
+
+    $ craft model Blog
+
+This will create a model inside `app/Blog.py`. We do not have to specify any columns. Our model is good to go.
+
+Our model should look like this:
+
+```python
+''' A Blog Database Model '''
+from orator import DatabaseManager, Model
+from config.database import Model
+
+class User(Model):
+    pass
+```
+
+Keep in mind that our blog name will default to the plural form in our table. For example, the `Blog` model will point to the `blogs` table
 
 Finally after scaffolding our project with the `craft` command can we finally start programming in Python.
 
-Let's delete the column and put in two columns we'll need to get our blog started. Lets put a `title` and a `body` column.
-
-Our model should now look something like:
-
-```python
-class Blog(Model):
-    title = CharField(default='')
-    body = CharField(default='')
-
-    class Meta:
-        database = db
-```
-
-Once our model is created we now need to create the migrations file for it. Like previously stated, since we already have a model to go off of, we can create a model migration. This migration will create a table based off of one of our models.
-
-To do this we can just run:
-
-```
-python craft modelmigration Blog
-```
-
-Which will create a migration file based on our Blog model. And then run
-
-```
-python craft migrate
-```
-
-Which will migrate our model into our database.
-
 Congratulations! You have successfully created your first model with Masonite.
+
+In the next tutorial we'll talk about how we can start adding blogs to our table.

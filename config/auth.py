@@ -1,5 +1,5 @@
 ''' Where authentication settings should be'''
-from app.Users import Users
+from app.User import User
 
 '''
 |--------------------------------------------------------------------------
@@ -19,6 +19,6 @@ from app.Users import Users
 '''
 
 AUTH = {
-    'model': Users,
-    'driver': 'cookie'
+    'driver': 'cookie',
+    'model': User,
 }

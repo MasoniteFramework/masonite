@@ -8,24 +8,25 @@ This tutorial will consist of three parts:
 
 ## Installation
 
-Currently the best way to install masonite is by cloning the repository onto your machine. This will require `git`.
+Currently the best way to create a Masonite project is through pip
 
 ```
-$ git clone http://github.com/josephmancuso/masonite.git
+$ pip install masonite-cli
+$ craft new project_name
 ```
 
-After the repository has been cloned to your machine you can open it in any text editor you choose. 
+This command will download a zip of the `josephmancuso/masonite-starter` repository and name the newly created folder the same name as the project name you specified.
 
 {alert} You can optionally create a virtual environment here by running `python3 -m venv venv` which will create a virtual environment into the project. You can then run `source venv/bin/activate` on a Mac or `./venv/bin/activate` on Windows
 
 ## Dependencies
 
-You now need to install all the project dependencies. Masonite comes with a helper command tool called the `craft` command tool. The `craft` command tool is to speed development and make remembering multiple commands under multiple modules easier.
+You now need to install all the project dependencies. Masonite comes with a helper command tool called the `craft` command tool which we used to setup the project. The `craft` command tool is to speed development and make remembering multiple commands under multiple modules easier.
 
-To install all needed requirements you can simply run:
+To install all needed requirements just `cd` into your project and simply run:
 
 ```
-python craft install
+$ craft install
 ```
 
 This will install all dependencies specified in the requirements.txt file. This may take a minute to complete.
@@ -35,7 +36,7 @@ This will install all dependencies specified in the requirements.txt file. This 
 Another great `craft` command is the `serve` command. This will serve Masonite under the `8000` port by default. To serve your project just run:
 
 ```
-python craft serve
+$ craft serve
 ```
 
 Your application will now run and give you the supplied URL in the terminal. Default for this is `127.0.0.1:8000`

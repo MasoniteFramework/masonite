@@ -6,6 +6,7 @@ class Storage(object):
     def __init__(self):
         pass
 
+    # this function will compile sass files only if the libsass module installed
     def compile_sass(self):
         try:
             import sass

@@ -77,7 +77,7 @@ There are 4 main type of comments you should use when developing for Masonite:
 
 All modules should have a docstring at the top of every module file and should look something like:
 
-```
+```python
 ''' This is a module to add support for Billing users '''
 from masonite.request import Request
 ...
@@ -91,7 +91,9 @@ For example:
 
 ```python
 def some_function(self):
-    ''' This is a function that does x action. Then give an exmaple of when to use it '''
+    ''' This is a function that does x action. 
+        Then give an exmaple of when to use it 
+    '''
     ... code ...
 ```
 
@@ -102,7 +104,6 @@ If you're code MUST be complex enough that future developers will not understand
 For normal code this will look something like:
 
 ```python
-
 # This code performs a complex task that may not be understood later on
 # You can add a second line like this
 complex_code = 'value'
@@ -134,6 +135,8 @@ Flag pole comments are a fantastic way to give developers an inside to what is r
 | A quick description
 |
 '''
+
+SETTING = 'some value'
 ```
 
 It's important to note that there should have exactly 75 `-` above and below the header and have a trailing `|` at the bottom of the comment.
@@ -148,8 +151,7 @@ It's important to note that there should have exactly 75 `-` above and below the
 3. Must add unit testing for any changes made.
 4. Increase the version numbers in any examples files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-5. You may merge the Pull Request in once you have the sign-off of two other developers, or the repo owner,
-   so that we can merge it in
+5. The PR must pass the Travis build. The Pull Request can be merged in once you have the sign-off of two other developers, or    the repo owner, so that we can merge it in. 
 
 ## Code of Conduct
 

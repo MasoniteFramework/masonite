@@ -65,6 +65,80 @@ Craft commands make up a large part of the workflow for Masonite. Follow these i
 
 This repository is the repository where `craft new project_name` will install from. It takes the zip of the repository, unzips it and renames the folder to the project name. This repository is not directly editable by contributors as it's a pretty static repo that is only updated on josephmancuso/masonite releases. We will take the contents of this repo, strip it down (remove .travis and docs/ stuff) data and leave only the core project.
 
+## Comments
+
+Comments are a vital part of any repository and should be used where needed. It is important not to overcomment something. If you find you need to constantly add comments, you're code may be too complex. Code should be self documenting (with clearly defined variable and method names)
+
+### Types of comments to use
+
+There are 4 main type of comments you should use when developing for Masonite:
+
+#### Module Docstrings
+
+All modules should have a docstring at the top of every module file and should look something like:
+
+```
+''' This is a module to add support for Billing users '''
+from masonite.request import Request
+...
+```
+
+#### Method and Function Docstrings
+
+All methods and functions should also contain a docstring with a brief description of what the module does
+
+For example:
+
+```python
+def some_function(self):
+    ''' This is a function that does x action. Then give an exmaple of when to use it '''
+    ... code ...
+```
+
+#### Code Comments
+
+If you're code MUST be complex enough that future developers will not understand it, add a `#` comment above it
+
+For normal code this will look something like:
+
+```python
+
+# This code performs a complex task that may not be understood later on
+# You can add a second line like this
+complex_code = 'value'
+
+perform_some_complex_task()
+```
+
+If you are using if statements it should look something like:
+
+```python
+if x in y:
+    # This comment should be inside the if statement
+    ... code ...
+else:
+    # this comment should be inside the else statement
+    ... code ...
+```
+
+#### Flagpole Comments
+
+Flag pole comments are a fantastic way to give developers an inside to what is really happening and for now should only be reserved for configuration files. A flag pole comment gets its name from how the comment looks
+
+```
+'''
+|--------------------------------------------------------------------------
+| A Heading of The Setting Being Set
+|--------------------------------------------------------------------------
+|
+| A quick description
+|
+'''
+```
+
+It's important to note that there should have exactly 75 `-` above and below the header and have a trailing `|` at the bottom of the comment.
+
+
 ## Pull Request Process
 
 1. Ensure any changes are well commented and any configuration files that are added have a flagpole comment on the

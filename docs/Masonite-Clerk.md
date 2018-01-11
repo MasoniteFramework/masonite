@@ -11,7 +11,7 @@ First we'll need to install Clerk on our machine. To do this simply run:
 
 #### Adding The Configuration File
 
-Masonite uses the config/payments.py configuration file. Conveniently, Clerk comes with a `publish` command we can use to create this.
+Masonite uses the `config/payment.py` configuration file. Conveniently, Clerk comes with a `publish` command we can use to create this.
 
 #### NOTE: Virtual Environment
 
@@ -122,7 +122,7 @@ That's it! You're all ready to start charging and subscribing users!
 
 ## Subscriptions and Charges
 
-**NOTE: All references to token are stripe tokens which are sent by the request after a form submission.**
+**NOTE: All references to token are stripe tokens which are sent by the request after a form submission. For testing purposes you can use the 'tok_amex' string which will create a test AMEX card we don't have to keep submitting forms**
 
 To charge a user $1. All amounts are in cents. So below we are charging our user 1000 cents (or $10)
 

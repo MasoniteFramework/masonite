@@ -2,3 +2,4 @@ dist
 docs
 masonite.egg-info
 venv
+.vscode

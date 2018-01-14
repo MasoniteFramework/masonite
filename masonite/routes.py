@@ -112,7 +112,6 @@ class BaseHttpRoute(object):
     def run_middleware(self, type_of_middleware):
         ''' type_of_middleware should be a string that contains either 'before' or 'after' '''
 
-        print('ran middleware')
         for arg in self.list_middleware:
             if hasattr(middleware.ROUTE_MIDDLEWARE[arg], type_of_middleware):
                 middleware.ROUTE_MIDDLEWARE[arg](self.request).before()
@@ -148,7 +147,7 @@ class Api():
         ''' Loads the model into the class '''
         if not self.url:
             self.url = '/api/' +model.__name__.lower()
-            print('the route is ' + self.url)
+            print('API Route: ' + self.url)
 
         self.model_obj = model
         return self

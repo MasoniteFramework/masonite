@@ -12,7 +12,7 @@
 '''
 
 HTTP_MIDDLEWARE = [
-    'app.http.middleware.AuthenticationMiddleware.AuthenticationMiddleware'
+    'app.http.middleware.LoadUserMiddleware.LoadUserMiddleware'
 ]
 
 '''
@@ -22,10 +22,14 @@ HTTP_MIDDLEWARE = [
 |
 | Route middleware is middleware that is registered with a name and can
 | be used in the routes/web.py file. This middleware should really be
-| used for middleware on an individual route like a dashboard route
+| used for middleware on an individual route like a dashboard route.
+|
+| The Route Middleware is a dictionary with the key being what is specified
+| in your route/web.py file (in the .middleware() method) and the value is
+| a string with the full module path of the middleware class
 |
 '''
 
 ROUTE_MIDDLEWARE = {
-    'auth':  'app.http.middleware.RouteMiddleware.RouteMiddleware',
+    'auth':  'app.http.middleware.AuthenticationMiddleware.AuthenticationMiddleware',
 }

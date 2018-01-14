@@ -9,12 +9,13 @@ class AuthenticationMiddleware(object):
 
     def before(self):
         ''' Register as a before middleware to be ran before the request '''
-
         self.load_user(self.request)
         return self.request
 
     def after(self):
+        ''' Register as an after middleware to be ran after the request '''
         pass
 
     def load_user(self, request):
+        ''' Load user into the request '''
         request.set_user(Auth(request).user())

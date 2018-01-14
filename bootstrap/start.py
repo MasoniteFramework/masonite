@@ -7,6 +7,7 @@ from masonite.request import Request
 from masonite.routes import Route
 from masonite.storage import Storage
 from config import middleware
+from pydoc import locate
 
 # Load environment variable from .env file
 load_dotenv(find_dotenv())
@@ -71,9 +72,14 @@ def app(environ, start_response):
         if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
 
             # Execute HTTP Before Middleware
+            # for http_middleware in middleware.HTTP_MIDDLEWARE:
+            #     if hasattr(http_middleware, 'before'):
+            #         http_middleware(request).before()
+            
             for http_middleware in middleware.HTTP_MIDDLEWARE:
-                if hasattr(http_middleware, 'before'):
-                    http_middleware(request).before()
+                located_middleware = locate(http_middleware)
+                if hasattr(located_middleware, 'before'):
+                    located_middleware(request).before()
 
             # Show a helper in the terminal of which route has been visited
             print(route.method_type + ' Route: ' + router.url)
@@ -90,10 +96,11 @@ def app(environ, start_response):
             #     request object. This is after middleware and is ran after the request
             route.load_request(request).run_middleware('after')
 
-            # Execute HTTP Before Middleware
+            # Execute HTTP After Middleware
             for http_middleware in middleware.HTTP_MIDDLEWARE:
-                if hasattr(http_middleware, 'after'):
-                    http_middleware(request).after()
+                located_middleware = locate(http_middleware)
+                if hasattr(located_middleware, 'after'):
+                    located_middleware(request).after()
             break
         else:
             data = 'Route not found. Error 404'

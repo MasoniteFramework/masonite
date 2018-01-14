@@ -1,4 +1,4 @@
-from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
+''' Middleware Configuration File '''
 
 '''
 |--------------------------------------------------------------------------
@@ -12,7 +12,7 @@ from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddlewar
 '''
 
 HTTP_MIDDLEWARE = [
-    AuthenticationMiddleware
+    'app.http.middleware.AuthenticationMiddleware.AuthenticationMiddleware'
 ]
 
 '''
@@ -26,8 +26,6 @@ HTTP_MIDDLEWARE = [
 |
 '''
 
-from app.http.middleware.RouteMiddleware import RouteMiddleware
-
 ROUTE_MIDDLEWARE = {
-    'auth': RouteMiddleware
+    'auth':  'app.http.middleware.RouteMiddleware.RouteMiddleware',
 }

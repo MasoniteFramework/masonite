@@ -22,7 +22,7 @@ HTTP_MIDDLEWARE = [
 |
 | Route middleware is middleware that is registered with a name and can
 | be used in the routes/web.py file. This middleware should really be
-| used for middleware on an individual request
+| used for middleware on an individual route like a dashboard route
 |
 '''
 

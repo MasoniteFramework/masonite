@@ -1,7 +1,8 @@
 ''' Module for the Routing System '''
-import json
-import re
 import importlib
+import re
+from pydoc import locate
+
 from config import middleware
 
 class Route():
@@ -112,9 +113,16 @@ class BaseHttpRoute(object):
     def run_middleware(self, type_of_middleware):
         ''' type_of_middleware should be a string that contains either 'before' or 'after' '''
 
+        # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
-            if hasattr(middleware.ROUTE_MIDDLEWARE[arg], type_of_middleware):
-                middleware.ROUTE_MIDDLEWARE[arg](self.request).before()
+
+            # Locate the middleware based on the string specified
+            located_middleware = locate(middleware.ROUTE_MIDDLEWARE[arg])(self.request)
+
+            # If the middleware has the specific type of middleware (before or after)
+            #     then execute that
+            if hasattr(located_middleware, type_of_middleware):
+                getattr(located_middleware, type_of_middleware)()
 
 class Get(BaseHttpRoute):
     ''' Class for specifying GET requests '''
@@ -208,4 +216,3 @@ class Api():
         ''' Exclude columns from the model '''
         self.exclude_list = exclude_list
         return self
-    

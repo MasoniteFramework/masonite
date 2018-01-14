@@ -6,6 +6,8 @@ from dotenv import find_dotenv, load_dotenv
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.storage import Storage
+from config import middleware
+from pydoc import locate
 
 # Load environment variable from .env file
 load_dotenv(find_dotenv())
@@ -65,13 +67,40 @@ def app(environ, start_response):
         except AttributeError:
             pass
 
-
         # If the route url matches the regex and the method type and the route can continue
         #     (will be used with middleware later)
         if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
+
+            # Execute HTTP Before Middleware
+            # for http_middleware in middleware.HTTP_MIDDLEWARE:
+            #     if hasattr(http_middleware, 'before'):
+            #         http_middleware(request).before()
+            
+            for http_middleware in middleware.HTTP_MIDDLEWARE:
+                located_middleware = locate(http_middleware)
+                if hasattr(located_middleware, 'before'):
+                    located_middleware(request).before()
+
             # Show a helper in the terminal of which route has been visited
             print(route.method_type + ' Route: ' + router.url)
+
+            # Loads the request in so the middleware specified is able to use the
+            #     request object. This is before middleware and is ran before the request
+            route.load_request(request).run_middleware('before')
+
+            # Get the data from the route. This data is typically the output
+            #     of the controller method
             data = router.get(route.route, route.output(request))
+
+            # Loads the request in so the middleware specified is able to use the
+            #     request object. This is after middleware and is ran after the request
+            route.load_request(request).run_middleware('after')
+
+            # Execute HTTP After Middleware
+            for http_middleware in middleware.HTTP_MIDDLEWARE:
+                located_middleware = locate(http_middleware)
+                if hasattr(located_middleware, 'after'):
+                    located_middleware(request).after()
             break
         else:
             data = 'Route not found. Error 404'

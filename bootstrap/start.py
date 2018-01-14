@@ -73,7 +73,7 @@ def app(environ, start_response):
             # Execute HTTP Before Middleware
             for http_middleware in middleware.HTTP_MIDDLEWARE:
                 if hasattr(http_middleware, 'before'):
-                    http_middleware().before(request)
+                    http_middleware(request).before()
 
             # Show a helper in the terminal of which route has been visited
             print(route.method_type + ' Route: ' + router.url)
@@ -93,7 +93,7 @@ def app(environ, start_response):
             # Execute HTTP Before Middleware
             for http_middleware in middleware.HTTP_MIDDLEWARE:
                 if hasattr(http_middleware, 'after'):
-                    http_middleware().after(request)
+                    http_middleware(request).after()
             break
         else:
             data = 'Route not found. Error 404'

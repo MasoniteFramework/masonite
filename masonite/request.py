@@ -22,6 +22,7 @@ class Request(object):
         self.url_params = None
         self.redirect_url = False
         self.redirect_route = False
+        self.user_model = None
 
     def input(self, param):
         ''' Returns either the FORM_PARAMS during a POST request
@@ -75,6 +76,15 @@ class Request(object):
                 return grab_cookie[provided_cookie].value
 
         return None
+
+    def set_user(self, user_model):
+        ''' Loads the user into the class '''
+        self.user_model = user_model
+        return self
+
+    def user(self):
+        ''' Retreives the user model '''
+        return self.user_model
 
     def redirect(self, route):
         ''' Redirect the user based on the route specified '''

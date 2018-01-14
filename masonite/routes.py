@@ -1,7 +1,9 @@
 ''' Module for the Routing System '''
-import json
-import re
 import importlib
+import re
+from pydoc import locate
+
+from config import middleware
 
 class Route():
     ''' Loads the environ '''
@@ -63,70 +65,29 @@ class Route():
 
     def generated_url_list(self):
         return self.url_list
-class Get():
-    ''' Class for specifying GET requests '''
 
-    def __init__(self):
-        self.method_type = 'GET'
-        self.continueroute = True
-        self.output = False
-        self.route_url = None
-        self.named_route = None
-
-    def route(self, route, output):
-        ''' The model route given by the developer.
-            The output parameter is a controller and method
-        '''
-
-        if isinstance(output, str):
-            mod = output.split('@')
-
-            # import the module
-            module = importlib.import_module('app.http.controllers.' + mod[0])
-
-            # get the controller from the module
-            controller = getattr(module, mod[0])
-
-            # get the view from the controller
-            view = getattr(controller(), mod[1])
-            self.output = view
-        else:
-            self.output = output
-
-        self.route_url = route
-        return self
-
-    def middleware(self, middleware):
-        ''' Blocking middleware '''
-        self.continueroute = bool(middleware)
-        return self
-
-    def name(self, name):
-        self.named_route = name
-        return self
-
-class Post():
-    ''' Class for specifying POST requests '''
-
-    def __init__(self):
-        self.method_type = 'POST'
-        self.continueroute = True
-        self.output = False
-        self.route_url = None
-
+class BaseHttpRoute(object):
+    method_type = 'GET'
+    continueroute = True
+    output = False
+    route_url = None
+    request = None
+    named_route = None
+    list_middleware = []
+    
     def route(self, route, output):
         ''' Loads the route into the class '''
 
         if isinstance(output, str):
             mod = output.split('@')
 
-            # import the module
+            # Import the module
             module = importlib.import_module('app.http.controllers.' + mod[0])
 
-            # get the controller from the module
+            # Get the controller from the module
             controller = getattr(module, mod[0])
 
-            # get the view from the controller
+            # Get the view from the controller
             view = getattr(controller(), mod[1])
             self.output = view
         else:
@@ -134,10 +95,46 @@ class Post():
         self.route_url = route
         return self
 
-    def middleware(self, middleware):
-        ''' Blocking middleware '''
-        self.continueroute = bool(middleware)
+    def name(self, name):
+        ''' Specifies the name of the route '''
+        self.named_route = name
         return self
+
+    def load_request(self, request):
+        ''' Load the request into this class '''
+        self.request = request
+        return self
+
+    def middleware(self, *args):
+        ''' Loads a list of middleware to run '''
+        self.list_middleware = args
+        return self
+
+    def run_middleware(self, type_of_middleware):
+        ''' type_of_middleware should be a string that contains either 'before' or 'after' '''
+
+        # Get the list of middleware to run for a route.
+        for arg in self.list_middleware:
+
+            # Locate the middleware based on the string specified
+            located_middleware = locate(middleware.ROUTE_MIDDLEWARE[arg])(self.request)
+
+            # If the middleware has the specific type of middleware (before or after)
+            #     then execute that
+            if hasattr(located_middleware, type_of_middleware):
+                getattr(located_middleware, type_of_middleware)()
+
+class Get(BaseHttpRoute):
+    ''' Class for specifying GET requests '''
+
+    def __init__(self):
+        self.method_type = 'GET'
+
+class Post(BaseHttpRoute):
+    ''' Class for specifying POST requests '''
+
+    def __init__(self):
+        self.method_type = 'POST'
 
 class Api():
     ''' API class docstring '''
@@ -158,7 +155,7 @@ class Api():
         ''' Loads the model into the class '''
         if not self.url:
             self.url = '/api/' +model.__name__.lower()
-            print('the route is ' + self.url)
+            print('API Route: ' + self.url)
 
         self.model_obj = model
         return self

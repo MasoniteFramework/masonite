@@ -142,7 +142,7 @@ class Api():
         self.method_type = 'POST'
         self.continueroute = True
         self.url = False
-        self.exclude_list = False
+        self.exclude_list = []
         self.output = False
         self.model_obj = None
 

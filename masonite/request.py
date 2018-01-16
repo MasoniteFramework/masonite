@@ -96,6 +96,11 @@ class Request(object):
         self.redirect_route = route
         return self
 
+    def back(self, input_parameter='back'):
+        ''' Go to a named route with the back parameter '''
+        self.redirectTo(self.input(input_parameter))
+        return self
+
     def compile_route_to_url(self):
         ''' Compile the route url into a usable url
             Converts /url/@id into /url/1. Used for redirection

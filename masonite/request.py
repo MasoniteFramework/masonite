@@ -109,7 +109,7 @@ class Request(object):
 
         # Iterate over the list
         for url in split_url:
-            
+
             # if the url contains a parameter variable like @id:int
             if '@' in url:
                 url = url.replace('@', '').replace(':int', '').replace(':string', '')
@@ -121,6 +121,5 @@ class Request(object):
 
     def send(self, params):
         ''' With '''
-        print('send url params')
         self.set_params(params)
         return self

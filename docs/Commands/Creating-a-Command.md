@@ -2,6 +2,8 @@
 
 Creating a command is quite simple with Masonite and allows other developers to use your package in the command line similiar to a `craft` command by running `craft-vendor`. In this documentation we'll talk about how to create a package that can expand the `craft` tool by using `craft-vendor` which comes with the `masonite-cli` package.
 
+**The `craft-vendor` command is added in the `masonite-cli >= v0.30.2`**
+
 ### Virtual Environments
 
 It's important to note that `craft-vendor` does not have access to your virtual environment by default, only your system packages. What we can do is add our virtual environment's `site_packages` directory to our `config/packages.py` config file which should look something like:

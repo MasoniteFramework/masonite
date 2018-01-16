@@ -145,7 +145,7 @@ def app(environ, start_response):
     else:
         # Redirection. In order to redirect the response types need to be 302 instead of 200
         start_response("302 OK", [
-            ('Location', request.redirect_url)
+            ('Location', request.compile_route_to_url())
         ] + request.get_cookies())
 
     # This will output the data to the browser.

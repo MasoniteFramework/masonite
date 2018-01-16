@@ -89,9 +89,38 @@ class Request(object):
     def redirect(self, route):
         ''' Redirect the user based on the route specified '''
         self.redirect_url = route
-        return 'redirecting ...'
+        return self
 
     def redirectTo(self, route):
         ''' Redirect to a named route '''
         self.redirect_route = route
-        return 'redirecting ...'
+        return self
+
+    def compile_route_to_url(self):
+        ''' Compile the route url into a usable url
+            Converts /url/@id into /url/1. Used for redirection
+        '''
+
+        # Split the url into a list
+        split_url = self.redirect_url.split('/')
+
+        # Start beginning of the new compiled url
+        compiled_url = '/'
+
+        # Iterate over the list
+        for url in split_url:
+            
+            # if the url contains a parameter variable like @id:int
+            if '@' in url:
+                url = url.replace('@', '').replace(':int', '').replace(':string', '')
+                compiled_url += '/' + str(self.param(url))
+            else:
+                compiled_url += url
+
+        return compiled_url
+
+    def send(self, params):
+        ''' With '''
+        print('send url params')
+        self.set_params(params)
+        return self

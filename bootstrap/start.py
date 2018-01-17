@@ -135,7 +135,6 @@ def app(environ, start_response):
                 request.redirect_url = route.route_url
 
     # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
-    data = bytes(data, 'utf-8')
 
     if not request.redirect_url:
         # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
@@ -148,7 +147,6 @@ def app(environ, start_response):
         ] + request.get_cookies())
     else:
         data = bytes('redirecting ..', 'utf-8')
-        
         # Redirection. In order to redirect the response types need to be 302 instead of 200
         start_response("302 OK", [
             ('Location', request.compile_route_to_url())

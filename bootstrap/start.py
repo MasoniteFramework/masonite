@@ -134,8 +134,6 @@ def app(environ, start_response):
                 data = router.get(route.route, route.output(request))
                 request.redirect_url = route.route_url
 
-    # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
-
     if not request.redirect_url:
         # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
         data = bytes(data, 'utf-8')

@@ -90,7 +90,8 @@ def app(environ, start_response):
 
             # Get the data from the route. This data is typically the output
             #     of the controller method
-            data = router.get(route.route, route.output(request))
+            if not request.redirect_url:
+                data = router.get(route.route, route.output(request))
 
             # Loads the request in so the middleware specified is able to use the
             #     request object. This is after middleware and is ran after the request
@@ -133,19 +134,20 @@ def app(environ, start_response):
                 data = router.get(route.route, route.output(request))
                 request.redirect_url = route.route_url
 
-    # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
-    data = bytes(data, 'utf-8')
-
     if not request.redirect_url:
+        # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
+        data = bytes(data, 'utf-8')
+
         # Normal HTTP response.
         start_response("200 OK", [
             ("Content-Type", "text/html; charset=utf-8"),
             ("Content-Length", str(len(data)))
         ] + request.get_cookies())
     else:
+        data = bytes('redirecting ..', 'utf-8')
         # Redirection. In order to redirect the response types need to be 302 instead of 200
         start_response("302 OK", [
-            ('Location', request.redirect_url)
+            ('Location', request.compile_route_to_url())
         ] + request.get_cookies())
 
     # This will output the data to the browser.

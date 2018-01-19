@@ -35,6 +35,14 @@ Go to `http://127.0.0.1:8000/`
 
 Please read the CONTRIBUTING file in this repo and then please post or view open issues. Development will be on the current releasing branch so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
 
+## Official Packages
+
+Masonite also has optional packages that extend the functionality of the framework. It's very easy to make packages that integrate solely and perfectly with Masonite. Documenting on how to create packages can be [Found Here](https://github.com/josephmancuso/masonite/blob/master/docs/Creating-Packages.md). Official pacakges include:
+
+* [Masonite Clerk](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-Clerk.md) - Adds stripe charging, customer creation and subscriptions to your Masonite models.
+* [Masonite Triggers](https://github.com/josephmancuso/masonite-triggers) - Adds a way to register classes in a configuration file and then call it in anywhere with a `trigger` function. This is great for registering a class for sending a welcome email and then triggering it in your controllers
+* [Masonite AuthHub](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-AuthHub.md) - Add OAuth support for authenticating users with third party providers like GitHub.
+
 ## License
 
 The Masonite framework is open-sourced software licensed under the MIT license. 

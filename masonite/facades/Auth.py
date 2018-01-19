@@ -2,6 +2,7 @@
 import uuid
 
 from config import auth
+import bcrypt
 
 class Auth(object):
     ''' This class will be used to authenticate users based on the config/auth.py file '''
@@ -27,15 +28,15 @@ class Auth(object):
         ''' Login the user based on the parameters provided '''
         auth_column = auth.AUTH['model'].__auth__
         try:
-            model = auth.AUTH['model'].where(auth_column, name).where('password', password).first()
-            
-            if model:
+            model = auth.AUTH['model'].where(auth_column, name).first()
+
+            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(model.password, 'utf-8')):
                 remember_token = str(uuid.uuid4())
                 model.remember_token = remember_token
                 model.save()
                 self.request.cookie('token', remember_token)
                 return model
-                
+
         except Exception as exception:
             raise exception
 

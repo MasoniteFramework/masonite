@@ -14,15 +14,15 @@ class Request(object):
         as a request paramter
     '''
     def __init__(self, environ):
-        self.method = environ['REQUEST_METHOD']
-        self.path = environ['PATH_INFO']
         self.cookies = []
-        self.environ = environ
-        self.params = parse_qs(environ['QUERY_STRING'])
         self.url_params = None
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
+        self.environ = environ
+        self.params = parse_qs(environ['QUERY_STRING'])
+        self.method = environ['REQUEST_METHOD']
+        self.path = environ['PATH_INFO']
 
     def input(self, param):
         ''' Returns either the FORM_PARAMS during a POST request
@@ -105,6 +105,9 @@ class Request(object):
         ''' Compile the route url into a usable url
             Converts /url/@id into /url/1. Used for redirection
         '''
+
+        if 'http' in self.redirect_url:
+            return self.redirect_url
 
         # Split the url into a list
         split_url = self.redirect_url.split('/')

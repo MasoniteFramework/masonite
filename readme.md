@@ -1,9 +1,5 @@
 # Masonite
-
-## The Framework For Web Crafters
 <img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> <img src="https://img.shields.io/github/issues/josephmancuso/masonite.svg" alt="Issues"> [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
-
-## Documentation: [Found Here](https://josephmancuso.gitbooks.io/masonite/content/)
 
 ## About Masonite
 
@@ -17,7 +13,7 @@ Masonite is a Python web application framework that strives for elegant and beau
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](http://masonite.docsforcode.com) and would be wise to go through the tutorials there.
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there.
 
 ## Installation:
 

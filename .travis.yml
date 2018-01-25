@@ -8,6 +8,6 @@ python:
 # command to install dependencies
 install:
   - pip install masonite-cli
-  - sudo apt-get install libffi
+  - sudo apt-get install python-dev
   - craft install
 script: python -m pytest

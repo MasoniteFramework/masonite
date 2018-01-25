@@ -21,7 +21,6 @@ def app(environ, start_response):
     os.environ.setdefault('REQUEST_METHOD', environ['REQUEST_METHOD'])
     os.environ.setdefault('URI_PATH', environ['PATH_INFO'])
 
-
     router = Route(environ)
 
     if router.is_post():
@@ -72,10 +71,6 @@ def app(environ, start_response):
         if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
 
             # Execute HTTP Before Middleware
-            # for http_middleware in middleware.HTTP_MIDDLEWARE:
-            #     if hasattr(http_middleware, 'before'):
-            #         http_middleware(request).before()
-            
             for http_middleware in middleware.HTTP_MIDDLEWARE:
                 located_middleware = locate(http_middleware)
                 if hasattr(located_middleware, 'before'):

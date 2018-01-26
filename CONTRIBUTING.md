@@ -33,32 +33,32 @@ This repo is simple and will be able to be installed following the installation 
     * `git push origin change-default-orm`
 * Open a pull request and follow the PR process below
 
-### Editing the masonite-core repository 
+### Editing the masonite core repository 
 
 The trick to this is that we need it to be pip installed and then quickly editable until we like it, and then pushed back to the repo for a PR. Do this only if you want to make changes to the core masonite package
 
 To do this just:
 
-* Fork the josephmancuso/masonite-core repo,
+* Fork the MasoniteFramework/core repo,
 * Clone that repo into your computer:
-    * `git clone your-username/masonite-core`
+    * `git clone your-username/core`
 * Activate your masonite virtual environment (optional)
     * Go to where you installed masonite and activate the environment
-* While inside the virtual environment, cd into the directory you installed masonite-core
-* Run `pip install --editable .` from inside the masonite-core directory. This will install masonite as a pip package but also keep a reference to the folder so you can make changes freely to masonite-core while not having to worry about continuously reinstalling it.
+* While inside the virtual environment, cd into the directory you installed core
+* Run `pip install --editable .` from inside the masonite-core directory. This will install masonite as a pip package but also keep a reference to the folder so you can make changes freely to core while not having to worry about continuously reinstalling it.
 * Any changes you make to this package just push it to your feature branch on your fork and follow the PR process below.
 
-### Editing the masonite-cli repository (`craft` commands)
+### Editing the cli repository (`craft` commands)
 
 Craft commands make up a large part of the workflow for Masonite. Follow these instructions to get the masonite-cli package on your computer and editable.
 
-* Fork the josephmancuso/masonite-cli repo,
+* Fork the MasoniteFramework/cli repo,
 * Clone that repo into your computer:
-    * `git clone your-username/masonite-cli`
+    * `git clone your-username/cli`
 * Activate your masonite virtual environment (optional)
     * Go to where you installed masonite and activate the environment
-* While inside the virtual environment, cd into the directory you installed masonite-cli
-* Run `pip install --editable .` from inside the masonite-cli directory. This will install masonite-cli (which contains the craft commands) as a pip package but also keep a reference to the folder so you can make changes freely to craft commands while not having to worry about continuously reinstalling it.
+* While inside the virtual environment, cd into the directory you installed cli
+* Run `pip install --editable .` from inside the masonite-cli directory. This will install cli (which contains the craft commands) as a pip package but also keep a reference to the folder so you can make changes freely to craft commands while not having to worry about continuously reinstalling it.
 * Any changes you make to this package just push it to your feature branch on your fork and follow the PR process below.
 
 ## Editing the josephmancuso/masonite-starter repository

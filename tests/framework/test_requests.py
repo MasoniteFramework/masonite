@@ -60,10 +60,10 @@ def test_request_gets_cookies():
     assert REQUEST.get_cookie('setcookie') == 'value'
     assert REQUEST.get_cookie('nocookie') == None
 
-def test_redirect_returns_string():
-    assert isinstance(REQUEST.redirect('newrurl'), str)
-    assert REQUEST.redirect_url == 'newrurl'
+def test_redirect_returns_request():
+    assert REQUEST.redirect('newurl') == REQUEST
+    assert REQUEST.redirect_url == 'newurl'
 
 def test_redirectTo_returns_string():
-    assert isinstance(REQUEST.redirectTo('newroute'), str)
+    assert REQUEST.redirectTo('newroute') == REQUEST
     assert REQUEST.redirect_route == 'newroute'

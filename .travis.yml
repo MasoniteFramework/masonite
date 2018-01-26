@@ -9,3 +9,7 @@ install:
   - pip install masonite-cli
   - craft install
 script: python -m pytest
+
+matrix:
+  allow_failures:
+    - python: 3.7-dev

@@ -1,5 +1,14 @@
-# Masonite
-<img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> <img src="https://img.shields.io/github/issues/josephmancuso/masonite.svg" alt="Issues"> [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
+
+<p align="center">
+<img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
+</p>
+
+<p align="center">
+
+<img src="https://travis-ci.org/josephmancuso/masonite.svg?branch=master">
+<img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> 
+
+</p>
 
 ## About Masonite
 
@@ -7,13 +16,13 @@ Masonite is a Python web application framework that strives for elegant and beau
 
 * Having a simple routing engine
 * An extremely powerful command line helper called `craft` commands
-* A single `craft deploy` command to deploy your web applications
 * A simple migration system, removing the "magic" and finger crossing of migrations
-* A great filesystem architecture for navigating and expanding your projec.
+* A great Active Record style ORM called Orator
+* A great filesystem architecture for navigating and expanding your project.
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there.
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
 ## Installation:
 
@@ -36,7 +45,7 @@ Please read the CONTRIBUTING file in this repo and then please post or view open
 Masonite also has optional packages that extend the functionality of the framework. It's very easy to make packages that integrate solely and perfectly with Masonite. Documentation on how to create packages can be [Found Here](https://github.com/josephmancuso/masonite/blob/master/docs/Creating-Packages.md). Official packages include:
 
 * [Masonite Clerk](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-Clerk.md) - Adds stripe charging, customer creation and subscriptions to your models.
-* [Masonite Triggers](https://github.com/josephmancuso/masonite-triggers) - Adds a way to register classes in a configuration file and then call it in anywhere with a `trigger` function. This is great for registering a class for sending a welcome email and then triggering it in your controllers
+* [Masonite Triggers](https://github.com/MasoniteFramework/masonite-triggers) - Adds a way to register classes in a configuration file and then call it in anywhere with a `trigger` function. This is great for registering a class for sending a welcome email and then triggering it in your controllers
 * [Masonite AuthHub](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-AuthHub.md) - Add OAuth support for authenticating users with third party providers like GitHub.
 
 ## License

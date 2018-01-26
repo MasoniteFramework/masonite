@@ -72,6 +72,12 @@ def test_validator_check_matches_without_request():
     email_validator.validate({'id': [Required, Pattern(r'\d+')]})
     assert email_validator.check({'id': '4'}) is True
 
+def test_validator_errors_returns_false():
+    email_validator = Validator()
+    email_validator.validate({'id': [Required, Pattern(r'\d+')]})
+    assert email_validator.check({'id': '4'}) is True
+    assert email_validator.errors() is None
+
 def test_custom_error_message():
     email_validator = Validator()
     email_validator.validate({'id': [Required], 'username': [Required]})

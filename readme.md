@@ -1,13 +1,15 @@
-<div style="text-align:center">
-<img src="https://lh3.googleusercontent.com/M78mPGyhJxVspj6aP_rlF4VlFcMmI8tzsgCxO7S-UqtimlF5Ldr1cHn7SLvkMcknDVFMYqu-wbCPRuECGn7zOUKnbieM4wQqnQyPvU2C48vYH26gtuU1gf363DnVHl2ceZGejt9XI4ZmitOFO1NW80-t56IcIzEWSkX_BoyMCc-3JitQKjcharHGKhaoOJDrayLd1RSmlKGTNNWGX-ESNbPnBrKyX5VW8rExFXVRF5oPim19-1WutRqXwevFz-ia8SgHUEyJqGMx-OmRoVIOwNnckAxLzPPwL6llujfjnnekAvJrgKLM4B__8O0Dc8Tz508skvsWz0o-AZtyZMowrBcV4k7Kri1TSEeN_T9UxmJC2fg819mjtWe0ZDqyg3e9sZC9xUP1JmFCHzllUmbiaa6hJmWoVyNj8Wk3p_ZOX4QlqzB1ys_jzOGfMbw8zNFyY2Ea3nAVS57fkRh79wNkqYM5uU9Z0T77QR6m5wsx6GjR5IuUolPsWBvBkjg9i87uZe6gX3Ru0H0DrhFzs9mxZ6wIs13312X-wbzl8pzm1dvT9zPnnmZ6fW1EKUxxWNBORBSmH_1NLCSEtNT6Qxy8n36QCVYYe4qUZdq25kxUxNhdNEl5q8DR2DGi9cwkb1qBn9J_iFsaaggRXVDTEGJ8mI5BGpGgBlfp=s648-no" width="64px">
+<p align="center">
+<img src="https://lh3.googleusercontent.com/EIteMlqzzc0ydpLMsBPshbGkud80_HrOpnFGv6Y1VhIHV2icIdu3NjFvBl5cBKHDRsfEfhHNpDaiLPI0Jf6tREdGkIZXXUX7cvAkLvY0BMUWxp1sOKS63i-hAW8z05-86EhyYbL_p-ri7WLj9iZhAbasAwojF1AZMFi31g8meHJy0zujBACQ6buKxGr-yeYftrkC6Qdno6S_kv-5_5kJL5LHkZquJpvRPHp54NnXtHaYfz1TgnmDxHNdVNjRqtQWXFIUcN4mcrNtOcSHOwy4dCLj6x_EEdXrUBGCnNRSUo0PgU-bNBD-eK60nfuJBz_B_voEFHQaKJWTP_1Qobx-RpmMNZl6ZfrIfz9XD9BDes23F1LymCKbjcRKkVAnifyeWSYYb-cEV1RUQ1-S5oM7lgLTabbpeVM-539lXL6uEV4ewlZoQVsSG0qULqLlkekth1sZbK7OhUiFDBVRB7UGq6DsrFlqwmGuJss-nSgwfT9nrzZNFEktAuOoc83cMzADEufDQ4qtl8fTCk6_klYiqOXCy1TUyLrEe0jF1B9EK-NifSgrkYrowIUDFYcJ-3uN9FDSdxqL1scFpi7CijEAi8wiQfUq4j3iok_a6ZA=w631-h648-no" width="160px"> 
+</p>
 
-# Masonite
+<p align="center">
 
 [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
 <img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License">
 
+</p>
+
 ## Documentation: [Found Here](https://josephmancuso.gitbooks.io/masonite/content/)
-</div>
 
 ## About Masonite
 

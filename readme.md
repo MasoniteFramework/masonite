@@ -1,3 +1,4 @@
+
 <p align="center">
 <img src="https://lh3.googleusercontent.com/EIteMlqzzc0ydpLMsBPshbGkud80_HrOpnFGv6Y1VhIHV2icIdu3NjFvBl5cBKHDRsfEfhHNpDaiLPI0Jf6tREdGkIZXXUX7cvAkLvY0BMUWxp1sOKS63i-hAW8z05-86EhyYbL_p-ri7WLj9iZhAbasAwojF1AZMFi31g8meHJy0zujBACQ6buKxGr-yeYftrkC6Qdno6S_kv-5_5kJL5LHkZquJpvRPHp54NnXtHaYfz1TgnmDxHNdVNjRqtQWXFIUcN4mcrNtOcSHOwy4dCLj6x_EEdXrUBGCnNRSUo0PgU-bNBD-eK60nfuJBz_B_voEFHQaKJWTP_1Qobx-RpmMNZl6ZfrIfz9XD9BDes23F1LymCKbjcRKkVAnifyeWSYYb-cEV1RUQ1-S5oM7lgLTabbpeVM-539lXL6uEV4ewlZoQVsSG0qULqLlkekth1sZbK7OhUiFDBVRB7UGq6DsrFlqwmGuJss-nSgwfT9nrzZNFEktAuOoc83cMzADEufDQ4qtl8fTCk6_klYiqOXCy1TUyLrEe0jF1B9EK-NifSgrkYrowIUDFYcJ-3uN9FDSdxqL1scFpi7CijEAi8wiQfUq4j3iok_a6ZA=w631-h648-no" width="160px"> 
 </p>
@@ -8,8 +9,6 @@
 <img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> 
 
 </p>
-
-## Documentation: [Found Here](https://josephmancuso.gitbooks.io/masonite/content/)
 
 ## About Masonite
 
@@ -23,7 +22,7 @@ Masonite is a Python web application framework that strives for elegant and beau
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](http://masonite.docsforcode.com) and would be wise to go through the tutorials there.
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there.
 
 ## Installation:
 

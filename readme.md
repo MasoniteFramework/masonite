@@ -45,7 +45,7 @@ Please read the CONTRIBUTING file in this repo and then please post or view open
 Masonite also has optional packages that extend the functionality of the framework. It's very easy to make packages that integrate solely and perfectly with Masonite. Documentation on how to create packages can be [Found Here](https://github.com/josephmancuso/masonite/blob/master/docs/Creating-Packages.md). Official packages include:
 
 * [Masonite Clerk](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-Clerk.md) - Adds stripe charging, customer creation and subscriptions to your models.
-* [Masonite Triggers](https://github.com/josephmancuso/masonite-triggers) - Adds a way to register classes in a configuration file and then call it in anywhere with a `trigger` function. This is great for registering a class for sending a welcome email and then triggering it in your controllers
+* [Masonite Triggers](https://github.com/MasoniteFramework/masonite-triggers) - Adds a way to register classes in a configuration file and then call it in anywhere with a `trigger` function. This is great for registering a class for sending a welcome email and then triggering it in your controllers
 * [Masonite AuthHub](https://github.com/josephmancuso/masonite/blob/master/docs/Masonite-AuthHub.md) - Add OAuth support for authenticating users with third party providers like GitHub.
 
 ## License

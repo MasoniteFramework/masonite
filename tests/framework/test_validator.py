@@ -1,6 +1,6 @@
 from masonite.request import Request
 from masonite.validator import Validator
-from validator import Pattern, Required, validate
+from validator import Pattern, Required, validate, Length
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -97,3 +97,7 @@ def test_custom_error_messages_missing_one():
     assert email_validator.check({'username': '5'}) is False
     assert email_validator.errors()['id'] == 'must be present'
 
+def test_validator_length():
+    email_validator = Validator()
+    email_validator.validate({'id': [Length(0, maximum=2)]})
+    assert email_validator.check({'id': [1,2,3,4,5]}) is False

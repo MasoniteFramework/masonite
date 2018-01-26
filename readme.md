@@ -18,11 +18,11 @@ Masonite is a Python web application framework that strives for elegant and beau
 * An extremely powerful command line helper called `craft` commands
 * A simple migration system, removing the "magic" and finger crossing of migrations
 * A great Active Record style ORM called Orator
-* A great filesystem architecture for navigating and expanding your projec.
+* A great filesystem architecture for navigating and expanding your project.
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there.
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
 ## Installation:
 

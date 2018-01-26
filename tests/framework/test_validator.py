@@ -9,7 +9,7 @@ wsgi_request = {
     'wsgi.run_once': False,
     'SERVER_SOFTWARE': 'gunicorn/19.7.1',
     'REQUEST_METHOD': 'GET',
-    'QUERY_STRING': 'id=2',
+    'QUERY_STRING': 'id=1',
     'RAW_URI': '/',
     'SERVER_PROTOCOL': 'HTTP/1.1',
     'HTTP_HOST': '127.0.0.1:8000',
@@ -54,3 +54,40 @@ def test_validator_check_matches():
     email_validator = Validator(REQUEST)
     email_validator.validate({'id': [Required, Pattern(r'\d+')]})
     assert email_validator.check() is True
+
+def test_validator_error():
+    email_validator = Validator(REQUEST)
+    email_validator.validate({'username': [Required]})
+    assert email_validator.check() is False
+    assert email_validator.errors()['username'] == 'must be present'
+
+def test_validator_error_without_request():
+    email_validator = Validator()
+    email_validator.validate({'username': [Required]})
+    assert email_validator.check({'id': 5}) is False
+    assert email_validator.errors()['username'] == 'must be present'
+
+def test_validator_check_matches_without_request():
+    email_validator = Validator()
+    email_validator.validate({'id': [Required, Pattern(r'\d+')]})
+    assert email_validator.check({'id': '4'}) is True
+
+def test_custom_error_message():
+    email_validator = Validator()
+    email_validator.validate({'id': [Required], 'username': [Required]})
+    email_validator.messages({'id': 'change your id', 'username': 'dont forget your username'})
+
+    assert email_validator.check({'tomato': 'true'}) is False
+    assert email_validator.errors()['id'] == 'change your id'
+    assert email_validator.errors()['username'] == 'dont forget your username'
+
+def test_custom_error_messages_missing_one():
+    email_validator = Validator()
+    email_validator.validate({'id': [Required]})
+
+    email_validator.messages(
+        {'username': 'dont forget your username'})
+
+    assert email_validator.check({'username': '5'}) is False
+    assert email_validator.errors()['id'] == 'must be present'
+

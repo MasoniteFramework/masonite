@@ -1,9 +1,13 @@
+<div style="text-align:center">
+<img src="https://lh3.googleusercontent.com/M78mPGyhJxVspj6aP_rlF4VlFcMmI8tzsgCxO7S-UqtimlF5Ldr1cHn7SLvkMcknDVFMYqu-wbCPRuECGn7zOUKnbieM4wQqnQyPvU2C48vYH26gtuU1gf363DnVHl2ceZGejt9XI4ZmitOFO1NW80-t56IcIzEWSkX_BoyMCc-3JitQKjcharHGKhaoOJDrayLd1RSmlKGTNNWGX-ESNbPnBrKyX5VW8rExFXVRF5oPim19-1WutRqXwevFz-ia8SgHUEyJqGMx-OmRoVIOwNnckAxLzPPwL6llujfjnnekAvJrgKLM4B__8O0Dc8Tz508skvsWz0o-AZtyZMowrBcV4k7Kri1TSEeN_T9UxmJC2fg819mjtWe0ZDqyg3e9sZC9xUP1JmFCHzllUmbiaa6hJmWoVyNj8Wk3p_ZOX4QlqzB1ys_jzOGfMbw8zNFyY2Ea3nAVS57fkRh79wNkqYM5uU9Z0T77QR6m5wsx6GjR5IuUolPsWBvBkjg9i87uZe6gX3Ru0H0DrhFzs9mxZ6wIs13312X-wbzl8pzm1dvT9zPnnmZ6fW1EKUxxWNBORBSmH_1NLCSEtNT6Qxy8n36QCVYYe4qUZdq25kxUxNhdNEl5q8DR2DGi9cwkb1qBn9J_iFsaaggRXVDTEGJ8mI5BGpGgBlfp=s648-no" width="64px">
+
 # Masonite
 
-## The Framework For Web Crafters
-<img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> <img src="https://img.shields.io/github/issues/josephmancuso/masonite.svg" alt="Issues"> [![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
+[![Build Status](https://travis-ci.org/josephmancuso/masonite.svg?branch=master)](https://travis-ci.org/josephmancuso/masonite)
+<img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> [![Join the chat at https://gitter.im/masonite-framework/Lobby](https://badges.gitter.im/masonite-framework/Lobby.svg)](https://gitter.im/masonite-framework/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License">
 
 ## Documentation: [Found Here](https://josephmancuso.gitbooks.io/masonite/content/)
+</div>
 
 ## About Masonite
 
@@ -11,8 +15,8 @@ Masonite is a Python web application framework that strives for elegant and beau
 
 * Having a simple routing engine
 * An extremely powerful command line helper called `craft` commands
-* A single `craft deploy` command to deploy your web applications
 * A simple migration system, removing the "magic" and finger crossing of migrations
+* A great Active Record style ORM called Orator
 * A great filesystem architecture for navigating and expanding your projec.
 
 ## Learning Masonite

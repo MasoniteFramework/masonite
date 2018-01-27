@@ -27,6 +27,20 @@ DEBUG = True
 
 '''
 |--------------------------------------------------------------------------
+| Secret Key
+|--------------------------------------------------------------------------
+|
+| This key is used to encrypt and decrypt various values. Out of the box
+| Masonite uses this key to encrypt and decrypt cookies but you can use
+| it to encrypt and decrypt various values using the Masonite Sign
+| class. Read the documentation on Encryption to find out how.
+|
+'''
+
+KEY = os.environ.get('key')
+
+'''
+|--------------------------------------------------------------------------
 | Application URL
 |--------------------------------------------------------------------------
 |

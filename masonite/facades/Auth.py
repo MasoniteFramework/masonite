@@ -43,5 +43,5 @@ class Auth(object):
         return False
 
     def logout(self):
-        self.request.cookie('token', '; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+        self.request.cookie('token', '; expires=Thu, 01 Jan 1970 00:00:00 GMT', False)
         return self

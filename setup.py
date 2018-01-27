@@ -4,13 +4,13 @@ setup(
     packages=['masonite',
               'masonite.auth',
               'masonite.facades',
-             ],  # this must be the same as the name above
-    version='0.2.9.4',
+             ],
+    version='0.2.10',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4'
     ],
-    description='The core for the Masonite framework',
+    description='The core for the Masonite ',
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
     url='https://github.com/josephmancuso/masonite',  # use the URL to the github repo

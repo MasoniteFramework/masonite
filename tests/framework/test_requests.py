@@ -27,7 +27,8 @@ wsgi_request = {
     'SCRIPT_NAME': ''
 }
 
-REQUEST = Request(wsgi_request)
+REQUEST = Request(wsgi_request).key(
+    'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
 def test_request_is_callable():
     ''' Request should be callable '''
@@ -53,12 +54,12 @@ def test_request_param_returns_parameter_set_or_false():
     assert REQUEST.param('nullvalue') == False
 
 def test_request_appends_cookie():
-    assert REQUEST.cookie('setcookie', 'value') == REQUEST
-    assert REQUEST.cookies == [('Set-Cookie', 'setcookie=value')]
+    assert REQUEST.cookie('appendcookie', 'value') == REQUEST
+    assert 'appendcookie' in REQUEST.environ['HTTP_COOKIE']
 
-def test_request_gets_cookies():
+def test_request_sets_and_gets_cookies():
+    REQUEST.cookie('setcookie', 'value') 
     assert REQUEST.get_cookie('setcookie') == 'value'
-    assert REQUEST.get_cookie('nocookie') == None
 
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST

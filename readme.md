@@ -6,7 +6,7 @@
 <p align="center">
 
 <img src="https://travis-ci.org/josephmancuso/masonite.svg?branch=master">
-<img src="https://img.shields.io/badge/python-3.3+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> 
+<img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/josephmancuso/masonite.svg" alt="License"> 
 
 </p>
 

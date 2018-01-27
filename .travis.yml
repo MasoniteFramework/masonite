@@ -7,8 +7,3 @@ python:
 install:
   - pip install .
 script: python -m pytest
-
-matrix:
-  allowed_failures:
-    - python: "3.3"
-    - python: "3.7-dev"

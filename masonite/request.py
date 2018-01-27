@@ -7,6 +7,7 @@
 '''
 from urllib.parse import parse_qs
 from http import cookies
+from masonite.auth.Sign import Sign
 
 class Request(object):
     ''' Handles many different aspects of a single request.
@@ -23,6 +24,7 @@ class Request(object):
         self.params = parse_qs(environ['QUERY_STRING'])
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
+        self.encryption_key = False
 
     def input(self, param):
         ''' Returns either the FORM_PARAMS during a POST request
@@ -31,6 +33,11 @@ class Request(object):
         if self.has(param):
             return self.params[param][0]
         return False
+
+    def key(self, key):
+        ''' Sets encryption key '''
+        self.encryption_key = key
+        return self
 
     def all(self):
         ''' Returns all the params '''
@@ -59,23 +66,40 @@ class Request(object):
             return self.url_params[parameter]
         return False
 
-    def cookie(self, key, value):
+    def cookie(self, key, value, encrypt = True):
         ''' Sets a cookie in the browser '''
-        self.cookies.append(('Set-Cookie', '{0}={1}'.format(key, value)))
+        if encrypt:
+            value = Sign(self.encryption_key).sign(value)
+        else:
+            value = value
+            
+        self.cookies.append(('Set-Cookie', '{0}={1}; HttpOnly'.format(key, value)))
+        self.append_cookie(key, value)
         return self
 
     def get_cookies(self):
         ''' Retrieve all cookies from the browser '''
         return self.cookies
 
-    def get_cookie(self, provided_cookie):
+    def get_cookie(self, provided_cookie, decrypt=True):
         ''' Retrieves a specific cookie from the browser '''
         if 'HTTP_COOKIE' in self.environ:
             grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
             if provided_cookie in grab_cookie:
+                if decrypt:
+                    return Sign(self.encryption_key).unsign(
+                        grab_cookie[provided_cookie].value)
                 return grab_cookie[provided_cookie].value
 
         return None
+
+    def append_cookie(self, key, value):
+        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
+            self.environ['HTTP_COOKIE'] += ';{0}={1}'.format(
+                key, value)
+        else:
+            self.environ['HTTP_COOKIE'] = '{0}={1}'.format(
+                key, value)
 
     def set_user(self, user_model):
         ''' Loads the user into the class '''

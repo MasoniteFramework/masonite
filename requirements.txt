@@ -1,4 +1,4 @@
-gunicorn==19.7.1
+waitress==1.1.0
 Jinja2==2.10
 python-dotenv==0.7.1
 passlib==1.7.1

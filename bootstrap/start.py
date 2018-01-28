@@ -2,15 +2,17 @@
 import os
 import re
 
+# Load environment variable from .env file
 from dotenv import find_dotenv, load_dotenv
+load_dotenv(find_dotenv())
+
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.storage import Storage
 from config import middleware
 from pydoc import locate
 
-# Load environment variable from .env file
-load_dotenv(find_dotenv())
+
 
 # Run once and only once the server is ran
 # This will not actually compile if the libsass module in not installed

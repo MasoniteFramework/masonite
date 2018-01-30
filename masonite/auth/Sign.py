@@ -20,5 +20,5 @@ class Sign(object):
         f = Fernet(self.key)
 
         if not value:
-            return f.decrypt(bytes(self.encryption, 'utf-8')).decode('utf-8')
+            return f.decrypt(self.encryption).decode('utf-8')
         return f.decrypt(bytes(value, 'utf-8')).decode('utf-8')

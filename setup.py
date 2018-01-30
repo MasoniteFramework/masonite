@@ -8,7 +8,8 @@ setup(
     version='0.2.10.1',
     install_requires=[
         'validator.py==1.2.5',
-        'cryptography==2.1.4'
+        'cryptography==2.1.4',
+        'bcrypt==3.1.4'
     ],
     description='The core for the Masonite ',
     author='Joseph Mancuso',

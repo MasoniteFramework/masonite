@@ -68,3 +68,14 @@ def test_redirect_returns_request():
 def test_redirectTo_returns_request():
     assert REQUEST.redirectTo('newroute') == REQUEST
     assert REQUEST.redirect_route == 'newroute'
+
+def test_request_no_input_returns_false():
+    assert REQUEST.input('notavailable') == False
+
+def test_request_get_cookies_returns_cookies():
+    assert REQUEST.get_cookies() == REQUEST.cookies
+
+def test_request_set_user_sets_object():
+    assert REQUEST.set_user(object) == REQUEST
+    assert REQUEST.user_model == object
+    assert REQUEST.user() == object

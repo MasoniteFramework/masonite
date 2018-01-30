@@ -1,23 +1,28 @@
 ''' Authentication Class '''
 import uuid
 
-from config import auth
 import bcrypt
 
 class Auth(object):
     ''' This class will be used to authenticate users based on the config/auth.py file '''
 
-    def __init__(self, request):
+    def __init__(self, request, auth_model=None):
         self.request = request
+
+        if auth_model:
+            self.auth_model = auth_model
+        else:
+            from config import auth
+            self.auth_model = self.auth_model
 
     def user(self):
         ''' Returns the model specified in the auth.py configuration '''
         try:
             if self.request.get_cookie('token'):
-                return auth.AUTH['model'].where(
+                return self.auth_model.where(
                     'remember_token', self.request.get_cookie('token')
                 ).first()
-            
+
             return False
         except Exception as exception:
             raise exception
@@ -26,9 +31,9 @@ class Auth(object):
 
     def login(self, name, password):
         ''' Login the user based on the parameters provided '''
-        auth_column = auth.AUTH['model'].__auth__
+        auth_column = self.auth_model.__auth__
         try:
-            model = auth.AUTH['model'].where(auth_column, name).first()
+            model = self.auth_model.where(auth_column, name).first()
 
             if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(model.password, 'utf-8')):
                 remember_token = str(uuid.uuid4())

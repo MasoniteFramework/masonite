@@ -3,3 +3,7 @@ docs
 masonite.egg-info
 venv
 .vscode
+htmlcov
+.coverage
+**.pyc
+**.DS_Store

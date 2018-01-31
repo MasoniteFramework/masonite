@@ -15,3 +15,8 @@ def test_unsigning_without_value():
     s = Sign(SECRET_KEY)
     s.sign('value')
     assert s.unsign() == 'value'
+
+def test_sign_without_specifying_key():
+    s = Sign()
+
+    assert s.key == 'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY='

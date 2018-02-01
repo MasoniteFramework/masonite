@@ -23,11 +23,8 @@ class App():
             from classes in the container
         '''
 
-        print('signature:', inspect.signature(obj).parameters)
-
         provider_list = []
         for provider in inspect.signature(obj).parameters:
-            print('parameter', provider)
             if provider is not 'self' and provider not in inspect.getfullargspec(obj)[6]:
                 provider_list.append(self.providers[provider])
 

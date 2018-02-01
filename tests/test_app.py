@@ -1,6 +1,8 @@
 from masonite.app import App
 from masonite.request import Request
+from masonite.routes import Get, Post
 import inspect
+import pytest
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -31,9 +33,12 @@ wsgi_request = {
 
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+print(REQUEST.__class__)
 
-def functest(Request):
+def functest(Request, get: Get, post: Post):
+    print('route_url', get.route_url)
     return Request.cookies
+
 
 def test_app_binds():
     app = App()
@@ -48,7 +53,11 @@ def test_app_makes():
     app.bind('Request', REQUEST)
     assert app.make('Request').cookies == []
 
-def test_random():
+def test_throws_exception_if_too_many_bindings():
     app = App()
+    REQUEST.cookies = ['hey']
     app.bind('Request', REQUEST)
-    assert app.resolve(functest) == []
+    app.bind('Route', Get().route('test/', None))
+    print(inspect.getfullargspec(functest))
+    with pytest.raises(TypeError, message="should raise error"):
+        app.resolve(functest)

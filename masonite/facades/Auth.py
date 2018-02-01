@@ -13,7 +13,7 @@ class Auth(object):
             self.auth_model = auth_model
         else:
             from config import auth
-            self.auth_model = self.auth_model
+            self.auth_model = auth.AUTH['model']
 
     def user(self):
         ''' Returns the model specified in the auth.py configuration '''

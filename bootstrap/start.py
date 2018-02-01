@@ -9,9 +9,9 @@ load_dotenv(find_dotenv())
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.storage import Storage
-from config import middleware
+from masonite.app import App
+from config import middleware, application
 from pydoc import locate
-
 
 
 # Run once and only once the server is ran
@@ -22,6 +22,27 @@ def app(environ, start_response):
     ''' Framework Engine '''
     os.environ.setdefault('REQUEST_METHOD', environ['REQUEST_METHOD'])
     os.environ.setdefault('URI_PATH', environ['PATH_INFO'])
+
+    # Instantiate the Service Container
+    app = App()
+
+    # Instantiate the Request object.
+    # This is the `request` object passed into controller methods
+    request = Request(environ)
+
+    # Bind the Request object into the container
+    app.bind('Request', request)
+
+    # Execute all the register methods in all containers
+    for provider in application.PROVIDERS:
+        locate(provider)().load_app(app).register()
+
+    # Execute all the boot methods in all containers
+    for provider in application.PROVIDERS:
+        app.resolve(locate(provider)().boot)
+
+    # Load the container into the request
+    app.make('Request').load_app(app)
 
     router = Route(environ)
 
@@ -36,10 +57,6 @@ def app(environ, start_response):
     # Get all routes from the routes/web.py file
     import routes.web
     routes = routes.web.ROUTES
-
-    # Instantiate the Request object.
-    # This is the `request` object passed into controller methods
-    request = Request(environ)
 
     # Check all http routes
     for route in routes:
@@ -88,7 +105,7 @@ def app(environ, start_response):
             # Get the data from the route. This data is typically the output
             #     of the controller method
             if not request.redirect_url:
-                data = router.get(route.route, route.output(request))
+                data = router.get(route.route, app.resolve(route.output))
 
             # Loads the request in so the middleware specified is able to use the
             #     request object. This is after middleware and is ran after the request

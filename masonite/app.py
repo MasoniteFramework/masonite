@@ -22,8 +22,12 @@ class App():
         ''' Takes a function or class method and resolves it's parameters
             from classes in the container
         '''
+
+        print('signature:', inspect.signature(obj).parameters)
+
         provider_list = []
-        for provider in inspect.getfullargspec(obj)[0]:
+        for provider in inspect.signature(obj).parameters:
+            print('parameter', provider)
             if provider is not 'self' and provider not in inspect.getfullargspec(obj)[6]:
                 provider_list.append(self.providers[provider])
 
@@ -40,9 +44,10 @@ class App():
         ''' Resolves class annotations (type hinting) parameters.
             Will retrieve by class type.
         '''
-        for name, class_name in inspect.getfullargspec(obj)[6].items():
-            for provider, provider_class in self.providers.items():
-                if class_name.__name__ == provider:
-                    provider_list.append(provider_class)
+        for parameter in inspect.signature(obj).parameters.values():
+            if parameter.annotation:
+                for provider, provider_class in self.providers.items():
+                    if parameter.annotation.__class__.__name__ == provider_class.__class__.__name__:
+                        provider_list.append(provider_class)
 
         return provider_list

@@ -37,7 +37,6 @@ REQUEST = Request(wsgi_request).key(
 def functest(Request, get: Get, post: Post):
     return Request.cookies
 
-
 def test_app_binds():
     app = App()
 

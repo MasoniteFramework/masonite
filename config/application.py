@@ -37,7 +37,7 @@ DEBUG = True
 |
 '''
 
-KEY = os.environ.get('key')
+KEY = os.environ.get('KEY')
 
 '''
 |--------------------------------------------------------------------------
@@ -64,7 +64,9 @@ URL = 'http://localhost'
 |
 '''
 
-PROVIDERS = []
+PROVIDERS = [
+    'app.providers.UserModelProvider.UserModelProvider'
+]
 
 '''
 |--------------------------------------------------------------------------

@@ -28,7 +28,6 @@ class App():
             if provider is not 'self' and provider not in inspect.getfullargspec(obj)[6]:
                 provider_list.append(self.providers[provider])
 
-        
         if inspect.getfullargspec(obj)[6]:
             provider_list = self.resolve_annotations(obj, provider_list)
 
@@ -44,7 +43,7 @@ class App():
         for parameter in inspect.signature(obj).parameters.values():
             if parameter.annotation:
                 for provider, provider_class in self.providers.items():
-                    if parameter.annotation.__class__.__name__ == provider_class.__class__.__name__:
+                    if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class:
                         provider_list.append(provider_class)
 
         return provider_list

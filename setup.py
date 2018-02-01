@@ -5,7 +5,7 @@ setup(
               'masonite.auth',
               'masonite.facades',
              ],
-    version='0.2.10.1',
+    version='0.2.11.1',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',

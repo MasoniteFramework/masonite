@@ -33,10 +33,8 @@ wsgi_request = {
 
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
-print(REQUEST.__class__)
 
 def functest(Request, get: Get, post: Post):
-    print('route_url', get.route_url)
     return Request.cookies
 
 
@@ -58,6 +56,5 @@ def test_throws_exception_if_too_many_bindings():
     REQUEST.cookies = ['hey']
     app.bind('Request', REQUEST)
     app.bind('Route', Get().route('test/', None))
-    print(inspect.getfullargspec(functest))
     with pytest.raises(TypeError, message="should raise error"):
         app.resolve(functest)

@@ -1,4 +1,5 @@
 from masonite.request import Request
+from masonite.app import App
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -79,3 +80,11 @@ def test_request_set_user_sets_object():
     assert REQUEST.set_user(object) == REQUEST
     assert REQUEST.user_model == object
     assert REQUEST.user() == object
+
+def test_request_loads_app():
+    app = App()
+    app.bind('Request', REQUEST)
+    app.make('Request').load_app(app)
+
+    assert REQUEST.app() == app
+    assert app.make('Request').app() == app

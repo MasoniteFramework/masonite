@@ -27,6 +27,7 @@ class App():
             if provider is not 'self' and provider not in inspect.getfullargspec(obj)[6]:
                 provider_list.append(self.providers[provider])
 
+        
         if inspect.getfullargspec(obj)[6]:
             provider_list = self.resolve_annotations(obj, provider_list)
 
@@ -41,8 +42,7 @@ class App():
         '''
         for name, class_name in inspect.getfullargspec(obj)[6].items():
             for provider, provider_class in self.providers.items():
-                if provider_class.__class__.__name__ == class_name.__name__:
+                if class_name.__name__ == provider:
                     provider_list.append(provider_class)
-                    break
 
         return provider_list

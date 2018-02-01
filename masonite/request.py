@@ -25,6 +25,7 @@ class Request(object):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.encryption_key = False
+        self.container = None
 
     def input(self, param):
         ''' Returns either the FORM_PARAMS during a POST request
@@ -43,6 +44,13 @@ class Request(object):
         ''' Returns all the params '''
         return self.params
 
+    def load_app(self, app):
+        self.container = app
+        return self
+
+    def app(self):
+        return self.container
+    
     def has(self, param):
         ''' Check if a param exists '''
         if param in self.params:

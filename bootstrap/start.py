@@ -22,7 +22,7 @@ def app(environ, start_response):
     | Execute All Service Providers
     |--------------------------------------------------------------------------
     |
-    | Run all service providers boot methods if the wsgi attribute is true.
+    | Run all service provider boot methods if the wsgi attribute is true.
     |
     '''
 

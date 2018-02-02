@@ -71,7 +71,7 @@ PROVIDERS = [
     'app.providers.RedirectionProvider.RedirectionProvider',
     'app.providers.StartResponseProvider.StartResponseProvider',
     'app.providers.SassProvider.SassProvider',
-    'app.providers.WhiteNoiseProvider.WhiteNoiseProvider',
+    'app.providers.WhitenoiseProvider.WhitenoiseProvider',
 
     # Third Party Providers
 

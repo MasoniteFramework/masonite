@@ -65,7 +65,9 @@ URL = 'http://localhost'
 '''
 
 PROVIDERS = [
-    'app.providers.UserModelProvider.UserModelProvider'
+    'app.providers.AppProvider.AppProvider',
+    'app.providers.UserModelProvider.UserModelProvider',
+    'app.providers.MiddlewareProvider.MiddlewareProvider'
 ]
 
 '''

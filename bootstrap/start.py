@@ -6,11 +6,9 @@ import re
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
-from masonite.request import Request
-from masonite.routes import Route
 from masonite.storage import Storage
 from masonite.app import App
-from config import middleware, application
+from config import application
 from pydoc import locate
 
 
@@ -20,46 +18,33 @@ Storage().compile_sass()
 
 def app(environ, start_response):
     ''' Framework Engine '''
-    os.environ.setdefault('REQUEST_METHOD', environ['REQUEST_METHOD'])
-    os.environ.setdefault('URI_PATH', environ['PATH_INFO'])
-
     # Instantiate the Service Container
     app = App()
 
-    # Instantiate the Request object.
-    # This is the `request` object passed into controller methods
-    request = Request(environ)
-
-    # Bind the Request object into the container
-    app.bind('Request', request)
-
+    app.bind('Environ', environ)
+    
     # Execute all the register methods in all containers
     for provider in application.PROVIDERS:
         locate(provider)().load_app(app).register()
 
     # Execute all the boot methods in all containers
     for provider in application.PROVIDERS:
-        app.resolve(locate(provider)().boot)
+        app.resolve(locate(provider)().load_app(app).boot)
+    
+    request = app.make('Request')
 
-    # Load the container into the request
-    app.make('Request').load_app(app)
-
-    router = Route(environ)
+    router = app.make('Route')
 
     if router.is_post():
         # Set POST parameters given into the query string to centralize parsing and retrieval.
         # This was made to directly support the Request.input() method.
         # There is no known reason to differentiate between GET and POST when retrieving
-        #    form paramters. This line below simply puts both POST form params in the
+        #    form parameters. This line below simply puts both POST form params in the
         #    same query_string as GET params.
         environ['QUERY_STRING'] = router.set_post_params()
 
-    # Get all routes from the routes/web.py file
-    import routes.web
-    routes = routes.web.ROUTES
-
     # Check all http routes
-    for route in routes:
+    for route in app.make('WebRoutes'):
         # Compiles the given route to regex
         regex = router.compile_route_to_regex(route)
 
@@ -74,8 +59,8 @@ def app(environ, start_response):
         else:
             matchurl = re.compile(regex.replace(r'\/$', r'$'))
 
-        # This will create a dictionary of paramters given. This is a sort of a short
-        #     but complex way to retrieve the url paramters. This is the code used to
+        # This will create a dictionary of parameters given. This is sort of a short
+        #     but complex way to retrieve the url parameters. This is the code used to
         #     convert /url/@firstname/@lastname to {'firstmane': 'joseph', 'lastname': 'mancuso'}
         try:
             parameter_dict = {}
@@ -87,13 +72,13 @@ def app(environ, start_response):
 
         # If the route url matches the regex and the method type and the route can continue
         #     (will be used with middleware later)
-        if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD'] and route.continueroute is True:
+        if matchurl.match(router.url) and route.method_type == environ['REQUEST_METHOD']:
 
             # Execute HTTP Before Middleware
-            for http_middleware in middleware.HTTP_MIDDLEWARE:
+            for http_middleware in app.make('HttpMiddleware'):
                 located_middleware = locate(http_middleware)
                 if hasattr(located_middleware, 'before'):
-                    located_middleware(request).before()
+                    app.resolve(located_middleware().before)
 
             # Show a helper in the terminal of which route has been visited
             print(route.method_type + ' Route: ' + router.url)
@@ -112,10 +97,10 @@ def app(environ, start_response):
             route.load_request(request).run_middleware('after')
 
             # Execute HTTP After Middleware
-            for http_middleware in middleware.HTTP_MIDDLEWARE:
+            for http_middleware in app.make('HttpMiddleware'):
                 located_middleware = locate(http_middleware)
                 if hasattr(located_middleware, 'after'):
-                    located_middleware(request).after()
+                    app.resolve(located_middleware().after)
             break
         else:
             data = 'Route not found. Error 404'
@@ -123,10 +108,9 @@ def app(environ, start_response):
     ## Check all API Routes
     if data == 'Route not found. Error 404':
         # Look at the API routes files
-        import routes.api
-        routes = routes.api.ROUTES
+        
 
-        for route in routes:
+        for route in app.make('ApiRoutes'):
 
             # If the base url matches
             if route.url in router.url:
@@ -163,6 +147,5 @@ def app(environ, start_response):
         start_response("302 OK", [
             ('Location', request.compile_route_to_url())
         ] + request.get_cookies())
-
     # This will output the data to the browser.
     return iter([data])

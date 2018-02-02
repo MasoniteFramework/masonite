@@ -1,4 +1,4 @@
-''' Middleware Configuration File '''
+''' Middleware Configuration Settings '''
 
 '''
 |--------------------------------------------------------------------------

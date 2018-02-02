@@ -1,4 +1,5 @@
-''' Where authentication settings should be'''
+''' Authentication Settings '''
+
 from app.User import User
 
 '''

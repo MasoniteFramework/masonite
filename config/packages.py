@@ -1,4 +1,4 @@
-''' Packages Configuration '''
+''' Packages Configuration Settings '''
 
 '''
 |--------------------------------------------------------------------------
@@ -19,4 +19,6 @@
 |
 '''
 
-SITE_PACKAGES = []
+SITE_PACKAGES = [
+    'venv/lib/python3.6/site-packages'
+]

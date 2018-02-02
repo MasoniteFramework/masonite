@@ -1,4 +1,5 @@
 ''' Database Settings '''
+
 import os
 
 from dotenv import find_dotenv, load_dotenv
@@ -17,6 +18,7 @@ load_dotenv(find_dotenv())
 | @see Orator migrations documentation for more info
 |
 '''
+
 databases = {
     'mysql': {
         'driver': os.environ.get('DB_DRIVER'),

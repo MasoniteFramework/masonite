@@ -2,14 +2,20 @@
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
+from config import storage
 from routes import web, api
 
 class AppProvider(ServiceProvider):
 
+    wsgi = True
+
     def register(self):
         self.app.bind('WebRoutes', web.ROUTES)
         self.app.bind('ApiRoutes', api.ROUTES)
+        self.app.bind('Response', 'hey')
+        self.app.bind('Storage', storage)
 
     def boot(self, Environ):
         self.app.bind('Request', Request(Environ))
         self.app.bind('Route', Route(Environ))
+

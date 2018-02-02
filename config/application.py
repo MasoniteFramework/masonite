@@ -71,6 +71,7 @@ PROVIDERS = [
     'app.providers.RedirectionProvider.RedirectionProvider',
     'app.providers.StartResponseProvider.StartResponseProvider',
     'app.providers.SassProvider.SassProvider',
+    'app.providers.WhiteNoiseProvider.WhiteNoiseProvider',
 
     # Third Party Providers
 
@@ -95,7 +96,7 @@ BASE_DIRECTORY = os.getcwd()
 | Static Root
 |--------------------------------------------------------------------------
 |
-| TODO
+| Set the static root of your application that you wil use to store assets
 |
 '''
 

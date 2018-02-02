@@ -12,7 +12,7 @@ class AppProvider(ServiceProvider):
     def register(self):
         self.app.bind('WebRoutes', web.ROUTES)
         self.app.bind('ApiRoutes', api.ROUTES)
-        self.app.bind('Response', 'hey')
+        self.app.bind('Response', None)
         self.app.bind('Storage', storage)
 
     def boot(self, Environ):

@@ -65,13 +65,13 @@ URL = 'http://localhost'
 
 PROVIDERS = [
     # Framework Providers
-    'app.providers.AppProvider.AppProvider',
-    'app.providers.RouteProvider.RouteProvider',
-    'app.providers.ApiProvider.ApiProvider',
-    'app.providers.RedirectionProvider.RedirectionProvider',
-    'app.providers.StartResponseProvider.StartResponseProvider',
-    'app.providers.SassProvider.SassProvider',
-    'app.providers.WhitenoiseProvider.WhitenoiseProvider',
+    'masonite.providers.AppProvider.AppProvider',
+    'masonite.providers.RouteProvider.RouteProvider',
+    'masonite.providers.ApiProvider.ApiProvider',
+    'masonite.providers.RedirectionProvider.RedirectionProvider',
+    'masonite.providers.StartResponseProvider.StartResponseProvider',
+    'masonite.providers.SassProvider.SassProvider',
+    'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
 
     # Third Party Providers
 

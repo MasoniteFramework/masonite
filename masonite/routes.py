@@ -165,7 +165,6 @@ class Api():
         ''' Loads the model into the class '''
         if not self.url:
             self.url = '/api/' +model.__name__.lower()
-            print('API Route: ' + self.url)
 
         self.model_obj = model
         return self

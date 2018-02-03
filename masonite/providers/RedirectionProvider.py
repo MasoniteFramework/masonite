@@ -3,8 +3,6 @@ from masonite.provider import ServiceProvider
 
 class RedirectionProvider(ServiceProvider):
 
-    wsgi = True
-
     def register(self):
         pass
 

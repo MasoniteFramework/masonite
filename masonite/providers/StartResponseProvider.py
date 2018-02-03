@@ -3,8 +3,6 @@ from masonite.provider import ServiceProvider
 
 class StartResponseProvider(ServiceProvider):
 
-    wsgi = True
-
     def register(self):
         pass
 

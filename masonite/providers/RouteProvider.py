@@ -5,8 +5,6 @@ from pydoc import locate
 
 class RouteProvider(ServiceProvider):
 
-    wsgi = True
-
     def register(self):
         pass
 

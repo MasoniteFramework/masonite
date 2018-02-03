@@ -2,13 +2,11 @@
 from masonite.provider import ServiceProvider
 
 class ApiProvider(ServiceProvider):
-
-    wsgi = True
-
+    
     def register(self):
         pass
 
-    def boot(self, Response, ApiRoutes, Route):
+    def boot(self, Response, ApiRoutes, Route, Request):
         router = Route
         if Response == 'Route not found. Error 404':
 
@@ -35,7 +33,7 @@ class ApiProvider(ServiceProvider):
                 '''
 
                 if route.url in router.url:
-                    data = route.fetch(request).output
+                    data = route.fetch(Request).output
                     if data:
                         break
                     else:

@@ -7,15 +7,12 @@ from routes import web, api
 
 class AppProvider(ServiceProvider):
 
-    wsgi = True
-
     def register(self):
         self.app.bind('WebRoutes', web.ROUTES)
         self.app.bind('ApiRoutes', api.ROUTES)
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
-        self.app.bind('Request', Request(self.app.make('Environ')))
-        self.app.bind('Route', Route(self.app.make('Environ')))
 
     def boot(self, Environ):
-        pass
+        self.app.bind('Request', Request(Environ))
+        self.app.bind('Route', Route(Environ))

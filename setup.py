@@ -4,8 +4,9 @@ setup(
     packages=['masonite',
               'masonite.auth',
               'masonite.facades',
+              'masonite.providers',
              ],
-    version='0.2.11.1',
+    version='0.2.12',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',

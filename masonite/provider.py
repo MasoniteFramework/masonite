@@ -1,5 +1,6 @@
-
 class ServiceProvider():
+
+    wsgi = True
 
     def __init__(self):
         self.app = None

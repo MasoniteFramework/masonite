@@ -13,6 +13,9 @@ class Route():
         self.url = environ['PATH_INFO']
         self.url_list = []
 
+        if self.is_post():
+            self.environ['QUERY_STRING'] = self.set_post_params()
+
     def get(self, route, output=None):
         ''' Returns the output '''
         return output

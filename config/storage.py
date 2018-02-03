@@ -7,3 +7,7 @@ SASSFILES = {
     ],
     'compileTo': 'storage/compiled'
 }
+
+STATICFILES = {
+    'storage/static': 'static/',
+}

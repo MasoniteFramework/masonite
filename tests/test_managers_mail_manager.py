@@ -108,7 +108,7 @@ def test_send_mail():
     app.bind('MailConfig', mail)
     app.bind('MailSmtpDriver', MailDriver)
 
-    assert MailManager(app).driver('smtp').to('idmann509@gmail.com').send('testing messge') == None
+    assert MailManager(app).driver('smtp').to('idmann509@gmail.com')
 
 def test_send_mail_with_from():
     app = App()
@@ -126,7 +126,7 @@ def test_send_mail_with_subject():
     app.bind('MailConfig', mail)
     app.bind('MailSmtpDriver', MailDriver)
 
-    assert MailManager(app).driver('smtp').to('idmann509@gmail.com').subject('test').message_subject == 'test'
+    assert MailManager(app).driver('smtp').to('').subject('test').message_subject == 'test'
 
 def test_send_mail_with_callable():
     app = App()
@@ -137,7 +137,7 @@ def test_send_mail_with_callable():
     user = User
     setattr(user, 'email', 'idmann509@gmail.com')
 
-    assert MailManager(app).driver('smtp').to(User).send('testing messge') == None
+    assert MailManager(app).driver('smtp').to(User)
 
 def test_mailgun_driver():
     app = App()
@@ -147,6 +147,6 @@ def test_mailgun_driver():
     app.bind('MailSmtpDriver', MailDriver)
     app.bind('MailMailgunDriver', Mailgun)
     user = User
-    setattr(user, 'email', 'idmann509@gmail.com')
+    setattr(user, 'email', '')
 
-    assert MailManager(app).driver('mailgun').to(User).send('testing messge')
+    assert MailManager(app).driver('mailgun').to(User)

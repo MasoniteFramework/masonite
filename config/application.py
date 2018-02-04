@@ -13,6 +13,7 @@ PROVIDERS = [
     'masonite.providers.StartResponseProvider.StartResponseProvider',
     'masonite.providers.SassProvider.SassProvider',
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
+    'masonite.providers.MailProvider.MailProvider',
 ]
 
 STATIC_ROOT = 'storage'

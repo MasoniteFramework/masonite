@@ -7,3 +7,4 @@ htmlcov
 .coverage
 **.pyc
 **.DS_Store
+.env

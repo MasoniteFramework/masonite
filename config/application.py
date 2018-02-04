@@ -72,6 +72,7 @@ PROVIDERS = [
     'masonite.providers.StartResponseProvider.StartResponseProvider',
     'masonite.providers.SassProvider.SassProvider',
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
+    'masonite.providers.MailProvider.MailProvider',
 
     # Third Party Providers
 

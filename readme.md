@@ -12,14 +12,14 @@
 
 ## About Masonite
 
-Masonite is a Python web application framework that strives for elegant and beautiful syntax. We make building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web applications from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web applications by:
+Masonite is the rapid application Python framework that strives for elegant, readable and beautiful syntax. Masonite makes building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web applications from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web applications by:
 
 * Having a simple and expressive routing engine
 * Extremely powerful command line helpers called `craft` commands
 * A simple migration system, removing the "magic" and finger crossing of migrations
 * A great Active Record style ORM called Orator
 * A great filesystem architecture for navigating and expanding your project
-* Service Providers to simply add or remove functionality of Masonite
+* Service Providers which makes Masonite extremely extendable
 
 ## Learning Masonite
 

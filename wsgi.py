@@ -2,18 +2,6 @@ from masonite.app import App
 from bootstrap.start import app
 from config import application
 from pydoc import locate
-from dotenv import find_dotenv, load_dotenv
-
-'''
-|--------------------------------------------------------------------------
-| Load Environment Variables
-|--------------------------------------------------------------------------
-|
-| Take environment variables from the .env file and load them in.
-|
-'''
-
-load_dotenv(find_dotenv())
 
 '''
 |--------------------------------------------------------------------------

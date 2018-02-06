@@ -14,13 +14,13 @@ class StartResponseProvider(ServiceProvider):
             self.app.bind('StatusCode', "200 OK")
             self.app.bind('Headers', [
                 ("Content-Type", "text/html; charset=utf-8"),
-                ("Content-Length", str(len(Response)))
+                ("Content-Length", str(len(data)))
             ] + Request.get_cookies())
         else:
             self.app.bind('StatusCode', "302 OK")
             self.app.bind('Headers', [
                 ('Location', Request.compile_route_to_url())
-            ] + request.get_cookies())
+            ] + Request.get_cookies())
             self.app.bind('Response', 'redirecting ...')
 
 

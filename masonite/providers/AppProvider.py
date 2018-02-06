@@ -14,5 +14,5 @@ class AppProvider(ServiceProvider):
         self.app.bind('Storage', storage)
 
     def boot(self, Environ):
-        self.app.bind('Request', Request(Environ))
         self.app.bind('Route', Route(Environ))
+        self.app.bind('Request', Request(Environ).load_app(self.app))

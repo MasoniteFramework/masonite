@@ -9,6 +9,7 @@ class StartResponseProvider(ServiceProvider):
     def boot(self, Request, Response):
         if not Request.redirect_url:
             # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
+
             data = bytes(Response, 'utf-8')
 
             self.app.bind('StatusCode', "200 OK")

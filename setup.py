@@ -4,11 +4,16 @@ setup(
     packages=['masonite',
               'masonite.auth',
               'masonite.facades',
+              'masonite.providers',
+              'masonite.drivers',
+              'masonite.managers',
              ],
-    version='0.2.10.1',
+    version='0.2.12',
     install_requires=[
         'validator.py==1.2.5',
-        'cryptography==2.1.4'
+        'cryptography==2.1.4',
+        'bcrypt==3.1.4',
+        'requests==2.18.4',
     ],
     description='The core for the Masonite ',
     author='Joseph Mancuso',

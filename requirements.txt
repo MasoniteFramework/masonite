@@ -1,0 +1,4 @@
+libsass
+Jinja2
+whitenoise
+python-dotenv

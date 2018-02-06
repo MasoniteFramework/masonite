@@ -1,3 +1,5 @@
+import os
+
 '''
 |--------------------------------------------------------------------------
 | Application Name
@@ -8,7 +10,6 @@
 | any other location as required by the application or its packages.
 |
 '''
-import os
 
 NAME = 'Masonite'
 
@@ -19,7 +20,7 @@ NAME = 'Masonite'
 |
 | When your application is in debug mode, detailed error messages with
 | stack traces will be shown on every error that occurs within your
-| application. If disabled, a simple generic error page is shown.
+| application. If disabled, a simple generic error page is shown
 |
 '''
 
@@ -31,7 +32,7 @@ DEBUG = True
 |--------------------------------------------------------------------------
 |
 | This key is used to encrypt and decrypt various values. Out of the box
-| Masonite uses this key to encrypt and decrypt cookies but you can use
+| Masonite uses this key to encrypt or decrypt cookies so you can use
 | it to encrypt and decrypt various values using the Masonite Sign
 | class. Read the documentation on Encryption to find out how.
 |
@@ -55,17 +56,29 @@ URL = 'http://localhost'
 | Providers List
 |--------------------------------------------------------------------------
 |
-| This providers list is used to add functionality to this project. You
-| can add modules to this list which will import them when the command
-| line is ran. Add modules here with a function which can be picked up
-| by the command line. For example: when you add a module with the
-| function 'auth' then that function will become available when
-| you run: python craft auth
+| Providers are a simple way to remove or add functionality for Masonite
+| The providers in this list are either ran on server start or when a
+| request is made depending on the provider. Take some time to can
+| learn more more about Service Providers in our documentation
 |
 '''
 
 PROVIDERS = [
-    'app.providers.UserModelProvider.UserModelProvider'
+    # Framework Providers
+    'masonite.providers.AppProvider.AppProvider',
+    'masonite.providers.RouteProvider.RouteProvider',
+    'masonite.providers.ApiProvider.ApiProvider',
+    'masonite.providers.RedirectionProvider.RedirectionProvider',
+    'masonite.providers.StartResponseProvider.StartResponseProvider',
+    'masonite.providers.SassProvider.SassProvider',
+    'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
+    'masonite.providers.MailProvider.MailProvider',
+
+    # Third Party Providers
+
+    # Application Providers
+    'app.providers.UserModelProvider.UserModelProvider',
+    'app.providers.MiddlewareProvider.MiddlewareProvider',
 ]
 
 '''
@@ -84,7 +97,7 @@ BASE_DIRECTORY = os.getcwd()
 | Static Root
 |--------------------------------------------------------------------------
 |
-| TODO
+| Set the static root of your application that you wil use to store assets
 |
 '''
 

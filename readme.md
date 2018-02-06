@@ -12,13 +12,14 @@
 
 ## About Masonite
 
-Masonite is a Python web application framework that strives for elegant and beautiful syntax. We make building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web applications from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web applications by:
+Masonite is the rapid application Python framework that strives for elegant, readable and beautiful syntax. Masonite makes building web applications fun and enjoyable. Masonite takes all the pain out of developing and deploying web applications from simple payment systems to single command line deployments. Masonite removes much of the mundane tasks of building web applications by:
 
-* Having a simple routing engine
-* An extremely powerful command line helper called `craft` commands
+* Having a simple and expressive routing engine
+* Extremely powerful command line helpers called `craft` commands
 * A simple migration system, removing the "magic" and finger crossing of migrations
 * A great Active Record style ORM called Orator
-* A great filesystem architecture for navigating and expanding your project.
+* A great filesystem architecture for navigating and expanding your project
+* Service Providers which makes Masonite extremely extendable
 
 ## Learning Masonite
 
@@ -77,7 +78,7 @@ Once that is cloned we need to add the pip dependencies. You can run `pip3 insta
 
 **NOTE: Python craft commands are essentially wrappers around common mundane tasks. Read the docs about the craft command tool to learn more**
 
-This will install all the required dependencies to run this framework. Now we can run the gunicorn server by simply running `gunicorn -w 2 wsgi:application` or the `craft` command:
+This will install all the required dependencies to run this framework. Now we can run the `craft` command:
 
     $ craft serve
 

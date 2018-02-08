@@ -1,5 +1,41 @@
 ''' Storage Settings '''
 
+import os
+
+'''
+|--------------------------------------------------------------------------
+| Storage Driver
+|--------------------------------------------------------------------------
+|
+| The default driver you will like to use for storing uploads. You may add
+| additional drivers as you need or pip install additional drivers.
+|
+| Supported: 'disk', 's3'
+|
+'''
+
+DRIVER = 'disk'
+
+'''
+|--------------------------------------------------------------------------
+| Drivers
+|--------------------------------------------------------------------------
+|
+| Different drivers you can use for storing file uploads.
+|
+'''
+
+DRIVERS = {
+    'disk': {
+        'location': 'uploads/'
+    },
+    's3': {
+        'client': os.environ.get('S3_CLIENT'),
+        'secret': os.environ.get('S3_SECRET'),
+        'bucket': os.environ.get('S3_BUCKET'),
+    }
+}
+
 '''
 |--------------------------------------------------------------------------
 | Static Files

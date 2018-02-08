@@ -1,9 +1,12 @@
 ''' Module for the Routing System '''
+import cgi
 import importlib
 import re
 from pydoc import locate
 
 from config import middleware
+
+import cgitb; cgitb.enable()
 
 class Route():
     ''' Loads the environ '''
@@ -22,12 +25,11 @@ class Route():
     
     def set_post_params(self):
         ''' If the route is a Post, swap the QUERY_STRING '''
-        get_post_params = int(self.environ.get('CONTENT_LENGTH')) if self.environ.get(
-            'CONTENT_LENGTH') else 0
-        body = self.environ['wsgi.input'].read(
-            get_post_params) if get_post_params > 0 else ''
-
-        return body.decode('utf-8')
+        fields = None
+        if 'POST' == self.environ['REQUEST_METHOD']:
+            fields = cgi.FieldStorage(
+                fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
+            return fields
 
     def is_post(self):
         ''' Check to see if the current request is a POST request '''

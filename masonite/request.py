@@ -21,7 +21,7 @@ class Request(object):
         self.redirect_route = False
         self.user_model = None
         self.environ = environ
-        self.params = parse_qs(environ['QUERY_STRING'])
+        self.params = environ['QUERY_STRING']
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.encryption_key = False
@@ -31,8 +31,31 @@ class Request(object):
         ''' Returns either the FORM_PARAMS during a POST request
             or QUERY_STRING during a GET request
         '''
+
+        # Post Request Input
+        if self.is_post():
+            if isinstance(self.params, str):
+                return parse_qs(self.params)[param][0]
+
+            if not self.params[param].filename:
+                return self.params[param].value
+
+            if self.params[param].filename:
+                return self.params[param]
+
+        # Get Request Input
         if self.has(param):
-            return self.params[param][0]
+            return parse_qs(self.params)[param][0]
+
+        return False
+
+    def file(self, param):
+        pass
+
+    def is_post(self):
+        if self.environ['REQUEST_METHOD'] == 'POST':
+            return True
+
         return False
 
     def key(self, key):
@@ -42,6 +65,9 @@ class Request(object):
 
     def all(self):
         ''' Returns all the params '''
+        if isinstance(self.params, str):
+            return parse_qs(self.params)
+        
         return self.params
 
     def load_app(self, app):

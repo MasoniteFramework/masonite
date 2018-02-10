@@ -109,15 +109,7 @@ def test_request_gets_input_from_container():
     ])
 
     container.bind('Response', 'Route not found. Error 404')
-    # container.bind('ApiRoutes', [
-    #     Api().model(object),
-    #     Api().model(object),
-    # ])
 
-    # container.make('Route').url = 'url'
-    # container.bind('HttpMiddleware', [])
-
-    # container.bind('Response', 'test')
 
     for provider in container.make('Application').PROVIDERS:
         located_provider = locate(provider)().load_app(container)
@@ -129,3 +121,19 @@ def test_request_gets_input_from_container():
     container.make('Request').environ['REQUEST_METHOD'] = 'POST'
     assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
     assert container.make('Request').input('application') == 'Masonite'
+
+def test_redirections_reset():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test')
+    request.redirectTo('test')
+
+    assert request.redirect_url is 'test'
+    assert request.redirect_route is 'test'
+
+    request.reset_redirections()
+
+    assert request.redirect_url is False
+    assert request.redirect_route is False

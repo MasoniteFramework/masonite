@@ -53,12 +53,6 @@ def test_providers_load_into_container():
         Api().model(object),
     ])
 
-    # container.make('Route').url = 'url'
-    # container.bind('HttpMiddleware', [])
-
-
-    # container.bind('Response', 'test')
-
     for provider in container.make('Application').PROVIDERS:
         located_provider = locate(provider)().load_app(container)
 

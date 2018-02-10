@@ -11,14 +11,26 @@ import cgitb; cgitb.enable()
 class Route():
     ''' Loads the environ '''
 
-    def __init__(self, environ):
+    def __init__(self, environ=None):
+        self.url_list = []
+
+        if environ:
+            self.environ = environ
+            self.url = environ['PATH_INFO']
+            
+
+            if self.is_post():
+                self.environ['QUERY_STRING'] = self.set_post_params()
+
+    def load_environ(self, environ):
         self.environ = environ
         self.url = environ['PATH_INFO']
-        self.url_list = []
 
         if self.is_post():
             self.environ['QUERY_STRING'] = self.set_post_params()
-
+        
+        return self
+            
     def get(self, route, output=None):
         ''' Returns the output '''
         return output

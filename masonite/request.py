@@ -14,16 +14,19 @@ class Request(object):
         This is the object passed through to the controllers
         as a request paramter
     '''
-    def __init__(self, environ):
+    def __init__(self, environ=None):
         self.cookies = []
         self.url_params = None
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
-        self.environ = environ
-        self.params = environ['QUERY_STRING']
-        self.method = environ['REQUEST_METHOD']
-        self.path = environ['PATH_INFO']
+
+        if environ:
+            self.environ = environ
+            self.params = environ['QUERY_STRING']
+            self.method = environ['REQUEST_METHOD']
+            self.path = environ['PATH_INFO']
+
         self.encryption_key = False
         self.container = None
 
@@ -72,6 +75,14 @@ class Request(object):
 
     def load_app(self, app):
         self.container = app
+        return self
+
+    def load_environ(self, environ):
+        self.environ = environ
+        self.params = environ['QUERY_STRING']
+        self.method = environ['REQUEST_METHOD']
+        self.path = environ['PATH_INFO']
+
         return self
 
     def app(self):
@@ -179,10 +190,11 @@ class Request(object):
             # if the url contains a parameter variable like @id:int
             if '@' in url:
                 url = url.replace('@', '').replace(':int', '').replace(':string', '')
-                compiled_url += '/' + str(self.param(url))
+                print('url after @', url)
+                compiled_url += '/' + str(self.param(url)) + '/' 
             else:
                 compiled_url += url
-
+        print('compiled_url:', compiled_url)
         return compiled_url
 
     def send(self, params):

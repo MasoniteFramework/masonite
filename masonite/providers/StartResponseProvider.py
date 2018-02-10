@@ -22,6 +22,9 @@ class StartResponseProvider(ServiceProvider):
             self.app.bind('Headers', [
                 ('Location', Request.compile_route_to_url())
             ] + Request.get_cookies())
+
+            Request.reset_redirections()
+            
             self.app.bind('Response', 'redirecting ...')
 
 

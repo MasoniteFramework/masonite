@@ -165,6 +165,10 @@ class Request(object):
         self.redirect_route = route
         return self
 
+    def reset_redirections(self):
+        self.redirect_url = False
+        self.redirect_route = False
+
     def back(self, input_parameter='back'):
         ''' Go to a named route with the back parameter '''
         self.redirectTo(self.input(input_parameter))

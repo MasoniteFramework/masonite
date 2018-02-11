@@ -12,7 +12,6 @@ def test_view_extends_dictionary():
 
     assert view('test', {'test': 'test'}) == 'test'
 
-
 def test_view_extends_without_dictionary_parameters():
     container = App()
 
@@ -87,3 +86,17 @@ def test_composers_load_all_views_with_list():
 
     view = container.make('View')
     assert view('test') == 'test'
+
+def test_view_share_updates_dictionary_not_overwrite():
+    container = App()
+
+    ViewClass = View()
+
+    container.bind('ViewClass', ViewClass)
+
+    viewclass = container.make('ViewClass')
+
+    viewclass.share({'test1': 'test1'})
+    viewclass.share({'test2': 'test2'})
+
+    assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2'}

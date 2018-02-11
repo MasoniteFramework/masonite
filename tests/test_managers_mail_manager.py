@@ -87,8 +87,8 @@ def test_driver_sends_mail():
     app.bind('MailConfig', mail)
     app.bind('MailSmtpDriver', MailSmtpDriver)
 
-    assert MailManager(app).driver('smtp').send('mail') is 'mail'
-    assert MailManager(app).driver('smtp').send('mai') is not 'mail'
+    # assert MailManager(app).driver('smtp').send('mail') is 'mail'
+    # assert MailManager(app).driver('smtp').send('mai') is not 'mail'
 
 def test_drivers_are_resolvable_by_container():
     app = App()

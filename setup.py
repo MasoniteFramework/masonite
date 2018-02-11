@@ -7,8 +7,9 @@ setup(
               'masonite.providers',
               'masonite.drivers',
               'masonite.managers',
+              'masonite.testsuite',
              ],
-    version='0.2.12.5',
+    version='1.0.0',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',

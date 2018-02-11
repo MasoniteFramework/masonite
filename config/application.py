@@ -74,6 +74,8 @@ PROVIDERS = [
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
     'masonite.providers.MailProvider.MailProvider',
     'masonite.providers.UploadProvider.UploadProvider',
+    'masonite.providers.ViewProvider.ViewProvider',
+    'masonite.providers.HelpersProvider.HelpersProvider',
 
     # Third Party Providers
 

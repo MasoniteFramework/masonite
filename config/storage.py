@@ -14,11 +14,11 @@ import os
 |
 '''
 
-DRIVER = 'disk'
+DRIVER = os.getenv('STORAGE_DRIVER', 'disk')
 
 '''
 |--------------------------------------------------------------------------
-| Drivers
+| Storage Drivers
 |--------------------------------------------------------------------------
 |
 | Different drivers you can use for storing file uploads.
@@ -27,14 +27,15 @@ DRIVER = 'disk'
 
 DRIVERS = {
     'disk': {
-        'location': 'uploads/'
+        'location': 'storage/uploads'
     },
     's3': {
-        'client': os.environ.get('S3_CLIENT'),
-        'secret': os.environ.get('S3_SECRET'),
-        'bucket': os.environ.get('S3_BUCKET'),
+        'client': os.getenv('S3_CLIENT', 'AxJz...'),
+        'secret': os.getenv('S3_SECRET', 'HkZj...'),
+        'bucket': os.getenv('S3_BUCKET', 's3bucket'),
     }
 }
+
 
 '''
 |--------------------------------------------------------------------------

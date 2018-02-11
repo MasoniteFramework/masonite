@@ -205,3 +205,6 @@ class Request(object):
         ''' With '''
         self.set_params(params)
         return self
+    
+    def helper(self):
+        return self

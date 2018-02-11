@@ -17,6 +17,9 @@ class App():
     def make(self, name):
         ''' Retreives a class from the container by key '''
         return self.providers[name]
+    
+    def helper(self):
+        return self
 
     def resolve(self, obj):
         ''' Takes a function or class method and resolves it's parameters

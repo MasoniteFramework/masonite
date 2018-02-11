@@ -46,5 +46,5 @@ class View(object):
         pass
     
     def share(self, dictionary):
-        self.dictionary = dictionary
+        self.dictionary.update(dictionary)
         return self

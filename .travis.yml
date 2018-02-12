@@ -1,17 +1,17 @@
 language: python
 python:
-  - "3.4"
-  - "3.5"
-  - "3.6"
-# command to install dependencies
+- '3.4'
+- '3.5'
+- '3.6'
 install:
-  - pip install .
-  - pip install -r requirements.txt
+- pip install .
+- pip install -r requirements.txt
 script: python -m pytest
 deploy:
   provider: pypi
-  user: "josephmancuso"
+  user: josephmancuso
   password:
-    secure: "rvNRbr8OBmsx1YGbOEAHRUAMaydHohv4sijih3ew3k/nh09Z71RD06sv4OMndBD9BxTe9OiTsTEzGDGnIwijRKKP3GOpWSf8qRUbleUWjUtv/Mf9PzM+lQrJ00G8KksIkuaUQOKgtMiE74fyqeE/Ze9PLg42czJqyLgEHSoOuaP39+DcDGNKcCjUKqVSpH0M2dlSiVZ1B6a1aqzAaiK5irs55oqH7V2E6glc+WFstkDoaa7w6ODzk2dK9PIBKL5ryYEMujVSCipvwwSgdYLMbArNT1E/9wR6fYRpfT6SVDRE47dBTEktuYMwFftzUxa2kuaXCk8qFZK6sApbKa8DKQgcVRL1sRTQBTLiZrxrXLSFYmv9ChfvMQHMdH0oLlxfgT1W7prMyEekmgBtu9y0Tg1nZLxhdRuuBO8Jpzx8dZ7msDNDPnEU9rgyXZ9uIJ7b3jA9AVlDEKOUXDxbkYGpsoAxPgBJiV4UH5XSV6QP9eOuyXVa6u5Vm+boRHqbgxeK1jstGEzxg/T7NsEEOCTqvXB9MCa4Hp2hNACcBR3gyi1hrRHbiaC+nnEY9l8HXqkj3DYNaAklJbAiQ4j5gCwk9IxF/xOKG/fyckdjKcc5PyFyXZiUAJ9d6MHugFEthBcb/ktri519uYPpyH7/uiVSK2+lTvMhFx5vCZFN6YjF/iQ="
+    secure: McIrYxinFbhhTQMmWt+IW6nGstz41+j87iUJ4ovVqxpAirsm7gZ75AoUJ1UAoa/y9uWxvR0ZzBjuhnt04mxPr3XZ4X8qCm/boWtHE3WDt4Kd/Xw4hVJ8rMUBTGqWJ1s1MRRXHkUYsACDEqJvJ2mAvp9yLGeXDWlgfQa/7Fd6zQV1V9FaxeyjkLw4efOXXL30pUyaRrJMLzeHhNp2/Kv+4VYGh+7TnbQOJlCV2HNuDdTmetIfT7VJDhw1mpY2Shdo4cIWkJ6ANxG1CIQh/Bm2mKjSRliKviydfizzgJw9EDR0kvogYUZYeFt9DWAJmdcEP+PamkEMW9L6q6O1268BcoID3/Bu02SoMvn1wWZgWL+HoTB1Jr+fc6nAveFRSCio2tRVUaQ+tylwX6la8198JZBBZc+1AYLZQpcaMy2W03y6oYtOb1KZv0IPG49Dxfk/+OnPGb7TEPiummRN1vKSB+wURKDHVhZhGuons/vW3/PrKsDtbyw/I4AVXt+rKZFt30qies0vjvPR55z0g2t/sV+Pei6cBTstBYgcjNqpFIjIOXjJgmm7asfUC5E36+hVb5BxLAvMbBU4s77qpmG6h0XKueoWhmI3gUltDyPNZXFrDVyU/KYRjocWa7bVAr3vryuMc9IModDNvwFq/nnkaYLD3jvxu7DdMjhi90KWit8=
   on:
     tags: true
+    python: 3.6

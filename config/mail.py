@@ -1,3 +1,5 @@
+''' Mail Settings '''
+
 import os
 
 '''

@@ -1,3 +1,5 @@
+''' Application Settings '''
+
 import os
 
 '''
@@ -45,11 +47,11 @@ KEY = os.environ.get('KEY')
 | Application URL
 |--------------------------------------------------------------------------
 |
-| Currently not in use. Will add documentation at a later date
+| Sets the root URL of the application. This is primarily used for testing
 |
 '''
 
-URL = 'http://localhost'
+URL = 'http://localhost:8000'
 
 '''
 |--------------------------------------------------------------------------
@@ -89,7 +91,7 @@ PROVIDERS = [
 | Base Directory
 |--------------------------------------------------------------------------
 |
-| TODO
+| Sets the root path of your project
 |
 '''
 

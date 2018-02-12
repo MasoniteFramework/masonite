@@ -8,3 +8,10 @@ install:
   - pip install .
   - pip install -r requirements.txt
 script: python -m pytest
+deploy:
+  provider: pypi
+  user: "josephmancuso"
+  password:
+    secure: "rvNRbr8OBmsx1YGbOEAHRUAMaydHohv4sijih3ew3k/nh09Z71RD06sv4OMndBD9BxTe9OiTsTEzGDGnIwijRKKP3GOpWSf8qRUbleUWjUtv/Mf9PzM+lQrJ00G8KksIkuaUQOKgtMiE74fyqeE/Ze9PLg42czJqyLgEHSoOuaP39+DcDGNKcCjUKqVSpH0M2dlSiVZ1B6a1aqzAaiK5irs55oqH7V2E6glc+WFstkDoaa7w6ODzk2dK9PIBKL5ryYEMujVSCipvwwSgdYLMbArNT1E/9wR6fYRpfT6SVDRE47dBTEktuYMwFftzUxa2kuaXCk8qFZK6sApbKa8DKQgcVRL1sRTQBTLiZrxrXLSFYmv9ChfvMQHMdH0oLlxfgT1W7prMyEekmgBtu9y0Tg1nZLxhdRuuBO8Jpzx8dZ7msDNDPnEU9rgyXZ9uIJ7b3jA9AVlDEKOUXDxbkYGpsoAxPgBJiV4UH5XSV6QP9eOuyXVa6u5Vm+boRHqbgxeK1jstGEzxg/T7NsEEOCTqvXB9MCa4Hp2hNACcBR3gyi1hrRHbiaC+nnEY9l8HXqkj3DYNaAklJbAiQ4j5gCwk9IxF/xOKG/fyckdjKcc5PyFyXZiUAJ9d6MHugFEthBcb/ktri519uYPpyH7/uiVSK2+lTvMhFx5vCZFN6YjF/iQ="
+  on:
+    tags: true

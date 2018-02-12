@@ -3,8 +3,8 @@
 class AuthenticationMiddleware(object):
     ''' Middleware class which loads the current user into the request '''
 
-    def __init__(self, request):
-        self.request = request
+    def __init__(self, Request):
+        self.request = Request
 
     def before(self):
         ''' Register as a before middleware to be ran before the request '''

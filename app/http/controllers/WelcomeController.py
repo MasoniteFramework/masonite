@@ -1,5 +1,5 @@
 ''' A Module Description '''
-from masonite.view import view
+
 from masonite.request import Request
 
 class WelcomeController(object):

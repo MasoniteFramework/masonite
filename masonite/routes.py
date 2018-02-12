@@ -141,7 +141,7 @@ class BaseHttpRoute(object):
         for arg in self.list_middleware:
 
             # Locate the middleware based on the string specified
-            located_middleware = locate(middleware.ROUTE_MIDDLEWARE[arg])(self.request)
+            located_middleware = self.request.app().resolve(locate(middleware.ROUTE_MIDDLEWARE[arg]))
 
             # If the middleware has the specific type of middleware (before or after)
             #     then execute that

@@ -17,4 +17,4 @@ class AppProvider(ServiceProvider):
 
     def boot(self, Environ, Request, Route):
         Route.load_environ(Environ)
-        Request.load_environ(Environ)
+        Request.load_environ(Environ).load_app(self.app)

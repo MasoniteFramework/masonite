@@ -66,9 +66,9 @@ class RouteProvider(ServiceProvider):
                 '''
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = locate(http_middleware)
+                    located_middleware = self.app.resolve(locate(http_middleware))
                     if hasattr(located_middleware, 'before'):
-                        self.app.resolve(located_middleware().before)
+                        located_middleware.before()
 
                 # Show a helper in the terminal of which route has been visited
                 print(route.method_type + ' Route: ' + router.url)
@@ -96,9 +96,9 @@ class RouteProvider(ServiceProvider):
                 '''
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = locate(http_middleware)
+                    located_middleware = self.app.resolve(locate(http_middleware))
                     if hasattr(located_middleware, 'after'):
-                        self.app.resolve(located_middleware().after)
+                        located_middleware.after()
                 break
             else:
                 data = 'Route not found. Error 404'

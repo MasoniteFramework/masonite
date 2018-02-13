@@ -85,11 +85,11 @@ class Route():
 
 class BaseHttpRoute(object):
     method_type = 'GET'
-    continueroute = True
     output = False
     route_url = None
     request = None
     named_route = None
+    required_domain = None
     list_middleware = []
 
     def route(self, route, output):
@@ -118,6 +118,16 @@ class BaseHttpRoute(object):
             self.output = output
         self.route_url = route
         return self
+    
+    def domain(self, domain):
+        self.required_domain = domain
+        return self
+
+    def has_required_domain(self):
+        if self.request.has_subdomain() and (self.required_domain is '*' or self.request.subdomain == self.required_domain):
+            return True
+        
+        return False
 
     def name(self, name):
         ''' Specifies the name of the route '''

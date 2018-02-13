@@ -12,6 +12,7 @@ class RouteProvider(ServiceProvider):
         for route in WebRoutes:
             router = Route
             request = Request
+
             # Compiles the given route to regex
             regex = router.compile_route_to_regex(route)
 
@@ -53,9 +54,14 @@ class RouteProvider(ServiceProvider):
             | one match. Routes are executed on a first come, first serve basis
             |
             '''
-
+            
             if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
-
+                route.load_request(request)
+                if request.has_subdomain():
+                    ## check if the subdomain matches the routes domain
+                    if not route.has_required_domain():
+                        self.app.bind('Response', 'Route not found. Error 404')
+                        break
                 '''
                 |--------------------------------------------------------------------------
                 | Execute Before Middleware
@@ -75,7 +81,7 @@ class RouteProvider(ServiceProvider):
 
                 # Loads the request in so the middleware specified is able to use the
                 #     request object. This is before middleware and is ran before the request
-                route.load_request(request).run_middleware('before')
+                route.run_middleware('before')
 
                 # Get the data from the route. This data is typically the output
                 #     of the controller method
@@ -84,7 +90,7 @@ class RouteProvider(ServiceProvider):
 
                 # Loads the request in so the middleware specified is able to use the
                 #     request object. This is after middleware and is ran after the request
-                route.load_request(request).run_middleware('after')
+                route.run_middleware('after')
 
                 '''
                 |--------------------------------------------------------------------------
@@ -101,4 +107,4 @@ class RouteProvider(ServiceProvider):
                         located_middleware.after()
                 break
             else:
-                data = 'Route not found. Error 404'
+                self.app.bind('Response', 'Route not found. Error 404')

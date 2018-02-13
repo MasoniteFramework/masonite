@@ -137,3 +137,15 @@ def test_redirections_reset():
 
     assert request.redirect_url is False
     assert request.redirect_route is False
+
+def test_request_has_subdomain_returns_bool():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    assert request.has_subdomain() is False
+    assert request.subdomain is None
+
+    request.environ['HTTP_HOST'] = 'test.localhost.com'
+
+    assert request.has_subdomain() is True

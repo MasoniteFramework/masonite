@@ -16,6 +16,7 @@ setup(
         'bcrypt==3.1.4',
         'requests==2.18.4',
         'boto3==1.5.24',
+        'tldextract==2.2.0',
     ],
     description='The core for the Masonite ',
     author='Joseph Mancuso',

@@ -7,6 +7,7 @@
 '''
 from urllib.parse import parse_qs
 from http import cookies
+import tldextract
 from masonite.auth.Sign import Sign
 
 class Request(object):
@@ -16,10 +17,11 @@ class Request(object):
     '''
     def __init__(self, environ=None):
         self.cookies = []
-        self.url_params = None
+        self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
+        self.subdomain = None
 
         if environ:
             self.environ = environ
@@ -200,6 +202,16 @@ class Request(object):
                 compiled_url += url
         print('compiled_url:', compiled_url)
         return compiled_url
+    
+    def has_subdomain(self):
+        url = tldextract.extract(self.environ['HTTP_HOST'])
+
+        if url.subdomain:
+            self.subdomain = url.subdomain
+            self.url_params.update({'subdomain': self.subdomain})
+            return True
+        
+        return False
 
     def send(self, params):
         ''' With '''

@@ -102,7 +102,7 @@ class Request(object):
             These parameters are where the developer can retrieve the
             /url/@variable:string/ from the url.
         '''
-        self.url_params = params
+        self.url_params.update(params)
         return self
 
     def param(self, parameter):

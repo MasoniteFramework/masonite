@@ -12,18 +12,19 @@
 
 ## About Masonite
 
-Masonite is the rapid application Python development framework that strives for elegant, readable and beautiful syntax. Masonite makes building web applications fun, enjoyable and scalable. Masonite takes all the pain out of developing web applications from simple payment systems to removing mundane development tasks with a masonite cli companion called craft commands. Masonite removes much of the mundane tasks of building web applications by:
+Masonite is the rapid application Python development framework that strives for elegant, readable, and beautiful syntax. Masonite makes building web applications fun, enjoyable and scalable. Masonite takes much of the pain out of developing web applications from simple payment systems to removing mundane development tasks with a command line companion tool called craft commands. Masonite removes much of the mundane tasks of building web applications by:
 
 * Having a simple and expressive routing engine
 * Extremely powerful command line helpers called `craft` commands
 * A simple migration system, removing the "magic" and finger crossing of migrations
 * A great Active Record style ORM called Orator
 * A great filesystem architecture for navigating and expanding your project
+* An extremely powerful Service Container (IOC Container)
 * Service Providers which makes Masonite extremely extendable
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://josephmancuso.gitbooks.io/masonite/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://masoniteframework.gitbooks.io/docs/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
 ## Installation:
 
@@ -35,16 +36,15 @@ Masonite strives to have extremely comprehensive documentation. All documentatio
     $ craft serve
 ```
 
-Go to `http://127.0.0.1:8000/`
+Go to `http://localhost:8000/`
 
 ## Contributing
 
-Please read the CONTRIBUTING file in this repo and then please post or view open issues. Development will be on the current releasing branch so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
+Please read the [Contributing Documentation](https://masoniteframework.gitbooks.io/docs/content/todo-contributing.html) here. Development will be on the current releasing branch (typically the `develop` branch) so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
 
 ## License
 
 The Masonite framework is open-sourced software licensed under the MIT license. 
-
 
 ## Hello World
 

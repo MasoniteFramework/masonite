@@ -108,3 +108,10 @@ def test_request_sets_subdomain_on_get():
 
     get.has_required_domain()
     assert request.param('subdomain') == 'test'
+
+def test_route_changes_module_location():
+
+    get = Get().module('app.test')
+    post = Get().module('app.test')
+
+    assert get.module_location == 'app.test'

@@ -90,6 +90,7 @@ class BaseHttpRoute(object):
     request = None
     named_route = None
     required_domain = None
+    module_location = 'app.http.controllers'
     list_middleware = []
 
     def route(self, route, output):
@@ -106,7 +107,7 @@ class BaseHttpRoute(object):
 
             # Import the module
             module = importlib.import_module(
-                'app.http.controllers.' + get_controller)
+                '{0}.'.format(self.module_location) + get_controller)
 
             # Get the controller from the module
             controller = getattr(module, get_controller)
@@ -121,6 +122,10 @@ class BaseHttpRoute(object):
     
     def domain(self, domain):
         self.required_domain = domain
+        return self
+    
+    def module(self, module):
+        self.module_location = module
         return self
 
     def has_required_domain(self):

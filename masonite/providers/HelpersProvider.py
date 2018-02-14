@@ -19,4 +19,4 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
 
-        ViewClass.share({'request': Request, 'auth': Request.user})
+        ViewClass.share({'request': Request.helper, 'auth': Request.user})

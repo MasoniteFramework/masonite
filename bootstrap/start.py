@@ -16,6 +16,7 @@ from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
 def app(environ, start_response):
+    ''' The WSGI Application Server '''
     from wsgi import container
 
     '''
@@ -28,7 +29,7 @@ def app(environ, start_response):
     | incoming requests
     |
     '''
-    
+
     container.bind('Environ', environ)
 
     '''
@@ -52,7 +53,7 @@ def app(environ, start_response):
     |
     | If we have a solid response and not redirecting then we need to return
     | a 200 status code along with the data. If we don't, then we'll have
-    | to return a 302 redirection to where the developer would like to
+    | to return a 302 redirection to where the user would like to
     | go next.
     |
     '''
@@ -64,8 +65,8 @@ def app(environ, start_response):
     | Final Step
     |--------------------------------------------------------------------------
     |
-    | This will take the data variable from above and return it to the WSGI
-    | server.
+    | This will take the data variable from the Service Container and return
+    | it to the WSGI server.
     |
     '''
 

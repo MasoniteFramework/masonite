@@ -1,3 +1,11 @@
+DRIVER = 'disk'
+
+DRIVERS = {
+    'disk': {
+        'location': 'uploads/'
+    }
+}
+
 SASSFILES = {
     'importFrom': [
         'storage/static'

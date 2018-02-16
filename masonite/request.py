@@ -7,6 +7,7 @@
 '''
 from urllib.parse import parse_qs
 from http import cookies
+import tldextract
 from masonite.auth.Sign import Sign
 
 class Request(object):
@@ -14,16 +15,20 @@ class Request(object):
         This is the object passed through to the controllers
         as a request paramter
     '''
-    def __init__(self, environ):
+    def __init__(self, environ=None):
         self.cookies = []
-        self.url_params = None
+        self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
-        self.environ = environ
-        self.params = parse_qs(environ['QUERY_STRING'])
-        self.method = environ['REQUEST_METHOD']
-        self.path = environ['PATH_INFO']
+        self.subdomain = None
+
+        if environ:
+            self.environ = environ
+            self.params = environ['QUERY_STRING']
+            self.method = environ['REQUEST_METHOD']
+            self.path = environ['PATH_INFO']
+
         self.encryption_key = False
         self.container = None
 
@@ -31,8 +36,31 @@ class Request(object):
         ''' Returns either the FORM_PARAMS during a POST request
             or QUERY_STRING during a GET request
         '''
+
+        # Post Request Input
+        if self.is_post():
+            if isinstance(self.params, str):
+                return parse_qs(self.params)[param][0]
+
+            if not self.params[param].filename:
+                return self.params[param].value
+
+            if self.params[param].filename:
+                return self.params[param]
+
+        # Get Request Input
         if self.has(param):
-            return self.params[param][0]
+            return parse_qs(self.params)[param][0]
+
+        return False
+
+    def file(self, param):
+        pass
+
+    def is_post(self):
+        if self.environ['REQUEST_METHOD'] == 'POST':
+            return True
+
         return False
 
     def key(self, key):
@@ -42,10 +70,21 @@ class Request(object):
 
     def all(self):
         ''' Returns all the params '''
+        if isinstance(self.params, str):
+            return parse_qs(self.params)
+        
         return self.params
 
     def load_app(self, app):
         self.container = app
+        return self
+
+    def load_environ(self, environ):
+        self.environ = environ
+        self.params = environ['QUERY_STRING']
+        self.method = environ['REQUEST_METHOD']
+        self.path = environ['PATH_INFO']
+
         return self
 
     def app(self):
@@ -63,7 +102,7 @@ class Request(object):
             These parameters are where the developer can retrieve the
             /url/@variable:string/ from the url.
         '''
-        self.url_params = params
+        self.url_params.update(params)
         return self
 
     def param(self, parameter):
@@ -128,6 +167,10 @@ class Request(object):
         self.redirect_route = route
         return self
 
+    def reset_redirections(self):
+        self.redirect_url = False
+        self.redirect_route = False
+
     def back(self, input_parameter='back'):
         ''' Go to a named route with the back parameter '''
         self.redirectTo(self.input(input_parameter))
@@ -153,13 +196,27 @@ class Request(object):
             # if the url contains a parameter variable like @id:int
             if '@' in url:
                 url = url.replace('@', '').replace(':int', '').replace(':string', '')
-                compiled_url += '/' + str(self.param(url))
+                print('url after @', url)
+                compiled_url += '/' + str(self.param(url)) + '/' 
             else:
                 compiled_url += url
-
+        print('compiled_url:', compiled_url)
         return compiled_url
+    
+    def has_subdomain(self):
+        url = tldextract.extract(self.environ['HTTP_HOST'])
+
+        if url.subdomain:
+            self.subdomain = url.subdomain
+            self.url_params.update({'subdomain': self.subdomain})
+            return True
+        
+        return False
 
     def send(self, params):
         ''' With '''
         self.set_params(params)
+        return self
+    
+    def helper(self):
         return self

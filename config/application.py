@@ -4,6 +4,8 @@ KEY='NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY='
 
 BASE_DIRECTORY = os.getcwd()
 
+URL = 'http://localhost'
+
 PROVIDERS = [
     # Framework Providers
     'masonite.providers.AppProvider.AppProvider',
@@ -14,6 +16,9 @@ PROVIDERS = [
     'masonite.providers.SassProvider.SassProvider',
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
     'masonite.providers.MailProvider.MailProvider',
+    'masonite.providers.ViewProvider.ViewProvider',
+    'masonite.providers.HelpersProvider.HelpersProvider',
+    'masonite.providers.UploadProvider.UploadProvider',
 ]
 
 STATIC_ROOT = 'storage'

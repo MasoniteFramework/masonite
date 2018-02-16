@@ -1,0 +1,5 @@
+DRIVER = 'redis'
+
+DRIVERS = {
+    'redis': ''
+}

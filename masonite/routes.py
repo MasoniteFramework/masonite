@@ -1,33 +1,47 @@
 ''' Module for the Routing System '''
+import cgi
 import importlib
 import re
 from pydoc import locate
 
 from config import middleware
 
+import cgitb; cgitb.enable()
+
 class Route():
     ''' Loads the environ '''
 
-    def __init__(self, environ):
+    def __init__(self, environ=None):
+        self.url_list = []
+
+        if environ:
+            self.environ = environ
+            self.url = environ['PATH_INFO']
+            
+
+            if self.is_post():
+                self.environ['QUERY_STRING'] = self.set_post_params()
+
+    def load_environ(self, environ):
         self.environ = environ
         self.url = environ['PATH_INFO']
-        self.url_list = []
 
         if self.is_post():
             self.environ['QUERY_STRING'] = self.set_post_params()
-
+        
+        return self
+            
     def get(self, route, output=None):
         ''' Returns the output '''
         return output
     
     def set_post_params(self):
         ''' If the route is a Post, swap the QUERY_STRING '''
-        get_post_params = int(self.environ.get('CONTENT_LENGTH')) if self.environ.get(
-            'CONTENT_LENGTH') else 0
-        body = self.environ['wsgi.input'].read(
-            get_post_params) if get_post_params > 0 else ''
-
-        return body.decode('utf-8')
+        fields = None
+        if 'POST' == self.environ['REQUEST_METHOD']:
+            fields = cgi.FieldStorage(
+                fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
+            return fields
 
     def is_post(self):
         ''' Check to see if the current request is a POST request '''
@@ -71,11 +85,12 @@ class Route():
 
 class BaseHttpRoute(object):
     method_type = 'GET'
-    continueroute = True
     output = False
     route_url = None
     request = None
     named_route = None
+    required_domain = None
+    module_location = 'app.http.controllers'
     list_middleware = []
 
     def route(self, route, output):
@@ -92,7 +107,7 @@ class BaseHttpRoute(object):
 
             # Import the module
             module = importlib.import_module(
-                'app.http.controllers.' + get_controller)
+                '{0}.'.format(self.module_location) + get_controller)
 
             # Get the controller from the module
             controller = getattr(module, get_controller)
@@ -104,6 +119,20 @@ class BaseHttpRoute(object):
             self.output = output
         self.route_url = route
         return self
+    
+    def domain(self, domain):
+        self.required_domain = domain
+        return self
+    
+    def module(self, module):
+        self.module_location = module
+        return self
+
+    def has_required_domain(self):
+        if self.request.has_subdomain() and (self.required_domain is '*' or self.request.subdomain == self.required_domain):
+            return True
+        
+        return False
 
     def name(self, name):
         ''' Specifies the name of the route '''
@@ -127,7 +156,7 @@ class BaseHttpRoute(object):
         for arg in self.list_middleware:
 
             # Locate the middleware based on the string specified
-            located_middleware = locate(middleware.ROUTE_MIDDLEWARE[arg])(self.request)
+            located_middleware = self.request.app().resolve(locate(middleware.ROUTE_MIDDLEWARE[arg]))
 
             # If the middleware has the specific type of middleware (before or after)
             #     then execute that

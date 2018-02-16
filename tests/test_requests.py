@@ -1,5 +1,8 @@
 from masonite.request import Request
 from masonite.app import App
+from masonite.routes import Get
+from pydoc import locate
+from config import application
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -88,3 +91,61 @@ def test_request_loads_app():
 
     assert REQUEST.app() == app
     assert app.make('Request').app() == app
+
+def test_request_gets_input_from_container():
+    container = App()
+    container.bind('Application', application)
+    container.bind('WSGI', object)
+    container.bind('Environ', wsgi_request)
+
+    for provider in container.make('Application').PROVIDERS:
+        container.resolve(locate(provider)().load_app(container).register)
+
+    container.bind('Response', 'test')
+    container.bind('WebRoutes', [
+        Get().route('url', None),
+        Get().route('url/', None),
+        Get().route('url/@firstname', None),
+    ])
+
+    container.bind('Response', 'Route not found. Error 404')
+
+
+    for provider in container.make('Application').PROVIDERS:
+        located_provider = locate(provider)().load_app(container)
+
+        container.resolve(locate(provider)().load_app(container).boot)
+
+    assert container.make('Request').input('application') == 'Masonite'
+    assert container.make('Request').all() == {'application': ['Masonite']}
+    container.make('Request').environ['REQUEST_METHOD'] = 'POST'
+    assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
+    assert container.make('Request').input('application') == 'Masonite'
+
+def test_redirections_reset():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test')
+    request.redirectTo('test')
+
+    assert request.redirect_url is 'test'
+    assert request.redirect_route is 'test'
+
+    request.reset_redirections()
+
+    assert request.redirect_url is False
+    assert request.redirect_route is False
+
+def test_request_has_subdomain_returns_bool():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    assert request.has_subdomain() is False
+    assert request.subdomain is None
+
+    request.environ['HTTP_HOST'] = 'test.localhost.com'
+
+    assert request.has_subdomain() is True

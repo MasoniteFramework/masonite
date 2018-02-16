@@ -12,7 +12,9 @@ class AppProvider(ServiceProvider):
         self.app.bind('ApiRoutes', api.ROUTES)
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
+        self.app.bind('Route', Route())
+        self.app.bind('Request', Request())
 
-    def boot(self, Environ):
-        self.app.bind('Request', Request(Environ))
-        self.app.bind('Route', Route(Environ))
+    def boot(self, Environ, Request, Route):
+        Route.load_environ(Environ)
+        Request.load_environ(Environ).load_app(self.app)

@@ -6,7 +6,8 @@ class RedirectionProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, Request, WebRoutes):
+    def boot(self, Request, WebRoutes, Route):
+        router = Route
         if Request.redirect_route:
             for route in WebRoutes:
                 if route.named_route == Request.redirect_route:

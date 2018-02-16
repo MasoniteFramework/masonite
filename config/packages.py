@@ -19,6 +19,4 @@
 |
 '''
 
-SITE_PACKAGES = [
-    'venv/lib/python3.6/site-packages'
-]
+SITE_PACKAGES = []

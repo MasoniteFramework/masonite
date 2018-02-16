@@ -1,15 +1,17 @@
-''' Class for the authentication middleware '''
+''' Authentication Middleware '''
 
 class AuthenticationMiddleware(object):
-    ''' Middleware class which loads the current user into the request '''
+    ''' Middleware To Check If The User Is Logged In '''
 
-    def __init__(self, request):
-        self.request = request
+    def __init__(self, Request):
+        ''' Inject Any Dependencies From The Service Container '''
+        self.request = Request
 
     def before(self):
-        ''' Register as a before middleware to be ran before the request '''
+        ''' Run This Middleware Before The Route Executes '''
         if not self.request.user():
             self.request.redirectTo('login')
 
     def after(self):
+        ''' Run This Middleware After The Route Executes '''
         pass

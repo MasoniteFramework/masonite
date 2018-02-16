@@ -1,2 +1,2 @@
-def test_pytest():
+def test_unit():
     assert True

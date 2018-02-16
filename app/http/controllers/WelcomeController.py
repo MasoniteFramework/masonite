@@ -1,12 +1,9 @@
-''' A Module Description '''
-from masonite.view import view
+''' Welcome The User To Masonite '''
+
 from masonite.request import Request
 
 class WelcomeController(object):
-    ''' Controller for welcoming the user '''
-
-    def __init__(self):
-        pass
+    ''' Controller For Welcoming The User '''
 
     def show(self, Application, request: Request):
         ''' Show Welcome Template '''

@@ -12,7 +12,7 @@
 '''
 
 HTTP_MIDDLEWARE = [
-    'app.http.middleware.LoadUserMiddleware.LoadUserMiddleware'
+    # 'app.http.middleware.LoadUserMiddleware.LoadUserMiddleware'
 ]
 
 '''

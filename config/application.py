@@ -1,3 +1,5 @@
+''' Application Settings '''
+
 import os
 
 '''
@@ -11,7 +13,7 @@ import os
 |
 '''
 
-NAME = 'Masonite'
+NAME = 'Masonite 1.3'
 
 '''
 |--------------------------------------------------------------------------
@@ -45,11 +47,11 @@ KEY = os.environ.get('KEY')
 | Application URL
 |--------------------------------------------------------------------------
 |
-| Currently not in use. Will add documentation at a later date
+| Sets the root URL of the application. This is primarily used for testing
 |
 '''
 
-URL = 'http://localhost'
+URL = 'http://localhost:8000'
 
 '''
 |--------------------------------------------------------------------------
@@ -74,6 +76,9 @@ PROVIDERS = [
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
     'masonite.providers.MailProvider.MailProvider',
     'masonite.providers.UploadProvider.UploadProvider',
+    'masonite.providers.ViewProvider.ViewProvider',
+    'masonite.providers.HelpersProvider.HelpersProvider',
+    'masonite.providers.QueueProvider.QueueProvider',
 
     # Third Party Providers
 
@@ -87,7 +92,7 @@ PROVIDERS = [
 | Base Directory
 |--------------------------------------------------------------------------
 |
-| TODO
+| Sets the root path of your project
 |
 '''
 

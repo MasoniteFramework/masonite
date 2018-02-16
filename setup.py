@@ -10,7 +10,7 @@ setup(
               'masonite.testsuite',
               'masonite.queues',
              ],
-    version='1.0.0',
+    version='1.3.0',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',

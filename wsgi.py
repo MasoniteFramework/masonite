@@ -1,7 +1,9 @@
+''' First Entry For The WSGI Server '''
+
+from pydoc import locate
 from masonite.app import App
 from bootstrap.start import app
 from config import application
-from pydoc import locate
 
 '''
 |--------------------------------------------------------------------------

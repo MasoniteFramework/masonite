@@ -54,8 +54,8 @@ def app(environ, start_response):
     |
     | If we have a solid response and not redirecting then we need to return
     | a 200 status code along with the data. If we don't, then we'll have
-    | to return a 302 redirection to where the user would like to
-    | go next.
+    | to return a 302 redirection to where ever the user would like go
+    | to next.
     |
     '''
 

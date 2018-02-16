@@ -11,4 +11,3 @@ class QueueAsyncDriver(object):
             
             thread = threading.Thread(target=obj.dispatch(), args=(), kwargs={})
             thread.start()
-    

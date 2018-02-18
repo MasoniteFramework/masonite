@@ -12,6 +12,8 @@ class UploadDiskDriver(object):
         if not location:
             location = self.config.DRIVERS['disk']['location']
         
+        location += '/'
+        
         open(location + filename, 'wb').write(fileitem.file.read())
 
         return location + filename

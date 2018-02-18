@@ -196,11 +196,18 @@ class Request(object):
             # if the url contains a parameter variable like @id:int
             if '@' in url:
                 url = url.replace('@', '').replace(':int', '').replace(':string', '')
-                print('url after @', url)
-                compiled_url += '/' + str(self.param(url)) + '/' 
+                compiled_url +=  str(self.param(url)) + '/' 
             else:
-                compiled_url += url
-        print('compiled_url:', compiled_url)
+                compiled_url += url + '/'
+
+        # The loop isn't perfect and may have an unwanted trailing slash
+        if compiled_url.endswith('/') and not self.redirect_url.endswith('/'):
+            compiled_url = compiled_url[:-1]
+        
+        # The loop isn't perfect and may have 2 slashes next to eachother
+        if '//' in compiled_url:
+            compiled_url = compiled_url.replace('//', '/')
+
         return compiled_url
     
     def has_subdomain(self):

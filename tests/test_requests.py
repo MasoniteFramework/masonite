@@ -149,3 +149,58 @@ def test_request_has_subdomain_returns_bool():
     request.environ['HTTP_HOST'] = 'test.localhost.com'
 
     assert request.has_subdomain() is True
+
+def test_redirect_compiles_url():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test/url')
+
+    assert request.compile_route_to_url() == '/test/url'
+
+def test_redirect_compiles_url_with_multiple_slashes():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test/url/here')
+
+    assert request.compile_route_to_url() == '/test/url/here'
+
+def test_redirect_compiles_url_with_trailing_slash():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test/url/here/')
+
+    assert request.compile_route_to_url() == '/test/url/here/'
+
+def test_redirect_compiles_url_with_parameters():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test/@id').send({'id': '1'})
+
+    assert request.compile_route_to_url() == '/test/1'
+
+def test_redirect_compiles_url_with_multiple_parameters():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('test/@id/@test').send({'id': '1', 'test': 'user'})
+
+    assert request.compile_route_to_url() == '/test/1/user'
+
+def test_redirect_compiles_url_with_http():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('http://google.com')
+
+    assert request.compile_route_to_url() == 'http://google.com'
+

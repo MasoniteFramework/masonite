@@ -79,6 +79,7 @@ PROVIDERS = [
     'masonite.providers.ViewProvider.ViewProvider',
     'masonite.providers.HelpersProvider.HelpersProvider',
     'masonite.providers.QueueProvider.QueueProvider',
+    'masonite.providers.BroadcastProvider.BroadcastProvider',
 
     # Third Party Providers
 

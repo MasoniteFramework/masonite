@@ -19,6 +19,7 @@ PROVIDERS = [
     'masonite.providers.ViewProvider.ViewProvider',
     'masonite.providers.HelpersProvider.HelpersProvider',
     'masonite.providers.UploadProvider.UploadProvider',
+    'masonite.providers.BroadcastProvider.BroadcastProvider',
 ]
 
 STATIC_ROOT = 'storage'

@@ -110,7 +110,7 @@ We can make a method called `show()` in order to handle the logic for our templa
 Inside the `HelloWorldController` we can make a method that looks like this:
 
 ```python
-def show(self, request):
+def show(self):
     ''' Show Hello World Template '''
     return view('helloworld')
 ```
@@ -126,6 +126,7 @@ Which will create the `resources/templates/helloworld.html` template for us.
 Lastly all templates run through the Jinja2 rendering engine so we can use any Jinja2 code inside our template like:
 
 inside the `resources/views/helloworld.html`
+
 ```
 {{ 'Hello World' }}
 ```

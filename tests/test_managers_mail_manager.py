@@ -1,10 +1,12 @@
-from masonite.app import App
 from config import mail
 import pytest
+
+from masonite.app import App
 from masonite.exceptions import DriverNotFound
 from masonite.managers.MailManager import MailManager
 from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
+
 
 class MailSmtpDriver(object):
 
@@ -13,6 +15,7 @@ class MailSmtpDriver(object):
 
     def send(self, message):
         return message
+
 
 def test_mail_manager_loads_container():
     app = App()
@@ -25,8 +28,10 @@ def test_mail_manager_loads_container():
 
     assert mailManager.load_container(app) #.container.providers == {'Test': object}
 
+
 class User(object):
     pass
+
 
 def test_creates_driver():
     app = App()
@@ -39,6 +44,7 @@ def test_creates_driver():
 
     assert mailManager.load_container(app).manage_driver == object
 
+
 def test_creates_driver_with_initilization_container():
     app = App()
 
@@ -50,6 +56,7 @@ def test_creates_driver_with_initilization_container():
 
     assert mailManager.manage_driver == object
 
+
 def test_throws_drivernotfound_exception():
     app = App()
 
@@ -58,6 +65,7 @@ def test_throws_drivernotfound_exception():
 
     with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
         mailManager = MailManager(app)
+
 
 def test_manager_sets_driver():
     app = App()
@@ -80,6 +88,7 @@ def test_manager_sets_driver_throws_driver_not_found_exception():
     with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
         mailManager = MailManager(app).driver('mailtrap')
 
+
 def test_driver_sends_mail():
     app = App()
 
@@ -89,6 +98,7 @@ def test_driver_sends_mail():
 
     # assert MailManager(app).driver('smtp').send('mail') is 'mail'
     # assert MailManager(app).driver('smtp').send('mai') is not 'mail'
+
 
 def test_drivers_are_resolvable_by_container():
     app = App()
@@ -101,6 +111,7 @@ def test_drivers_are_resolvable_by_container():
     assert MailManager(app).driver('smtp').test is 'test'
     assert MailManager(app).driver('smtp').test is not 'tet'
 
+
 def test_send_mail():
     app = App()
 
@@ -109,6 +120,7 @@ def test_send_mail():
     app.bind('MailSmtpDriver', MailDriver)
 
     assert MailManager(app).driver('smtp').to('idmann509@gmail.com')
+
 
 def test_send_mail_with_from():
     app = App()
@@ -119,6 +131,7 @@ def test_send_mail_with_from():
 
     assert MailManager(app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
 
+
 def test_send_mail_with_subject():
     app = App()
 
@@ -127,6 +140,7 @@ def test_send_mail_with_subject():
     app.bind('MailSmtpDriver', MailDriver)
 
     assert MailManager(app).driver('smtp').to('').subject('test').message_subject == 'test'
+
 
 def test_send_mail_with_callable():
     app = App()
@@ -138,6 +152,7 @@ def test_send_mail_with_callable():
     setattr(user, 'email', 'idmann509@gmail.com')
 
     assert MailManager(app).driver('smtp').to(User)
+
 
 def test_mailgun_driver():
     app = App()
@@ -151,6 +166,7 @@ def test_mailgun_driver():
 
     assert MailManager(app).driver('mailgun').to(User)
 
+
 def test_mail_renders_template():
     app = App()
 
@@ -158,6 +174,7 @@ def test_mail_renders_template():
     app.bind('MailSmtpDriver', MailDriver)
 
     assert MailManager(app).driver('smtp').to('idmann509@gmail.com').template('mail/welcome', {'to': 'Masonite'}).send() is None
+
 
 def test_mailgun_renders_template():
     app = App()

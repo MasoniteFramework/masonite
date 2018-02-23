@@ -1,8 +1,10 @@
-from masonite.app import App
 from pydoc import locate
 from config import application
+
+from masonite.app import App
 from masonite.routes import Get, Api
 from masonite.testsuite.TestSuite import TestSuite
+
 
 container = App()
 container.bind('WSGI', object)
@@ -36,6 +38,7 @@ wsgi_request = {
 container.bind('Application', application)
 container.bind('Environ', wsgi_request)
 
+
 def test_providers_load_into_container():
 
     for provider in container.make('Application').PROVIDERS:
@@ -60,6 +63,7 @@ def test_providers_load_into_container():
         container.resolve(locate(provider)().load_app(container).boot)
 
     assert container.make('Request')
+
 
 def test_normal_app_containers():
     container = TestSuite().create_container()

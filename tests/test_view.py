@@ -1,7 +1,10 @@
 from masonite.view import view, View
 from masonite.app import App
+
+
 def test_view_compiles_jinja():
     assert view('test', {'test': 'test'}) == 'test'
+
 
 def test_view_extends_dictionary():
     container = App()
@@ -11,6 +14,7 @@ def test_view_extends_dictionary():
     view = container.make('View')
 
     assert view('test', {'test': 'test'}) == 'test'
+
 
 def test_view_extends_without_dictionary_parameters():
     container = App()
@@ -86,6 +90,7 @@ def test_composers_load_all_views_with_list():
 
     view = container.make('View')
     assert view('test') == 'test'
+
 
 def test_view_share_updates_dictionary_not_overwrite():
     container = App()

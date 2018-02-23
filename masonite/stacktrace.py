@@ -1,5 +1,6 @@
 from masonite.view import view
 
+
 class StackTrace(object):
 
     def __init__(self, trace_obj):

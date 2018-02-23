@@ -1,3 +1,7 @@
+"""
+Storage configuration
+"""
+
 DRIVER = 'disk'
 
 DRIVERS = {

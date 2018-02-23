@@ -1,7 +1,10 @@
 import os
 
-class UploadDiskDriver(object):
 
+class UploadDiskDriver(object):
+    """
+    Upload from the disk driver
+    """
     def __init__(self, StorageConfig, Application):
         self.config = StorageConfig
         self.appconfig = Application
@@ -11,9 +14,9 @@ class UploadDiskDriver(object):
 
         if not location:
             location = self.config.DRIVERS['disk']['location']
-        
+
         location += '/'
-        
+
         open(location + filename, 'wb').write(fileitem.file.read())
 
         return location + filename

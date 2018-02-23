@@ -1,7 +1,10 @@
 import boto3
 
+
 class UploadS3Driver(object):
-    
+    """
+    Amazon S3 Upload driver
+    """
     def __init__(self, Upload, StorageConfig):
         self.upload = Upload
         self.config = StorageConfig
@@ -17,6 +20,9 @@ class UploadS3Driver(object):
         s3 = session.resource('s3')
 
         s3.meta.client.upload_file(
-            file_location, self.config.DRIVERS['s3']['bucket'], fileitem.filename)
+            file_location,
+            self.config.DRIVERS['s3']['bucket'], fileitem.filename
+        )
+
     def storeAs(self):
         pass

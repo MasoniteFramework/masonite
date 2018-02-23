@@ -1,10 +1,11 @@
-''' A Mail Service Provider '''
+""" A Mail Service Provider """
 from masonite.provider import ServiceProvider
 from masonite.drivers.MailSmtpDriver import MailSmtpDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver
 from masonite.managers.MailManager import MailManager
 
 from config import mail
+
 
 class MailProvider(ServiceProvider):
 

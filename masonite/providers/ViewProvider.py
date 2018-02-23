@@ -1,6 +1,7 @@
-''' A Mail Service Provider '''
+""" A Mail Service Provider """
 from masonite.provider import ServiceProvider
 from masonite.view import View
+
 
 class ViewProvider(ServiceProvider):
 

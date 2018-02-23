@@ -1,15 +1,18 @@
 from setuptools import setup
+
+
 setup(
     name='masonite',
-    packages=['masonite',
-              'masonite.auth',
-              'masonite.facades',
-              'masonite.providers',
-              'masonite.drivers',
-              'masonite.managers',
-              'masonite.testsuite',
-              'masonite.queues',
-             ],
+    packages=[
+        'masonite',
+        'masonite.auth',
+        'masonite.facades',
+        'masonite.providers',
+        'masonite.drivers',
+        'masonite.managers',
+        'masonite.testsuite',
+        'masonite.queues',
+    ],
     version='1.3.2',
     install_requires=[
         'validator.py==1.2.5',

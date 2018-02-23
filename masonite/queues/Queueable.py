@@ -5,4 +5,3 @@ class Queueable(object):
 
     def dispatch(self):
         return self.handle
-

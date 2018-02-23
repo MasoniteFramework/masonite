@@ -1,8 +1,10 @@
+import inspect
+
 from masonite.provider import ServiceProvider
 from masonite.app import App
 from masonite.request import Request
 from masonite.routes import Get
-import inspect
+
 
 class ContainerTest(ServiceProvider):
 
@@ -19,6 +21,7 @@ def test_service_provider_loads_app():
 
     assert provider.app == app
 
+
 def test_service_provider_sets_on_app_object():
     app = App()
     provider = ServiceProvider()
@@ -27,6 +30,7 @@ def test_service_provider_sets_on_app_object():
     assert 'Request' in app.providers 
     assert app.make('Request') == object
 
+
 def test_can_call_container_with_self_parameter():
     app = App()
 
@@ -34,6 +38,7 @@ def test_can_call_container_with_self_parameter():
     app.bind('Get', object)
 
     assert app.resolve(ContainerTest().boot) == app.make('Request')
+
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -61,6 +66,7 @@ wsgi_request = {
     'PATH_INFO': '/',
     'SCRIPT_NAME': ''
 }
+
 
 def test_can_call_container_with_annotations_from_variable():
     app = App()

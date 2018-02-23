@@ -1,4 +1,4 @@
-""" A Mail Service Provider """
+""" An Upload Service Provider """
 from masonite.provider import ServiceProvider
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver

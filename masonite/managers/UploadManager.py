@@ -6,6 +6,7 @@ class UploadManager(Manager):
     """
     Upload files manager class
     """
+
     def create_driver(self, driver=None):
         if not driver:
             driver = self.container.make('StorageConfig').DRIVER.capitalize()

@@ -26,6 +26,20 @@ Masonite is the rapid application Python development framework that strives for 
 
 Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://masoniteframework.gitbooks.io/docs/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
+## Linux
+
+If you are running on a Linux flavor, you’ll need a few extra packages before you start. You can download these packages by running:
+
+```
+$ sudo apt-get install libmysqlclient-dev python-dev
+```
+
+Instead of `python-dev` you may need to specify your Python version
+
+```
+$ sudo apt-get install python3.6-dev
+```
+
 ## Installation:
 
 ```

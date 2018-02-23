@@ -1,12 +1,16 @@
-from masonite.drivers.BaseMailDriver import BaseMailDriver
 import smtplib
+
+from masonite.drivers.BaseMailDriver import BaseMailDriver
 
 from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-class MailSmtpDriver(BaseMailDriver):
 
+class MailSmtpDriver(BaseMailDriver):
+    """
+    Mail smtp driver
+    """
     def send(self, message_contents=None):
         config = self.config.DRIVERS['smtp']
 

@@ -2,6 +2,7 @@ from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get
 
+
 wsgi_request = {
     'wsgi.version': (1, 0),
     'wsgi.multithread': False,
@@ -33,30 +34,36 @@ wsgi_request = {
 ROUTE = Route(wsgi_request)
 REQUEST = Request(wsgi_request)
 
+
 def test_route_is_callable():
     if callable(ROUTE):
         assert True
 
+
 def test_route_get_returns_output():
     assert ROUTE.get('url', 'output') == 'output'
 
+
 def test_route_is_not_post():
     assert ROUTE.is_post() == False
+
 
 def test_route_is_post():
     ROUTE.environ['REQUEST_METHOD'] = 'POST'
     assert ROUTE.is_post() == True
 
+
 def test_compile_route_to_regex():
     assert ROUTE.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
     assert ROUTE.compile_route_to_regex(Get().route(
         'test/@route', None)) == '^test\\/(\\w+)\\/$'
-    
+
     assert ROUTE.compile_route_to_regex(Get().route(
         'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
-    
+
     assert ROUTE.compile_route_to_regex(Get().route(
         'test/@route:string', None)) == '^test\\/([a-zA-Z]+)\\/$'
-    
+
+
 def test_route_url_list():
     assert ROUTE.generated_url_list() == ['route']

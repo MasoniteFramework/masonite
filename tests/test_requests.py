@@ -1,8 +1,10 @@
+from config import application
+from pydoc import locate
+
 from masonite.request import Request
 from masonite.app import App
 from masonite.routes import Get
-from pydoc import locate
-from config import application
+
 
 wsgi_request = {
     'wsgi.version': (1, 0),
@@ -34,10 +36,12 @@ wsgi_request = {
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
+
 def test_request_is_callable():
-    ''' Request should be callable '''
+    """ Request should be callable """
     if callable(REQUEST):
         assert True
+
 
 def test_request_input_should_return_input_on_get_request():
     assert REQUEST.input('application') == 'Masonite'
@@ -45,44 +49,55 @@ def test_request_input_should_return_input_on_get_request():
 def test_request_all_should_return_params():
     assert REQUEST.all() == {'application': ['Masonite']}
 
+
 def test_request_has_should_return_bool():
     assert REQUEST.has('application') == True
     assert REQUEST.has('shouldreturnfalse') == False
+
 
 def test_request_set_params_should_return_self():
     assert REQUEST.set_params({'value': 'new'}) == REQUEST
     assert REQUEST.url_params == {'value': 'new'}
 
+
 def test_request_param_returns_parameter_set_or_false():
     assert REQUEST.param('value') == 'new'
     assert REQUEST.param('nullvalue') == False
+
 
 def test_request_appends_cookie():
     assert REQUEST.cookie('appendcookie', 'value') == REQUEST
     assert 'appendcookie' in REQUEST.environ['HTTP_COOKIE']
 
+
 def test_request_sets_and_gets_cookies():
     REQUEST.cookie('setcookie', 'value') 
     assert REQUEST.get_cookie('setcookie') == 'value'
+
 
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST
     assert REQUEST.redirect_url == 'newurl'
 
+
 def test_redirectTo_returns_request():
     assert REQUEST.redirectTo('newroute') == REQUEST
     assert REQUEST.redirect_route == 'newroute'
 
+
 def test_request_no_input_returns_false():
     assert REQUEST.input('notavailable') == False
 
+
 def test_request_get_cookies_returns_cookies():
     assert REQUEST.get_cookies() == REQUEST.cookies
+
 
 def test_request_set_user_sets_object():
     assert REQUEST.set_user(object) == REQUEST
     assert REQUEST.user_model == object
     assert REQUEST.user() == object
+
 
 def test_request_loads_app():
     app = App()
@@ -91,6 +106,7 @@ def test_request_loads_app():
 
     assert REQUEST.app() == app
     assert app.make('Request').app() == app
+
 
 def test_request_gets_input_from_container():
     container = App()
@@ -110,7 +126,6 @@ def test_request_gets_input_from_container():
 
     container.bind('Response', 'Route not found. Error 404')
 
-
     for provider in container.make('Application').PROVIDERS:
         located_provider = locate(provider)().load_app(container)
 
@@ -121,6 +136,7 @@ def test_request_gets_input_from_container():
     container.make('Request').environ['REQUEST_METHOD'] = 'POST'
     assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
     assert container.make('Request').input('application') == 'Masonite'
+
 
 def test_redirections_reset():
     app = App()
@@ -138,6 +154,7 @@ def test_redirections_reset():
     assert request.redirect_url is False
     assert request.redirect_route is False
 
+
 def test_request_has_subdomain_returns_bool():
     app = App()
     app.bind('Request', REQUEST)
@@ -150,6 +167,7 @@ def test_request_has_subdomain_returns_bool():
 
     assert request.has_subdomain() is True
 
+
 def test_redirect_compiles_url():
     app = App()
     app.bind('Request', REQUEST)
@@ -158,6 +176,7 @@ def test_redirect_compiles_url():
     request.redirect('test/url')
 
     assert request.compile_route_to_url() == '/test/url'
+
 
 def test_redirect_compiles_url_with_multiple_slashes():
     app = App()
@@ -168,6 +187,7 @@ def test_redirect_compiles_url_with_multiple_slashes():
 
     assert request.compile_route_to_url() == '/test/url/here'
 
+
 def test_redirect_compiles_url_with_trailing_slash():
     app = App()
     app.bind('Request', REQUEST)
@@ -176,6 +196,7 @@ def test_redirect_compiles_url_with_trailing_slash():
     request.redirect('test/url/here/')
 
     assert request.compile_route_to_url() == '/test/url/here/'
+
 
 def test_redirect_compiles_url_with_parameters():
     app = App()
@@ -186,6 +207,7 @@ def test_redirect_compiles_url_with_parameters():
 
     assert request.compile_route_to_url() == '/test/1'
 
+
 def test_redirect_compiles_url_with_multiple_parameters():
     app = App()
     app.bind('Request', REQUEST)
@@ -195,6 +217,7 @@ def test_redirect_compiles_url_with_multiple_parameters():
 
     assert request.compile_route_to_url() == '/test/1/user'
 
+
 def test_redirect_compiles_url_with_http():
     app = App()
     app.bind('Request', REQUEST)
@@ -203,4 +226,3 @@ def test_redirect_compiles_url_with_http():
     request.redirect('http://google.com')
 
     assert request.compile_route_to_url() == 'http://google.com'
-

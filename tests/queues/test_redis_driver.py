@@ -5,6 +5,7 @@ from masonite.managers.MailManager import MailManager
 from masonite.testsuite.TestSuite import TestSuite
 from config import queue, mail
 
+
 def test_redis_driver():
     container = TestSuite().create_container().container
 

@@ -1,4 +1,4 @@
-"""Authentication Class"""
+""" Authentication Class """
 import bcrypt
 import uuid
 

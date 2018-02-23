@@ -6,6 +6,7 @@ class QueueManager(Manager):
     """
     Queue manager class
     """
+
     def create_driver(self, driver=None):
         if not driver:
             driver = self.container.make('QueueConfig').DRIVER.capitalize()

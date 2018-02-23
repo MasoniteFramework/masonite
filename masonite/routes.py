@@ -6,10 +6,6 @@ from pydoc import locate
 
 from config import middleware
 
-import cgitb
-
-cgitb.enable()
-
 
 class Route():
     """ Loads the environ """

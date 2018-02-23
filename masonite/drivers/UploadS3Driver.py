@@ -21,7 +21,8 @@ class UploadS3Driver(object):
 
         s3.meta.client.upload_file(
             file_location,
-            self.config.DRIVERS['s3']['bucket'], fileitem.filename
+            self.config.DRIVERS['s3']['bucket'],
+            fileitem.filename
         )
 
     def storeAs(self):

@@ -2,6 +2,7 @@ class Manager(object):
     """
     Manager container class
     """
+
     def __init__(self, container=None):
         self.manage_driver = None
         self.container = container

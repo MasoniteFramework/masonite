@@ -173,7 +173,7 @@ def test_mail_renders_template():
     app.bind('MailConfig', mail)
     app.bind('MailSmtpDriver', MailDriver)
 
-    # assert MailManager(app).driver('smtp').to('idmann509@gmail.com').template('mail/welcome', {'to': 'Masonite'}).send() is None
+    assert 'MasoniteTesting' in MailManager(app).driver('smtp').to('idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
 
 
 def test_mailgun_renders_template():

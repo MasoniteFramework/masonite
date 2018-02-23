@@ -1,16 +1,21 @@
 import os
+from masonite.drivers.BaseUploadDriver import BaseUploadDriver
 
 
-class UploadDiskDriver(object):
+class UploadDiskDriver(BaseUploadDriver):
     """
     Upload from the disk driver
     """
+
     def __init__(self, StorageConfig, Application):
         self.config = StorageConfig
         self.appconfig = Application
 
     def store(self, fileitem, location=None):
         filename = os.path.basename(fileitem.filename)
+
+        # Check if is a valid extension
+        self.validate_extension(filename)
 
         if not location:
             location = self.config.DRIVERS['disk']['location']

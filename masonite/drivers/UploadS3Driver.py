@@ -1,7 +1,8 @@
 import boto3
+from masonite.drivers.BaseUploadDriver import BaseUploadDriver
 
 
-class UploadS3Driver(object):
+class UploadS3Driver(BaseUploadDriver):
     """
     Amazon S3 Upload driver
     """
@@ -11,6 +12,9 @@ class UploadS3Driver(object):
 
     def store(self, fileitem, location=None):
         file_location = self.upload.driver('disk').store(fileitem)
+
+        # Check if is a valid extension
+        self.validate_extension(fileitem.filename)
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],

@@ -16,5 +16,5 @@ class UploadProvider(ServiceProvider):
         self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('UploadManager', UploadManager(self.app))
 
-    def boot(self, UploadManager):
-        self.app.bind('Upload', UploadManager.driver('disk'))
+    def boot(self, UploadManager, StorageConfig):
+        self.app.bind('Upload', UploadManager.driver(StorageConfig.DRIVER))

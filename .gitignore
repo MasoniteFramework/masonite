@@ -10,3 +10,4 @@ htmlcov
 .env
 .pytest_cache/
 storage/compiled/
+uploads/test.jpg

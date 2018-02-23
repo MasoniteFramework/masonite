@@ -1,6 +1,7 @@
 import requests
 from config import application
 
+
 class TestRequest(object):
 
     def __init__(self):
@@ -14,12 +15,11 @@ class TestRequest(object):
     def status_code(self, code):
         if self.request.status_code == code:
             return True
-        
+
         return False
-    
+
     def contains(self, content):
         if content in self.request.text:
             return True
 
         return False
-            

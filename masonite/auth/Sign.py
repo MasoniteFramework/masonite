@@ -1,7 +1,10 @@
 from cryptography.fernet import Fernet
 
-class Sign(object):
 
+class Sign(object):
+    """
+    Authentication Sign and UnSign
+    """
     def __init__(self, key=None):
         if key:
             self.key = key
@@ -15,7 +18,7 @@ class Sign(object):
         f = Fernet(self.key)
         self.encryption = f.encrypt(bytes(value, 'utf-8'))
         return self.encryption.decode('utf-8')
-    
+
     def unsign(self, value=None):
         f = Fernet(self.key)
 

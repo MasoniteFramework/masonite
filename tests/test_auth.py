@@ -1,6 +1,7 @@
 from masonite.facades.Auth import Auth
 from masonite.request import Request
 
+
 wsgi_request = {
     'wsgi.version': (1, 0),
     'wsgi.multithread': False,
@@ -32,6 +33,7 @@ REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
 AUTH = Auth(REQUEST, object)
+
 
 def test_auth():
     assert AUTH

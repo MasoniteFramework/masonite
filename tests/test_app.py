@@ -4,6 +4,7 @@ from masonite.routes import Get, Post
 import inspect
 import pytest
 
+
 wsgi_request = {
     'wsgi.version': (1, 0),
     'wsgi.multithread': False,
@@ -34,8 +35,10 @@ wsgi_request = {
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
+
 def functest(Request, get: Get, post: Post):
     return Request.cookies
+
 
 def test_app_binds():
     app = App()
@@ -45,10 +48,12 @@ def test_app_binds():
 
     assert app.providers == {'test1': object, 'test2': object}
 
+
 def test_app_makes():
     app = App()
     app.bind('Request', REQUEST)
     assert app.make('Request').cookies == []
+
 
 def test_throws_exception_if_too_many_bindings():
     app = App()

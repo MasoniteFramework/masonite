@@ -1,5 +1,6 @@
-''' A StartResponseProvider Service Provider '''
+""" A StartResponseProvider Service Provider """
 from masonite.provider import ServiceProvider
+
 
 class StartResponseProvider(ServiceProvider):
 
@@ -8,7 +9,8 @@ class StartResponseProvider(ServiceProvider):
 
     def boot(self, Request, Response):
         if not Request.redirect_url:
-            # Convert the data that is retrieved above to bytes so the wsgi server can handle it.
+            # Convert the data that is retrieved above to bytes
+            # so the wsgi server can handle it.
 
             data = bytes(Response, 'utf-8')
 
@@ -24,7 +26,5 @@ class StartResponseProvider(ServiceProvider):
             ] + Request.get_cookies())
 
             Request.reset_redirections()
-            
+
             self.app.bind('Response', 'redirecting ...')
-
-

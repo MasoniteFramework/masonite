@@ -1,5 +1,6 @@
-from masonite.storage import Storage
 import os
+from masonite.storage import Storage
+
 
 def test_compiles_sass():
     Storage().compile_sass()

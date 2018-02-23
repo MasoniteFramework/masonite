@@ -1,9 +1,10 @@
-''' A Mail Service Provider '''
+""" A Mail Service Provider """
 from masonite.provider import ServiceProvider
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from config import storage
+
 
 class UploadProvider(ServiceProvider):
 

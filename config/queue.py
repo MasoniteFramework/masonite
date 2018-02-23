@@ -1,3 +1,7 @@
+"""
+Queue configuration
+"""
+
 DRIVER = 'redis'
 
 DRIVERS = {

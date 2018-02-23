@@ -1,6 +1,7 @@
 from masonite.exceptions import DriverNotFound
 from masonite.managers.Manager import Manager
 
+
 class MailManager(Manager):
 
     def create_driver(self, driver=None):

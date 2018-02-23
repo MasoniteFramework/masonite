@@ -1,10 +1,12 @@
-''' Authentication Class '''
+"""Authentication Class"""
+import bcrypt
 import uuid
 
-import bcrypt
 
 class Auth(object):
-    ''' This class will be used to authenticate users based on the config/auth.py file '''
+    """
+    This class will be used to authenticate users based on the config/auth.py file
+    """
 
     def __init__(self, request, auth_model=None):
         self.request = request
@@ -16,7 +18,9 @@ class Auth(object):
             self.auth_model = auth.AUTH['model']
 
     def user(self):
-        ''' Returns the model specified in the auth.py configuration '''
+        """
+        Returns the model specified in the auth.py configuration
+        """
         try:
             if self.request.get_cookie('token'):
                 return self.auth_model.where(
@@ -30,7 +34,9 @@ class Auth(object):
         return None
 
     def login(self, name, password):
-        ''' Login the user based on the parameters provided '''
+        """
+        Login the user based on the parameters provided
+        """
         auth_column = self.auth_model.__auth__
         try:
             model = self.auth_model.where(auth_column, name).first()

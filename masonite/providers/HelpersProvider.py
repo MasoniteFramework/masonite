@@ -1,7 +1,9 @@
-''' A SassProvider Service Provider '''
-from masonite.provider import ServiceProvider
+""" A SassProvider Service Provider """
 import builtins
 import os
+
+from masonite.provider import ServiceProvider
+
 
 class HelpersProvider(ServiceProvider):
 
@@ -11,7 +13,7 @@ class HelpersProvider(ServiceProvider):
         pass
 
     def boot(self, View, ViewClass, Request):
-        ''' Add helper functions to Masonite '''
+        """ Add helper functions to Masonite """
         builtins.view = View
         builtins.request = Request.helper
         builtins.auth = Request.user

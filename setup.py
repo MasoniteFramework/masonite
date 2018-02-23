@@ -3,15 +3,16 @@ from setuptools import setup
 
 setup(
     name='masonite',
-    packages=['masonite',
-              'masonite.auth',
-              'masonite.facades',
-              'masonite.providers',
-              'masonite.drivers',
-              'masonite.managers',
-              'masonite.testsuite',
-              'masonite.queues',
-             ],
+    packages=[
+        'masonite',
+        'masonite.auth',
+        'masonite.facades',
+        'masonite.providers',
+        'masonite.drivers',
+        'masonite.managers',
+        'masonite.testsuite',
+        'masonite.queues',
+    ],
     version='1.3.3',
     install_requires=[
         'validator.py==1.2.5',
@@ -23,11 +24,10 @@ setup(
         'pusher==1.7.4',
         'ably==1.0.1',
     ],
-    description='The core for the Masonite ',
+    description='The core for the Masonite',
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
-    url='https://github.com/josephmancuso/masonite',  # use the URL to the github repo
-    download_url='',
-    keywords=['python web framework', 'python3'],  # arbitrary keywords
+    url='https://github.com/MasoniteFramework/masonite',
+    keywords=['python web framework', 'python3'],
     classifiers=[],
 )

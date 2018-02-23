@@ -20,7 +20,6 @@ def create_or_append_config(location, name=False):
     else:
         # Append to the file
         # tempfiles is a list of file handles to your temp files.
-        # Order them however you like
         project_config = open(config_directory + '/' + file_name, "a")
         package_config = open(location, 'r')
 
@@ -37,7 +36,6 @@ def append_web_routes(location):
 
     # Append to the file
     # tempfiles is a list of file handles to your temp files.
-    # Order them however you like
     project_routes = open(routes_file, "a")
     package_routes = open(location, 'r')
 
@@ -54,7 +52,6 @@ def append_api_routes(location):
 
     # Append to the file
     # tempfiles is a list of file handles to your temp files.
-    # Order them however you like
     project_routes = open(api_file, "a")
     package_routes = open(location, 'r')
 

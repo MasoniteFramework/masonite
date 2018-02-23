@@ -1,4 +1,4 @@
-""" A ApiProvider Service Provider """
+""" An ApiProvider Service Provider """
 from masonite.provider import ServiceProvider
 
 

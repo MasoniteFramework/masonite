@@ -63,7 +63,7 @@ class RouteProvider(ServiceProvider):
             if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
                 route.load_request(request)
                 if request.has_subdomain():
-                    ## check if the subdomain matches the routes domain
+                    # check if the subdomain matches the routes domain
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
                         break
@@ -93,7 +93,13 @@ class RouteProvider(ServiceProvider):
                 # Get the data from the route. This data is typically the output
                 #     of the controller method
                 if not request.redirect_url:
-                    self.app.bind('Response', router.get(route.route, self.app.resolve(route.output)))
+                    self.app.bind(
+                        'Response',
+                        router.get(
+                            route.route,
+                            self.app.resolve(route.output).rendered_template
+                        )
+                    )
 
                 # Loads the request in so the middleware
                 # specified is able to use the

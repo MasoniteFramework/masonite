@@ -1,3 +1,6 @@
+import time
+import glob
+
 from config import cache
 from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
@@ -167,5 +170,23 @@ def test_view_cache():
     view = container.make('View')
 
     assert view(
+        'test_cache', {'test': 'test'}
+    ).cache_for(1, 'second').rendered_template == 'test'
+
+    assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'test'
+
+    time.sleep(2)
+
+    assert view(
         'test_cache', {'test': 'macho'}
-    ).cache_for(5, 'second').rendered_template == 'macho'
+    ).cache_for(5, 'seconds').rendered_template == 'macho'
+
+    assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'macho'
+
+    assert view(
+        'test_cache', {'test': 'macho'}
+    ).cache_for(1, 'second').rendered_template == 'macho'
+
+    time.sleep(1)
+
+    assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'macho'

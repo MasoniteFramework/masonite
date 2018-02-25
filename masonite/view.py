@@ -23,6 +23,7 @@ class View(object):
     def __init__(self):
         self.dictionary = {}
         self.composers = {}
+        self.cache = False
         self.container = None
         self.cache_time = None
         self.cache_type = None
@@ -80,10 +81,9 @@ class View(object):
         """
         Set time and type for cache
         """
-
+        self.cache = True
         self.cache_time = time
         self.cache_type = type
-
         if self.__is_expired_cache():
             self.__create_cache_template(self.template)
         return self
@@ -127,15 +127,16 @@ class View(object):
         Check if cache is expired
         """
 
-        # If is forever
-        if self.cache_time is None and self.cache_time is None:
-            return False
+        # Check if cache_for is set and configurate
+        if self.cache_time is None or self.cache_time is None and self.cache:
+            return True
 
         # By seconds
         cache_type = self.cache_type.lower()
         calc = 0
         if cache_type == "second" or cache_type == "seconds":
-            calc = 1
+            # Set time now for
+            calc = self.cache_time
         elif cache_type == "minutes" or cache_type == "minute":
             calc = 60
         elif cache_type == "hours" or cache_type == 'hour':
@@ -147,6 +148,7 @@ class View(object):
         elif cache_type == "years" or cache_type == 'year':
             calc = 60 * 60 * 60 * 60 * 60
         else:
+            # If is forever
             return False
 
         path = self.__get_path_cache()
@@ -154,11 +156,14 @@ class View(object):
         if find_template:
             template_file = find_template[0]
         else:
+            # Error to find template, then expired
             return True
 
         time_cache = self.__get_time_cache(template_file)
 
-        result = not (time.time() - float(time_cache)) > self.cache_time * calc
+        diff_time = time.time() - float(time_cache)
+        cache_for_time = self.cache_time * calc
+        result = diff_time > cache_for_time
         if result:
             self.__delete_cache()
         # True is expired

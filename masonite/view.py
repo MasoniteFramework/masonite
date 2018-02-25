@@ -82,7 +82,7 @@ class View(object):
         Set time and type for cache
         """
         self.cache = True
-        self.cache_time = time
+        self.cache_time = float(time)
         self.cache_type = type
         if self.__is_expired_cache():
             self.__create_cache_template(self.template)
@@ -136,7 +136,7 @@ class View(object):
         calc = 0
         if cache_type == "second" or cache_type == "seconds":
             # Set time now for
-            calc = self.cache_time
+            calc = 1
         elif cache_type == "minutes" or cache_type == "minute":
             calc = 60
         elif cache_type == "hours" or cache_type == 'hour':

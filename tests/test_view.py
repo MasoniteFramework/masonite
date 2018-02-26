@@ -15,7 +15,7 @@ def test_view_compiles_jinja():
 def test_view_extends_dictionary():
     container = App()
 
-    view = View().load_container(container)
+    view = View(container)
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
     container.bind('CacheManager', CacheManager(container))
@@ -32,7 +32,7 @@ def test_view_extends_dictionary():
 def test_view_extends_without_dictionary_parameters():
     container = App()
 
-    view = View().load_container(container)
+    view = View(container)
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
     container.bind('CacheManager', CacheManager(container))
@@ -50,7 +50,7 @@ def test_view_extends_without_dictionary_parameters():
 def test_render_from_container_as_view_class():
     container = App()
 
-    ViewClass = View().load_container(container)
+    ViewClass = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
@@ -70,7 +70,7 @@ def test_render_from_container_as_view_class():
 def test_composers():
     container = App()
 
-    ViewClass = View().load_container(container)
+    ViewClass = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
@@ -91,7 +91,7 @@ def test_composers():
 def test_composers_load_all_views_with_astericks():
     container = App()
 
-    ViewClass = View().load_container(container)
+    ViewClass = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
@@ -112,7 +112,7 @@ def test_composers_load_all_views_with_astericks():
 def test_composers_load_all_views_with_list():
     container = App()
 
-    ViewClass = View().load_container(container)
+    ViewClass = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
@@ -134,7 +134,7 @@ def test_composers_load_all_views_with_list():
 def test_view_share_updates_dictionary_not_overwrite():
     container = App()
 
-    ViewClass = View().load_container(container)
+    ViewClass = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)
@@ -158,7 +158,7 @@ def test_view_cache():
 
     container = App()
 
-    view = View().load_container(container)
+    view = View(container)
 
     container.bind('CacheConfig', cache)
     container.bind('CacheDiskDriver', CacheDiskDriver)

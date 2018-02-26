@@ -85,8 +85,31 @@ class View(object):
         Save in the cache the template
         """
 
+        cache_type = self.cache_type.lower()
+        calc = 0
+        if cache_type == "second" or cache_type == "seconds":
+            # Set time now for
+            calc = 1
+        elif cache_type == "minutes" or cache_type == "minute":
+            calc = 60
+        elif cache_type == "hours" or cache_type == 'hour':
+            calc = 60 * 60
+        elif cache_type == "days" or cache_type == 'day':
+            calc = 60 * 60 * 60
+        elif cache_type == "months" or cache_type == 'month':
+            calc = 60 * 60 * 60 * 60
+        elif cache_type == "years" or cache_type == 'year':
+            calc = 60 * 60 * 60 * 60 * 60
+        else:
+            # If is forever
+            return True
+
+        cache_for_time = self.cache_time * calc
+
+        cache_for_time = cache_for_time + time.time()
+
         self.container.make('Cache').store(
-            template + ":" + str(time.time()),
+            template + ":" + str(cache_for_time),
             self.rendered_template, '.html',
         )
 
@@ -95,7 +118,7 @@ class View(object):
         Check if the cache template exists
         """
 
-        return self.container.make('Cache').exists_cache(self.template)
+        return self.container.make('Cache').cache_exists(self.template)
 
     def __is_expired_cache(self):
         """
@@ -109,9 +132,7 @@ class View(object):
         driver_cache = self.container.make('Cache')
 
         # True is expired
-        return not driver_cache.is_valid(
-            self.template, self.cache_time, self.cache_type, ".html"
-        )
+        return not driver_cache.is_valid(self.template)
 
     def __get_cached_template(self):
         """

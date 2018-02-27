@@ -12,7 +12,7 @@ import os
 | to show data updates to your clients in real time without having
 | to constantly refresh the page or send constant ajax requests
 |
-| Supported: 'pusher', 'alby'
+| Supported: 'pusher', 'ably'
 |
 '''
 

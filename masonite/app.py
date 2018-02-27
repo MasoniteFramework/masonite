@@ -1,6 +1,7 @@
 """ Core of the IOC Container """
 
 import inspect
+from masonite.exceptions import MissingContainerBindingNotFound
 
 
 class App():
@@ -19,7 +20,16 @@ class App():
 
     def make(self, name):
         """ Retreives a class from the container by key """
-        return self.providers[name]
+        if self.has(name):
+            return self.providers[name]
+        
+        raise MissingContainerBindingNotFound("{0} key was not found in the container".format(name))
+    
+    def has(self, name):
+        if name in self.providers:
+            return True
+        
+        return False
 
     def helper(self):
         """ Adds a helper to create builtin functions """

@@ -6,6 +6,8 @@ from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
 from masonite.managers.CacheManager import CacheManager
 from masonite.view import view, View
+from masonite.exceptions import RequiredContainerBindingNotFound
+import pytest
 
 
 def test_view_compiles_jinja():
@@ -16,11 +18,6 @@ def test_view_extends_dictionary():
     container = App()
 
     view = View(container)
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
 
     container.bind('View', view.render)
 
@@ -33,11 +30,6 @@ def test_view_extends_without_dictionary_parameters():
     container = App()
 
     view = View(container)
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
     view.share({'test': 'test'})
 
     container.bind('View', view.render)
@@ -51,12 +43,6 @@ def test_render_from_container_as_view_class():
     container = App()
 
     ViewClass = View(container)
-
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
 
     container.bind('ViewClass', ViewClass)
     container.bind('View', ViewClass.render)
@@ -72,11 +58,6 @@ def test_composers():
 
     ViewClass = View(container)
 
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
     container.bind('ViewClass', ViewClass)
     container.bind('View', ViewClass.render)
 
@@ -93,11 +74,6 @@ def test_composers_load_all_views_with_astericks():
 
     ViewClass = View(container)
 
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
     container.bind('ViewClass', ViewClass)
     container.bind('View', ViewClass.render)
 
@@ -114,11 +90,6 @@ def test_composers_load_all_views_with_list():
 
     ViewClass = View(container)
 
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
     container.bind('ViewClass', ViewClass)
     container.bind('View', ViewClass.render)
 
@@ -136,11 +107,6 @@ def test_view_share_updates_dictionary_not_overwrite():
 
     ViewClass = View(container)
 
-    container.bind('CacheConfig', cache)
-    container.bind('CacheDiskDriver', CacheDiskDriver)
-    container.bind('CacheManager', CacheManager(container))
-    container.bind('Application', container)
-    container.bind('Cache', container.make('CacheManager').driver('disk'))
     container.bind('ViewClass', ViewClass)
 
     viewclass = container.make('ViewClass')
@@ -149,6 +115,20 @@ def test_view_share_updates_dictionary_not_overwrite():
     viewclass.share({'test2': 'test2'})
 
     assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2'}
+
+
+def test_view_throws_exception_without_cache_binding():
+    container = App()
+
+    ViewClass = View(container)
+
+    container.bind('ViewClass', ViewClass)
+    container.bind('View', ViewClass.render)
+
+    view = container.make('View')
+
+    with pytest.raises(RequiredContainerBindingNotFound):
+        view('test_cache').cache_for('5', 'seconds')
 
 
 def test_view_cache():

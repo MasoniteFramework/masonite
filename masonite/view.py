@@ -1,4 +1,5 @@
 from jinja2 import Environment, PackageLoader, select_autoescape
+from masonite.exceptions import RequiredContainerBindingNotFound
 
 
 def view(template='index', dictionary={}):
@@ -44,7 +45,7 @@ class View(object):
         self.template = template
 
         # Check if use cache and return template from cache if exists
-        if self.__cached_template_exists() and not self.__is_expired_cache():
+        if self.container.has('Cache') and self.__cached_template_exists() and not self.__is_expired_cache():
             return self.__get_cached_template()
 
         if template in self.composers:
@@ -88,6 +89,11 @@ class View(object):
         """
         Set time and type for cache
         """
+
+        if not self.container.has('Cache'):
+            raise RequiredContainerBindingNotFound(
+                "The 'Cache' container binding is required to use this method and wasn't found in the container. You may be missing a Service Provider"
+            )
 
         self.cache = True
         self.cache_time = float(time)

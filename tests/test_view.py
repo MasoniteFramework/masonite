@@ -131,7 +131,8 @@ def test_view_throws_exception_without_cache_binding():
         view('test_cache').cache_for('5', 'seconds')
 
 
-def test_view_cache():
+
+def test_view_cache_caches_files():
     """
     Test for cache template each 5 min
     """
@@ -176,3 +177,22 @@ def test_view_cache():
     assert view(
         'test_cache', {'test': 'macho'}
     ).cache_for('1', 'second').rendered_template == 'macho'
+
+def test_cache_throws_exception_with_incorrect_cache_type():
+    container = App()
+
+    view = View(container)
+
+    container.bind('CacheConfig', cache)
+    container.bind('CacheDiskDriver', CacheDiskDriver)
+    container.bind('CacheManager', CacheManager(container))
+    container.bind('Application', container)
+    container.bind('Cache', container.make('CacheManager').driver('disk'))
+    container.bind('View', view.render)
+
+    view = container.make('View')
+
+    with pytest.raises(ValueError):
+        view(
+            'test_exception', {'test': 'test'}
+        ).cache_for(1, 'monthss')

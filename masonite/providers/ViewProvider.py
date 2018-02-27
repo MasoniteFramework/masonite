@@ -8,7 +8,7 @@ class ViewProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
-        view = View()
+        view = View(self.app)
         self.app.bind('ViewClass', view)
         self.app.bind('View', view.render)
 

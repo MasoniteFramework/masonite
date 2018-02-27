@@ -3,6 +3,7 @@ import re
 from pydoc import locate
 
 from masonite.provider import ServiceProvider
+from masonite.view import View
 
 
 class RouteProvider(ServiceProvider):
@@ -25,7 +26,7 @@ class RouteProvider(ServiceProvider):
             |
             | Sometimes a user will end with a trailing slash. Because the user might
             | create routes like `/url/route` and `/url/route/` and how the regex 
-            | is compiled down, we may need to adjust for urls that end or dont 
+            | is compiled down, we may need to adjust for urls that end or dont
             | end with a trailing slash.
             |
             """
@@ -63,7 +64,7 @@ class RouteProvider(ServiceProvider):
             if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
                 route.load_request(request)
                 if request.has_subdomain():
-                    ## check if the subdomain matches the routes domain
+                    # check if the subdomain matches the routes domain
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
                         break
@@ -77,7 +78,9 @@ class RouteProvider(ServiceProvider):
                 """
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = self.app.resolve(locate(http_middleware))
+                    located_middleware = self.app.resolve(
+                        locate(http_middleware)
+                    )
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
 
@@ -90,10 +93,18 @@ class RouteProvider(ServiceProvider):
                 # before the request
                 route.run_middleware('before')
 
-                # Get the data from the route. This data is typically the output
-                #     of the controller method
+                # Get the data from the route. This data is typically the
+                # output of the controller method
                 if not request.redirect_url:
-                    self.app.bind('Response', router.get(route.route, self.app.resolve(route.output)))
+                    response = self.app.resolve(route.output)
+
+                    if isinstance(response, View):
+                        response = response.rendered_template
+
+                    self.app.bind(
+                        'Response',
+                        router.get(route.route, response)
+                    )
 
                 # Loads the request in so the middleware
                 # specified is able to use the
@@ -111,7 +122,9 @@ class RouteProvider(ServiceProvider):
                 """
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = self.app.resolve(locate(http_middleware))
+                    located_middleware = self.app.resolve(
+                        locate(http_middleware)
+                    )
                     if hasattr(located_middleware, 'after'):
                         located_middleware.after()
                 break

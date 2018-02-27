@@ -1,4 +1,4 @@
-from masonite.exceptions import DriverNotFound
+from masonite.exceptions import DriverNotFound, MissingContainerBindingNotFound
 from masonite.managers.Manager import Manager
 
 
@@ -17,5 +17,5 @@ class CacheManager(Manager):
             self.manage_driver = self.container.make(
                 'Cache{0}Driver'.format(driver)
             )
-        except KeyError:
+        except MissingContainerBindingNotFound:
             raise DriverNotFound('Could not find the Cache{0}Driver from the service container. Are you missing a service provider?'.format(driver))

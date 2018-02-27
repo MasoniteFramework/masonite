@@ -181,7 +181,7 @@ def test_view_cache():
         'test_cache', {'test': 'macho'}
     ).cache_for(5, 'seconds').rendered_template == 'macho'
 
-    time.sleep(5)
+    time.sleep(2)
 
     assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'macho'
 

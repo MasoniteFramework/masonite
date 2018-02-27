@@ -1,4 +1,3 @@
-import time
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 
@@ -19,10 +18,15 @@ class View(object):
     def __init__(self, container):
         self.dictionary = {}
         self.composers = {}
-        self.cache = False
         self.container = container
+
+        # If the cache_for method is declared
+        self.cache = False
+        # Cache time of cache_for
         self.cache_time = None
+        # Cache type of cache_for
         self.cache_type = None
+
         self.template = None
         self.env = Environment(
             loader=PackageLoader('resources', 'templates'),
@@ -30,6 +34,10 @@ class View(object):
         )
 
     def render(self, template, dictionary={}):
+        """
+        Get the string contents of the view.
+        """
+
         self.dictionary.update(dictionary)
 
         # Load template
@@ -52,6 +60,9 @@ class View(object):
         return self
 
     def composer(self, composer_name, dictionary):
+        """
+        Updates composer dictionary
+        """
 
         if isinstance(composer_name, str):
             self.composers[composer_name] = dictionary
@@ -66,6 +77,10 @@ class View(object):
         pass
 
     def share(self, dictionary):
+        """
+        Updates the dictionary
+        """
+
         self.dictionary.update(dictionary)
         return self
 
@@ -73,6 +88,7 @@ class View(object):
         """
         Set time and type for cache
         """
+
         self.cache = True
         self.cache_time = float(time)
         self.cache_type = type
@@ -85,32 +101,9 @@ class View(object):
         Save in the cache the template
         """
 
-        cache_type = self.cache_type.lower()
-        calc = 0
-        if cache_type == "second" or cache_type == "seconds":
-            # Set time now for
-            calc = 1
-        elif cache_type == "minutes" or cache_type == "minute":
-            calc = 60
-        elif cache_type == "hours" or cache_type == 'hour':
-            calc = 60 * 60
-        elif cache_type == "days" or cache_type == 'day':
-            calc = 60 * 60 * 60
-        elif cache_type == "months" or cache_type == 'month':
-            calc = 60 * 60 * 60 * 60
-        elif cache_type == "years" or cache_type == 'year':
-            calc = 60 * 60 * 60 * 60 * 60
-        else:
-            # If is forever
-            return True
-
-        cache_for_time = self.cache_time * calc
-
-        cache_for_time = cache_for_time + time.time()
-
-        self.container.make('Cache').store(
-            template + ":" + str(cache_for_time),
-            self.rendered_template, '.html',
+        self.container.make('Cache').store_for(
+            template, self.rendered_template,
+            self.cache_time, self.cache_type, '.html',
         )
 
     def __cached_template_exists(self):
@@ -138,6 +131,7 @@ class View(object):
         """
         Return the rendered template
         """
+
         driver_cache = self.container.make('Cache')
         self.rendered_template = driver_cache.get(self.template)
         return self

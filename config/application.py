@@ -80,6 +80,7 @@ PROVIDERS = [
     'masonite.providers.HelpersProvider.HelpersProvider',
     'masonite.providers.QueueProvider.QueueProvider',
     'masonite.providers.BroadcastProvider.BroadcastProvider',
+    'masonite.providers.CacheProvider.CacheProvider',
 
     # Third Party Providers
 

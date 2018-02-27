@@ -133,10 +133,6 @@ def test_view_throws_exception_without_cache_binding():
 
 
 def test_view_cache_caches_files():
-    """
-    Test for cache template each 5 min
-    """
-
     container = App()
 
     view = View(container)

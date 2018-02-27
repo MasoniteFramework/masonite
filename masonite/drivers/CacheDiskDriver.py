@@ -33,12 +33,10 @@ class CacheDiskDriver():
         Store content with time, type and extension
         """
 
-        if cache_time is None or cache_type is None:
-            raise ValueError("4 parameters are expected.")
-
         self.cache_forever = False
         cache_type = cache_type.lower()
         calc = 0
+        
         if cache_type in ("second", "seconds"):
             # Set time now for
             calc = 1

@@ -1,7 +1,8 @@
 from masonite.view import view
+from masonite.contracts.MailContract import MailContract
 
 
-class BaseMailDriver(object):
+class BaseMailDriver(MailContract):
     """
     Class base for mail drivers
     """

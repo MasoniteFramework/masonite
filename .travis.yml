@@ -6,7 +6,14 @@ python:
 install:
 - pip install .
 - pip install -r requirements.txt
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
 script: python -m pytest
+env:
+  global:
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+    - CC_TEST_REPORTER_ID=2d7bb4d2dd17bfc481c3809341af79c47c1e24190099215b05052d10b4353d6e
 deploy:
   provider: pypi
   user: josephmancuso

@@ -22,6 +22,7 @@ if os.getenv('ABLY_SECRET'):
         assert container.make('Broadcast').channel('random', {'message': 'dictionary'}) == {'message': 'dictionary'}
         assert container.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
         assert container.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
+        assert container.make('Broadcast').ssl(True).ssl_message is True
 
     def test_broadcast_loads_into_container_with_ably():
         container = TestSuite().create_container().container
@@ -36,3 +37,4 @@ if os.getenv('ABLY_SECRET'):
         assert container.make('Broadcast').channel('test-channel', {'message': 'from driver'}) == {'message': 'from driver'}
         assert container.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
         assert container.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
+        assert container.make('Broadcast').ssl(True).ssl_message is True

@@ -13,7 +13,7 @@ class BroadcastAblyDriver(object):
         self.ssl_message = True
 
     def ssl(self, boolean):
-        self.ssl = ssl_message
+        self.ssl_message = boolean
         return self
 
     def channel(self, channels, message, event='base-event'):

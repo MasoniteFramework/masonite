@@ -1,4 +1,5 @@
 import os
+
 from masonite.exceptions import FileTypeException
 
 
@@ -14,6 +15,7 @@ class BaseUploadDriver(object):
         """
         Set file types to accept
         """
+
         self.accept_file_types = args
         return self
 
@@ -21,6 +23,7 @@ class BaseUploadDriver(object):
         """
         Check if files is a valid extension
         """
+
         if self.accept_file_types is not None:
             if not filename.endswith(self.accept_file_types):
                 raise FileTypeException("The extension file not is valid.")

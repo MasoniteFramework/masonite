@@ -4,4 +4,9 @@ from abc import ABC, abstractmethod
 class BroadcastContract(ABC):
 
     @abstractmethod
-    def store(self): pass
+    def ssl(self): pass
+    
+    @abstractmethod
+    def channel(self): pass
+    
+

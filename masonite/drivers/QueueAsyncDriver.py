@@ -1,7 +1,9 @@
 import threading
 
+from masonite.contracts.QueueContract import QueueContract
 
-class QueueAsyncDriver(object):
+
+class QueueAsyncDriver(QueueContract):
     """
     Queue Aysnc Driver
     """

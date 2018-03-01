@@ -1,8 +1,10 @@
 import os
+
+from masonite.contracts.UploadContract import UploadContract
 from masonite.drivers.BaseUploadDriver import BaseUploadDriver
 
 
-class UploadDiskDriver(BaseUploadDriver):
+class UploadDiskDriver(BaseUploadDriver, UploadContract):
     """
     Upload from the disk driver
     """
@@ -26,7 +28,7 @@ class UploadDiskDriver(BaseUploadDriver):
 
         return location + filename
 
-    def storePrepend(self, fileitem, prepend, location=None):
+    def store_prepend(self, fileitem, prepend, location=None):
         filename = os.path.basename(fileitem.filename)
 
         if not location:

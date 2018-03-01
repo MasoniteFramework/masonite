@@ -1,3 +1,4 @@
+from masonite.contracts.BroadcastContract import BroadcastContract
 from masonite.exceptions import DriverLibraryNotFound
 
 try:
@@ -6,7 +7,7 @@ except ImportError:
     raise DriverLibraryNotFound(
         'Could not find the "ably" library. Please pip install this library running "pip install ably"')
 
-class BroadcastAblyDriver(object):
+class BroadcastAblyDriver(BroadcastContract):
 
     def __init__(self, BroadcastConfig):
         self.config = BroadcastConfig

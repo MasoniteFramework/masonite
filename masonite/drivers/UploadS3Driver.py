@@ -1,11 +1,13 @@
 import boto3
+from masonite.contracts.UploadContract import UploadContract
 from masonite.drivers.BaseUploadDriver import BaseUploadDriver
 
 
-class UploadS3Driver(BaseUploadDriver):
+class UploadS3Driver(BaseUploadDriver, UploadContract):
     """
     Amazon S3 Upload driver
     """
+
     def __init__(self, Upload, StorageConfig):
         self.upload = Upload
         self.config = StorageConfig
@@ -29,5 +31,7 @@ class UploadS3Driver(BaseUploadDriver):
             fileitem.filename
         )
 
-    def storeAs(self):
-        pass
+    def store_prepend(self, fileitem, prepend, location=None):
+        fileitem.filename = prepend + fileitem.filename
+
+        return self.store(self, fileitem, location)

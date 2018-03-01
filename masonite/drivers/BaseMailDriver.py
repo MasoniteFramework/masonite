@@ -1,11 +1,11 @@
 from masonite.view import view
-from masonite.contracts.MailContract import MailContract
 
 
-class BaseMailDriver(MailContract):
+class BaseMailDriver(object):
     """
     Class base for mail drivers
     """
+
     def __init__(self, MailConfig):
         self.config = MailConfig
         self.to_address = None

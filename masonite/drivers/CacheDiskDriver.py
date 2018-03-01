@@ -36,7 +36,7 @@ class CacheDiskDriver():
         self.cache_forever = False
         cache_type = cache_type.lower()
         calc = 0
-        
+
         if cache_type in ("second", "seconds"):
             # Set time now for
             calc = 1
@@ -69,6 +69,9 @@ class CacheDiskDriver():
         """
         Get the data from a key in the cache
         """
+
+        if not self.is_valid(key):
+            return None
 
         cache_path = self.config.DRIVERS['disk']['location'] + "/"
         content = ""

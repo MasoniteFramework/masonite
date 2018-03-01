@@ -131,7 +131,6 @@ def test_view_throws_exception_without_cache_binding():
         view('test_cache').cache_for('5', 'seconds')
 
 
-
 def test_view_cache_caches_files():
     container = App()
 

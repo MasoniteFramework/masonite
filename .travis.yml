@@ -9,11 +9,14 @@ install:
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script: python -m pytest
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 env:
   global:
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
-    - CC_TEST_REPORTER_ID=2d7bb4d2dd17bfc481c3809341af79c47c1e24190099215b05052d10b4353d6e
+    - CC_TEST_REPORTER_ID=C0gGrCK7UAH5KGDKZA5Yl9bwyIpIA5NGlJqDjc38F1+S1IRUb6NPcNigrmWiUl+bjlguYacETdN4ZXdZGhcl8/QVpX8saUUSmOen+3h5Ehx4Y2ip2vU1mPNwFUIZotCatAt4y1yeWIxUQJAxbk1s8I8pvUOB1sDAKaJDDNNdQuPJiI3VsnFa3cFeryE+CFZCSKSpLt/KsKdymFYKG+CTYLQLz9uHFtsUu4eF3XZQzyPYHG8LQacvP4jtFgsYbspDiewmx9uK2yDvJQ4K4/MJ3kTni3ziVLSJLuNrE8zNcqab0ce6z/bDSylTKqISqkouSd3WOt2fQplzSIZYxwyEzf6dz/+fD4UGoN1iMMQhE50fHZPfVgHmHJqKCd3EfoGzqpUqoLCrFf6C1aEQS0FmDUTaw2RbFFq5gwmuNBOAeRezf76dSPKsNo0PI1doahh+s0SSXkupdpcWfCqaJDzUD6Zc3oBLLISjEr6uQOzF5Ht1BOunvyRNlV63xNlklBHCXxbRjR4RgfeGbF/mz0ZBunK5F4PVMeT9U0aPOsQcPDdCJOEAxQxvXb+h1lRlAYD0JRaKAW6B4r4m9pKSNEPAFPKseBMQWH31ygZSY1HeuLu6GqYPFRXbybfVQ7CIr7u1dt0+snEQw1meXN7taJEeD/v7rtFoOGN7nO9ESQA+XDQ=
 deploy:
   provider: pypi
   user: josephmancuso

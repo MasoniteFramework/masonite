@@ -2,8 +2,10 @@ import glob
 import os
 import time
 
+from masonite.contracts.CacheContract import CacheContract
 
-class CacheDiskDriver():
+
+class CacheDiskDriver(CacheContract):
     """
     Cache from the disk driver
     """

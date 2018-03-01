@@ -5,6 +5,7 @@ class BaseMailDriver(object):
     """
     Class base for mail drivers
     """
+
     def __init__(self, MailConfig):
         self.config = MailConfig
         self.to_address = None

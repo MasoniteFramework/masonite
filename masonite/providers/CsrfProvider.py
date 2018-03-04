@@ -8,9 +8,7 @@ class CsrfProvider(ServiceProvider):
     wsgi = True
 
     def register(self):
-        request = self.app.make('Request')
-        self.app.bind('Request', request)
-        self.app.bind('CSRF', Csrf(request))
+        self.app.bind('CSRF', Csrf(self.app.make('Request')))
 
     def boot(self, View, ViewClass, Request):
         # Share token csrf

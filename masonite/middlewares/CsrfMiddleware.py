@@ -14,7 +14,7 @@ class CsrfMiddleware(object):
 
     def before(self):
         if self.request.is_post():
-            token = self.request.input('csrftoken')
+            token = self.request.input('csrf_token')
             if (not self.csrf.verify_csrf_token(token)
                     and not self.__in_except()):
                 raise InvalidCSRFToken("Invalid CSRF token.")

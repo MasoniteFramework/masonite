@@ -12,8 +12,17 @@ class FileTypeException(Exception):
     """
     pass
 
+
 class RequiredContainerBindingNotFound(Exception):
     pass
 
+
 class MissingContainerBindingNotFound(Exception):
+    pass
+
+
+class InvalidCSRFToken(Exception):
+    """
+    For exceptions that return error when verifying the csrf token
+    """
     pass

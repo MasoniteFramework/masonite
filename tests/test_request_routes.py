@@ -2,6 +2,7 @@ from masonite.routes import Get, Post
 from masonite.request import Request
 from masonite.testsuite.TestSuite import TestSuite
 
+
 wsgi_request = {
     'wsgi.version': (1, 0),
     'wsgi.multithread': False,
@@ -32,31 +33,38 @@ wsgi_request = {
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
+
 def test_get_initialized():
     assert callable(Get)
     assert callable(Post)
 
+
 def test_get_sets_route():
     assert Get().route('test', None)
+
 
 def test_sets_name():
     get = Get().route('test', None).name('test')
 
     assert get.named_route == 'test'
 
+
 def test_loads_request():
     get = Get().route('test', None).name('test').load_request('test')
 
     assert get.request == 'test'
+
 
 def test_loads_middleware():
     get = Get().route('test', None).middleware('auth', 'middleware')
 
     assert get.list_middleware == ('auth', 'middleware')
 
+
 def test_method_type():
     assert Post().method_type == 'POST'
     assert Get().method_type == 'GET'
+
 
 def test_method_type_sets_domain():
     get = Get().domain('test')
@@ -64,6 +72,7 @@ def test_method_type_sets_domain():
 
     assert get.required_domain == 'test'
     assert post.required_domain == 'test'
+
 
 def test_method_type_has_required_subdomain():
     get = Get().domain('test')
@@ -76,6 +85,7 @@ def test_method_type_has_required_subdomain():
 
     assert get.has_required_domain() == True
     assert post.has_required_domain() == True
+
 
 def test_method_type_has_required_subdomain_with_asterick():
     container = TestSuite().create_container()
@@ -94,7 +104,7 @@ def test_method_type_has_required_subdomain_with_asterick():
 
 
 def test_request_sets_subdomain_on_get():
-    
+
     container = TestSuite().create_container()
     request = container.container.make('Request')
 
@@ -108,6 +118,7 @@ def test_request_sets_subdomain_on_get():
 
     get.has_required_domain()
     assert request.param('subdomain') == 'test'
+
 
 def test_route_changes_module_location():
 

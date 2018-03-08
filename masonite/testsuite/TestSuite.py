@@ -4,6 +4,7 @@ from masonite.testsuite.TestRequest import TestRequest
 from config import application
 from pydoc import locate
 
+
 WSGI_REQUEST = {
     'wsgi.version': (1, 0),
     'wsgi.multithread': False,
@@ -31,7 +32,8 @@ WSGI_REQUEST = {
     'SCRIPT_NAME': ''
 }
 
-class TestSuite(object):
+
+class TestSuite:
 
     def create_container(self):
         container = App()
@@ -39,7 +41,7 @@ class TestSuite(object):
         container.bind('WSGI', object)
         container.bind('Application', application)
 
-        '''
+        """
         |--------------------------------------------------------------------------
         | Bind all service providers
         |--------------------------------------------------------------------------
@@ -50,7 +52,7 @@ class TestSuite(object):
         | only run once when the server is started. Providers will be ran
         | once if the wsgi attribute on a provider is False.
         |
-        '''
+        """
 
         for provider in container.make('Application').PROVIDERS:
             locate(provider)().load_app(container).register()
@@ -61,7 +63,7 @@ class TestSuite(object):
             if located_provider.wsgi is False:
                 container.resolve(locate(provider)().load_app(container).boot)
 
-            '''
+            """
         |--------------------------------------------------------------------------
         | Startup the Service Container
         |--------------------------------------------------------------------------
@@ -70,18 +72,18 @@ class TestSuite(object):
         | bind the environ variable that is created by the WSGI server into
         | the container.
         |
-        '''
+        """
 
         container.bind('Environ', WSGI_REQUEST)
 
-        '''
+        """
         |--------------------------------------------------------------------------
         | Execute All Service Providers
         |--------------------------------------------------------------------------
         |
         | Run all service provider boot methods if the wsgi attribute is true.
         |
-        '''
+        """
 
         for provider in container.make('Application').PROVIDERS:
             located_provider = locate(provider)().load_app(container)
@@ -91,12 +93,12 @@ class TestSuite(object):
 
         self.container = container
         return self
-    
+
     def get_container(self):
         return self.container
 
     def route(self, route):
         return TestRoute(route)
-    
+
     def get(self, route_url):
         return TestRequest().get(route_url)

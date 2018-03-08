@@ -1,9 +1,8 @@
-''' Test the wsgi server running '''
+""" Test the wsgi server running """
+import os
+import signal
 import subprocess
 
-import signal
-import sys
-import os
 
 def test_run_server():
     pro = subprocess.Popen('craft serve', stdout=subprocess.PIPE,

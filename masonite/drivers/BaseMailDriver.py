@@ -1,6 +1,10 @@
 from masonite.view import view
 
-class BaseMailDriver(object):
+
+class BaseMailDriver:
+    """
+    Class base for mail drivers
+    """
 
     def __init__(self, MailConfig):
         self.config = MailConfig
@@ -27,4 +31,3 @@ class BaseMailDriver(object):
     def subject(self, subject):
         self.message_subject = subject
         return self
-

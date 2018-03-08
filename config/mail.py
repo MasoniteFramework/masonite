@@ -1,33 +1,33 @@
 from dotenv import find_dotenv, load_dotenv
+import os
 
-'''
+
+"""
 |--------------------------------------------------------------------------
 | Load Environment Variables
 |--------------------------------------------------------------------------
 |
 | Take environment variables from the .env file and load them in.
 |
-'''
+"""
 
 load_dotenv(find_dotenv())
 
-import os
-
-'''
+"""
 |--------------------------------------------------------------------------
 | From Email Address
 |--------------------------------------------------------------------------
 |
 | This value will be used for the default address when sending emails.
 |
-'''
+"""
 
 FROM = {
     'address': os.getenv('MAIL_FROM_ADDRESS', 'hello@example.com'),
     'name': os.getenv('MAIL_FROM_NAME', 'Masonite')
 }
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Mail Driver
 |--------------------------------------------------------------------------
@@ -37,11 +37,11 @@ FROM = {
 |
 | Supported: 'smtp', 'mailgun'
 |
-'''
+"""
 
 DRIVER = os.getenv('MAIL_DRIVER', 'smtp')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Application Name
 |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ DRIVER = os.getenv('MAIL_DRIVER', 'smtp')
 | framework needs to place the application's name in a notification or
 | any other location as required by the application or its packages.
 |
-'''
+"""
 
 DRIVERS = {
     'smtp': {

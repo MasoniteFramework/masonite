@@ -1,7 +1,7 @@
-''' Third party package integrations '''
+""" Third party package integrations """
 import os
-import sys
 import shutil
+
 
 def create_or_append_config(location, name=False):
     if name:
@@ -18,8 +18,8 @@ def create_or_append_config(location, name=False):
                         config_directory + '/' + file_name)
         print('\033[92mConfiguration File Created!\033[0m')
     else:
-        ## Append to the file
-        # tempfiles is a list of file handles to your temp files. Order them however you like
+        # Append to the file
+        # tempfiles is a list of file handles to your temp files.
         project_config = open(config_directory + '/' + file_name, "a")
         package_config = open(location, 'r')
 
@@ -34,8 +34,8 @@ def append_web_routes(location):
     # import it into the web.py file
     routes_file = os.path.join(os.getcwd(), 'routes/web.py')
 
-    ## Append to the file
-    # tempfiles is a list of file handles to your temp files. Order them however you like
+    # Append to the file
+    # tempfiles is a list of file handles to your temp files.
     project_routes = open(routes_file, "a")
     package_routes = open(location, 'r')
 
@@ -45,12 +45,13 @@ def append_web_routes(location):
     package_routes.close()
     print('\033[92mroutes/web.py File Appended!\033[0m')
 
+
 def append_api_routes(location):
     # import it into the web.py file
     api_file = os.path.join(os.getcwd(), 'routes/api.py')
 
-    ## Append to the file
-    # tempfiles is a list of file handles to your temp files. Order them however you like
+    # Append to the file
+    # tempfiles is a list of file handles to your temp files.
     project_routes = open(api_file, "a")
     package_routes = open(location, 'r')
 

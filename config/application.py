@@ -9,6 +9,7 @@ URL = 'http://localhost'
 PROVIDERS = [
     # Framework Providers
     'masonite.providers.AppProvider.AppProvider',
+    'masonite.providers.CsrfProvider.CsrfProvider',
     'masonite.providers.RouteProvider.RouteProvider',
     'masonite.providers.ApiProvider.ApiProvider',
     'masonite.providers.RedirectionProvider.RedirectionProvider',
@@ -19,6 +20,8 @@ PROVIDERS = [
     'masonite.providers.ViewProvider.ViewProvider',
     'masonite.providers.HelpersProvider.HelpersProvider',
     'masonite.providers.UploadProvider.UploadProvider',
+    'masonite.providers.BroadcastProvider.BroadcastProvider',
+    'masonite.providers.CacheProvider.CacheProvider',
 ]
 
 STATIC_ROOT = 'storage'

@@ -37,6 +37,7 @@ def test_set_and_get_cookie():
     REQUEST.cookie('test', 'testvalue')
     assert REQUEST.get_cookie('test') == 'testvalue'
 
+
 def test_set_and_get_multiple_cookies():
     REQUEST.cookie('cookie1', 'cookie1value')
     REQUEST.cookie('cookie2', 'cookie2value')
@@ -44,15 +45,18 @@ def test_set_and_get_multiple_cookies():
     assert REQUEST.get_cookie('cookie1') == 'cookie1value'
     assert REQUEST.get_cookie('cookie2') == 'cookie2value'
 
+
 def test_set_cookie_without_encryption():
     REQUEST.cookie('notencrypted', 'value', False)
 
     assert REQUEST.get_cookie('notencrypted', False) == 'value'
 
+
 def test_set_and_get_cookie_with_no_existing_cookies():
     REQUEST.environ['HTTP_COOKIE'] = ''
     REQUEST.cookie('test', 'testvalue')
     assert REQUEST.get_cookie('test') == 'testvalue'
+
 
 def test_set_and_get_cookie_with_existing_cookie():
     REQUEST.environ['HTTP_COOKIE'] = 'cookie=true'

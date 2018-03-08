@@ -1,9 +1,10 @@
-''' A Mail Service Provider '''
+""" An Upload Service Provider """
 from masonite.provider import ServiceProvider
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from config import storage
+
 
 class UploadProvider(ServiceProvider):
 
@@ -15,5 +16,5 @@ class UploadProvider(ServiceProvider):
         self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('UploadManager', UploadManager(self.app))
 
-    def boot(self, UploadManager):
-        self.app.bind('Upload', UploadManager.driver('disk'))
+    def boot(self, UploadManager, StorageConfig):
+        self.app.bind('Upload', UploadManager.driver(StorageConfig.DRIVER))

@@ -1,6 +1,7 @@
 from masonite.view import view
 
-class StackTrace(object):
+
+class StackTrace:
 
     def __init__(self, trace_obj):
         self.trace_obj = trace_obj

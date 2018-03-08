@@ -1,5 +1,7 @@
-DRIVER = 'redis'
+"""
+Queue configuration
+"""
 
-DRIVERS = {
-    'redis': ''
-}
+DRIVER = 'async'
+
+DRIVERS = {}

@@ -1,4 +1,4 @@
-''' Module for the Routing System '''
+""" Module for the Routing System """
 import cgi
 import importlib
 import re
@@ -6,10 +6,9 @@ from pydoc import locate
 
 from config import middleware
 
-import cgitb; cgitb.enable()
 
 class Route():
-    ''' Loads the environ '''
+    """ Loads the environ """
 
     def __init__(self, environ=None):
         self.url_list = []
@@ -17,7 +16,7 @@ class Route():
         if environ:
             self.environ = environ
             self.url = environ['PATH_INFO']
-            
+
 
             if self.is_post():
                 self.environ['QUERY_STRING'] = self.set_post_params()
@@ -28,15 +27,15 @@ class Route():
 
         if self.is_post():
             self.environ['QUERY_STRING'] = self.set_post_params()
-        
+
         return self
-            
+
     def get(self, route, output=None):
-        ''' Returns the output '''
+        """ Returns the output """
         return output
-    
+
     def set_post_params(self):
-        ''' If the route is a Post, swap the QUERY_STRING '''
+        """ If the route is a Post, swap the QUERY_STRING """
         fields = None
         if 'POST' == self.environ['REQUEST_METHOD']:
             fields = cgi.FieldStorage(
@@ -44,10 +43,10 @@ class Route():
             return fields
 
     def is_post(self):
-        ''' Check to see if the current request is a POST request '''
+        """ Check to see if the current request is a POST request """
         if self.environ['REQUEST_METHOD'] == 'POST':
             return True
-        
+
         return False
 
     def compile_route_to_regex(self, route):
@@ -83,7 +82,8 @@ class Route():
     def generated_url_list(self):
         return self.url_list
 
-class BaseHttpRoute(object):
+
+class BaseHttpRoute:
     method_type = 'GET'
     output = False
     route_url = None
@@ -94,15 +94,15 @@ class BaseHttpRoute(object):
     list_middleware = []
 
     def route(self, route, output):
-        ''' Loads the route into the class '''
+        """ Loads the route into the class """
 
         # If the output specified is a string controller
         if isinstance(output, str):
             mod = output.split('@')
 
             # Gets the controller name from the output parameter
-            #     This is used to add support for additional modules
-            #     like 'LoginController' and 'Auth.LoginController'
+            # This is used to add support for additional modules
+            # like 'LoginController' and 'Auth.LoginController'
             get_controller = mod[0].split('.')[-1]
 
             # Import the module
@@ -119,11 +119,11 @@ class BaseHttpRoute(object):
             self.output = output
         self.route_url = route
         return self
-    
+
     def domain(self, domain):
         self.required_domain = domain
         return self
-    
+
     def module(self, module):
         self.module_location = module
         return self
@@ -131,26 +131,25 @@ class BaseHttpRoute(object):
     def has_required_domain(self):
         if self.request.has_subdomain() and (self.required_domain is '*' or self.request.subdomain == self.required_domain):
             return True
-        
         return False
 
     def name(self, name):
-        ''' Specifies the name of the route '''
+        """ Specifies the name of the route """
         self.named_route = name
         return self
 
     def load_request(self, request):
-        ''' Load the request into this class '''
+        """ Load the request into this class """
         self.request = request
         return self
 
     def middleware(self, *args):
-        ''' Loads a list of middleware to run '''
+        """ Loads a list of middleware to run """
         self.list_middleware = args
         return self
 
     def run_middleware(self, type_of_middleware):
-        ''' type_of_middleware should be a string that contains either 'before' or 'after' '''
+        """ type_of_middleware should be a string that contains either 'before' or 'after' """
 
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
@@ -158,25 +157,28 @@ class BaseHttpRoute(object):
             # Locate the middleware based on the string specified
             located_middleware = self.request.app().resolve(locate(middleware.ROUTE_MIDDLEWARE[arg]))
 
-            # If the middleware has the specific type of middleware (before or after)
-            #     then execute that
+            # If the middleware has the specific type of middleware
+            # (before or after) then execute that
             if hasattr(located_middleware, type_of_middleware):
                 getattr(located_middleware, type_of_middleware)()
 
+
 class Get(BaseHttpRoute):
-    ''' Class for specifying GET requests '''
+    """ Class for specifying GET requests """
 
     def __init__(self):
         self.method_type = 'GET'
 
+
 class Post(BaseHttpRoute):
-    ''' Class for specifying POST requests '''
+    """ Class for specifying POST requests """
 
     def __init__(self):
         self.method_type = 'POST'
 
+
 class Api():
-    ''' API class docstring '''
+    """ API class docstring """
     def __init__(self):
         self.method_type = 'POST'
         self.continueroute = True
@@ -186,20 +188,20 @@ class Api():
         self.model_obj = None
 
     def route(self, route):
-        ''' Loads the route into the class '''
+        """ Loads the route into the class """
         self.url = route
         return self
 
     def model(self, model):
-        ''' Loads the model into the class '''
+        """ Loads the model into the class """
         if not self.url:
-            self.url = '/api/' +model.__name__.lower()
+            self.url = '/api/' + model.__name__.lower()
 
         self.model_obj = model
         return self
 
     def fetch(self, request):
-        ''' Fetch the API from the model '''
+        """ Fetch the API from the model """
         # regex for /api/users/1
         matchregex = re.compile(r"^\/\w+\/\w+\/(\d+)")
         updateregex = re.compile(r"^\/\w+\/\w+\/(\d+)/update")
@@ -251,6 +253,6 @@ class Api():
         return self
 
     def exclude(self, exclude_list):
-        ''' Exclude columns from the model '''
+        """ Exclude columns from the model """
         self.exclude_list = exclude_list
         return self

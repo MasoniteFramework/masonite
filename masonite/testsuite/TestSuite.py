@@ -33,7 +33,7 @@ WSGI_REQUEST = {
 }
 
 
-class TestSuite(object):
+class TestSuite:
 
     def create_container(self):
         container = App()

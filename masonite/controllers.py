@@ -1,7 +1,7 @@
 """ Controller module """
 
 
-class Controller(object):
+class Controller:
     """
     Base Class for Controllers
     """

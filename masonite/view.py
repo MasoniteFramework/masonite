@@ -11,7 +11,7 @@ def view(template='index', dictionary={}):
     return env.get_template(template + '.html').render(dictionary)
 
 
-class View(object):
+class View:
     """
     Render template view
     """

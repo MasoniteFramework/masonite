@@ -1,6 +1,6 @@
 import inspect
 
-class Extendable(object):
+class Extendable:
 
     def extend(self, key, obj=None):
         

@@ -2,7 +2,7 @@ from config import storage, application
 import os
 
 
-class Storage(object):
+class Storage:
 
     def __init__(self):
         pass

@@ -1,4 +1,4 @@
-class Manager(object):
+class Manager:
     """
     Manager container class
     """

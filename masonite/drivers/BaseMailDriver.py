@@ -1,7 +1,7 @@
 from masonite.view import view
 
 
-class BaseMailDriver(object):
+class BaseMailDriver:
     """
     Class base for mail drivers
     """

@@ -2,7 +2,7 @@ from masonite.routes import Route, Get, Post
 from routes import web
 
 
-class TestRoute(object):
+class TestRoute:
 
     def __init__(self, route):
         self.route = None

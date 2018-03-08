@@ -8,7 +8,7 @@ from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
 
 
-class MailSmtpDriver(object):
+class MailSmtpDriver:
 
     def __init__(self, Test=None):
         self.test = Test
@@ -29,7 +29,7 @@ def test_mail_manager_loads_container():
     assert mailManager.load_container(app) #.container.providers == {'Test': object}
 
 
-class User(object):
+class User:
     pass
 
 

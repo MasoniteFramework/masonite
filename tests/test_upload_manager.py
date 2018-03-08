@@ -80,7 +80,21 @@ def test_upload_file():
 
     assert UploadManager(container).driver('disk').store(img)
 
-    assert container.make('Upload').driver('s3').store(img) is None
+if os.environ.get('S3_BUCKET'):
+    def test_upload_file_for_s3():
+
+        container = App()
+
+        container.bind('Application', application)
+        container.bind('StorageConfig', storage)
+        container.bind('UploadDiskDriver', UploadDiskDriver)
+        container.bind('UploadManager', UploadManager(container))
+        container.bind('Upload', UploadManager(container))
+        container.bind('UploadS3Driver', UploadS3Driver)
+
+        img = ImageTest()
+
+        assert container.make('Upload').driver('s3').store(img) is None
 
 
 def test_upload_manage_accept_files():

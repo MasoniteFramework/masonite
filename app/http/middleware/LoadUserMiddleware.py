@@ -1,7 +1,7 @@
 ''' Load User Middleware'''
 from masonite.facades.Auth import Auth
 
-class LoadUserMiddleware(object):
+class LoadUserMiddleware:
     ''' Middleware class which loads the current user into the request '''
 
     def __init__(self, Request):

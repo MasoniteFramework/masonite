@@ -1,10 +1,8 @@
 ''' Welcome The User To Masonite '''
 
-from masonite.request import Request
-
-class WelcomeController(object):
+class WelcomeController:
     ''' Controller For Welcoming The User '''
 
-    def show(self, Application, request: Request):
+    def show(self, Application):
         ''' Show Welcome Template '''
         return view('welcome', {'app': Application})

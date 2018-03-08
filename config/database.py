@@ -28,8 +28,8 @@ load_dotenv(find_dotenv())
 |
 '''
 
-databases = {
-    'mysql': {
+DATABASES = {
+    'default': {
         'driver': os.environ.get('DB_DRIVER'),
         'host': os.environ.get('DB_HOST'),
         'database': os.environ.get('DB_DATABASE'),
@@ -39,5 +39,5 @@ databases = {
     }
 }
 
-db = DatabaseManager(databases)
-Model.set_connection_resolver(db)
+DB = DatabaseManager(DATABASES)
+Model.set_connection_resolver(DB)

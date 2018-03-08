@@ -20,9 +20,9 @@ if os.getenv('MAILGUN_SECRET'):
         app.bind('MailSmtpDriver', MailDriver)
         app.bind('MailMailgunDriver', Mailgun)
         user = User
-        user.email = 'idmann509@gmail.com'
+        user.email = 'test@email.com'
 
-        assert MailManager(app).driver('mailgun').to(user).to_address == 'idmann509@gmail.com'
+        assert MailManager(app).driver('mailgun').to(user).to_address == 'test@email.com'
 
 
     def test_mail_renders_template():

@@ -17,6 +17,7 @@ class Csrf(object):
 
         token = bytes(binascii.b2a_hex(os.urandom(15))).decode('utf-8')
         self.request.cookie('csrf_token', token)
+        return token
 
     def verify_csrf_token(self, token):
         """

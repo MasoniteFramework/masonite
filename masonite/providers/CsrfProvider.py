@@ -5,10 +5,10 @@ from masonite.auth.Csrf import Csrf
 
 class CsrfProvider(ServiceProvider):
 
-    wsgi = True
+    wsgi = False
 
     def register(self):
-        self.app.bind('CSRF', Csrf(self.app.make('Request')))
+        self.app.bind('Csrf', Csrf(self.app.make('Request')))
 
-    def boot(self, View, ViewClass, Request):
+    def boot(self):
         pass

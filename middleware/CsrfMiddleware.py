@@ -6,11 +6,11 @@ class CsrfMiddleware(object):
     Verify csrf token middleware
     """
 
-    exempt = []
+    exempt = ['/']
 
-    def __init__(self, Request, CSRF, ViewClass):
+    def __init__(self, Request, Csrf, ViewClass):
         self.request = Request
-        self.csrf = CSRF
+        self.csrf = Csrf
         self.view = ViewClass
 
     def before(self):
@@ -24,7 +24,7 @@ class CsrfMiddleware(object):
     def after(self):
         pass
 
-    def __in_except(self):
+    def __in_exempt(self):
         """
         Determine if the request has a URI that should pass
         through CSRF verification.
@@ -40,10 +40,9 @@ class CsrfMiddleware(object):
         Verify si csrf token in post is valid.
         """
 
-        if self.request.is_post():
+        if self.request.is_post() and not self.__in_exempt():
             token = self.request.input('csrf_token')
-            if (not self.csrf.verify_csrf_token(token)
-                    and not self.__in_except()):
+            if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
         else:
             token = self.csrf.generate_csrf_token()

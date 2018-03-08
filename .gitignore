@@ -13,3 +13,4 @@ storage/compiled/
 uploads/test.jpg
 bootstrap/cache/*.html
 bootstrap/cache/*.txt
+/uploads/

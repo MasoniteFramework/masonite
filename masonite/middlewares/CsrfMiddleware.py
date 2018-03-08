@@ -8,18 +8,18 @@ class CsrfMiddleware(object):
 
     exempt = []
 
-    def __init__(self, Request, CSRF):
+    def __init__(self, Request, CSRF, ViewClass):
         self.request = Request
         self.csrf = CSRF
+        self.view = ViewClass
 
     def before(self):
-        if self.request.is_post():
-            token = self.request.input('csrf_token')
-            if (not self.csrf.verify_csrf_token(token)
-                    and not self.__in_except()):
-                raise InvalidCSRFToken("Invalid CSRF token.")
-        else:
-            self.csrf.generate_token()
+        # Verify token
+        token = self.__verify_csrf_token()
+
+        self.view.share({
+            'csrf_field': "<input type='hidden' name='csrf_token' value='{0}' />".format(token)
+        })
 
     def after(self):
         pass
@@ -34,3 +34,18 @@ class CsrfMiddleware(object):
             return True
         else:
             return False
+
+    def __verify_csrf_token(self):
+        """
+        Verify si csrf token in post is valid.
+        """
+
+        if self.request.is_post():
+            token = self.request.input('csrf_token')
+            if (not self.csrf.verify_csrf_token(token)
+                    and not self.__in_except()):
+                raise InvalidCSRFToken("Invalid CSRF token.")
+        else:
+            token = self.csrf.generate_csrf_token()
+
+        return token

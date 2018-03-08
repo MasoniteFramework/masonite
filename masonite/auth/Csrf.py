@@ -15,15 +15,15 @@ class Csrf(object):
         Generate token for csrf protection
         """
 
-        token = binascii.b2a_hex(os.urandom(15))
-        self.request.cookie('csrftoken', token)
+        token = bytes(binascii.b2a_hex(os.urandom(15))).decode('utf-8')
+        self.request.cookie('csrf_token', token)
 
     def verify_csrf_token(self, token):
         """
         Verify if csrf token is valid
         """
 
-        if self.request.get_cookie('csrftoken') == token:
+        if self.request.get_cookie('csrf_token') == token:
             return True
         else:
             return False

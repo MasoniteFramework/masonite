@@ -6,6 +6,7 @@ from masonite.app import App
 from masonite.exceptions import DriverNotFound, FileTypeException
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
+from masonite.drivers.UploadS3Driver import UploadS3Driver
 
 
 def test_upload_manager_grabs_drivers():
@@ -13,9 +14,11 @@ def test_upload_manager_grabs_drivers():
 
     container.bind('Test', object)
     container.bind('StorageConfig', storage)
-    container.bind('UploadDiskDriver', object)
+    container.bind('UploadDiskDriver', UploadDiskDriver)
+    container.bind('Application', application)
     container.bind('UploadManager', UploadManager().load_container(container))
 
+    assert isinstance(container.make('UploadManager').driver('disk'), UploadDiskDriver)
 
 def test_upload_manager_raises_driver_not_found_error():
     container = App()
@@ -24,7 +27,7 @@ def test_upload_manager_raises_driver_not_found_error():
     container.bind('StorageConfig', storage)
 
     with pytest.raises(DriverNotFound):
-        container.bind(
+        assert container.bind(
             'UploadManager',
             UploadManager().load_container(container)
         )
@@ -35,10 +38,15 @@ def test_upload_manager_switches_drivers():
 
     container.bind('Test', object)
     container.bind('StorageConfig', storage)
-    container.bind('UploadDiskDriver', object)
+    container.bind('UploadDiskDriver', UploadDiskDriver)
     container.bind('UploadTestDriver', object)
-    container.bind('UploadManager', UploadManager(container).driver('test'))
+    container.bind('Application', application)
+    container.bind('UploadManager', UploadManager(container))
 
+    assert isinstance(container.make(
+        'UploadManager').driver('disk'), UploadDiskDriver)
+    
+    assert isinstance(container.make('UploadManager').driver('test'), object)
 
 class ImageTest():
     """
@@ -64,9 +72,15 @@ def test_upload_file():
     container.bind('Application', application)
     container.bind('StorageConfig', storage)
     container.bind('UploadDiskDriver', UploadDiskDriver)
+    container.bind('UploadManager', UploadManager(container))
+    container.bind('Upload', UploadManager(container))
+    container.bind('UploadS3Driver', UploadS3Driver)
 
     img = ImageTest()
+
     assert UploadManager(container).driver('disk').store(img)
+
+    assert container.make('Upload').driver('s3').store(img) is None
 
 
 def test_upload_manage_accept_files():
@@ -97,8 +111,15 @@ def test_upload_manage_accept_files_error():
     container.bind('UploadDiskDriver', UploadDiskDriver)
 
     img = ImageTest()
-    try:
+    with pytest.raises(FileTypeException):
         UploadManager(container).driver('disk').accept('png').store(img)
-        assert False
-    except FileTypeException:
-        assert True
+
+def test_upload_store_prepend():
+    container = App()
+
+    container.bind('Application', application)
+    container.bind('StorageConfig', storage)
+    container.bind('UploadDiskDriver', UploadDiskDriver)
+    container.bind('UploadManager', UploadManager(container))
+
+    assert container.make('UploadManager').driver('disk').store_prepend(ImageTest(), 'hey') == 'uploads/heytest.jpg'

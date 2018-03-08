@@ -154,33 +154,3 @@ def test_send_mail_with_callable():
     assert MailManager(app).driver('smtp').to(User)
 
 
-def test_mailgun_driver():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-    app.bind('MailMailgunDriver', Mailgun)
-    user = User
-    setattr(user, 'email', '')
-
-    assert MailManager(app).driver('mailgun').to(User)
-
-
-def test_mail_renders_template():
-    app = App()
-
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-
-    assert 'MasoniteTesting' in MailManager(app).driver('smtp').to('idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
-
-
-def test_mailgun_renders_template():
-    app = App()
-
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-    app.bind('MailMailgunDriver', Mailgun)
-
-    assert MailManager(app).driver('mailgun').to('idmann509@gmail.com').template('mail/welcome', {'to': 'Masonite'})

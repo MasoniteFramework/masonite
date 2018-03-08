@@ -8,8 +8,8 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
     Amazon S3 Upload driver
     """
 
-    def __init__(self, Upload, StorageConfig):
-        self.upload = Upload
+    def __init__(self, UploadManager, StorageConfig):
+        self.upload = UploadManager
         self.config = StorageConfig
 
     def store(self, fileitem, location=None):

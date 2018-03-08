@@ -39,5 +39,5 @@ DATABASES = {
     }
 }
 
-db = DatabaseManager(DATABASES)
-Model.set_connection_resolver(db)
+DB = DatabaseManager(DATABASES)
+Model.set_connection_resolver(DB)

@@ -226,3 +226,53 @@ def test_redirect_compiles_url_with_http():
     request.redirect('http://google.com')
 
     assert request.compile_route_to_url() == 'http://google.com'
+
+
+class ExtendClass:
+
+    path = None
+
+    def get_path(self):
+        return self.path
+
+    def get_another_path(self):
+        return self.path
+
+class ExtendClass2:
+
+    path = None
+
+    def get_path2(self):
+        return self.path
+
+    def get_another_path2(self):
+        return self.path
+
+def get_third_path(self):
+    return self.path
+
+def test_request_can_extend():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.extend('get_path', ExtendClass.get_path)
+    request.extend('get_another_path_test', ExtendClass.get_another_path)
+    request.extend('get_third_path_test', get_third_path)
+
+    assert request.get_path() == '/'
+    assert request.get_another_path_test() == '/'
+    assert request.get_third_path_test() == '/'
+
+    request.extend(ExtendClass2)
+
+    assert request.get_path2() == '/'
+    assert request.get_another_path2() == '/'
+
+    request.extend(get_third_path)
+    assert request.get_third_path() == '/'
+
+    request.extend(ExtendClass.get_another_path)
+    assert request.get_another_path() == '/'
+
+

@@ -23,8 +23,6 @@ if os.getenv('MAILGUN_SECRET'):
         user.email = 'idmann509@gmail.com'
 
         assert MailManager(app).driver('mailgun').to(user).to_address == 'idmann509@gmail.com'
-        # assert MailManager(app).driver('mailgun').to(user).template(
-        #     'mail/welcome', {'to': 'MasoniteTesting'}).send()
 
 
     def test_mail_renders_template():

@@ -13,7 +13,7 @@ import os
 |
 '''
 
-NAME = 'Masonite 1.3'
+NAME = 'Masonite 1.4'
 
 '''
 |--------------------------------------------------------------------------
@@ -81,6 +81,7 @@ PROVIDERS = [
     'masonite.providers.QueueProvider.QueueProvider',
     'masonite.providers.BroadcastProvider.BroadcastProvider',
     'masonite.providers.CacheProvider.CacheProvider',
+    'masonite.providers.CsrfProvider.CsrfProvider',
 
     # Third Party Providers
 

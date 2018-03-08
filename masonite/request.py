@@ -12,9 +12,10 @@ from http import cookies
 import tldextract
 
 from masonite.auth.Sign import Sign
+from masonite.helpers.Extendable import Extendable
 
 
-class Request(object):
+class Request(Extendable):
     """
     Handles many different aspects of a single request.
     This is the object passed through to the controllers
@@ -144,7 +145,8 @@ class Request(object):
         else:
             value = value
 
-        self.cookies.append(('Set-Cookie', '{0}={1}; HttpOnly'.format(key, value)))
+        self.cookies.append(
+            ('Set-Cookie', '{0}={1}; HttpOnly'.format(key, value)))
         self.append_cookie(key, value)
         return self
 
@@ -241,8 +243,9 @@ class Request(object):
 
             # if the url contains a parameter variable like @id:int
             if '@' in url:
-                url = url.replace('@', '').replace(':int', '').replace(':string', '')
-                compiled_url +=  str(self.param(url)) + '/' 
+                url = url.replace('@', '').replace(
+                    ':int', '').replace(':string', '')
+                compiled_url += str(self.param(url)) + '/'
             else:
                 compiled_url += url + '/'
 

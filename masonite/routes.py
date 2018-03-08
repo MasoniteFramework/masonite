@@ -83,7 +83,7 @@ class Route():
         return self.url_list
 
 
-class BaseHttpRoute(object):
+class BaseHttpRoute:
     method_type = 'GET'
     output = False
     route_url = None

@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
 
-class Sign(object):
+class Sign:
     """
     Authentication Sign and UnSign
     """

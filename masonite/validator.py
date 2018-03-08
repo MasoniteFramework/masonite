@@ -3,7 +3,7 @@
 from validator import *
 
 
-class Validator(object):
+class Validator:
     """ 
     Validator Class 
     """

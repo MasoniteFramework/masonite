@@ -1,4 +1,4 @@
-class Queueable(object):
+class Queueable:
 
     def handle(self):
         pass

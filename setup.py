@@ -12,8 +12,10 @@ setup(
         'masonite.managers',
         'masonite.testsuite',
         'masonite.queues',
+        'masonite.contracts',
+        'masonite.helpers',
     ],
-    version='1.3.3',
+    version='1.4.0',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',

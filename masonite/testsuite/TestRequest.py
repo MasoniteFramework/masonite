@@ -2,7 +2,7 @@ import requests
 from config import application
 
 
-class TestRequest(object):
+class TestRequest:
 
     def __init__(self):
         self.request = None

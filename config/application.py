@@ -9,6 +9,7 @@ URL = 'http://localhost'
 PROVIDERS = [
     # Framework Providers
     'masonite.providers.AppProvider.AppProvider',
+    'masonite.providers.CsrfProvider.CsrfProvider',
     'masonite.providers.RouteProvider.RouteProvider',
     'masonite.providers.ApiProvider.ApiProvider',
     'masonite.providers.RedirectionProvider.RedirectionProvider',

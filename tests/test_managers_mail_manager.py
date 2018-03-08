@@ -153,4 +153,3 @@ def test_send_mail_with_callable():
 
     assert MailManager(app).driver('smtp').to(User)
 
-

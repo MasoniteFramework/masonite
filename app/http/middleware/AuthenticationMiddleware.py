@@ -1,6 +1,6 @@
 ''' Authentication Middleware '''
 
-class AuthenticationMiddleware(object):
+class AuthenticationMiddleware:
     ''' Middleware To Check If The User Is Logged In '''
 
     def __init__(self, Request):

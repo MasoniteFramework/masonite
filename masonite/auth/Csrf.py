@@ -16,7 +16,7 @@ class Csrf(object):
         """
 
         token = bytes(binascii.b2a_hex(os.urandom(15))).decode('utf-8')
-        self.request.cookie('csrf_token', token)
+        self.request.cookie('csrf_token', token, encrypt=False)
         return token
 
     def verify_csrf_token(self, token):
@@ -24,7 +24,7 @@ class Csrf(object):
         Verify if csrf token is valid
         """
 
-        if self.request.get_cookie('csrf_token') == token:
+        if self.request.get_cookie('csrf_token', decrypt=False) == token:
             return True
         else:
             return False

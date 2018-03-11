@@ -15,7 +15,7 @@ middleware = container.resolve(CsrfMiddleware)
 middleware.before()
 
 def test_middleware_sets_csrf_cookie():
-    assert request.get_cookie('csrf_token')
+    assert request.get_cookie('csrf_token', decrypt=False)
 
 def test_middleware_shares_view():
     assert 'csrf_field' in container.make('ViewClass').dictionary

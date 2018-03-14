@@ -31,7 +31,7 @@ Masonite strives to have extremely comprehensive documentation. All documentatio
 If you are running on a Linux flavor, you’ll need a few extra packages before you start. You can download these packages by running:
 
 ```
-$ sudo apt-get install libmysqlclient-dev python-dev
+$ sudo apt-get install python-dev
 ```
 
 Instead of `python-dev` you may need to specify your Python version

@@ -275,4 +275,23 @@ def test_request_can_extend():
     request.extend(ExtendClass.get_another_path)
     assert request.get_another_path() == '/'
 
+def test_gets_input_with_all_request_methods():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+    request.params = 'hey=test'
 
+    request.environ['REQUEST_METHOD'] = 'GET'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'POST'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'PUT'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'PATCH'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'DELETE'
+    assert request.input('hey') == 'test'

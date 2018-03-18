@@ -295,3 +295,15 @@ def test_gets_input_with_all_request_methods():
 
     request.environ['REQUEST_METHOD'] = 'DELETE'
     assert request.input('hey') == 'test'
+
+def test_hidden_form_request_method_changes_request_method():
+    app = App()
+    wsgi_request['QUERY_STRING'] = 'request_method=PUT'
+    request_class = Request(wsgi_request)
+
+    app.bind('Request', request_class)
+    request = app.make('Request').load_app(app)
+
+    assert request.environ['REQUEST_METHOD'] == 'PUT'
+
+

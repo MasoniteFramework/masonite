@@ -31,10 +31,7 @@ class Request(Extendable):
         self.subdomain = None
 
         if environ:
-            self.environ = environ
-            self.params = environ['QUERY_STRING']
-            self.method = environ['REQUEST_METHOD']
-            self.path = environ['PATH_INFO']
+            self.load_environ(environ)
 
         self.encryption_key = False
         self.container = None
@@ -73,6 +70,14 @@ class Request(Extendable):
             return True
         
         return False
+    
+    def __set_request_method(self):
+        if self.has('request_method'):
+            self.environ['REQUEST_METHOD'] = self.input('request_method')
+            return True
+        
+        return False
+        
 
     def key(self, key):
         """
@@ -101,6 +106,9 @@ class Request(Extendable):
         self.params = environ['QUERY_STRING']
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
+
+        if self.has('request_method'):
+            self.__set_request_method()
 
         return self
 

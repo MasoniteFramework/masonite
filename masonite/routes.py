@@ -37,7 +37,7 @@ class Route():
     def set_post_params(self):
         """ If the route is a Post, swap the QUERY_STRING """
         fields = None
-        if 'POST' == self.environ['REQUEST_METHOD']:
+        if 'POST' in self.environ['REQUEST_METHOD']:
             fields = cgi.FieldStorage(
                 fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
             return fields

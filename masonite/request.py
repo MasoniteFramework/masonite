@@ -45,8 +45,8 @@ class Request(Extendable):
         or QUERY_STRING during a GET request
         """
 
-        # Post Request Input
-        if self.is_post():
+        # Special Request Methods
+        if self.is_not_get_request():
             if isinstance(self.params, str):
                 return parse_qs(self.params)[param][0]
 
@@ -56,19 +56,22 @@ class Request(Extendable):
             if self.params[param].filename:
                 return self.params[param]
 
-        # Get Request Input
+        # GET Request Input
         if self.has(param):
             return parse_qs(self.params)[param][0]
 
         return False
 
-    def file(self, param):
-        pass
-
     def is_post(self):
         if self.environ['REQUEST_METHOD'] == 'POST':
             return True
 
+        return False
+    
+    def is_not_get_request(self):
+        if not self.environ['REQUEST_METHOD'] == 'GET':
+            return True
+        
         return False
 
     def key(self, key):

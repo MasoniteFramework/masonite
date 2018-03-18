@@ -18,14 +18,14 @@ class Route():
             self.url = environ['PATH_INFO']
 
 
-            if self.is_post():
+            if self.is_not_get_request():
                 self.environ['QUERY_STRING'] = self.set_post_params()
 
     def load_environ(self, environ):
         self.environ = environ
         self.url = environ['PATH_INFO']
 
-        if self.is_post():
+        if self.is_not_get_request():
             self.environ['QUERY_STRING'] = self.set_post_params()
 
         return self
@@ -37,7 +37,8 @@ class Route():
     def set_post_params(self):
         """ If the route is a Post, swap the QUERY_STRING """
         fields = None
-        if 'POST' in self.environ['REQUEST_METHOD']:
+
+        if self.is_not_get_request():
             fields = cgi.FieldStorage(
                 fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
             return fields
@@ -47,6 +48,12 @@ class Route():
         if self.environ['REQUEST_METHOD'] == 'POST':
             return True
 
+        return False
+    
+    def is_not_get_request(self):
+        if not self.environ['REQUEST_METHOD'] == 'GET':
+            return True
+        
         return False
 
     def compile_route_to_regex(self, route):
@@ -176,6 +183,20 @@ class Post(BaseHttpRoute):
     def __init__(self):
         self.method_type = 'POST'
 
+class Put(BaseHttpRoute):
+
+    def __init__(self):
+        self.method_type = 'PUT'
+
+class Patch(BaseHttpRoute):
+
+    def __init__(self):
+        self.method_type = 'PATCH'
+
+class Delete(BaseHttpRoute):
+
+    def __init__(self):
+        self.method_type = 'DELETE'
 
 class Api():
     """ API class docstring """

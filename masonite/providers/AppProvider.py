@@ -11,6 +11,7 @@ class AppProvider(ServiceProvider):
     def register(self):
         self.app.bind('WebRoutes', web.ROUTES)
         self.app.bind('ApiRoutes', api.ROUTES)
+        self.app.bind('ResourceRoutes', api.RESOURCES)
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
         self.app.bind('Route', Route())
@@ -18,5 +19,6 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
 
     def boot(self, Environ, Request, Route):
+        self.app.bind('Headers', [])
         Route.load_environ(Environ)
         Request.load_environ(Environ).load_app(self.app)

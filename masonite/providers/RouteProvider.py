@@ -11,7 +11,7 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, WebRoutes, Route, Request, Environ):
+    def boot(self, WebRoutes, Route, Request, Environ, Headers):
         for route in WebRoutes:
             router = Route
             request = Request
@@ -105,6 +105,10 @@ class RouteProvider(ServiceProvider):
                         'Response',
                         router.get(route.route, response)
                     )
+
+                    Headers += [
+                        ("Content-Type", "text/html; charset=utf-8")
+                    ]
 
                 # Loads the request in so the middleware
                 # specified is able to use the

@@ -26,3 +26,10 @@ class InvalidCSRFToken(Exception):
     For exceptions that return error when verifying the csrf token
     """
     pass
+
+
+class ApiNotAuthenticated(Exception):
+    pass
+
+class NoApiTokenFound(Exception):
+    pass

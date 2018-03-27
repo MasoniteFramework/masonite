@@ -17,7 +17,6 @@ class Route():
             self.environ = environ
             self.url = environ['PATH_INFO']
 
-
             if self.is_not_get_request():
                 self.environ['QUERY_STRING'] = self.set_post_params()
 
@@ -49,11 +48,11 @@ class Route():
             return True
 
         return False
-    
+
     def is_not_get_request(self):
         if not self.environ['REQUEST_METHOD'] == 'GET':
             return True
-        
+
         return False
 
     def compile_route_to_regex(self, route):
@@ -183,20 +182,24 @@ class Post(BaseHttpRoute):
     def __init__(self):
         self.method_type = 'POST'
 
+
 class Put(BaseHttpRoute):
 
     def __init__(self):
         self.method_type = 'PUT'
+
 
 class Patch(BaseHttpRoute):
 
     def __init__(self):
         self.method_type = 'PATCH'
 
+
 class Delete(BaseHttpRoute):
 
     def __init__(self):
         self.method_type = 'DELETE'
+
 
 class Api():
     """ API class docstring """

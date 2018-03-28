@@ -14,7 +14,6 @@ setup(
         'masonite.queues',
         'masonite.contracts',
         'masonite.helpers',
-        'masonite.api',
     ],
     version='1.4.1',
     install_requires=[

@@ -2,7 +2,7 @@ from pydoc import locate
 from config import application
 
 from masonite.app import App
-from masonite.routes import Get, Api
+from masonite.routes import Get
 from masonite.testsuite.TestSuite import TestSuite
 
 
@@ -52,10 +52,6 @@ def test_providers_load_into_container():
     ])
 
     container.bind('Response', 'Route not found. Error 404')
-    container.bind('ApiRoutes', [
-        Api().model(object),
-        Api().model(object),
-    ])
 
     for provider in container.make('Application').PROVIDERS:
         located_provider = locate(provider)().load_app(container)

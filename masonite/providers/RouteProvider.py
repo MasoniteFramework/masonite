@@ -1,5 +1,6 @@
 """ A RouteProvider Service Provider """
 import re
+import json
 from pydoc import locate
 
 from masonite.provider import ServiceProvider
@@ -106,9 +107,22 @@ class RouteProvider(ServiceProvider):
                         router.get(route.route, response)
                     )
 
-                    Headers += [
-                        ("Content-Type", "text/html; charset=utf-8")
-                    ]
+                    if isinstance(response, dict):
+                        Headers += [
+                            ("Content-Type", "application/json; charset=utf-8")
+                        ]
+                        self.app.bind(
+                            'Response',
+                            str(json.dumps(response))
+                        )
+                    else:
+                        Headers += [
+                            ("Content-Type", "text/html; charset=utf-8")
+                        ]
+                        self.app.bind(
+                            'Response',
+                            router.get(route.route, response)
+                        )
 
                 # Loads the request in so the middleware
                 # specified is able to use the

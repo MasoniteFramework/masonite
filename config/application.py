@@ -11,7 +11,6 @@ PROVIDERS = [
     'masonite.providers.AppProvider.AppProvider',
     'masonite.providers.CsrfProvider.CsrfProvider',
     'masonite.providers.RouteProvider.RouteProvider',
-    'masonite.providers.ApiProvider.ApiProvider',
     'masonite.providers.RedirectionProvider.RedirectionProvider',
     'masonite.providers.StartResponseProvider.StartResponseProvider',
     'masonite.providers.SassProvider.SassProvider',

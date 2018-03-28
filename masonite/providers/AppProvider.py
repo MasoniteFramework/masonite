@@ -10,8 +10,6 @@ class AppProvider(ServiceProvider):
 
     def register(self):
         self.app.bind('WebRoutes', web.ROUTES)
-        self.app.bind('ApiRoutes', api.ROUTES)
-        self.app.bind('ResourceRoutes', api.RESOURCES)
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
         self.app.bind('Route', Route())

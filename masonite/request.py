@@ -24,11 +24,13 @@ class Request(Extendable):
 
     def __init__(self, environ=None):
         self.cookies = []
+        self._headers = []
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
         self.subdomain = None
+        self._status = '404 Not Found'
 
         if environ:
             self.load_environ(environ)
@@ -124,6 +126,36 @@ class Request(Extendable):
             return True
 
         return False
+
+    def status(self, status):
+        self._status = status
+        return self
+
+    def get_status_code(self):
+        return self._status
+
+    def header(self, key, value=None, http_prefix=True):
+
+        # Get Headers
+        if value is None:
+            if 'HTTP_{0}'.format(key) in self.environ:
+                return self.environ['HTTP_{0}'.format(key)]
+            elif key in self.environ:
+                return self.environ[key]
+            else:
+                return None
+
+        # Set Headers
+        if http_prefix:
+            self.environ['HTTP_{0}'.format(key)] = value
+            self._headers.append(('HTTP_{0}'.format(key), value))
+        else:
+            self.environ[key] = value
+            self._headers.append((key, value))
+        return True
+
+    def get_headers(self):
+        return self._headers
 
     def set_params(self, params):
         """

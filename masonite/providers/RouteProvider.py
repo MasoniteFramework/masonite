@@ -97,6 +97,8 @@ class RouteProvider(ServiceProvider):
                 # Get the data from the route. This data is typically the
                 # output of the controller method
                 if not request.redirect_url:
+                    Request.status('200 OK')
+
                     response = self.app.resolve(route.output)
 
                     if isinstance(response, View):
@@ -108,17 +110,13 @@ class RouteProvider(ServiceProvider):
                     )
 
                     if isinstance(response, dict):
-                        Headers += [
-                            ("Content-Type", "application/json; charset=utf-8")
-                        ]
+                        Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
                         self.app.bind(
                             'Response',
                             str(json.dumps(response))
                         )
                     else:
-                        Headers += [
-                            ("Content-Type", "text/html; charset=utf-8")
-                        ]
+                        Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
                         self.app.bind(
                             'Response',
                             router.get(route.route, response)

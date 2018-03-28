@@ -228,6 +228,46 @@ def test_redirect_compiles_url_with_http():
     assert request.compile_route_to_url() == 'http://google.com'
 
 
+def test_request_gets_correct_header():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    assert request.header('UPGRADE_INSECURE_REQUESTS') == '1'
+    assert request.header('RAW_URI') == '/'
+    assert request.header('NOT_IN') == None
+
+def test_request_sets_correct_header():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.header('TEST', 'set_this')
+    assert request.header('HTTP_TEST') == 'set_this'
+    
+    request.header('TEST', 'set_this', http_prefix = None)
+    assert request.header('TEST') == 'set_this'
+
+
+def test_request_gets_all_headers():
+    app = App()
+    app.bind('Request', Request(wsgi_request))
+    request = app.make('Request').load_app(app)
+
+    request.header('TEST1', 'set_this_item')
+    request.header('TEST2', 'set_this_item', http_prefix = None)
+    assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+
+
+def test_request_sets_status_code():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.status('200 OK')
+    assert request.get_status_code() == '200 OK'
+
+
 class ExtendClass:
 
     path = None

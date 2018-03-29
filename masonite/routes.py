@@ -17,15 +17,14 @@ class Route():
             self.environ = environ
             self.url = environ['PATH_INFO']
 
-
-            if self.is_post():
+            if self.is_not_get_request():
                 self.environ['QUERY_STRING'] = self.set_post_params()
 
     def load_environ(self, environ):
         self.environ = environ
         self.url = environ['PATH_INFO']
 
-        if self.is_post():
+        if self.is_not_get_request():
             self.environ['QUERY_STRING'] = self.set_post_params()
 
         return self
@@ -37,7 +36,8 @@ class Route():
     def set_post_params(self):
         """ If the route is a Post, swap the QUERY_STRING """
         fields = None
-        if 'POST' == self.environ['REQUEST_METHOD']:
+
+        if self.is_not_get_request():
             fields = cgi.FieldStorage(
                 fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
             return fields
@@ -45,6 +45,12 @@ class Route():
     def is_post(self):
         """ Check to see if the current request is a POST request """
         if self.environ['REQUEST_METHOD'] == 'POST':
+            return True
+
+        return False
+
+    def is_not_get_request(self):
+        if not self.environ['REQUEST_METHOD'] == 'GET':
             return True
 
         return False
@@ -177,82 +183,19 @@ class Post(BaseHttpRoute):
         self.method_type = 'POST'
 
 
-class Api():
-    """ API class docstring """
+class Put(BaseHttpRoute):
+
     def __init__(self):
-        self.method_type = 'POST'
-        self.continueroute = True
-        self.url = False
-        self.exclude_list = []
-        self.output = False
-        self.model_obj = None
+        self.method_type = 'PUT'
 
-    def route(self, route):
-        """ Loads the route into the class """
-        self.url = route
-        return self
 
-    def model(self, model):
-        """ Loads the model into the class """
-        if not self.url:
-            self.url = '/api/' + model.__name__.lower()
+class Patch(BaseHttpRoute):
 
-        self.model_obj = model
-        return self
+    def __init__(self):
+        self.method_type = 'PATCH'
 
-    def fetch(self, request):
-        """ Fetch the API from the model """
-        # regex for /api/users/1
-        matchregex = re.compile(r"^\/\w+\/\w+\/(\d+)")
-        updateregex = re.compile(r"^\/\w+\/\w+\/(\d+)/update")
-        match_url = matchregex.match(request.path)
-        match_update_url = updateregex.match(request.path)
 
-        if self.url == request.path and request.method == 'GET':
-            # if GET /api/user
+class Delete(BaseHttpRoute):
 
-            model = self.model_obj
-            model.__hidden__ = self.exclude_list
-
-            query = model.all()
-
-            self.output = query.to_json()
-        elif match_url and request.method == 'GET':
-            # if GET /api/user/1
-            # query = self.model_obj.get(self.model_obj.id == match_url.group(1))
-            model = self.model_obj.find(match_url.group(1))
-            if model:
-                self.output = model.to_json()
-            else:
-                self.output = []
-        elif self.url == request.path and request.method == 'POST':
-            # if POST /api/user
-            proxy = self.model_obj()
-            for field in request.all():
-                setattr(proxy, field, request.input(field))
-            proxy.save()
-            self.output = proxy.to_json()
-        elif match_url and request.method == 'DELETE':
-            # if DELETE /api/user/1
-            get = self.model_obj.find(match_url.group(1))
-            if get:
-                query = get.delete()
-                self.output = get.to_json()
-            else:
-                self.output = []
-        elif match_update_url and request.method == 'POST':
-            # if POST /api/user/1/update
-            proxy = self.model_obj.find(match_update_url.group(1))
-            for field in request.all():
-                setattr(proxy, field, request.input(field))
-            proxy.save()
-            proxy = self.model_obj.find(match_update_url.group(1))
-            self.output = proxy.to_json()
-        else:
-            self.output = None
-        return self
-
-    def exclude(self, exclude_list):
-        """ Exclude columns from the model """
-        self.exclude_list = exclude_list
-        return self
+    def __init__(self):
+        self.method_type = 'DELETE'

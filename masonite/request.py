@@ -24,17 +24,16 @@ class Request(Extendable):
 
     def __init__(self, environ=None):
         self.cookies = []
+        self._headers = []
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
         self.subdomain = None
+        self._status = '404 Not Found'
 
         if environ:
-            self.environ = environ
-            self.params = environ['QUERY_STRING']
-            self.method = environ['REQUEST_METHOD']
-            self.path = environ['PATH_INFO']
+            self.load_environ(environ)
 
         self.encryption_key = False
         self.container = None
@@ -45,8 +44,8 @@ class Request(Extendable):
         or QUERY_STRING during a GET request
         """
 
-        # Post Request Input
-        if self.is_post():
+        # Special Request Methods
+        if self.is_not_get_request():
             if isinstance(self.params, str):
                 return parse_qs(self.params)[param][0]
 
@@ -56,20 +55,31 @@ class Request(Extendable):
             if self.params[param].filename:
                 return self.params[param]
 
-        # Get Request Input
+        # GET Request Input
         if self.has(param):
             return parse_qs(self.params)[param][0]
 
         return False
-
-    def file(self, param):
-        pass
 
     def is_post(self):
         if self.environ['REQUEST_METHOD'] == 'POST':
             return True
 
         return False
+    
+    def is_not_get_request(self):
+        if not self.environ['REQUEST_METHOD'] == 'GET':
+            return True
+        
+        return False
+    
+    def __set_request_method(self):
+        if self.has('request_method'):
+            self.environ['REQUEST_METHOD'] = self.input('request_method')
+            return True
+        
+        return False
+        
 
     def key(self, key):
         """
@@ -99,6 +109,9 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
 
+        if self.has('request_method'):
+            self.__set_request_method()
+
         return self
 
     def app(self):
@@ -113,6 +126,39 @@ class Request(Extendable):
             return True
 
         return False
+
+    def status(self, status):
+        self._status = status
+        return self
+
+    def get_status_code(self):
+        return self._status
+
+    def header(self, key, value=None, http_prefix=True):
+
+        # Get Headers
+        if value is None:
+            if 'HTTP_{0}'.format(key) in self.environ:
+                return self.environ['HTTP_{0}'.format(key)]
+            elif key in self.environ:
+                return self.environ[key]
+            else:
+                return None
+
+        # Set Headers
+        if http_prefix:
+            self.environ['HTTP_{0}'.format(key)] = str(value)
+            self._headers.append(('HTTP_{0}'.format(key), str(value)))
+        else:
+            self.environ[key] = str(value)
+            self._headers.append((key, str(value)))
+        return True
+
+    def get_headers(self):
+        return self._headers
+    
+    def reset_headers(self):
+        self._headers = []
 
     def set_params(self, params):
         """

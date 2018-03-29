@@ -62,11 +62,14 @@ def append_api_routes(location):
     print('\033[92mroutes/api.py File Appended!\033[0m')
 
 
-def create_controller(location):
+def create_controller(location, to='app/http/controllers'):
     file_name = os.path.basename(location)
 
-    controller_directory = os.path.join(os.getcwd(), 'app/http/controllers')
+    controller_directory = os.path.join(os.getcwd(), to)
     controller_file = os.path.join(controller_directory, file_name)
+    if not os.path.exists(controller_directory):
+        # Create the path to the model if it does not exist
+        os.makedirs(controller_directory)
 
     if os.path.isfile(controller_file):
         # if file does exist

@@ -27,12 +27,12 @@ def test_create_controller():
     os.remove('app/http/controllers/test-config.py')
 
 
-def test_append_api_routes():
-    append_api_routes(os.path.join(
-        PACKAGE_DIRECTORY, 'testpackage/test-config.py'))
+# def test_append_api_routes():
+#     append_api_routes(os.path.join(
+#         PACKAGE_DIRECTORY, 'testpackage/test-config.py'))
 
-    with open(os.path.join(PACKAGE_DIRECTORY, 'routes/api.py')) as f:
-        assert 'ROUTES = []' in f.read()
+#     with open(os.path.join(PACKAGE_DIRECTORY, 'routes/api.py')) as f:
+#         assert 'ROUTES = []' in f.read()
 
 # def test_append_web_routes():
 #     append_web_routes(os.path.join(

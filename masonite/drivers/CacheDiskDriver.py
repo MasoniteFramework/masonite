@@ -25,8 +25,11 @@ class CacheDiskDriver(CacheContract):
             location = self.config.DRIVERS['disk']['location']
 
         location += '/'
+        path = os.path.join(location, key + extension)
+        if not os.path.exists(path):
+            self._create_directory(path)
 
-        open(os.path.join(location, key + extension), 'w').write(value)
+        open(path, 'w').write(value)
 
         return key
 
@@ -103,6 +106,21 @@ class CacheDiskDriver(CacheContract):
 
         for template in glob.glob(glob_path):
             os.remove(template)
+    
+    def update(self, key, value, location=None):
+        """
+            Updates a specific cache by key
+        """
+
+        if not location:
+            location = self.config.DRIVERS['disk']['location'] + "/"
+
+        location = os.path.join(location, key)
+        cache = glob.glob(location + ':*')[0]
+        
+        open(cache, 'w').write(str(value))
+
+        return key
 
     def cache_exists(self, key):
         """
@@ -147,4 +165,11 @@ class CacheDiskDriver(CacheContract):
                 return True
 
         self.delete(key)
+        return False
+
+    def _create_directory(self, directory):
+        if not os.path.exists(os.path.dirname(directory)):
+            # Create the path to the model if it does not exist
+            os.makedirs(os.path.dirname(directory))
+            return True
         return False

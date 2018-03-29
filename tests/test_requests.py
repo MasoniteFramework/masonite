@@ -228,6 +228,46 @@ def test_redirect_compiles_url_with_http():
     assert request.compile_route_to_url() == 'http://google.com'
 
 
+def test_request_gets_correct_header():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    assert request.header('UPGRADE_INSECURE_REQUESTS') == '1'
+    assert request.header('RAW_URI') == '/'
+    assert request.header('NOT_IN') == None
+
+def test_request_sets_correct_header():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.header('TEST', 'set_this')
+    assert request.header('HTTP_TEST') == 'set_this'
+    
+    request.header('TEST', 'set_this', http_prefix = None)
+    assert request.header('TEST') == 'set_this'
+
+
+def test_request_gets_all_headers():
+    app = App()
+    app.bind('Request', Request(wsgi_request))
+    request = app.make('Request').load_app(app)
+
+    request.header('TEST1', 'set_this_item')
+    request.header('TEST2', 'set_this_item', http_prefix = None)
+    assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+
+
+def test_request_sets_status_code():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.status('200 OK')
+    assert request.get_status_code() == '200 OK'
+
+
 class ExtendClass:
 
     path = None
@@ -274,5 +314,36 @@ def test_request_can_extend():
 
     request.extend(ExtendClass.get_another_path)
     assert request.get_another_path() == '/'
+
+def test_gets_input_with_all_request_methods():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+    request.params = 'hey=test'
+
+    request.environ['REQUEST_METHOD'] = 'GET'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'POST'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'PUT'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'PATCH'
+    assert request.input('hey') == 'test'
+
+    request.environ['REQUEST_METHOD'] = 'DELETE'
+    assert request.input('hey') == 'test'
+
+def test_hidden_form_request_method_changes_request_method():
+    app = App()
+    wsgi_request['QUERY_STRING'] = 'request_method=PUT'
+    request_class = Request(wsgi_request)
+
+    app.bind('Request', request_class)
+    request = app.make('Request').load_app(app)
+
+    assert request.environ['REQUEST_METHOD'] == 'PUT'
 
 

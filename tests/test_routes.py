@@ -1,6 +1,6 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get
+from masonite.routes import Get, Post, Put, Patch, Delete
 
 
 wsgi_request = {
@@ -36,8 +36,12 @@ REQUEST = Request(wsgi_request)
 
 
 def test_route_is_callable():
-    if callable(ROUTE):
-        assert True
+    assert callable(Get)
+    assert callable(Post)
+    assert callable(Put)
+    assert callable(Patch)
+    assert callable(Delete)
+        
 
 
 def test_route_get_returns_output():

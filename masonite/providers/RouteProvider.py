@@ -1,5 +1,6 @@
 """ A RouteProvider Service Provider """
 import re
+import json
 from pydoc import locate
 
 from masonite.provider import ServiceProvider
@@ -11,7 +12,7 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, WebRoutes, Route, Request, Environ):
+    def boot(self, WebRoutes, Route, Request, Environ, Headers):
         for route in WebRoutes:
             router = Route
             request = Request
@@ -96,6 +97,8 @@ class RouteProvider(ServiceProvider):
                 # Get the data from the route. This data is typically the
                 # output of the controller method
                 if not request.redirect_url:
+                    Request.status('200 OK')
+
                     response = self.app.resolve(route.output)
 
                     if isinstance(response, View):
@@ -105,6 +108,19 @@ class RouteProvider(ServiceProvider):
                         'Response',
                         router.get(route.route, response)
                     )
+
+                    if isinstance(response, dict):
+                        Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
+                        self.app.bind(
+                            'Response',
+                            str(json.dumps(response))
+                        )
+                    else:
+                        Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
+                        self.app.bind(
+                            'Response',
+                            router.get(route.route, response)
+                        )
 
                 # Loads the request in so the middleware
                 # specified is able to use the

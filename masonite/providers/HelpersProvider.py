@@ -3,6 +3,7 @@ import builtins
 import os
 
 from masonite.provider import ServiceProvider
+from masonite.helpers.view_helpers import set_request_method
 
 
 class HelpersProvider(ServiceProvider):
@@ -21,4 +22,10 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
 
-        ViewClass.share({'request': Request.helper, 'auth': Request.user})
+        ViewClass.share(
+            {
+                'request': Request.helper,
+                'auth': Request.user,
+                'request_method': set_request_method
+            }
+        )

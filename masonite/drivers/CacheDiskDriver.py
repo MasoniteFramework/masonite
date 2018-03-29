@@ -116,7 +116,6 @@ class CacheDiskDriver(CacheContract):
             location = self.config.DRIVERS['disk']['location'] + "/"
 
         location = os.path.join(location, key)
-        print(location)
         cache = glob.glob(location + ':*')[0]
         
         open(cache, 'w').write(str(value))

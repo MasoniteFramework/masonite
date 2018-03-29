@@ -27,3 +27,5 @@ class StartResponseProvider(ServiceProvider):
             Request.reset_redirections()
 
             self.app.bind('Response', 'redirecting ...')
+        
+        Request.reset_headers()

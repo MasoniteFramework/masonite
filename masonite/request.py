@@ -147,15 +147,18 @@ class Request(Extendable):
 
         # Set Headers
         if http_prefix:
-            self.environ['HTTP_{0}'.format(key)] = value
-            self._headers.append(('HTTP_{0}'.format(key), value))
+            self.environ['HTTP_{0}'.format(key)] = str(value)
+            self._headers.append(('HTTP_{0}'.format(key), str(value)))
         else:
-            self.environ[key] = value
-            self._headers.append((key, value))
+            self.environ[key] = str(value)
+            self._headers.append((key, str(value)))
         return True
 
     def get_headers(self):
         return self._headers
+    
+    def reset_headers(self):
+        self._headers = []
 
     def set_params(self, params):
         """

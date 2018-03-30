@@ -5,10 +5,9 @@
 | Site Packages
 |--------------------------------------------------------------------------
 |
-| A list of additional locations that are loaded into the craft command
-| when certain actions are performed like the `publish` command. Put
-| the directory of your virtual environment's site-packages directory
-| to load your virtual environments python package.
+| Although not used often, you may have to add several additional package
+| directories while building third party packages. Put the path of the
+| package here and Masonite will pick it up.
 |
 | ----------
 | @example

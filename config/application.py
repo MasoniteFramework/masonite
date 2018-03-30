@@ -13,7 +13,7 @@ import os
 |
 '''
 
-NAME = 'Masonite 1.4'
+NAME = 'Masonite 1.5'
 
 '''
 |--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ PROVIDERS = [
     # Framework Providers
     'masonite.providers.AppProvider.AppProvider',
     'masonite.providers.RouteProvider.RouteProvider',
-    'masonite.providers.ApiProvider.ApiProvider',
+    'entry.providers.ApiProvider.ApiProvider',
     'masonite.providers.RedirectionProvider.RedirectionProvider',
     'masonite.providers.StartResponseProvider.StartResponseProvider',
     'masonite.providers.SassProvider.SassProvider',

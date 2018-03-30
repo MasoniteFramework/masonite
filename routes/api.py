@@ -1,7 +1,14 @@
 ''' API Routes '''
-from masonite.routes import Api
-from app.User import User
 
-ROUTES = [
-    Api().model(User).exclude(['password', 'token']),
-]
+'''
+|--------------------------------------------------------------------------
+| Resources
+|--------------------------------------------------------------------------
+|
+| Resources are classes that represent API endpoints. You can create these
+| endpoints with any API Masonite packages. Consider Masonite Entry for
+| creating full RESTful API systems.
+|
+'''
+
+RESOURCES = []

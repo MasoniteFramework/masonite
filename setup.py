@@ -15,7 +15,7 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='1.5.0',
+    version='1.5.1',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.1.4',
@@ -35,6 +35,7 @@ setup(
         'cryptography==2.1.4',
         'PyMySQL==0.8.0',
         'psycopg2==2.7.3.2',
+        'masonite-entry>=0.0.0,<=0.9.99'
     ],
     description='The core for the Masonite',
     author='Joseph Mancuso',

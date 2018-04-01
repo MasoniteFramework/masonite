@@ -29,3 +29,4 @@ class StartResponseProvider(ServiceProvider):
             self.app.bind('Response', 'redirecting ...')
         
         Request.reset_headers()
+        Request.cookies = []

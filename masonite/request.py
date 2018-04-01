@@ -181,7 +181,7 @@ class Request(Extendable):
             return self.url_params[parameter]
         return False
 
-    def cookie(self, key, value, encrypt=True):
+    def cookie(self, key, value, encrypt=True, path='/'):
         """
         Sets a cookie in the browser
         """
@@ -192,7 +192,7 @@ class Request(Extendable):
             value = value
 
         self.cookies.append(
-            ('Set-Cookie', '{0}={1}; HttpOnly'.format(key, value)))
+            ('Set-Cookie', '{0}={1}; HttpOnly; Path={2}'.format(key, value, path)))
         self.append_cookie(key, value)
         return self
 

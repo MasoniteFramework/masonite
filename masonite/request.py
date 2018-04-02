@@ -11,6 +11,7 @@ from http import cookies
 
 import tldextract
 
+from masonite.session import Session
 from masonite.auth.Sign import Sign
 from masonite.helpers.Extendable import Extendable
 
@@ -37,6 +38,7 @@ class Request(Extendable):
 
         self.encryption_key = False
         self.container = None
+        self.session = Session(environ)
 
     def input(self, param):
         """
@@ -66,20 +68,19 @@ class Request(Extendable):
             return True
 
         return False
-    
+
     def is_not_get_request(self):
         if not self.environ['REQUEST_METHOD'] == 'GET':
             return True
-        
+
         return False
-    
+
     def __set_request_method(self):
         if self.has('request_method'):
             self.environ['REQUEST_METHOD'] = self.input('request_method')
             return True
-        
+
         return False
-        
 
     def key(self, key):
         """
@@ -156,7 +157,7 @@ class Request(Extendable):
 
     def get_headers(self):
         return self._headers
-    
+
     def reset_headers(self):
         self._headers = []
 

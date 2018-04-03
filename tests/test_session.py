@@ -34,10 +34,12 @@ REQUEST = Request(wsgi_request).key(
 
 def test_session_request():
     REQUEST.session.set('username', 'pep')
+    REQUEST.session.set('password', 'secret')
     assert REQUEST.session.get('username') == 'pep'
+    assert REQUEST.session.get('password') == 'secret'
 
 
 def test_reset_session():
     REQUEST.session.set('username', 'pep')
     REQUEST.session.reset()
-    assert REQUEST.session.get('username') == ''
+    assert REQUEST.session.get('username') is None

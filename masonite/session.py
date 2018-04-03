@@ -4,7 +4,7 @@ class Session():
     """
     Class Session for manage sessions of the app
     """
-    _session = {}
+    _session = dict()
 
     def __init__(self, environ):
         """
@@ -30,7 +30,7 @@ class Session():
         """
         ip = self.__get_client_address()
         if not (ip in self._session):
-            self._session[ip] = {}
+            self._session[ip] = dict()
 
         self._session[ip][key] = value
 
@@ -38,7 +38,11 @@ class Session():
         """
         Reset object _session
         """
-        self._session = {}
+        ip = self.__get_client_address()
+        try:
+            self._session[ip] = dict()
+        except KeyError:
+            pass
 
     def __get_client_address(self):
         """

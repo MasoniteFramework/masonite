@@ -1,4 +1,6 @@
 from masonite.request import Request
+from masonite.session import Session
+from masonite.app import App
 
 
 wsgi_request = {
@@ -28,18 +30,54 @@ wsgi_request = {
     'SCRIPT_NAME': ''
 }
 
-REQUEST = Request(wsgi_request).key(
-    'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+session = Session(wsgi_request)
+container = App()
+container.bind('Session', session)
+SESSION = container.make('Session')
 
 
 def test_session_request():
-    REQUEST.session.set('username', 'pep')
-    REQUEST.session.set('password', 'secret')
-    assert REQUEST.session.get('username') == 'pep'
-    assert REQUEST.session.get('password') == 'secret'
+    SESSION.set('username', 'pep')
+    SESSION.set('password', 'secret')
+    assert SESSION.get('username') == 'pep'
+    assert SESSION.get('password') == 'secret'
+
+
+def test_change_ip_address():
+    SESSION.environ['REMOTE_ADDR'] = '111.222.33.44'
+    SESSION.set('username', 'pep')
+    assert SESSION.get('username') == 'pep'
+
+
+def test_session_get_all_data():
+    SESSION.environ['REMOTE_ADDR'] = 'get.all.data'
+    SESSION.set('username', 'pep')
+    assert SESSION.all() == {'username': 'pep'}
+
+
+def test_session_has_data():
+    SESSION._session = {}
+    SESSION.set('username', 'pep')
+    assert SESSION.has('username') is True
+    assert SESSION.has('has_password') is False
+
+
+def test_session_flash_data():
+    SESSION._session = {}
+    SESSION.flash('flash_username', 'pep')
+    SESSION.flash('flash_password', 'secret')
+    assert SESSION.get('flash_username') == 'pep'
+    assert SESSION.get('flash_password') == 'secret'
+    
+
+def test_reset_flash_session():
+    SESSION.flash('flash_', 'test_pep')
+
+    SESSION.reset(flash_only=True)
+    assert SESSION.get('flash_') is None
 
 
 def test_reset_session():
-    REQUEST.session.set('username', 'pep')
-    REQUEST.session.reset()
-    assert REQUEST.session.get('username') is None
+    SESSION.set('flash_', 'test_pep')
+    SESSION.reset()
+    assert SESSION.get('reset_username') is None

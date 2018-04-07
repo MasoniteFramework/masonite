@@ -43,6 +43,11 @@ def test_session_request():
     assert SESSION.get('password') == 'secret'
 
 
+def test_session_has_no_data():
+    SESSION._session = {}
+    SESSION._flash = {}
+    assert SESSION.has('nodata') is False
+
 def test_change_ip_address():
     SESSION.environ['REMOTE_ADDR'] = '111.222.33.44'
     SESSION.set('username', 'pep')
@@ -78,7 +83,7 @@ def test_session_flash_data():
     SESSION.flash('flash_password', 'secret')
     assert SESSION.get('flash_username') == 'pep'
     assert SESSION.get('flash_password') == 'secret'
-    
+
 
 def test_reset_flash_session():
     SESSION.flash('flash_', 'test_pep')

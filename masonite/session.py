@@ -43,18 +43,30 @@ class Session():
 
 
     def has(self, key):
-        # if self.get(key):
-        if key in self.__collect_data():
+        """
+        Check if a key exists in the session
+        """
+        
+        data = self.__collect_data()
+        if data and key in data:
             return True
         
         return False
 
 
     def all(self):
+        """
+        Get all session data
+        """
+
         return self.__collect_data()
 
 
     def flash(self, key, value):
+        """
+        Add temporary data to the session
+        """
+
         ip = self.__get_client_address()
         if not ip in self._flash:
             self._flash[ip] = {}
@@ -89,6 +101,10 @@ class Session():
 
 
     def __collect_data(self, key=False):
+        """
+        Collect data from session and flash data
+        """
+
         ip = self.__get_client_address()
 
         session = {}

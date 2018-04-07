@@ -52,14 +52,24 @@ def test_change_ip_address():
 def test_session_get_all_data():
     SESSION.environ['REMOTE_ADDR'] = 'get.all.data'
     SESSION.set('username', 'pep')
-    assert SESSION.all() == {'username': 'pep'}
+    SESSION.flash('password', 'secret')
+    assert SESSION.all() == {'username': 'pep', 'password': 'secret'}
 
 
 def test_session_has_data():
     SESSION._session = {}
+    SESSION._flash = {}
     SESSION.set('username', 'pep')
     assert SESSION.has('username') is True
     assert SESSION.has('has_password') is False
+
+
+def test_session_helper():
+    SESSION._session = {}
+    SESSION._flash = {}
+    helper = SESSION.helper
+
+    assert isinstance(helper(), type(SESSION))
 
 
 def test_session_flash_data():

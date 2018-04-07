@@ -5,8 +5,8 @@ class Session():
     Class Session for manage sessions of the app
     """
 
-    _session = dict()
-    _flash = dict()
+    _session = {}
+    _flash = {}
 
 
     def __init__(self, environ):
@@ -37,27 +37,27 @@ class Session():
         ip = self.__get_client_address()
 
         if not ip in self._session:
-            self._session[ip] = dict()
+            self._session[ip] = {}
 
         self._session[ip][key] = value
 
 
     def has(self, key):
-        if self.get(key):
+        # if self.get(key):
+        if key in self.__collect_data():
             return True
         
         return False
 
 
     def all(self):
-        ip = self.__get_client_address()
-        return self._session[ip]
+        return self.__collect_data()
 
 
     def flash(self, key, value):
         ip = self.__get_client_address()
-        if not (ip in self._flash):
-            self._flash[ip] = dict()
+        if not ip in self._flash:
+            self._flash[ip] = {}
 
         self._flash[ip][key] = value
 
@@ -71,10 +71,11 @@ class Session():
 
         if flash_only:
             if ip in self._flash:
-                self._flash[ip] = dict()
+                self._flash[ip] = {}
         else:
             if ip in self._session:
-                self._session[ip] = dict()
+                self._session[ip] = {}
+
 
     def __get_client_address(self):
         """
@@ -87,10 +88,10 @@ class Session():
         return self.environ['REMOTE_ADDR']
 
 
-    def __collect_data(self, key):
+    def __collect_data(self, key=False):
         ip = self.__get_client_address()
 
-        session = dict()
+        session = {}
 
         if ip in self._session:
             session = self._session[ip]
@@ -98,10 +99,13 @@ class Session():
         if ip in self._flash:
             session.update(self._flash[ip])
 
-        if key in session:
+        if key and key in session:
             return session[key]
         
-        return None
+        if not session:
+            return None
+
+        return session
         
 
     def helper(self):

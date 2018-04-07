@@ -68,12 +68,15 @@ URL = 'http://localhost:8000'
 PROVIDERS = [
     # Framework Providers
     'masonite.providers.AppProvider.AppProvider',
+    'masonite.providers.SessionProvider.SessionProvider',
     'masonite.providers.RouteProvider.RouteProvider',
-    'entry.providers.ApiProvider.ApiProvider',
+    # 'entry.providers.ApiProvider.ApiProvider',
     'masonite.providers.RedirectionProvider.RedirectionProvider',
     'masonite.providers.StartResponseProvider.StartResponseProvider',
     'masonite.providers.SassProvider.SassProvider',
     'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
+
+    # Optional Framework Providers
     'masonite.providers.MailProvider.MailProvider',
     'masonite.providers.UploadProvider.UploadProvider',
     'masonite.providers.ViewProvider.ViewProvider',

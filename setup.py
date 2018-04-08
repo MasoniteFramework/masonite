@@ -38,7 +38,7 @@ setup(
         'masonite-entry>=0.0.0,<=0.9.99',
         'pendulum==1.4.4',
     ],
-    description='The core for the Masonite',
+    description='The core for the Masonite framework',
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
     url='https://github.com/MasoniteFramework/masonite',

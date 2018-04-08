@@ -34,7 +34,7 @@ class Session():
 
         ip = self.__get_client_address()
 
-        if not (ip in self._session):
+        if ip not in self._session:
             self._session[ip] = {}
 
         self._session[ip][key] = value
@@ -62,7 +62,7 @@ class Session():
         """
 
         ip = self.__get_client_address()
-        if not (ip in self._flash):
+        if ip not in self._flash:
             self._flash[ip] = {}
 
         self._flash[ip][key] = value

@@ -4,6 +4,7 @@ from pydoc import locate
 from masonite.request import Request
 from masonite.app import App
 from masonite.routes import Get
+from masonite.helpers.time import cookie_expire_time
 
 
 wsgi_request = {
@@ -74,6 +75,15 @@ def test_request_sets_and_gets_cookies():
     REQUEST.cookie('setcookie', 'value') 
     assert REQUEST.get_cookie('setcookie') == 'value'
 
+
+def test_request_sets_expiration_cookie_2_month():
+    REQUEST.cookies = []
+    REQUEST.cookie('setcookie_expiration', 'value', expires='2 months')
+
+    time = cookie_expire_time('2 months')
+
+    assert REQUEST.get_cookie('setcookie_expiration') == 'value'
+    assert 'Expires={0}'.format(time) in REQUEST.cookies[0][1]
 
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST

@@ -76,7 +76,7 @@ def test_request_sets_and_gets_cookies():
     assert REQUEST.get_cookie('setcookie') == 'value'
 
 
-def test_request_sets_expiration_cookie_2_month():
+def test_request_sets_expiration_cookie_2_months():
     REQUEST.cookies = []
     REQUEST.cookie('setcookie_expiration', 'value', expires='2 months')
 

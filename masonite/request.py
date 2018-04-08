@@ -13,6 +13,7 @@ import tldextract
 
 from masonite.auth.Sign import Sign
 from masonite.helpers.Extendable import Extendable
+from masonite.helpers.time import cookie_expire_time
 
 
 class Request(Extendable):
@@ -181,7 +182,7 @@ class Request(Extendable):
             return self.url_params[parameter]
         return False
 
-    def cookie(self, key, value, encrypt=True, path='/'):
+    def cookie(self, key, value, encrypt=True, path='/', expires=''):
         """
         Sets a cookie in the browser
         """
@@ -191,8 +192,11 @@ class Request(Extendable):
         else:
             value = value
 
+        if expires:
+            expires = "Expires={0};".format(cookie_expire_time(expires))
+
         self.cookies.append(
-            ('Set-Cookie', '{0}={1}; HttpOnly; Path={2}'.format(key, value, path)))
+            ('Set-Cookie', '{0}={1};{2} HttpOnly; Path={3}'.format(key, value, expires, path)))
         self.append_cookie(key, value)
         return self
 

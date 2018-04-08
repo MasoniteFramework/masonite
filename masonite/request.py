@@ -39,7 +39,6 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-
     def input(self, param):
         """
         Returns either the FORM_PARAMS during a POST request

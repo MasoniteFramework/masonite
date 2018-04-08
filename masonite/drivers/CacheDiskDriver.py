@@ -106,7 +106,7 @@ class CacheDiskDriver(CacheContract):
 
         for template in glob.glob(glob_path):
             os.remove(template)
-    
+
     def update(self, key, value, location=None):
         """
             Updates a specific cache by key
@@ -117,7 +117,7 @@ class CacheDiskDriver(CacheContract):
 
         location = os.path.join(location, key)
         cache = glob.glob(location + ':*')[0]
-        
+
         open(cache, 'w').write(str(value))
 
         return key

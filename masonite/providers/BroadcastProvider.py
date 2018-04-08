@@ -5,6 +5,7 @@ from masonite.drivers.BroadcastPusherDriver import BroadcastPusherDriver
 from masonite.drivers.BroadcastAblyDriver import BroadcastAblyDriver
 from config import broadcast
 
+
 class BroadcastProvider(ServiceProvider):
 
     wsgi = False

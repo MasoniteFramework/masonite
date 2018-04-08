@@ -35,7 +35,8 @@ setup(
         'cryptography==2.1.4',
         'PyMySQL==0.8.0',
         'psycopg2==2.7.3.2',
-        'masonite-entry>=0.0.0,<=0.9.99'
+        'masonite-entry>=0.0.0,<=0.9.99',
+        'pendulum==1.4.4',
     ],
     description='The core for the Masonite',
     author='Joseph Mancuso',

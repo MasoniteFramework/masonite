@@ -10,11 +10,10 @@ class SessionProvider(ServiceProvider):
 
     def boot(self, Environ, Request, ViewClass):
         session = Session(Environ)
-        
+
         self.app.bind('Session', session)
         Request.session = session
 
         ViewClass.share({
             'session': session.helper
         })
-        

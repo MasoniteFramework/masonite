@@ -7,12 +7,13 @@ except ImportError:
     raise DriverLibraryNotFound(
         'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
 
+
 class BroadcastPusherDriver(BroadcastContract):
 
     def __init__(self, BroadcastConfig):
         self.config = BroadcastConfig
         self.ssl_message = True
-    
+
     def ssl(self, boolean):
         self.ssl_message = boolean
         return self

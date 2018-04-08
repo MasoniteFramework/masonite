@@ -22,13 +22,13 @@ class App():
         """ Retreives a class from the container by key """
         if self.has(name):
             return self.providers[name]
-        
+
         raise MissingContainerBindingNotFound("{0} key was not found in the container".format(name))
-    
+
     def has(self, name):
         if name in self.providers:
             return True
-        
+
         return False
 
     def helper(self):

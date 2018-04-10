@@ -235,6 +235,7 @@ class Request(Extendable):
         """
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
+            self.cookie(key, 'expired', expires='expired')
             cookies = self.environ['HTTP_COOKIE'].split(';')
             for index, cookie in enumerate(cookies):
                 if cookie.startswith(key):

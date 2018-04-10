@@ -241,8 +241,10 @@ class Request(Extendable):
                     # remove that cookie
                     del cookies[index]
 
-        # put string back together
-        ';'.join(cookies)
+            # put string back together
+            self.environ['HTTP_COOKIE'] = ';'.join(cookies)
+            return True
+        return False
 
     def set_user(self, user_model):
         """

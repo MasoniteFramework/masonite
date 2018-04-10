@@ -85,6 +85,16 @@ def test_request_sets_expiration_cookie_2_months():
     assert REQUEST.get_cookie('setcookie_expiration') == 'value'
     assert 'Expires={0}'.format(time) in REQUEST.cookies[0][1]
 
+
+def test_delete_cookie():
+    REQUEST.cookies = []
+    REQUEST.cookie('delete_cookie', 'value')
+
+    assert REQUEST.get_cookie('delete_cookie') == 'value'
+    REQUEST.delete_cookie('delete_cookie')
+    assert REQUEST.get_cookie('delete_cookie') is None
+
+
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST
     assert REQUEST.redirect_url == 'newurl'

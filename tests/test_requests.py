@@ -92,7 +92,7 @@ def test_delete_cookie():
 
     assert REQUEST.get_cookie('delete_cookie') == 'value'
     REQUEST.delete_cookie('delete_cookie')
-    assert REQUEST.get_cookie('delete_cookie') is None
+    assert not REQUEST.get_cookie('delete_cookie')
 
 
 def test_redirect_returns_request():

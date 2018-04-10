@@ -213,6 +213,7 @@ class Request(Extendable):
 
         if 'HTTP_COOKIE' in self.environ:
             grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+            
             if provided_cookie in grab_cookie:
                 if decrypt:
                     return Sign(self.encryption_key).unsign(
@@ -233,9 +234,10 @@ class Request(Extendable):
         """
         Delete cookie
         """
+        self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            self.cookie(key, 'expired', expires='expired')
+            
             cookies = self.environ['HTTP_COOKIE'].split(';')
             for index, cookie in enumerate(cookies):
                 if cookie.startswith(key):

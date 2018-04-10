@@ -98,20 +98,30 @@ class SessionMemoryDriver(SessionContract):
 
         ip = self.__get_client_address()
 
+        # Declare a new dictionary
         session = {}
 
+        # If the session data has keys
         if ip in self._session:
             session = self._session[ip]
 
+        # If the session flash has keys
         if ip in self._flash:
             session.update(self._flash[ip])
 
+        # If a key is set and it is inside the new declared session, return that key
         if key and key in session:
             return session[key]
 
-        if not session:
+        # If the key is set and is not in the session
+        if key and key not in session:
             return None
 
+        # If the session is still an empty dictionary
+        if not session:
+            return None
+        
+        # No checks have been hit. Return the new dictionary
         return session
 
     def helper(self):

@@ -229,6 +229,21 @@ class Request(Extendable):
             self.environ['HTTP_COOKIE'] = '{0}={1}'.format(
                 key, value)
 
+    def delete_cookie(self, key):
+        """
+        Delete cookie
+        """
+
+        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
+            cookies = self.environ['HTTP_COOKIE'].split(';')
+            for index, cookie in enumerate(cookies):
+                if cookie.startswith(key):
+                    # remove that cookie
+                    del cookies[index]
+
+        # put string back together
+        ';'.join(cookies)
+
     def set_user(self, user_model):
         """
         Loads the user into the class

@@ -1,5 +1,6 @@
 import pendulum
 
+
 def cookie_expire_time(str_time):
     """ str_time should be a string like "1 month" """
     number = int(str_time.split(" ")[0])

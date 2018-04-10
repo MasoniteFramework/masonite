@@ -37,7 +37,7 @@ class SessionCookieDriver(SessionContract):
         Check if a key exists in the session
         """
 
-        if self.get('s_{0}'.format(key)):
+        if self.get(key):
             return True
         return False
 
@@ -53,14 +53,14 @@ class SessionCookieDriver(SessionContract):
         Collect data from session and flash data
         """
 
-        cookies = []
+        cookies = {}
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
             cookies_original = self.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
                 if cookie.startswith('s_'):
                     data = cookie.split("=")
-                    result = {'key': data[0], 'value': data[1]}
-                    cookies.append(result)
+                    cookie_value = self.request.get_cookie(data[0])
+                    cookies[data[0][2:]] = cookie_value
         return cookies
 
     def flash(self, key, value):
@@ -76,7 +76,7 @@ class SessionCookieDriver(SessionContract):
         """
         cookies = self.__collect_data()
         for cookie in cookies:
-            self.request.delete_cookie(cookie['key'])
+            self.request.delete_cookie('s_{0}'.format(cookie))
 
     def helper(self):
         """

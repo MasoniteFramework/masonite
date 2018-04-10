@@ -75,6 +75,7 @@ def test_session_get_all_data():
         SESSION.environ['REMOTE_ADDR'] = 'get.all.data'
         SESSION.set('username', 'pep')
         SESSION.flash('password', 'secret')
+
         assert SESSION.all() == {'username': 'pep', 'password': 'secret'}
 
 

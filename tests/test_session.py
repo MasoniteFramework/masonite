@@ -109,13 +109,18 @@ def test_session_flash_data():
         assert SESSION.get('flash_password') == 'secret'
 
 
-def test_reset_flash_session():
-    for driver in ('memory', 'cookie'):
-        SESSION = container.make('SessionManager').driver(driver)
-        SESSION.flash('flash_', 'test_pep')
+def test_reset_flash_session_memory():
+    SESSION = container.make('SessionManager').driver('memory')
+    SESSION.flash('flash_', 'test_pep')
+    SESSION.reset(flash_only=True)
+    assert SESSION.get('flash_') is None
 
-        SESSION.reset(flash_only=True)
-        assert SESSION.get('flash_') is None
+def test_reset_flash_session_driver():
+    SESSION = container.make('SessionManager').driver('cookie')
+    SESSION.flash('flash_', 'test_pep')
+
+    SESSION.reset(flash_only=True)
+    assert SESSION.get('flash_') is None
 
 
 def test_reset_session():

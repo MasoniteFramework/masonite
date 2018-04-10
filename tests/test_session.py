@@ -124,3 +124,4 @@ def test_reset_session():
         SESSION.set('flash_', 'test_pep')
         SESSION.reset()
         assert SESSION.get('reset_username') is None
+

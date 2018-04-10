@@ -1,0 +1,7 @@
+[run]
+source = masonite
+
+[report]
+ignore_errors = True
+omit =
+    */tests/*

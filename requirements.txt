@@ -11,3 +11,7 @@ boto3==1.5.24
 tldextract==2.2.0
 pusher==1.7.4
 ably==1.0.1
+pendulum==1.4.4
+
+pytest
+coveralls

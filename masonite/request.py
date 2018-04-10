@@ -13,6 +13,7 @@ import tldextract
 
 from masonite.auth.Sign import Sign
 from masonite.helpers.Extendable import Extendable
+from masonite.helpers.time import cookie_expire_time
 
 
 class Request(Extendable):
@@ -37,7 +38,6 @@ class Request(Extendable):
 
         self.encryption_key = False
         self.container = None
-
 
     def input(self, param):
         """
@@ -181,7 +181,7 @@ class Request(Extendable):
             return self.url_params[parameter]
         return False
 
-    def cookie(self, key, value, encrypt=True, path='/'):
+    def cookie(self, key, value, encrypt=True, path='/', expires=''):
         """
         Sets a cookie in the browser
         """
@@ -191,8 +191,11 @@ class Request(Extendable):
         else:
             value = value
 
+        if expires:
+            expires = "Expires={0};".format(cookie_expire_time(expires))
+
         self.cookies.append(
-            ('Set-Cookie', '{0}={1}; HttpOnly; Path={2}'.format(key, value, path)))
+            ('Set-Cookie', '{0}={1};{2} HttpOnly; Path={3}'.format(key, value, expires, path)))
         self.append_cookie(key, value)
         return self
 
@@ -210,6 +213,7 @@ class Request(Extendable):
 
         if 'HTTP_COOKIE' in self.environ:
             grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+            
             if provided_cookie in grab_cookie:
                 if decrypt:
                     return Sign(self.encryption_key).unsign(
@@ -225,6 +229,25 @@ class Request(Extendable):
         else:
             self.environ['HTTP_COOKIE'] = '{0}={1}'.format(
                 key, value)
+
+    def delete_cookie(self, key):
+        """
+        Delete cookie
+        """
+        self.cookie(key, '', expires='expired')
+
+        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
+            
+            cookies = self.environ['HTTP_COOKIE'].split(';')
+            for index, cookie in enumerate(cookies):
+                if cookie.startswith(key):
+                    # remove that cookie
+                    del cookies[index]
+
+            # put string back together
+            self.environ['HTTP_COOKIE'] = ';'.join(cookies)
+            return True
+        return False
 
     def set_user(self, user_model):
         """

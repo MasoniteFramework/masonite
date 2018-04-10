@@ -1,0 +1,5 @@
+"""
+Session configuration
+"""
+
+DRIVER = 'memory'

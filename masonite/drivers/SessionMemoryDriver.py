@@ -1,21 +1,20 @@
+from masonite.contracts.SessionContract import SessionContract
 
 
-class Session():
+class SessionMemoryDriver(SessionContract):
     """
-    Class Session for manage sessions of the app
+    Session from the memory driver
     """
 
     _session = {}
     _flash = {}
 
-
-    def __init__(self, environ):
+    def __init__(self, Environ):
         """
         Constructor
         """
 
-        self.environ = environ
-
+        self.environ = Environ
 
     def get(self, key):
         """
@@ -25,9 +24,8 @@ class Session():
         data = self.__collect_data(key)
         if data:
             return data
-        
-        return None
 
+        return None
 
     def set(self, key, value):
         """
@@ -36,23 +34,20 @@ class Session():
 
         ip = self.__get_client_address()
 
-        if not ip in self._session:
+        if ip not in self._session:
             self._session[ip] = {}
 
         self._session[ip][key] = value
-
 
     def has(self, key):
         """
         Check if a key exists in the session
         """
-        
+
         data = self.__collect_data()
         if data and key in data:
             return True
-        
         return False
-
 
     def all(self):
         """
@@ -61,18 +56,16 @@ class Session():
 
         return self.__collect_data()
 
-
     def flash(self, key, value):
         """
         Add temporary data to the session
         """
 
         ip = self.__get_client_address()
-        if not ip in self._flash:
+        if ip not in self._flash:
             self._flash[ip] = {}
 
         self._flash[ip][key] = value
-
 
     def reset(self, flash_only=False):
         """
@@ -88,7 +81,6 @@ class Session():
             if ip in self._session:
                 self._session[ip] = {}
 
-
     def __get_client_address(self):
         """
         Get ip from the client
@@ -96,9 +88,8 @@ class Session():
 
         if 'HTTP_X_FORWARDED_FOR' in self.environ:
             return self.environ['HTTP_X_FORWARDED_FOR'].split(',')[-1].strip()
-        
-        return self.environ['REMOTE_ADDR']
 
+        return self.environ['REMOTE_ADDR']
 
     def __collect_data(self, key=False):
         """
@@ -107,22 +98,31 @@ class Session():
 
         ip = self.__get_client_address()
 
+        # Declare a new dictionary
         session = {}
 
+        # If the session data has keys
         if ip in self._session:
             session = self._session[ip]
-        
+
+        # If the session flash has keys
         if ip in self._flash:
             session.update(self._flash[ip])
 
+        # If a key is set and it is inside the new declared session, return that key
         if key and key in session:
             return session[key]
-        
-        if not session:
+
+        # If the key is set and is not in the session
+        if key and key not in session:
             return None
 
-        return session
+        # If the session is still an empty dictionary
+        if not session:
+            return None
         
+        # No checks have been hit. Return the new dictionary
+        return session
 
     def helper(self):
         """

@@ -20,3 +20,7 @@ def test_middleware_sets_csrf_cookie():
 def test_middleware_shares_view():
     assert 'csrf_field' in container.make('ViewClass').dictionary
     assert 'input' in container.make('ViewClass').dictionary['csrf_field']
+
+def test_verify_token():
+    token = request.get_cookie('csrf_token', decrypt=False)
+    assert csrf.verify_csrf_token(token)

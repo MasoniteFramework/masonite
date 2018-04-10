@@ -1,12 +1,16 @@
 language: python
+
 python:
 - '3.4'
 - '3.5'
 - '3.6'
+
 install:
 - pip install .
 - pip install -r requirements.txt
-script: python -m pytest
+
+script: coverage run -m pytest
+
 deploy:
   provider: pypi
   user: josephmancuso
@@ -16,3 +20,5 @@ deploy:
     tags: true
     python: 3.6
 
+after_success:
+  coveralls

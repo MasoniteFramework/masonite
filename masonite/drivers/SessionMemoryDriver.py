@@ -1,20 +1,20 @@
-""" Masonite session module """
+from masonite.contracts.SessionContract import SessionContract
 
 
-class Session():
+class SessionMemoryDriver(SessionContract):
     """
-    Class Session for manage sessions of the app
+    Session from the memory driver
     """
 
     _session = {}
     _flash = {}
 
-    def __init__(self, environ):
+    def __init__(self, Environ):
         """
         Constructor
         """
 
-        self.environ = environ
+        self.environ = Environ
 
     def get(self, key):
         """

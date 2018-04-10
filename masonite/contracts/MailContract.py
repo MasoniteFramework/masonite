@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
+
 class MailContract(ABC):
-    
+
     @abstractmethod
     def to(self): pass
-    
+
     @abstractmethod
     def template(self): pass
 

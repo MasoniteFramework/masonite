@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
+
 class CacheContract(ABC):
 
     @abstractmethod
     def store(self): pass
-        
+
     @abstractmethod
     def store_for(self): pass
 

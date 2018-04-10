@@ -1,6 +1,8 @@
-from masonite.request import Request
-from masonite.session import Session
+from config import session
 from masonite.app import App
+from masonite.drivers.SessionMemoryDriver import SessionMemoryDriver
+from masonite.managers.SessionManager import SessionManager
+from masonite.request import Request
 
 
 wsgi_request = {
@@ -30,9 +32,14 @@ wsgi_request = {
     'SCRIPT_NAME': ''
 }
 
-session = Session(wsgi_request)
+
 container = App()
-container.bind('Session', session)
+container.bind('Environ', wsgi_request)
+container.bind('SessionConfig', session)
+container.bind('SessionMemoryDriver', SessionMemoryDriver)
+container.bind('SessionManager', SessionManager(container))
+container.bind('Application', container)
+container.bind('Session', container.make('SessionManager').driver('memory'))
 SESSION = container.make('Session')
 
 
@@ -47,6 +54,7 @@ def test_session_has_no_data():
     SESSION._session = {}
     SESSION._flash = {}
     assert SESSION.has('nodata') is False
+
 
 def test_change_ip_address():
     SESSION.environ['REMOTE_ADDR'] = '111.222.33.44'

@@ -95,6 +95,13 @@ def test_delete_cookie():
     assert not REQUEST.get_cookie('delete_cookie')
 
 
+def test_delete_cookie_with_wrong_key():
+    REQUEST.cookies = []
+    REQUEST.cookie('cookie', 'value')
+    REQUEST.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+    assert REQUEST.get_cookie('cookie') is None
+
+
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST
     assert REQUEST.redirect_url == 'newurl'

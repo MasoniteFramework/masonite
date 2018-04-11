@@ -129,8 +129,6 @@ def show(self):
     return view('helloworld')
 ```
 
-**NOTE: All views (controller methods) MUST take `self` and `request` as an argument. If you would like to render a template then you return a `view()` function which is imported for you at the top.**
-
 As you see above, we are returning a `helloworld` template but we do not have that yet. All templates are in `resources/templates`. We can simply make a file called `helloworld.html` or run the `craft` command:
 
     $ craft view helloworld

@@ -57,6 +57,16 @@ Go to `http://localhost:8000/`
 
 Please read the [Contributing Documentation](https://masoniteframework.gitbooks.io/docs/content/todo-contributing.html) here. Development will be on the current releasing branch (typically the `develop` branch) so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
 
+## Contributors
+
+Thank you for those who have contributed to Masonite!
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| | |
+| :-------------: | :-------------: |
+| [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) |
+
 ## License
 
 The Masonite framework is open-sourced software licensed under the MIT license. 

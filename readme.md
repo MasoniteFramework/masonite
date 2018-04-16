@@ -55,7 +55,7 @@ Go to `http://localhost:8000/`
 
 ## Contributing
 
-Please read the [Contributing Documentation](https://masoniteframework.gitbooks.io/docs/content/todo-contributing.html) here. Development will be on the current releasing branch (typically the `develop` branch) so check open issues, the current Milestone as well as the contributing file. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
+Please read the [Contributing Documentation](https://masoniteframework.gitbook.io/docs/prologue/contributing-guide) here. Development will be on the current releasing branch of the [Core Repository](https://github.com/MasoniteFramework/core) (typically the `develop` branch) so check open issues, the current Milestone and the releases in that repository. Ask any questions you like in the issues so we can have an open discussion about the framework, design decisions and future of the project.
 
 ## Contributors
 

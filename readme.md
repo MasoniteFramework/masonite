@@ -90,7 +90,7 @@ You can now cd into this directory by doing:
 
     $ cd project_name
 
-Once that is cloned we need to add the pip dependencies. You can run `pip3 install -r "requirements.txt"` or you can run the `craft` command:
+Now we just need to add the pip dependencies. You can run `pip3 install -r "requirements.txt"` or you can run the `craft` command:
 
     $ craft install
 
@@ -100,7 +100,15 @@ This will install all the required dependencies to run this framework. Now we ca
 
     $ craft serve
 
-This will run the server at `localhost:8000`. Navigating to that URL should show the Masonite welcome message.
+This will run the server at `localhost:8000`. Navigating to that URL should show the Masonite welcome message. 
+
+If that port is blocked you can specify a port by running:
+
+    $ craft serve --port 8080
+
+Or specify a host by running:
+
+    $ craft serve --host 192.168.1.283
 
 ## Hello World
 
@@ -121,19 +129,19 @@ ROUTES = [
 
 **NOTE: Notice this new interesting string syntax in our route. This will grant our route access to a controller (which we will create below)**
 
-Since we used a string controller we don't have to import our controller into this file. All imports are does through Masonite on the backend.
+Since we used a string controller we don't have to import our controller into this file. All imports are done through Masonite on the backend.
 
-You'll notice that we have a reference to the HelloWorldController class which we do not have yet. This framework uses controllers in order to separate the application logic. Controller can be looked at as the views.py in a Django application. The architecture here is 1 controller per file.
+You'll notice that we have a reference to the HelloWorldController class which we do not have yet. This framework uses controllers in order to separate the application logic. Controllers can be looked at as the views.py in a Django application. The architectural standard here is 1 controller per file.
 
 In order to make the `HelloWorldController` we can use a `craft` command:
 
     $ craft controller HelloWorldController
 
-This will scaffold the controller for you and put it in `app/http/controllers/HelloWorldController.py` with the needed imports already scaffolded for you.
+This will scaffold the controller for you and put it in `app/http/controllers/HelloWorldController.py`
 
-We can make a method called `show()` in order to handle the logic for our template.
+We will have a `show()` method by default which is the typical method we will use to "show" our views and content.
 
-Inside the `HelloWorldController` we can make a method that looks like this:
+Inside the `HelloWorldController` we can make our `show` method like this:
 
 ```python
 def show(self):

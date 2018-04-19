@@ -182,7 +182,7 @@ class Request(Extendable):
         return False
 
     def cookie(self, key, value, encrypt=True,
-               http_only=True, path='/', expires=''):
+               http_only="HttpOnly;", path='/', expires=''):
         """
         Sets a cookie in the browser
         """
@@ -195,13 +195,12 @@ class Request(Extendable):
         if expires:
             expires = "Expires={0};".format(cookie_expire_time(expires))
 
-        http_only_text = ""
-        if http_only:
-            http_only_text = "HttpOnly"
+        if not http_only:
+            http_only = ""
 
         self.cookies.append(
-            ('Set-Cookie', '{0}={1};{2} {3}; Path={4}'.format(
-                key, value, expires, http_only_text, path)))
+            ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
+                key, value, expires, http_only, path)))
         self.append_cookie(key, value)
         return self
 

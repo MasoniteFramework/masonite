@@ -64,6 +64,14 @@ def test_set_and_get_cookie_with_existing_cookie():
     assert REQUEST.get_cookie('test') == 'testvalue'
 
 
-def test_set_and_get_cookie_http_only():
-    REQUEST.cookie('test', 'testvalue', http_only=True)
+def test_set_and_get_cookie_with_http_only():
+    REQUEST.cookie('test', 'testvalue')
     assert REQUEST.get_cookie('test') == 'testvalue'
+    assert 'HttpOnly' in REQUEST.cookies[0][1]
+
+
+def test_set_and_get_cookie_without_http_only():
+    REQUEST.cookies = []
+    REQUEST.cookie('test', 'testvalue', http_only=False, encrypt=False)
+    assert REQUEST.get_cookie('test', decrypt=False) == 'testvalue'
+    assert 'test=testvalue; Path=/' in REQUEST.cookies[0][1]

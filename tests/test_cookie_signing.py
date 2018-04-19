@@ -62,3 +62,8 @@ def test_set_and_get_cookie_with_existing_cookie():
     REQUEST.environ['HTTP_COOKIE'] = 'cookie=true'
     REQUEST.cookie('test', 'testvalue')
     assert REQUEST.get_cookie('test') == 'testvalue'
+
+
+def test_set_and_get_cookie_http_only():
+    REQUEST.cookie('test', 'testvalue', http_only=True)
+    assert REQUEST.get_cookie('test') == 'testvalue'

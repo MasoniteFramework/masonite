@@ -9,7 +9,7 @@ install:
 - pip install .
 - pip install -r requirements.txt
 
-script: travis-retry coverage run -m pytest
+script: travis_retry coverage run -m pytest
 
 deploy:
   provider: pypi

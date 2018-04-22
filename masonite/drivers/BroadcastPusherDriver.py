@@ -1,5 +1,6 @@
 from masonite.contracts.BroadcastContract import BroadcastContract
 from masonite.exceptions import DriverLibraryNotFound
+from masonite.drivers.BaseDriver import BaseDriver
 
 try:
     import pusher
@@ -8,7 +9,7 @@ except ImportError:
         'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
 
 
-class BroadcastPusherDriver(BroadcastContract):
+class BroadcastPusherDriver(BroadcastContract, BaseDriver):
 
     def __init__(self, BroadcastConfig):
         self.config = BroadcastConfig

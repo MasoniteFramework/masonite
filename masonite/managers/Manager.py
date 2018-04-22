@@ -23,7 +23,7 @@ class Manager:
 
     def driver(self, driver):
         self.create_driver(driver)
-        return self.container.resolve(self.manage_driver)
+        return self.container.resolve(self.manage_driver).load_manager(self)
 
     def create_driver(self, driver=None):
         if not driver:
@@ -33,7 +33,8 @@ class Manager:
 
         try:
             self.manage_driver = self.container.make(
-                '{0}{1}Driver'.format(self.driver_prefix, driver))
+                '{0}{1}Driver'.format(self.driver_prefix, driver)
+            )
         except MissingContainerBindingNotFound:
             raise DriverNotFound(
                 'Could not find the {0}{1}Driver from the service container. Are you missing a service provider?'.format(self.driver_prefix, driver))

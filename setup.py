@@ -18,7 +18,7 @@ setup(
     version='1.5.5',
     install_requires=[
         'validator.py==1.2.5',
-        'cryptography==2.1.4',
+        'cryptography==2.2.2',
         'bcrypt==3.1.4',
         'requests==2.18.4',
         'boto3==1.5.24',

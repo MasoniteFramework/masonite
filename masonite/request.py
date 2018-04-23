@@ -50,6 +50,9 @@ class Request(Extendable):
         if self.is_not_get_request():
             if isinstance(self.params, str):
                 return parse_qs(self.params)[param][0]
+            
+            if isinstance(self.params, dict):
+                return self.params[param]
 
             if not self.params[param].filename:
                 return self.params[param].value

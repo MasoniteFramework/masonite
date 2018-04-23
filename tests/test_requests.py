@@ -374,3 +374,11 @@ def test_hidden_form_request_method_changes_request_method():
     assert request.environ['REQUEST_METHOD'] == 'PUT'
 
 
+def test_get_json_input():
+    json_wsgi = wsgi_request
+    json_wsgi['REQUEST_METHOD'] = 'POST'
+    request_obj = Request(json_wsgi)
+    request_obj.params = {'payload': {'id': 1}}
+
+    assert request_obj.input('payload') == {'id': 1}
+

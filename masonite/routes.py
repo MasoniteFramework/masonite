@@ -1,6 +1,7 @@
 """ Module for the Routing System """
 import cgi
 import importlib
+import json
 import re
 from pydoc import locate
 
@@ -36,11 +37,19 @@ class Route():
     def set_post_params(self):
         """ If the route is a Post, swap the QUERY_STRING """
         fields = None
-
         if self.is_not_get_request():
-            fields = cgi.FieldStorage(
-                fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
-            return fields
+            if 'CONTENT_TYPE' in self.environ and 'application/json' in self.environ['CONTENT_TYPE']:
+                try:
+                    request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+                except (ValueError):
+                    request_body_size = 0
+
+                request_body = self.environ['wsgi.input'].read(request_body_size)
+                return {'payload': json.loads(request_body)}
+            else:
+                fields = cgi.FieldStorage(
+                    fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
+                return fields
 
     def is_post(self):
         """ Check to see if the current request is a POST request """

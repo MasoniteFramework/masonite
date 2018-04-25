@@ -18,7 +18,6 @@ from masonite.commands.MigrateResetCommand import MigrateResetCommand
 from masonite.commands.MigrateRollbackCommand import MigrateRollbackCommand
 from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
-from masonite.commands.ServeCommand import ServeCommand
 from masonite.commands.ViewCommand import ViewCommand
 
 
@@ -46,7 +45,6 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteMigrateRollbackCommand', MigrateRollbackCommand())
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
-        self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
 
     def boot(self, Environ, Request, Route):

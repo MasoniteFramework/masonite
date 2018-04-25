@@ -75,7 +75,8 @@ class App():
         for parameter in inspect.signature(obj).parameters.values():
             if parameter.annotation:
                 for provider, provider_class in self.providers.items():
-                    if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class:
+                    if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class or isinstance(provider_class, parameter.annotation.__class__):
                         provider_list.append(provider_class)
+                        break
 
         return provider_list

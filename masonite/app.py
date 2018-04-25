@@ -35,6 +35,7 @@ class App():
         """ Adds a helper to create builtin functions """
         return self
 
+
     def resolve(self, obj):
         """
         Takes an object such as a function or class method and resolves it's 
@@ -43,40 +44,26 @@ class App():
 
         provider_list = []
 
-        """
-        Inspect all non annotation parameters, find them in the container
-        and add them to the provider_list
-        """
-        for provider in inspect.signature(obj).parameters:
-            if provider is not 'self' and provider not in inspect.getfullargspec(obj)[6]:
-                provider_list.append(self.providers[provider])
+        for parameter, value in inspect.signature(obj).parameters.items():
+            if ':' in str(value):
+                provider_list.append(self._find_annotated_parameter(value))
+            else:
+                provider_list.append(self._find_parameter(value))
 
-        """
-        Inspect all annotation parameters, find the object it annotates from the container
-        and add the object to the provider_list
-        """
-        if inspect.getfullargspec(obj)[6]:
-            provider_list = self.resolve_annotations(obj, provider_list)
+        return obj(*provider_list)
 
-        """
-        Pass the provider list which contains all the dependencies found from the container
-        into the parameters.
-        """
-        try:
-            return obj(*provider_list)
-        except TypeError:
-            raise TypeError('Could not resolve the incorrect amount of objects from the container')
 
-    def resolve_annotations(self, obj, provider_list):
-        """
-        Resolves class annotations (type hinted) parameters.
-        This will retrieve the object from the container, not the key.
-        """
-        for parameter in inspect.signature(obj).parameters.values():
-            if parameter.annotation:
-                for provider, provider_class in self.providers.items():
-                    if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class or isinstance(provider_class, parameter.annotation.__class__):
-                        provider_list.append(provider_class)
-                        break
+    def _find_parameter(self, parameter):
+        parameter = str(parameter)
+        if parameter is not 'self' and parameter in self.providers:
+            return self.providers[parameter]
+        
+        raise TypeError('Could not resolve the incorrect amount of objects from the container')
 
-        return provider_list
+
+    def _find_annotated_parameter(self, parameter):
+        for provider, provider_class in self.providers.items():
+            if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class or isinstance(provider_class, parameter.annotation.__class__):
+                return provider_class
+        
+        raise TypeError('Could not resolve the incorrect amount of objects from the container')

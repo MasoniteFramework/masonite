@@ -58,3 +58,9 @@ def function_test4(upload: UploadContract):
 
 def test_container_contract_returns_upload_disk_driver():
     assert isinstance(app.resolve(function_test4), UploadDiskDriver.__class__)
+
+def function_test5(UploadDiskDriver, request: Request, MockObject):
+    return MockObject
+
+def test_container_injects_dependencies_in_any_order():
+    assert isinstance(app.resolve(function_test5), MockObject.__class__)

@@ -39,14 +39,14 @@ def test_upload_manager_switches_drivers():
     container.bind('Test', object)
     container.bind('StorageConfig', storage)
     container.bind('UploadDiskDriver', UploadDiskDriver)
-    container.bind('UploadTestDriver', object)
+    container.bind('UploadTestDriver', UploadDiskDriver)
     container.bind('Application', application)
     container.bind('UploadManager', UploadManager(container))
 
     assert isinstance(container.make(
         'UploadManager').driver('disk'), UploadDiskDriver)
     
-    assert isinstance(container.make('UploadManager').driver('test'), object)
+    assert isinstance(container.make('UploadManager').driver('test'), UploadDiskDriver)
 
 class ImageTest():
     """

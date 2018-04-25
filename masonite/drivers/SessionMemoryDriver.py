@@ -1,7 +1,8 @@
 from masonite.contracts.SessionContract import SessionContract
+from masonite.drivers.BaseDriver import BaseDriver
 
 
-class SessionMemoryDriver(SessionContract):
+class SessionMemoryDriver(SessionContract, BaseDriver):
     """
     Session from the memory driver
     """

@@ -14,6 +14,7 @@ import tldextract
 from masonite.auth.Sign import Sign
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.time import cookie_expire_time
+from cryptography.fernet import InvalidToken
 
 
 class Request(Extendable):
@@ -49,6 +50,9 @@ class Request(Extendable):
         if self.is_not_get_request():
             if isinstance(self.params, str):
                 return parse_qs(self.params)[param][0]
+            
+            if isinstance(self.params, dict):
+                return self.params[param]
 
             if not self.params[param].filename:
                 return self.params[param].value
@@ -221,8 +225,12 @@ class Request(Extendable):
 
             if provided_cookie in grab_cookie:
                 if decrypt:
-                    return Sign(self.encryption_key).unsign(
-                        grab_cookie[provided_cookie].value)
+                    try:
+                        return Sign(self.encryption_key).unsign(
+                            grab_cookie[provided_cookie].value)
+                    except InvalidToken:
+                        self.delete_cookie(provided_cookie)
+                        return None
                 return grab_cookie[provided_cookie].value
 
         return None

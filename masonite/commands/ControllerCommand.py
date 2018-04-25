@@ -7,7 +7,8 @@ class ControllerCommand(Command):
     Creates a controller
 
     controller
-        {name : Name of the view you would like to create}
+        {name : Name of the controller you would like to create}
+        {--r|--resource : Create a controller as a resource}
     """
 
     def handle(self):
@@ -21,5 +22,19 @@ class ControllerCommand(Command):
             f.write("    ''' Class Docstring Description '''\n\n")
             f.write('    def show(self):\n')
             f.write('        pass\n')
+
+            if self.option('resource'):
+                f.write('\n    def index(self):\n')
+                f.write('        pass\n\n')
+                f.write('    def create(self):\n')
+                f.write('        pass\n\n')
+                f.write('    def store(self):\n')
+                f.write('        pass\n\n')
+                f.write('    def edit(self):\n')
+                f.write('        pass\n\n')
+                f.write('    def update(self):\n')
+                f.write('        pass\n\n')
+                f.write('    def destroy(self):\n')
+                f.write('        pass\n')
 
             self.info('{0} Created Successfully!'.format(controller))

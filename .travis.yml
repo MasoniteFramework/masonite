@@ -4,7 +4,6 @@ python:
 - '3.4'
 - '3.5'
 - '3.6'
-- '3.7-dev'
 
 install:
 - pip install .
@@ -23,7 +22,3 @@ deploy:
 
 after_success:
   coveralls
-  
-matrix:
-  allow_failures:
-    python: "3.7-dev"

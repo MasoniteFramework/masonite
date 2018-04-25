@@ -1,7 +1,7 @@
 from cleo import Command
 import os
 import sys
-from ..helpers.helpers import add_venv_site_packages
+from masonite.packages import add_venv_site_packages
 from subprocess import check_output
 
 

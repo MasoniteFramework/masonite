@@ -3,7 +3,7 @@ from pydoc import locate
 
 from masonite.request import Request
 from masonite.app import App
-from masonite.routes import Get
+from masonite.routes import Get, Route
 from masonite.helpers.time import cookie_expire_time
 
 
@@ -93,6 +93,13 @@ def test_delete_cookie():
     assert REQUEST.get_cookie('delete_cookie') == 'value'
     REQUEST.delete_cookie('delete_cookie')
     assert not REQUEST.get_cookie('delete_cookie')
+
+
+def test_delete_cookie_with_wrong_key():
+    REQUEST.cookies = []
+    REQUEST.cookie('cookie', 'value')
+    REQUEST.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+    assert REQUEST.get_cookie('cookie') is None
 
 
 def test_redirect_returns_request():
@@ -366,4 +373,23 @@ def test_hidden_form_request_method_changes_request_method():
 
     assert request.environ['REQUEST_METHOD'] == 'PUT'
 
+
+class MockWsgiInput():
+
+    def read(self, value):
+        return '{"id": 1}'
+
+
+def test_get_json_input():
+    json_wsgi = wsgi_request
+    json_wsgi['REQUEST_METHOD'] = 'POST'
+    json_wsgi['CONTENT_TYPE'] = 'application/json'
+    json_wsgi['QUERY_STRING'] = ''
+    json_wsgi['wsgi.input'] = MockWsgiInput()
+
+    Route(json_wsgi)
+    request_obj = Request(json_wsgi)
+
+    assert isinstance(request_obj.params, dict)
+    assert request_obj.input('payload') == {'id': 1}
 

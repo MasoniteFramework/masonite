@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 setup(
     name='masonite',
     packages=[
@@ -8,6 +7,7 @@ setup(
         'masonite.auth',
         'masonite.facades',
         'masonite.providers',
+        'masonite.commands',
         'masonite.drivers',
         'masonite.managers',
         'masonite.testsuite',
@@ -15,10 +15,10 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='1.5.6',
+    version='1.6.0',
     install_requires=[
         'validator.py==1.2.5',
-        'cryptography==2.1.4',
+        'cryptography==2.2.2',
         'bcrypt==3.1.4',
         'requests==2.18.4',
         'boto3==1.5.24',

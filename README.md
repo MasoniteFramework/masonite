@@ -1,8 +1,23 @@
-# Masonite
-Core files for the python framework
 
-[![Build Status](https://travis-ci.org/MasoniteFramework/core.svg?branch=master)](https://travis-ci.org/MasoniteFramework/core) 
+<p align="center">
+<img src="https://imgur.com/TDqD4lo.png" width="240px"> 
+</p>
 
-[![Coverage Status](https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master)](https://coveralls.io/github/MasoniteFramework/core?branch=master)
+<p align="center">
 
-To get started with this repo, [read the CONTRIBUTING.md file on the masonite repo](https://github.com/josephmancuso/masonite/blob/master/CONTRIBUTING.md)
+<img src="https://travis-ci.org/MasoniteFramework/core.svg?branch=master">
+<img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/MasoniteFramework/core.svg" alt="License"> 
+<img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master" alt="Code Coverage"> 
+
+</p>
+
+----
+
+# Contributing
+
+Contributing to Masonite is simple:
+* Read the [How To Contribute](https://masoniteframework.gitbook.io/docs/prologue/how-to-contribute) documentation to see ways to contribtue to the project.
+* Read the [Contributing Guide](https://masoniteframework.gitbook.io/docs/prologue/contributing-guide) to learn how to contribute to the core source code development of the project.
+* Read the [Installation](https://masoniteframework.gitbook.io/docs/prologue/introduction-and-installaton) documentation on how to get started creating a Masonite project.
+* Check the open issues and milestones.
+* If you have any questions just open up an issue to discuss with the core maintainers.

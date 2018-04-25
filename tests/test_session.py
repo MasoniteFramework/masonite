@@ -115,6 +115,7 @@ def test_reset_flash_session_memory():
     SESSION.reset(flash_only=True)
     assert SESSION.get('flash_') is None
 
+
 def test_reset_flash_session_driver():
     SESSION = container.make('SessionManager').driver('cookie')
     SESSION.flash('flash_', 'test_pep')

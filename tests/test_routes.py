@@ -74,4 +74,4 @@ def test_route_url_list():
 
 def test_route_gets_controllers():
     assert Get().route('test/url', 'TestController@show')
-    assert Get().route('test/url', '/app.http.controllers.TestController@show')
+    assert Get().route('test/url', '/app.http.test_controllers.TestController@show')

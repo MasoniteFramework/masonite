@@ -1,6 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete
+import pytest
 
 
 wsgi_request = {
@@ -75,3 +76,6 @@ def test_route_url_list():
 def test_route_gets_controllers():
     assert Get().route('test/url', 'TestController@show')
     assert Get().route('test/url', '/app.http.test_controllers.TestController@show')
+
+def test_route_doesnt_break_on_incorrect_controller():
+    assert Get().route('test/url', 'BreakController@show')

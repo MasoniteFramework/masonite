@@ -2,6 +2,8 @@ from masonite.app import App
 from masonite.request import Request
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.contracts.UploadContract import UploadContract
+from masonite.exceptions import ContainerError
+import pytest
 
 app = App()
 app.bind('Request', Request(None))
@@ -64,3 +66,10 @@ def function_test5(UploadDiskDriver, request: Request, MockObject):
 
 def test_container_injects_dependencies_in_any_order():
     assert isinstance(app.resolve(function_test5), MockObject.__class__)
+
+def function_test6(NotIn):
+    return NotIn
+
+def test_container_raises_value_error():
+    with pytest.raises(ContainerError):
+        assert app.resolve(function_test6)

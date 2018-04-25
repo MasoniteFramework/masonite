@@ -1,7 +1,7 @@
 """ Core of the IOC Container """
 
 import inspect
-from masonite.exceptions import MissingContainerBindingNotFound
+from masonite.exceptions import MissingContainerBindingNotFound, ContainerError
 
 
 class App():
@@ -73,7 +73,7 @@ class App():
         if parameter is not 'self' and parameter in self.providers:
             return self.providers[parameter]
         
-        raise TypeError(
+        raise ContainerError(
             'The dependency with the key of {0} could not be found in the container'.format(parameter)
         )
 
@@ -86,4 +86,4 @@ class App():
             if parameter.annotation == provider_class.__class__ or parameter.annotation == provider_class or isinstance(provider_class, parameter.annotation.__class__):
                 return provider_class
         
-        raise TypeError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+        raise ContainerError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))

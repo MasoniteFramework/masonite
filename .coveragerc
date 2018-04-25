@@ -5,3 +5,4 @@ source = masonite
 ignore_errors = True
 omit =
     */tests/*
+    masonite/commands/*

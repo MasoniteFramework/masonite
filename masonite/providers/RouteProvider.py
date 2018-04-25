@@ -119,10 +119,6 @@ class RouteProvider(ServiceProvider):
                             )
                         else:
                             Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
-                            # self.app.bind(
-                            #     'Response',
-                            #     router.get(route.route, response)
-                            # )
 
                 # Loads the request in so the middleware
                 # specified is able to use the

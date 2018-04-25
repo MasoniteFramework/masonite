@@ -43,7 +43,6 @@ def test_route_is_callable():
     assert callable(Delete)
         
 
-
 def test_route_get_returns_output():
     assert ROUTE.get('url', 'output') == 'output'
 
@@ -71,3 +70,8 @@ def test_compile_route_to_regex():
 
 def test_route_url_list():
     assert ROUTE.generated_url_list() == ['route']
+
+
+def test_route_gets_controllers():
+    assert Get().route('test/url', 'TestController@show')
+    assert Get().route('test/url', '/app.http.controllers.TestController@show')

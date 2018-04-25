@@ -1,5 +1,7 @@
 from masonite.app import App
 from masonite.request import Request
+from masonite.drivers.UploadDiskDriver import UploadDiskDriver
+from masonite.contracts.UploadContract import UploadContract
 
 app = App()
 app.bind('Request', Request(None))
@@ -48,3 +50,11 @@ def function_test3(mock: MockObject, request: Request):
 def test_container_resolving_multiple_annotations():
     assert isinstance(app.resolve(function_test3)['mock'], MockObject.__class__)
     assert isinstance(app.resolve(function_test3)['request'], Request.__class__)
+
+app.bind('UploadDiskDriver', UploadDiskDriver)
+
+def function_test4(upload: UploadContract):
+    return upload
+
+def test_container_contract_returns_upload_disk_driver():
+    assert isinstance(app.resolve(function_test4), UploadDiskDriver.__class__)

@@ -113,16 +113,20 @@ class BaseHttpRoute:
 
         # If the output specified is a string controller
         if isinstance(output, str):
-            mod = output.split('@')
+            mod = output.split('@') 
 
             # Gets the controller name from the output parameter
             # This is used to add support for additional modules
             # like 'LoginController' and 'Auth.LoginController'
             get_controller = mod[0].split('.')[-1]
 
+            # If trying to get an absolute path
+            if mod[0].startswith('/'):
+                self.module_location = '.'.join(mod[0].replace('/', '').split('.')[0:-1])
+
             # Import the module
             module = importlib.import_module(
-                '{0}.'.format(self.module_location) + get_controller)
+                '{0}.'.format(self.module_location) + get_controller)      
 
             # Get the controller from the module
             controller = getattr(module, get_controller)

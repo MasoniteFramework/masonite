@@ -1,7 +1,6 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete
-import pytest
 
 
 wsgi_request = {

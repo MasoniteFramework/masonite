@@ -40,3 +40,11 @@ app.bind('GetObject', GetObject)
 def test_container_resolving_instance_of_object():
     # assert isinstance(GetObject, MockObject.__class__)
     assert isinstance(app.resolve(function_test2), GetObject.__class__)
+
+
+def function_test3(mock: MockObject, request: Request):
+    return {'mock': MockObject, 'request': Request}
+
+def test_container_resolving_multiple_annotations():
+    assert isinstance(app.resolve(function_test3)['mock'], MockObject.__class__)
+    assert isinstance(app.resolve(function_test3)['request'], Request.__class__)

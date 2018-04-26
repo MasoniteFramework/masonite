@@ -2,7 +2,9 @@
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
+
 from config import storage
+
 from routes import web, api
 
 from masonite.commands.AuthCommand import AuthCommand
@@ -19,6 +21,7 @@ from masonite.commands.MigrateRollbackCommand import MigrateRollbackCommand
 from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
 from masonite.commands.ViewCommand import ViewCommand
+from masonite.commands.ServeCommand import ServeCommand
 
 
 class AppProvider(ServiceProvider):
@@ -46,6 +49,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
+        self.app.bind('MasoniteServeCommand', ServeCommand())
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])

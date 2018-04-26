@@ -1,8 +1,10 @@
-from cleo import Command
 import os
 import sys
-from masonite.packages import add_venv_site_packages
 from subprocess import check_output
+
+from cleo import Command
+
+from masonite.packages import add_venv_site_packages
 
 
 class MigrateCommand(Command):
@@ -20,7 +22,6 @@ class MigrateCommand(Command):
             self.comment('This command must be ran inside of the root of a Masonite project directory')
 
         from wsgi import container
-        
 
         migration_directory = ['databases/migrations']
         for key, value in container.providers.items():
@@ -40,5 +41,5 @@ class MigrateCommand(Command):
                     output.replace('OK', '<info>OK</info>') \
                     .replace('Migrated', '<info>Migrated</info><fg=cyan>') + '</>'
                 )
-            except:
+            except Exception:
                 pass

@@ -1,7 +1,9 @@
-from cleo import Command
-from subprocess import call
 import os
 import shutil
+from subprocess import call
+
+from cleo import Command
+
 
 class InstallCommand(Command):
     """

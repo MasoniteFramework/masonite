@@ -1,5 +1,6 @@
-from cleo import Command
 from subprocess import call
+from cleo import Command
+
 
 class ServeCommand(Command):
     """
@@ -10,10 +11,12 @@ class ServeCommand(Command):
         {--host=127.0.0.1 : Specify which ip address to run the server}
     """
 
-
     def handle(self):
         try:
-            call(["waitress-serve", '--port', self.option('port'), "--host", self.option('host'), "wsgi:application"])
-        except:
+            call([
+                "waitress-serve", '--port', self.option('port'),
+                "--host", self.option('host'), "wsgi:application"
+            ])
+        except Exception:
             self.line('')
             self.comment('Server aborted!')

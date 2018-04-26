@@ -1,8 +1,9 @@
-from cleo import Command
 import os
 import sys
-from masonite.packages import  add_venv_site_packages
-from subprocess import check_output
+
+from cleo import Command
+
+from masonite.packages import add_venv_site_packages
 
 
 class MigrateResetCommand(Command):
@@ -20,7 +21,6 @@ class MigrateResetCommand(Command):
         except ImportError:
             self.comment(
                 'This command must be ran inside of the root of a Masonite project directory')
-
 
         # Get any migration files from the Service Container
         migration_directory = ['databases/migrations']
@@ -51,17 +51,16 @@ class MigrateResetCommand(Command):
                 try:
                     migrator.reset(migration_directory)
 
-                except:
+                except Exception:
                     pass
 
                 if migrator.get_notes():
                     notes += migrator.get_notes()
 
-
         # Show notes from the migrator
         self.line('')
         for note in notes:
-            if not 'Nothing to rollback.' in note:
+            if not ('Nothing to rollback.' in note):
                 self.line(note)
         if not notes:
             self.info('Nothing to rollback')

@@ -1,6 +1,4 @@
 from cleo import Command
-import os
-from subprocess import check_output
 
 
 class MigrateRefreshCommand(Command):

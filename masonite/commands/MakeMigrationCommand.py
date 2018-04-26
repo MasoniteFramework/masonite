@@ -1,6 +1,5 @@
-from cleo import Command
-import os
 from subprocess import call
+from cleo import Command
 
 
 class MakeMigrationCommand(Command):

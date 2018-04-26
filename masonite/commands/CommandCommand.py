@@ -1,5 +1,5 @@
-from cleo import Command
 import os
+from cleo import Command
 
 
 class CommandCommand(Command):

@@ -1,5 +1,4 @@
 from cleo import Command
-import os
 from cryptography.fernet import Fernet
 
 

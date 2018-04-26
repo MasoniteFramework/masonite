@@ -1,12 +1,13 @@
-from cleo import Command
 import os
 import shutil
+
+from cleo import Command
 
 
 class AuthCommand(Command):
     """
     Creates an authentication system
-    
+
     auth
     """
 

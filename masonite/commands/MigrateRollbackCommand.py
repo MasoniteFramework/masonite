@@ -1,8 +1,9 @@
-from cleo import Command
 import os
 import sys
+
+from cleo import Command
+
 from masonite.packages import add_venv_site_packages
-from subprocess import check_output
 
 
 class MigrateRollbackCommand(Command):
@@ -50,5 +51,5 @@ class MigrateRollbackCommand(Command):
                 migrator.rollback(migration)
                 for note in migrator.get_notes():
                     self.line(note)
-            except:
+            except Exception:
                 pass

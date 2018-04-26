@@ -124,16 +124,19 @@ class BaseHttpRoute:
             if mod[0].startswith('/'):
                 self.module_location = '.'.join(mod[0].replace('/', '').split('.')[0:-1])
 
-            # Import the module
-            module = importlib.import_module(
-                '{0}.'.format(self.module_location) + get_controller)      
+            try:
+                # Import the module
+                module = importlib.import_module(
+                    '{0}.'.format(self.module_location) + get_controller)  
+                # Get the controller from the module
+                controller = getattr(module, get_controller)
 
-            # Get the controller from the module
-            controller = getattr(module, get_controller)
-
-            # Get the view from the controller
-            view = getattr(controller(), mod[1])
-            self.output = view
+                # Get the view from the controller
+                view = getattr(controller(), mod[1])
+                self.output = view
+            except Exception as e:
+                print('\033[93mWarning in routes/web.py!', e, '\033[0m')
+  
         else:
             self.output = output
         self.route_url = route

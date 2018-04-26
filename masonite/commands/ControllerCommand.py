@@ -9,10 +9,15 @@ class ControllerCommand(Command):
     controller
         {name : Name of the controller you would like to create}
         {--r|--resource : Create a controller as a resource}
+        {--e|--exact : For add the name controller without `Controller` text}
     """
 
     def handle(self):
         controller = self.argument('name')
+
+        if not self.option('exact'):
+            controller = controller + "Controller"
+
         if os.path.isfile('app/http/controllers/{0}.py'.format(controller)):
             self.error('{0} Controller Exists!'.format(controller))
         else:

@@ -2,12 +2,6 @@ from masonite.contracts.BroadcastContract import BroadcastContract
 from masonite.exceptions import DriverLibraryNotFound
 from masonite.drivers.BaseDriver import BaseDriver
 
-try:
-    from ably import AblyRest
-except ImportError:
-    raise DriverLibraryNotFound(
-        'Could not find the "ably" library. Please pip install this library running "pip install ably"')
-
 
 class BroadcastAblyDriver(BroadcastContract, BaseDriver):
 
@@ -20,6 +14,12 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
         return self
 
     def channel(self, channels, message, event='base-event'):
+        try:
+            from ably import AblyRest
+        except ImportError:
+            raise DriverLibraryNotFound(
+                'Could not find the "ably" library. Please pip install this library running "pip install ably"')
+
         client = AblyRest('{0}'.format(
             self.config.DRIVERS['ably']['secret']
         ))

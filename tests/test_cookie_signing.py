@@ -69,7 +69,6 @@ def test_set_and_get_cookie_with_http_only():
     REQUEST.cookie('test', 'testvalue', encrypt=False)
     assert REQUEST.get_cookie('test', decrypt=False) == 'testvalue'
     assert 'HttpOnly' in REQUEST.cookies[0][1]
-    print(REQUEST.cookies[0][1])
     assert 'test=testvalue; HttpOnly;Path=/' in REQUEST.cookies[0][1]
 
 

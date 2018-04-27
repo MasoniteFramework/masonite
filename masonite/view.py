@@ -1,4 +1,4 @@
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 from masonite.exceptions import RequiredContainerBindingNotFound
 
 
@@ -39,6 +39,23 @@ class View:
         Get the string contents of the view.
         """
 
+        filename = template + '.html'
+
+        if template.startswith('/'):
+            location = template.split('/')
+            filename = location[-1] + '.html'
+
+            # If the location is more than 1 directory deep
+            if len(location[1:-1]) > 1:
+                loader = PackageLoader(*location[1:-1])
+            else:
+                loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
+            
+            self.env = Environment(
+                loader=loader,
+                autoescape=select_autoescape(['html', 'xml'])
+            )
+
         self.dictionary.update(dictionary)
 
         # Load template
@@ -54,7 +71,6 @@ class View:
         if '*' in self.composers:
             self.dictionary.update(self.composers['*'])
 
-        filename = template + '.html'
         self.rendered_template = self.env.get_template(filename).render(
             self.dictionary)
 

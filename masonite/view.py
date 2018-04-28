@@ -48,7 +48,6 @@ class View:
 
             # If the location is more than 1 directory deep
             if len(location[1:-1]) > 1:
-                print('package loader: ', location[1:-1])
                 loader = PackageLoader(*location[1:-1])
             else:
                 loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))

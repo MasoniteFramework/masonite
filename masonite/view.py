@@ -31,7 +31,8 @@ class View:
         self.template = None
         self.env = Environment(
             loader=PackageLoader('resources', 'templates'),
-            autoescape=select_autoescape(['html', 'xml'])
+            autoescape=select_autoescape(['html', 'xml']),
+            extensions=['jinja2.ext.loopcontrols']
         )
 
     def render(self, template, dictionary={}):
@@ -47,13 +48,15 @@ class View:
 
             # If the location is more than 1 directory deep
             if len(location[1:-1]) > 1:
+                print('package loader: ', location[1:-1])
                 loader = PackageLoader(*location[1:-1])
             else:
                 loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
             
             self.env = Environment(
                 loader=loader,
-                autoescape=select_autoescape(['html', 'xml'])
+                autoescape=select_autoescape(['html', 'xml']),
+                extensions=['jinja2.ext.loopcontrols']
             )
 
         self.dictionary.update(dictionary)

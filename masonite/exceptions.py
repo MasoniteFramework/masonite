@@ -30,3 +30,5 @@ class InvalidCSRFToken(Exception):
     For exceptions that return error when verifying the csrf token
     """
     pass
+
+class RouteMiddlewareNotFound(Exception): pass

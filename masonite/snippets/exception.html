@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=News+Cycle:400,700">
+
+    <link rel="stylesheet" href="/_exceptions/css/style.css">
+</head>
+
+<body>
+    <div style="position: fixed; z-index: 10; width: 100%">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Exception</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#Request">Request</a></li>
+                        <li><a href="#Container">Container</a></li>
+                        <li><a href="{{ app.make('Request').path }}">Try Again</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <ol class="breadcrumb" style="margin-bottom:1px; background-color: white;">
+            <li>
+                <span style="color: #eb6864">{{ tb[0].__name__ }} &gt; {{ exception }} in 
+                    {% for stack in traceback.extract_tb(tb[2])[::-1] %}
+                        {% if not 'site-packages' in stack.filename %}
+                            <u><a style="color: inherit;" href="#{{stack.filename}}">{{ stack.filename }} on line {{ stack.lineno }}</a></u>
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </li>
+        </ol>
+    </div>
+    <div class="container" style="padding-top: 100px">
+        <section>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="margin-top:12px;margin-bottom:12px;">StackTrace</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="background-color:#f5f5f5;padding-left:0px;margin-left:15px;padding-right:0px;">
+                    {% for stack in traceback.extract_tb(tb[2]) %}
+                        {% if not 'site-packages' in stack.filename %}
+                            {% set local_file_background_color = '#d9ffc2' %}
+                        {% else %}
+                            {% set local_file_background_color = 'inherit' %}
+                        {% endif %}
+                        <div id="{{ stack.filename }}" class="stack-row trace" style="padding:15px;padding-bottom:7px;padding-top:15px;background-color: {{ local_file_background_color }}">
+                            <h4> {{ stack.filename }}, line {{ stack.lineno  }} in {{ stack.name}} </h4>
+                            
+                                {% for i, line in enumerate(open(stack.filename)) %}
+                                    {% if stack.lineno - 5 <= i <= stack.lineno + 5  %}
+                                        
+                                        {% if i == stack.lineno - 1 %}
+                                            <div style="background-color: #f1c40f">
+                                                {{ i + 1 }}. {{ line }}
+                                            </div>
+                                         {% elif stack.lineno - 3 <= i <= stack.lineno + 1 %} 
+                                            <div style="background-color: #fee893;">
+                                                {{ i + 1 }}. {{ line }}
+                                            </div>
+                                        {% else %}
+                                            <div>
+                                                {{ i + 1 }}. {{ line }}
+                                            </div>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                            
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+    <hr>
+    <div></div>
+    <div class="container">
+        <div class="page-header" style="margin-top:0px;">
+            <h2 style="margin-top:15px;">Environment</h2>
+        </div>
+
+        
+        <h3 id="Request" style="margin-top:15px;margin-bottom:15px;">Request</h3>
+
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Request Method</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    <p>{{ app.make('Request').environ['REQUEST_METHOD'] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Path</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    <p>{{ app.make('Request').path }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#ffffff;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Inputs</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for key in app.make('Request').all() %}
+                        <p>{{ key }}={{ app.make('Request').input(key) }}</p>
+                    {% else %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#ffffff;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Parameters</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for key in app.make('Request').url_params %}
+                        <p>{{ key }}={{ app.make('Request').param(key) }}</p>
+                    {% else %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#ffffff;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Headers</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for header, value in app.make('Environ').items() %}
+                        {% if header.startswith('HTTP_') %}
+                            <p>{{ header }}: {{ value }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3 id="Container" style="margin-top:15px;margin-bottom:15px;">Container</h3>
+
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Provider Classes</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    <div style="display: none">{{ app.bind('Response', '') }}</div>
+                    {% for provider, class in app.providers.items() %}
+                        <p>{{ provider }} - {{ class }}</p>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Environ</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for key, value in app.make('Environ').items() %}
+                        <p>{{ key }} - {{ value }}</p>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Routes</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for route in app.make('WebRoutes') %}
+                        <p>URL: {{ route.route_url }}</p>
+                        <p>Method: {{ route.method_type }}</p>
+                        <p>Name: {{ route.named_route }}</p>
+                        <p>Module: {{ route.module_location }} </p>
+                        <p>Route Middleware: 
+                            {% for middleware in route.list_middleware %}
+                                {{ middleware }},
+                            {% else %}
+                                None
+                            {% endfor %}
+                        </p>
+                        
+                        <hr>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#f8f8f8;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Service Providers</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for provider in app.make('Application').PROVIDERS %}
+                        <p class="stack-row">{{ provider }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color:#ffffff;padding:15px;padding-bottom:7px;padding-top:7px;">
+            <div class="col-md-2">
+                <div>
+                    <p>Static File Directories</p>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div>
+                    {% for directory in app.make('Storage').STATICFILES %}
+                        <p>
+                            {{ directory}}
+                        </p>
+                    {% else %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>

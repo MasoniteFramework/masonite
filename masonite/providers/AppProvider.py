@@ -1,12 +1,4 @@
 """ An AppProvider Service Provider """
-from masonite.provider import ServiceProvider
-from masonite.request import Request
-from masonite.routes import Route
-
-from config import storage
-
-from routes import web, api
-
 from masonite.commands.AuthCommand import AuthCommand
 from masonite.commands.CommandCommand import CommandCommand
 from masonite.commands.ControllerCommand import ControllerCommand
@@ -20,8 +12,15 @@ from masonite.commands.MigrateResetCommand import MigrateResetCommand
 from masonite.commands.MigrateRollbackCommand import MigrateRollbackCommand
 from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
-from masonite.commands.ViewCommand import ViewCommand
 from masonite.commands.ServeCommand import ServeCommand
+from masonite.commands.ViewCommand import ViewCommand
+from masonite.exception_handler import ExceptionHandler
+from masonite.provider import ServiceProvider
+from masonite.request import Request
+from masonite.routes import Route
+
+from config import storage
+from routes import api, web
 
 
 class AppProvider(ServiceProvider):
@@ -33,6 +32,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Route', Route())
         self.app.bind('Request', Request())
         self.app.bind('Container', self.app)
+        self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
 
         # Insert Commands
         self.app.bind('MasoniteAuthCommand', AuthCommand())

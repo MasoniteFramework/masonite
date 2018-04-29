@@ -84,8 +84,8 @@ def test_route_doesnt_break_on_incorrect_controller():
 
 def test_group_route():
     routes = group('/example', [
-        Get().route('test/1', 'TestController@show'),
-        Get().route('test/2', 'TestController@show')
+        Get().route('/test/1', 'TestController@show'),
+        Get().route('/test/2', 'TestController@show')
     ])
 
     assert routes[0].route_url == '/example/test/1'

@@ -40,9 +40,6 @@ def group(url, route_list):
     """
     Group route
     """
-    if url[-1:] != '/':
-        url += "/"
-
     for route in route_list:
         route.route_url = url + route.route_url
 

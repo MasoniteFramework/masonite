@@ -2,7 +2,7 @@
 import cgi
 import importlib
 import json
-import re
+
 from pydoc import locate
 
 from config import middleware
@@ -137,7 +137,6 @@ class BaseHttpRoute:
                 self.output = view
             except Exception as e:
                 print('\033[93mWarning in routes/web.py!', e, '\033[0m')
-  
         else:
             self.output = output
         self.route_url = route

@@ -1,6 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete
+from masonite.helpers.routes import group
 
 
 wsgi_request = {
@@ -41,7 +42,7 @@ def test_route_is_callable():
     assert callable(Put)
     assert callable(Patch)
     assert callable(Delete)
-        
+
 
 def test_route_get_returns_output():
     assert ROUTE.get('url', 'output') == 'output'
@@ -76,5 +77,16 @@ def test_route_gets_controllers():
     assert Get().route('test/url', 'TestController@show')
     assert Get().route('test/url', '/app.http.test_controllers.TestController@show')
 
+
 def test_route_doesnt_break_on_incorrect_controller():
     assert Get().route('test/url', 'BreakController@show')
+
+
+def test_group_route():
+    routes = group('/example', [
+        Get().route('test/1', 'TestController@show'),
+        Get().route('test/2', 'TestController@show')
+    ])
+
+    assert routes[0].route_url == '/example/test/1'
+    assert routes[1].route_url == '/example/test/2'

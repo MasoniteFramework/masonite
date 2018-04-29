@@ -13,18 +13,18 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, WebRoutes, Route, Request, Environ, Headers):
-        # Join routes and groups
-        WebRoutesApp = []
+        # Rebuild Route List
+        RouteCollection = []
         for route in WebRoutes:
-            # Check if a group routes
+            # Check if a route is a list of routes
             if isinstance(route, list):
                 for r in route:
-                    WebRoutesApp.append(r)
+                    RouteCollection.append(r)
             else:
-                WebRoutesApp.append(route)
+                RouteCollection.append(route)
 
         # All routes joined
-        for route in WebRoutesApp:
+        for route in RouteCollection:
             router = Route
             request = Request
 

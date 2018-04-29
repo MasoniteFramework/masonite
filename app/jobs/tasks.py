@@ -4,7 +4,6 @@ from masonite.queues.Queueable import Queueable
 
 def TryMe():
     time.sleep(5)
-    print('hey')
 
 
 class AsyncMe(Queueable):

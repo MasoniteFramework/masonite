@@ -1,7 +1,8 @@
 from masonite.exceptions import FileTypeException
+from masonite.drivers.BaseDriver import BaseDriver
 
 
-class BaseUploadDriver:
+class BaseUploadDriver(BaseDriver):
     """
     Class base for upload drivers
     """

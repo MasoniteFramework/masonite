@@ -21,8 +21,14 @@ class MissingContainerBindingNotFound(Exception):
     pass
 
 
+class ContainerError(Exception):
+    pass
+
+
 class InvalidCSRFToken(Exception):
     """
     For exceptions that return error when verifying the csrf token
     """
     pass
+
+class RouteMiddlewareNotFound(Exception): pass

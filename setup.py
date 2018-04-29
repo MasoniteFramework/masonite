@@ -42,4 +42,5 @@ setup(
     url='https://github.com/MasoniteFramework/masonite',
     keywords=['python web framework', 'python3'],
     classifiers=[],
+    include_package_data=True,
 )

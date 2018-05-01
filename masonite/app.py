@@ -64,6 +64,30 @@ class App():
 
         return obj(*provider_list)
 
+    def collect(self, search):
+        # Search Can Be:
+        #    '*ExceptionHook'
+        #    'Sentry*'
+        #    'Sentry*Hook'
+        provider_list = {}
+        for key, value in self.providers.items():
+            if search.startswith('*'):
+                if key.endswith(search.split('*')[1]):
+                    provider_list.update({key: value})
+            elif search.endswith('*'):
+                if key.startswith(search.split('*')[0]):
+                    provider_list.update({key: value})
+            elif '*' in search:
+                split_search = search.split('*')
+                print(split_search)
+                print('look for something that starts with ', split_search[0])
+                print('and ends with ', split_search[1])
+                if key.startswith(split_search[0]) and key.endswith(split_search[1]):
+                    print('found a match for ', split_search[0], ' and ending with ', split_search[1])
+                    provider_list.update({key: value})
+            else:
+                raise AttributeError("There is no '*' in your collection search")
+        return provider_list
 
     def _find_parameter(self, parameter):
         """

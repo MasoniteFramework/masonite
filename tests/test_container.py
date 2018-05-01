@@ -73,3 +73,15 @@ def function_test6(NotIn):
 def test_container_raises_value_error():
     with pytest.raises(ContainerError):
         assert app.resolve(function_test6)
+
+def test_container_collects_correct_objects():
+    app = App()
+    app.bind('ExceptionHook', object)
+    app.bind('SentryExceptionHook', object)
+    app.bind('ExceptionHandler', object)
+    
+    assert app.collect('*ExceptionHook') == {'ExceptionHook': object, 'SentryExceptionHook': object}
+    assert app.collect('Exception*') == {'ExceptionHook': object, 'ExceptionHandler': object}
+    assert app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
+    with pytest.raises(AttributeError):
+        app.collect('Sentry')

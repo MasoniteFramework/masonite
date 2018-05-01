@@ -29,11 +29,7 @@ class View:
         self.cache_type = None
 
         self.template = None
-        self.env = Environment(
-            loader=PackageLoader('resources', 'templates'),
-            autoescape=select_autoescape(['html', 'xml']),
-            extensions=['jinja2.ext.loopcontrols']
-        )
+
 
     def render(self, template, dictionary={}):
         """
@@ -54,6 +50,12 @@ class View:
             
             self.env = Environment(
                 loader=loader,
+                autoescape=select_autoescape(['html', 'xml']),
+                extensions=['jinja2.ext.loopcontrols']
+            )
+        else:
+            self.env = Environment(
+                loader=PackageLoader('resources', 'templates'),
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']
             )

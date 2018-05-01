@@ -30,6 +30,9 @@ class ExceptionHandler:
     def _render(self):
         self._app.bind('StatusCode', '500 Internal Server Error')
 
+        # Run Any Framework Exception Hooks
+        self._app.make('HookHandler').fire('*ExceptionHook')
+
         # Check if DEBUG is False
         if not self._app.make('Application').DEBUG or self._app.make('Application').DEBUG == 'False':
             raise self._exception

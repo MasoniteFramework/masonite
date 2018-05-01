@@ -1,6 +1,7 @@
 from masonite.app import App
 from masonite.view import View
 from masonite.exception_handler import ExceptionHandler
+from masonite.hook import Hook
 import pytest
 from masonite.exceptions import MissingContainerBindingNotFound
 
@@ -15,6 +16,7 @@ container.bind('Application', ApplicationMock)
 container.bind('View', View(container).render)
 container.bind('Storage', StorageMock)
 container.bind('ExceptionHandler', ExceptionHandler(container))
+container.bind('HookHandler', Hook(app))
 
 def test_exception_renders_view():
     with pytest.raises(MissingContainerBindingNotFound):

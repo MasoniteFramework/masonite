@@ -1,0 +1,33 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+<div class="col-xs-4 col-xs-offset-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Register</div>
+        <div class="panel-body">
+        <form action="/register" method="POST">
+            {{ csrf_field|safe }}
+
+            <div class="form-group">
+                <label for="">Username</label>
+                <input type="text" name="name" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="email" name="email" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="">Password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-success">Register</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

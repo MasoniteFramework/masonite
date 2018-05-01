@@ -27,15 +27,15 @@ class AuthCommand(Command):
         f.write(']\n')
 
         # move controllers
-        shutil.copyfile(module_path+"/../masonite_snippets/auth/controllers/LoginController.py",
+        shutil.copyfile(module_path+"/../snippets/auth/controllers/LoginController.py",
                         os.getcwd()+"/app/http/controllers/LoginController.py")
-        shutil.copyfile(module_path+"/../masonite_snippets/auth/controllers/RegisterController.py",
+        shutil.copyfile(module_path+"/../snippets/auth/controllers/RegisterController.py",
                         os.getcwd()+"/app/http/controllers/RegisterController.py")
-        shutil.copyfile(module_path+"/../masonite_snippets/auth/controllers/HomeController.py",
+        shutil.copyfile(module_path+"/../snippets/auth/controllers/HomeController.py",
                         os.getcwd()+"/app/http/controllers/HomeController.py")
 
         # move templates
-        shutil.copytree(module_path + "/../masonite_snippets/auth/templates/auth",
+        shutil.copytree(module_path + "/../snippets/auth/templates/auth",
                         os.getcwd()+"/resources/templates/auth")
 
         self.info('Project Scaffolded. You now have 4 new controllers, 5 new templates and 6 new routes')

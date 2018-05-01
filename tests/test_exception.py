@@ -16,7 +16,7 @@ container.bind('Application', ApplicationMock)
 container.bind('View', View(container).render)
 container.bind('Storage', StorageMock)
 container.bind('ExceptionHandler', ExceptionHandler(container))
-container.bind('HookHandler', Hook(app))
+container.bind('HookHandler', Hook(container))
 
 def test_exception_renders_view():
     with pytest.raises(MissingContainerBindingNotFound):

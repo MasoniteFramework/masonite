@@ -135,7 +135,7 @@ You'll notice that we have a reference to the HelloWorldController class which w
 
 In order to make the `HelloWorldController` we can use a `craft` command:
 
-    $ craft controller HelloWorldController
+    $ craft controller HelloWorld
 
 This will scaffold the controller for you and put it in `app/http/controllers/HelloWorldController.py`
 

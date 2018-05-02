@@ -15,7 +15,7 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='1.6.2',
+    version='1.6.3',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.2.2',

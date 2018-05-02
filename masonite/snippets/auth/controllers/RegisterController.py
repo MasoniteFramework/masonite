@@ -17,9 +17,9 @@ class RegisterController(object):
     def store(self, Request):
         ''' Register a new user '''
         # register the user
-        password = bcrypt.hashpw(
-                bytes(Request.input('password'), 'utf-8'), bcrypt.gensalt()
-            )
+        password = bytes(bcrypt.hashpw(
+            bytes(Request.input('password'), 'utf-8'), bcrypt.gensalt()
+        )).decode('utf-8')
 
         auth.AUTH['model'].create(
             name=Request.input('name'),

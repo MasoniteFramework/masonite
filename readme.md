@@ -64,9 +64,9 @@ Thank you for those who have contributed to Masonite!
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| | |
-| :-------------: | :-------------: |
-| [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) |
+| | | |
+| :-------------: | :-------------: | :-------------: |
+| [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) | [<img src="https://avatars.githubusercontent.com/u/1970073?v=3" width="100px;"/><br /><sub><b>Abram C. Isola</b></sub>](https://github.com/aisola) |
 
 ## License
 

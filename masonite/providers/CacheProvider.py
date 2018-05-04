@@ -12,7 +12,7 @@ class CacheProvider(ServiceProvider):
     def register(self):
         self.app.bind('CacheConfig', cache)
         self.app.bind('CacheDiskDriver', CacheDiskDriver)
-        self.app.bind('CacheManager', CacheManager(self.app))
+        self.app.bind('CacheManager', CacheManager)
 
     def boot(self, CacheManager, CacheConfig):
         self.app.bind('Cache', CacheManager.driver(CacheConfig.DRIVER))

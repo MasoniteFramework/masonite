@@ -12,7 +12,7 @@ class SessionProvider(ServiceProvider):
         self.app.bind('SessionConfig', session)
         self.app.bind('SessionMemoryDriver', SessionMemoryDriver)
         self.app.bind('SessionCookieDriver', SessionCookieDriver)
-        self.app.bind('SessionManager', SessionManager)
+        self.app.bind('SessionManager', SessionManager(self.app))
 
     def boot(self, Environ, Request, ViewClass, SessionManager, SessionConfig):
         self.app.bind('Session', SessionManager.driver(SessionConfig.DRIVER))

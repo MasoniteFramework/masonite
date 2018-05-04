@@ -45,7 +45,7 @@ def test_creates_driver():
     assert mailManager.load_container(app).manage_driver == object
 
 
-def test_creates_driver_with_initilization_container():
+def test_does_not_create_driver_with_initilization_container():
     app = App()
 
     app.bind('Test', object)
@@ -54,17 +54,16 @@ def test_creates_driver_with_initilization_container():
 
     mailManager = MailManager(app)
 
-    assert mailManager.manage_driver == object
+    assert mailManager.manage_driver == None
 
 
-def test_throws_drivernotfound_exception():
+def test_does_not_raise_drivernotfound_exception():
     app = App()
 
     app.bind('Test', object)
     app.bind('MailConfig', mail)
 
-    with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
-        mailManager = MailManager(app)
+    mailManager = MailManager(app)
 
 
 def test_manager_sets_driver():
@@ -151,11 +150,11 @@ def test_send_mail_with_callable():
     setattr(user, 'email', 'idmann509@gmail.com')
     assert MailManager(app).driver('smtp').to(User)
 
-    
+
 
 def test_switch_mail_manager():
     app = App()
-    
+
     app.bind('MailConfig', mail)
     app.bind('MailSmtpDriver', MailDriver)
     app.bind('MailTestDriver', Mailgun)

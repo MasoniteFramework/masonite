@@ -13,9 +13,6 @@ class Manager:
         self.manage_driver = None
         self.container = container
 
-        if container:
-            self.create_driver()
-
     def load_container(self, container):
         self.container = container
         self.create_driver()

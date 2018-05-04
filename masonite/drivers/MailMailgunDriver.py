@@ -1,6 +1,7 @@
 import requests
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers.BaseMailDriver import BaseMailDriver
+from masonite.drivers.BaseDriver import BaseDriver
 
 
 class MailMailgunDriver(BaseMailDriver, MailContract):

@@ -1,6 +1,7 @@
 from masonite.app import App
 from masonite.request import Request
 from masonite.routes import Get, Post
+from masonite.exceptions import ContainerError
 import inspect
 import pytest
 
@@ -60,5 +61,5 @@ def test_throws_exception_if_too_many_bindings():
     REQUEST.cookies = ['hey']
     app.bind('Request', REQUEST)
     app.bind('Route', Get().route('test/', None))
-    with pytest.raises(TypeError, message="should raise error"):
+    with pytest.raises(ContainerError, message="should raise error"):
         app.resolve(functest)

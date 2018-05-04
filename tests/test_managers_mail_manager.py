@@ -72,8 +72,8 @@ def test_manager_sets_driver():
 
     app.bind('Test', object)
     app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', object)
-    app.bind('MailMailtrapDriver', object)
+    app.bind('MailSmtpDriver', MailSmtpDriver)
+    app.bind('MailMailtrapDriver', Mailgun)
 
     mailManager = MailManager(app).driver('mailtrap')
 
@@ -105,11 +105,10 @@ def test_drivers_are_resolvable_by_container():
 
     app.bind('Test', object)
     app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailSmtpDriver)
+    app.bind('MailSmtpDriver', MailDriver)
     app.bind('Test', 'test')
 
-    assert MailManager(app).driver('smtp').test is 'test'
-    assert MailManager(app).driver('smtp').test is not 'tet'
+    assert isinstance(MailManager(app).driver('smtp'), MailDriver)
 
 
 def test_send_mail():
@@ -150,6 +149,17 @@ def test_send_mail_with_callable():
     app.bind('MailSmtpDriver', MailDriver)
     user = User
     setattr(user, 'email', 'idmann509@gmail.com')
-
     assert MailManager(app).driver('smtp').to(User)
 
+    
+
+def test_switch_mail_manager():
+    app = App()
+    
+    app.bind('MailConfig', mail)
+    app.bind('MailSmtpDriver', MailDriver)
+    app.bind('MailTestDriver', Mailgun)
+
+    mail_driver = MailManager(app).driver('smtp')
+
+    assert isinstance(mail_driver.driver('test'), Mailgun)

@@ -34,3 +34,13 @@ def patch(url, controller):
     Shortcut for PATCH http
     """
     return Patch().route(url, controller)
+
+
+def group(url, route_list):
+    """
+    Group route
+    """
+    for route in route_list:
+        route.route_url = url + route.route_url
+
+    return route_list

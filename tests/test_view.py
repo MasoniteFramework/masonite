@@ -26,6 +26,19 @@ def test_view_extends_dictionary():
     assert view('test', {'test': 'test'}).rendered_template == 'test'
 
 
+def test_view_gets_global_template():
+    container = App()
+
+    view = View(container)
+
+    container.bind('View', view.render)
+
+    view = container.make('View')
+
+    assert view('/storage/test', {'test': 'test'}).rendered_template == 'test'
+    assert view('/storage/static/test', {'test': 'test'}).rendered_template == 'test'
+
+
 def test_view_extends_without_dictionary_parameters():
     container = App()
 

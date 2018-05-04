@@ -1,6 +1,7 @@
-import boto3
+
 from masonite.contracts.UploadContract import UploadContract
 from masonite.drivers.BaseUploadDriver import BaseUploadDriver
+from masonite.exceptions import DriverLibraryNotFound
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):
@@ -17,6 +18,12 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
 
         # Check if is a valid extension
         self.validate_extension(fileitem.filename)
+
+        try:
+            import boto3
+        except ImportError:
+            raise DriverLibraryNotFound(
+                'Could not find the "ably" library. Please pip install this library running "pip install ably"')
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],

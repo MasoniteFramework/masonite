@@ -200,9 +200,18 @@ def test_redirect_compiles_url():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('test/url')
+    request.redirect('/test/url')
 
     assert request.compile_route_to_url() == '/test/url'
+
+def test_redirect_compiles_url_with_1_slash():
+    app = App()
+    app.bind('Request', REQUEST)
+    request = app.make('Request').load_app(app)
+
+    request.redirect('/')
+
+    assert request.compile_route_to_url() == '/'
 
 
 def test_redirect_compiles_url_with_multiple_slashes():

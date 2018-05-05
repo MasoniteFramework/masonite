@@ -322,14 +322,14 @@ class Request(Extendable):
 
         # Iterate over the list
         for url in split_url:
-
-            # if the url contains a parameter variable like @id:int
-            if '@' in url:
-                url = url.replace('@', '').replace(
-                    ':int', '').replace(':string', '')
-                compiled_url += str(self.param(url)) + '/'
-            else:
-                compiled_url += url + '/'
+            if url:
+                # if the url contains a parameter variable like @id:int
+                if '@' in url:
+                    url = url.replace('@', '').replace(
+                        ':int', '').replace(':string', '')
+                    compiled_url += str(self.param(url)) + '/'
+                else:
+                    compiled_url += url + '/'
 
         # The loop isn't perfect and may have an unwanted trailing slash
         if compiled_url.endswith('/') and not self.redirect_url.endswith('/'):

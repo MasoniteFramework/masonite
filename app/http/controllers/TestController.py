@@ -1,4 +1,4 @@
 class TestController:
 
-    def show():
+    def show(self):
         pass

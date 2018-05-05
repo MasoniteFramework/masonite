@@ -5,6 +5,7 @@ from masonite.providers.RouteProvider import RouteProvider
 from masonite.view import View
 from masonite.helpers.routes import get
 from masonite.testsuite.TestSuite import generate_wsgi
+from app.http.controllers.ControllerTest import ControllerTest
 
 
 class TestRouteProvider:
@@ -25,7 +26,7 @@ class TestRouteProvider:
      
     def test_controller_that_returns_a_view(self):
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [get('/view', Controller.returns_a_view)])
+        self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('WebRoutes'),
@@ -35,11 +36,11 @@ class TestRouteProvider:
             self.app.make('Headers'),
         )
 
-        assert self.app.make('Response') == 'hey'
+        assert self.app.make('Response') == 'test'
 
     def test_controller_does_not_return_with_non_matching_end_slash(self):
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [get('/view/', Controller.returns_a_view)])
+        self.app.bind('WebRoutes', [get('/view/', ControllerTest.returns_a_view)])
 
         self.provider.boot(
             self.app.make('WebRoutes'),
@@ -54,7 +55,7 @@ class TestRouteProvider:
 
     def test_provider_runs_through_routes(self):
         self.app.make('Route').url = '/test'
-        self.app.bind('WebRoutes', [get('/test', Controller.show)])
+        self.app.bind('WebRoutes', [get('/test', ControllerTest.show)])
 
         self.provider.boot(
             self.app.make('WebRoutes'),
@@ -69,7 +70,7 @@ class TestRouteProvider:
 
     def test_sets_request_params(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', Controller.show)])
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.show)])
 
         self.provider.boot(
             self.app.make('WebRoutes'),
@@ -84,7 +85,7 @@ class TestRouteProvider:
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'
         self.app.make('Environ')['HTTP_HOST'] = 'subb.domain.com'
-        self.app.bind('WebRoutes', [get('/test', Controller.show)])
+        self.app.bind('WebRoutes', [get('/test', ControllerTest.show)])
 
         request = self.app.make('Request')
         request.activate_subdomains()
@@ -101,7 +102,7 @@ class TestRouteProvider:
     
     def test_controller_returns_json_response_for_dict(self):
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [get('/view', Controller.returns_a_dict)])
+        self.app.bind('WebRoutes', [get('/view', ControllerTest.returns_a_dict)])
 
         self.provider.boot(
             self.app.make('WebRoutes'),
@@ -113,17 +114,6 @@ class TestRouteProvider:
 
         assert self.app.make('Response') == '{"id": 1}'
         assert self.app.make('Request').header('Content-Type') == 'application/json; charset=utf-8'
-
-class Controller:
-
-    def show():
-        return 'test'
-    
-    def returns_a_view(View):
-        return View('index')
-
-    def returns_a_dict():
-        return {'id': 1}
 
 class Middleware:
 

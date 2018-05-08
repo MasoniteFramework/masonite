@@ -13,6 +13,7 @@ from masonite.commands.MigrateRollbackCommand import MigrateRollbackCommand
 from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
 from masonite.commands.ServeCommand import ServeCommand
+from masonite.commands.TinkerCommand import TinkerCommand
 from masonite.commands.ViewCommand import ViewCommand
 from masonite.exception_handler import ExceptionHandler
 from masonite.hook import Hook
@@ -52,6 +53,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
+        self.app.bind('MasoniteTinkerCommand', TinkerCommand())
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])

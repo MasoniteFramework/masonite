@@ -15,6 +15,7 @@ from masonite.commands.ProviderCommand import ProviderCommand
 from masonite.commands.ServeCommand import ServeCommand
 from masonite.commands.ViewCommand import ViewCommand
 from masonite.exception_handler import ExceptionHandler
+from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
@@ -28,7 +29,7 @@ class AppProvider(ServiceProvider):
 
     def register(self):
         self.app.bind('HookHandler', Hook(self.app))
-        self.app.bind('WebRoutes', web.ROUTES)
+        self.app.bind('WebRoutes', flatten_routes(web.ROUTES))
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
         self.app.bind('Route', Route())

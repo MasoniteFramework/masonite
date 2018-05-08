@@ -21,7 +21,7 @@ class StartResponseProvider(ServiceProvider):
         else:
             self.app.bind('StatusCode', "302 OK")
             self.app.bind('Headers', [
-                ('Location', Request.compile_route_to_url())
+                ('Location', Request.redirect_url)
             ] + Request.get_cookies())
 
             Request.reset_redirections()

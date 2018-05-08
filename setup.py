@@ -37,6 +37,7 @@ setup(
         'cleo==0.6.5',
         'tabulate==0.8.2',
         'watchdog==0.8.3',
+        'waitress==1.1.0',
     ],
     description='The core for the Masonite framework',
     author='Joseph Mancuso',

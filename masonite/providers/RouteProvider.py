@@ -100,11 +100,7 @@ class RouteProvider(ServiceProvider):
                 if not request.redirect_url:
                     Request.status('200 OK')
 
-                    # Resolve Controller Constructor
-                    controller = self.app.resolve(route.controller)
-
-                    # Resolve Controller Method
-                    response = self.app.resolve(getattr(controller, route.controller_method))
+                    response = self.app.resolve(route.output)
 
                     if isinstance(response, View):
                         response = response.rendered_template

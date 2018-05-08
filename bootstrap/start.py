@@ -42,10 +42,13 @@ def app(environ, start_response):
     |
     '''
 
-    for provider in container.make('Application').PROVIDERS:
-        located_provider = locate(provider)().load_app(container)
-        if located_provider.wsgi is True:
-            container.resolve(located_provider.boot)
+    try:
+        for provider in container.make('Application').PROVIDERS:
+            located_provider = locate(provider)().load_app(container)
+            if located_provider.wsgi is True:
+                container.resolve(located_provider.boot)
+    except Exception as e:
+        container.make('ExceptionHandler').load_exception(e)
 
     '''
     |--------------------------------------------------------------------------

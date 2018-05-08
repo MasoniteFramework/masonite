@@ -1,6 +1,22 @@
 from masonite.routes import Get, Post, Delete, Patch, Put
 
 
+def flatten_routes(routes):
+    """
+    Flattens the grouped routes into a single list of routes.
+    """
+    route_collection = []
+    for route in routes:
+        # Check if a route is a list of routes
+        if isinstance(route, list):
+            for r in flatten_routes(route):
+                route_collection.append(r)
+        else:
+            route_collection.append(route)
+
+    return route_collection
+
+
 def get(url, controller):
     """
     Shortcut for GET http

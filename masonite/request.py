@@ -50,7 +50,7 @@ class Request(Extendable):
         if self.is_not_get_request():
             if isinstance(self.params, str):
                 return parse_qs(self.params)[param][0]
-            
+
             if isinstance(self.params, dict):
                 return self.params[param]
 
@@ -250,7 +250,7 @@ class Request(Extendable):
         self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            
+
             cookies = self.environ['HTTP_COOKIE'].split(';')
             for index, cookie in enumerate(cookies):
                 if cookie.startswith(key):
@@ -277,20 +277,23 @@ class Request(Extendable):
 
         return self.user_model
 
-    def redirect(self, route):
+    def redirect(self, route, params={}):
         """
         Redirect the user based on the route specified
         """
-
-        self.redirect_url = route
+        self.redirect_url = self.compile_route_to_url(route, params)
         return self
 
-    def redirectTo(self, route):
+    def redirect_to(self, route_name, params={}):
         """
         Redirect to a named route
         """
+        web_routes = self.container.make('WebRoutes')
 
-        self.redirect_route = route
+        for route in web_routes:
+            if route.named_route == route_name:
+                self.redirect_url = self.compile_route_to_url(route.route_url, params)
+
         return self
 
     def reset_redirections(self):
@@ -301,21 +304,20 @@ class Request(Extendable):
         """
         Go to a named route with the back parameter
         """
-
-        self.redirectTo(self.input(input_parameter))
+        self.redirect(self.input(input_parameter))
         return self
 
-    def compile_route_to_url(self):
+    def compile_route_to_url(self, route, params={}):
         """
         Compile the route url into a usable url
         Converts /url/@id into /url/1. Used for redirection
         """
 
-        if 'http' in self.redirect_url:
-            return self.redirect_url
+        if "http" in route:
+            return route
 
         # Split the url into a list
-        split_url = self.redirect_url.split('/')
+        split_url = route.split('/')
 
         # Start beginning of the new compiled url
         compiled_url = '/'
@@ -327,12 +329,12 @@ class Request(Extendable):
                 if '@' in url:
                     url = url.replace('@', '').replace(
                         ':int', '').replace(':string', '')
-                    compiled_url += str(self.param(url)) + '/'
+                    compiled_url += str(params[url]) + '/'
                 else:
                     compiled_url += url + '/'
 
         # The loop isn't perfect and may have an unwanted trailing slash
-        if compiled_url.endswith('/') and not self.redirect_url.endswith('/'):
+        if compiled_url.endswith('/') and not route.endswith('/'):
             compiled_url = compiled_url[:-1]
 
         # The loop isn't perfect and may have 2 slashes next to eachother

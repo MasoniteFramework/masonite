@@ -4,6 +4,7 @@ from pydoc import locate
 from masonite.request import Request
 from masonite.app import App
 from masonite.routes import Get, Route
+from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
 
 
@@ -36,6 +37,13 @@ wsgi_request = {
 
 REQUEST = Request(wsgi_request).key(
     'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+
+WEB_ROUTES = flatten_routes([
+    get('/test', 'Controller@show').name('test'),
+    group('/a', [
+        get('/account', 'Controller@show').name('a_account'),
+    ])
+])
 
 
 def test_request_is_callable():
@@ -72,7 +80,7 @@ def test_request_appends_cookie():
 
 
 def test_request_sets_and_gets_cookies():
-    REQUEST.cookie('setcookie', 'value') 
+    REQUEST.cookie('setcookie', 'value')
     assert REQUEST.get_cookie('setcookie') == 'value'
 
 
@@ -104,12 +112,7 @@ def test_delete_cookie_with_wrong_key():
 
 def test_redirect_returns_request():
     assert REQUEST.redirect('newurl') == REQUEST
-    assert REQUEST.redirect_url == 'newurl'
-
-
-def test_redirectTo_returns_request():
-    assert REQUEST.redirectTo('newroute') == REQUEST
-    assert REQUEST.redirect_route == 'newroute'
+    assert REQUEST.redirect_url == '/newurl'
 
 
 def test_request_no_input_returns_false():
@@ -168,18 +171,24 @@ def test_request_gets_input_from_container():
 def test_redirections_reset():
     app = App()
     app.bind('Request', REQUEST)
+    app.bind('WebRoutes', WEB_ROUTES)
     request = app.make('Request').load_app(app)
 
     request.redirect('test')
-    request.redirectTo('test')
 
-    assert request.redirect_url is 'test'
-    assert request.redirect_route is 'test'
+    assert request.redirect_url == '/test'
 
     request.reset_redirections()
 
     assert request.redirect_url is False
-    assert request.redirect_route is False
+
+    request.redirect_to('test')
+
+    assert request.redirect_url == '/test'
+
+    request.reset_redirections()
+
+    assert request.redirect_url is False
 
 
 def test_request_has_subdomain_returns_bool():
@@ -200,18 +209,19 @@ def test_redirect_compiles_url():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('/test/url')
+    route = '/test/url'
 
-    assert request.compile_route_to_url() == '/test/url'
+    assert request.compile_route_to_url(route) == '/test/url'
+
 
 def test_redirect_compiles_url_with_1_slash():
     app = App()
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('/')
+    route = '/'
 
-    assert request.compile_route_to_url() == '/'
+    assert request.compile_route_to_url(route) == '/'
 
 
 def test_redirect_compiles_url_with_multiple_slashes():
@@ -219,9 +229,9 @@ def test_redirect_compiles_url_with_multiple_slashes():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('test/url/here')
+    route = 'test/url/here'
 
-    assert request.compile_route_to_url() == '/test/url/here'
+    assert request.compile_route_to_url(route) == '/test/url/here'
 
 
 def test_redirect_compiles_url_with_trailing_slash():
@@ -229,9 +239,9 @@ def test_redirect_compiles_url_with_trailing_slash():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('test/url/here/')
+    route = 'test/url/here/'
 
-    assert request.compile_route_to_url() == '/test/url/here/'
+    assert request.compile_route_to_url(route) == '/test/url/here/'
 
 
 def test_redirect_compiles_url_with_parameters():
@@ -239,9 +249,12 @@ def test_redirect_compiles_url_with_parameters():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('test/@id').send({'id': '1'})
+    route = 'test/@id'
+    params = {
+        'id': '1',
+    }
 
-    assert request.compile_route_to_url() == '/test/1'
+    assert request.compile_route_to_url(route, params) == '/test/1'
 
 
 def test_redirect_compiles_url_with_multiple_parameters():
@@ -249,9 +262,13 @@ def test_redirect_compiles_url_with_multiple_parameters():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('test/@id/@test').send({'id': '1', 'test': 'user'})
+    route = 'test/@id/@test'
+    params = {
+        'id': '1',
+        'test': 'user',
+    }
 
-    assert request.compile_route_to_url() == '/test/1/user'
+    assert request.compile_route_to_url(route, params) == '/test/1/user'
 
 
 def test_redirect_compiles_url_with_http():
@@ -259,9 +276,9 @@ def test_redirect_compiles_url_with_http():
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
 
-    request.redirect('http://google.com')
+    route = "http://google.com"
 
-    assert request.compile_route_to_url() == 'http://google.com'
+    assert request.compile_route_to_url(route) == 'http://google.com'
 
 
 def test_request_gets_correct_header():
@@ -280,7 +297,7 @@ def test_request_sets_correct_header():
 
     request.header('TEST', 'set_this')
     assert request.header('HTTP_TEST') == 'set_this'
-    
+
     request.header('TEST', 'set_this', http_prefix = None)
     assert request.header('TEST') == 'set_this'
 
@@ -401,4 +418,3 @@ def test_get_json_input():
 
     assert isinstance(request_obj.params, dict)
     assert request_obj.input('payload') == {'id': 1}
-

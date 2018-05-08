@@ -1,4 +1,4 @@
-\
+
 from cleo import Command
 from tabulate import tabulate
 
@@ -7,7 +7,7 @@ class RoutesCommand(Command):
     """
     List out all routes of the application.
 
-    routes
+    show:routes
     """
 
     def handle(self):

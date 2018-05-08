@@ -182,7 +182,7 @@ def test_redirections_reset():
 
     assert request.redirect_url is False
 
-    request.redirect_to('test')
+    request.redirectTo('test')
 
     assert request.redirect_url == '/test'
 

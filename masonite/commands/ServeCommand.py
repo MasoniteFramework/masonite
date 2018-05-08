@@ -16,7 +16,7 @@ class ServeCommand(Command):
     serve
         {--port=8000 : Specify which port to run the server}
         {--host=127.0.0.1 : Specify which ip address to run the server}
-        {--reload : Make the server automatically reload on file changes}
+        {--r|reload : Make the server automatically reload on file changes}
     """
 
     def handle(self):

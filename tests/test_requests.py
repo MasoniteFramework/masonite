@@ -341,8 +341,10 @@ class ExtendClass2:
     def get_another_path2(self):
         return self.path
 
+
 def get_third_path(self):
     return self.path
+
 
 def test_request_can_extend():
     app = App()
@@ -368,6 +370,7 @@ def test_request_can_extend():
     request.extend(ExtendClass.get_another_path)
     assert request.get_another_path() == '/'
 
+
 def test_gets_input_with_all_request_methods():
     app = App()
     app.bind('Request', REQUEST)
@@ -388,6 +391,7 @@ def test_gets_input_with_all_request_methods():
 
     request.environ['REQUEST_METHOD'] = 'DELETE'
     assert request.input('hey') == 'test'
+
 
 def test_hidden_form_request_method_changes_request_method():
     app = App()

@@ -47,8 +47,8 @@ def test_request_is_callable():
 def test_request_input_should_return_input_on_get_request():
     assert REQUEST.input('application') == 'Masonite'
 
-def test_request_all_should_return_params():
-    assert REQUEST.all() == {'application': ['Masonite']}
+def test_request_all_should_return_request_variables():
+    assert REQUEST.all() == {'application': 'Masonite'}
 
 
 def test_request_has_should_return_bool():
@@ -72,7 +72,7 @@ def test_request_appends_cookie():
 
 
 def test_request_sets_and_gets_cookies():
-    REQUEST.cookie('setcookie', 'value') 
+    REQUEST.cookie('setcookie', 'value')
     assert REQUEST.get_cookie('setcookie') == 'value'
 
 
@@ -159,7 +159,7 @@ def test_request_gets_input_from_container():
         container.resolve(locate(provider)().load_app(container).boot)
 
     assert container.make('Request').input('application') == 'Masonite'
-    assert container.make('Request').all() == {'application': ['Masonite']}
+    assert container.make('Request').all() == {'application': 'Masonite'}
     container.make('Request').environ['REQUEST_METHOD'] = 'POST'
     assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
     assert container.make('Request').input('application') == 'Masonite'
@@ -280,7 +280,7 @@ def test_request_sets_correct_header():
 
     request.header('TEST', 'set_this')
     assert request.header('HTTP_TEST') == 'set_this'
-    
+
     request.header('TEST', 'set_this', http_prefix = None)
     assert request.header('TEST') == 'set_this'
 
@@ -355,7 +355,7 @@ def test_gets_input_with_all_request_methods():
     app = App()
     app.bind('Request', REQUEST)
     request = app.make('Request').load_app(app)
-    request.params = 'hey=test'
+    request._set_standardized_request_variables('hey=test')
 
     request.environ['REQUEST_METHOD'] = 'GET'
     assert request.input('hey') == 'test'
@@ -399,6 +399,5 @@ def test_get_json_input():
     Route(json_wsgi)
     request_obj = Request(json_wsgi)
 
-    assert isinstance(request_obj.params, dict)
+    assert isinstance(request_obj.request_variables, dict)
     assert request_obj.input('payload') == {'id': 1}
-

@@ -82,7 +82,7 @@ class Request(Extendable):
 
         return self.request_variables
 
-    def only(self, names):
+    def only(self, *names):
         """
         Returns the specified request variables in a dictionary
         """

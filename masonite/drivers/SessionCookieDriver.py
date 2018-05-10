@@ -56,7 +56,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             self.request.delete_cookie('s_{}'.format(key))
             return True
         
-        return None
+        return False
 
     def __collect_data(self):
         """

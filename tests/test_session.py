@@ -136,5 +136,6 @@ def test_delete_session():
         SESSION = container.make('SessionManager').driver(driver)
         SESSION.set('test1', 'value')
         SESSION.set('test2', 'value')
-        SESSION.delete('test1')
+        assert SESSION.delete('test1')
         assert SESSION.has('test1') is False
+        assert SESSION.delete('test1') is False

@@ -89,7 +89,7 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
             del data[key]
             return True
         
-        return None
+        return False
     def __get_client_address(self):
         """
         Get ip from the client

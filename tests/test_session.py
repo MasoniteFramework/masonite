@@ -130,3 +130,11 @@ def test_reset_session():
         SESSION.set('flash_', 'test_pep')
         SESSION.reset()
         assert SESSION.get('reset_username') is None
+
+def test_delete_session():
+    for driver in ('memory', 'cookie'):
+        SESSION = container.make('SessionManager').driver(driver)
+        SESSION.set('test1', 'value')
+        SESSION.set('test2', 'value')
+        SESSION.delete('test1')
+        assert SESSION.has('test1') is False

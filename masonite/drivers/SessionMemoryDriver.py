@@ -82,6 +82,14 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
             if ip in self._session:
                 self._session[ip] = {}
 
+    def delete(self, key):
+        data = self.__collect_data()
+
+        if key in data:
+            del data[key]
+            return True
+        
+        return None
     def __get_client_address(self):
         """
         Get ip from the client

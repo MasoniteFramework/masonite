@@ -1,5 +1,6 @@
 """ A StartResponseProvider Service Provider """
 from masonite.provider import ServiceProvider
+from masonite.exceptions import ResponseError
 
 
 class StartResponseProvider(ServiceProvider):
@@ -11,8 +12,10 @@ class StartResponseProvider(ServiceProvider):
         if not Request.redirect_url:
             # Convert the data that is retrieved above to bytes
             # so the wsgi server can handle it.
-
-            data = bytes(Response, 'utf-8')
+            try:
+                data = bytes(Response, 'utf-8')
+            except TypeError:
+                raise ResponseError('An acceptable response type was not returned')
 
             self.app.bind('StatusCode', Request.get_status_code())
             Headers += [

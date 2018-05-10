@@ -32,3 +32,5 @@ class InvalidCSRFToken(Exception):
     pass
 
 class RouteMiddlewareNotFound(Exception): pass
+
+class ResponseError(Exception): pass

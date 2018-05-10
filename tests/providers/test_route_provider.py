@@ -62,7 +62,7 @@ class TestRouteProvider:
 
         assert self.app.make('Response') == 'hey'
 
-    def test_controller_that_returns_a_view_with_route_with_end_slash(self):
+    def test_controller_does_not_return_with_non_matching_end_slash(self):
         self.app.make('Route').url = '/view'
         self.app.bind('WebRoutes', [get('/view/', Controller.returns_a_view)])
 

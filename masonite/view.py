@@ -69,16 +69,39 @@ class View:
         if self.container.has('Cache') and self.__cached_template_exists() and not self.__is_expired_cache():
             return self.__get_cached_template()
 
-        if template in self.composers:
-            self.dictionary.update(self.composers[template])
-
-        if '*' in self.composers:
-            self.dictionary.update(self.composers['*'])
+        # Check if composers are even set for a speed improvement
+        if self.composers:
+            self._update_from_composers()
 
         self.rendered_template = self.env.get_template(filename).render(
             self.dictionary)
 
         return self
+
+    def _update_from_composers(self):
+
+        # Check if the template is directly specified in the composer
+        if self.template in self.composers:
+            self.dictionary.update(self.composers[self.template])
+
+        # Check if there is just an astericks in the composer
+        if '*' in self.composers:
+            self.dictionary.update(self.composers['*'])
+        
+        # We will append onto this string for an easier way to search through wildcard routes
+        compiled_string = ''
+
+        # Check for wildcard view composers
+        for template in self.template.split('/'):
+            # Append the template onto the compiled_string
+            compiled_string += template
+            if '{}*'.format(compiled_string) in self.composers:
+                self.dictionary.update(self.composers['{}*'.format(compiled_string)])
+            else:
+                # Add a slash to symbolize going into a deeper directory structure
+                compiled_string += '/'
+            
+
 
     def composer(self, composer_name, dictionary):
         """

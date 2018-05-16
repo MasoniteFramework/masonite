@@ -1,0 +1,10 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+masonite = "<=2.0.0,>=2.0.99"
+
+[dev-packages]
+waitress = "==1.1.0"

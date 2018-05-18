@@ -6,35 +6,36 @@ from masonite.routes import Get
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 
 
-container = App()
-container.bind('WSGI', object)
+class TestProviders:
 
-container.bind('Application', application)
-container.bind('Environ', generate_wsgi())
+    def setup_method(self):
+        self.app = App()
+        self.app.bind('WSGI', object)
+
+        self.app.bind('Application', application)
+        self.app.bind('Environ', generate_wsgi())
+
+    def test_providers_load_into_container(self):
+        for provider in self.app.make('Application').PROVIDERS:
+            self.app.resolve(locate(provider)().load_app(self.app).register)
+
+        self.app.bind('Response', 'test')
+        self.app.bind('WebRoutes', [
+            Get().route('url', None),
+            Get().route('url/', None),
+            Get().route('url/@firstname', None),
+        ])
+
+        self.app.bind('Response', 'Route not found. Error 404')
+
+        for provider in self.app.make('Application').PROVIDERS:
+            located_provider = locate(provider)().load_app(self.app)
+
+            self.app.resolve(locate(provider)().load_app(self.app).boot)
+
+        assert self.app.make('Request')
 
 
-def test_providers_load_into_container():
-
-    for provider in container.make('Application').PROVIDERS:
-        container.resolve(locate(provider)().load_app(container).register)
-
-    container.bind('Response', 'test')
-    container.bind('WebRoutes', [
-        Get().route('url', None),
-        Get().route('url/', None),
-        Get().route('url/@firstname', None),
-    ])
-
-    container.bind('Response', 'Route not found. Error 404')
-
-    for provider in container.make('Application').PROVIDERS:
-        located_provider = locate(provider)().load_app(container)
-
-        container.resolve(locate(provider)().load_app(container).boot)
-
-    assert container.make('Request')
-
-
-def test_normal_app_containers():
-    container = TestSuite().create_container()
-    assert container.get_container().make('Request')
+    def test_normal_app_containers(self):
+        self.app = TestSuite().create_container()
+        assert self.app.get_container().make('Request')

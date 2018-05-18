@@ -3,99 +3,98 @@ from masonite.request import Request
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 
 
-REQUEST = Request(generate_wsgi()).key(
-    'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+class TestRequestRoutes:
+
+    def setup_method(self):
+        self.request = Request(generate_wsgi()).key(
+            'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+
+    def test_get_initialized(self):
+        assert callable(Get)
+        assert callable(Post)
 
 
-def test_get_initialized():
-    assert callable(Get)
-    assert callable(Post)
+    def test_get_sets_route(self):
+        assert Get().route('test', None)
 
 
-def test_get_sets_route():
-    assert Get().route('test', None)
+    def test_sets_name(self):
+        get = Get().route('test', None).name('test')
+
+        assert get.named_route == 'test'
 
 
-def test_sets_name():
-    get = Get().route('test', None).name('test')
+    def test_loads_request(self):
+        get = Get().route('test', None).name('test').load_request('test')
 
-    assert get.named_route == 'test'
-
-
-def test_loads_request():
-    get = Get().route('test', None).name('test').load_request('test')
-
-    assert get.request == 'test'
+        assert get.request == 'test'
 
 
-def test_loads_middleware():
-    get = Get().route('test', None).middleware('auth', 'middleware')
+    def test_loads_middleware(self):
+        get = Get().route('test', None).middleware('auth', 'middleware')
 
-    assert get.list_middleware == ('auth', 'middleware')
-
-
-def test_method_type():
-    assert Post().method_type == 'POST'
-    assert Get().method_type == 'GET'
+        assert get.list_middleware == ('auth', 'middleware')
 
 
-def test_method_type_sets_domain():
-    get = Get().domain('test')
-    post = Post().domain('test')
-
-    assert get.required_domain == 'test'
-    assert post.required_domain == 'test'
+    def test_method_type(self):
+        assert Post().method_type == 'POST'
+        assert Get().method_type == 'GET'
 
 
-def test_method_type_has_required_subdomain():
-    get = Get().domain('test')
-    post = Get().domain('test')
+    def test_method_type_sets_domain(self):
+        get = Get().domain('test')
+        post = Post().domain('test')
 
-    REQUEST.environ['HTTP_HOST'] = 'test.localhost:8000'
-
-    get.request = REQUEST
-    post.request = REQUEST
-
-    assert get.has_required_domain() == True
-    assert post.has_required_domain() == True
+        assert get.required_domain == 'test'
+        assert post.required_domain == 'test'
 
 
-def test_method_type_has_required_subdomain_with_asterick():
-    container = TestSuite().create_container()
-    request = container.container.make('Request')
+    def test_method_type_has_required_subdomain(self):
+        get = Get().domain('test')
+        post = Get().domain('test')
 
-    request.environ['HTTP_HOST'] = 'test.localhost:8000'
+        self.request.environ['HTTP_HOST'] = 'test.localhost:8000'
 
-    get = Get().domain('*')
-    post = Get().domain('*')
+        get.request = post.request = self.request
 
-    get.request = request
-    post.request = request
-
-    assert get.has_required_domain() == True
-    assert post.has_required_domain() == True
+        assert get.has_required_domain() == True
+        assert post.has_required_domain() == True
 
 
-def test_request_sets_subdomain_on_get():
+    def test_method_type_has_required_subdomain_with_asterick(self):
+        container = TestSuite().create_container()
+        request = container.container.make('Request')
 
-    container = TestSuite().create_container()
-    request = container.container.make('Request')
+        request.environ['HTTP_HOST'] = 'test.localhost:8000'
 
-    request.environ['HTTP_HOST'] = 'test.localhost:8000'
+        get = Get().domain('*')
+        post = Get().domain('*')
 
-    get = Get().domain('*')
-    post = Get().domain('*')
+        get.request = request
+        post.request = request
 
-    get.request = request
-    post.request = request
-
-    get.has_required_domain()
-    assert request.param('subdomain') == 'test'
+        assert get.has_required_domain() == True
+        assert post.has_required_domain() == True
 
 
-def test_route_changes_module_location():
+    def test_request_sets_subdomain_on_get(self):
+        container = TestSuite().create_container()
+        request = container.container.make('Request')
 
-    get = Get().module('app.test')
-    post = Get().module('app.test')
+        request.environ['HTTP_HOST'] = 'test.localhost:8000'
 
-    assert get.module_location == 'app.test'
+        get = Get().domain('*')
+        post = Get().domain('*')
+
+        get.request = request
+        post.request = request
+
+        get.has_required_domain()
+        assert request.param('subdomain') == 'test'
+
+
+    def test_route_changes_module_location(self):
+        get = Get().module('app.test')
+        post = Get().module('app.test')
+
+        assert get.module_location == 'app.test'

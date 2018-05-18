@@ -5,11 +5,7 @@ from masonite.contracts.UploadContract import UploadContract
 from masonite.exceptions import ContainerError
 import pytest
 
-app = App()
-app.bind('Request', Request(None))
 
-def test_container_gets_direct_class():
-    assert isinstance(app.make('Request'), Request)
 
 
 class MockObject:
@@ -18,70 +14,80 @@ class MockObject:
 class GetObject(MockObject):
     pass
 
-def function_test(MockObject):
-    return MockObject
+class TestContainer:
 
-app.bind('MockObject', MockObject)
+    def setup_method(self):
+        self.app = App()
+        self.app.bind('Request', Request(None))
+        self.app.bind('MockObject', MockObject)
+        self.app.bind('GetObject', GetObject)
 
-def test_container_resolves_object():
-    assert isinstance(app.resolve(function_test), MockObject.__class__)
+    def test_container_gets_direct_class(self):
+        assert isinstance(self.app.make('Request'), Request)
 
+    def test_container_resolves_object(self):
+        assert isinstance(self.app.resolve(self._function_test), MockObject.__class__)
 
-def function_test1(mock: MockObject):
-    return mock
+    def _function_test(self, MockObject):
+        return MockObject
 
-def test_container_resolving_annotation():
-    assert isinstance(app.resolve(function_test1), MockObject.__class__)
+    def test_container_resolving_annotation(self):
+        assert isinstance(self.app.resolve(self._function_test_annotation), MockObject.__class__)
 
+    def _function_test_annotation(self, mock: MockObject):
+        return mock
 
-def function_test2(mock: MockObject):
-    return mock
+    def test_container_resolving_instance_of_object(self):
+        # assert isinstance(GetObject, MockObject.__class__)
+        assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
 
-
-app.bind('GetObject', GetObject)
-
-
-def test_container_resolving_instance_of_object():
-    # assert isinstance(GetObject, MockObject.__class__)
-    assert isinstance(app.resolve(function_test2), GetObject.__class__)
-
-
-def function_test3(mock: MockObject, request: Request):
-    return {'mock': MockObject, 'request': Request}
-
-def test_container_resolving_multiple_annotations():
-    assert isinstance(app.resolve(function_test3)['mock'], MockObject.__class__)
-    assert isinstance(app.resolve(function_test3)['request'], Request.__class__)
-
-app.bind('UploadDiskDriver', UploadDiskDriver)
-
-def function_test4(upload: UploadContract):
-    return upload
-
-def test_container_contract_returns_upload_disk_driver():
-    assert isinstance(app.resolve(function_test4), UploadDiskDriver.__class__)
-
-def function_test5(UploadDiskDriver, request: Request, MockObject):
-    return MockObject
-
-def test_container_injects_dependencies_in_any_order():
-    assert isinstance(app.resolve(function_test5), MockObject.__class__)
-
-def function_test6(NotIn):
-    return NotIn
-
-def test_container_raises_value_error():
-    with pytest.raises(ContainerError):
-        assert app.resolve(function_test6)
-
-def test_container_collects_correct_objects():
-    app = App()
-    app.bind('ExceptionHook', object)
-    app.bind('SentryExceptionHook', object)
-    app.bind('ExceptionHandler', object)
+    def _function_test_double_annotations(self, mock: MockObject, request: Request):
+        return {'mock': MockObject, 'request': Request}
     
-    assert app.collect('*ExceptionHook') == {'ExceptionHook': object, 'SentryExceptionHook': object}
-    assert app.collect('Exception*') == {'ExceptionHook': object, 'ExceptionHandler': object}
-    assert app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
-    with pytest.raises(AttributeError):
-        app.collect('Sentry')
+    def test_container_resolving_multiple_annotations(self):
+        assert isinstance(self.app.resolve(self._function_test_double_annotations)['mock'], MockObject.__class__)
+        assert isinstance(self.app.resolve(self._function_test_double_annotations)['request'], Request.__class__)
+
+    def test_container_contract_returns_upload_disk_driver(self):
+        self.app.bind('UploadDiskDriver', UploadDiskDriver)
+        assert isinstance(self.app.resolve(self._function_test_contracts), UploadDiskDriver.__class__)
+    
+    def _function_test_contracts(self, upload: UploadContract):
+        return upload
+
+    def _function_test_contract_and_annotations(self, UploadDiskDriver, request: Request, MockObject):
+        return MockObject
+
+    def test_container_injects_dependencies_in_any_order(self):
+        self.app.bind('UploadDiskDriver', UploadDiskDriver)
+        assert isinstance(self.app.resolve(self._function_test_contract_and_annotations), MockObject.__class__)
+
+    def _function_not_in_container(self, NotIn):
+        return NotIn
+
+    def test_container_raises_value_error(self):
+        with pytest.raises(ContainerError):
+            assert self.app.resolve(self._function_not_in_container)
+
+    def test_container_collects_correct_objects(self):
+        self.app.bind('ExceptionHook', object)
+        self.app.bind('SentryExceptionHook', object)
+        self.app.bind('ExceptionHandler', object)
+        
+        assert self.app.collect('*ExceptionHook') == {'ExceptionHook': object, 'SentryExceptionHook': object}
+        assert self.app.collect('Exception*') == {'ExceptionHook': object, 'ExceptionHandler': object}
+        assert self.app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
+        with pytest.raises(AttributeError):
+            self.app.collect('Sentry')
+
+
+
+
+
+
+
+
+
+
+
+

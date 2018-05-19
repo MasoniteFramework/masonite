@@ -111,43 +111,36 @@ class BaseHttpRoute:
 
     def route(self, route, output):
         """ Loads the route into the class """
-        self._find_controller(output)
+
+        # If the output specified is a string controller
+        if isinstance(output, str):
+            mod = output.split('@') 
+
+            # Gets the controller name from the output parameter
+            # This is used to add support for additional modules
+            # like 'LoginController' and 'Auth.LoginController'
+            get_controller = mod[0].split('.')[-1]
+
+            # If trying to get an absolute path
+            if mod[0].startswith('/'):
+                self.module_location = '.'.join(mod[0].replace('/', '').split('.')[0:-1])
+
+            try:
+                # Import the module
+                module = importlib.import_module(
+                    '{0}.'.format(self.module_location) + get_controller)  
+                # Get the controller from the module
+                controller = getattr(module, get_controller)
+
+                # Get the view from the controller
+                view = getattr(controller(), mod[1])
+                self.output = view
+            except Exception as e:
+                print('\033[93mWarning in routes/web.py!', e, '\033[0m')
+        else:
+            self.output = output
         self.route_url = route
         return self
-    
-    def _find_controller(self, controller):
-        # If the output specified is a string controller
-        if isinstance(controller, str):
-            mod = controller.split('@')
-        
-        else:
-            if controller is None:
-                return None
-            fully_qualified_name = controller.__qualname__
-            mod = fully_qualified_name.split('.')
-
-        # Gets the controller name from the output parameter
-        # This is used to add support for additional modules
-        # like 'LoginController' and 'Auth.LoginController'
-        get_controller = mod[0].split('.')[-1]
-
-        # If trying to get an absolute path
-        if mod[0].startswith('/'):
-            self.module_location = '.'.join(
-                mod[0].replace('/', '').split('.')[0:-1])
-
-        try:
-            # Import the module
-            module = importlib.import_module(
-                '{0}.'.format(self.module_location) + get_controller)
-            # Get the controller from the module
-            self.controller = getattr(module, get_controller)
-
-            # Set the controller method on class. This is a string
-            self.controller_method = mod[1]
-
-        except Exception as e:
-            print('\033[93mWarning in routes/web.py!', e, '\033[0m')
 
     def domain(self, domain):
         self.required_domain = domain

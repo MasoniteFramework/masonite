@@ -15,7 +15,7 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='1.6.5',
+    version='1.6.9',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.2.2',
@@ -29,7 +29,6 @@ setup(
         'bcrypt==3.1.4',
         'pytest==3.3.1',
         'orator==0.9.7',
-        'cryptography==2.1.4',
         'PyMySQL==0.8.0',
         'psycopg2==2.7.3.2',
         'masonite-entry>=0.0.0,<=0.9.99',

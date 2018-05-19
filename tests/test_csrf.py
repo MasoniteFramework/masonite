@@ -3,24 +3,24 @@ from middleware.CsrfMiddleware import CsrfMiddleware
 from masonite.auth.Csrf import Csrf
 from masonite.testsuite.TestSuite import TestSuite
 
-container = TestSuite().create_container().container
 
-container.bind('Csrf', Csrf(container.make('Request')))
+class TestCsrf:
+    def setup_method(self):
+        self.app = TestSuite().create_container().container
+        self.app.bind('Csrf', Csrf(self.app.make('Request')))
+        self.csrf = self.app.make('Csrf')
+        self.request = self.app.make('Request')
+        middleware = self.app.resolve(CsrfMiddleware)
 
-csrf = container.make('Csrf')
-request = container.make('Request')
+        middleware.before()
 
-middleware = container.resolve(CsrfMiddleware)
+    def test_middleware_sets_csrf_cookie(self):
+        assert self.request.get_cookie('csrf_token', decrypt=False)
 
-middleware.before()
+    def test_middleware_shares_view(self):
+        assert 'csrf_field' in self.app.make('ViewClass').dictionary
+        assert 'input' in self.app.make('ViewClass').dictionary['csrf_field']
 
-def test_middleware_sets_csrf_cookie():
-    assert request.get_cookie('csrf_token', decrypt=False)
-
-def test_middleware_shares_view():
-    assert 'csrf_field' in container.make('ViewClass').dictionary
-    assert 'input' in container.make('ViewClass').dictionary['csrf_field']
-
-def test_verify_token():
-    token = request.get_cookie('csrf_token', decrypt=False)
-    assert csrf.verify_csrf_token(token)
+    def test_verify_token(self):
+        token = self.request.get_cookie('csrf_token', decrypt=False)
+        assert self.csrf.verify_csrf_token(token)

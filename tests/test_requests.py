@@ -6,37 +6,7 @@ from masonite.app import App
 from masonite.routes import Get, Route
 from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
-
-
-wsgi_request = {
-    'wsgi.version': (1, 0),
-    'wsgi.multithread': False,
-    'wsgi.multiprocess': True,
-    'wsgi.run_once': False,
-    'SERVER_SOFTWARE': 'gunicorn/19.7.1',
-    'REQUEST_METHOD': 'GET',
-    'QUERY_STRING': 'application=Masonite',
-    'RAW_URI': '/',
-    'SERVER_PROTOCOL': 'HTTP/1.1',
-    'HTTP_HOST': '127.0.0.1:8000',
-    'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'HTTP_UPGRADE_INSECURE_REQUESTS': '1',
-    'HTTP_COOKIE': 'setcookie=value',
-    'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7',
-    'HTTP_ACCEPT_LANGUAGE': 'en-us',
-    'HTTP_ACCEPT_ENCODING': 'gzip, deflate',
-    'HTTP_CONNECTION': 'keep-alive',
-    'wsgi.url_scheme': 'http',
-    'REMOTE_ADDR': '127.0.0.1',
-    'REMOTE_PORT': '62241',
-    'SERVER_NAME': '127.0.0.1',
-    'SERVER_PORT': '8000',
-    'PATH_INFO': '/',
-    'SCRIPT_NAME': ''
-}
-
-REQUEST = Request(wsgi_request).key(
-    'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+from masonite.testsuite.TestSuite import generate_wsgi
 
 WEB_ROUTES = flatten_routes([
     get('/test', 'Controller@show').name('test'),
@@ -45,380 +15,285 @@ WEB_ROUTES = flatten_routes([
     ])
 ])
 
+wsgi_request = generate_wsgi()
 
-def test_request_is_callable():
-    """ Request should be callable """
-    if callable(REQUEST):
-        assert True
+class TestRequest:
 
+    def setup_method(self):
+        self.request = Request(wsgi_request).key(
+            'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
-def test_request_input_should_return_input_on_get_request():
-    assert REQUEST.input('application') == 'Masonite'
+    def test_request_is_callable(self):
+        """ Request should be callable """
+        if callable(self.request):
+            assert True
 
-def test_request_all_should_return_params():
-    assert REQUEST.all() == {'application': ['Masonite']}
 
+    def test_request_input_should_return_input_on_get_request(self):
+        assert self.request.input('application') == 'Masonite'
 
-def test_request_has_should_return_bool():
-    assert REQUEST.has('application') == True
-    assert REQUEST.has('shouldreturnfalse') == False
+    def test_request_all_should_return_params(self):
+        assert self.request.all() == {'application': ['Masonite']}
 
 
-def test_request_set_params_should_return_self():
-    assert REQUEST.set_params({'value': 'new'}) == REQUEST
-    assert REQUEST.url_params == {'value': 'new'}
+    def test_request_has_should_return_bool(self):
+        assert self.request.has('application') == True
+        assert self.request.has('shouldreturnfalse') == False
 
 
-def test_request_param_returns_parameter_set_or_false():
-    assert REQUEST.param('value') == 'new'
-    assert REQUEST.param('nullvalue') == False
+    def test_request_set_params_should_return_self(self):
+        assert self.request.set_params({'value': 'new'}) == self.request
+        assert self.request.url_params == {'value': 'new'}
 
 
-def test_request_appends_cookie():
-    assert REQUEST.cookie('appendcookie', 'value') == REQUEST
-    assert 'appendcookie' in REQUEST.environ['HTTP_COOKIE']
+    def test_request_param_returns_parameter_set_or_false(self):
+        self.request.set_params({'value': 'new'})
+        assert self.request.param('value') == 'new'
+        assert self.request.param('nullvalue') == False
 
 
-def test_request_sets_and_gets_cookies():
-    REQUEST.cookie('setcookie', 'value')
-    assert REQUEST.get_cookie('setcookie') == 'value'
+    def test_request_appends_cookie(self):
+        assert self.request.cookie('appendcookie', 'value') == self.request
+        assert 'appendcookie' in self.request.environ['HTTP_COOKIE']
 
 
-def test_request_sets_expiration_cookie_2_months():
-    REQUEST.cookies = []
-    REQUEST.cookie('setcookie_expiration', 'value', expires='2 months')
+    def test_request_sets_and_gets_cookies(self):
+        self.request.cookie('setcookie', 'value')
+        assert self.request.get_cookie('setcookie') == 'value'
 
-    time = cookie_expire_time('2 months')
 
-    assert REQUEST.get_cookie('setcookie_expiration') == 'value'
-    assert 'Expires={0}'.format(time) in REQUEST.cookies[0][1]
+    def test_request_sets_expiration_cookie_2_months(self):
+        self.request.cookies = []
+        self.request.cookie('setcookie_expiration', 'value', expires='2 months')
 
+        time = cookie_expire_time('2 months')
 
-def test_delete_cookie():
-    REQUEST.cookies = []
-    REQUEST.cookie('delete_cookie', 'value')
+        assert self.request.get_cookie('setcookie_expiration') == 'value'
+        assert 'Expires={0}'.format(time) in self.request.cookies[0][1]
 
-    assert REQUEST.get_cookie('delete_cookie') == 'value'
-    REQUEST.delete_cookie('delete_cookie')
-    assert not REQUEST.get_cookie('delete_cookie')
 
+    def test_delete_cookie(self):
+        self.request.cookies = []
+        self.request.cookie('delete_cookie', 'value')
 
-def test_delete_cookie_with_wrong_key():
-    REQUEST.cookies = []
-    REQUEST.cookie('cookie', 'value')
-    REQUEST.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
-    assert REQUEST.get_cookie('cookie') is None
+        assert self.request.get_cookie('delete_cookie') == 'value'
+        self.request.delete_cookie('delete_cookie')
+        assert not self.request.get_cookie('delete_cookie')
 
 
-def test_redirect_returns_request():
-    assert REQUEST.redirect('newurl') == REQUEST
-    assert REQUEST.redirect_url == '/newurl'
+    def test_delete_cookie_with_wrong_key(self):
+        self.request.cookies = []
+        self.request.cookie('cookie', 'value')
+        self.request.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+        assert self.request.get_cookie('cookie') is None
 
 
-def test_request_no_input_returns_false():
-    assert REQUEST.input('notavailable') == False
+    def test_redirect_returns_request(self):
+        assert self.request.redirect('newurl') == self.request
+        assert self.request.redirect_url == '/newurl'
 
 
-def test_request_get_cookies_returns_cookies():
-    assert REQUEST.get_cookies() == REQUEST.cookies
+    def test_request_no_input_returns_false(self):
+        assert self.request.input('notavailable') == False
 
 
-def test_request_set_user_sets_object():
-    assert REQUEST.set_user(object) == REQUEST
-    assert REQUEST.user_model == object
-    assert REQUEST.user() == object
+    def test_request_get_cookies_returns_cookies(self):
+        assert self.request.get_cookies() == self.request.cookies
 
 
-def test_request_loads_app():
-    app = App()
-    app.bind('Request', REQUEST)
-    app.make('Request').load_app(app)
+    def test_request_set_user_sets_object(self):
+        assert self.request.set_user(object) == self.request
+        assert self.request.user_model == object
+        assert self.request.user() == object
 
-    assert REQUEST.app() == app
-    assert app.make('Request').app() == app
 
+    def test_request_loads_app(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.make('Request').load_app(app)
 
-def test_request_gets_input_from_container():
-    container = App()
-    container.bind('Application', application)
-    container.bind('WSGI', object)
-    container.bind('Environ', wsgi_request)
+        assert self.request.app() == app
+        assert app.make('Request').app() == app
 
-    for provider in container.make('Application').PROVIDERS:
-        container.resolve(locate(provider)().load_app(container).register)
 
-    container.bind('Response', 'test')
-    container.bind('WebRoutes', [
-        Get().route('url', None),
-        Get().route('url/', None),
-        Get().route('url/@firstname', None),
-    ])
+    def test_request_gets_input_from_container(self):
+        container = App()
+        container.bind('Application', application)
+        container.bind('WSGI', object)
+        container.bind('Environ', wsgi_request)
 
-    container.bind('Response', 'Route not found. Error 404')
+        for provider in container.make('Application').PROVIDERS:
+            container.resolve(locate(provider)().load_app(container).register)
 
-    for provider in container.make('Application').PROVIDERS:
-        located_provider = locate(provider)().load_app(container)
+        container.bind('Response', 'test')
+        container.bind('WebRoutes', [
+            Get().route('url', None),
+            Get().route('url/', None),
+            Get().route('url/@firstname', None),
+        ])
 
-        container.resolve(locate(provider)().load_app(container).boot)
+        container.bind('Response', 'Route not found. Error 404')
 
-    assert container.make('Request').input('application') == 'Masonite'
-    assert container.make('Request').all() == {'application': ['Masonite']}
-    container.make('Request').environ['REQUEST_METHOD'] = 'POST'
-    assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
-    assert container.make('Request').input('application') == 'Masonite'
+        for provider in container.make('Application').PROVIDERS:
+            located_provider = locate(provider)().load_app(container)
 
+            container.resolve(locate(provider)().load_app(container).boot)
 
-def test_redirections_reset():
-    app = App()
-    app.bind('Request', REQUEST)
-    app.bind('WebRoutes', WEB_ROUTES)
-    request = app.make('Request').load_app(app)
+        assert container.make('Request').input('application') == 'Masonite'
+        assert container.make('Request').all() == {'application': ['Masonite']}
+        container.make('Request').environ['REQUEST_METHOD'] = 'POST'
+        assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
+        assert container.make('Request').input('application') == 'Masonite'
 
-    request.redirect('test')
 
-    assert request.redirect_url == '/test'
+    def test_redirections_reset(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', WEB_ROUTES)
+        request = app.make('Request').load_app(app)
 
-    request.reset_redirections()
+        request.redirect('test')
 
-    assert request.redirect_url is False
+        assert request.redirect_url == '/test'
 
-    request.redirectTo('test')
+        request.reset_redirections()
 
-    assert request.redirect_url == '/test'
+        assert request.redirect_url is False
 
-    request.reset_redirections()
+        request.redirectTo('test')
 
-    assert request.redirect_url is False
+        assert request.redirect_url == '/test'
 
+        request.reset_redirections()
 
-def test_request_has_subdomain_returns_bool():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.redirect_url is False
 
-    assert request.has_subdomain() is False
-    assert request.subdomain is None
 
-    request.environ['HTTP_HOST'] = 'test.localhost.com'
+    def test_request_has_subdomain_returns_bool(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
-    assert request.has_subdomain() is True
+        assert request.has_subdomain() is False
+        assert request.subdomain is None
 
+        request.environ['HTTP_HOST'] = 'test.localhost.com'
 
-def test_redirect_compiles_url():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.has_subdomain() is True
 
-    route = '/test/url'
 
-    assert request.compile_route_to_url(route) == '/test/url'
+    def test_redirect_compiles_url(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = '/test/url'
 
-def test_redirect_compiles_url_with_1_slash():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route) == '/test/url'
 
-    route = '/'
 
-    assert request.compile_route_to_url(route) == '/'
+    def test_redirect_compiles_url_with_1_slash(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = '/'
 
-def test_redirect_compiles_url_with_multiple_slashes():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route) == '/'
 
-    route = 'test/url/here'
 
-    assert request.compile_route_to_url(route) == '/test/url/here'
+    def test_redirect_compiles_url_with_multiple_slashes(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = 'test/url/here'
 
-def test_redirect_compiles_url_with_trailing_slash():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route) == '/test/url/here'
 
-    route = 'test/url/here/'
 
-    assert request.compile_route_to_url(route) == '/test/url/here/'
+    def test_redirect_compiles_url_with_trailing_slash(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = 'test/url/here/'
 
-def test_redirect_compiles_url_with_parameters():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route) == '/test/url/here/'
 
-    route = 'test/@id'
-    params = {
-        'id': '1',
-    }
 
-    assert request.compile_route_to_url(route, params) == '/test/1'
+    def test_redirect_compiles_url_with_parameters(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = 'test/@id'
+        params = {
+            'id': '1',
+        }
 
-def test_redirect_compiles_url_with_multiple_parameters():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route, params) == '/test/1'
 
-    route = 'test/@id/@test'
-    params = {
-        'id': '1',
-        'test': 'user',
-    }
 
-    assert request.compile_route_to_url(route, params) == '/test/1/user'
+    def test_redirect_compiles_url_with_multiple_parameters(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = 'test/@id/@test'
+        params = {
+            'id': '1',
+            'test': 'user',
+        }
 
-def test_redirect_compiles_url_with_http():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route, params) == '/test/1/user'
 
-    route = "http://google.com"
 
-    assert request.compile_route_to_url(route) == 'http://google.com'
+    def test_redirect_compiles_url_with_http(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        route = "http://google.com"
 
-def test_request_gets_correct_header():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        assert request.compile_route_to_url(route) == 'http://google.com'
 
-    assert request.header('UPGRADE_INSECURE_REQUESTS') == '1'
-    assert request.header('RAW_URI') == '/'
-    assert request.header('NOT_IN') == None
 
-def test_request_sets_correct_header():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+    def test_request_gets_correct_header(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
-    request.header('TEST', 'set_this')
-    assert request.header('HTTP_TEST') == 'set_this'
+        assert request.header('UPGRADE_INSECURE_REQUESTS') == '1'
+        assert request.header('RAW_URI') == '/'
+        assert request.header('NOT_IN') == None
 
-    request.header('TEST', 'set_this', http_prefix = None)
-    assert request.header('TEST') == 'set_this'
+    def test_request_sets_correct_header(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
+        request.header('TEST', 'set_this')
+        assert request.header('HTTP_TEST') == 'set_this'
 
-def test_request_gets_all_headers():
-    app = App()
-    app.bind('Request', Request(wsgi_request))
-    request = app.make('Request').load_app(app)
+        request.header('TEST', 'set_this', http_prefix = None)
+        assert request.header('TEST') == 'set_this'
 
-    request.header('TEST1', 'set_this_item')
-    request.header('TEST2', 'set_this_item', http_prefix = None)
-    assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
+    def test_request_gets_all_headers(self):
+        app = App()
+        app.bind('Request', Request(wsgi_request))
+        request = app.make('Request').load_app(app)
 
-def test_request_sets_status_code():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
+        request.header('TEST1', 'set_this_item')
+        request.header('TEST2', 'set_this_item', http_prefix = None)
+        assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
-    request.status('200 OK')
-    assert request.get_status_code() == '200 OK'
 
+    def test_request_sets_status_code(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
 
-class ExtendClass:
-
-    path = None
-
-    def get_path(self):
-        return self.path
-
-    def get_another_path(self):
-        return self.path
-
-class ExtendClass2:
-
-    path = None
-
-    def get_path2(self):
-        return self.path
-
-    def get_another_path2(self):
-        return self.path
-
-
-def get_third_path(self):
-    return self.path
-
-
-def test_request_can_extend():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
-
-    request.extend('get_path', ExtendClass.get_path)
-    request.extend('get_another_path_test', ExtendClass.get_another_path)
-    request.extend('get_third_path_test', get_third_path)
-
-    assert request.get_path() == '/'
-    assert request.get_another_path_test() == '/'
-    assert request.get_third_path_test() == '/'
-
-    request.extend(ExtendClass2)
-
-    assert request.get_path2() == '/'
-    assert request.get_another_path2() == '/'
-
-    request.extend(get_third_path)
-    assert request.get_third_path() == '/'
-
-    request.extend(ExtendClass.get_another_path)
-    assert request.get_another_path() == '/'
-
-
-def test_gets_input_with_all_request_methods():
-    app = App()
-    app.bind('Request', REQUEST)
-    request = app.make('Request').load_app(app)
-    request.params = 'hey=test'
-
-    request.environ['REQUEST_METHOD'] = 'GET'
-    assert request.input('hey') == 'test'
-
-    request.environ['REQUEST_METHOD'] = 'POST'
-    assert request.input('hey') == 'test'
-
-    request.environ['REQUEST_METHOD'] = 'PUT'
-    assert request.input('hey') == 'test'
-
-    request.environ['REQUEST_METHOD'] = 'PATCH'
-    assert request.input('hey') == 'test'
-
-    request.environ['REQUEST_METHOD'] = 'DELETE'
-    assert request.input('hey') == 'test'
-
-
-def test_hidden_form_request_method_changes_request_method():
-    app = App()
-    wsgi_request['QUERY_STRING'] = 'request_method=PUT'
-    request_class = Request(wsgi_request)
-
-    app.bind('Request', request_class)
-    request = app.make('Request').load_app(app)
-
-    assert request.environ['REQUEST_METHOD'] == 'PUT'
-
-
-class MockWsgiInput():
-
-    def read(self, value):
-        return '{"id": 1}'
-
-
-def test_get_json_input():
-    json_wsgi = wsgi_request
-    json_wsgi['REQUEST_METHOD'] = 'POST'
-    json_wsgi['CONTENT_TYPE'] = 'application/json'
-    json_wsgi['QUERY_STRING'] = ''
-    json_wsgi['wsgi.input'] = MockWsgiInput()
-
-    Route(json_wsgi)
-    request_obj = Request(json_wsgi)
-
-    assert isinstance(request_obj.params, dict)
-    assert request_obj.input('payload') == {'id': 1}
+        request.status('200 OK')
+        assert request.get_status_code() == '200 OK'

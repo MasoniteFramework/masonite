@@ -1,6 +1,6 @@
 from masonite.providers.StartResponseProvider import StartResponseProvider
 from masonite.request import Request
-from masonite.testsuite.TestSuite import WSGI_REQUEST
+from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.app import App
 from masonite.exceptions import ResponseError
 import pytest
@@ -12,7 +12,7 @@ class TestResponseProvider:
         self.provider = StartResponseProvider()
 
         self.app.bind('Response', None)
-        self.app.bind('Request', Request(WSGI_REQUEST))
+        self.app.bind('Request', Request(generate_wsgi()))
         self.app.bind('Headers', [])
 
         self.provider.app = self.app

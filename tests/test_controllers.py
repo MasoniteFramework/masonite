@@ -2,9 +2,12 @@ from masonite.app import App
 from masonite.controllers import Controller
 
 
-def test_controller_loads_app():
-    app = App()
-    app.bind('object', object)
-
-    controller = Controller().load_app(app)
-    assert controller.app.providers == {'object': object}
+class TestController:
+    
+    def setup_method(self):
+        self.app = App()
+        self.app.bind('object', object)
+    
+    def test_controller_loads_app(self):
+        controller = Controller().load_app(self.app)
+        assert controller.app.providers == {'object': object}

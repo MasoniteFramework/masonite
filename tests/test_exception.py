@@ -11,19 +11,22 @@ class ApplicationMock:
 class StorageMock:
     STATICFILES = {}
 
-container = App()
-container.bind('Application', ApplicationMock)
-container.bind('View', View(container).render)
-container.bind('Storage', StorageMock)
-container.bind('ExceptionHandler', ExceptionHandler(container))
-container.bind('HookHandler', Hook(container))
 
-def test_exception_renders_view():
-    with pytest.raises(MissingContainerBindingNotFound):
-        assert container.make('ExceptionHandler').load_exception(KeyError)
+class TestException:
 
+    def setup_method(self):
+        self.app = App()
+        self.app.bind('Application', ApplicationMock)
+        self.app.bind('View', View(self.app).render)
+        self.app.bind('Storage', StorageMock)
+        self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
+        self.app.bind('HookHandler', Hook(self.app))
 
-def test_exception_raises_exception():
-    container.make('Application').DEBUG = False
-    with pytest.raises(KeyError):
-        assert container.make('ExceptionHandler').load_exception(KeyError)
+    def test_exception_renders_view(self):
+        with pytest.raises(MissingContainerBindingNotFound):
+            assert self.app.make('ExceptionHandler').load_exception(KeyError)
+
+    def test_exception_raises_exception(self):
+        self.app.make('Application').DEBUG = False
+        with pytest.raises(KeyError):
+            assert self.app.make('ExceptionHandler').load_exception(KeyError)

@@ -21,7 +21,7 @@ class Request(Extendable):
     """
     Handles many different aspects of a single request.
     This is the object passed through to the controllers
-    as a request paramter
+    as a request parameter
     """
 
     def __init__(self, environ=None):
@@ -111,8 +111,6 @@ class Request(Extendable):
         return self
 
     def _set_standardized_request_variables(self, variables):
-        print(variables, type(variables))
-
         if isinstance(variables, str):
             variables = parse_qs(variables)
 
@@ -153,7 +151,6 @@ class Request(Extendable):
         return self._status
 
     def header(self, key, value=None, http_prefix=True):
-
         # Get Headers
         if value is None:
             if 'HTTP_{0}'.format(key) in self.environ:

@@ -33,7 +33,7 @@ class TestRequest:
         assert self.request.input('application') == 'Masonite'
 
     def test_request_all_should_return_params(self):
-        assert self.request.all() == {'application': ['Masonite']}
+        assert self.request.all() == {'application': 'Masonite'}
 
 
     def test_request_has_should_return_bool(self):
@@ -140,7 +140,7 @@ class TestRequest:
             container.resolve(locate(provider)().load_app(container).boot)
 
         assert container.make('Request').input('application') == 'Masonite'
-        assert container.make('Request').all() == {'application': ['Masonite']}
+        assert container.make('Request').all() == {'application': 'Masonite'}
         container.make('Request').environ['REQUEST_METHOD'] = 'POST'
         assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
         assert container.make('Request').input('application') == 'Masonite'
@@ -249,12 +249,6 @@ class TestRequest:
             'id': '1',
             'test': 'user',
         }
-
-    def test_gets_input_with_all_request_methods(self):
-        app = App()
-        app.bind('Request', REQUEST)
-        request = app.make('Request').load_app(app)
-        request._set_standardized_request_variables('hey=test')
 
 
     def test_redirect_compiles_url_with_http(self):

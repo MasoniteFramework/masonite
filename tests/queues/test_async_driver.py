@@ -10,13 +10,16 @@ class Job(Queueable):
     def handle(self):
         return 'test'
 
-def test_async_driver_pushes_to_queue():
-    container = App()
+class TestAsyncDriver:
 
-    container.bind('QueueAsyncDriver', QueueAsyncDriver)
-    container.bind('QueueConfig', queue)
-    container.bind('Queueable', Queueable)
-    container.bind('Container', container)
-    container.bind('QueueManager', QueueManager(container))
+    def setup_method(self):
+        self.app = App()
 
-    assert container.make('QueueManager').driver('async').push(Job) is None
+        self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
+        self.app.bind('QueueConfig', queue)
+        self.app.bind('Queueable', Queueable)
+        self.app.bind('Container', self.app)
+        self.app.bind('QueueManager', QueueManager(self.app))
+
+    def test_async_driver_pushes_to_queue(self):
+        assert self.app.make('QueueManager').driver('async').push(Job) is None

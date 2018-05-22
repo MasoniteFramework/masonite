@@ -9,32 +9,31 @@ from config import broadcast
 
 if os.getenv('ABLY_SECRET'):
 
-    def test_broadcast_loads_into_container():
-        container = TestSuite().create_container().container
+    class TestSockets:
 
-        container.bind('BroadcastConfig', broadcast)
-        container.bind('BroadcastPusherDriver', BroadcastPusherDriver)
-        container.bind('BroadcastManager', BroadcastManager().load_container(container))
-        container.bind('Broadcast', container.make('BroadcastManager').driver('pusher'))
+        def setup_method(self):
+            self.app = TestSuite().create_container().container
+            self.app.bind('BroadcastConfig', broadcast)
+            self.app.bind('BroadcastPusherDriver', BroadcastPusherDriver)
+            self.app.bind('BroadcastManager', BroadcastManager().load_container(self.app))
 
-        assert container.make('BroadcastManager')
-        assert container.make('Broadcast').channel('random', 'from driver') == {'message': 'from driver'}
-        assert container.make('Broadcast').channel('random', {'message': 'dictionary'}) == {'message': 'dictionary'}
-        assert container.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
-        assert container.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
-        assert container.make('Broadcast').ssl(True).ssl_message is True
+        def test_broadcast_loads_into_container(self):
 
-    def test_broadcast_loads_into_container_with_ably():
-        container = TestSuite().create_container().container
+            self.app.bind('Broadcast', self.app.make('BroadcastManager').driver('pusher'))
 
-        container.bind('BroadcastConfig', broadcast)
-        container.bind('BroadcastAblyDriver', BroadcastAblyDriver)
-        container.bind('BroadcastManager', BroadcastManager().load_container(container))
-        container.bind('Broadcast', container.make('BroadcastManager').driver('ably'))
+            assert self.app.make('BroadcastManager')
+            assert self.app.make('Broadcast').channel('random', 'from driver') == {'message': 'from driver'}
+            assert self.app.make('Broadcast').channel('random', {'message': 'dictionary'}) == {'message': 'dictionary'}
+            assert self.app.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
+            assert self.app.make('Broadcast').channel(['channel1', 'channel2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
+            assert self.app.make('Broadcast').ssl(True).ssl_message is True
 
-        assert container.make('BroadcastManager')
-        assert container.make('Broadcast').channel('test-channel', 'from driver') == 'from driver'
-        assert container.make('Broadcast').channel('test-channel', {'message': 'from driver'}) == {'message': 'from driver'}
-        assert container.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
-        assert container.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
-        assert container.make('Broadcast').ssl(True).ssl_message is True
+        def test_broadcast_loads_into_container_with_ably(self):
+            self.app.bind('Broadcast', self.app.make('BroadcastManager').driver('ably'))
+
+            assert self.app.make('BroadcastManager')
+            assert self.app.make('Broadcast').channel('test-channel', 'from driver') == 'from driver'
+            assert self.app.make('Broadcast').channel('test-channel', {'message': 'from driver'}) == {'message': 'from driver'}
+            assert self.app.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}) == {'message': 'dictionary'}
+            assert self.app.make('Broadcast').channel(['channel-1', 'channel-2'], {'message': 'dictionary'}, 'test-event') == {'message': 'dictionary'}
+            assert self.app.make('Broadcast').ssl(True).ssl_message is True

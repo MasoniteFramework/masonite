@@ -14,6 +14,9 @@ class SessionContract(ABC):
 
     @abstractmethod
     def all(self): pass
+    
+    @abstractmethod
+    def delete(self): pass
 
     @abstractmethod
     def flash(self): pass

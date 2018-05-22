@@ -48,6 +48,15 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         """
 
         return self.__collect_data()
+    
+    def delete(self, key):
+        data = self.__collect_data()
+
+        if self.request.get_cookie('s_{}'.format(key)):
+            self.request.delete_cookie('s_{}'.format(key))
+            return True
+        
+        return False
 
     def __collect_data(self):
         """

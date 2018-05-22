@@ -13,18 +13,8 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, WebRoutes, Route, Request, Environ, Headers):
-        # Rebuild Route List
-        RouteCollection = []
-        for route in WebRoutes:
-            # Check if a route is a list of routes
-            if isinstance(route, list):
-                for r in route:
-                    RouteCollection.append(r)
-            else:
-                RouteCollection.append(route)
-
         # All routes joined
-        for route in RouteCollection:
+        for route in WebRoutes:
             router = Route
             request = Request
 
@@ -37,7 +27,7 @@ class RouteProvider(ServiceProvider):
             |--------------------------------------------------------------------------
             |
             | Sometimes a user will end with a trailing slash. Because the user might
-            | create routes like `/url/route` and `/url/route/` and how the regex 
+            | create routes like `/url/route` and `/url/route/` and how the regex
             | is compiled down, we may need to adjust for urls that end or dont
             | end with a trailing slash.
             |
@@ -110,11 +100,7 @@ class RouteProvider(ServiceProvider):
                 if not request.redirect_url:
                     Request.status('200 OK')
 
-                    # Resolve Controller Constructor
-                    controller = self.app.resolve(route.controller)
-
-                    # Resolve Controller Method
-                    response = self.app.resolve(getattr(controller, route.controller_method))
+                    response = self.app.resolve(route.output)
 
                     if isinstance(response, View):
                         response = response.rendered_template

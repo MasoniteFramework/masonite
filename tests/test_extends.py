@@ -67,9 +67,10 @@ class TestExtends:
 
     def test_gets_input_with_all_request_methods(self):
         app = App()
-        app.bind('Request', self.request)
+        wsgi_request['QUERY_STRING'] = 'hey=test'
+        request_class = Request(wsgi_request)
+        app.bind('Request', request_class)
         request = app.make('Request').load_app(app)
-        request.params = 'hey=test'
 
         request.environ['REQUEST_METHOD'] = 'GET'
         assert request.input('hey') == 'test'
@@ -108,5 +109,5 @@ class TestExtends:
         Route(json_wsgi)
         request_obj = Request(json_wsgi)
 
-        assert isinstance(request_obj.params, dict)
+        assert isinstance(request_obj.request_variables, dict)
         assert request_obj.input('payload') == {'id': 1}

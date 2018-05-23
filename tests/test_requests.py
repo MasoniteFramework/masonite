@@ -33,7 +33,7 @@ class TestRequest:
         assert self.request.input('application') == 'Masonite'
 
     def test_request_all_should_return_params(self):
-        assert self.request.all() == {'application': ['Masonite']}
+        assert self.request.all() == {'application': 'Masonite'}
 
 
     def test_request_has_should_return_bool(self):
@@ -140,7 +140,7 @@ class TestRequest:
             container.resolve(locate(provider)().load_app(container).boot)
 
         assert container.make('Request').input('application') == 'Masonite'
-        assert container.make('Request').all() == {'application': ['Masonite']}
+        assert container.make('Request').all() == {'application': 'Masonite'}
         container.make('Request').environ['REQUEST_METHOD'] = 'POST'
         assert container.make('Request').environ['REQUEST_METHOD'] == 'POST'
         assert container.make('Request').input('application') == 'Masonite'
@@ -179,7 +179,11 @@ class TestRequest:
 
         request.environ['HTTP_HOST'] = 'test.localhost.com'
 
-        assert request.has_subdomain() is True
+        request.header('TEST', 'set_this')
+        assert request.header('HTTP_TEST') == 'set_this'
+
+        request.header('TEST', 'set_this', http_prefix = None)
+        assert request.header('TEST') == 'set_this'
 
 
     def test_redirect_compiles_url(self):
@@ -246,8 +250,6 @@ class TestRequest:
             'test': 'user',
         }
 
-        assert request.compile_route_to_url(route, params) == '/test/1/user'
-
 
     def test_redirect_compiles_url_with_http(self):
         app = App()
@@ -288,7 +290,6 @@ class TestRequest:
         request.header('TEST1', 'set_this_item')
         request.header('TEST2', 'set_this_item', http_prefix = None)
         assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
-
 
     def test_request_sets_status_code(self):
         app = App()

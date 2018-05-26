@@ -108,6 +108,5 @@ class App():
                 return provider_class
             elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation):
                 return provider_class
-       
         
         raise ContainerError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))

@@ -6,13 +6,18 @@ from masonite.exceptions import ContainerError
 import pytest
 
 
-
-
 class MockObject:
     pass
 
 class GetObject(MockObject):
-    pass
+    
+    def find(self):
+        return 1
+
+class GetAnotherObject(MockObject):
+
+    def find(self):
+        return 2
 
 class TestContainer:
 
@@ -40,6 +45,20 @@ class TestContainer:
     def test_container_resolving_instance_of_object(self):
         # assert isinstance(GetObject, MockObject.__class__)
         assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
+    
+    def test_container_resolving_similiar_objects(self):
+        self.app.bind('GetAnotherObject', GetAnotherObject)
+
+        obj = self.app.resolve(self._function_test_find_method_on_similiar_objects)
+        assert obj[0] == 2
+        assert obj[1] == 1
+    
+    def _function_test_find_method_on_similiar_objects(self, user: GetAnotherObject, country: GetObject):
+        return [user().find(), country().find()]
+
+    def test_raises_error_when_getting_instances_of_classes(self):
+        with pytest.raises(ContainerError):
+            assert self.app.resolve(self._function_test_find_method_on_similiar_objects)
 
     def _function_test_double_annotations(self, mock: MockObject, request: Request):
         return {'mock': MockObject, 'request': Request}

@@ -27,6 +27,19 @@ class TestView:
 
         assert view('test', {'test': 'test'}).rendered_template == 'test'
 
+    def test_view_exists(self):
+        view = self.container.make('ViewClass')
+
+        assert view.exists('index')
+        assert view.exists('not_available') is False
+    
+    
+    def test_global_view_exists(self):
+        view = self.container.make('ViewClass')
+
+        assert view.exists('/resources/templates/index')
+        assert view.exists('/resources/templates/not_available') is False
+
     def test_view_gets_global_template(self):
         view = self.container.make('View')
 

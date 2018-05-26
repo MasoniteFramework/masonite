@@ -23,7 +23,9 @@ from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
 
-from config import storage
+from masonite.autoload import Autoload
+
+from config import storage, application
 from routes import api, web
 
 
@@ -58,7 +60,12 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
 
+        self._autoload(application.AUTOLOAD)
+
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])
         Route.load_environ(Environ)
         Request.load_environ(Environ).load_app(self.app)
+
+    def _autoload(self, directories):
+        Autoload(self.app).load(directories)

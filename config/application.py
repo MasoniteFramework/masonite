@@ -25,3 +25,5 @@ PROVIDERS = [
 ]
 
 STATIC_ROOT = 'storage'
+
+AUTOLOAD = []

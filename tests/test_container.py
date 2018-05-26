@@ -43,7 +43,6 @@ class TestContainer:
         return mock
 
     def test_container_resolving_instance_of_object(self):
-        # assert isinstance(GetObject, MockObject.__class__)
         assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
     
     def test_container_resolving_similiar_objects(self):

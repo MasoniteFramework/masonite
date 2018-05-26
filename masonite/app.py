@@ -102,19 +102,12 @@ class App():
         """
         Find a given annotation in the container
         """
-        found = False
-        return_class = None
         for provider, provider_class in self.providers.items():
-            
+
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 return provider_class
-            elif hasattr(provider_class, '__name__') and parameter.annotation == provider_class.__name__:
-                return provider_class
             elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation):
-                found = True
-                return_class = provider_class
-        
-        if found is True:
-            return return_class
+                return provider_class
+       
         
         raise ContainerError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))

@@ -295,7 +295,7 @@ class Request(Extendable):
         self.redirect_url = self.compile_route_to_url(route, params)
         return self
 
-    def redirectTo(self, route_name, params={}):
+    def redirect_to(self, route_name, params={}):
         """
         Redirect to a named route
         """

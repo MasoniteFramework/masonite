@@ -160,7 +160,7 @@ class TestRequest:
 
         assert request.redirect_url is False
 
-        request.redirectTo('test')
+        request.redirect_to('test')
 
         assert request.redirect_url == '/test'
 

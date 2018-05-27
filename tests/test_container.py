@@ -97,15 +97,10 @@ class TestContainer:
         assert self.app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
         with pytest.raises(AttributeError):
             self.app.collect('Sentry')
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    def test_container_collects_correct_subclasses_of_objects(self):
+        self.app.bind('GetAnotherObject', GetAnotherObject)
+        objects = self.app.collect(MockObject)
+        
+        assert 'GetAnotherObject' in objects
+        assert 'GetObject' in objects

@@ -65,24 +65,30 @@ class App():
         return obj(*provider_list)
 
     def collect(self, search):
-        # Search Can Be:
-        #    '*ExceptionHook'
-        #    'Sentry*'
-        #    'Sentry*Hook'
         provider_list = {}
-        for key, value in self.providers.items():
-            if search.startswith('*'):
-                if key.endswith(search.split('*')[1]):
-                    provider_list.update({key: value})
-            elif search.endswith('*'):
-                if key.startswith(search.split('*')[0]):
-                    provider_list.update({key: value})
-            elif '*' in search:
-                split_search = search.split('*')
-                if key.startswith(split_search[0]) and key.endswith(split_search[1]):
-                    provider_list.update({key: value})
-            else:
-                raise AttributeError("There is no '*' in your collection search")
+        if isinstance(search, str):
+            # Search Can Be:
+            #    '*ExceptionHook'
+            #    'Sentry*'
+            #    'Sentry*Hook'
+            for key, value in self.providers.items():
+                if search.startswith('*'):
+                    if key.endswith(search.split('*')[1]):
+                        provider_list.update({key: value})
+                elif search.endswith('*'):
+                    if key.startswith(search.split('*')[0]):
+                        provider_list.update({key: value})
+                elif '*' in search:
+                    split_search = search.split('*')
+                    if key.startswith(split_search[0]) and key.endswith(split_search[1]):
+                        provider_list.update({key: value})
+                else:
+                    raise AttributeError("There is no '*' in your collection search")
+        else:
+            for provider_key, provider_class in self.providers.items():
+                if inspect.isclass(provider_class) and issubclass(provider_class, search):
+                    provider_list.update({provider_key: provider_class})
+                    
         return provider_list
 
     def _find_parameter(self, parameter):

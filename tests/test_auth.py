@@ -34,6 +34,21 @@ class TestAuth:
         assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
         assert self.request.get_cookie('token')
     
+    def test_get_user(self):
+        assert self.auth.login_by_id(1)
+        assert isinstance(self.auth.user(), MockUser)
+
+    def test_get_user_returns_false_if_not_loggedin(self):
+        self.auth.login('user@email.com', 'wrong_secret')
+        assert self.auth.user() is False
+    
+    def test_logout_user(self):
+        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        assert self.request.get_cookie('token')
+
+        self.auth.logout()
+        assert not self.request.get_cookie('token')
+    
     def test_login_user_fails(self):
         assert self.auth.login('user@email.com', 'bad_password') is False
     

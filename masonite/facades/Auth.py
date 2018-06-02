@@ -57,7 +57,7 @@ class Auth:
         return False
 
     def logout(self):
-        self.request.cookie('token', '; expires=Thu, 01 Jan 1970 00:00:00 GMT', False)
+        self.request.delete_cookie('token')
         return self
     
     def login_by_id(self, id):

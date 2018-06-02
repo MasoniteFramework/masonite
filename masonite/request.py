@@ -21,7 +21,7 @@ class Request(Extendable):
     """
     Handles many different aspects of a single request.
     This is the object passed through to the controllers
-    as a request paramter
+    as a request parameter
     """
 
     def __init__(self, environ=None):
@@ -40,31 +40,13 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, param):
+    def input(self, name):
         """
         Returns either the FORM_PARAMS during a POST request
         or QUERY_STRING during a GET request
         """
 
-        # Special Request Methods
-        if self.is_not_get_request():
-            if isinstance(self.params, str):
-                return parse_qs(self.params)[param][0]
-
-            if isinstance(self.params, dict):
-                return self.params[param]
-
-            if not self.params[param].filename:
-                return self.params[param].value
-
-            if self.params[param].filename:
-                return self.params[param]
-
-        # GET Request Input
-        if self.has(param):
-            return parse_qs(self.params)[param][0]
-
-        return False
+        return self.request_variables.get(name, False)
 
     def is_post(self):
         if self.environ['REQUEST_METHOD'] == 'POST':
@@ -95,13 +77,21 @@ class Request(Extendable):
 
     def all(self):
         """
-        Returns all the params
+        Returns all the request variables
         """
 
-        if isinstance(self.params, str):
-            return parse_qs(self.params)
+        return self.request_variables
 
-        return self.params
+    def only(self, *names):
+        """
+        Returns the specified request variables in a dictionary
+        """
+        only_vars = {}
+
+        for name in names:
+            only_vars[name] = self.request_variables.get(name)
+
+        return only_vars
 
     def load_app(self, app):
         self.container = app
@@ -109,27 +99,49 @@ class Request(Extendable):
 
     def load_environ(self, environ):
         self.environ = environ
-        self.params = environ['QUERY_STRING']
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
+        self.request_variables = {}
+
+        self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('request_method'):
             self.__set_request_method()
 
         return self
 
+    def _set_standardized_request_variables(self, variables):
+        if isinstance(variables, str):
+            variables = parse_qs(variables)
+
+        for name in variables.keys():
+            value = self._get_standardized_value(variables[name])
+            self.request_variables[name] = value
+
+    def _get_standardized_value(self, value):
+        if isinstance(value, list):
+            return value[0]
+
+        if isinstance(value, dict):
+            return value
+
+        if not value.filename:
+            return value.value
+
+        if value.filename:
+            return value
+
+        return False
+
     def app(self):
         return self.container
 
-    def has(self, param):
+    def has(self, name):
         """
-        Check if a param exists
+        Check if a request variable exists
         """
 
-        if param in self.params:
-            return True
-
-        return False
+        return name in self.request_variables
 
     def status(self, status):
         self._status = status
@@ -139,7 +151,6 @@ class Request(Extendable):
         return self._status
 
     def header(self, key, value=None, http_prefix=True):
-
         # Get Headers
         if value is None:
             if 'HTTP_{0}'.format(key) in self.environ:
@@ -284,7 +295,7 @@ class Request(Extendable):
         self.redirect_url = self.compile_route_to_url(route, params)
         return self
 
-    def redirectTo(self, route_name, params={}):
+    def redirect_to(self, route_name, params={}):
         """
         Redirect to a named route
         """

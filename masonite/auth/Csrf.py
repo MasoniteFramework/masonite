@@ -2,7 +2,7 @@ import binascii
 import os
 
 
-class Csrf(object):
+class Csrf:
     """
     Class for csrf protection
     """

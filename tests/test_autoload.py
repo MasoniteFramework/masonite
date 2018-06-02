@@ -17,3 +17,7 @@ class TestAutoload:
         with pytest.raises(InvalidAutoloadPath):
             Autoload(self.app).load(['app/http/controllers/'])
     
+    
+    def test_autoload_loads_from_directories_and_instances(self):
+        classes = Autoload().instances(['app/http/controllers'], object).classes
+        assert 'TestController' in classes

@@ -48,6 +48,7 @@ class TestAuth:
 
         self.auth.logout()
         assert not self.request.get_cookie('token')
+        assert not self.auth.user()
     
     def test_login_user_fails(self):
         assert self.auth.login('user@email.com', 'bad_password') is False

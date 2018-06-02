@@ -7,6 +7,7 @@ class MockUser():
     __auth__ = 'email'
     password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
     email = 'user@email.com'
+    id = 1
 
     def where(self, column, name):
         return self
@@ -18,7 +19,9 @@ class MockUser():
         pass
     
     def find(self, id):
-        return self
+        if self.id == id:
+            return self
+        return False
 
 class TestAuth:
 
@@ -56,6 +59,8 @@ class TestAuth:
     def test_login_by_id(self):
         assert isinstance(self.auth.login_by_id(1), MockUser)
         assert self.request.get_cookie('token')
+
+        assert self.auth.login_by_id(2) is False
     
     def test_login_once_does_not_set_cookie(self):
         assert isinstance(self.auth.once().login_by_id(1), MockUser)

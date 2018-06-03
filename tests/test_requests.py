@@ -298,3 +298,12 @@ class TestRequest:
 
         request.status('200 OK')
         assert request.get_status_code() == '200 OK'
+
+    def test_request_sets_request_method(self):
+        wsgi = generate_wsgi()
+        wsgi['QUERY_STRING'] = '__method=PUT'
+        request = Request(wsgi)
+
+        assert request.has('__method')
+        assert request.input('__method') == 'PUT'
+        assert request.get_request_method() == 'PUT'

@@ -75,11 +75,17 @@ class Request(Extendable):
         self.encryption_key = key
         return self
 
-    def all(self):
+    def all(self, internal_variables=True):
         """
         Returns all the request variables
         """
-
+        if not internal_variables:
+            without_internals = {}
+            for key, value in self.request_variables.items():
+                if not key.startswith('__'):
+                    without_internals.update({key: value})
+            return without_internals
+        
         return self.request_variables
 
     def only(self, *names):

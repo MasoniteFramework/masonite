@@ -34,6 +34,11 @@ class TestRequest:
 
     def test_request_all_should_return_params(self):
         assert self.request.all() == {'application': 'Masonite'}
+    
+    def test_request_all_without_internal_request_variables(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.all() == {'__token': 'testing', 'application': 'Masonite'}
+        assert self.request.all(internal_variables=False) == {'application': 'Masonite'}
 
 
     def test_request_has_should_return_bool(self):
@@ -307,3 +312,4 @@ class TestRequest:
         assert request.has('__method')
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
+    

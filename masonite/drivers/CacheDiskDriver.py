@@ -34,7 +34,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
         return key
 
-    def store_for(self, key, value, cache_time, cache_type, extension=".txt"):
+    def store_for(self, key, value, cache_time, cache_type, extension=".txt", location=None):
         """
         Store content with time, type and extension
         """
@@ -66,7 +66,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
         key = self.store(
             key + ":" + str(cache_for_time),
-            value, extension,
+            value, extension, location
         )
 
         return key

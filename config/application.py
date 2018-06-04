@@ -40,7 +40,7 @@ DEBUG = os.getenv('APP_DEBUG', False)
 |
 '''
 
-KEY = os.environ.get('KEY')
+KEY = os.getenv('KEY', None)
 
 '''
 |--------------------------------------------------------------------------
@@ -67,24 +67,23 @@ URL = 'http://localhost:8000'
 
 PROVIDERS = [
     # Framework Providers
-    'masonite.providers.AppProvider.AppProvider',
-    'masonite.providers.SessionProvider.SessionProvider',
-    'masonite.providers.RouteProvider.RouteProvider',
+    'masonite.providers.AppProvider',
+    'masonite.providers.SessionProvider',
+    'masonite.providers.RouteProvider',
     # 'entry.providers.ApiProvider.ApiProvider',
-    'masonite.providers.RedirectionProvider.RedirectionProvider',
-    'masonite.providers.StartResponseProvider.StartResponseProvider',
-    'masonite.providers.SassProvider.SassProvider',
-    'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
+    'masonite.providers.StartResponseProvider',
+    'masonite.providers.WhitenoiseProvider',
 
     # Optional Framework Providers
-    'masonite.providers.MailProvider.MailProvider',
-    'masonite.providers.UploadProvider.UploadProvider',
-    'masonite.providers.ViewProvider.ViewProvider',
-    'masonite.providers.HelpersProvider.HelpersProvider',
-    'masonite.providers.QueueProvider.QueueProvider',
-    'masonite.providers.BroadcastProvider.BroadcastProvider',
-    'masonite.providers.CacheProvider.CacheProvider',
-    'masonite.providers.CsrfProvider.CsrfProvider',
+    'masonite.providers.MailProvider',
+    'masonite.providers.UploadProvider',
+    'masonite.providers.ViewProvider',
+    'masonite.providers.HelpersProvider',
+    'masonite.providers.QueueProvider',
+    'masonite.providers.BroadcastProvider',
+    'masonite.providers.CacheProvider',
+    'masonite.providers.CsrfProvider',
+    'masonite.providers.SassProvider',
 
     # Third Party Providers
 

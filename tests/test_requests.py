@@ -34,6 +34,11 @@ class TestRequest:
 
     def test_request_all_should_return_params(self):
         assert self.request.all() == {'application': 'Masonite'}
+    
+    def test_request_all_without_internal_request_variables(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.all() == {'__token': 'testing', 'application': 'Masonite'}
+        assert self.request.all(internal_variables=False) == {'application': 'Masonite'}
 
 
     def test_request_has_should_return_bool(self):
@@ -298,3 +303,13 @@ class TestRequest:
 
         request.status('200 OK')
         assert request.get_status_code() == '200 OK'
+
+    def test_request_sets_request_method(self):
+        wsgi = generate_wsgi()
+        wsgi['QUERY_STRING'] = '__method=PUT'
+        request = Request(wsgi)
+
+        assert request.has('__method')
+        assert request.input('__method') == 'PUT'
+        assert request.get_request_method() == 'PUT'
+    

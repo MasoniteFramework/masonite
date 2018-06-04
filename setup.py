@@ -31,6 +31,7 @@ setup(
         'PyMySQL==0.8.0',
         'psycopg2==2.7.4',
         'masonite-entry>=0.0.0,<=0.9.99',
+        'masonite-scheduler>=1.0.0,<=1.0.99',
         'pendulum==1.5.1',
         'cleo==0.6.6',
         'tabulate==0.8.2',

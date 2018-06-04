@@ -61,8 +61,8 @@ class Request(Extendable):
         return False
 
     def __set_request_method(self):
-        if self.has('request_method'):
-            self.environ['REQUEST_METHOD'] = self.input('request_method')
+        if self.has('__method'):
+            self.environ['REQUEST_METHOD'] = self.input('__method')
             return True
 
         return False
@@ -75,11 +75,17 @@ class Request(Extendable):
         self.encryption_key = key
         return self
 
-    def all(self):
+    def all(self, internal_variables=True):
         """
         Returns all the request variables
         """
-
+        if not internal_variables:
+            without_internals = {}
+            for key, value in self.request_variables.items():
+                if not key.startswith('__'):
+                    without_internals.update({key: value})
+            return without_internals
+        
         return self.request_variables
 
     def only(self, *names):
@@ -105,7 +111,7 @@ class Request(Extendable):
 
         self._set_standardized_request_variables(environ['QUERY_STRING'])
 
-        if self.has('request_method'):
+        if self.has('__method'):
             self.__set_request_method()
 
         return self
@@ -149,6 +155,9 @@ class Request(Extendable):
 
     def get_status_code(self):
         return self._status
+    
+    def get_request_method(self):
+        return self.environ['REQUEST_METHOD']
 
     def header(self, key, value=None, http_prefix=True):
         # Get Headers

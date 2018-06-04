@@ -90,7 +90,7 @@ class TestExtends:
 
     def test_hidden_form_request_method_changes_request_method(self):
         app = App()
-        wsgi_request['QUERY_STRING'] = 'request_method=PUT'
+        wsgi_request['QUERY_STRING'] = '__method=PUT'
         request_class = Request(wsgi_request)
 
         app.bind('Request', request_class)

@@ -20,6 +20,6 @@ from app.User import User
 '''
 
 AUTH = {
-    'driver': 'cookie',
+    'driver': os.getenv('AUTH_DRIVER', 'cookie'),
     'model': User,
 }

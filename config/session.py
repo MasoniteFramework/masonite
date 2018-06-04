@@ -1,5 +1,7 @@
 ''' Session Settings '''
 
+import os
+
 '''
 |--------------------------------------------------------------------------
 | Session Driver
@@ -13,4 +15,4 @@
 |
 '''
 
-DRIVER = 'cookie'
+DRIVER = os.getenv('SESSION_DRIVER', 'cookie')

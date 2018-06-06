@@ -71,6 +71,7 @@ PROVIDERS = [
     'masonite.providers.SessionProvider',
     'masonite.providers.RouteProvider',
     # 'entry.providers.ApiProvider.ApiProvider',
+    'masonite.providers.StatusCodeProvider',
     'masonite.providers.StartResponseProvider',
     'masonite.providers.WhitenoiseProvider',
 

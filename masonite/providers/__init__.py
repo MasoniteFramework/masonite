@@ -1,4 +1,3 @@
-from .ApiProvider import ApiProvider
 from .AppProvider import AppProvider
 from .BroadcastProvider import BroadcastProvider
 from .CacheProvider import CacheProvider

@@ -76,6 +76,9 @@ class TestUploadManager:
         with pytest.raises(FileTypeException):
             UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
 
+    def test_upload_store_prepend(self):
+        assert self.app.make('UploadManager').driver('disk').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+
 
 class ImageMock():
     """

@@ -35,4 +35,4 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
 
         open(location + prepend + filename, 'wb').write(fileitem.file.read())
 
-        return location + prepend + filename
+        return prepend + filename

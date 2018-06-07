@@ -20,7 +20,9 @@ DRIVER = 'disk'
 
 DRIVERS = {
     'disk': {
-        'location': 'uploads/'
+        'location': {
+            'uploading': 'uploads/'
+        }
     },
     's3': {
         'client': os.environ.get('S3_CLIENT'),

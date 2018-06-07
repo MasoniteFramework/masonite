@@ -47,6 +47,21 @@ class TestUploadManager:
         """
 
         assert UploadManager(self.app).driver('disk').store(ImageMock())
+    
+    def test_upload_file_with_location(self):
+        """
+        This test is responsible for checking if you upload a file correctly.
+        """
+
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'uploads')
+
+    def test_upload_file_with_location_from_driver(self):
+        """
+        This test is responsible for checking if you upload a file correctly.
+        """
+
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'disk.uploading')
+
 
 class ImageMock():
     """

@@ -14,7 +14,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         self.config = StorageConfig
 
     def store(self, fileitem, location=None):
-        file_location = self.upload.driver('disk').store(fileitem)
+        file_location = self.upload.driver('disk').store(fileitem, location)
 
         # Check if is a valid extension
         self.validate_extension(fileitem.filename)
@@ -23,7 +23,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             import boto3
         except ImportError:
             raise DriverLibraryNotFound(
-                'Could not find the "ably" library. Please pip install this library running "pip install ably"')
+                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],

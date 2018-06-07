@@ -14,7 +14,9 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         self.config = StorageConfig
 
     def store(self, fileitem, location=None):
-        file_location = self.upload.driver('disk').store(fileitem, location)
+        driver = self.upload.driver('disk')
+        driver.store(fileitem, location)
+        file_location = driver.file_location
 
         # Check if is a valid extension
         self.validate_extension(fileitem.filename)

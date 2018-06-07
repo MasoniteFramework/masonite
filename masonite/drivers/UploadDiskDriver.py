@@ -9,6 +9,8 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
     Upload from the disk driver
     """
 
+    file_location = None
+
     def __init__(self, StorageConfig, Application):
         self.config = StorageConfig
         self.appconfig = Application
@@ -26,7 +28,9 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
 
         open(location + filename, 'wb').write(fileitem.file.read())
 
-        return location + filename
+        self.file_location = location + filename
+
+        return filename
 
     def store_prepend(self, fileitem, prepend, location=None):
         filename = os.path.basename(fileitem.filename)

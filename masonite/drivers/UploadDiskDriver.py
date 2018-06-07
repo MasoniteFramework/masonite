@@ -13,19 +13,7 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         self.config = StorageConfig
         self.appconfig = Application
     
-    def get_location(self, location):
-        location = self.config.DRIVERS['disk']['location']
-
-        if '.' in location:
-            location = location.split('.')
-            return self.config.DRIVERS[location[0]]['location'][location[1]]
-        elif isinstance(location, str):
-            return location
-        elif isinstance(location, dict):
-            return list(location.values())[0]
-        
-        return location
-
+    
     def store(self, fileitem, location=None):
         filename = os.path.basename(fileitem.filename)
 

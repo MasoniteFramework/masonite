@@ -12,7 +12,7 @@ class TestResponseProvider:
         self.provider = StartResponseProvider()
 
         self.app.bind('Response', None)
-        self.app.bind('Request', Request(generate_wsgi()))
+        self.app.bind('Request', Request(generate_wsgi()).load_app(self.app))
         self.app.bind('Headers', [])
 
         self.provider.app = self.app
@@ -24,6 +24,7 @@ class TestResponseProvider:
     def test_response_encodes_header_response_to_bytes(self):
         encoded_bytes = bytes('test', 'utf-8')
         self.app.bind('Response', 'test')
+        self.app.bind('StatusCode', '200 OK')
 
         self.provider.boot(self.app.make('Request'), self.app.make('Response'), self.app.make('Headers'))
 

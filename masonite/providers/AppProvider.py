@@ -64,6 +64,7 @@ class AppProvider(ServiceProvider):
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])
+        self.app.bind('StatusCode', '404 Not Found')
         Route.load_environ(Environ)
         Request.load_environ(Environ).load_app(self.app)
 

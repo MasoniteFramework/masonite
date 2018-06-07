@@ -85,6 +85,7 @@ PROVIDERS = [
     'masonite.providers.CacheProvider',
     'masonite.providers.CsrfProvider',
     'masonite.providers.SassProvider',
+    'scheduler.providers.ScheduleProvider',
 
     # Third Party Providers
 

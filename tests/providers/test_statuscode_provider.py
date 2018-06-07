@@ -23,7 +23,7 @@ class TestStatusCode:
         assert self.provider is None
 
 class MockApplicationConfig:
-    DEBUG = True
+    DEBUG = 'True'
 
 class TestServerErrorExceptionHook:
 
@@ -35,8 +35,8 @@ class TestServerErrorExceptionHook:
         self.app.bind('View', self.app.make('ViewClass').render)
         self.hook = ServerErrorExceptionHook().load(self.app)
 
-    def test_response_is_set(self):
-        assert '500 Internal Server Error' in self.app.make('Response')
+    def test_response_is_set_when_app_debug_is_true(self):
+        assert self.hook is None
     
     def test_no_response_set_when_app_debug_is_false(self):
         application = MockApplicationConfig

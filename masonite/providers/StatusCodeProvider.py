@@ -4,7 +4,7 @@ from masonite.provider import ServiceProvider
 class ServerErrorExceptionHook:
 
     def load(self, app):
-        if app.make('Application').DEBUG == 'True':
+        if app.make('Application').DEBUG == 'True' or app.make('Application').DEBUG == True:
             return
 
         request = app.make('Request').status('500 Internal Server Error')

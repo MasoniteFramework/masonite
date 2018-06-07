@@ -12,6 +12,7 @@ PROVIDERS = [
     'masonite.providers.SessionProvider',
     'masonite.providers.CsrfProvider',
     'masonite.providers.RouteProvider',
+    'masonite.providers.StatusCodeProvider',
     'masonite.providers.StartResponseProvider',
     'masonite.providers.SassProvider',
     'masonite.providers.WhitenoiseProvider',

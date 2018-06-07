@@ -38,7 +38,9 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             fileitem.filename
         )
 
+        return fileitem.filename
+
     def store_prepend(self, fileitem, prepend, location=None):
         fileitem.filename = prepend + fileitem.filename
 
-        return self.store(self, fileitem, location)
+        return self.store(fileitem, location=location)

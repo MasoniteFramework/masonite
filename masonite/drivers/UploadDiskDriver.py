@@ -32,7 +32,9 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         # Check if is a valid extension
         self.validate_extension(filename)
 
-        location = self.get_location(location) + '/'
+        location = self.get_location(location)
+        if not location.endswith('/'):
+            location += '/'
 
         open(location + filename, 'wb').write(fileitem.file.read())
 

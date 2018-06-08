@@ -28,6 +28,7 @@ DRIVERS = {
         'client': os.environ.get('S3_CLIENT'),
         'secret': os.environ.get('S3_SECRET'),
         'bucket': os.environ.get('S3_BUCKET'),
+        'location': 'http://s3.amazon.com/bucket'
     }
 }
 

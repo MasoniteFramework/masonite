@@ -7,6 +7,24 @@ from masonite.exceptions import DriverNotFound, FileTypeException
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
+from masonite.helpers import static
+
+class TestStaticTemplateHelper:
+    
+    def setup_method(self):
+        self.static = static
+    
+    def test_static_gets_first_value_from_dictionary(self):
+        assert self.static('disk', 'profile.py') == 'uploads/profile.py'
+    
+    def test_static_gets_alias_with_dot_notation(self):
+        assert self.static('disk.uploading', 'profile.py') == 'uploads/profile.py'
+    
+    def test_static_gets_string_location(self):
+        assert self.static('s3', 'profile.py') == 'http://s3.amazon.com/bucket/profile.py'
+    
+
+
 
 
 class TestUploadManager:

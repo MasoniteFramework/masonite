@@ -1,0 +1,1 @@
+from .static import static

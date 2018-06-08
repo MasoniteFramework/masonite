@@ -7,6 +7,24 @@ from masonite.exceptions import DriverNotFound, FileTypeException
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
+from masonite.helpers import static
+
+class TestStaticTemplateHelper:
+    
+    def setup_method(self):
+        self.static = static
+    
+    def test_static_gets_first_value_from_dictionary(self):
+        assert self.static('disk', 'profile.py') == 'uploads/profile.py'
+    
+    def test_static_gets_alias_with_dot_notation(self):
+        assert self.static('disk.uploading', 'profile.py') == 'uploads/profile.py'
+    
+    def test_static_gets_string_location(self):
+        assert self.static('s3', 'profile.py') == 'http://s3.amazon.com/bucket/profile.py'
+    
+
+
 
 
 class TestUploadManager:
@@ -47,19 +65,52 @@ class TestUploadManager:
         """
 
         assert UploadManager(self.app).driver('disk').store(ImageMock())
+    
+    def test_upload_file_with_location(self):
+        """
+        This test is responsible for checking if you upload a file correctly.
+        """
+
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'uploads')
+
+    def test_upload_file_with_location_from_driver(self):
+        """
+        This test is responsible for checking if you upload a file correctly.
+        """
+
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'disk.uploading')
+
+    def test_upload_manage_accept_files(self):
+        """
+        This test is responsible for checking if you upload
+        a file correctly with a valid extension.
+        """
+        assert UploadManager(self.app).driver('disk').accept('jpg', 'png').store(ImageMock())
+
+    def test_upload_manage_accept_files_error(self):
+        """
+        This test should return an error because it is an invalid extension.
+        """
+        with pytest.raises(FileTypeException):
+            UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
+
+    def test_upload_store_prepend(self):
+        assert self.app.make('UploadManager').driver('disk').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+
 
 class ImageMock():
     """
     Image test for emulate upload file
     """
 
-    @property
-    def filename(self):
-        return os.getcwd() + "/tests/static/test.jpg"
+    filename = 'test.jpg'
 
     @property
     def file(self):
-        return open(self.filename, 'rb')
+        return self
+    
+    def read(self):
+        return bytes('file read', 'utf-8')
 
 
 
@@ -78,7 +129,7 @@ if os.environ.get('S3_BUCKET'):
             self.app.bind('UploadS3Driver', UploadS3Driver)
 
         def test_upload_file_for_s3(self):
-            assert self.app.make('Upload').driver('s3').store(ImageMock()) is None
+            assert self.app.make('Upload').driver('s3').store(ImageMock()) == 'test.jpg'
 
 
         def test_upload_manage_accept_files(self):
@@ -86,7 +137,7 @@ if os.environ.get('S3_BUCKET'):
             This test is responsible for checking if you upload
             a file correctly with a valid extension.
             """
-            assert UploadManager(self.app).driver('disk').accept('jpg', 'png').store(ImageMock())
+            assert UploadManager(self.app).driver('s3').accept('jpg', 'png').store(ImageMock())
 
 
         def test_upload_manage_accept_files_error(self):
@@ -94,7 +145,7 @@ if os.environ.get('S3_BUCKET'):
             This test should return an error because it is an invalid extension.
             """
             with pytest.raises(FileTypeException):
-                UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
+                UploadManager(self.app).driver('s3').accept('png').store(ImageMock())
 
         def test_upload_store_prepend(self):
-            assert self.app.make('UploadManager').driver('disk').store_prepend(ImageMock(), 'hey') == 'uploads/heytest.jpg'
+            assert self.app.make('UploadManager').driver('s3').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'

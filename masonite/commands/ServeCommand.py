@@ -20,14 +20,6 @@ class ServeCommand(Command):
     """
 
     def handle(self):
-        # try:
-        #     call([
-        #         "waitress-serve", '--port', self.option('port'),
-        #         "--host", self.option('host'), "wsgi:application"
-        #     ])
-        # except Exception:
-        #     self.line('')
-        #     self.comment('Server aborted!')
         if self.option('reload'):
             self._run_with_reloader(extra_files=[".env"])
 

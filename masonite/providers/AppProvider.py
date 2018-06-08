@@ -14,6 +14,8 @@ from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
 from masonite.commands.RoutesCommand import RoutesCommand
 from masonite.commands.ServeCommand import ServeCommand
+from masonite.commands.SeedCommand import SeedCommand
+from masonite.commands.SeedRunCommand import SeedRunCommand
 from masonite.commands.TinkerCommand import TinkerCommand
 from masonite.commands.ViewCommand import ViewCommand
 from masonite.exception_handler import ExceptionHandler
@@ -58,12 +60,15 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
+        self.app.bind('MasoniteSeedCommand', SeedCommand())
+        self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
 
         self._autoload(application.AUTOLOAD)
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])
+        self.app.bind('StatusCode', '404 Not Found')
         Route.load_environ(Environ)
         Request.load_environ(Environ).load_app(self.app)
 

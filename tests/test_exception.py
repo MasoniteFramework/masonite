@@ -26,7 +26,6 @@ class TestException:
         with pytest.raises(MissingContainerBindingNotFound):
             assert self.app.make('ExceptionHandler').load_exception(KeyError)
 
-    def test_exception_raises_exception(self):
+    def test_exception_returns_none_when_debug_is_false(self):
         self.app.make('Application').DEBUG = False
-        with pytest.raises(KeyError):
-            assert self.app.make('ExceptionHandler').load_exception(KeyError)
+        assert self.app.make('ExceptionHandler').load_exception(KeyError) is None

@@ -150,11 +150,11 @@ class Request(Extendable):
         return name in self.request_variables
 
     def status(self, status):
-        self._status = status
+        self.app().bind('StatusCode', status)
         return self
 
     def get_status_code(self):
-        return self._status
+        return self.app().make('StatusCode')
     
     def get_request_method(self):
         return self.environ['REQUEST_METHOD']

@@ -1,5 +1,4 @@
 ''' CSRF Middleware '''
-
 from masonite.exceptions import InvalidCSRFToken
 
 
@@ -17,7 +16,7 @@ class CsrfMiddleware:
         token = self.__verify_csrf_token()
 
         self.view.share({
-            'csrf_field': "<input type='hidden' name='csrf_token' value='{0}' />".format(token)
+            'csrf_field': "<input type='hidden' name='__token' value='{0}' />".format(token)
         })
 
     def after(self):
@@ -40,7 +39,7 @@ class CsrfMiddleware:
         """
 
         if self.request.is_post() and not self.__in_exempt():
-            token = self.request.input('csrf_token')
+            token = self.request.input('__token')
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
         else:

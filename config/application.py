@@ -26,7 +26,7 @@ NAME = 'Masonite 2.0'
 |
 '''
 
-DEBUG = os.getenv('APP_DEBUG', False)
+DEBUG = os.getenv('APP_DEBUG', 'False')
 
 '''
 |--------------------------------------------------------------------------
@@ -74,11 +74,11 @@ PROVIDERS = [
     'masonite.providers.StatusCodeProvider',
     'masonite.providers.StartResponseProvider',
     'masonite.providers.WhitenoiseProvider',
+    'masonite.providers.ViewProvider',
 
     # Optional Framework Providers
     'masonite.providers.MailProvider',
     'masonite.providers.UploadProvider',
-    'masonite.providers.ViewProvider',
     'masonite.providers.HelpersProvider',
     'masonite.providers.QueueProvider',
     'masonite.providers.BroadcastProvider',

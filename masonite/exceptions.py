@@ -36,3 +36,5 @@ class RouteMiddlewareNotFound(Exception): pass
 class ResponseError(Exception): pass
 
 class InvalidAutoloadPath(Exception): pass
+
+class AutoloadContainerOverwrite(Exception): pass

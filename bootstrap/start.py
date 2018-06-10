@@ -1,7 +1,18 @@
 ''' Start of Application. This function is the gunicorn server '''
 
 from pydoc import locate
+from masonite.environment import LoadEnvironment
 
+'''
+|--------------------------------------------------------------------------
+| Load Environment Variables
+|--------------------------------------------------------------------------
+|
+| Take environment variables from the .env file and load them in.
+|
+'''
+
+LoadEnvironment()
 
 def app(environ, start_response):
     ''' The WSGI Application Server '''

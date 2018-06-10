@@ -15,7 +15,7 @@ class TestEnvironment:
         env_path = os.path.join(os.getcwd(), '.env')
         if not os.path.exists(env_path):
             env_file = open(env_path, 'w')
-            env_file.write('APP_DEBUG=production')
+            env_file.write('APP_ENV=production')
             env_file.close()
 
         LoadEnvironment()

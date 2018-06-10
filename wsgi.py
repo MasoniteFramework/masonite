@@ -4,6 +4,18 @@ from pydoc import locate
 from masonite.app import App
 from bootstrap.start import app
 from config import application
+from masonite.environment import LoadEnvironment
+
+'''
+|--------------------------------------------------------------------------
+| Load Environment Variables
+|--------------------------------------------------------------------------
+|
+| Take environment variables from the .env file and load them in.
+|
+'''
+
+LoadEnvironment()
 
 '''
 |--------------------------------------------------------------------------

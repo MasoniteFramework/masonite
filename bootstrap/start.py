@@ -2,18 +2,6 @@
 
 from pydoc import locate
 
-from dotenv import find_dotenv, load_dotenv
-
-'''
-|--------------------------------------------------------------------------
-| Load Environment Variables
-|--------------------------------------------------------------------------
-|
-| Take environment variables from the .env file and load them in.
-|
-'''
-
-load_dotenv(find_dotenv())
 
 def app(environ, start_response):
     ''' The WSGI Application Server '''

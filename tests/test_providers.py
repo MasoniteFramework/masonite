@@ -17,7 +17,7 @@ class TestProviders:
 
     def test_providers_load_into_container(self):
         for provider in self.app.make('Application').PROVIDERS:
-            self.app.resolve(locate(provider)().load_app(self.app).register)
+            self.app.resolve(provider().load_app(self.app).register)
 
         self.app.bind('Response', 'test')
         self.app.bind('WebRoutes', [
@@ -29,9 +29,9 @@ class TestProviders:
         self.app.bind('Response', 'Route not found. Error 404')
 
         for provider in self.app.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(self.app)
+            located_provider = provider().load_app(self.app)
 
-            self.app.resolve(locate(provider)().load_app(self.app).boot)
+            self.app.resolve(provider().load_app(self.app).boot)
 
         assert self.app.make('Request')
 

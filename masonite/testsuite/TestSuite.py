@@ -58,13 +58,13 @@ class TestSuite:
         """
 
         for provider in container.make('Application').PROVIDERS:
-            locate(provider)().load_app(container).register()
+            provider().load_app(container).register()
 
         for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+            located_provider = provider().load_app(container)
 
             if located_provider.wsgi is False:
-                container.resolve(locate(provider)().load_app(container).boot)
+                container.resolve(located_provider.boot)
 
             """
         |--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ class TestSuite:
         """
 
         for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+            located_provider = provider().load_app(container)
             container.bind('Response', 'test')
             if located_provider.wsgi is True:
                 container.resolve(located_provider.boot)

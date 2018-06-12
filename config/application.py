@@ -1,4 +1,20 @@
 import os
+from masonite.providers import (
+    AppProvider,
+    SessionProvider,
+    CsrfProvider,
+    RouteProvider,
+    StatusCodeProvider,
+    StartResponseProvider,
+    SassProvider,
+    WhitenoiseProvider,
+    MailProvider,
+    ViewProvider,
+    HelpersProvider,
+    UploadProvider,
+    BroadcastProvider,
+    CacheProvider
+)
 
 KEY = 'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY='
 
@@ -8,20 +24,20 @@ URL = 'http://localhost'
 
 PROVIDERS = [
     # Framework Providers
-    'masonite.providers.AppProvider',
-    'masonite.providers.SessionProvider',
-    'masonite.providers.CsrfProvider',
-    'masonite.providers.RouteProvider',
-    'masonite.providers.StatusCodeProvider',
-    'masonite.providers.StartResponseProvider',
-    'masonite.providers.SassProvider',
-    'masonite.providers.WhitenoiseProvider',
-    'masonite.providers.MailProvider',
-    'masonite.providers.ViewProvider',
-    'masonite.providers.HelpersProvider',
-    'masonite.providers.UploadProvider',
-    'masonite.providers.BroadcastProvider',
-    'masonite.providers.CacheProvider',
+    AppProvider,
+    SessionProvider,
+    CsrfProvider,
+    RouteProvider,
+    StatusCodeProvider,
+    StartResponseProvider,
+    SassProvider,
+    WhitenoiseProvider,
+    MailProvider,
+    ViewProvider,
+    HelpersProvider,
+    UploadProvider,
+    BroadcastProvider,
+    CacheProvider,
 ]
 
 STATIC_ROOT = 'storage'

@@ -86,10 +86,13 @@ class TestRouteProvider:
         self.app.make('Environ')['HTTP_HOST'] = 'subb.domain.com'
         self.app.bind('WebRoutes', [get('/test', Controller.show)])
 
+        request = self.app.make('Request')
+        request.activate_subdomains()
+
         self.provider.boot(
             self.app.make('WebRoutes'),
             self.app.make('Route'),
-            self.app.make('Request'),
+            request,
             self.app.make('Environ'),
             self.app.make('Headers'),
         )

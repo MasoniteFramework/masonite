@@ -32,6 +32,7 @@ class Request(Extendable):
         self.redirect_route = False
         self.user_model = None
         self.subdomain = None
+        self._activate_subdomains = False
         self._status = '404 Not Found'
 
         if environ:
@@ -362,14 +363,18 @@ class Request(Extendable):
             compiled_url = compiled_url.replace('//', '/')
 
         return compiled_url
+    
+    def activate_subdomains(self):
+        self._activate_subdomains = True
 
     def has_subdomain(self):
-        url = tldextract.extract(self.environ['HTTP_HOST'])
+        if self._activate_subdomains:
+            url = tldextract.extract(self.environ['HTTP_HOST'])
 
-        if url.subdomain:
-            self.subdomain = url.subdomain
-            self.url_params.update({'subdomain': self.subdomain})
-            return True
+            if url.subdomain:
+                self.subdomain = url.subdomain
+                self.url_params.update({'subdomain': self.subdomain})
+                return True
 
         return False
 

@@ -26,14 +26,12 @@ from masonite.request import Request
 from masonite.routes import Route
 
 from masonite.autoload import Autoload
-
-from config import storage, application
 from routes import api, web
-
 
 class AppProvider(ServiceProvider):
 
     def register(self):
+        from config import storage, application
         self.app.bind('HookHandler', Hook(self.app))
         self.app.bind('WebRoutes', flatten_routes(web.ROUTES))
         self.app.bind('Response', None)

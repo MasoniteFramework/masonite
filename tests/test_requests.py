@@ -1,4 +1,4 @@
-from config import application
+from config import application, providers
 from pydoc import locate
 
 from masonite.request import Request
@@ -6,7 +6,7 @@ from masonite.app import App
 from masonite.routes import Get, Route
 from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
-from masonite.testsuite.TestSuite import generate_wsgi
+from masonite.testsuite.TestSuite import generate_wsgi, TestSuite
 
 WEB_ROUTES = flatten_routes([
     get('/test', 'Controller@show').name('test'),
@@ -124,11 +124,12 @@ class TestRequest:
     def test_request_gets_input_from_container(self):
         container = App()
         container.bind('Application', application)
+        container.bind('Providers', providers)
         container.bind('WSGI', object)
         container.bind('Environ', wsgi_request)
 
-        for provider in container.make('Application').PROVIDERS:
-            container.resolve(locate(provider)().load_app(container).register)
+        for provider in container.make('Providers').PROVIDERS:
+            container.resolve(provider().load_app(container).register)
 
         container.bind('Response', 'test')
         container.bind('WebRoutes', [
@@ -139,10 +140,10 @@ class TestRequest:
 
         container.bind('Response', 'Route not found. Error 404')
 
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+        for provider in container.make('Providers').PROVIDERS:
+            located_provider = provider().load_app(container)
 
-            container.resolve(locate(provider)().load_app(container).boot)
+            container.resolve(provider().load_app(container).boot)
 
         assert container.make('Request').input('application') == 'Masonite'
         assert container.make('Request').all() == {'application': 'Masonite'}

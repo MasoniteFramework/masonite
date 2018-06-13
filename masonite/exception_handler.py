@@ -2,8 +2,6 @@ import sys
 import traceback
 import os
 
-from config import application
-
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
 

@@ -25,11 +25,9 @@ from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
 
-from masonite.autoload import Autoload
-
 from config import storage, application
+from masonite.autoload import Autoload
 from routes import api, web
-
 
 class AppProvider(ServiceProvider):
 

@@ -1,11 +1,11 @@
-
+from config import storage, application
 import os
 
 
 class Storage:
 
     def __init__(self):
-        from config import storage, application
+
         pass
 
     # this function will compile sass files only if

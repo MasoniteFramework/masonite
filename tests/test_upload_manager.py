@@ -3,7 +3,7 @@ import pytest
 
 from config import application, storage
 from masonite.app import App
-from masonite.exceptions import DriverNotFound, FileTypeException
+from masonite.exceptions import DriverNotFound, FileTypeException, UnacceptableDriverType
 from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
@@ -22,9 +22,6 @@ class TestStaticTemplateHelper:
     
     def test_static_gets_string_location(self):
         assert self.static('s3', 'profile.py') == 'http://s3.amazon.com/bucket/profile.py'
-    
-
-
 
 
 class TestUploadManager:
@@ -39,7 +36,14 @@ class TestUploadManager:
 
     def test_upload_manager_grabs_drivers(self):
         assert isinstance(self.app.make('UploadManager').driver('disk'), UploadDiskDriver)
-
+    
+    def test_upload_manager_grabs_drivers_with_a_class(self):
+        assert isinstance(self.app.make('UploadManager').driver(UploadDiskDriver), UploadDiskDriver)
+    
+    def test_upload_manager_throws_error_with_incorrect_file_type(self):
+        with pytest.raises(UnacceptableDriverType):
+            self.app.make('UploadManager').driver(static)
+    
     def test_upload_manager_raises_driver_not_found_error(self):
         self.app = App()
         self.app.bind('Test', object)

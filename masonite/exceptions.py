@@ -20,6 +20,9 @@ class RequiredContainerBindingNotFound(Exception):
 class MissingContainerBindingNotFound(Exception):
     pass
 
+class UnacceptableDriverType(Exception):
+    pass
+
 
 class ContainerError(Exception):
     pass

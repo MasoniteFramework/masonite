@@ -1,10 +1,8 @@
 from masonite.app import App
 from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
-from config import application
+from config import application, providers
 from pydoc import locate
-
-
 
 
 def generate_wsgi():
@@ -43,6 +41,7 @@ class TestSuite:
 
         container.bind('WSGI', object)
         container.bind('Application', application)
+        container.bind('Providers', providers)
 
         """
         |--------------------------------------------------------------------------
@@ -57,14 +56,14 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Application').PROVIDERS:
-            locate(provider)().load_app(container).register()
+        for provider in container.make('Providers').PROVIDERS:
+            provider().load_app(container).register()
 
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+        for provider in container.make('Providers').PROVIDERS:
+            located_provider = provider().load_app(container)
 
             if located_provider.wsgi is False:
-                container.resolve(locate(provider)().load_app(container).boot)
+                container.resolve(located_provider.boot)
 
             """
         |--------------------------------------------------------------------------
@@ -88,8 +87,8 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+        for provider in container.make('Providers').PROVIDERS:
+            located_provider = provider().load_app(container)
             container.bind('Response', 'test')
             if located_provider.wsgi is True:
                 container.resolve(located_provider.boot)

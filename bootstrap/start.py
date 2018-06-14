@@ -1,6 +1,5 @@
 ''' Start of Application. This function is the gunicorn server '''
 
-from pydoc import locate
 from masonite.environment import LoadEnvironment
 
 '''
@@ -16,7 +15,6 @@ LoadEnvironment()
 
 def app(environ, start_response):
     ''' The WSGI Application Server '''
-
     from wsgi import container
 
     '''
@@ -42,10 +40,8 @@ def app(environ, start_response):
     '''
 
     try:
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
-            if located_provider.wsgi is True:
-                container.resolve(located_provider.boot)
+        for provider in container.make('WSGIProviders'):
+            container.resolve(provider.boot)
     except Exception as e:
         container.make('ExceptionHandler').load_exception(e)
 

@@ -1,11 +1,10 @@
-''' First Entry For The WSGI Server '''
+""" First Entry For The WSGI Server """
 
-from pydoc import locate
 from masonite.app import App
 from bootstrap.start import app
-from config import application
+from config import application, providers
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Instantiate Container And Perform Important Bindings
 |--------------------------------------------------------------------------
@@ -13,14 +12,19 @@ from config import application
 | Some Service providers need important bindings like the WSGI application
 | and the application configuration file before they boot.
 |
-'''
+"""
 
 container = App()
 
 container.bind('WSGI', app)
 container.bind('Application', application)
+container.bind('Container', container)
 
-'''
+container.bind('ProvidersConfig', providers)
+container.bind('Providers', [])
+container.bind('WSGIProviders', [])
+
+"""
 |--------------------------------------------------------------------------
 | Bind all service providers
 |--------------------------------------------------------------------------
@@ -31,18 +35,18 @@ container.bind('Application', application)
 | only run once when the server is started. Providers will be ran
 | once if the wsgi attribute on a provider is False.
 |
-'''
+"""
 
-for provider in container.make('Application').PROVIDERS:
-    locate(provider)().load_app(container).register()
+for provider in container.make('ProvidersConfig').PROVIDERS:
+    located_provider = provider()
+    located_provider.load_app(container).register()
+    if located_provider.wsgi:
+        container.make('WSGIProviders').append(located_provider)
+    else:
+        container.resolve(located_provider.boot)
+        container.make('Providers').append(located_provider)
 
-for provider in container.make('Application').PROVIDERS:
-    located_provider = locate(provider)().load_app(container)
-
-    if located_provider.wsgi is False:
-        container.resolve(locate(provider)().load_app(container).boot)
-
-'''
+"""
 |--------------------------------------------------------------------------
 | Get the application from the container
 |--------------------------------------------------------------------------
@@ -52,6 +56,6 @@ for provider in container.make('Application').PROVIDERS:
 | from the container and pass it to the application variable. This
 | will allow WSGI servers to pick it up from the command line
 |
-'''
+"""
 
 application = container.make('WSGI')

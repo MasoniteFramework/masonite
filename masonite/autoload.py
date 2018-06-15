@@ -39,7 +39,7 @@ class Autoload:
                     elif not only_app:
                         self.classes.update({obj[1].__name__: self._can_instantiate(obj)})
 
-        return self
+        return self.classes
     
     def collect(self, directories, only_app=True, instantiate=False):
         self.instantiate = instantiate

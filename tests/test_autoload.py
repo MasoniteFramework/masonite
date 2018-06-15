@@ -28,21 +28,21 @@ class TestAutoload:
         assert 'Command' not in classes
 
     def test_autoload_loads_from_directories_and_instances(self):
-        classes = Autoload().instances(['app/http/controllers'], object).classes
+        classes = Autoload().instances(['app/http/controllers'], object)
         assert 'TestController' in classes
         assert 'Command' not in classes
     
     def test_autoload_loads_not_only_from_app_from_directories_and_instances(self):
-        classes = Autoload().instances(['app/http/controllers'], object, only_app=False).classes
+        classes = Autoload().instances(['app/http/controllers'], object, only_app=False)
         assert 'TestController' in classes
         assert 'Command' in classes
     
     def test_autoload_instantiates_classes(self):
-        classes = Autoload().instances(['app/http/controllers'], object, instantiate=True).classes
+        classes = Autoload().instances(['app/http/controllers'], object, instantiate=True)
         assert classes['TestController'].test == True
 
     def test_autoload_does_not_instantiate_classes(self):
-        classes = Autoload().instances(['app/http/controllers'], object).classes
+        classes = Autoload().instances(['app/http/controllers'], object)
         with pytest.raises(AttributeError):
             assert classes['TestController'].test == True
     

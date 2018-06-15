@@ -7,7 +7,7 @@
 
 <img src="https://travis-ci.org/MasoniteFramework/core.svg?branch=master">
 <img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="https://img.shields.io/github/license/MasoniteFramework/core.svg" alt="License"> 
-<img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master" alt="Code Coverage"> 
+<img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#1" alt="Code Coverage"> 
 
 </p>
 

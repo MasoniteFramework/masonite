@@ -3,9 +3,10 @@ import os
 import time
 
 from masonite.contracts.CacheContract import CacheContract
+from masonite.drivers.BaseDriver import BaseDriver
 
 
-class CacheDiskDriver(CacheContract):
+class CacheDiskDriver(CacheContract, BaseDriver):
     """
     Cache from the disk driver
     """
@@ -33,7 +34,7 @@ class CacheDiskDriver(CacheContract):
 
         return key
 
-    def store_for(self, key, value, cache_time, cache_type, extension=".txt"):
+    def store_for(self, key, value, cache_time, cache_type, extension=".txt", location=None):
         """
         Store content with time, type and extension
         """
@@ -65,7 +66,7 @@ class CacheDiskDriver(CacheContract):
 
         key = self.store(
             key + ":" + str(cache_for_time),
-            value, extension,
+            value, extension, location
         )
 
         return key

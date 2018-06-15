@@ -13,6 +13,7 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, WebRoutes, Route, Request, Environ, Headers):
+        # All routes joined
         for route in WebRoutes:
             router = Route
             request = Request
@@ -26,7 +27,7 @@ class RouteProvider(ServiceProvider):
             |--------------------------------------------------------------------------
             |
             | Sometimes a user will end with a trailing slash. Because the user might
-            | create routes like `/url/route` and `/url/route/` and how the regex 
+            | create routes like `/url/route` and `/url/route/` and how the regex
             | is compiled down, we may need to adjust for urls that end or dont
             | end with a trailing slash.
             |
@@ -68,7 +69,7 @@ class RouteProvider(ServiceProvider):
                     # check if the subdomain matches the routes domain
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
-                        break
+                        continue
                 """
                 |--------------------------------------------------------------------------
                 | Execute Before Middleware
@@ -109,18 +110,16 @@ class RouteProvider(ServiceProvider):
                         router.get(route.route, response)
                     )
 
-                    if isinstance(response, dict):
-                        Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
-                        self.app.bind(
-                            'Response',
-                            str(json.dumps(response))
-                        )
-                    else:
-                        Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
-                        self.app.bind(
-                            'Response',
-                            router.get(route.route, response)
-                        )
+                    # If the Content-Type was not set in the view or before this
+                    if not Request.header('Content-Type'):
+                        if isinstance(response, dict):
+                            Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
+                            self.app.bind(
+                                'Response',
+                                str(json.dumps(response))
+                            )
+                        else:
+                            Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
 
                 # Loads the request in so the middleware
                 # specified is able to use the

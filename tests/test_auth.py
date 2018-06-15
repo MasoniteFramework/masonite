@@ -1,39 +1,67 @@
 from masonite.facades.Auth import Auth
 from masonite.request import Request
+from masonite.testsuite.TestSuite import generate_wsgi
 
+class MockUser():
 
-wsgi_request = {
-    'wsgi.version': (1, 0),
-    'wsgi.multithread': False,
-    'wsgi.multiprocess': True,
-    'wsgi.run_once': False,
-    'SERVER_SOFTWARE': 'gunicorn/19.7.1',
-    'REQUEST_METHOD': 'GET',
-    'QUERY_STRING': 'application=Masonite',
-    'RAW_URI': '/',
-    'SERVER_PROTOCOL': 'HTTP/1.1',
-    'HTTP_HOST': '127.0.0.1:8000',
-    'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'HTTP_UPGRADE_INSECURE_REQUESTS': '1',
-    'HTTP_COOKIE': 'setcookie=value',
-    'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7',
-    'HTTP_ACCEPT_LANGUAGE': 'en-us',
-    'HTTP_ACCEPT_ENCODING': 'gzip, deflate',
-    'HTTP_CONNECTION': 'keep-alive',
-    'wsgi.url_scheme': 'http',
-    'REMOTE_ADDR': '127.0.0.1',
-    'REMOTE_PORT': '62241',
-    'SERVER_NAME': '127.0.0.1',
-    'SERVER_PORT': '8000',
-    'PATH_INFO': '/',
-    'SCRIPT_NAME': ''
-}
+    __auth__ = 'email'
+    password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
+    email = 'user@email.com'
+    id = 1
 
-REQUEST = Request(wsgi_request).key(
-    'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+    def where(self, column, name):
+        return self
 
-AUTH = Auth(REQUEST, object)
+    def first(self):
+        return self
+    
+    def save(self):
+        pass
+    
+    def find(self, id):
+        if self.id == id:
+            return self
+        return False
 
+class TestAuth:
 
-def test_auth():
-    assert AUTH
+    def setup_method(self):
+        self.request = Request(generate_wsgi())
+
+        self.auth = Auth(self.request, MockUser())
+
+    def test_auth(self):
+        assert self.auth
+    
+    def test_login_user(self):
+        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        assert self.request.get_cookie('token')
+    
+    def test_get_user(self):
+        assert self.auth.login_by_id(1)
+        assert isinstance(self.auth.user(), MockUser)
+
+    def test_get_user_returns_false_if_not_loggedin(self):
+        self.auth.login('user@email.com', 'wrong_secret')
+        assert self.auth.user() is False
+    
+    def test_logout_user(self):
+        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        assert self.request.get_cookie('token')
+
+        self.auth.logout()
+        assert not self.request.get_cookie('token')
+        assert not self.auth.user()
+    
+    def test_login_user_fails(self):
+        assert self.auth.login('user@email.com', 'bad_password') is False
+    
+    def test_login_by_id(self):
+        assert isinstance(self.auth.login_by_id(1), MockUser)
+        assert self.request.get_cookie('token')
+
+        assert self.auth.login_by_id(2) is False
+    
+    def test_login_once_does_not_set_cookie(self):
+        assert isinstance(self.auth.once().login_by_id(1), MockUser)
+        assert self.request.get_cookie('token') is None

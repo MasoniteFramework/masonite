@@ -1,36 +1,37 @@
 from masonite.app import App
 from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
-from config import application
+from config import application, providers
 from pydoc import locate
 
 
-WSGI_REQUEST = {
-    'wsgi.version': (1, 0),
-    'wsgi.multithread': False,
-    'wsgi.multiprocess': True,
-    'wsgi.run_once': False,
-    'SERVER_SOFTWARE': 'gunicorn/19.7.1',
-    'REQUEST_METHOD': 'GET',
-    'QUERY_STRING': 'application=Masonite',
-    'RAW_URI': '/',
-    'SERVER_PROTOCOL': 'HTTP/1.1',
-    'HTTP_HOST': '127.0.0.1:8000',
-    'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'HTTP_UPGRADE_INSECURE_REQUESTS': '1',
-    'HTTP_COOKIE': 'setcookie=value',
-    'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7',
-    'HTTP_ACCEPT_LANGUAGE': 'en-us',
-    'HTTP_ACCEPT_ENCODING': 'gzip, deflate',
-    'HTTP_CONNECTION': 'keep-alive',
-    'wsgi.url_scheme': 'http',
-    'REMOTE_ADDR': '127.0.0.1',
-    'REMOTE_PORT': '62241',
-    'SERVER_NAME': '127.0.0.1',
-    'SERVER_PORT': '8000',
-    'PATH_INFO': '/',
-    'SCRIPT_NAME': ''
-}
+def generate_wsgi():
+    return {
+        'wsgi.version': (1, 0),
+        'wsgi.multithread': False,
+        'wsgi.multiprocess': True,
+        'wsgi.run_once': False,
+        'SERVER_SOFTWARE': 'gunicorn/19.7.1',
+        'REQUEST_METHOD': 'GET',
+        'QUERY_STRING': 'application=Masonite',
+        'RAW_URI': '/',
+        'SERVER_PROTOCOL': 'HTTP/1.1',
+        'HTTP_HOST': '127.0.0.1:8000',
+        'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'HTTP_UPGRADE_INSECURE_REQUESTS': '1',
+        'HTTP_COOKIE': 'setcookie=value',
+        'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7',
+        'HTTP_ACCEPT_LANGUAGE': 'en-us',
+        'HTTP_ACCEPT_ENCODING': 'gzip, deflate',
+        'HTTP_CONNECTION': 'keep-alive',
+        'wsgi.url_scheme': 'http',
+        'REMOTE_ADDR': '127.0.0.1',
+        'REMOTE_PORT': '62241',
+        'SERVER_NAME': '127.0.0.1',
+        'SERVER_PORT': '8000',
+        'PATH_INFO': '/',
+        'SCRIPT_NAME': ''
+    }
 
 
 class TestSuite:
@@ -40,6 +41,7 @@ class TestSuite:
 
         container.bind('WSGI', object)
         container.bind('Application', application)
+        container.bind('Providers', providers)
 
         """
         |--------------------------------------------------------------------------
@@ -54,14 +56,14 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Application').PROVIDERS:
-            locate(provider)().load_app(container).register()
+        for provider in container.make('Providers').PROVIDERS:
+            provider().load_app(container).register()
 
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+        for provider in container.make('Providers').PROVIDERS:
+            located_provider = provider().load_app(container)
 
             if located_provider.wsgi is False:
-                container.resolve(locate(provider)().load_app(container).boot)
+                container.resolve(located_provider.boot)
 
             """
         |--------------------------------------------------------------------------
@@ -74,7 +76,7 @@ class TestSuite:
         |
         """
 
-        container.bind('Environ', WSGI_REQUEST)
+        container.bind('Environ', generate_wsgi())
 
         """
         |--------------------------------------------------------------------------
@@ -85,8 +87,8 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Application').PROVIDERS:
-            located_provider = locate(provider)().load_app(container)
+        for provider in container.make('Providers').PROVIDERS:
+            located_provider = provider().load_app(container)
             container.bind('Response', 'test')
             if located_provider.wsgi is True:
                 container.resolve(located_provider.boot)

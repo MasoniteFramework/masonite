@@ -5,3 +5,6 @@ source = masonite
 ignore_errors = True
 omit =
     */tests/*
+    masonite/commands/*
+    masonite/contracts/*
+    masonite/snippets/*

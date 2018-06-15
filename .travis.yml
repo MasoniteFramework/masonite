@@ -6,10 +6,10 @@ python:
 - '3.6'
 
 install:
-- pip install .
+- pip install -e .
 - pip install -r requirements.txt
 
-script: coverage run -m pytest
+script: travis_retry coverage run -m pytest
 
 deploy:
   provider: pypi

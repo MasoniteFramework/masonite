@@ -15,141 +15,76 @@ class MailSmtpDriver:
 
     def send(self, message):
         return message
-
-
-def test_mail_manager_loads_container():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailSmtpDriver', object)
-    app.bind('MailConfig', mail)
-
-    mailManager = MailManager()
-
-    assert mailManager.load_container(app) #.container.providers == {'Test': object}
-
-
+    
 class User:
     pass
 
+class TestMailManager:
 
-def test_creates_driver():
-    app = App()
+    def setup_method(self):
+        self.app = App()
 
-    app.bind('Test', object)
-    app.bind('MailSmtpDriver', object)
-    app.bind('MailConfig', mail)
+        self.app.bind('Test', object)
+        self.app.bind('MailSmtpDriver', object)
+        self.app.bind('MailConfig', mail)
 
-    mailManager = MailManager()
+    def test_mail_manager_loads_container(self):
+        mailManager = MailManager()
+        assert mailManager.load_container(self.app) 
 
-    assert mailManager.load_container(app).manage_driver == object
+    def test_creates_driver(self):
+        mailManager = MailManager()
 
+        assert mailManager.load_container(self.app).manage_driver == object
 
-def test_creates_driver_with_initilization_container():
-    app = App()
+    def test_does_not_create_driver_with_initilization_container(self):
 
-    app.bind('Test', object)
-    app.bind('MailSmtpDriver', object)
-    app.bind('MailConfig', mail)
+        mailManager = MailManager(self.app)
 
-    mailManager = MailManager(app)
+        assert mailManager.manage_driver == None
 
-    assert mailManager.manage_driver == object
+    def test_does_not_raise_drivernotfound_exception(self):
 
+        mailManager = MailManager(self.app)
 
-def test_throws_drivernotfound_exception():
-    app = App()
+    def test_manager_sets_driver(self):
+        self.app.bind('MailMailtrapDriver', Mailgun)
 
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
+        mailManager = MailManager(self.app).driver('mailtrap')
 
-    with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
-        mailManager = MailManager(app)
+    def test_manager_sets_driver_throws_driver_not_found_exception(self):
+        with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
+            mailManager = MailManager(self.app).driver('mailtrap')
 
+    def test_drivers_are_resolvable_by_container(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
 
-def test_manager_sets_driver():
-    app = App()
+        assert isinstance(MailManager(self.app).driver('smtp'), MailDriver)
 
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', object)
-    app.bind('MailMailtrapDriver', object)
+    def test_send_mail(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
+        assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com')
 
-    mailManager = MailManager(app).driver('mailtrap')
+    def test_send_mail_with_from(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
 
+        assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
 
-def test_manager_sets_driver_throws_driver_not_found_exception():
-    app = App()
+    def test_send_mail_with_subject(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
 
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', object)
+        assert MailManager(self.app).driver('smtp').to('').subject('test').message_subject == 'test'
 
-    with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
-        mailManager = MailManager(app).driver('mailtrap')
+    def test_send_mail_with_callable(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
+        user = User
+        user.email = 'email@email.com'
+        assert MailManager(self.app).driver('smtp').to(User)
 
+    def test_switch_mail_manager(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
+        self.app.bind('MailTestDriver', Mailgun)
 
-def test_driver_sends_mail():
-    app = App()
+        mail_driver = MailManager(self.app).driver('smtp')
 
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailSmtpDriver)
-
-    # assert MailManager(app).driver('smtp').send('mail') is 'mail'
-    # assert MailManager(app).driver('smtp').send('mai') is not 'mail'
-
-
-def test_drivers_are_resolvable_by_container():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailSmtpDriver)
-    app.bind('Test', 'test')
-
-    assert MailManager(app).driver('smtp').test is 'test'
-    assert MailManager(app).driver('smtp').test is not 'tet'
-
-
-def test_send_mail():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-
-    assert MailManager(app).driver('smtp').to('idmann509@gmail.com')
-
-
-def test_send_mail_with_from():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-
-    assert MailManager(app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
-
-
-def test_send_mail_with_subject():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-
-    assert MailManager(app).driver('smtp').to('').subject('test').message_subject == 'test'
-
-
-def test_send_mail_with_callable():
-    app = App()
-
-    app.bind('Test', object)
-    app.bind('MailConfig', mail)
-    app.bind('MailSmtpDriver', MailDriver)
-    user = User
-    setattr(user, 'email', 'idmann509@gmail.com')
-
-    assert MailManager(app).driver('smtp').to(User)
-
+        assert isinstance(mail_driver.driver('test'), Mailgun)

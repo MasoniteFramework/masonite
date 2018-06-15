@@ -1,6 +1,7 @@
-import boto3
+
 from masonite.contracts.UploadContract import UploadContract
 from masonite.drivers.BaseUploadDriver import BaseUploadDriver
+from masonite.exceptions import DriverLibraryNotFound
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):
@@ -13,10 +14,18 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         self.config = StorageConfig
 
     def store(self, fileitem, location=None):
-        file_location = self.upload.driver('disk').store(fileitem)
+        driver = self.upload.driver('disk')
+        driver.store(fileitem, location)
+        file_location = driver.file_location
 
         # Check if is a valid extension
         self.validate_extension(fileitem.filename)
+
+        try:
+            import boto3
+        except ImportError:
+            raise DriverLibraryNotFound(
+                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],
@@ -31,7 +40,9 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             fileitem.filename
         )
 
+        return fileitem.filename
+
     def store_prepend(self, fileitem, prepend, location=None):
         fileitem.filename = prepend + fileitem.filename
 
-        return self.store(self, fileitem, location)
+        return self.store(fileitem, location=location)

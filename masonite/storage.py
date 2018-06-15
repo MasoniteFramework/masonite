@@ -5,6 +5,7 @@ import os
 class Storage:
 
     def __init__(self):
+
         pass
 
     # this function will compile sass files only if

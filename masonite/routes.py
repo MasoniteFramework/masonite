@@ -2,10 +2,11 @@
 import cgi
 import importlib
 import json
-import re
+
 from pydoc import locate
 
 from config import middleware
+from masonite.exceptions import RouteMiddlewareNotFound
 
 
 class Route():
@@ -113,23 +114,29 @@ class BaseHttpRoute:
 
         # If the output specified is a string controller
         if isinstance(output, str):
-            mod = output.split('@')
+            mod = output.split('@') 
 
             # Gets the controller name from the output parameter
             # This is used to add support for additional modules
             # like 'LoginController' and 'Auth.LoginController'
             get_controller = mod[0].split('.')[-1]
 
-            # Import the module
-            module = importlib.import_module(
-                '{0}.'.format(self.module_location) + get_controller)
+            # If trying to get an absolute path
+            if mod[0].startswith('/'):
+                self.module_location = '.'.join(mod[0].replace('/', '').split('.')[0:-1])
 
-            # Get the controller from the module
-            controller = getattr(module, get_controller)
+            try:
+                # Import the module
+                module = importlib.import_module(
+                    '{0}.'.format(self.module_location) + get_controller)  
+                # Get the controller from the module
+                controller = getattr(module, get_controller)
 
-            # Get the view from the controller
-            view = getattr(controller(), mod[1])
-            self.output = view
+                # Get the view from the controller
+                view = getattr(controller(), mod[1])
+                self.output = view
+            except Exception as e:
+                print('\033[93mWarning in routes/web.py!', e, '\033[0m')
         else:
             self.output = output
         self.route_url = route
@@ -170,7 +177,10 @@ class BaseHttpRoute:
         for arg in self.list_middleware:
 
             # Locate the middleware based on the string specified
-            located_middleware = self.request.app().resolve(locate(middleware.ROUTE_MIDDLEWARE[arg]))
+            try:
+                located_middleware = self.request.app().resolve(locate(middleware.ROUTE_MIDDLEWARE[arg]))
+            except KeyError:
+                raise RouteMiddlewareNotFound("Could not find the '{0}' route middleware".format(arg))
 
             # If the middleware has the specific type of middleware
             # (before or after) then execute that

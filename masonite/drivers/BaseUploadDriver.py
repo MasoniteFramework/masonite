@@ -26,3 +26,17 @@ class BaseUploadDriver(BaseDriver):
         if self.accept_file_types is not None:
             if not filename.endswith(self.accept_file_types):
                 raise FileTypeException("The extension file not is valid.")
+
+    def get_location(self, location=None):
+        if not location:
+            location = self.config.DRIVERS['disk']['location']
+
+        if '.' in location:
+            location = location.split('.')
+            return self.config.DRIVERS[location[0]]['location'][location[1]]
+        elif isinstance(location, str):
+            return location
+        elif isinstance(location, dict):
+            return list(location.values())[0]
+        
+        return location

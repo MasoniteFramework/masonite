@@ -12,23 +12,28 @@ from masonite.commands.MigrateResetCommand import MigrateResetCommand
 from masonite.commands.MigrateRollbackCommand import MigrateRollbackCommand
 from masonite.commands.ModelCommand import ModelCommand
 from masonite.commands.ProviderCommand import ProviderCommand
+from masonite.commands.RoutesCommand import RoutesCommand
 from masonite.commands.ServeCommand import ServeCommand
+from masonite.commands.SeedCommand import SeedCommand
+from masonite.commands.SeedRunCommand import SeedRunCommand
+from masonite.commands.TinkerCommand import TinkerCommand
 from masonite.commands.ViewCommand import ViewCommand
 from masonite.exception_handler import ExceptionHandler
+from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
 
-from config import storage
+from config import storage, application
+from masonite.autoload import Autoload
 from routes import api, web
-
 
 class AppProvider(ServiceProvider):
 
     def register(self):
         self.app.bind('HookHandler', Hook(self.app))
-        self.app.bind('WebRoutes', web.ROUTES)
+        self.app.bind('WebRoutes', flatten_routes(web.ROUTES))
         self.app.bind('Response', None)
         self.app.bind('Storage', storage)
         self.app.bind('Route', Route())
@@ -51,9 +56,19 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
+        self.app.bind('MasoniteRoutesCommand', RoutesCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
+        self.app.bind('MasoniteSeedCommand', SeedCommand())
+        self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
+        self.app.bind('MasoniteTinkerCommand', TinkerCommand())
+
+        self._autoload(application.AUTOLOAD)
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])
+        self.app.bind('StatusCode', '404 Not Found')
         Route.load_environ(Environ)
         Request.load_environ(Environ).load_app(self.app)
+
+    def _autoload(self, directories):
+        Autoload(self.app).load(directories)

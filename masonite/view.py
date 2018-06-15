@@ -1,4 +1,5 @@
 from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
+from jinja2.exceptions import TemplateNotFound
 from masonite.exceptions import RequiredContainerBindingNotFound
 
 
@@ -36,49 +37,46 @@ class View:
         Get the string contents of the view.
         """
 
-        filename = template + '.html'
-
-        if template.startswith('/'):
-            location = template.split('/')
-            filename = location[-1] + '.html'
-
-            # If the location is more than 1 directory deep
-            if len(location[1:-1]) > 1:
-                loader = PackageLoader(*location[1:-1])
-            else:
-                loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
-            
-            self.env = Environment(
-                loader=loader,
-                autoescape=select_autoescape(['html', 'xml']),
-                extensions=['jinja2.ext.loopcontrols']
-            )
-        else:
-            self.env = Environment(
-                loader=PackageLoader('resources', 'templates'),
-                autoescape=select_autoescape(['html', 'xml']),
-                extensions=['jinja2.ext.loopcontrols']
-            )
+        self.__load_environment(template)
 
         self.dictionary.update(dictionary)
-
-        # Load template
-        self.template = template
 
         # Check if use cache and return template from cache if exists
         if self.container.has('Cache') and self.__cached_template_exists() and not self.__is_expired_cache():
             return self.__get_cached_template()
 
-        if template in self.composers:
-            self.dictionary.update(self.composers[template])
+        # Check if composers are even set for a speed improvement
+        if self.composers:
+            self._update_from_composers()
 
-        if '*' in self.composers:
-            self.dictionary.update(self.composers['*'])
-
-        self.rendered_template = self.env.get_template(filename).render(
+        self.rendered_template = self.env.get_template(self.filename).render(
             self.dictionary)
 
         return self
+
+    def _update_from_composers(self):
+
+        # Check if the template is directly specified in the composer
+        if self.template in self.composers:
+            self.dictionary.update(self.composers[self.template])
+
+        # Check if there is just an astericks in the composer
+        if '*' in self.composers:
+            self.dictionary.update(self.composers['*'])
+        
+        # We will append onto this string for an easier way to search through wildcard routes
+        compiled_string = ''
+
+        # Check for wildcard view composers
+        for template in self.template.split('/'):
+            # Append the template onto the compiled_string
+            compiled_string += template
+            if '{}*'.format(compiled_string) in self.composers:
+                self.dictionary.update(self.composers['{}*'.format(compiled_string)])
+            else:
+                # Add a slash to symbolize going into a deeper directory structure
+                compiled_string += '/'
+            
 
     def composer(self, composer_name, dictionary):
         """
@@ -121,6 +119,42 @@ class View:
         if self.__is_expired_cache():
             self.__create_cache_template(self.template)
         return self
+    
+    def exists(self, template):
+        self.__load_environment(template)
+        
+        try:
+            self.env.get_template(self.filename)
+            return True
+        except TemplateNotFound as e:
+            return False
+
+    def __load_environment(self, template):
+        self.template = template
+        self.filename = template + '.html'
+
+        if template.startswith('/'):
+            location = template.split('/')
+            self.filename = location[-1] + '.html'
+
+            # If the location is more than 1 directory deep
+            if len(location[1:-1]) > 1:
+                loader = PackageLoader(*location[1:-1])
+            else:
+                loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
+            
+            self.env = Environment(
+                loader=loader,
+                autoescape=select_autoescape(['html', 'xml']),
+                extensions=['jinja2.ext.loopcontrols']
+            )
+        else:
+           
+            self.env = Environment(
+                loader=PackageLoader('resources', 'templates'),
+                autoescape=select_autoescape(['html', 'xml']),
+                extensions=['jinja2.ext.loopcontrols']
+            )
 
     def __create_cache_template(self, template):
         """

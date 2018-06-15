@@ -2,8 +2,6 @@ import sys
 import traceback
 import os
 
-from config import application
-
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -35,7 +33,7 @@ class ExceptionHandler:
 
         # Check if DEBUG is False
         if not self._app.make('Application').DEBUG or self._app.make('Application').DEBUG == 'False':
-            raise self._exception
+            return
 
         # return a view
         rendered_view = self._app.make('View')('/masonite/snippets/exception',

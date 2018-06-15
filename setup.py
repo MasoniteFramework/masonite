@@ -15,12 +15,12 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='2.0.1',
+    version='2.0.2',
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.2.2',
         'bcrypt==3.1.4',
-        'requests==2.18.4',
+        'requests==2.19.1',
         'tldextract==2.2.0',
         'Jinja2==2.10',
         'python-dotenv==0.8.2',
@@ -40,7 +40,7 @@ setup(
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
     url='https://github.com/MasoniteFramework/masonite',
-    keywords=['python web framework', 'python3'],
+    keywords=['python web framework', 'python3', 'masonite'],
     classifiers=[],
     include_package_data=True,
 )

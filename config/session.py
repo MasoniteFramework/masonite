@@ -1,5 +1,7 @@
 ''' Session Settings '''
 
+import os
+
 '''
 |--------------------------------------------------------------------------
 | Session Driver
@@ -10,7 +12,7 @@
 | inside memory which will delete when the server stops running.
 |
 | Supported: 'memory', 'cookie'
-| 
+|
 '''
 
-DRIVER = 'memory'
+DRIVER = os.getenv('SESSION_DRIVER', 'cookie')

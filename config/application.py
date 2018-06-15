@@ -13,7 +13,7 @@ import os
 |
 '''
 
-NAME = 'Masonite 1.6'
+NAME = 'Masonite 2.0'
 
 '''
 |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ NAME = 'Masonite 1.6'
 |
 '''
 
-DEBUG = os.getenv('APP_DEBUG', False)
+DEBUG = os.getenv('APP_DEBUG', 'False')
 
 '''
 |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ DEBUG = os.getenv('APP_DEBUG', False)
 |
 '''
 
-KEY = os.environ.get('KEY')
+KEY = os.getenv('KEY', None)
 
 '''
 |--------------------------------------------------------------------------
@@ -52,46 +52,6 @@ KEY = os.environ.get('KEY')
 '''
 
 URL = 'http://localhost:8000'
-
-'''
-|--------------------------------------------------------------------------
-| Providers List
-|--------------------------------------------------------------------------
-|
-| Providers are a simple way to remove or add functionality for Masonite
-| The providers in this list are either ran on server start or when a
-| request is made depending on the provider. Take some time to can
-| learn more more about Service Providers in our documentation
-|
-'''
-
-PROVIDERS = [
-    # Framework Providers
-    'masonite.providers.AppProvider.AppProvider',
-    'masonite.providers.SessionProvider.SessionProvider',
-    'masonite.providers.RouteProvider.RouteProvider',
-    # 'entry.providers.ApiProvider.ApiProvider',
-    'masonite.providers.RedirectionProvider.RedirectionProvider',
-    'masonite.providers.StartResponseProvider.StartResponseProvider',
-    'masonite.providers.SassProvider.SassProvider',
-    'masonite.providers.WhitenoiseProvider.WhitenoiseProvider',
-
-    # Optional Framework Providers
-    'masonite.providers.MailProvider.MailProvider',
-    'masonite.providers.UploadProvider.UploadProvider',
-    'masonite.providers.ViewProvider.ViewProvider',
-    'masonite.providers.HelpersProvider.HelpersProvider',
-    'masonite.providers.QueueProvider.QueueProvider',
-    'masonite.providers.BroadcastProvider.BroadcastProvider',
-    'masonite.providers.CacheProvider.CacheProvider',
-    'masonite.providers.CsrfProvider.CsrfProvider',
-
-    # Third Party Providers
-
-    # Application Providers
-    'app.providers.UserModelProvider.UserModelProvider',
-    'app.providers.MiddlewareProvider.MiddlewareProvider',
-]
 
 '''
 |--------------------------------------------------------------------------
@@ -114,3 +74,18 @@ BASE_DIRECTORY = os.getcwd()
 '''
 
 STATIC_ROOT = os.path.join(BASE_DIRECTORY, 'storage')
+
+'''
+|--------------------------------------------------------------------------
+| Autoload Directories
+|--------------------------------------------------------------------------
+|
+| List of directories that are used to find classes and autoload them into 
+| the Service Container. This is initially used to find models and load
+| them in but feel free to autoload any directories
+|
+'''
+
+AUTOLOAD = [
+    'app',
+]

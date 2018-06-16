@@ -5,5 +5,5 @@ class TestController:
     def __init__(self):
         self.test = True
 
-    def show():
+    def show(self):
         pass

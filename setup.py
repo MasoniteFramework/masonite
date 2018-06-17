@@ -31,7 +31,7 @@ setup(
         'masonite-entry>=0.0.0,<=0.9.99',
         'masonite-scheduler>=1.0.0,<=1.0.99',
         'pendulum==1.5.1',
-        'cleo==0.6.6',
+        'cleo>=0.6,<=0.6.99',
         'tabulate==0.8.2',
         'watchdog==0.8.3',
         'waitress==1.1.0',

@@ -47,7 +47,7 @@ $ sudo apt-get install python3.6-dev libssl-dev
 ## Installation:
 
 ```
-    $ pip install masonite-cli
+    $ pip3 install masonite-cli :: (may need sudo if using UNIX) ::
     $ craft new project
     $ cd project
     $ craft install

@@ -1,4 +1,5 @@
 from cryptography.fernet import Fernet
+from masonite.exceptions import InvalidSecretKey
 
 
 class Sign:
@@ -11,6 +12,9 @@ class Sign:
         else:
             from config import application
             self.key = application.KEY
+
+        if not self.key:
+            raise InvalidSecretKey("The encryption key passed in is: None. Be sure there is a secret key present in your .env file or your config/application.py file.")
 
         self.encryption = None
 

@@ -186,7 +186,12 @@
                 <div>
                     <div style="display: none">{{ app.bind('Response', '') }}</div>
                     {% for provider, class in app.providers.items() %}
-                        <p>{{ provider }} - {{ class }}</p>
+                        <p>{{ provider }}
+                            
+                            {% if platform.system() != 'Windows' %}
+                                {{ class }}
+                            {% endif %}
+                        </p>
                     {% endfor %}
                     
                 </div>

@@ -1,6 +1,7 @@
 import sys
 import traceback
 import os
+import platform
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -43,7 +44,8 @@ class ExceptionHandler:
                 'tb': sys.exc_info(),
                 'app': self._app,
                 'enumerate': enumerate,
-                'open': open
+                'open': open,
+                'platform': platform
             }
         ).rendered_template
         self._app.bind('Response', rendered_view)

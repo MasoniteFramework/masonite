@@ -41,3 +41,5 @@ class ResponseError(Exception): pass
 class InvalidAutoloadPath(Exception): pass
 
 class AutoloadContainerOverwrite(Exception): pass
+
+class InvalidSecretKey(Exception): pass

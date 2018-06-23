@@ -30,6 +30,8 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://masoniteframework.gitbooks.io/docs/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
+Also be sure to join the [Slack channel](https://masoniteframework.gitbooks.io/docs/content/)!
+
 ## Linux
 
 If you are running on a Linux flavor, you’ll need a few extra packages before you start. You can download these packages by running:

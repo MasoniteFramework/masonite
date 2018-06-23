@@ -2,6 +2,7 @@
 from masonite.commands.AuthCommand import AuthCommand
 from masonite.commands.CommandCommand import CommandCommand
 from masonite.commands.ControllerCommand import ControllerCommand
+from masonite.commands.InfoCommand import InfoCommand
 from masonite.commands.InstallCommand import InstallCommand
 from masonite.commands.JobCommand import JobCommand
 from masonite.commands.KeyCommand import KeyCommand
@@ -45,6 +46,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteAuthCommand', AuthCommand())
         self.app.bind('MasoniteCommandCommand', CommandCommand())
         self.app.bind('MasoniteControllerCommand', ControllerCommand())
+        self.app.bind('MasoniteInfoCommand', InfoCommand())
         self.app.bind('MasoniteInstallCommand', InstallCommand())
         self.app.bind('MasoniteJobCommand', JobCommand())
         self.app.bind('MasoniteKeyCommand', KeyCommand())

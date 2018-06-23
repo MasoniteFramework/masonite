@@ -6,6 +6,7 @@ import sys
 from cleo import Command
 import psutil
 from tabulate import tabulate
+from masonite_cli.application import application
 
 from masonite.info import VERSION
 
@@ -26,6 +27,7 @@ class InfoCommand(Command):
         rows.append(['Python Version', self._get_python_info()])
         rows.append(['Virtual Environment', self._check_virtual_environment()])
         rows.append(['Masonite Version', VERSION])
+        rows.append(['Craft Version', application._version])
 
         self.info('')
         self.info(tabulate(rows, headers=['Environment Information', '']))

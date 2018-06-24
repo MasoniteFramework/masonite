@@ -28,15 +28,16 @@ class StatusCodeProvider(ServiceProvider):
         if StatusCode == '200 OK':
             return
 
-        if self.app.make('ViewClass').exists('errors/{}'.format(StatusCode.split(' ')[0])):
-            rendered_view = self.app.make('View')('errors/{}'.format(StatusCode.split(' ')[0])).rendered_template
-        else:
-            rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
-                'code': StatusCode
-            }).rendered_template
-        Headers = [
-            ("Content-Length", str(len(rendered_view)))
-        ]
-        self.app.bind('Response', rendered_view)
+        if StatusCode in ('500 Internal Server Error', '404 Not Found'):
+            if self.app.make('ViewClass').exists('errors/{}'.format(StatusCode.split(' ')[0])):
+                rendered_view = self.app.make('View')('errors/{}'.format(StatusCode.split(' ')[0])).rendered_template
+            else:
+                rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
+                    'code': StatusCode
+                }).rendered_template
+            Headers = [
+                ("Content-Length", str(len(rendered_view)))
+            ]
+            self.app.bind('Response', rendered_view)
 
-        self.app.bind('Headers', Headers)
+            self.app.bind('Headers', Headers)

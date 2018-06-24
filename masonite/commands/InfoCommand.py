@@ -46,7 +46,7 @@ class InfoCommand(Command):
         return py_implementation + ' ' + py_version
 
     def _check_virtual_environment(self):
-        if hasattr(sys, 'real_prefix'):
+        if hasattr(sys, 'real_prefix') or 'VIRTUAL_ENV' in os.environ:
             return u'\u2713'  # currently running in virutal env
         return 'X'
 

@@ -20,6 +20,7 @@ class ServeCommand(Command):
     """
 
     def handle(self):
+        self._check_patch()
         if self.option('reload'):
             self._run_with_reloader(extra_files=[".env"])
 
@@ -32,6 +33,23 @@ class ServeCommand(Command):
             application,
             host=self.option('host'),
             port=self.option('port'))
+    
+    def _check_patch(self):
+        patched = False
+
+        with open('wsgi.py', 'r') as file:
+            # read a list of lines into data
+            data = file.readlines()
+
+        # change the line that starts with KEY=
+        for line_number, line in enumerate(data):
+            if line.startswith("for provider in container.make('Providers'):"):
+                patched = True
+                break
+        
+        if not patched:
+            print('\033[93mWARNING: {}\033[0m'.format(
+                "Your application does not have a 2.0 patch! You can read more about this patch here: https://dev.to/josephmancuso/masonite-framework-20-patch-3op2"))
 
     def _run_with_reloader(self, extra_files=None, interval=1):
         """Run the given function in an independent python interpreter."""

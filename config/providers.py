@@ -39,7 +39,6 @@ PROVIDERS = [
     AppProvider,
     SessionProvider,
     RouteProvider,
-    # 'entry.providers.ApiProvider.ApiProvider',
     StatusCodeProvider,
     StartResponseProvider,
     WhitenoiseProvider,

@@ -43,8 +43,10 @@ for provider in container.make('ProvidersConfig').PROVIDERS:
     if located_provider.wsgi:
         container.make('WSGIProviders').append(located_provider)
     else:
-        container.resolve(located_provider.boot)
         container.make('Providers').append(located_provider)
+
+for provider in container.make('Providers'):
+    container.resolve(provider.boot)
 
 """
 |--------------------------------------------------------------------------

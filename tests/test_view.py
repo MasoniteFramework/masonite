@@ -8,6 +8,7 @@ from masonite.managers.CacheManager import CacheManager
 from masonite.view import view, View
 from masonite.exceptions import RequiredContainerBindingNotFound
 import pytest
+from jinja2 import FileSystemLoader
 
 
 class TestView:
@@ -115,6 +116,13 @@ class TestView:
         viewclass.share({'test2': 'test2'})
 
         assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2'}
+
+    def test_adding_environment(self):
+        viewclass = self.container.make('ViewClass')
+
+        viewclass.add_environment('storage', loader=FileSystemLoader)
+
+        assert viewclass.render('test_location', {'test': 'testing'}).rendered_template == 'testing'
 
     def test_view_throws_exception_without_cache_binding(self):
         view = self.container.make('View')

@@ -1,4 +1,4 @@
-from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
+from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 from masonite.exceptions import RequiredContainerBindingNotFound
 
@@ -30,6 +30,7 @@ class View:
         self.cache_type = None
 
         self.template = None
+        self.environments = []
 
 
     def render(self, template, dictionary={}):
@@ -128,10 +129,16 @@ class View:
             return True
         except TemplateNotFound as e:
             return False
+    
+    def add_environment(self, template_location, loader=PackageLoader):
+        self.environments.append(
+            loader(*template_location.split('/')))
 
     def __load_environment(self, template):
         self.template = template
         self.filename = template + '.html'
+
+        print('env:: ', self.environments)
 
         if template.startswith('/'):
             location = template.split('/')
@@ -142,16 +149,22 @@ class View:
                 loader = PackageLoader(*location[1:-1])
             else:
                 loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
-            
+
+            # ChoiceLoader([
+            #         FileSystemLoader('/path/to/user/templates'),
+            #         FileSystemLoader('/path/to/system/templates')
+            #     ])
             self.env = Environment(
-                loader=loader,
+                loader=ChoiceLoader([loader] + self.environments),
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']
             )
         else:
            
             self.env = Environment(
-                loader=PackageLoader('resources', 'templates'),
+                loader=ChoiceLoader(
+                        [PackageLoader('resources', 'templates'), *self.environments]
+                    ),
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']
             )

@@ -2,6 +2,7 @@
 from masonite.commands.AuthCommand import AuthCommand
 from masonite.commands.CommandCommand import CommandCommand
 from masonite.commands.ControllerCommand import ControllerCommand
+from masonite.commands.InfoCommand import InfoCommand
 from masonite.commands.InstallCommand import InstallCommand
 from masonite.commands.JobCommand import JobCommand
 from masonite.commands.KeyCommand import KeyCommand
@@ -25,7 +26,7 @@ from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
 
-from config import storage, application
+from config import storage, application, middleware
 from masonite.autoload import Autoload
 from routes import api, web
 
@@ -40,11 +41,13 @@ class AppProvider(ServiceProvider):
         self.app.bind('Request', Request())
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
+        self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
 
         # Insert Commands
         self.app.bind('MasoniteAuthCommand', AuthCommand())
         self.app.bind('MasoniteCommandCommand', CommandCommand())
         self.app.bind('MasoniteControllerCommand', ControllerCommand())
+        self.app.bind('MasoniteInfoCommand', InfoCommand())
         self.app.bind('MasoniteInstallCommand', InstallCommand())
         self.app.bind('MasoniteJobCommand', JobCommand())
         self.app.bind('MasoniteKeyCommand', KeyCommand())

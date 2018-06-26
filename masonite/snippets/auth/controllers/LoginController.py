@@ -1,6 +1,7 @@
 ''' A Module Description '''
 from masonite.facades.Auth import Auth
 
+
 class LoginController(object):
     ''' Login Form Controller '''
 

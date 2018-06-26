@@ -1,6 +1,7 @@
 from .AuthCommand import AuthCommand
 from .CommandCommand import CommandCommand
 from .ControllerCommand import ControllerCommand
+from .InfoCommand import InfoCommand
 from .InstallCommand import InstallCommand
 from .JobCommand import JobCommand
 from .KeyCommand import KeyCommand

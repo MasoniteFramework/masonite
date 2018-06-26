@@ -1,4 +1,5 @@
 from setuptools import setup
+from masonite.info import VERSION
 
 setup(
     name='masonite',
@@ -15,7 +16,7 @@ setup(
         'masonite.contracts',
         'masonite.helpers',
     ],
-    version='2.0.7',
+    version=VERSION,
     install_requires=[
         'validator.py==1.2.5',
         'cryptography==2.2.2',

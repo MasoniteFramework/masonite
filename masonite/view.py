@@ -162,7 +162,8 @@ class View:
         else:
             self.env = Environment(
                 loader=ChoiceLoader(
-                        [PackageLoader('resources', 'templates'), *self.environments]
+                    [PackageLoader('resources', 'templates')] +
+                    self.environments
                     ),
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']

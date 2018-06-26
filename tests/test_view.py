@@ -8,7 +8,7 @@ from masonite.managers.CacheManager import CacheManager
 from masonite.view import view, View
 from masonite.exceptions import RequiredContainerBindingNotFound
 import pytest
-from jinja2 import FileSystemLoader
+from jinja2 import FileSystemLoader, PackageLoader
 
 
 class TestView:
@@ -83,6 +83,21 @@ class TestView:
 
         view = self.container.make('View')
         assert 'test_user' in view('mail/welcome').rendered_template
+
+    def test_composers_with_wildcard_base_view_route(self):
+        self.container.make('ViewClass').composer('mail*', {'to': 'test_user'})
+
+        assert self.container.make('ViewClass').composers == {'mail*': {'to': 'test_user'}}
+
+        view = self.container.make('View')
+        assert 'test_user' in view('mail/welcome').rendered_template
+
+    def test_render_deep_in_file_structure_with_package_loader(self):
+
+        self.container.make('ViewClass').add_environment('storage')
+
+        view = self.container.make('View')
+        assert view('/storage/templates/tests/test', {'test': 'testing'}).rendered_template == 'testing'
 
     def test_composers_with_wildcard_lower_directory_view(self):
         self.container.make('ViewClass').composer('mail/welcome*', {'to': 'test_user'})

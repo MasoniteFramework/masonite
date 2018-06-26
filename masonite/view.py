@@ -77,7 +77,7 @@ class View:
             else:
                 # Add a slash to symbolize going into a deeper directory structure
                 compiled_string += '/'
-            
+
 
     def composer(self, composer_name, dictionary):
         """
@@ -131,36 +131,35 @@ class View:
             return False
     
     def add_environment(self, template_location, loader=PackageLoader):
-        self.environments.append(
-            loader(*template_location.split('/')))
+        # loader(package_name, location)
+        # /dashboard/templates/dashboard
+        if loader == PackageLoader:
+            template_location = template_location.split('/')
+
+            self.environments.append(loader(template_location[0], '/'.join(template_location[1:])))
+        else:
+            self.environments.append(
+                loader(template_location))
 
     def __load_environment(self, template):
         self.template = template
         self.filename = template + '.html'
 
-        print('env:: ', self.environments)
-
         if template.startswith('/'):
-            location = template.split('/')
+            # Filter blanks strings from the split
+            location = list(filter(None, template.split('/')))
             self.filename = location[-1] + '.html'
 
-            # If the location is more than 1 directory deep
-            if len(location[1:-1]) > 1:
-                loader = PackageLoader(*location[1:-1])
-            else:
-                loader = FileSystemLoader(str('/'.join(location[1:-1]) + '/'))
+            loader = PackageLoader(location[0], '/'.join(location[1:-1]))
 
-            # ChoiceLoader([
-            #         FileSystemLoader('/path/to/user/templates'),
-            #         FileSystemLoader('/path/to/system/templates')
-            #     ])
             self.env = Environment(
-                loader=ChoiceLoader([loader] + self.environments),
+                loader=ChoiceLoader(
+                        [loader] + self.environments
+                    ),
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']
             )
         else:
-           
             self.env = Environment(
                 loader=ChoiceLoader(
                         [PackageLoader('resources', 'templates'), *self.environments]

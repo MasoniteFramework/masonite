@@ -41,11 +41,13 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name):
+    def input(self, name, default_val=False):
         """
         Returns either the FORM_PARAMS during a POST request
         or QUERY_STRING during a GET request
         """
+        if name not in self.request_variables:
+            return default_val
 
         return self.request_variables.get(name, False)
 

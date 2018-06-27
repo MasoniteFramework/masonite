@@ -31,6 +31,10 @@ class TestRequest:
 
     def test_request_input_should_return_input_on_get_request(self):
         assert self.request.input('application') == 'Masonite'
+        assert self.request.input('application', 'foo') == 'Masonite'
+
+    def test_request_input_should_return_default_when_not_exists(self):
+        assert self.request.input('foo', 'bar') == 'bar'
 
     def test_request_all_should_return_params(self):
         assert self.request.all() == {'application': 'Masonite'}

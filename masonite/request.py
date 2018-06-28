@@ -143,14 +143,11 @@ class Request(Extendable):
     def app(self):
         return self.container
 
-    def has(self, name, *args):
+    def has(self, *args):
         """
         Check if a request variable exists
         """
-        if args:
-            return name in self.request_variables and all((arg in self.request_variables) for arg in args)
-        else:
-            return name in self.request_variables
+        return all((arg in self.request_variables) for arg in args)
 
     def status(self, status):
         self.app().bind('StatusCode', status)

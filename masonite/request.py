@@ -41,13 +41,12 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name):
+    def input(self, name, default=False):
         """
         Returns either the FORM_PARAMS during a POST request
         or QUERY_STRING during a GET request
         """
-
-        return self.request_variables.get(name, False)
+        return self.request_variables.get(name, default)
 
     def is_post(self):
         if self.environ['REQUEST_METHOD'] == 'POST':

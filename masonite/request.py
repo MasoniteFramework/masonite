@@ -387,3 +387,9 @@ class Request(Extendable):
 
     def helper(self):
         return self
+    
+    def pop(self, *args):
+        if args:
+            keys = list(args)
+            variables = self.request_variables
+            self.request_variables = {key: variables[key] for key in variables if key not in keys}

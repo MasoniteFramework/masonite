@@ -325,3 +325,12 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+
+    def test_request_has_should_pop_variables_from_input(self):
+        self.request.request_variables.update({'key1': 'test', 'key2': 'test'})
+        self.request.pop('key1', 'key2')
+        assert self.request.request_variables == {'application': 'Masonite'}
+        self.request.pop('shouldnotexist')
+        assert self.request.request_variables == {'application': 'Masonite'}
+        self.request.pop('application')
+        assert self.request.request_variables == {}

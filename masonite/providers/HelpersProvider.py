@@ -21,6 +21,7 @@ class HelpersProvider(ServiceProvider):
         builtins.container = self.app.helper
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
+        builtins.route = Request.route
 
         ViewClass.share(
             {

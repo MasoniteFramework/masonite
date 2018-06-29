@@ -50,6 +50,16 @@ class TestRequest:
         assert self.request.has('shouldreturnfalse') == False
 
 
+    def test_request_has_should_accept_multiple_values(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.has('application') == True
+        assert self.request.has('shouldreturnfalse') == False
+        assert self.request.has('__token') == True
+        assert self.request.has('__token', 'shouldreturnfalse') == False
+        assert self.request.has('__token', 'application') == True
+        assert self.request.has('__token', 'application', 'shouldreturnfalse') == False
+
+
     def test_request_set_params_should_return_self(self):
         assert self.request.set_params({'value': 'new'}) == self.request
         assert self.request.url_params == {'value': 'new'}

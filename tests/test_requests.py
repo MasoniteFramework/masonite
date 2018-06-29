@@ -224,7 +224,18 @@ class TestRequest:
         route = '/'
 
         assert request.compile_route_to_url(route) == '/'
+    
+    def test_request_route_returns_url(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
 
+        assert request.route('test.url') == '/test/url'
+        assert request.route('test.id', {'id': 1}) == '/test/url/1'
 
     def test_redirect_compiles_url_with_multiple_slashes(self):
         app = App()

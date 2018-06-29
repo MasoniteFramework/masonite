@@ -26,6 +26,7 @@ class HelpersProvider(ServiceProvider):
             {
                 'request': Request.helper,
                 'auth': Request.user,
-                'request_method': set_request_method
+                'request_method': set_request_method,
+                'route': Request.route,
             }
         )

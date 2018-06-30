@@ -322,6 +322,23 @@ class Request(Extendable):
 
         return None
     
+    def _get_route_from_controller(self, controller):
+        web_routes = self.container.make('WebRoutes')
+
+        if not isinstance(controller, str):
+            module_location = controller.__module__
+            controller = controller.__qualname__.split('.')
+        else:
+            module_location = 'app.http.controllers'
+            controller = controller.split('@')
+
+        for route in web_routes:
+            if route.controller.__name__ == controller[0] and route.controller_method == controller[1] and route.module_location == module_location:
+                return route
+
+    def url_from_controller(self, controller, params = {}):
+        return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
+    
     def route(self, name, params = {}):
         web_routes = self.container.make('WebRoutes')
 

@@ -344,7 +344,11 @@ class TestRequest:
         self.request.path = '/test/path/joe' 
         assert not self.request.contains('/test/path/*:int')    
 
-    def test_contains_for_path_with_alpha_and_wrong_contains(self):
+    def test_contains_for_path_with_alpha_contains(self):
         self.request.path = '/test/path/joe' 
         assert self.request.contains('/test/path/*:string')    
+
+    def test_contains_multiple_asteriks(self):
+        self.request.path = '/dashboard/user/edit/1' 
+        assert self.request.contains('/dashboard/user/*:string/*:int')    
 

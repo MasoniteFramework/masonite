@@ -309,11 +309,25 @@ class Request(Extendable):
         """
         web_routes = self.container.make('WebRoutes')
 
-        for route in web_routes:
-            if route.named_route == route_name:
-                self.redirect_url = self.compile_route_to_url(route.route_url, params)
+        self.redirect_url = self._get_named_route(route_name, params)
 
         return self
+    
+    def _get_named_route(self, name, params):
+        web_routes = self.container.make('WebRoutes')
+
+        for route in web_routes:
+            if route.named_route == name:
+                return self.compile_route_to_url(route.route_url, params)
+
+        return None
+    
+    def route(self, name, params = {}):
+        web_routes = self.container.make('WebRoutes')
+
+        return self._get_named_route(name, params)
+
+        return None
 
     def reset_redirections(self):
         self.redirect_url = False

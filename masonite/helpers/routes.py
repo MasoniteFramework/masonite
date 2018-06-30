@@ -60,3 +60,36 @@ def group(url, route_list):
         route.route_url = url + route.route_url
 
     return route_list
+
+def compile_route_to_regex(route):
+    # Split the route
+    split_given_route = route.split('/')
+
+    # compile the provided url into regex
+    url_list = []
+    regex = '^'
+    for regex_route in split_given_route:
+        if '*' in regex_route or '@' in regex_route:
+            if ':int' in regex_route:
+                regex += r'(\d+)'
+            elif ':string' in regex_route:
+                regex += r'([a-zA-Z]+)'
+            else:
+                # default
+                regex += r'(\w+)'
+            regex += r'\/'
+
+            # append the variable name passed @(variable):int to a list
+            url_list.append(
+                regex_route.replace('@', '').replace(
+                    ':int', '').replace(':string', '')
+            )
+        else:
+            regex += regex_route + r'\/'
+
+    if regex.endswith('/') and not route.endswith('/'):
+        regex = regex[:-2]
+
+    regex += '$'
+
+    return regex

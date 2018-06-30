@@ -329,3 +329,22 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+    def test_contains_for_path_detection(self):
+        self.request.path = '/test/path'
+        assert self.request.contains('/test/*')        
+        assert self.request.contains('/test/path')        
+        assert not self.request.contains('/test/wrong')     
+
+    def test_contains_for_path_with_digit(self):
+        self.request.path = '/test/path/1'
+        assert self.request.contains('/test/path/*')    
+        assert self.request.contains('/test/path/*:int')   
+
+    def test_contains_for_path_with_digit_and_wrong_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert not self.request.contains('/test/path/*:int')    
+
+    def test_contains_for_path_with_alpha_and_wrong_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:string')    
+

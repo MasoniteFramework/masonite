@@ -340,3 +340,17 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+    def test_is_named_route(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
+
+        request.path = '/test/url'
+        assert request.is_named_route('test.url')
+
+        request.path = '/test/url/1'
+        assert request.is_named_route('test.id', {'id': 1})

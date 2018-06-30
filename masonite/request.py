@@ -339,6 +339,12 @@ class Request(Extendable):
         """
         self.redirect(self.input(input_parameter))
         return self
+    
+    def is_named_route(self, name, params={}):
+        if self._get_named_route(name, params) == self.path:
+            return True
+        
+        return False
 
     def compile_route_to_url(self, route, params={}):
         """

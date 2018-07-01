@@ -1,5 +1,6 @@
 from config import application, providers
 from pydoc import locate
+from app.http.test_controllers.TestController import TestController
 
 from masonite.request import Request
 from masonite.app import App
@@ -340,6 +341,22 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+
+    def test_request_url_from_controller(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', 'TestController@show').name('test.url'),
+            get('/test/url/@id', 'ControllerTest@show').name('test.id'),
+            get('/test/url/controller/@id', TestController.show).name('test.controller'),
+        ])
+
+        request = app.make('Request').load_app(app)
+
+        assert request.url_from_controller('TestController@show') == '/test/url'
+        assert request.url_from_controller('ControllerTest@show', {'id': 1}) == '/test/url/1'
+        assert request.url_from_controller(TestController.show, {'id': 1}) == '/test/url/controller/1'
+
     def test_contains_for_path_detection(self):
         self.request.path = '/test/path'
         assert self.request.contains('/test/*')        
@@ -362,4 +379,5 @@ class TestRequest:
     def test_contains_multiple_asteriks(self):
         self.request.path = '/dashboard/user/edit/1' 
         assert self.request.contains('/dashboard/user/*:string/*:int')    
+
 

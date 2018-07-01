@@ -340,6 +340,7 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+
     def test_is_named_route(self):
         app = App()
         app.bind('Request', self.request)
@@ -354,3 +355,28 @@ class TestRequest:
 
         request.path = '/test/url/1'
         assert request.is_named_route('test.id', {'id': 1})
+
+    def test_contains_for_path_detection(self):
+        self.request.path = '/test/path'
+        assert self.request.contains('/test/*')        
+        assert self.request.contains('/test/path')        
+        assert not self.request.contains('/test/wrong')     
+
+    def test_contains_for_path_with_digit(self):
+        self.request.path = '/test/path/1'
+        assert self.request.contains('/test/path/*')    
+        assert self.request.contains('/test/path/*:int')   
+
+    def test_contains_for_path_with_digit_and_wrong_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert not self.request.contains('/test/path/*:int')    
+
+    def test_contains_for_path_with_alpha_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:string')    
+
+    def test_contains_multiple_asteriks(self):
+        self.request.path = '/dashboard/user/edit/1' 
+        assert self.request.contains('/dashboard/user/*:string/*:int')    
+
+

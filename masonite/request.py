@@ -7,6 +7,8 @@ Methods may return another object if necessary to expand capabilities
 of this class.
 """
 from urllib.parse import parse_qs
+import re
+from masonite.helpers.routes import compile_route_to_regex
 from http import cookies
 
 import tldextract
@@ -345,6 +347,9 @@ class Request(Extendable):
             return True
         
         return False
+
+    def contains(self, route):
+        return re.match(compile_route_to_regex(route), self.path)
 
     def compile_route_to_url(self, route, params={}):
         """

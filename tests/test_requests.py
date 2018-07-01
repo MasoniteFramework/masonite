@@ -341,6 +341,7 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
+
     def test_request_url_from_controller(self):
         app = App()
         app.bind('Request', self.request)
@@ -355,3 +356,28 @@ class TestRequest:
         assert request.url_from_controller('TestController@show') == '/test/url'
         assert request.url_from_controller('ControllerTest@show', {'id': 1}) == '/test/url/1'
         assert request.url_from_controller(TestController.show, {'id': 1}) == '/test/url/controller/1'
+
+    def test_contains_for_path_detection(self):
+        self.request.path = '/test/path'
+        assert self.request.contains('/test/*')        
+        assert self.request.contains('/test/path')        
+        assert not self.request.contains('/test/wrong')     
+
+    def test_contains_for_path_with_digit(self):
+        self.request.path = '/test/path/1'
+        assert self.request.contains('/test/path/*')    
+        assert self.request.contains('/test/path/*:int')   
+
+    def test_contains_for_path_with_digit_and_wrong_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert not self.request.contains('/test/path/*:int')    
+
+    def test_contains_for_path_with_alpha_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:string')    
+
+    def test_contains_multiple_asteriks(self):
+        self.request.path = '/dashboard/user/edit/1' 
+        assert self.request.contains('/dashboard/user/*:string/*:int')    
+
+

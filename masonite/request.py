@@ -358,6 +358,12 @@ class Request(Extendable):
         """
         self.redirect(self.input(input_parameter))
         return self
+    
+    def is_named_route(self, name, params={}):
+        if self._get_named_route(name, params) == self.path:
+            return True
+        
+        return False
 
     def contains(self, route):
         return re.match(compile_route_to_regex(route), self.path)

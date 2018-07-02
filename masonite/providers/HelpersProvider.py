@@ -21,11 +21,13 @@ class HelpersProvider(ServiceProvider):
         builtins.container = self.app.helper
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
+        builtins.route = Request.route
 
         ViewClass.share(
             {
                 'request': Request.helper,
                 'auth': Request.user,
-                'request_method': set_request_method
+                'request_method': set_request_method,
+                'route': Request.route,
             }
         )

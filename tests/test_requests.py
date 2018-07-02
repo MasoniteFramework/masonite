@@ -1,5 +1,6 @@
 from config import application, providers
 from pydoc import locate
+from app.http.test_controllers.TestController import TestController
 
 from masonite.request import Request
 from masonite.app import App
@@ -31,6 +32,10 @@ class TestRequest:
 
     def test_request_input_should_return_input_on_get_request(self):
         assert self.request.input('application') == 'Masonite'
+        assert self.request.input('application', 'foo') == 'Masonite'
+
+    def test_request_input_should_return_default_when_not_exists(self):
+        assert self.request.input('foo', 'bar') == 'bar'
 
     def test_request_all_should_return_params(self):
         assert self.request.all() == {'application': 'Masonite'}
@@ -220,7 +225,18 @@ class TestRequest:
         route = '/'
 
         assert request.compile_route_to_url(route) == '/'
+    
+    def test_request_route_returns_url(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
 
+        assert request.route('test.url') == '/test/url'
+        assert request.route('test.id', {'id': 1}) == '/test/url/1'
 
     def test_redirect_compiles_url_with_multiple_slashes(self):
         app = App()
@@ -325,7 +341,6 @@ class TestRequest:
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
     
-
     def test_request_has_should_pop_variables_from_input(self):
         self.request.request_variables.update({'key1': 'test', 'key2': 'test'})
         self.request.pop('key1', 'key2')
@@ -334,3 +349,58 @@ class TestRequest:
         assert self.request.request_variables == {'application': 'Masonite'}
         self.request.pop('application')
         assert self.request.request_variables == {}
+        
+    def test_is_named_route(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
+
+        request.path = '/test/url'
+        assert request.is_named_route('test.url')
+
+        request.path = '/test/url/1'
+        assert request.is_named_route('test.id', {'id': 1})
+
+    def test_request_url_from_controller(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', 'TestController@show').name('test.url'),
+            get('/test/url/@id', 'ControllerTest@show').name('test.id'),
+            get('/test/url/controller/@id', TestController.show).name('test.controller'),
+        ])
+
+        request = app.make('Request').load_app(app)
+
+        assert request.url_from_controller('TestController@show') == '/test/url'
+        assert request.url_from_controller('ControllerTest@show', {'id': 1}) == '/test/url/1'
+        assert request.url_from_controller(TestController.show, {'id': 1}) == '/test/url/controller/1'
+
+
+    def test_contains_for_path_detection(self):
+        self.request.path = '/test/path'
+        assert self.request.contains('/test/*')        
+        assert self.request.contains('/test/path')        
+        assert not self.request.contains('/test/wrong')     
+
+    def test_contains_for_path_with_digit(self):
+        self.request.path = '/test/path/1'
+        assert self.request.contains('/test/path/*')    
+        assert self.request.contains('/test/path/*:int')   
+
+    def test_contains_for_path_with_digit_and_wrong_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert not self.request.contains('/test/path/*:int')    
+
+    def test_contains_for_path_with_alpha_contains(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:string')    
+
+    def test_contains_multiple_asteriks(self):
+        self.request.path = '/dashboard/user/edit/1' 
+        assert self.request.contains('/dashboard/user/*:string/*:int')
+        

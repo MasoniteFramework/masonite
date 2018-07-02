@@ -389,7 +389,6 @@ class Request(Extendable):
         return self
     
     def pop(self, *args):
-        if args:
-            keys = list(args)
-            variables = self.request_variables
-            self.request_variables = {key: variables[key] for key in variables if key not in keys}
+        for key in args:
+            if key in self.request_variables:
+                del self.request_variables[key]

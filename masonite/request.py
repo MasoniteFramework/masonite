@@ -428,3 +428,8 @@ class Request(Extendable):
 
     def helper(self):
         return self
+    
+    def pop(self, *input_variables):
+        for key in input_variables:
+            if key in self.request_variables:
+                del self.request_variables[key]

@@ -7,6 +7,8 @@ Methods may return another object if necessary to expand capabilities
 of this class.
 """
 from urllib.parse import parse_qs
+import re
+from masonite.helpers.routes import compile_route_to_regex
 from http import cookies
 
 import tldextract
@@ -41,13 +43,12 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name):
+    def input(self, name, default=False):
         """
         Returns either the FORM_PARAMS during a POST request
         or QUERY_STRING during a GET request
         """
-
-        return self.request_variables.get(name, False)
+        return self.request_variables.get(name, default)
 
     def is_post(self):
         if self.environ['REQUEST_METHOD'] == 'POST':
@@ -143,12 +144,11 @@ class Request(Extendable):
     def app(self):
         return self.container
 
-    def has(self, name):
+    def has(self, *args):
         """
         Check if a request variable exists
         """
-
-        return name in self.request_variables
+        return all((arg in self.request_variables) for arg in args)
 
     def status(self, status):
         self.app().bind('StatusCode', status)
@@ -311,11 +311,42 @@ class Request(Extendable):
         """
         web_routes = self.container.make('WebRoutes')
 
-        for route in web_routes:
-            if route.named_route == route_name:
-                self.redirect_url = self.compile_route_to_url(route.route_url, params)
+        self.redirect_url = self._get_named_route(route_name, params)
 
         return self
+    
+    def _get_named_route(self, name, params):
+        web_routes = self.container.make('WebRoutes')
+
+        for route in web_routes:
+            if route.named_route == name:
+                return self.compile_route_to_url(route.route_url, params)
+
+        return None
+    
+    def _get_route_from_controller(self, controller):
+        web_routes = self.container.make('WebRoutes')
+
+        if not isinstance(controller, str):
+            module_location = controller.__module__
+            controller = controller.__qualname__.split('.')
+        else:
+            module_location = 'app.http.controllers'
+            controller = controller.split('@')
+
+        for route in web_routes:
+            if route.controller.__name__ == controller[0] and route.controller_method == controller[1] and route.module_location == module_location:
+                return route
+
+    def url_from_controller(self, controller, params = {}):
+        return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
+    
+    def route(self, name, params = {}):
+        web_routes = self.container.make('WebRoutes')
+
+        return self._get_named_route(name, params)
+
+        return None
 
     def reset_redirections(self):
         self.redirect_url = False
@@ -327,6 +358,15 @@ class Request(Extendable):
         """
         self.redirect(self.input(input_parameter))
         return self
+    
+    def is_named_route(self, name, params={}):
+        if self._get_named_route(name, params) == self.path:
+            return True
+        
+        return False
+
+    def contains(self, route):
+        return re.match(compile_route_to_regex(route), self.path)
 
     def compile_route_to_url(self, route, params={}):
         """
@@ -388,3 +428,8 @@ class Request(Extendable):
 
     def helper(self):
         return self
+    
+    def pop(self, *input_variables):
+        for key in input_variables:
+            if key in self.request_variables:
+                del self.request_variables[key]

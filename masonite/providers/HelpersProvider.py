@@ -3,7 +3,7 @@ import builtins
 import os
 
 from masonite.provider import ServiceProvider
-from masonite.helpers.view_helpers import set_request_method
+from masonite.helpers.view_helpers import set_request_method, back
 
 
 class HelpersProvider(ServiceProvider):
@@ -29,5 +29,6 @@ class HelpersProvider(ServiceProvider):
                 'auth': Request.user,
                 'request_method': set_request_method,
                 'route': Request.route,
+                'back': back
             }
         )

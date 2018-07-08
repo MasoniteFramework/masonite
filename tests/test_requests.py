@@ -404,3 +404,14 @@ class TestRequest:
         self.request.path = '/dashboard/user/edit/1' 
         assert self.request.contains('/dashboard/user/*:string/*:int')
         
+    def test_back_returns_correct_url(self):
+        self.request.path = '/dashboard/create'
+        self.request.back()
+        assert self.request.redirect_url == '/dashboard/create'
+
+        self.request.back(default='/home')
+        assert self.request.redirect_url == '/home'
+
+        self.request.request_variables = {'__back': '/login'}
+        self.request.back(default='/home')
+        assert self.request.redirect_url == '/login'

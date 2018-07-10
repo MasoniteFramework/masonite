@@ -231,3 +231,44 @@ class Delete(BaseHttpRoute):
 
     def __init__(self):
         self.method_type = 'DELETE'
+
+class RouteGroup():
+    
+    def __new__(self, routes=[], middleware=[], domain=[], prefix='', name=''):
+        self.routes = routes
+
+        if middleware:
+            self._middleware(self, *middleware)
+        
+        if domain:
+            self._domain(self, domain)
+        
+        if prefix:
+            self._prefix(self, prefix)
+        
+        if name:
+            self._name(self, name)
+
+        return self.routes
+
+
+    def _middleware(self, *middleware):
+        for route in self.routes:
+            route.middleware(*middleware)
+        
+        return self.routes
+
+    def _domain(self, domain):
+        for route in self.routes:
+            route.domain(domain)
+    
+    def _prefix(self, prefix):
+        for route in self.routes:
+            route.route_url = prefix + route.route_url
+
+    def _name(self, name):
+        for route in self.routes:
+            route.named_route = name + route.named_route
+
+    def middleware(self):
+        print(self.routes)

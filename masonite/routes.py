@@ -235,7 +235,9 @@ class Delete(BaseHttpRoute):
 class RouteGroup():
     
     def __new__(self, routes=[], middleware=[], domain=[], prefix='', name=''):
-        self.routes = routes
+        from masonite.helpers.routes import flatten_routes
+        
+        self.routes = flatten_routes(routes)
 
         if middleware:
             self._middleware(self, *middleware)

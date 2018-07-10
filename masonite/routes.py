@@ -271,6 +271,3 @@ class RouteGroup():
     def _name(self, name):
         for route in self.routes:
             route.named_route = name + route.named_route
-
-    def middleware(self):
-        print(self.routes)

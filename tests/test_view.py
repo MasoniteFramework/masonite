@@ -145,6 +145,18 @@ class TestView:
         with pytest.raises(RequiredContainerBindingNotFound):
             view('test_cache').cache_for('5', 'seconds')
 
+    def test_view_can_add_custom_filters(self):
+        view = self.container.make('ViewClass')
+
+        view.filter('slug', self._filter_slug)
+
+        assert view._filters == {'slug': self._filter_slug}
+        assert view.render('filter', {'test': 'test slug'}).rendered_template == 'test-slug'
+    
+    @staticmethod
+    def _filter_slug(item):
+        return item.replace(' ', '-')
+
     def test_view_cache_caches_files(self):
 
         self.container.bind('CacheConfig', cache)

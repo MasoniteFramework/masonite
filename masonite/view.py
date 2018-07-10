@@ -31,6 +31,7 @@ class View:
 
         self.template = None
         self.environments = []
+        self._filters = {}
 
 
     def render(self, template, dictionary={}):
@@ -140,6 +141,9 @@ class View:
         else:
             self.environments.append(
                 loader(template_location))
+    
+    def filter(self, name, function):
+        self._filters.update({name: function})
 
     def __load_environment(self, template):
         self.template = template
@@ -168,6 +172,8 @@ class View:
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=['jinja2.ext.loopcontrols']
             )
+        
+        self.env.filters.update(self._filters)
 
     def __create_cache_template(self, template):
         """

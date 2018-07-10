@@ -352,12 +352,14 @@ class Request(Extendable):
         self.redirect_url = False
         self.redirect_route = False
 
-    def back(self, input_parameter='back'):
-        """
-        Go to a named route with the back parameter
-        """
-        self.redirect(self.input(input_parameter))
-        return self
+    def back(self, default=None):
+        redirect_url = self.input('__back')
+        if not redirect_url and default:
+            return self.redirect(default)
+        elif not redirect_url and not default:
+            return self.redirect(self.path)  # Some global default?
+        
+        return self.redirect(redirect_url)
     
     def is_named_route(self, name, params={}):
         if self._get_named_route(name, params) == self.path:

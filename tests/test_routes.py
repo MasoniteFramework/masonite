@@ -1,7 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get, Post, Put, Patch, Delete
-from masonite.helpers.routes import group
+from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
+from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 
 
@@ -58,3 +58,68 @@ class TestRoutes:
 
         assert routes[0].route_url == '/example/test/1'
         assert routes[1].route_url == '/example/test/2'
+
+    def test_group_route_sets_middleware(self):
+        routes = group('/example', [
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ])
+
+        assert routes[0].route_url == '/example/test/1'
+
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ], middleware=['auth', 'user'])
+
+        assert isinstance(routes, list)
+
+        assert routes[0].list_middleware == ('auth', 'user')
+
+    def test_group_route_sets_domain(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ], domain=['www'])
+
+        assert routes[0].required_domain == ['www']
+
+    def test_group_route_sets_prefix(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ], prefix='/dashboard')
+
+        assert routes[0].route_url == '/dashboard/test/1'
+
+    def test_group_route_sets_name(self):
+        look_for = []
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show').name('create'),
+            Get().route('/test/2', 'TestController@show').name('edit')
+        ], name='post.')
+
+        assert routes[0].named_route == 'post.create'
+        assert routes[1].named_route == 'post.edit'
+
+    def test_flatten_flattens_multiple_lists(self):
+        routes = [
+            Get().route('/test/1', 'TestController@show').name('create'),
+            RouteGroup([
+                Get().route('/test/1', 'TestController@show').name('create'),
+                Get().route('/test/2', 'TestController@show').name('edit'),
+                RouteGroup([
+                    Get().route('/test/1', 'TestController@show').name('update'),
+                    Get().route('/test/2', 'TestController@show').name('delete'),
+                    RouteGroup([
+                        Get().route('/test/3', 'TestController@show').name('update'),
+                        Get().route('/test/4', 'TestController@show').name('delete'),
+                    ], middleware = ('auth')),
+                ], name='post.')
+            ], prefix='/dashboard')
+        ]
+
+        routes = flatten_routes(routes)
+
+        assert routes[3].route_url == '/dashboard/test/1'
+        assert routes[3].named_route == 'post.update'

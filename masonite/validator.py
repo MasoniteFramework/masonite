@@ -44,25 +44,25 @@ class Validator:
             validation_dict.update({
                 validation: self.get(validation)
             })
+
         return validate(self.validation_dictionary, validation_dict)
     
     def get(self, validation):
         if hasattr(self, "cast_{}".format(validation)):
-            placeholder = self.load_request_input()[validation]
-            return getattr(self, "cast_{}".format(validation))(placeholder)
+            validation_input = self.load_request_input()[validation]
+            return getattr(self, "cast_{}".format(validation))(validation_input)
         
         return self.load_request_input()[validation]
+    
+    def error(self, error_id):
+        if error_id in self.errors():
+            return self.errors()[error_id]
+        
+        return None
 
     def load_request_input(self):
-        """ Need to load request input into a different value
-            Since the Request class stores input values as string, we
-                need to create a new dictonary value from the request
-        """
         if self.request:
-            dictionary = {}
-            for value in self.request.all():
-                dictionary[value] = self.request.input(value)
-            return dictionary
+            return self.request.all().copy()
 
         return self.check_manual_dictionary
 

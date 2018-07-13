@@ -7,10 +7,9 @@ from masonite.testsuite.TestSuite import generate_wsgi
 class TestValidator:
 
     def setup_method(self):
-        wsgi_request = generate_wsgi()
-        wsgi_request['QUERY_STRING'] = 'id=1'
+        self.request = Request(generate_wsgi())
+        self.request.request_variables = {'id': '1'}
 
-        self.request = Request(wsgi_request)
 
     def test_validator_sets_request(self):
         validator = Validator(self.request)
@@ -99,6 +98,13 @@ class TestValidator:
         email_validator.test()
         assert email_validator.check()
         assert email_validator.get('id') == ['1', '2']
+        assert self.request.all() == {'id': '1,2'}
+
+    def test_validator_can_get_validation_error(self):
+        email_validator = Validator()
+        email_validator.validate({'id': [Required]})
+        assert email_validator.check({'name': '1,2'}) is False
+        assert email_validator.error('id') == 'must be present'
 
 
 class CastValidator(Validator):

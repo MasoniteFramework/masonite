@@ -39,8 +39,19 @@ class Validator:
 
     def run_validation(self):
         """ Loads the dictionary and runs the validations """
-        self.load_request_input()
-        return validate(self.validation_dictionary, self.load_request_input())
+        validation_dict = self.load_request_input()
+        for validation in validation_dict:
+            validation_dict.update({
+                validation: self.get(validation)
+            })
+        return validate(self.validation_dictionary, validation_dict)
+    
+    def get(self, validation):
+        if hasattr(self, "cast_{}".format(validation)):
+            placeholder = self.load_request_input()[validation]
+            return getattr(self, "cast_{}".format(validation))(placeholder)
+        
+        return self.load_request_input()[validation]
 
     def load_request_input(self):
         """ Need to load request input into a different value

@@ -87,3 +87,26 @@ class TestValidator:
         email_validator = Validator()
         email_validator.validate({'id': [Length(0, maximum=2)]})
         assert email_validator.check({'id': [1,2,3,4,5]}) is False
+
+    def test_validator_length_with_casted_value(self):
+        email_validator = CastValidator()
+        email_validator.test()
+        assert email_validator.check({'id': '1,2'}) is True
+
+    def test_validator_get_with_casted_value(self):
+        self.request.request_variables = {'id': '1,2'}
+        email_validator = CastValidator(self.request)
+        email_validator.test()
+        assert email_validator.check()
+        assert email_validator.get('id') == ['1', '2']
+
+
+class CastValidator(Validator):
+    
+    def test(self):
+        return self.validate({
+            'id': [Length(0, maximum=2)]
+            })
+
+    def cast_id(self, id):
+        return id.split(',')

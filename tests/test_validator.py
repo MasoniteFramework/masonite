@@ -105,6 +105,7 @@ class TestValidator:
         email_validator.validate({'id': [Required]})
         assert email_validator.check({'name': '1,2'}) is False
         assert email_validator.error('id') == 'must be present'
+        assert email_validator.error('name') == None
 
 
 class CastValidator(Validator):

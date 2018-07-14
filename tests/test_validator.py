@@ -108,6 +108,10 @@ class TestValidatorHelper:
 
         assert validate({'id': [Required]}, {'id': '1,2'}) == True
 
+    def test_helper_validates_with_custom_messages(self):
+        assert validate({'id': [Required]}, {'name': '1,2'}, {'id': 'is required'}) == {
+            'id': 'is required'}
+
 
 class CastValidator(Validator):
 

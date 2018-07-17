@@ -169,6 +169,7 @@ class Request(Extendable):
         Returns:
             self
         """
+
         self.environ = environ
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
@@ -204,6 +205,7 @@ class Request(Extendable):
         Returns:
             string|bool
         """
+
         if isinstance(value, list):
             return value[0]
 
@@ -233,6 +235,7 @@ class Request(Extendable):
         Returns:
             bool
         """
+
         return all((arg in self.request_variables) for arg in args)
 
     def status(self, status):
@@ -254,6 +257,7 @@ class Request(Extendable):
         Returns:
             string -- Returns the status code (404 Not Found, 200 OK, etc)
         """
+
         return self.app().make('StatusCode')
     
     def get_request_method(self):
@@ -278,6 +282,7 @@ class Request(Extendable):
         Returns:
             string|True|None -- [description]
         """
+        
         # Get Headers
         if value is None:
             if 'HTTP_{0}'.format(key) in self.environ:
@@ -302,12 +307,14 @@ class Request(Extendable):
         Returns:
             dict -- Dictionary of all headers.
         """
+
         return self._headers
 
     def reset_headers(self):
         """Resets all headers being set. Typically ran at the end of the request
         because of this object acts like a singleton.
         """
+
         self._headers = []
 
     def set_params(self, params):
@@ -441,6 +448,7 @@ class Request(Extendable):
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
+
         self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
@@ -492,6 +500,7 @@ class Request(Extendable):
         Returns:
             self
         """
+
         self.redirect_url = self.compile_route_to_url(route, params)
         return self
 
@@ -509,6 +518,7 @@ class Request(Extendable):
         Returns:
             self
         """
+
         web_routes = self.container.make('WebRoutes')
 
         self.redirect_url = self._get_named_route(route_name, params)
@@ -573,6 +583,7 @@ class Request(Extendable):
         Returns:
             masonite.routes.Route|None -- Returns None if the route could not be found.
         """
+
         return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
     
     def route(self, name, params = {}):
@@ -587,6 +598,7 @@ class Request(Extendable):
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
+
         web_routes = self.container.make('WebRoutes')
 
         return self._get_named_route(name, params)
@@ -594,6 +606,7 @@ class Request(Extendable):
     def reset_redirections(self):
         """Resets the redirections because of this class acting like a singleton pattern.
         """
+        
         self.redirect_url = False
         self.redirect_route = False
 
@@ -606,6 +619,7 @@ class Request(Extendable):
         Returns:
             self
         """
+
         redirect_url = self.input('__back')
         if not redirect_url and default:
             return self.redirect(default)
@@ -626,6 +640,7 @@ class Request(Extendable):
         Returns:
             bool
         """
+
         if self._get_named_route(name, params) == self.path:
             return True
         
@@ -690,6 +705,7 @@ class Request(Extendable):
     def activate_subdomains(self):
         """Activates subdomains abilities
         """
+
         self._activate_subdomains = True
 
     def has_subdomain(self):
@@ -728,11 +744,13 @@ class Request(Extendable):
         Returns:
             self
         """
+
         return self
     
     def pop(self, *input_variables):
         """Deletes keys from the request input.
         """
+        
         for key in input_variables:
             if key in self.request_variables:
                 del self.request_variables[key]

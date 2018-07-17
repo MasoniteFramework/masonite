@@ -9,7 +9,8 @@ class LoadEnvironment:
             self._load_environment(only, override=override)
             return
 
-        load_dotenv(find_dotenv(), override=override)
+        env_path = str(Path('.') / '.env')
+        load_dotenv(env_path, override=override)
 
         if os.environ.get('APP_ENV'):
             self._load_environment(os.environ.get('APP_ENV'), override=override)

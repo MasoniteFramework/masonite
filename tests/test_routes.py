@@ -99,8 +99,15 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
+    def test_group_route_sets_name_for_none_route(self):
+        look_for = []
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show').name('create'),
+            Get().route('/test/2', 'TestController@show')
+        ], name='post.')
+
         assert routes[0].named_route == 'post.create'
-        assert routes[1].named_route == 'post.edit'
+        assert routes[1].named_route == None
 
     def test_flatten_flattens_multiple_lists(self):
         routes = [

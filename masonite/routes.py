@@ -270,4 +270,5 @@ class RouteGroup():
 
     def _name(self, name):
         for route in self.routes:
-            route.named_route = name + route.named_route
+            if isinstance(route.named_route, str):
+                route.named_route = name + route.named_route

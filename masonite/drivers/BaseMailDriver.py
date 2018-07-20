@@ -22,7 +22,7 @@ class BaseMailDriver(BaseDriver):
         return self
 
     def template(self, template_name, dictionary={}):
-        self.message_body = self.view.render(template_name, dictionary)
+        self.message_body = self.view.render(template_name, dictionary).rendered_template
         return self
 
     def send_from(self, address):

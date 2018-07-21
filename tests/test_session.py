@@ -100,8 +100,14 @@ class TestSession:
         session.reset(flash_only=True)
         assert session.get('flash_') is None
 
+    def test_session_flash_data_serializes_dict(self):
+        for driver in ('cookie', 'memory'):
+            session = self.app.make('SessionManager').driver(driver)
+            session._session = {}
+            session.flash('flash_dict', {'id': 1})
+            assert session.get('flash_dict') == {'id': 1}
 
-    def test_reset_session(self):
+    def test_reset_serializes_dict(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
             session.set('flash_', 'test_pep')

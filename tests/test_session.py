@@ -105,7 +105,9 @@ class TestSession:
             session = self.app.make('SessionManager').driver(driver)
             session._session = {}
             session.flash('flash_dict', {'id': 1})
+            session.set('get_dict', {'id': 1})
             assert session.get('flash_dict') == {'id': 1}
+            assert session.get('get_dict') == {'id': 1}
 
     def test_reset_serializes_dict(self):
         for driver in ('memory', 'cookie'):

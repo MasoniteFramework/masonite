@@ -1,5 +1,4 @@
-"""View Module
-"""
+""" View Module """
 
 
 from jinja2 import (ChoiceLoader, Environment, FileSystemLoader, PackageLoader,

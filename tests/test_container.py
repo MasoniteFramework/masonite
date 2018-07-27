@@ -104,3 +104,17 @@ class TestContainer:
         
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
+
+    def test_container_makes_from_class(self):
+        assert isinstance(self.app.make(Request), Request)
+        
+    def test_container_makes_from_base_class(self):
+        del self.app.providers['MockObject']
+        assert self.app.make(MockObject) == GetObject
+
+    def test_container_makes_from_contract(self):
+        self.app.providers = {}
+
+        self.app.bind('UploadDriver', UploadDiskDriver)
+        self.app.bind('UploadContract', UploadContract)
+        assert self.app.make(UploadContract) == UploadDiskDriver

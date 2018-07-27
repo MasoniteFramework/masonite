@@ -26,8 +26,10 @@ class App():
         """
         Retreives a class from the container by key
         """
-        if self.has(name):
+        if self.has(name) and isinstance(name, str):
             return self.providers[name]
+        elif self._find_obj(name):
+            return self._find_obj(name)
 
         raise MissingContainerBindingNotFound("{0} key was not found in the container".format(name))
 
@@ -116,3 +118,10 @@ class App():
                 return provider_class
         
         raise ContainerError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+
+    def _find_obj(self, obj):
+        for provider, provider_class in self.providers.items():
+            if obj == provider_class or obj == provider_class.__class__:
+                return provider_class
+            elif inspect.isclass(provider_class) and issubclass(provider_class, obj):
+                return provider_class

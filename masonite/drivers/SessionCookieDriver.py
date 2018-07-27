@@ -2,6 +2,7 @@
 
 from masonite.contracts.SessionContract import SessionContract
 from masonite.drivers.BaseDriver import BaseDriver
+import json
 
 
 class SessionCookieDriver(SessionContract, BaseDriver):
@@ -31,7 +32,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
 
         cookie = self.request.get_cookie('s_{0}'.format(key))
         if cookie:
-            return cookie
+            return self._get_serialization_value(cookie)
 
         return None
 
@@ -42,6 +43,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             key {string} -- The key to set as the session key.
             value {string} -- The value to set in the session.
         """
+        if isinstance(value, dict):
+            value = json.dumps(value)
 
         self.request.cookie('s_{0}'.format(key), value)
 
@@ -111,6 +114,9 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             value {string} -- The value to set in the session.
         """
 
+        if isinstance(value, dict):
+            value = json.dumps(value)
+
         self.request.cookie('s_{0}'.format(key), value, expires='2 seconds')
 
     def reset(self, flash_only=False):
@@ -129,3 +135,9 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         """
 
         return self
+    
+    def _get_serialization_value(self, value):
+        try:
+            return json.loads(value)
+        except ValueError:
+            return value

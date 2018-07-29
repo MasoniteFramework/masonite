@@ -11,6 +11,11 @@ class SeedRunCommand(Command):
     """
 
     def handle(self):
+        if not 'sys.path.append(os.getcwd())' in open('databases/seeds/__init__.py').read():
+            f = open('databases/seeds/__init__.py', 'w+')
+            f.write('import os\nimport sys\nsys.path.append(os.getcwd())\n')
+            f.close()
+
         table = self.argument('table').lower()
         if not table == 'none':
             seeder = '--seeder {}_table_seeder'.format(table.lower())

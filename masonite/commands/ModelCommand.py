@@ -19,9 +19,10 @@ class ModelCommand(Command):
 
             f = open('app/{0}.py'.format(model), 'w+')
 
-            f.write("''' A {0} Database Model '''\n".format(model))
+            f.write("''' A {0} Database Model '''\n".format(
+                model.split('/')[-1]))
             f.write('from config.database import Model\n\n')
-            f.write("class {0}(Model):\n    pass\n".format(model))
+            f.write("class {0}(Model):\n    pass\n".format(model.split('/')[-1]))
 
             self.info('Model Created Successfully!')
         else:

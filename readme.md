@@ -105,7 +105,7 @@ You can easily create new applications with `craft`. To create a new application
 * * * *
 </p>
 
-NOTE: If you do not have the craft command, you can run `pip install masonite-cli` which will install `craft` and `craft-vendor` command line tools.
+NOTE: If you do not have the craft command, you can run `pip install masonite-cli` which will install `craft` command line tool.
 
 <p align="center">
 * * * *

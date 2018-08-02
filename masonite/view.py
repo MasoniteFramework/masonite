@@ -217,6 +217,6 @@ class View:
         self.rendered_template = driver_cache.get(self.template)
         return self
     
-    def set_template_splice(self, splice):
+    def set_splice(self, splice):
         self._splice = splice
         return self

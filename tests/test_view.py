@@ -210,13 +210,13 @@ class TestView:
             ).cache_for(1, 'monthss')
 
     def test_view_can_change_template_splice(self):
-        self.container.make('ViewClass').set_template_splice('.')
+        self.container.make('ViewClass').set_splice('.')
 
         view = self.container.make('View')
 
         assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
 
-        self.container.make('ViewClass').set_template_splice('@')
+        self.container.make('ViewClass').set_splice('@')
 
         assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
 

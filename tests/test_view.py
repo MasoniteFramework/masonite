@@ -208,3 +208,15 @@ class TestView:
             view(
                 'test_exception', {'test': 'test'}
             ).cache_for(1, 'monthss')
+
+    def test_view_can_change_template_splice(self):
+        self.container.make('ViewClass').set_template_splice('.')
+
+        view = self.container.make('View')
+
+        assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
+
+        self.container.make('ViewClass').set_template_splice('@')
+
+        assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
+

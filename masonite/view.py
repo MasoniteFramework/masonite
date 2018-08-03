@@ -52,7 +52,7 @@ class View:
         # Check if composers are even set for a speed improvement
         if self.composers:
             self._update_from_composers()
-        print(self.filename)
+            
         self.rendered_template = self.env.get_template(self.filename).render(
             self.dictionary)
 

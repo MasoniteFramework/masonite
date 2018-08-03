@@ -3,8 +3,6 @@ import cgi
 import importlib
 import json
 
-from pydoc import locate
-
 from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound
 
@@ -41,11 +39,13 @@ class Route():
         if self.is_not_get_request():
             if 'CONTENT_TYPE' in self.environ and 'application/json' in self.environ['CONTENT_TYPE']:
                 try:
-                    request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(
+                        self.environ.get('CONTENT_LENGTH', 0))
                 except (ValueError):
                     request_body_size = 0
 
-                request_body = self.environ['wsgi.input'].read(request_body_size)
+                request_body = self.environ['wsgi.input'].read(
+                    request_body_size)
                 return {'payload': json.loads(request_body)}
             else:
                 fields = cgi.FieldStorage(
@@ -114,7 +114,7 @@ class BaseHttpRoute:
         self._find_controller(output)
         self.route_url = route
         return self
-    
+
     def _find_controller(self, controller):
         # If the output specified is a string controller
         if isinstance(controller, str):
@@ -123,11 +123,11 @@ class BaseHttpRoute:
             if mod[0].startswith('/'):
                 self.module_location = '.'.join(
                     mod[0].replace('/', '').split('.')[0:-1])
-        
+
         else:
             if controller is None:
                 return None
-            
+
             fully_qualified_name = controller.__qualname__
             mod = fully_qualified_name.split('.')
             self.module_location = controller.__module__
@@ -191,9 +191,11 @@ class BaseHttpRoute:
 
             # Locate the middleware based on the string specified
             try:
-                located_middleware = self.request.app().resolve(locate(self.request.app().make('RouteMiddleware')[arg]))
+                located_middleware = self.request.app().resolve(
+                    self.request.app().make('RouteMiddleware')[arg])
             except KeyError:
-                raise RouteMiddlewareNotFound("Could not find the '{0}' route middleware".format(arg))
+                raise RouteMiddlewareNotFound(
+                    "Could not find the '{0}' route middleware".format(arg))
 
             # If the middleware has the specific type of middleware
             # (before or after) then execute that
@@ -232,38 +234,38 @@ class Delete(BaseHttpRoute):
     def __init__(self):
         self.method_type = 'DELETE'
 
+
 class RouteGroup():
-    
+
     def __new__(self, routes=[], middleware=[], domain=[], prefix='', name=''):
         from masonite.helpers.routes import flatten_routes
-        
+
         self.routes = flatten_routes(routes)
 
         if middleware:
             self._middleware(self, *middleware)
-        
+
         if domain:
             self._domain(self, domain)
-        
+
         if prefix:
             self._prefix(self, prefix)
-        
+
         if name:
             self._name(self, name)
 
         return self.routes
 
-
     def _middleware(self, *middleware):
         for route in self.routes:
             route.middleware(*middleware)
-        
+
         return self.routes
 
     def _domain(self, domain):
         for route in self.routes:
             route.domain(domain)
-    
+
     def _prefix(self, prefix):
         for route in self.routes:
             route.route_url = prefix + route.route_url

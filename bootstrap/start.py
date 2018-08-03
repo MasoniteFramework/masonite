@@ -1,23 +1,23 @@
-''' Start of Application. This function is the gunicorn server '''
+""" Start of Application. This function is the gunicorn server """
 
 from masonite.environment import LoadEnvironment
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Load Environment Variables
 |--------------------------------------------------------------------------
 |
 | Take environment variables from the .env file and load them in.
 |
-'''
+"""
 
 LoadEnvironment()
 
 def app(environ, start_response):
-    ''' The WSGI Application Server '''
+    """ The WSGI Application Server """
     from wsgi import container
 
-    '''
+    """
     |--------------------------------------------------------------------------
     | Add Environ To Service Container
     |--------------------------------------------------------------------------
@@ -26,18 +26,18 @@ def app(environ, start_response):
     | the WSGI server above and used by a service provider to manipulate the
     | incoming requests
     |
-    '''
+    """
 
     container.bind('Environ', environ)
 
-    '''
+    """
     |--------------------------------------------------------------------------
     | Execute All Service Providers That Require The WSGI Server
     |--------------------------------------------------------------------------
     |
     | Run all service provider boot methods if the wsgi attribute is true.
     |
-    '''
+    """
 
     try:
         for provider in container.make('WSGIProviders'):
@@ -45,7 +45,7 @@ def app(environ, start_response):
     except Exception as e:
         container.make('ExceptionHandler').load_exception(e)
 
-    '''
+    """
     |--------------------------------------------------------------------------
     | We Are Ready For Launch
     |--------------------------------------------------------------------------
@@ -55,11 +55,11 @@ def app(environ, start_response):
     | to return a 302 redirection to where ever the user would like go
     | to next.
     |
-    '''
+    """
 
     start_response(container.make('StatusCode'), container.make('Headers'))
 
-    '''
+    """
     |--------------------------------------------------------------------------
     | Final Step
     |--------------------------------------------------------------------------
@@ -67,6 +67,6 @@ def app(environ, start_response):
     | This will take the data variable from the Service Container and return
     | it to the WSGI server.
     |
-    '''
+    """
 
     return iter([bytes(container.make('Response'), 'utf-8')])

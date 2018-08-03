@@ -1,6 +1,6 @@
-''' Middleware Configuration Settings '''
+""" Middleware Configuration Settings """
 
-'''
+"""
 |--------------------------------------------------------------------------
 | HTTP Middleware
 |--------------------------------------------------------------------------
@@ -9,14 +9,14 @@
 | is only ran when a HTTP call is successful (a 200 response). This list
 | should contain a simple aggregate of middleware classes.
 |
-'''
+"""
 
 HTTP_MIDDLEWARE = [
     'app.http.middleware.LoadUserMiddleware.LoadUserMiddleware',
     'app.http.middleware.CsrfMiddleware.CsrfMiddleware',
 ]
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Route Middleware
 |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ HTTP_MIDDLEWARE = [
 | in your route/web.py file (in the .middleware() method) and the value is
 | a string with the full module path of the middleware class
 |
-'''
+"""
 
 ROUTE_MIDDLEWARE = {
     'auth':  'app.http.middleware.AuthenticationMiddleware.AuthenticationMiddleware',

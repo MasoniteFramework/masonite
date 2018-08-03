@@ -1,6 +1,6 @@
-''' Packages Configuration Settings '''
+""" Packages Configuration Settings """
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Site Packages
 |--------------------------------------------------------------------------
@@ -16,6 +16,8 @@
 | ]
 | ----------
 |
-'''
+"""
 
-SITE_PACKAGES = []
+SITE_PACKAGES = [
+    # '/Users/joseph/Programming/core'
+]

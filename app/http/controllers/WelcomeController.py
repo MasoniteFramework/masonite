@@ -1,8 +1,12 @@
-''' Welcome The User To Masonite '''
+""" Welcome The User To Masonite """
+from masonite.view import View
 
 class WelcomeController:
-    ''' Controller For Welcoming The User '''
+    """Controller For Welcoming The User
+    """
 
-    def show(self, Application):
-        ''' Show Welcome Template '''
-        return view('welcome', {'app': Application})
+    def show(self, view: View, Application):
+        """Show Welcome Template 
+        """
+
+        return view.render('welcome', {'app': Application})

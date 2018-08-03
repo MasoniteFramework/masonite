@@ -1,30 +1,43 @@
-''' CSRF Middleware '''
+""" CSRF Middleware """
 from masonite.exceptions import InvalidCSRFToken
 
 
 class CsrfMiddleware:
-    ''' Verify CSRF Token Middleware '''
+    """ Verify CSRF Token Middleware """
 
     exempt = []
 
     def __init__(self, Request, Csrf, ViewClass):
+        """CRSF Middleware Constructor
+        
+        Arguments:
+            Request {masonite.request.Request} -- The Masonite request object.
+            Csrf {masonite.auth.Csrf} -- The Masonite CSRF class
+            ViewClass {masonite.view.View} -- The Masonite view object.
+        """
+
         self.request = Request
         self.csrf = Csrf
         self.view = ViewClass
 
     def before(self):
+        """Generate a CRSF token and share to the view
+        """
+
         token = self.__verify_csrf_token()
 
         self.view.share({
             'csrf_field': "<input type='hidden' name='__token' value='{0}' />".format(token)
+            'csrf_token': "{0}".format(token)
         })
 
     def after(self):
+        """Execute code after the route has been executed.
+        """
         pass
 
     def __in_exempt(self):
-        """
-        Determine if the request has a URI that should pass
+        """Determine if the request has a URI that should pass
         through CSRF verification.
         """
 
@@ -34,8 +47,7 @@ class CsrfMiddleware:
             return False
 
     def __verify_csrf_token(self):
-        """
-        Verify si csrf token in post is valid.
+        """Verify if the csrf token in POST request is valid, else generate a new token.
         """
 
         if self.request.is_post() and not self.__in_exempt():

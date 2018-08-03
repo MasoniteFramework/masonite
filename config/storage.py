@@ -1,8 +1,8 @@
-''' Storage Settings '''
+""" Storage Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Storage Driver
 |--------------------------------------------------------------------------
@@ -12,18 +12,18 @@ import os
 |
 | Supported: 'disk', 's3'
 |
-'''
+"""
 
 DRIVER = os.getenv('STORAGE_DRIVER', 'disk')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Storage Drivers
 |--------------------------------------------------------------------------
 |
 | Different drivers you can use for storing file uploads.
 |
-'''
+"""
 
 DRIVERS = {
     'disk': {
@@ -37,7 +37,7 @@ DRIVERS = {
 }
 
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Static Files
 |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ DRIVERS = {
 | Example will be the static assets folder at /storage/static
 | and an alias of <img src="/static/image.png">
 |
-'''
+"""
 
 STATICFILES = {
     # folder          # template alias
@@ -59,7 +59,7 @@ STATICFILES = {
     'storage/uploads': 'static/',
 }
 
-'''
+"""
 |--------------------------------------------------------------------------
 | SASS Settings
 |--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ STATICFILES = {
 | compileTo should contain a string with the directory you want your sass
 | compiled to.
 |
-'''
+"""
 
 SASSFILES = {
     'importFrom': [

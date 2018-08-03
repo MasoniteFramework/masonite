@@ -1,9 +1,9 @@
-''' Authentication Settings '''
+""" Authentication Settings """
 
 import os
 from app.User import User
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Authentication Model
 |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ from app.User import User
 |
 | @see masonite.facades.Auth
 |
-'''
+"""
 
 AUTH = {
     'driver': os.getenv('AUTH_DRIVER', 'cookie'),

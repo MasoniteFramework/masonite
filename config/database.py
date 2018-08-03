@@ -1,22 +1,22 @@
-''' Database Settings '''
+""" Database Settings """
 
 import os
 
 from dotenv import find_dotenv, load_dotenv
 from orator import DatabaseManager, Model
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Load Environment Variables
 |--------------------------------------------------------------------------
 |
 | Loads in the environment variables when this page is imported.
 |
-'''
+"""
 
 load_dotenv(find_dotenv())
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Database Settings
 |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ load_dotenv(find_dotenv())
 |
 | @see Orator migrations documentation for more info
 |
-'''
+"""
 
 DATABASES = {
     'default': {

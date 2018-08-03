@@ -1,8 +1,8 @@
-''' Cache Settings '''
+""" Cache Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Cache Driver
 |--------------------------------------------------------------------------
@@ -13,11 +13,11 @@ import os
 |
 | Supported: 'disk'
 |
-'''
+"""
 
 DRIVER = os.getenv('CACHE_DRIVER', 'disk')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Cache Drivers
 |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ DRIVER = os.getenv('CACHE_DRIVER', 'disk')
 | Place all your caching coniguration as a dictionary here. The keys here
 | should correspond to the driver types supported above.
 |
-'''
+"""
 
 DRIVERS = {
     'disk': {

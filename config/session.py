@@ -1,8 +1,8 @@
-''' Session Settings '''
+""" Session Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Session Driver
 |--------------------------------------------------------------------------
@@ -13,6 +13,6 @@ import os
 |
 | Supported: 'memory', 'cookie'
 |
-'''
+"""
 
 DRIVER = os.getenv('SESSION_DRIVER', 'cookie')

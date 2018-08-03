@@ -1,8 +1,8 @@
-''' Queue Settings '''
+""" Queue Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Queue Driver
 |--------------------------------------------------------------------------
@@ -12,11 +12,11 @@ import os
 |
 | Supported: 'async'
 |
-'''
+"""
 
 DRIVER = os.getenv('QUEUE_DRIVER', 'async')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Queue Drivers
 |--------------------------------------------------------------------------
@@ -24,6 +24,6 @@ DRIVER = os.getenv('QUEUE_DRIVER', 'async')
 | Put any configuration settings for your drivers in this configuration
 | setting.
 |
-'''
+"""
 
 DRIVERS = {}

@@ -21,7 +21,7 @@ from masonite.providers import (
 from app.providers.MiddlewareProvider import MiddlewareProvider
 from app.providers.UserModelProvider import UserModelProvider
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Providers List
 |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ from app.providers.UserModelProvider import UserModelProvider
 | request is made depending on the provider. Take some time to can
 | learn more more about Service Providers in our documentation
 |
-'''
+"""
 
 
 PROVIDERS = [

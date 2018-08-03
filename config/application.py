@@ -1,8 +1,8 @@
-''' Application Settings '''
+""" Application Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Application Name
 |--------------------------------------------------------------------------
@@ -11,11 +11,11 @@ import os
 | framework needs to place the application's name in a notification or
 | any other location as required by the application or its packages.
 |
-'''
+"""
 
 NAME = 'Masonite 2.0'
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Application Debug Mode
 |--------------------------------------------------------------------------
@@ -24,11 +24,11 @@ NAME = 'Masonite 2.0'
 | stack traces will be shown on every error that occurs within your
 | application. If disabled, a simple generic error page is shown
 |
-'''
+"""
 
 DEBUG = os.getenv('APP_DEBUG', 'False')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Secret Key
 |--------------------------------------------------------------------------
@@ -38,44 +38,44 @@ DEBUG = os.getenv('APP_DEBUG', 'False')
 | it to encrypt and decrypt various values using the Masonite Sign
 | class. Read the documentation on Encryption to find out how.
 |
-'''
+"""
 
 KEY = os.getenv('KEY', None)
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Application URL
 |--------------------------------------------------------------------------
 |
 | Sets the root URL of the application. This is primarily used for testing
 |
-'''
+"""
 
 URL = 'http://localhost:8000'
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Base Directory
 |--------------------------------------------------------------------------
 |
 | Sets the root path of your project
 |
-'''
+"""
 
 BASE_DIRECTORY = os.getcwd()
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Static Root
 |--------------------------------------------------------------------------
 |
 | Set the static root of your application that you wil use to store assets
 |
-'''
+"""
 
 STATIC_ROOT = os.path.join(BASE_DIRECTORY, 'storage')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Autoload Directories
 |--------------------------------------------------------------------------
@@ -84,7 +84,7 @@ STATIC_ROOT = os.path.join(BASE_DIRECTORY, 'storage')
 | the Service Container. This is initially used to find models and load
 | them in but feel free to autoload any directories
 |
-'''
+"""
 
 AUTOLOAD = [
     'app',

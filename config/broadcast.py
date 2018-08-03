@@ -1,8 +1,8 @@
-''' Broadcast Settings '''
+""" Broadcast Settings """
 
 import os
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Broadcast Driver
 |--------------------------------------------------------------------------
@@ -14,11 +14,11 @@ import os
 |
 | Supported: 'pusher', 'ably'
 |
-'''
+"""
 
 DRIVER = os.getenv('BROADCAST_DRIVER', 'pusher')
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Broadcast Drivers
 |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ DRIVER = os.getenv('BROADCAST_DRIVER', 'pusher')
 | Below is a dictionary of all your driver configurations. Each key in the
 | dictionary should be the name of a driver.
 |
-'''
+"""
 
 DRIVERS = {
     'pusher': {

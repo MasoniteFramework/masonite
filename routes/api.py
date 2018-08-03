@@ -1,6 +1,6 @@
-''' API Routes '''
+""" API Routes """
 
-'''
+"""
 |--------------------------------------------------------------------------
 | Resources
 |--------------------------------------------------------------------------
@@ -9,6 +9,6 @@
 | endpoints with any API Masonite packages. Consider Masonite Entry for
 | creating full RESTful API systems.
 |
-'''
+"""
 
 RESOURCES = []

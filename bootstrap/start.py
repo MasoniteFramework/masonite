@@ -14,7 +14,16 @@ from masonite.environment import LoadEnvironment
 LoadEnvironment()
 
 def app(environ, start_response):
-    """ The WSGI Application Server """
+    """The WSGI Application Server
+
+    Arguments:
+        environ {dict} -- The WSGI environ dictionary
+        start_response {WSGI callable}
+
+    Returns:
+        WSGI Response
+    """
+
     from wsgi import container
 
     """

@@ -19,7 +19,6 @@ from masonite.providers import (
 )
 
 from app.providers.MiddlewareProvider import MiddlewareProvider
-from app.providers.UserModelProvider import UserModelProvider
 
 """
 |--------------------------------------------------------------------------
@@ -58,6 +57,5 @@ PROVIDERS = [
     # Third Party Providers
 
     # Application Providers
-    UserModelProvider,
-    MiddlewareProvider,
+
 ]

@@ -1,6 +1,9 @@
 from masonite.testsuite import generate_wsgi, TestSuite
+from masonite.app import App
 
 class MockRoute:
+    _bind = {}
+
     def __init__(self, route, container):
         self.route = route
         self.container = container
@@ -23,8 +26,10 @@ class MockRoute:
         return self.container.make('Request').get_status_code() == '200 OK'
 
     def user(self, obj):
-        self.container.make('Request').set_user(obj)
+        self._bind.update({
+            'Request': self.container.make('Request').set_user(obj)
+        })
         return self
         
     def _run_container(self, wsgi):
-        return TestSuite().create_container(wsgi)
+        return TestSuite().create_container(wsgi, bind=self._bind)

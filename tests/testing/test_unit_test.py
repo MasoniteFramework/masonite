@@ -29,9 +29,6 @@ class TestUnitTest(UnitTest):
     def test_unit_test_has_route_middleware(self):
         assert self.route('/testing').has_controller(ControllerTest)
 
-    def test_user_can_view(self):
-        assert self.route('/unit/test').can_view()
-
-    def test_user_can_view_with_middleware(self):
+    def test_user_can_be_loaded(self):
+        assert not self.route('/unit/test').user(None).can_view()
         assert self.route('/unit/test').user(MockUser).can_view()
-

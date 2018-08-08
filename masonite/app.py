@@ -1,7 +1,7 @@
 """ Core of the IOC Container """
 
 import inspect
-from masonite.exceptions import MissingContainerBindingNotFound, ContainerError
+from masonite.exceptions import MissingContainerBindingNotFound, ContainerError, StrictContainerException
 
 
 class App():
@@ -10,15 +10,22 @@ class App():
     of objects to and from the container.
     """
 
-    def __init__(self):
+    def __init__(self, strict=False, override=True):
         self.providers = {}
+        self.strict = strict
+        self.override = override
 
 
     def bind(self, name, class_obj):
         """ 
         Bind classes into the container with a key value pair
         """
-        self.providers.update({name: class_obj})
+        if self.strict and name in self.providers:
+            raise StrictContainerException('You cannot override a key inside a strict container')
+
+        if self.override or not name in self.providers:
+            self.providers.update({name: class_obj})
+
         return self
 
 

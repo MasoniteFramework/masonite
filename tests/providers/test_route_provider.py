@@ -82,6 +82,20 @@ class TestRouteProvider:
 
         assert self.app.make('Request').param('id') == '1'
     
+    def test_url_with_dots_finds_route(self):
+        self.app.make('Route').url = '/test/user.endpoint'
+        self.app.bind('WebRoutes', [get('/test/@endpoint', ControllerTest.show)])
+
+        self.provider.boot(
+            self.app.make('WebRoutes'),
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make('Environ'),
+            self.app.make('Headers'),
+        )
+
+        assert self.app.make('Request').param('endpoint') == 'user.endpoint'
+    
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'
         self.app.make('Environ')['HTTP_HOST'] = 'subb.domain.com'

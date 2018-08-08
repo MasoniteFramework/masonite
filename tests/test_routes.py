@@ -33,7 +33,7 @@ class TestRoutes:
     def test_compile_route_to_regex(self):
         assert self.route.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
         assert self.route.compile_route_to_regex(Get().route(
-            'test/@route', None)) == '^test\\/(\\w+)\\/$'
+            'test/@route', None)) == '^test\\/([\\w.]+)\\/$'
 
         assert self.route.compile_route_to_regex(Get().route(
             'test/@route:int', None)) == '^test\\/(\\d+)\\/$'

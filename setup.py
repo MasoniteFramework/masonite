@@ -15,6 +15,7 @@ setup(
         'masonite.queues',
         'masonite.contracts',
         'masonite.helpers',
+        'masonite.middleware',
     ],
     version=VERSION,
     install_requires=[

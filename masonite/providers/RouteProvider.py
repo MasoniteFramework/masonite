@@ -1,7 +1,6 @@
 """ A RouteProvider Service Provider """
 import re
 import json
-from pydoc import locate
 
 from masonite.provider import ServiceProvider
 from masonite.view import View
@@ -83,7 +82,7 @@ class RouteProvider(ServiceProvider):
 
                 for http_middleware in self.app.make('HttpMiddleware'):
                     located_middleware = self.app.resolve(
-                        locate(http_middleware)
+                        http_middleware
                     )
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
@@ -144,7 +143,7 @@ class RouteProvider(ServiceProvider):
 
                 for http_middleware in self.app.make('HttpMiddleware'):
                     located_middleware = self.app.resolve(
-                        locate(http_middleware)
+                        http_middleware
                     )
                     if hasattr(located_middleware, 'after'):
                         located_middleware.after()

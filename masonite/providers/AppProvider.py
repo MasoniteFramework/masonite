@@ -42,6 +42,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
+        self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
 
         # Insert Commands
         self.app.bind('MasoniteAuthCommand', AuthCommand())

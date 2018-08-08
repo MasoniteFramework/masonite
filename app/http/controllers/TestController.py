@@ -7,3 +7,8 @@ class TestController:
 
     def show(self):
         pass
+    
+    
+    def testing(self):
+        return 'test'
+    

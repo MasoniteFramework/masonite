@@ -3,7 +3,7 @@ class ServiceProvider():
     wsgi = True
 
     def __init__(self):
-        self.app = None
+        pass
 
     def boot(self):
         pass

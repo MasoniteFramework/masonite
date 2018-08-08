@@ -1,0 +1,2 @@
+class MockRequest:
+    pass

@@ -215,8 +215,9 @@ class TestView:
         view = self.container.make('View')
 
         assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
+        assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
 
         self.container.make('ViewClass').set_splice('@')
 
         assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
-
+        assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template

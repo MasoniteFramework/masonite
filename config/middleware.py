@@ -1,5 +1,9 @@
 """ Middleware Configuration Settings """
 
+from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
+from app.http.middleware.CsrfMiddleware import CsrfMiddleware
+from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
+
 """
 |--------------------------------------------------------------------------
 | HTTP Middleware
@@ -12,8 +16,8 @@
 """
 
 HTTP_MIDDLEWARE = [
-    'app.http.middleware.LoadUserMiddleware.LoadUserMiddleware',
-    'app.http.middleware.CsrfMiddleware.CsrfMiddleware',
+    LoadUserMiddleware,
+    CsrfMiddleware,
 ]
 
 """
@@ -32,5 +36,5 @@ HTTP_MIDDLEWARE = [
 """
 
 ROUTE_MIDDLEWARE = {
-    'auth':  'app.http.middleware.AuthenticationMiddleware.AuthenticationMiddleware',
+    'auth':  AuthenticationMiddleware,
 }

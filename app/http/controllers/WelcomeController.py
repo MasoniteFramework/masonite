@@ -6,7 +6,14 @@ class WelcomeController:
     """
 
     def show(self, view: View, Application):
-        """Show Welcome Template 
+        """Shows the welcome page.
+        
+        Arguments:
+            view {masonite.view.View} -- The Masonite view class.
+            Application {config.application} -- The application config module.
+        
+        Returns:
+            masonite.view.View -- The Masonite view class.
         """
 
         return view.render('welcome', {'app': Application})

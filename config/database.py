@@ -2,7 +2,7 @@
 
 import os
 
-from dotenv import find_dotenv, load_dotenv
+from masonite.environment import LoadEnvironment
 from orator import DatabaseManager, Model
 
 """
@@ -14,7 +14,7 @@ from orator import DatabaseManager, Model
 |
 """
 
-load_dotenv(find_dotenv())
+LoadEnvironment()
 
 """
 |--------------------------------------------------------------------------
@@ -29,7 +29,13 @@ load_dotenv(find_dotenv())
 """
 
 DATABASES = {
-    'default': {
+    'default': os.environ.get('DB_DRIVER'),
+    'sqlite': {
+        'driver': 'sqlite',
+        'database': os.environ.get('DB_DATABASE'),
+        'prefix': ''
+    },
+    os.environ.get('DB_DRIVER'): {
         'driver': os.environ.get('DB_DRIVER'),
         'host': os.environ.get('DB_HOST'),
         'database': os.environ.get('DB_DATABASE'),

@@ -14,3 +14,4 @@ from .ModelCommand import ModelCommand
 from .ProviderCommand import ProviderCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand
+from .ValidatorCommand import ValidatorCommand

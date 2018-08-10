@@ -19,6 +19,7 @@ from masonite.commands.SeedCommand import SeedCommand
 from masonite.commands.SeedRunCommand import SeedRunCommand
 from masonite.commands.TinkerCommand import TinkerCommand
 from masonite.commands.ViewCommand import ViewCommand
+from masonite.commands.ValidatorCommand import ValidatorCommand
 from masonite.exception_handler import ExceptionHandler
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
@@ -64,6 +65,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
+        self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
 
         self._autoload(application.AUTOLOAD)
 

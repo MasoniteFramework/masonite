@@ -27,7 +27,7 @@ class CsrfMiddleware:
         token = self.verify_token()
 
         self.view.share({
-            'csrf_field': "<input type='hidden' name='__token' value='{0}' />".format(token)
+            'csrf_field': "<input type='hidden' name='__token' value='{0}' />".format(token),
             'csrf_token': "{0}".format(token)
         })
 
@@ -47,7 +47,7 @@ class CsrfMiddleware:
         """Verify if the csrf token in POST request is valid, else generate a new token.
         """
 
-        if self.request.is_post() and not self.__in_exempt():
+        if self.request.is_post() and not self.in_exempt():
             token = self.request.input('__token')
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")

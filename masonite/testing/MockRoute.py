@@ -26,10 +26,15 @@ class MockRoute:
         return self.container.make('Request').get_status_code() == '200 OK'
 
     def user(self, obj):
-        self._bind.update({
-            'Request': self.container.make('Request').set_user(obj)
-        })
+        self._user = obj
+        self.container.on_bind('Request', self._bind_user_to_request)
         return self
         
     def _run_container(self, wsgi):
-        return TestSuite().create_container(wsgi, bind=self._bind)
+        print('======== running =========')
+        return TestSuite().create_container(wsgi, container=self.container)
+    
+    def _bind_user_to_request(self, request, container):
+        print('loading user', self._user)
+        request.set_user(self._user)   
+        return self  

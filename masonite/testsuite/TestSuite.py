@@ -36,8 +36,9 @@ def generate_wsgi():
 
 class TestSuite:
 
-    def create_container(self, wsgi=generate_wsgi(), routes=[], bind={}):
-        container = App()
+    def create_container(self, wsgi=generate_wsgi(), container=None, routes=[]):
+        if not container:
+            container = App()
 
         container.bind('WSGI', wsgi)
         container.bind('Application', application)
@@ -99,7 +100,6 @@ class TestSuite:
 
         for provider in container.make('WSGIProviders'):
             container.resolve(provider.boot)
-            container.providers.update(bind)
 
         self.container = container
         return self

@@ -31,10 +31,8 @@ class MockRoute:
         return self
         
     def _run_container(self, wsgi):
-        print('======== running =========')
         return TestSuite().create_container(wsgi, container=self.container)
     
     def _bind_user_to_request(self, request, container):
-        print('loading user', self._user)
         request.set_user(self._user)   
         return self  

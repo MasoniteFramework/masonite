@@ -3,6 +3,7 @@ from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
 from config import application, providers
 from pydoc import locate
+import io
 
 
 def generate_wsgi():
@@ -11,6 +12,7 @@ def generate_wsgi():
         'wsgi.multithread': False,
         'wsgi.multiprocess': True,
         'wsgi.run_once': False,
+        'wsgi.input': io.BytesIO(),
         'SERVER_SOFTWARE': 'gunicorn/19.7.1',
         'REQUEST_METHOD': 'GET',
         'QUERY_STRING': 'application=Masonite',

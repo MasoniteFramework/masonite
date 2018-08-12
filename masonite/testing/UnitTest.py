@@ -8,9 +8,9 @@ class UnitTest:
 
     def controller(self): pass
 
-    def route(self, url):
+    def route(self, url, method='GET'):
         for route in self.container.make('WebRoutes'):
-            if route.route_url == url:
+            if route.route_url == url and route.method_type == method:
                 return MockRoute(route, self.container)
 
     def routes(self, routes): 

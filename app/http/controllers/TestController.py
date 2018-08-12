@@ -8,7 +8,9 @@ class TestController:
     def show(self):
         pass
     
-    
     def testing(self):
         return 'test'
+    
+    def post_test(self):
+        return 'post_test'
     

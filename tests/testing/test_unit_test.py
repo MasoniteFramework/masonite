@@ -36,3 +36,10 @@ class TestUnitTest(UnitTest):
     def test_view_contains(self):
         assert self.route('/test/route').contains('test')
         assert self.route('/test/route').user(MockUser).contains('test')
+
+    def test_can_get_post_route(self):
+        assert self.route('/test/post/route', method="POST").contains('post_test')
+
+    def test_can_get_status_code(self):
+        route = self.route('/test/post/route', method="POST")
+        assert route.status('200 OK')

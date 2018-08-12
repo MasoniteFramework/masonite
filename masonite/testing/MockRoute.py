@@ -1,5 +1,6 @@
 from masonite.testsuite import generate_wsgi, TestSuite
 from masonite.app import App
+import io
 
 class MockRoute:
     _bind = {}
@@ -20,8 +21,19 @@ class MockRoute:
     def contains(self, value):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
+        wsgi['REQUEST_METHOD'] = self.route.method_type
         self.container = self._run_container(wsgi).container
+
         return value in self.container.make('Response')
+    
+    def status(self, value):
+        wsgi = generate_wsgi()
+        wsgi['PATH_INFO'] = self.route.route_url
+        wsgi['REQUEST_METHOD'] = self.route.method_type
+        self.container = self._run_container(wsgi).container
+    
+        return self.container.make('Request').get_status_code() == value
+
 
     def can_view(self):
         wsgi = generate_wsgi()

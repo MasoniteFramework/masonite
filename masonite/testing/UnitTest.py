@@ -5,9 +5,9 @@ class UnitTest:
 
     def setup_method(self):
         self.container = TestSuite().create_container().container
-    
-    def get(self): pass
+
     def controller(self): pass
+
     def route(self, url):
         for route in self.container.make('WebRoutes'):
             if route.route_url == url:

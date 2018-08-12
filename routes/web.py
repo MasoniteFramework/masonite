@@ -6,6 +6,7 @@ ROUTES = [
     Get().route('/test', None).middleware('auth'),
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),
+    Get().domain('test').route('/test/route', 'TestController@testing'),
     Get().route('/login', 'TestController@testing').name('login'),
     group('/example', [
         Get().route('/test/1', 'TestController@show'),

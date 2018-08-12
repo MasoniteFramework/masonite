@@ -16,6 +16,12 @@ class MockRoute:
 
     def has_controller(self, controller):
         return self.route.controller == controller
+    
+    def contains(self, value):
+        wsgi = generate_wsgi()
+        wsgi['PATH_INFO'] = self.route.route_url
+        self.container = self._run_container(wsgi).container
+        return value in self.container.make('Response')
 
     def can_view(self):
         wsgi = generate_wsgi()

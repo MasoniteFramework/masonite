@@ -148,9 +148,17 @@ class App():
         return self._bind_hook('resolve', key, obj)
     
     def fire_hook(self, action, key, obj):
-        for hook, hook_list in self._hooks[action].items():
-            for hook_obj in hook_list:
-                hook_obj(obj, self)
+        if key in self._hooks[action] or \
+            inspect.isclass(obj) and \
+            obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
+            
+            for hook, hook_list in self._hooks[action].items():
+                for hook_obj in hook_list:
+                    hook_obj(obj, self)
+        # elif obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
+        #     for hook, hook_list in self._hooks[action].items():
+        #         for hook_obj in hook_list:
+        #             hook_obj(obj, self)
 
     def _bind_hook(self, hook, key, obj):
         if key in self._hooks[hook]:

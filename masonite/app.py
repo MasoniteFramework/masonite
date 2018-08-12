@@ -148,7 +148,7 @@ class App():
         return self._bind_hook('resolve', key, obj)
     
     def fire_hook(self, action, key, obj):
-        if key in self._hooks[action] or \
+        if str(key) in self._hooks[action] or \
             inspect.isclass(obj) and \
             obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
             

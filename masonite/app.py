@@ -14,6 +14,11 @@ class App():
         self.providers = {}
         self.strict = strict
         self.override = override
+        self._hooks = {
+            'make': {},
+            'bind': {},
+            'resolve': {},
+        }
 
 
     def bind(self, name, class_obj):
@@ -24,6 +29,7 @@ class App():
             raise StrictContainerException('You cannot override a key inside a strict container')
 
         if self.override or not name in self.providers:
+            self.fire_hook('bind', name, class_obj)
             self.providers.update({name: class_obj})
 
         return self
@@ -34,7 +40,9 @@ class App():
         Retreives a class from the container by key
         """
         if self.has(name):
-            return self.providers[name]
+            obj = self.providers[name]
+            self.fire_hook('make', name, obj)
+            return obj
 
         raise MissingContainerBindingNotFound("{0} key was not found in the container".format(name))
 
@@ -104,7 +112,9 @@ class App():
         """
         parameter = str(parameter)
         if parameter is not 'self' and parameter in self.providers:
-            return self.providers[parameter]
+            obj = self.providers[parameter]
+            self.fire_hook('resolve', parameter, obj)
+            return obj
         
         raise ContainerError(
             'The dependency with the key of {0} could not be found in the container'.format(parameter)
@@ -118,8 +128,33 @@ class App():
         for provider, provider_class in self.providers.items():
 
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
-                return provider_class
+                obj = provider_class
+                self.fire_hook('resolve', parameter, obj)
+                return obj
             elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation):
-                return provider_class
+                obj = provider_class
+                self.fire_hook('resolve', parameter, obj)
+                return obj
         
         raise ContainerError('The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+
+    def on_bind(self, key, obj):
+        return self._bind_hook('bind', key, obj)
+
+    def on_make(self, key, obj):
+        return self._bind_hook('make', key, obj)
+    
+    def on_resolve(self, key, obj):
+        return self._bind_hook('resolve', key, obj)
+    
+    def fire_hook(self, action, key, obj):
+        for hook, hook_list in self._hooks[action].items():
+            for hook_obj in hook_list:
+                hook_obj(obj, self)
+
+    def _bind_hook(self, hook, key, obj):
+        if key in self._hooks[hook]:
+            self._hooks[hook][key].append(obj)
+        else:
+            self._hooks[hook].update({key: [obj]})
+        return self

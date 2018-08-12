@@ -20,7 +20,7 @@ setup(
     version=VERSION,
     install_requires=[
         'validator.py==1.2.5',
-        'cryptography==2.2.2',
+        'cryptography==2.3',
         'bcrypt==3.1.4',
         'requests==2.19.1',
         'tldextract==2.2.0',

@@ -3,13 +3,12 @@ import os
 import platform
 import sys
 
-from cleo import Command
 import psutil
+from cleo import Command
 from tabulate import tabulate
-from masonite_cli.application import application
 
-from masonite.info import VERSION
 from masonite.environment import LoadEnvironment
+from masonite.info import VERSION
 
 
 class InfoCommand(Command):
@@ -20,6 +19,7 @@ class InfoCommand(Command):
     """
 
     def handle(self):
+        from masonite_cli.application import application
         rows = []
 
         rows.append(['System Information', self._get_system_info()])

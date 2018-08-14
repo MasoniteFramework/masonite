@@ -1,4 +1,4 @@
-from masonite.testing import UnitTest
+from masonite.testing import UnitTest, MockRequest
 from masonite.routes import Get
 from app.http.controllers.TestController import TestController as ControllerTest
 
@@ -43,3 +43,9 @@ class TestUnitTest(UnitTest):
     def test_can_get_status_code(self):
         route = self.route('/test/post/route', method="POST")
         assert route.status('200 OK')
+
+    def test_get_returns_mock_request(self):
+        assert isinstance(self.get('/unit/1'), MockRequest)
+
+    def test_can_get_status_code(self):
+        assert self.get('/test/param/1').status('200 OK')

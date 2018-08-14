@@ -1,5 +1,5 @@
-from masonite.testsuite import TestSuite
-from masonite.testing import MockRoute
+from masonite.testsuite import TestSuite, generate_wsgi
+from masonite.testing import MockRoute, MockRequest
 
 class UnitTest:
 
@@ -7,6 +7,12 @@ class UnitTest:
         self.container = TestSuite().create_container().container
 
     def controller(self): pass
+
+    def get(self, url): 
+        wsgi = generate_wsgi()
+        wsgi['PATH_INFO'] = url
+        self.container = TestSuite().create_container(wsgi=wsgi).container
+        return MockRequest(url, self.container)
 
     def route(self, url, method='GET'):
         for route in self.container.make('WebRoutes'):

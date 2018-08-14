@@ -46,6 +46,18 @@ Instead of `python-dev` you may need to specify your Python version
 $ sudo apt-get install python3.6-dev libssl-dev
 ```
 
+## Windows
+
+Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
+
+Install [Python 3.7](https://www.python.org/downloads/windows/) and add it to PATH Environment variable.
+
+Open Windows PowerShell and run: `pip install masonite-cli`
+
+Add `C:\Users\%USERNAME%\.AppData\Programs\Python\Python37\Scripts\` to PATH Environment variable.
+
+Note: PATH variables depend on your installation folder
+
 ## Installation:
 
 ```

@@ -48,9 +48,11 @@ $ sudo apt-get install python3.6-dev libssl-dev
 
 ## Windows
 
-Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
+With windows you will need to have the latest OpenSSL version. Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
 
-Install [Python 3.7](https://www.python.org/downloads/windows/) and add it to PATH Environment variable.
+### Python 3.7
+
+If you are using [Python 3.7](https://www.python.org/downloads/windows/), add it to PATH Environment variable.
 
 Open Windows PowerShell and run: `pip install masonite-cli`
 

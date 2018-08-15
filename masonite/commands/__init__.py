@@ -15,3 +15,7 @@ from .ProviderCommand import ProviderCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand
 from .ValidatorCommand import ValidatorCommand
+from .RoutesCommand import RoutesCommand
+from .SeedCommand import SeedCommand
+from .SeedRunCommand import SeedRunCommand
+from .TinkerCommand import TinkerCommand

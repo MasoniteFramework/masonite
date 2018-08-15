@@ -1,8 +1,8 @@
 """ A RedirectionProvider Service Provider """
+
 from config import session
-from masonite.drivers.SessionMemoryDriver import SessionMemoryDriver
-from masonite.drivers.SessionCookieDriver import SessionCookieDriver
-from masonite.managers.SessionManager import SessionManager
+from masonite.drivers import SessionCookieDriver, SessionMemoryDriver
+from masonite.managers import SessionManager
 from masonite.provider import ServiceProvider
 
 

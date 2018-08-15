@@ -1,1 +1,4 @@
-VERSION = '2.0.14'
+"""Module for specifying the Masonite version in a central location.
+"""
+
+VERSION = '2.0.15'

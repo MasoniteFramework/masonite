@@ -1,16 +1,24 @@
-from config import storage, application
+"""Module for Storage class.
+"""
+
 import os
+
+from config import application, storage
 
 
 class Storage:
+    """Responsible for compiling Sass.
+    """
 
     def __init__(self):
+        """Storage constructor.
+        """
 
         pass
 
-    # this function will compile sass files only if
-    # the libsass module installed
     def compile_sass(self):
+        """Compile sass.
+        """
         try:
             import sass
         except ImportError as e:
@@ -28,8 +36,9 @@ class Storage:
                     compiled_sass = sass.compile(
                         string=f.read(), include_paths=storage.SASSFILES['includePaths']
                     )
-                    name = filename.split(os.sep)[-1].replace('.scss', '').replace('.sass', '')
-                    write_file = os.path.join(os.path.join(application.BASE_DIRECTORY, 
-                        storage.SASSFILES['compileTo']), '{0}.css'.format(name))
+                    name = filename.split(
+                        os.sep)[-1].replace('.scss', '').replace('.sass', '')
+                    write_file = os.path.join(os.path.join(application.BASE_DIRECTORY,
+                                                           storage.SASSFILES['compileTo']), '{0}.css'.format(name))
                 with open(write_file, 'w') as r:
                     r.write(compiled_sass)

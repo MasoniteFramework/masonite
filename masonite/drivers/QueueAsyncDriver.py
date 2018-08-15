@@ -1,4 +1,5 @@
 """ Async Driver Method """
+
 import threading
 
 from masonite.contracts.QueueContract import QueueContract

@@ -1,6 +1,8 @@
 """ A WhiteNoiseProvider Service Provider """
-from masonite.provider import ServiceProvider
+
 from whitenoise import WhiteNoise
+
+from masonite.provider import ServiceProvider
 
 
 class WhitenoiseProvider(ServiceProvider):
@@ -12,6 +14,7 @@ class WhitenoiseProvider(ServiceProvider):
 
     def boot(self, Application):
         """ Wraps the WSGI server in a whitenoise container """
+        
         self.app.bind('WSGI', WhiteNoise(
             self.app.make('WSGI'), root=Application.STATIC_ROOT))
 

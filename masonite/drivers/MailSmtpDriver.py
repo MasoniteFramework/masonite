@@ -1,4 +1,5 @@
 """ SMTP Driver Module """
+
 import smtplib
 from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
@@ -14,10 +15,10 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
     def send(self, message_contents=None):
         """Sends the message through SMTP.
-        
+
         Keyword Arguments:
             message {string} -- The message to be sent to SMTP. (default: {None})
-        
+
         Returns:
             None
         """
@@ -32,7 +33,8 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         message_contents = MIMEText(message_contents, 'html')
 
         message['Subject'] = self.message_subject
-        message['From'] = '{0} <{1}>'.format(self.config.FROM['name'], self.config.FROM['address'])
+        message['From'] = '{0} <{1}>'.format(
+            self.config.FROM['name'], self.config.FROM['address'])
         message['To'] = self.to_address
         message.attach(message_contents)
 
@@ -41,5 +43,6 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         s.login(config['username'], config['password'])
 
         # s.send_message(message)
-        s.sendmail(self.config.FROM['name'], self.to_address, message.as_string())
+        s.sendmail(self.config.FROM['name'],
+                   self.to_address, message.as_string())
         s.quit()

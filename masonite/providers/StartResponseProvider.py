@@ -1,6 +1,7 @@
 """ A StartResponseProvider Service Provider """
-from masonite.provider import ServiceProvider
+
 from masonite.exceptions import ResponseError
+from masonite.provider import ServiceProvider
 
 
 class StartResponseProvider(ServiceProvider):
@@ -15,7 +16,8 @@ class StartResponseProvider(ServiceProvider):
             try:
                 data = bytes(Response, 'utf-8')
             except TypeError:
-                raise ResponseError('An acceptable response type was not returned')
+                raise ResponseError(
+                    'An acceptable response type was not returned')
 
             self.app.bind('StatusCode', Request.get_status_code())
             Headers += [

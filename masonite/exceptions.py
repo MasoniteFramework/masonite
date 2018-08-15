@@ -48,3 +48,7 @@ class AutoloadContainerOverwrite(Exception):
 
 class InvalidSecretKey(Exception):
     pass
+
+
+class StrictContainerException(Exception):
+    pass

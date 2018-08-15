@@ -2,7 +2,7 @@ from masonite.app import App
 from masonite.request import Request
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.contracts.UploadContract import UploadContract
-from masonite.exceptions import ContainerError
+from masonite.exceptions import ContainerError, StrictContainerException
 import pytest
 
 
@@ -104,3 +104,19 @@ class TestContainer:
         
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
+
+    def test_strict_container_raises_exception(self):
+        self.app = App(strict=True)
+
+        self.app.bind('Request', object)
+
+        with pytest.raises(StrictContainerException):
+            self.app.bind('Request', object)
+
+    def test_override_container_does_not_override(self):
+        self.app = App(override=False)
+
+        self.app.bind('Request', 'test')
+        self.app.bind('Request', 'override')
+        assert self.app.make('Request') == 'test'
+

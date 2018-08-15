@@ -135,7 +135,7 @@ class Route:
                     regex += r'([a-zA-Z]+)'
                 else:
                     # default
-                    regex += r'(\w+)'
+                    regex += r'([\w.-]+)'
                 regex += r'\/'
 
                 # append the variable name passed @(variable):int to a list
@@ -467,4 +467,5 @@ class RouteGroup():
         """
 
         for route in self.routes:
-            route.named_route = name + route.named_route
+            if isinstance(route.named_route, str):
+                route.named_route = name + route.named_route

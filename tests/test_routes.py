@@ -33,7 +33,7 @@ class TestRoutes:
     def test_compile_route_to_regex(self):
         assert self.route.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
         assert self.route.compile_route_to_regex(Get().route(
-            'test/@route', None)) == '^test\\/(\\w+)\\/$'
+            'test/@route', None)) == '^test\\/([\\w.-]+)\\/$'
 
         assert self.route.compile_route_to_regex(Get().route(
             'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
@@ -99,8 +99,15 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
+    def test_group_route_sets_name_for_none_route(self):
+        look_for = []
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show').name('create'),
+            Get().route('/test/2', 'TestController@show')
+        ], name='post.')
+
         assert routes[0].named_route == 'post.create'
-        assert routes[1].named_route == 'post.edit'
+        assert routes[1].named_route == None
 
     def test_flatten_flattens_multiple_lists(self):
         routes = [

@@ -2,7 +2,10 @@
 """
 
 import inspect
-from masonite.exceptions import MissingContainerBindingNotFound, ContainerError, StrictContainerException
+
+from masonite.exceptions import (ContainerError,
+                                 MissingContainerBindingNotFound,
+                                 StrictContainerException)
 
 
 class App():
@@ -13,7 +16,6 @@ class App():
     def __init__(self, strict=False, override=True):
         """App class constructor
         """
-
 
         self.providers = {}
         self.strict = strict
@@ -29,9 +31,10 @@ class App():
         Returns:
             self
         """
-        
+
         if self.strict and name in self.providers:
-            raise StrictContainerException('You cannot override a key inside a strict container')
+            raise StrictContainerException(
+                'You cannot override a key inside a strict container')
 
         if self.override or not name in self.providers:
             self.providers.update({name: class_obj})
@@ -79,6 +82,7 @@ class App():
         Returns:
             self
         """
+
         return self
 
     def resolve(self, obj):
@@ -94,7 +98,7 @@ class App():
 
         provider_list = []
 
-        for parameter, value in inspect.signature(obj).parameters.items():
+        for dummy, value in inspect.signature(obj).parameters.items():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             else:
@@ -176,7 +180,7 @@ class App():
             object -- Returns the object found in the container.
         """
 
-        for provider, provider_class in self.providers.items():
+        for dummy, provider_class in self.providers.items():
 
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 return provider_class

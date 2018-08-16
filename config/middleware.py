@@ -1,7 +1,11 @@
+from app.http.middleware.MiddlewareTest import MiddlewareTest
+from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
+
+
 ROUTE_MIDDLEWARE = {
-    'test': 'app.http.middleware.MiddlewareTest.MiddlewareTest',
+    'test': MiddlewareTest,
     'middleware.test': [
-        'app.http.middleware.MiddlewareTest.MiddlewareTest',
-        'app.http.middleware.AddAttributeMiddleware.AddAttributeMiddleware'
+        MiddlewareTest,
+        AddAttributeMiddleware,
     ]
 }

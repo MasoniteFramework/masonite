@@ -321,13 +321,14 @@ class BaseHttpRoute:
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
             middleware_to_run = self.request.app().make('RouteMiddleware')[arg]
-            if isinstance(middleware_to_run, str):
+            if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
 
-            # Locate the middleware based on the string specified
             try:
-                located_middleware = self.request.app().resolve(
-                    self.request.app().make('RouteMiddleware')[arg])
+                for middleware in middleware_to_run:
+                    located_middleware = self.request.app().resolve(middleware)
+                    if hasattr(located_middleware, type_of_middleware):
+                        getattr(located_middleware, type_of_middleware)()
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))

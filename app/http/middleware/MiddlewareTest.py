@@ -10,9 +10,7 @@ class MiddlewareTest:
 
     def before(self):
         ''' Run This Middleware Before The Route Executes '''
-        print('running before')
         self.request.path = 'test/middleware/before/ran'
-        print('request path', self.request.path)
 
     def after(self):
         ''' Run This Middleware After The Route Executes '''

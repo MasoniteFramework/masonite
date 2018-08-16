@@ -16,6 +16,3 @@ class AddAttributeMiddleware:
         ''' Run This Middleware After The Route Executes '''
         pass
 
-    def load_user(self, request):
-        ''' Load user into the request '''
-        request.set_user(Auth(request).user())

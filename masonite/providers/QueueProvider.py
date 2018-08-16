@@ -1,8 +1,9 @@
 """ A RedirectionProvider Service Provider """
-from masonite.provider import ServiceProvider
-from masonite.drivers.QueueAsyncDriver import QueueAsyncDriver
-from masonite.managers.QueueManager import QueueManager
+
 from config import queue
+from masonite.drivers import QueueAsyncDriver
+from masonite.managers import QueueManager
+from masonite.provider import ServiceProvider
 
 
 class QueueProvider(ServiceProvider):

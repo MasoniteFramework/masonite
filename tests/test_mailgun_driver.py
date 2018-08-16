@@ -4,6 +4,7 @@ import os
 
 from masonite.app import App
 from masonite.exceptions import DriverNotFound
+from masonite.view import View
 from masonite.managers.MailManager import MailManager
 from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
@@ -24,6 +25,7 @@ if os.getenv('MAILGUN_SECRET'):
             self.app.bind('MailConfig', mail)
             self.app.bind('MailSmtpDriver', MailDriver)
             self.app.bind('MailMailgunDriver', Mailgun)
+            self.app.bind('View', View(self.app))
 
         def test_mailgun_driver(self):
             user = UserMock

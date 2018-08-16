@@ -1,6 +1,7 @@
 """ A RouteProvider Service Provider """
-import re
+
 import json
+import re
 
 from masonite.provider import ServiceProvider
 from masonite.view import View
@@ -103,7 +104,8 @@ class RouteProvider(ServiceProvider):
                     controller = self.app.resolve(route.controller)
 
                     # Resolve Controller Method
-                    response = self.app.resolve(getattr(controller, route.controller_method))
+                    response = self.app.resolve(
+                        getattr(controller, route.controller_method))
 
                     if isinstance(response, View):
                         response = response.rendered_template
@@ -116,13 +118,15 @@ class RouteProvider(ServiceProvider):
                     # If the Content-Type was not set in the view or before this
                     if not Request.header('Content-Type'):
                         if isinstance(response, dict):
-                            Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
+                            Request.header(
+                                'Content-Type', 'application/json; charset=utf-8', http_prefix=None)
                             self.app.bind(
                                 'Response',
                                 str(json.dumps(response))
                             )
                         else:
-                            Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
+                            Request.header(
+                                'Content-Type', 'text/html; charset=utf-8', http_prefix=None)
 
                 # Loads the request in so the middleware
                 # specified is able to use the

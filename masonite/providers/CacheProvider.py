@@ -1,8 +1,9 @@
 """ A Cache Service Provider """
-from masonite.provider import ServiceProvider
-from masonite.managers.CacheManager import CacheManager
-from masonite.drivers.CacheDiskDriver import CacheDiskDriver
+
 from config import cache
+from masonite.drivers import CacheDiskDriver
+from masonite.managers.CacheManager import CacheManager
+from masonite.provider import ServiceProvider
 
 
 class CacheProvider(ServiceProvider):

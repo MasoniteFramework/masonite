@@ -1,6 +1,7 @@
 """ A Csrf Service Provider """
+
+from masonite.auth import Csrf
 from masonite.provider import ServiceProvider
-from masonite.auth.Csrf import Csrf
 
 
 class CsrfProvider(ServiceProvider):

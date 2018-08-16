@@ -1,25 +1,33 @@
+""" Session Memory Module """
+
 from masonite.contracts.SessionContract import SessionContract
 from masonite.drivers.BaseDriver import BaseDriver
 
 
 class SessionMemoryDriver(SessionContract, BaseDriver):
-    """
-    Session from the memory driver
+    """Memory Session Driver
     """
 
     _session = {}
     _flash = {}
 
     def __init__(self, Environ):
-        """
-        Constructor
+        """Cookie Session Constructor
+        
+        Arguments:
+            Environ {dict} -- The WSGI environment
         """
 
         self.environ = Environ
 
     def get(self, key):
-        """
-        Get a session from object _session
+        """Get a value from the session.
+        
+        Arguments:
+            key {string} -- The key to get from the session.
+        
+        Returns:
+            string|None - Returns None if a value does not exist.
         """
 
         data = self.__collect_data(key)
@@ -29,8 +37,11 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         return None
 
     def set(self, key, value):
-        """
-        Set a new session in object _session
+        """Set a vlue in the session.
+        
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
         """
 
         ip = self.__get_client_address()
@@ -41,8 +52,13 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         self._session[ip][key] = value
 
     def has(self, key):
-        """
-        Check if a key exists in the session
+        """Check if a key exists in the session
+        
+        Arguments:
+            key {string} -- The key to check for in the session.
+        
+        Returns:
+            bool
         """
 
         data = self.__collect_data()
@@ -51,15 +67,20 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         return False
 
     def all(self):
-        """
-        Get all session data
+        """Get all session data
+        
+        Returns:
+            dict
         """
 
         return self.__collect_data()
 
     def flash(self, key, value):
-        """
-        Add temporary data to the session
+        """Add temporary data to the session.
+        
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
         """
 
         ip = self.__get_client_address()
@@ -69,9 +90,12 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         self._flash[ip][key] = value
 
     def reset(self, flash_only=False):
+        """Deletes all session data
+        
+        Keyword Arguments:
+            flash_only {bool} -- If only flash data should be deleted. (default: {False})
         """
-        Reset object _session
-        """
+
 
         ip = self.__get_client_address()
 
@@ -83,6 +107,15 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
                 self._session[ip] = {}
 
     def delete(self, key):
+        """Delete a value in the session by it's key.
+        
+        Arguments:
+            key {string} -- The key to find in the session.
+        
+        Returns:
+            bool -- If the key was deleted or not
+        """
+
         data = self.__collect_data()
 
         if key in data:
@@ -101,8 +134,10 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         return self.environ['REMOTE_ADDR']
 
     def __collect_data(self, key=False):
-        """
-        Collect data from session and flash data
+        """Collect data from session and flash data
+        
+        Returns:
+            dict
         """
 
         ip = self.__get_client_address()
@@ -134,8 +169,7 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         return session
 
     def helper(self):
-        """
-        Used to create builtin helper function
+        """Used to create builtin helper function
         """
 
         return self

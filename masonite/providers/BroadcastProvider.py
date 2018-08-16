@@ -1,9 +1,9 @@
-''' A RedirectionProvider Service Provider '''
-from masonite.provider import ServiceProvider
-from masonite.managers.BroadcastManager import BroadcastManager
-from masonite.drivers.BroadcastPusherDriver import BroadcastPusherDriver
-from masonite.drivers.BroadcastAblyDriver import BroadcastAblyDriver
+""" A RedirectionProvider Service Provider """
+
 from config import broadcast
+from masonite.drivers import BroadcastAblyDriver, BroadcastPusherDriver
+from masonite.managers import BroadcastManager
+from masonite.provider import ServiceProvider
 
 
 class BroadcastProvider(ServiceProvider):

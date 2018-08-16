@@ -6,6 +6,7 @@ from masonite.exceptions import DriverNotFound
 from masonite.managers.MailManager import MailManager
 from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
+from masonite.view import View
 
 
 class MailSmtpDriver:
@@ -27,6 +28,7 @@ class TestMailManager:
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)
         self.app.bind('MailConfig', mail)
+        self.app.bind('View', View(self.app))
 
     def test_mail_manager_loads_container(self):
         mailManager = MailManager()

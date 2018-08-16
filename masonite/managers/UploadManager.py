@@ -1,9 +1,13 @@
+""" Upload Manager Module """
+
 from masonite.managers.Manager import Manager
 
 
 class UploadManager(Manager):
-    """
-    Upload files manager class
+    """Manages all upload drivers.
+
+    Arguments:
+        Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
     config = 'StorageConfig'

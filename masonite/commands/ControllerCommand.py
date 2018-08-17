@@ -39,25 +39,3 @@ class ControllerCommand(Command):
                 )
             self.info('Controller Created Successfully!')
             return f.close()
-
-        # f.write("''' A Module Description '''\n\n")
-        # f.write('class {0}:\n'.format(controller))
-        # f.write("    ''' Class Docstring Description '''\n\n")
-        # f.write('    def show(self):\n')
-        # f.write('        pass\n')
-
-
-        #         f.write('\n    def index(self):\n')
-        #         f.write('        pass\n\n')
-        #         f.write('    def create(self):\n')
-        #         f.write('        pass\n\n')
-        #         f.write('    def store(self):\n')
-        #         f.write('        pass\n\n')
-        #         f.write('    def edit(self):\n')
-        #         f.write('        pass\n\n')
-        #         f.write('    def update(self):\n')
-        #         f.write('        pass\n\n')
-        #         f.write('    def destroy(self):\n')
-        #         f.write('        pass\n')
-
-        #     self.info('{0} Created Successfully!'.format(controller))

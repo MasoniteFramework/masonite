@@ -1,5 +1,10 @@
 import os
+
 from cleo import Command
+
+from masonite.app import App
+from masonite.helpers.filesystem import make_directory
+from masonite.view import View
 
 
 class JobCommand(Command):
@@ -12,19 +17,19 @@ class JobCommand(Command):
 
     def handle(self):
         job = self.argument('name')
-        if not os.path.isfile('app/jobs/{0}.py'.format(job)):
-            if not os.path.exists(os.path.dirname('app/jobs/{0}.py'.format(job))):
-                # Create the path to the job if it does not exist
-                os.makedirs(os.path.dirname('app/jobs/{0}.py'.format(job)))
+        view = View(App())
+        job_directory = 'app/jobs/{0}.py'.format(job)
 
-            f = open('app/jobs/{0}.py'.format(job), 'w+')
 
-            f.write("''' A {0} Queue Job '''\n\n".format(job))
-            f.write('from masonite.queues.Queueable import Queueable\n\n')
-            f.write("class {0}(Queueable):\n\n    ".format(job))
-            f.write("def __init__(self):\n        pass\n\n    ")
-            f.write("def handle(self):\n        pass\n")
+        if not make_directory(job_directory):
+            return self.error('Job Already Exists!')
+        
 
+        f = open(job_directory, 'w+')
+        if view.exists('/masonite/snippets/scaffold/job'):
+            f.write(
+                view.render('/masonite/snippets/scaffold/job',
+                            {'class': job.split('/')[-1]}).rendered_template
+            )
             self.info('Job Created Successfully!')
-        else:
-            self.comment('Job Already Exists!')
+            return f.close()

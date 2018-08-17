@@ -1,4 +1,5 @@
 from .AuthCommand import AuthCommand
+from .BaseScaffoldCommand import BaseScaffoldCommand
 from .CommandCommand import CommandCommand
 from .ControllerCommand import ControllerCommand
 from .InfoCommand import InfoCommand

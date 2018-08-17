@@ -1,5 +1,8 @@
 import os
 from cleo import Command
+from masonite.view import View
+from masonite.app import App
+from masonite.helpers.filesystem import make_directory
 
 
 class CommandCommand(Command):
@@ -12,19 +15,17 @@ class CommandCommand(Command):
 
     def handle(self):
         command = self.argument('name')
-        if not os.path.isfile('app/commands/{0}.py'.format(command)):
-            if not os.path.exists(os.path.dirname('app/commands/{0}.py'.format(command))):
-                # Create the path to the command if it does not exist
-                os.makedirs(os.path.dirname('app/commands/{0}.py'.format(command)))
+        view = View(App())
+        command_directory = 'app/commands/{0}.py'.format(command)
 
-            f = open('app/commands/{0}.py'.format(command), 'w+')
+        if not make_directory(command_directory):
+            return self.error('Command Already Exists!')
 
-            f.write('""" A {0} Command """\n'.format(command))
-            f.write('from cleo import Command\n\n\n')
-            f.write('class {0}(Command):\n    """\n    Description of command\n\n    '.format(command))
-            f.write('command:name\n        {argument : description}\n    """\n\n    ')
-            f.write('def handle(self):\n        pass')
-
+        f = open('app/commands/{0}.py'.format(command), 'w+')
+        if view.exists('/masonite/snippets/scaffold/model'):
+            f.write(
+                view.render('/masonite/snippets/scaffold/command',
+                            {'class': command.split('/')[-1]}).rendered_template
+            )
             self.info('Command Created Successfully!')
-        else:
-            self.error('Command Already Exists!')
+            return f.close()

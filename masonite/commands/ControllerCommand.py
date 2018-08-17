@@ -4,6 +4,7 @@ from masonite.view import View
 from masonite.app import App
 from masonite.helpers.filesystem import make_directory
 
+
 class ControllerCommand(Command):
     """
     Creates a controller
@@ -23,19 +24,18 @@ class ControllerCommand(Command):
 
         if not make_directory('app/http/controllers/{0}.py'.format(controller)):
             return self.error('{0} Controller Exists!'.format(controller))
-            
 
         f = open('app/http/controllers/{0}.py'.format(controller), 'w+')
         if view.exists('/masonite/snippets/scaffold/controller'):
             if self.option('resource'):
-                f.write(
-                    view.render('/masonite/snippets/scaffold/controller_resource',
-                                {'class': controller.split('/')[-1]}).rendered_template
-                )
+                template = '/masonite/snippets/scaffold/controller_resource'
             else:
-                f.write(
-                    view.render('/masonite/snippets/scaffold/controller',
-                                {'class': controller.split('/')[-1]}).rendered_template
-                )
+                template = '/masonite/snippets/scaffold/controller'
+
+            f.write(
+                view.render(
+                    template, {'class': controller.split('/')[-1]}).rendered_template
+            )
+
             self.info('Controller Created Successfully!')
             return f.close()

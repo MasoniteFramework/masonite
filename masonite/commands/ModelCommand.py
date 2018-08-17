@@ -13,4 +13,4 @@ class ModelCommand(BaseScaffoldCommand):
 
     scaffold_name = "Model"
     template = '/masonite/snippets/scaffold/model'
-    base_directory = 'app/{0}.py'
+    base_directory = 'app/'

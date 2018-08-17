@@ -1,11 +1,9 @@
 import os
 from cleo import Command
-from masonite.view import View
-from masonite.app import App
-from masonite.helpers.filesystem import make_directory
+from masonite.commands import BaseScaffoldCommand
 
 
-class CommandCommand(Command):
+class CommandCommand(BaseScaffoldCommand):
     """
     Creates a new command
 
@@ -13,19 +11,23 @@ class CommandCommand(Command):
         {name : Name of the command you would like to create}
     """
 
-    def handle(self):
-        command = self.argument('name')
-        view = View(App())
-        command_directory = 'app/commands/{0}.py'.format(command)
+    scaffold_name = 'Command'
+    template = '/masonite/snippets/scaffold/command'
+    base_directory = 'app/commands/'
 
-        if not make_directory(command_directory):
-            return self.error('Command Already Exists!')
+    # def handle(self):
+    #     command = self.argument('name')
+    #     view = View(App())
+    #     command_directory = 'app/commands/{0}.py'.format(command)
 
-        f = open('app/commands/{0}.py'.format(command), 'w+')
-        if view.exists('/masonite/snippets/scaffold/model'):
-            f.write(
-                view.render('/masonite/snippets/scaffold/command',
-                            {'class': command.split('/')[-1]}).rendered_template
-            )
-            self.info('Command Created Successfully!')
-            return f.close()
+    #     if not make_directory(command_directory):
+    #         return self.error('Command Already Exists!')
+
+    #     f = open('app/commands/{0}.py'.format(command), 'w+')
+    #     if view.exists('/masonite/snippets/scaffold/model'):
+    #         f.write(
+    #             view.render('/masonite/snippets/scaffold/command',
+    #                         {'class': command.split('/')[-1]}).rendered_template
+    #         )
+    #         self.info('Command Created Successfully!')
+    #         return f.close()

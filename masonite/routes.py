@@ -162,8 +162,8 @@ class Route:
         regex += '$'
         return regex
 
-    def compile(self, key, compiler):
-        self.route_compilers.update({key: compiler})
+    def compile(self, key, to=''):
+        self.route_compilers.update({key: to})
         return self
 
     def generated_url_list(self):

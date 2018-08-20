@@ -3,6 +3,8 @@ from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
+from masonite.exceptions import InvalidRouteCompileException
+import pytest
 
 
 class TestRoutes:
@@ -40,6 +42,19 @@ class TestRoutes:
 
         assert self.route.compile_route_to_regex(Get().route(
             'test/@route:string', None)) == '^test\\/([a-zA-Z]+)\\/$'
+
+    def test_route_can_add_compilers(self):
+        assert self.route.compile_route_to_regex(Get().route(
+            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
+        
+        self.route.compile('year', r'[0-9]{4}')
+
+        assert self.route.compile_route_to_regex(Get().route(
+            'test/@route:year', None)) == '^test\\/[0-9]{4}\\/$'
+
+        with pytest.raises(InvalidRouteCompileException):
+            self.route.compile_route_to_regex(Get().route(
+                'test/@route:slug', None))
 
     def test_route_gets_controllers(self):
         assert Get().route('test/url', 'TestController@show')

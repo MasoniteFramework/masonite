@@ -25,14 +25,6 @@ class TestServiceProvider:
     def test_service_provider_loads_app(self):
         assert self.provider.app == self.app
 
-
-    def test_service_provider_sets_on_app_object(self):
-        provider = ServiceProvider()
-        provider.load_app(self.app).register()
-
-        assert 'Request' in self.app.providers 
-        assert self.app.make('Request') == object
-
     def test_can_call_container_with_self_parameter(self):
         self.app.bind('Request', object)
         self.app.bind('Get', object)

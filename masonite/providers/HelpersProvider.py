@@ -1,9 +1,10 @@
 """ A SassProvider Service Provider """
+
 import builtins
 import os
 
+from masonite.helpers.view_helpers import back, set_request_method
 from masonite.provider import ServiceProvider
-from masonite.helpers.view_helpers import set_request_method, back
 
 
 class HelpersProvider(ServiceProvider):

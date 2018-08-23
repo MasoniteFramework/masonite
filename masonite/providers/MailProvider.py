@@ -1,10 +1,9 @@
 """ A Mail Service Provider """
-from masonite.provider import ServiceProvider
-from masonite.drivers.MailSmtpDriver import MailSmtpDriver
-from masonite.drivers.MailMailgunDriver import MailMailgunDriver
-from masonite.managers.MailManager import MailManager
 
 from config import mail
+from masonite.drivers import MailMailgunDriver, MailSmtpDriver
+from masonite.managers import MailManager
+from masonite.provider import ServiceProvider
 
 
 class MailProvider(ServiceProvider):

@@ -7,12 +7,19 @@ import json
 from pydoc import locate
 
 from config import middleware
-from masonite.exceptions import RouteMiddlewareNotFound
+from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 
 
 class Route:
     """Route class used to handle routing.
     """
+
+    route_compilers = {
+        'int': r'(\d+)',
+        'integer': r'(\d+)', 
+        'string': r'([a-zA-Z]+)',
+        'default': r'([\w.-]+)'
+    }
 
     def __init__(self, environ=None):
         """Route constructor
@@ -129,13 +136,19 @@ class Route:
         regex = '^'
         for regex_route in split_given_route:
             if '@' in regex_route:
-                if ':int' in regex_route:
-                    regex += r'(\d+)'
-                elif ':string' in regex_route:
-                    regex += r'([a-zA-Z]+)'
+                if ':' in regex_route:
+                    try:
+                        regex += self.route_compilers[regex_route.split(':')[
+                            1]]
+                    except KeyError:
+                        raise InvalidRouteCompileException(
+                            'Route compiler "{}" is not an available route compiler. ' \
+                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
+                                regex_route.split(':')[1])
+                        )
                 else:
-                    # default
-                    regex += r'([\w.-]+)'
+                    regex += self.route_compilers['default']
+
                 regex += r'\/'
 
                 # append the variable name passed @(variable):int to a list
@@ -149,6 +162,10 @@ class Route:
         self.url_list = url_list
         regex += '$'
         return regex
+
+    def compile(self, key, to=''):
+        self.route_compilers.update({key: to})
+        return self
 
     def generated_url_list(self):
         """Returns the URL list
@@ -338,9 +355,6 @@ class BaseHttpRoute:
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
-
-
-
 
 
 class Get(BaseHttpRoute):

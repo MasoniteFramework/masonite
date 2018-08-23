@@ -16,6 +16,7 @@ class Route:
 
     route_compilers = {
         'int': r'(\d+)',
+        'integer': r'(\d+)', 
         'string': r'([a-zA-Z]+)',
         'default': r'([\w.-]+)'
     }

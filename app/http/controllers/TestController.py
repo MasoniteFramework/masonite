@@ -13,4 +13,6 @@ class TestController:
     
     def post_test(self):
         return 'post_test'
-    
+
+    def json(self):
+        return 'success'

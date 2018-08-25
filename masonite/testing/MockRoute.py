@@ -3,7 +3,6 @@ from masonite.app import App
 import io
 
 class MockRoute:
-    _bind = {}
 
     def __init__(self, route, container):
         self.route = route
@@ -34,7 +33,6 @@ class MockRoute:
     
         return self.container.make('Request').get_status_code() == value
 
-
     def can_view(self):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
@@ -47,7 +45,19 @@ class MockRoute:
         self._user = obj
         self.container.on_bind('Request', self._bind_user_to_request)
         return self
-        
+    
+    def on_bind(self, obj, method):
+        self.container.on_bind(obj, method)
+        return self
+    
+    def on_make(self, obj, method):
+        self.container.on_make(obj, method)
+        return self
+
+    def on_resolve(self, obj, method):
+        self.container.on_resolve(obj, method)
+        return self
+
     def _run_container(self, wsgi):
         return TestSuite().create_container(wsgi, container=self.container)
     

@@ -10,6 +10,7 @@ ROUTES = [
     Post().route('/test/post/route', 'TestController@post_test'),
     Get().route('/login', 'TestController@testing').name('login'),
     Get().route('/test/param/@id', 'TestController@testing'),
+    Post().route('/test/json/response/@id', 'TestController@json'),
     group('/example', [
         Get().route('/test/1', 'TestController@show'),
         Get().route('/test/2', 'TestController@show')

@@ -1,4 +1,4 @@
-from masonite.testing import UnitTest, MockRequest
+from masonite.testing import UnitTest, MockRequest, MockJson
 from masonite.routes import Get
 from app.http.controllers.TestController import TestController as ControllerTest
 
@@ -26,7 +26,7 @@ class TestUnitTest(UnitTest):
         assert self.route('/testing').has_middleware('auth')
         assert not self.route('/testing').has_middleware('auth', 'not')
 
-    def test_unit_test_has_route_middleware(self):
+    def test_unit_test_has_controller(self):
         assert self.route('/testing').has_controller(ControllerTest)
 
     def test_user_can_be_loaded(self):
@@ -40,7 +40,7 @@ class TestUnitTest(UnitTest):
     def test_can_get_post_route(self):
         assert self.route('/test/post/route', method="POST").contains('post_test')
 
-    def test_can_get_status_code(self):
+    def test_can_get_status_code_with_post_method(self):
         route = self.route('/test/post/route', method="POST")
         assert route.status('200 OK')
 
@@ -49,3 +49,12 @@ class TestUnitTest(UnitTest):
 
     def test_can_get_status_code(self):
         assert self.get('/test/param/1').status('200 OK')
+
+    def test_json_returns_mock_json(self):
+        assert isinstance(self.json('POST', '/test/json/response/1', {'id': 1}), MockJson)
+
+    def test_json_returns_200_OK(self):
+        json = self.json('POST', '/test/json/response/1', {'id': 1})
+        assert json.status('200 OK')
+        assert json.contains('success')
+

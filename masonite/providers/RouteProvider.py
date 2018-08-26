@@ -12,7 +12,7 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, WebRoutes, Route, Request, Environ, Headers):
+    def boot(self, WebRoutes, Route, Request, Environ, Headers, Application):
         # All routes joined
         for route in WebRoutes:
             router = Route
@@ -87,7 +87,8 @@ class RouteProvider(ServiceProvider):
                         located_middleware.before()
 
                 # Show a helper in the terminal of which route has been visited
-                print(route.method_type + ' Route: ' + router.url)
+                if Application.DEBUG:
+                    print(route.method_type + ' Route: ' + router.url)
 
                 # Loads the request in so the middleware
                 # specified is able to use the

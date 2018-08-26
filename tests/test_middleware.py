@@ -7,12 +7,14 @@ from masonite.auth import Csrf
 from masonite.providers import RouteProvider
 from app.http.middleware.TestMiddleware import TestMiddleware as MiddlewareTest
 from app.http.middleware.TestHttpMiddleware import TestHttpMiddleware as MiddlewareHttpTest
+from config import application
 
 class TestMiddleware:
 
     def setup_method(self):
         self.app = App()
         self.app.bind('Environ', generate_wsgi())
+        self.app.bind('Application', application)
         self.app.make('Environ')
         self.app.bind('Headers', [])
         self.app.bind('Request', Request(self.app.make('Environ')).load_app(self.app))

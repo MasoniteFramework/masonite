@@ -6,7 +6,6 @@ class JsonResponseMiddleware:
         self.request = Request
 
     def after(self):
-        print('running json response middleware')
         if not self.request.header('Content-Type'):
             if isinstance(self.request.app().make('Response'), dict):
                 self.request.header(

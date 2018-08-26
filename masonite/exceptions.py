@@ -52,3 +52,7 @@ class InvalidSecretKey(Exception):
 
 class StrictContainerException(Exception):
     pass
+
+
+class InvalidRouteCompileException(Exception):
+    pass

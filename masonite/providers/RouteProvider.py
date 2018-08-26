@@ -38,20 +38,6 @@ class RouteProvider(ServiceProvider):
             else:
                 matchurl = re.compile(regex.replace(r'\/$', r'$'))
 
-            # This will create a dictionary of parameters given.
-            # This is sort of a short
-            # but complex way to retrieve the url parameters.
-            # This is the code used to
-            # convert /url/@firstname/@lastname to
-            # {'firstmane': 'joseph', 'lastname': 'mancuso'}
-            try:
-                parameter_dict = {}
-                for index, value in enumerate(matchurl.match(router.url).groups()):
-                    parameter_dict[router.generated_url_list()[index]] = value
-                request.set_params(parameter_dict)
-            except AttributeError:
-                pass
-
             """
             |--------------------------------------------------------------------------
             | Houston, we've got a match
@@ -70,6 +56,21 @@ class RouteProvider(ServiceProvider):
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
                         continue
+
+                # This will create a dictionary of parameters given.
+                # This is sort of a short
+                # but complex way to retrieve the url parameters.
+                # This is the code used to
+                # convert /url/@firstname/@lastname to
+                # {'firstmane': 'joseph', 'lastname': 'mancuso'}
+                try:
+                    parameter_dict = {}
+                    for index, value in enumerate(matchurl.match(router.url).groups()):
+                        parameter_dict[router.generated_url_list()[index]] = value
+                    request.set_params(parameter_dict)
+                except AttributeError:
+                    pass
+
                 """
                 |--------------------------------------------------------------------------
                 | Execute Before Middleware
@@ -107,9 +108,6 @@ class RouteProvider(ServiceProvider):
                         'Response',
                         router.get(route.route, response)
                     )
-
-                    # If the Content-Type was not set in the view or before this
-                    
 
                 # Loads the request in so the middleware
                 # specified is able to use the

@@ -7,7 +7,7 @@ import json
 
 from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
-
+from masonite.view import View
 
 class Route:
     """Route class used to handle routing.
@@ -251,6 +251,19 @@ class BaseHttpRoute:
 
         except Exception as e:
             print('\033[93mWarning in routes/web.py!', e, '\033[0m')
+        
+    def get_response(self):
+        # Resolve Controller Constructor
+        controller = self.request.app().resolve(self.controller)
+
+        # Resolve Controller Method
+        response = self.request.app().resolve(
+            getattr(controller, self.controller_method))
+
+        if isinstance(response, View):
+            response = response.rendered_template
+        
+        return response
 
     def domain(self, domain):
         """Sets the subdomain for the route.

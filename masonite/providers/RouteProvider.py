@@ -99,16 +99,8 @@ class RouteProvider(ServiceProvider):
                 # output of the controller method
                 if not request.redirect_url:
                     Request.status('200 OK')
-
-                    # Resolve Controller Constructor
-                    controller = self.app.resolve(route.controller)
-
-                    # Resolve Controller Method
-                    response = self.app.resolve(
-                        getattr(controller, route.controller_method))
-
-                    if isinstance(response, View):
-                        response = response.rendered_template
+                    
+                    response = route.get_response()
 
                     self.app.bind(
                         'Response',
@@ -116,17 +108,7 @@ class RouteProvider(ServiceProvider):
                     )
 
                     # If the Content-Type was not set in the view or before this
-                    if not Request.header('Content-Type'):
-                        if isinstance(response, dict):
-                            Request.header(
-                                'Content-Type', 'application/json; charset=utf-8', http_prefix=None)
-                            self.app.bind(
-                                'Response',
-                                str(json.dumps(response))
-                            )
-                        else:
-                            Request.header(
-                                'Content-Type', 'text/html; charset=utf-8', http_prefix=None)
+                    
 
                 # Loads the request in so the middleware
                 # specified is able to use the
@@ -142,7 +124,7 @@ class RouteProvider(ServiceProvider):
                 | This is middleware with an after method.
                 |
                 """
-
+    
                 for http_middleware in self.app.make('HttpMiddleware'):
                     located_middleware = self.app.resolve(
                         http_middleware

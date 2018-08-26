@@ -60,7 +60,7 @@ class ExceptionHandler:
         self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
-        if not self._app.make('Application').DEBUG or self._app.make('Application').DEBUG == 'False':
+        if not self._app.make('Application').DEBUG:
             return
 
         # return a view

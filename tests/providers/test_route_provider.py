@@ -18,7 +18,7 @@ class TestRouteProvider:
         self.app.bind('Route', Route(self.app.make('Environ')))
         self.app.bind('Request', Request(self.app.make('Environ')).load_app(self.app))
         self.app.bind('Headers', [])
-        self.app.bind('HttpMiddleware', [])
+        self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
         view = View(self.app)
         self.app.bind('View', view.render)
         self.provider = RouteProvider()

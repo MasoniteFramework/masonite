@@ -33,6 +33,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
+        self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
 
         # Insert Commands
         self.app.bind('MasoniteAuthCommand', AuthCommand())
@@ -59,6 +60,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
 
         self._autoload(application.AUTOLOAD)
+        self._set_application_debug_level()
 
     def boot(self, Environ, Request, Route):
         self.app.bind('Headers', [])
@@ -68,3 +70,9 @@ class AppProvider(ServiceProvider):
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
+    
+    def _set_application_debug_level(self):
+        if self.app.make('Application').DEBUG == 'True':
+            self.app.make('Application').DEBUG == True
+        elif self.app.make('Application').DEBUG == 'False':
+            self.app.make('Application').DEBUG == False

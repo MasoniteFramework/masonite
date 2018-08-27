@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
-## [Unreleased]
-
-
+## [2.0.16](https://github.com/MasoniteFramework/core/releases/tag/v2.0.16) - 2018-08-22
+### Added
+- Added docstrings to nearly all classes
+- Added container hooks
+- Added strict and override options to the container
+- Added a validator command
+- Added middleware groups
+- Added change log
+- Added route compilers
 
 ## [2.0.15](https://github.com/MasoniteFramework/core/releases/tag/v2.0.15) - 2018-08-12
 

@@ -8,7 +8,7 @@ from masonite.exceptions import (ContainerError,
                                  StrictContainerException)
 
 
-class App():
+class App:
     """Core of the Service Container. Performs bindings and resolving
     of objects to and from the container.
     """
@@ -110,7 +110,7 @@ class App():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             else:
-                provider_list.append(self._find_parameter(value))
+                raise ContainerError('Can only resolve annotations')
 
         return obj(*provider_list)
 
@@ -153,29 +153,6 @@ class App():
                     provider_list.update({provider_key: provider_class})
 
         return provider_list
-
-    def _find_parameter(self, parameter):
-        """Find a parameter in the container
-
-        Arguments:
-            parameter {string} -- Parameter to search for.
-
-        Raises:
-            ContainerError -- Thrown when the dependency is not found in the container.
-
-        Returns:
-            object -- Returns the object found in the container
-        """
-        parameter = str(parameter)
-        if parameter is not 'self' and parameter in self.providers:
-            obj = self.providers[parameter]
-            self.fire_hook('resolve', parameter, obj)
-            return obj
-
-        raise ContainerError(
-            'The dependency with the key of {0} could not be found in the container'.format(
-                parameter)
-        )
 
     def _find_annotated_parameter(self, parameter):
         """Find a given annotation in the container.

@@ -5,6 +5,8 @@ import os
 
 from masonite.helpers.view_helpers import back, set_request_method
 from masonite.provider import ServiceProvider
+from masonite.view import View
+from masonite.request import Request
 
 
 class HelpersProvider(ServiceProvider):
@@ -14,22 +16,22 @@ class HelpersProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, View, ViewClass, Request):
+    def boot(self, view: View, request: Request):
         """ Add helper functions to Masonite """
-        builtins.view = View
-        builtins.request = Request.helper
-        builtins.auth = Request.user
+        builtins.view = view.render
+        builtins.request = request.helper
+        builtins.auth = request.user
         builtins.container = self.app.helper
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
-        builtins.route = Request.route
+        builtins.route = request.route
 
-        ViewClass.share(
+        view.share(
             {
-                'request': Request.helper,
-                'auth': Request.user,
+                'request': request.helper,
+                'auth': request.user,
                 'request_method': set_request_method,
-                'route': Request.route,
+                'route': request.route,
                 'back': back
             }
         )

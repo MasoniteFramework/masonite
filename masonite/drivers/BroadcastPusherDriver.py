@@ -1,23 +1,24 @@
 """Module for the Pusher websocket driver.
 """
 
-from masonite.contracts.BroadcastContract import BroadcastContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import BroadcastContract
+from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
+from masonite.app import App
 
 
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):
     """Class for the Pusher websocket driver.
     """
 
-    def __init__(self, BroadcastConfig):
+    def __init__(self, app: App):
         """Pusher driver constructor.
 
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration.
         """
 
-        self.config = BroadcastConfig
+        self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):

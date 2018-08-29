@@ -1,7 +1,8 @@
 """ Session Memory Module """
 
-from masonite.contracts.SessionContract import SessionContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import SessionContract
+from masonite.drivers import BaseDriver
+from masonite.app import App
 
 
 class SessionMemoryDriver(SessionContract, BaseDriver):
@@ -11,14 +12,14 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
     _session = {}
     _flash = {}
 
-    def __init__(self, Environ):
+    def __init__(self, app: App):
         """Cookie Session Constructor
         
         Arguments:
             Environ {dict} -- The WSGI environment
         """
 
-        self.environ = Environ
+        self.environ = app.make('Environ')
 
     def get(self, key):
         """Get a value from the session.

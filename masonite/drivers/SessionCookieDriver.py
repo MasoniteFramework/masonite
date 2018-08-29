@@ -2,15 +2,17 @@
 
 import json
 
-from masonite.contracts.SessionContract import SessionContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import SessionContract
+from masonite.drivers import BaseDriver
+from masonite.request import Request
+from masonite.app import App
 
 
 class SessionCookieDriver(SessionContract, BaseDriver):
     """Cookie Session Driver
     """
 
-    def __init__(self, Environ, Request):
+    def __init__(self, request: Request, app: App):
         """Cookie Session Constructor
 
         Arguments:
@@ -18,8 +20,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             Request {masonite.request.Request} -- The Request class.
         """
 
-        self.environ = Environ
-        self.request = Request
+        self.environ = app.make('Environ')
+        self.request = request
 
     def get(self, key):
         """Get a value from the session.

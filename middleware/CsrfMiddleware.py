@@ -1,5 +1,7 @@
 ''' CSRF Middleware '''
 from masonite.exceptions import InvalidCSRFToken
+from masonite.request import Request
+from masonite.view import 
 
 
 class CsrfMiddleware:

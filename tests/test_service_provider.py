@@ -9,8 +9,8 @@ from masonite.testsuite.TestSuite import generate_wsgi
 
 class ContainerTest(ServiceProvider):
 
-    def boot(self, Request, Get):
-        return Request
+    def boot(self, request: Request, get: Get):
+        return request
 
     def testboot(self, request: Request, Get: Get):
         return request
@@ -26,8 +26,8 @@ class TestServiceProvider:
         assert self.provider.app == self.app
 
     def test_can_call_container_with_self_parameter(self):
-        self.app.bind('Request', object)
-        self.app.bind('Get', object)
+        self.app.bind('Request', Request({}))
+        self.app.bind('Get', Get())
 
         assert self.app.resolve(ContainerTest().boot) == self.app.make('Request')
 

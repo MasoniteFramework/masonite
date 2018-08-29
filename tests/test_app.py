@@ -72,8 +72,8 @@ class TestApp:
     def _func_on_resolve_class(self, request, container):
         request.path = '/on/resolve/class'
     
-    def _resolve_request(self, Request):
-        return Request
+    def _resolve_request(self, request: Request):
+        return request
 
     def _resolve_reques_class(self, request: Request):
         return request

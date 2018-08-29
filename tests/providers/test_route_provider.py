@@ -13,6 +13,7 @@ class TestRouteProvider:
 
     def setup_method(self):
         self.app = App()
+        self.app.bind('Container', self.app)
         self.app.bind('Environ', generate_wsgi())
         self.app.bind('Application', application)
         self.app.bind('WebRoutes', [])
@@ -31,12 +32,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Response') == 'test'
@@ -46,12 +43,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/view/', ControllerTest.returns_a_view)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Response') == 'Route not found. Error 404'
@@ -62,12 +55,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/test', ControllerTest.show)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').header('Content-Type') == 'text/html; charset=utf-8'
@@ -78,12 +67,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.show)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').param('id') == '1'
@@ -93,12 +78,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/test/@endpoint', ControllerTest.show)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').param('endpoint') == 'user.endpoint'
@@ -108,12 +89,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/test/@endpoint', ControllerTest.show)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').param('endpoint') == 'user-endpoint'
@@ -127,12 +104,8 @@ class TestRouteProvider:
         request.activate_subdomains()
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             request,
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Response') == 'Route not found. Error 404'
@@ -142,12 +115,8 @@ class TestRouteProvider:
         self.app.bind('WebRoutes', [get('/view', ControllerTest.returns_a_dict)])
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Response') == '{"id": 1}'
@@ -162,12 +131,8 @@ class TestRouteProvider:
         )
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').path == 'test/middleware/before/ran'
@@ -181,12 +146,8 @@ class TestRouteProvider:
         )
 
         self.provider.boot(
-            self.app.make('WebRoutes'),
             self.app.make('Route'),
             self.app.make('Request'),
-            self.app.make('Environ'),
-            self.app.make('Headers'),
-            self.app.make('Application'),
         )
 
         assert self.app.make('Request').path == 'test/middleware/before/ran'

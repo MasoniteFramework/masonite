@@ -2,14 +2,15 @@
 """
 
 from masonite.drivers.BaseDriver import BaseDriver
-from masonite.view import view
+from masonite.view import View
+from masonite.app import App
 
 
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers.
     """
 
-    def __init__(self, MailConfig, View):
+    def __init__(self, app: App, view: View):
         """Base mail driver constructor.
         
         Arguments:
@@ -17,12 +18,12 @@ class BaseMailDriver(BaseDriver):
             View {object} -- This is the masonite.view.View class.
         """
 
-        self.config = MailConfig
+        self.config = app.make('MailConfig')
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'
         self.message_body = None
-        self.view = View
+        self.view = view
 
     def to(self, user_email):
         """Sets the user email address who you want to send mail to.

@@ -13,13 +13,14 @@ class App:
     of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True):
+    def __init__(self, strict=False, override=True, resolve_parameters=False):
         """App class constructor
         """
 
         self.providers = {}
         self.strict = strict
         self.override = override
+        self.resolve_parameters = resolve_parameters
         self._hooks = {
             'make': {},
             'bind': {},
@@ -109,8 +110,12 @@ class App:
         for dummy, value in inspect.signature(obj).parameters.items():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
+            elif self.resolve_parameters:
+                provider_list.append(self._find_parameter(value))
             else:
-                raise ContainerError('Can only resolve annotations')
+                raise ContainerError(
+                    "This container is not set to resolve parameters. You can set this in the container" \
+                    "constructor using the 'resolve_parameters=True' keyword argument.")
 
         return obj(*provider_list)
 
@@ -181,6 +186,30 @@ class App:
         raise ContainerError(
             'The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
 
+
+    def _find_parameter(self, parameter):
+        """Find a parameter in the container
+
+        Arguments:
+            parameter {string} -- Parameter to search for.
+
+        Raises:
+            ContainerError -- Thrown when the dependency is not found in the container.
+            
+        Returns:
+            object -- Returns the object found in the container
+        """
+
+        parameter = str(parameter)
+        if parameter is not 'self' and parameter in self.providers:
+            obj = self.providers[parameter]
+            self.fire_hook('resolve', parameter, obj)
+            return obj
+        raise ContainerError(	
+            'The dependency with the key of {0} could not be found in the container'.format(	
+                parameter)	
+        )
+
     def on_bind(self, key, obj):
         """Set some listeners for when a specific key or class in binded to the container
 
@@ -242,12 +271,12 @@ class App:
 
     def _bind_hook(self, hook, key, obj):
         """Internal method used to abstract away the logic for binding an listener to the container hooks.
-        
+
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)
             key {string|object} -- The key to save for the listener
             obj {object} -- Should be a function or class method
-        
+
         Returns:
             self
         """

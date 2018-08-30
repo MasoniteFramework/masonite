@@ -4,11 +4,10 @@
 import cgi
 import importlib
 import json
-from pydoc import locate
 
 from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
-
+from masonite.view import View
 
 class Route:
     """Route class used to handle routing.
@@ -252,6 +251,19 @@ class BaseHttpRoute:
 
         except Exception as e:
             print('\033[93mWarning in routes/web.py!', e, '\033[0m')
+        
+    def get_response(self):
+        # Resolve Controller Constructor
+        controller = self.request.app().resolve(self.controller)
+
+        # Resolve Controller Method
+        response = self.request.app().resolve(
+            getattr(controller, self.controller_method))
+
+        if isinstance(response, View):
+            response = response.rendered_template
+        
+        return response
 
     def domain(self, domain):
         """Sets the subdomain for the route.
@@ -339,19 +351,14 @@ class BaseHttpRoute:
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
             middleware_to_run = self.request.app().make('RouteMiddleware')[arg]
-            if isinstance(middleware_to_run, str):
+            if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
 
-            # Locate the middleware based on the string specified
             try:
                 for middleware in middleware_to_run:
-                    located_middleware = self.request.app().resolve(locate(middleware))
-
-                    # If the middleware has the specific type of middleware
-                    # (before or after) then execute that
+                    located_middleware = self.request.app().resolve(middleware)
                     if hasattr(located_middleware, type_of_middleware):
                         getattr(located_middleware, type_of_middleware)()
-
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))

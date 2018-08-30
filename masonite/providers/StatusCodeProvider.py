@@ -6,10 +6,10 @@ from masonite.provider import ServiceProvider
 class ServerErrorExceptionHook:
 
     def load(self, app):
-        if app.make('Application').DEBUG == 'True' or app.make('Application').DEBUG == True:
+        if app.make('Application').DEBUG:
             return
 
-        request = app.make('Request').status('500 Internal Server Error')
+        app.make('Request').status('500 Internal Server Error')
         if app.make('ViewClass').exists('errors/500'):
             rendered_view = app.make('View')('errors/500').rendered_template
         else:

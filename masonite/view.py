@@ -24,6 +24,8 @@ class View:
     """View class. Responsible for handling everything involved with views and view environments.
     """
 
+    _splice = '/'
+
     def __init__(self, container):
         """View constructor.
 
@@ -70,7 +72,7 @@ class View:
         # Check if composers are even set for a speed improvement
         if self.composers:
             self._update_from_composers()
-
+            
         self.rendered_template = self.env.get_template(self.filename).render(
             self.dictionary)
 
@@ -92,7 +94,7 @@ class View:
         compiled_string = ''
 
         # Check for wildcard view composers
-        for template in self.template.split('/'):
+        for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
             if '{}*'.format(compiled_string) in self.composers:
@@ -197,7 +199,7 @@ class View:
         # loader(package_name, location)
         # /dashboard/templates/dashboard
         if loader == PackageLoader:
-            template_location = template_location.split('/')
+            template_location = template_location.split(self._splice)
 
             self.environments.append(
                 loader(template_location[0], '/'.join(template_location[1:])))
@@ -223,11 +225,11 @@ class View:
         """
 
         self.template = template
-        self.filename = template + '.html'
+        self.filename = '/'.join(template.split(self._splice)) + '.html'
 
         if template.startswith('/'):
             # Filter blanks strings from the split
-            location = list(filter(None, template.split('/')))
+            location = list(filter(None, template.split(self._splice)))
             self.filename = location[-1] + '.html'
 
             loader = PackageLoader(location[0], '/'.join(location[1:-1]))
@@ -297,4 +299,8 @@ class View:
 
         driver_cache = self.container.make('Cache')
         self.rendered_template = driver_cache.get(self.template)
+        return self
+    
+    def set_splice(self, splice):
+        self._splice = splice
         return self

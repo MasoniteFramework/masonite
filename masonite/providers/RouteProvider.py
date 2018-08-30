@@ -14,6 +14,7 @@ class RouteProvider(ServiceProvider):
 
     def boot(self, WebRoutes, Route, Request, Environ, Headers, Application):
         # All routes joined
+
         for route in WebRoutes:
             router = Route
             request = Request
@@ -50,6 +51,7 @@ class RouteProvider(ServiceProvider):
             """
 
             if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
+
                 route.load_request(request)
                 if request.has_subdomain():
                     # check if the subdomain matches the routes domain

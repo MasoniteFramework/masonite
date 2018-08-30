@@ -3,6 +3,7 @@ from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
 from config import application, providers
 from pydoc import locate
+import io
 
 
 def generate_wsgi():
@@ -11,6 +12,7 @@ def generate_wsgi():
         'wsgi.multithread': False,
         'wsgi.multiprocess': True,
         'wsgi.run_once': False,
+        'wsgi.input': io.BytesIO(),
         'SERVER_SOFTWARE': 'gunicorn/19.7.1',
         'REQUEST_METHOD': 'GET',
         'QUERY_STRING': 'application=Masonite',
@@ -36,12 +38,18 @@ def generate_wsgi():
 
 class TestSuite:
 
-    def create_container(self):
-        container = App()
+    def create_container(self, wsgi=generate_wsgi(), container=None, routes=[]):
+        if not container:
+            container = App()
 
-        container.bind('WSGI', object)
+        container.bind('WSGI', wsgi)
         container.bind('Application', application)
-        container.bind('Providers', providers)
+        container.bind('Container', container)
+
+
+        container.bind('ProvidersConfig', providers)
+        container.bind('Providers', [])
+        container.bind('WSGIProviders', [])
 
         """
         |--------------------------------------------------------------------------
@@ -56,16 +64,18 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Providers').PROVIDERS:
-            provider().load_app(container).register()
+        for provider in container.make('ProvidersConfig').PROVIDERS:
+            located_provider = provider()
+            located_provider.load_app(container).register()
+            if located_provider.wsgi:
+                container.make('WSGIProviders').append(located_provider)
+            else:
+                container.make('Providers').append(located_provider)
 
-        for provider in container.make('Providers').PROVIDERS:
-            located_provider = provider().load_app(container)
-
-            if located_provider.wsgi is False:
-                container.resolve(located_provider.boot)
-
-            """
+        for provider in container.make('Providers'):
+            container.resolve(provider.boot)
+        
+        """
         |--------------------------------------------------------------------------
         | Startup the Service Container
         |--------------------------------------------------------------------------
@@ -76,7 +86,7 @@ class TestSuite:
         |
         """
 
-        container.bind('Environ', generate_wsgi())
+        container.bind('Environ', wsgi)
 
         """
         |--------------------------------------------------------------------------
@@ -87,11 +97,11 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('Providers').PROVIDERS:
-            located_provider = provider().load_app(container)
-            container.bind('Response', 'test')
-            if located_provider.wsgi is True:
-                container.resolve(located_provider.boot)
+        if routes:
+            container.bind('WebRoutes', routes)
+
+        for provider in container.make('WSGIProviders'):
+            container.resolve(provider.boot)
 
         self.container = container
         return self

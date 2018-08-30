@@ -1,9 +1,13 @@
+""" Cache Manager """
+
 from masonite.managers.Manager import Manager
 
 
 class CacheManager(Manager):
-    """
-    Manager for cache drivers
+    """Manages all cache drivers.
+
+    Arguments:
+        Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
     config = 'CacheConfig'

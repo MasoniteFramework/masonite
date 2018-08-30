@@ -50,3 +50,7 @@ class TestServiceProvider:
         self.app.bind('Get', Get().route('url', None))
 
         assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
+        
+    def test_service_provider_sets_on_app_object(self):
+        assert 'Request' in self.app.providers 
+        assert self.app.make('Request') == object

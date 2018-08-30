@@ -75,21 +75,19 @@ class TestRoutes:
         assert routes[1].route_url == '/example/test/2'
 
     def test_group_route_sets_middleware(self):
-        routes = group('/example', [
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
-        ])
-
-        assert routes[0].route_url == '/example/test/1'
-
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
-        ], middleware=['auth', 'user'])
+            Get().route('/test/1', 'TestController@show').middleware('another'),
+            Get().route('/test/2', 'TestController@show'),
+            RouteGroup([
+                Get().route('/test/3', 'TestController@show'),
+                Get().route('/test/4', 'TestController@show')
+            ], middleware=('test', 'test2'))
+        ], middleware=('auth', 'user'))
 
         assert isinstance(routes, list)
-
-        assert routes[0].list_middleware == ('auth', 'user')
+        assert ['another', 'auth', 'user'] == routes[0].list_middleware
+        assert ['auth', 'user'] == routes[1].list_middleware
+        assert ['test', 'test2', 'auth', 'user'] == routes[2].list_middleware
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([

@@ -25,11 +25,14 @@ class MockRoute:
 
         return value in self.container.make('Response')
     
-    def status(self, value):
+    def status(self, value=None):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
         wsgi['REQUEST_METHOD'] = self.route.method_type
         self.container = self._run_container(wsgi).container
+
+        if not value:
+            return self.container.make('Request').get_status_code()
     
         return self.container.make('Request').get_status_code() == value
     

@@ -6,7 +6,10 @@ class MockRequest:
         self.url = url
         self.container = container
 
-    def status(self, value):
+    def status(self, value=None):
+        if not value:
+            return self.container.make('Request').get_status_code()
+            
         return self.container.make('Request').get_status_code() == value
 
     def user(self, obj):
@@ -17,6 +20,9 @@ class MockRequest:
         self._run_container(wsgi)
 
         return self
+
+    def ok(self):
+        return self.status('200 OK')
 
     def _run_container(self, wsgi):
         return TestSuite().create_container(wsgi, container=self.container)

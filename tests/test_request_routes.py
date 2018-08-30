@@ -35,7 +35,7 @@ class TestRequestRoutes:
     def test_loads_middleware(self):
         get = Get().route('test', None).middleware('auth', 'middleware')
 
-        assert get.list_middleware == ('auth', 'middleware')
+        assert get.list_middleware == ['auth', 'middleware']
 
 
     def test_method_type(self):

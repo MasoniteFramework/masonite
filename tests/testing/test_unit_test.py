@@ -43,12 +43,26 @@ class TestUnitTest(UnitTest):
     def test_can_get_status_code_with_post_method(self):
         route = self.route('/test/post/route', method="POST")
         assert route.status('200 OK')
+        assert route.ok()
 
     def test_get_returns_mock_request(self):
         assert isinstance(self.get('/unit/1'), MockRequest)
 
     def test_can_get_status_code(self):
         assert self.get('/test/param/1').status('200 OK')
+
+    def test_route_is_post_request(self):
+        assert self.route('/test/post/route', method="POST").is_post()
+
+    def test_route_has_session(self):
+        assert self.route('/test/set/test/session') \
+            .has_session('test')
+
+        assert not self.route('/test/set/test/session') \
+            .has_session('not')
+
+    def test_route_finds_route_without_method(self):
+        assert self.route('/test/post/route')
 
     def test_json_returns_mock_json(self):
         assert isinstance(self.json('POST', '/test/json/response/1', {'id': 1}), MockJson)

@@ -11,6 +11,7 @@ ROUTES = [
     Get().route('/login', 'TestController@testing').name('login'),
     Get().route('/test/param/@id', 'TestController@testing'),
     Post().route('/test/json/response/@id', 'TestController@json'),
+    Get().route('/test/set/test/session', 'TestController@session'),
     group('/example', [
         Get().route('/test/1', 'TestController@show'),
         Get().route('/test/2', 'TestController@show')

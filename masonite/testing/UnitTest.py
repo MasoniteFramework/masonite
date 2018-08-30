@@ -17,9 +17,9 @@ class UnitTest:
         self.container = TestSuite().create_container(wsgi=wsgi).container
         return MockRequest(url, self.container)
 
-    def route(self, url, method='GET'):
+    def route(self, url, method=False):
         for route in self.container.make('WebRoutes'):
-            if route.route_url == url and route.method_type == method:
+            if route.route_url == url and (route.method_type == method or not method):
                 return MockRoute(route, self.container)
 
     def routes(self, routes): 

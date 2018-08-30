@@ -32,6 +32,9 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
     
         return self.container.make('Request').get_status_code() == value
+    
+    def ok(self):
+        return self.status('200 OK')
 
     def can_view(self):
         wsgi = generate_wsgi()
@@ -46,9 +49,38 @@ class MockRoute:
         self.container.on_bind('Request', self._bind_user_to_request)
         return self
     
+    def is_post(self):
+        return self.route.method_type == 'POST'
+
+    def is_get(self):
+        return self.route.method_type == 'GET'
+
+    def is_put(self):
+        return self.route.method_type == 'PUT'
+
+    def is_patch(self):
+        return self.route.method_type == 'PATCH'
+
+    def is_delete(self):
+        return self.route.method_type == 'DELETE'
+
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)
         return self
+    
+    def has_session(self, key):
+        wsgi = generate_wsgi()
+        wsgi['PATH_INFO'] = self.route.route_url
+        wsgi['RAW_URI'] = self.route.route_url
+        self.container = self._run_container(wsgi).container
+        return self.container.make('Session').has(key)
+    
+    def session(self, key):
+        wsgi = generate_wsgi()
+        wsgi['PATH_INFO'] = self.route.route_url
+        wsgi['RAW_URI'] = self.route.route_url
+        self.container = self._run_container(wsgi).container
+        return self.container.make('Session').get(key)
     
     def on_make(self, obj, method):
         self.container.on_make(obj, method)

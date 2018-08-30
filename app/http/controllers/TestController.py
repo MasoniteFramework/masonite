@@ -1,5 +1,7 @@
 from cleo import Command
 
+from masonite.request import Request
+
 class TestController:
 
     def __init__(self):
@@ -16,3 +18,7 @@ class TestController:
 
     def json(self):
         return 'success'
+
+    def session(self, request: Request):
+        request.session.set('test', 'value')
+        return 'session set'

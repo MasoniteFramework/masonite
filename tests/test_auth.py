@@ -1,4 +1,4 @@
-from masonite.facades.Auth import Auth
+from masonite.auth import Auth
 from masonite.request import Request
 from masonite.testsuite.TestSuite import generate_wsgi
 

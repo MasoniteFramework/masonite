@@ -55,8 +55,12 @@ class TestUnitTest(UnitTest):
         assert self.route('/test/post/route', method="POST").is_post()
 
     def test_route_has_session(self):
-        assert self.route('/test/set/test/session') \
+        route = self.route('/test/set/test/session')
+        assert route \
             .has_session('test')
+
+        assert route \
+            .is_get()
 
         assert not self.route('/test/set/test/session') \
             .has_session('not')

@@ -174,7 +174,6 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
-
         self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
@@ -189,8 +188,13 @@ class Request(Extendable):
             variables {string|dict}
         """
 
+        if isinstance(variables, dict):
+            self.request_variables = variables
+            return
+
         if isinstance(variables, str):
             variables = parse_qs(variables)
+
 
         for name in variables.keys():
             value = self._get_standardized_value(variables[name])
@@ -205,7 +209,6 @@ class Request(Extendable):
         Returns:
             string|bool
         """
-
         if isinstance(value, list):
             return value[0]
 

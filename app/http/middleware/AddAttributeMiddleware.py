@@ -1,10 +1,11 @@
 ''' Load User Middleware'''
 
+from masonite.request import Request
 
 class AddAttributeMiddleware:
     ''' Middleware class which loads the current user into the request '''
 
-    def __init__(self, Request):
+    def __init__(self, request: Request):
         ''' Inject Any Dependencies From The Service Container '''
         self.request = Request
 

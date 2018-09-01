@@ -4,20 +4,21 @@
 from masonite.contracts.BroadcastContract import BroadcastContract
 from masonite.drivers.BaseDriver import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
+from masonite.app import App
 
 
 class BroadcastAblyDriver(BroadcastContract, BaseDriver):
     """Class for the Ably Driver
     """
 
-    def __init__(self, BroadcastConfig):
+    def __init__(self, app: App):
         """Ably driver constructor
         
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration setting.
         """
 
-        self.config = BroadcastConfig
+        self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):

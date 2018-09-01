@@ -1,6 +1,3 @@
-from masonite.routes import Get, Post, Delete, Patch, Put
-
-
 def flatten_routes(routes):
     """Flattens the grouped routes into a single list of routes.
     
@@ -33,6 +30,7 @@ def get(url, controller):
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
+    from masonite.routes import Get
 
     return Get().route(url, controller)
 
@@ -47,6 +45,8 @@ def post(url, controller):
     Returns:
         masonite.routes.Post -- The Masonite Post class.
     """
+    
+    from masonite.routes import Post
 
     return Post().route(url, controller)
 
@@ -62,6 +62,8 @@ def delete(url, controller):
         masonite.routes.Delete -- The Masonite Delete class.
     """
 
+    from masonite.routes import Delete
+
     return Delete().route(url, controller)
 
 
@@ -75,6 +77,7 @@ def put(url, controller):
     Returns:
         masonite.routes.Put -- The Masonite Put class.
     """
+    from masonite.routes import Put
 
     return Put().route(url, controller)
 
@@ -89,6 +92,8 @@ def patch(url, controller):
     Returns:
         masonite.routes.Patch -- The Masonite Patch class.
     """
+
+    from masonite.routes import Patch
 
     return Patch().route(url, controller)
 

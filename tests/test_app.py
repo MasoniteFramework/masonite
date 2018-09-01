@@ -66,13 +66,22 @@ class TestApp:
         self.app.bind('Request', REQUEST)
         assert self.app.resolve(self._resolve_reques_class).path == '/on/resolve/class'
 
+    def test_can_resolve_parameter_with_keyword_argument_setting(self):
+        self.app.bind('Request', REQUEST)
+        self.app.resolve_parameters = True
+        assert self.app.resolve(
+            self._resolve_parameter) == REQUEST
+
     def _func_on_resolve(self, request, container):
         request.path = '/on/resolve'
 
     def _func_on_resolve_class(self, request, container):
         request.path = '/on/resolve/class'
     
-    def _resolve_request(self, Request):
+    def _resolve_request(self, request: Request):
+        return request
+
+    def _resolve_parameter(self, Request):
         return Request
 
     def _resolve_reques_class(self, request: Request):

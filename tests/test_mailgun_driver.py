@@ -20,6 +20,7 @@ if os.getenv('MAILGUN_SECRET'):
 
         def setup_method(self):
             self.app = App()
+            self.app.bind('Container', self.app)
 
             self.app.bind('Test', object)
             self.app.bind('MailConfig', mail)

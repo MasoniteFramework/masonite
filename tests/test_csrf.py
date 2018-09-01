@@ -1,5 +1,5 @@
 from masonite.app import App
-from middleware.CsrfMiddleware import CsrfMiddleware
+from masonite.middleware import CsrfMiddleware
 from masonite.auth.Csrf import Csrf
 from masonite.testsuite.TestSuite import TestSuite
 

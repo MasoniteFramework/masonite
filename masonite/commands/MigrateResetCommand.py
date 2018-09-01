@@ -4,6 +4,7 @@ import sys
 from cleo import Command
 
 from masonite.packages import add_venv_site_packages
+from orator.exceptions.query import QueryException
 
 
 class MigrateResetCommand(Command):
@@ -50,9 +51,8 @@ class MigrateResetCommand(Command):
             for migration_directory in migration_list:
                 try:
                     migrator.reset(migration_directory)
-
-                except Exception:
-                    pass
+                except QueryException as e:
+                    raise e
 
                 if migrator.get_notes():
                     notes += migrator.get_notes()

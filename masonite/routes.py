@@ -87,7 +87,7 @@ class Route:
 
                 request_body = self.environ['wsgi.input'].read(
                     request_body_size)
-                return {'payload': json.loads(request_body)}
+                return json.loads(request_body)
             else:
                 fields = cgi.FieldStorage(
                     fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)

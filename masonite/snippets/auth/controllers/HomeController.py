@@ -1,5 +1,5 @@
 ''' A Module Description '''
-from masonite.facades.Auth import Auth
+from masonite.auth import Auth
 
 class HomeController(object):
     ''' Home Dashboard Controller '''

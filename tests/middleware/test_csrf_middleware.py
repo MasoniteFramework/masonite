@@ -2,7 +2,7 @@ from masonite.request import Request
 from masonite.view import View
 from masonite.auth.Csrf import Csrf
 from masonite.app import App
-from middleware.CsrfMiddleware import CsrfMiddleware
+from masonite.middleware import CsrfMiddleware
 from masonite.testsuite.TestSuite import generate_wsgi
 import pytest
 from masonite.exceptions import InvalidCSRFToken

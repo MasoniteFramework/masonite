@@ -1,6 +1,7 @@
 """ A StatusProvider Service Provider """
 
 from masonite.provider import ServiceProvider
+from masonite.request import Request
 
 
 class ServerErrorExceptionHook:
@@ -28,17 +29,17 @@ class StatusCodeProvider(ServiceProvider):
     def register(self):
         self.app.bind('ServiceErrorExceptionHook', ServerErrorExceptionHook())
 
-    def boot(self, StatusCode, Request):
-        if StatusCode == '200 OK':
+    def boot(self):
+        if self.app.make('StatusCode') == '200 OK':
             return
 
-        if StatusCode in ('500 Internal Server Error', '404 Not Found'):
-            if self.app.make('ViewClass').exists('errors/{}'.format(StatusCode.split(' ')[0])):
+        if self.app.make('StatusCode') in ('500 Internal Server Error', '404 Not Found'):
+            if self.app.make('ViewClass').exists('errors/{}'.format(self.app.make('StatusCode').split(' ')[0])):
                 rendered_view = self.app.make('View')(
-                    'errors/{}'.format(StatusCode.split(' ')[0])).rendered_template
+                    'errors/{}'.format(self.app.make('StatusCode').split(' ')[0])).rendered_template
             else:
                 rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
-                    'code': StatusCode
+                    'code': self.app.make('StatusCode')
                 }).rendered_template
             Headers = [
                 ("Content-Length", str(len(rendered_view)))

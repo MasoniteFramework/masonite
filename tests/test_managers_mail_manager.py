@@ -24,6 +24,7 @@ class TestMailManager:
 
     def setup_method(self):
         self.app = App()
+        self.app = self.app.bind('Container', self.app)
 
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)

@@ -5,6 +5,8 @@ import re
 
 from masonite.provider import ServiceProvider
 from masonite.view import View
+from masonite.request import Request
+from masonite.routes import Route
 
 
 class RouteProvider(ServiceProvider):
@@ -12,11 +14,12 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, WebRoutes, Route, Request, Environ, Headers, Application):
+    def boot(self, route_class: Route, request_class: Request):
+
         # All routes joined
-        for route in WebRoutes:
-            router = Route
-            request = Request
+        for route in self.app.make('WebRoutes'):
+            router = route_class
+            request = request_class
 
             # Compiles the given route to regex
             regex = router.compile_route_to_regex(route)
@@ -49,7 +52,7 @@ class RouteProvider(ServiceProvider):
             |
             """
 
-            if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
+            if matchurl.match(router.url) and route.method_type == self.app.make('Environ')['REQUEST_METHOD']:
                 route.load_request(request)
                 if request.has_subdomain():
                     # check if the subdomain matches the routes domain
@@ -88,7 +91,8 @@ class RouteProvider(ServiceProvider):
                         located_middleware.before()
 
                 # Show a helper in the terminal of which route has been visited
-                if Application.DEBUG:
+
+                if self.app.make('Application').DEBUG:
                     print(route.method_type + ' Route: ' + router.url)
 
                 # Loads the request in so the middleware
@@ -100,7 +104,7 @@ class RouteProvider(ServiceProvider):
                 # Get the data from the route. This data is typically the
                 # output of the controller method
                 if not request.redirect_url:
-                    Request.status('200 OK')
+                    request_class.status('200 OK')
                     
                     response = route.get_response()
 

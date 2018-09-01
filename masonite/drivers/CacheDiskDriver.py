@@ -5,15 +5,15 @@ import glob
 import os
 import time
 
-from masonite.contracts.CacheContract import CacheContract
-from masonite.drivers.BaseDriver import BaseDriver
-
+from masonite.contracts import CacheContract
+from masonite.drivers import BaseDriver
+from masonite.app import App
 
 class CacheDiskDriver(CacheContract, BaseDriver):
     """Class for the cache disk driver.
     """
 
-    def __init__(self, CacheConfig, Application):
+    def __init__(self, app: App):
         """Cache disk driver constructor
         
         Arguments:
@@ -21,8 +21,8 @@ class CacheDiskDriver(CacheContract, BaseDriver):
             Application {config.application} -- Application configuration module.
         """
 
-        self.config = CacheConfig
-        self.appconfig = Application
+        self.config = app.make('CacheConfig')
+        self.appconfig = app.make('Application')
         self.cache_forever = None
 
     def store(self, key, value, extension=".txt", location=None):

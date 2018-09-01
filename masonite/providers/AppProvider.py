@@ -62,11 +62,11 @@ class AppProvider(ServiceProvider):
         self._autoload(application.AUTOLOAD)
         self._set_application_debug_level()
 
-    def boot(self, Environ, Request, Route):
+    def boot(self, request: Request, route: Route):
         self.app.bind('Headers', [])
         self.app.bind('StatusCode', '404 Not Found')
-        Route.load_environ(Environ)
-        Request.load_environ(Environ).load_app(self.app)
+        route.load_environ(self.app.make('Environ'))
+        request.load_environ(self.app.make('Environ')).load_app(self.app)
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)

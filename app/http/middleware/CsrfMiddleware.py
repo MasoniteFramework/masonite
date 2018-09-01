@@ -1,5 +1,5 @@
 """ CSRF Middleware """
-from masonite.middleware import CsrfMiddleware as Middleware
+from masonite.middleware.CsrfMiddleware import CsrfMiddleware as Middleware
 
 
 class CsrfMiddleware(Middleware):

@@ -18,8 +18,6 @@ from masonite.providers import (
     CsrfProvider,
 )
 
-from app.providers.MiddlewareProvider import MiddlewareProvider
-
 """
 |--------------------------------------------------------------------------
 | Providers List

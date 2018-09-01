@@ -1,10 +1,10 @@
 import json
-from masonite.app import App
+from masonite.request import Request
 
 class JsonResponseMiddleware:
 
-    def __init__(self, app: App):
-        self.request = app.make('Request')
+    def __init__(self, request: Request):
+        self.request = request
 
     def after(self):
         if not self.request.header('Content-Type'):

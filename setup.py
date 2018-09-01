@@ -6,7 +6,6 @@ setup(
     packages=[
         'masonite',
         'masonite.auth',
-        'masonite.facades',
         'masonite.providers',
         'masonite.commands',
         'masonite.drivers',

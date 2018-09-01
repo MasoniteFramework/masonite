@@ -15,6 +15,7 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, route_class: Route, request_class: Request):
+
         # All routes joined
         for route in self.app.make('WebRoutes'):
             router = route_class
@@ -90,6 +91,7 @@ class RouteProvider(ServiceProvider):
                         located_middleware.before()
 
                 # Show a helper in the terminal of which route has been visited
+
                 if self.app.make('Application').DEBUG:
                     print(route.method_type + ' Route: ' + router.url)
 

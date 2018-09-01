@@ -33,7 +33,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Response') == 'test'
@@ -44,7 +44,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Response') == 'Route not found. Error 404'
@@ -56,7 +56,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').header('Content-Type') == 'text/html; charset=utf-8'
@@ -68,7 +68,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').param('id') == '1'
@@ -79,7 +79,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').param('endpoint') == 'user.endpoint'
@@ -90,7 +90,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').param('endpoint') == 'user-endpoint'
@@ -104,8 +104,7 @@ class TestRouteProvider:
         request.activate_subdomains()
 
         self.provider.boot(
-            self.app.make('Route'),
-            request,
+            self.app.make('Route')
         )
 
         assert self.app.make('Response') == 'Route not found. Error 404'
@@ -116,7 +115,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Response') == '{"id": 1}'
@@ -132,7 +131,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').path == 'test/middleware/before/ran'
@@ -147,7 +146,7 @@ class TestRouteProvider:
 
         self.provider.boot(
             self.app.make('Route'),
-            self.app.make('Request'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Request').path == 'test/middleware/before/ran'

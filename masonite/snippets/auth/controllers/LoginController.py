@@ -1,24 +1,57 @@
-''' A Module Description '''
+""" A LoginController Module """
+
 from masonite.auth import Auth
+from masonite.request import Request
+from masonite.view import View
 
 
-class LoginController(object):
-    ''' Login Form Controller '''
+class LoginController:
+    """Login Form Controller
+    """
 
     def __init__(self):
+        """LoginContrller Constructor.
+        """
+
         pass
 
-    def show(self, Request, Application):
-        ''' Show the login page '''
-        return view('auth/login', {'app': Application, 'Auth': Auth(Request)})
+    def show(self, request: Request, view: View):
+        """Show the login page.
 
-    def store(self, Request):
-        if Auth(Request).login(Request.input('username'), Request.input('password')):
-            Request.redirect('/home')
-        else:
-            Request.redirect('/login')
-        return 'check terminal'
+        Arguments:
+            request {masonite.request.Request} -- The Masonite request class.
+            view {masonite.view.View} -- The Masonite view class.
 
-    def logout(self, Request):
-        Auth(Request).logout()
-        return Request.redirect('/login')
+        Returns:
+            masonite.view.View -- Returns the Masonite view class.
+        """
+
+        return view.render('auth/login', {'app': request.app.make('Application'), 'Auth': Auth(request)})
+
+    def store(self, request: Request):
+        """Login the user.
+
+        Arguments:
+            request {masonite.request.Request} -- The Masonite request class.
+
+        Returns:
+            masonite.request.Request -- The Masonite request class.
+        """
+
+        if Auth(request).login(request.input('username'), request.input('password')):
+            return request.redirect('/home')
+
+        return request.redirect('/login')
+
+    def logout(self, request: Request):
+        """Logs out the user.
+
+        Arguments:
+            request {masonite.request.Request} -- The Masonite request class.
+
+        Returns:
+            masonite.request.Request -- The Masonite request class.
+        """
+
+        Auth(request).logout()
+        return request.redirect('/login')

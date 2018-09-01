@@ -7,12 +7,19 @@ import json
 from pydoc import locate
 
 from config import middleware
-from masonite.exceptions import RouteMiddlewareNotFound
+from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 
 
 class Route:
     """Route class used to handle routing.
     """
+
+    route_compilers = {
+        'int': r'(\d+)',
+        'integer': r'(\d+)', 
+        'string': r'([a-zA-Z]+)',
+        'default': r'([\w.-]+)'
+    }
 
     def __init__(self, environ=None):
         """Route constructor
@@ -129,13 +136,19 @@ class Route:
         regex = '^'
         for regex_route in split_given_route:
             if '@' in regex_route:
-                if ':int' in regex_route:
-                    regex += r'(\d+)'
-                elif ':string' in regex_route:
-                    regex += r'([a-zA-Z]+)'
+                if ':' in regex_route:
+                    try:
+                        regex += self.route_compilers[regex_route.split(':')[
+                            1]]
+                    except KeyError:
+                        raise InvalidRouteCompileException(
+                            'Route compiler "{}" is not an available route compiler. ' \
+                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
+                                regex_route.split(':')[1])
+                        )
                 else:
-                    # default
-                    regex += r'([\w.-]+)'
+                    regex += self.route_compilers['default']
+
                 regex += r'\/'
 
                 # append the variable name passed @(variable):int to a list
@@ -149,6 +162,10 @@ class Route:
         self.url_list = url_list
         regex += '$'
         return regex
+
+    def compile(self, key, to=''):
+        self.route_compilers.update({key: to})
+        return self
 
     def generated_url_list(self):
         """Returns the URL list
@@ -171,7 +188,7 @@ class BaseHttpRoute:
     named_route = None
     required_domain = None
     module_location = 'app.http.controllers'
-    list_middleware = []
+    list_middleware = None
 
     def route(self, route, output):
         """Loads the route into the class. This also looks for the controller and attaches it to the route.
@@ -306,7 +323,10 @@ class BaseHttpRoute:
             self
         """
 
-        self.list_middleware = args
+        for arg in args:
+            if arg not in self.list_middleware:
+                self.list_middleware.append(arg)
+
         return self
 
     def run_middleware(self, type_of_middleware):
@@ -340,9 +360,6 @@ class BaseHttpRoute:
                     "Could not find the '{0}' route middleware".format(arg))
 
 
-
-
-
 class Get(BaseHttpRoute):
     """Class for specifying GET requests
     """
@@ -352,6 +369,7 @@ class Get(BaseHttpRoute):
         """
 
         self.method_type = 'GET'
+        self.list_middleware = []
 
 
 class Post(BaseHttpRoute):
@@ -363,6 +381,7 @@ class Post(BaseHttpRoute):
         """
 
         self.method_type = 'POST'
+        self.list_middleware = []
 
 
 class Put(BaseHttpRoute):
@@ -374,7 +393,7 @@ class Put(BaseHttpRoute):
         """
 
         self.method_type = 'PUT'
-
+        self.list_middleware = []
 
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests 
@@ -385,7 +404,7 @@ class Patch(BaseHttpRoute):
         """
 
         self.method_type = 'PATCH'
-
+        self.list_middleware = []
 
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests 
@@ -396,7 +415,7 @@ class Delete(BaseHttpRoute):
         """
 
         self.method_type = 'DELETE'
-
+        self.list_middleware = []
 
 class RouteGroup():
     """Class for specifying Route Groups
@@ -417,7 +436,6 @@ class RouteGroup():
         """
 
         from masonite.helpers.routes import flatten_routes
-
         self.routes = flatten_routes(routes)
 
         if middleware:

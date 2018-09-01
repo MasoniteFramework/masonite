@@ -191,12 +191,12 @@ class App():
         """
 
         for dummy, provider_class in self.providers.items():
-
+            
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
                 return obj
-            elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation):
+            elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation) or issubclass(provider_class.__class__, parameter.annotation):
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
                 return obj

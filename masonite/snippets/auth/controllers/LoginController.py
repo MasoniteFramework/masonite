@@ -10,7 +10,7 @@ class LoginController:
     """
 
     def __init__(self):
-        """LoginContrller Constructor.
+        """LoginController Constructor.
         """
 
         pass
@@ -26,7 +26,7 @@ class LoginController:
             masonite.view.View -- Returns the Masonite view class.
         """
 
-        return view.render('auth/login', {'app': request.app.make('Application'), 'Auth': Auth(request)})
+        return view.render('auth/login', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def store(self, request: Request):
         """Login the user.

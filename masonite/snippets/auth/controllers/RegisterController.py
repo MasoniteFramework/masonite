@@ -1,7 +1,5 @@
 """ The RegisterController Module """
 
-import bcrypt
-
 from config import auth
 from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password

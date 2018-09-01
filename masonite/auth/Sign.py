@@ -3,7 +3,7 @@ from cryptography.fernet import Fernet
 
 from masonite.exceptions import InvalidSecretKey
 
-
+import binascii
 class Sign:
     """Cryptographic signing class.
     """
@@ -38,11 +38,18 @@ class Sign:
         
         Returns:
             string -- Returns the encrypted value.
+
+        Raises:
+            InvalidSecretKey -- Thrown if the secret key has incorrect padding.
         """
 
-        f = Fernet(self.key)
-        self.encryption = f.encrypt(bytes(value, 'utf-8'))
-        return self.encryption.decode('utf-8')
+        try:
+            f = Fernet(self.key)
+            self.encryption = f.encrypt(bytes(value, 'utf-8'))
+            return self.encryption.decode('utf-8')
+        except binascii.Error:
+            raise InvalidSecretKey("The encryption key passed does not have correct padding and therefore cannot be used as a secret key.")
+
 
     def unsign(self, value=None):
         """Unsigns the value using the secret key.

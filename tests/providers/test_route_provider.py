@@ -104,7 +104,8 @@ class TestRouteProvider:
         request.activate_subdomains()
 
         self.provider.boot(
-            self.app.make('Route')
+            self.app.make('Route'),
+            self.app.make('Request')
         )
 
         assert self.app.make('Response') == 'Route not found. Error 404'

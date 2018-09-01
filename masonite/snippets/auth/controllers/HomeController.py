@@ -13,6 +13,6 @@ class HomeController:
         pass
 
     def show(self, request: Request, view: View):
-        if not Auth(Request).user():
+        if not Auth(request).user():
             request.redirect('/login')
         return view.render('auth/home', {'app': request.app().make('Application'), 'Auth': Auth(request)})

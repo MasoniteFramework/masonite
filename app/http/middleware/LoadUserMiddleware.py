@@ -3,6 +3,7 @@
 from masonite.auth import Auth
 from masonite.request import Request
 
+
 class LoadUserMiddleware:
     """Middleware class which loads the current user into the request
     """

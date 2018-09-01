@@ -26,7 +26,7 @@ NAME = 'Masonite 2.1'
 |
 """
 
-DEBUG = os.getenv('APP_DEBUG', 'False')
+DEBUG = os.getenv('APP_DEBUG', False)
 
 """
 |--------------------------------------------------------------------------

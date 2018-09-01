@@ -1,9 +1,10 @@
 """ Middleware Configuration Settings """
 
-from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
-from app.http.middleware.CsrfMiddleware import CsrfMiddleware
-from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
 from masonite.middleware import JsonResponseMiddleware
+
+from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
+from app.http.middleware.CsrfMiddleware import CsrfMiddleware
+from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 
 """
 |--------------------------------------------------------------------------

@@ -53,6 +53,8 @@ class MigrateResetCommand(Command):
                     migrator.reset(migration_directory)
                 except QueryException as e:
                     raise e
+                except FileNotFoundError:
+                    pass
 
                 if migrator.get_notes():
                     notes += migrator.get_notes()

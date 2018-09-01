@@ -49,7 +49,7 @@ class Autoload:
             for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
 
                 # If the object is a class and the objects module starts with the search path
-                if inspect.isclass(obj[1]) and obj[1].__module__.startswith(search_path.replace('/', '.')):
+                if inspect.isclass(obj[1]) and obj[1].__module__.split('.')[:-1] == search_path.split('/'):
                     if self.app.has(obj[1].__name__) and not self.app.make(obj[1].__name__).__module__.startswith(search_path):
                         raise AutoloadContainerOverwrite(
                             'Container already has the key: {}. Cannot overwrite a container key that exists outside of your application.'.format(obj[1].__name__))

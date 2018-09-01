@@ -187,7 +187,7 @@ class BaseHttpRoute:
     named_route = None
     required_domain = None
     module_location = 'app.http.controllers'
-    list_middleware = []
+    list_middleware = None
 
     def route(self, route, output):
         """Loads the route into the class. This also looks for the controller and attaches it to the route.
@@ -335,7 +335,10 @@ class BaseHttpRoute:
             self
         """
 
-        self.list_middleware = args
+        for arg in args:
+            if arg not in self.list_middleware:
+                self.list_middleware.append(arg)
+
         return self
 
     def run_middleware(self, type_of_middleware):
@@ -373,6 +376,7 @@ class Get(BaseHttpRoute):
         """
 
         self.method_type = 'GET'
+        self.list_middleware = []
 
 
 class Post(BaseHttpRoute):
@@ -384,6 +388,7 @@ class Post(BaseHttpRoute):
         """
 
         self.method_type = 'POST'
+        self.list_middleware = []
 
 
 class Put(BaseHttpRoute):
@@ -395,7 +400,7 @@ class Put(BaseHttpRoute):
         """
 
         self.method_type = 'PUT'
-
+        self.list_middleware = []
 
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests 
@@ -406,7 +411,7 @@ class Patch(BaseHttpRoute):
         """
 
         self.method_type = 'PATCH'
-
+        self.list_middleware = []
 
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests 
@@ -417,7 +422,7 @@ class Delete(BaseHttpRoute):
         """
 
         self.method_type = 'DELETE'
-
+        self.list_middleware = []
 
 class RouteGroup():
     """Class for specifying Route Groups
@@ -438,7 +443,6 @@ class RouteGroup():
         """
 
         from masonite.helpers.routes import flatten_routes
-
         self.routes = flatten_routes(routes)
 
         if middleware:

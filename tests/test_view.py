@@ -208,3 +208,25 @@ class TestView:
             view(
                 'test_exception', {'test': 'test'}
             ).cache_for(1, 'monthss')
+
+    def test_can_add_tests_to_view(self):
+        view = self.container.make('ViewClass')
+
+        view.test('admin', self._is_admin)
+
+        assert view._tests == {'admin': self._is_admin}
+
+        user = MockAdminUser
+        assert view.render(
+            'admin_test', {'user': user}).rendered_template == 'True'
+        
+        user.admin = 0
+
+        assert view.render(
+            'admin_test', {'user': user}).rendered_template == 'False'
+
+    def _is_admin(self, obj):
+        return obj.admin == 1
+
+class MockAdminUser:
+    admin = 1

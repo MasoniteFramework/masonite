@@ -31,6 +31,6 @@ class TestSigning:
 
     def test_sign_incorrect_padding(self):
         with pytest.raises(InvalidSecretKey):
-            padded_secret_key = "AQAAQDhAAMAAQAAAAAAAAthAAAAJDczODFmZDM2LTNiOTYtNDVmYS04MjQ2LWRkYzJkMmViYjQ2YQ==="
+            padded_secret_key = "AQAAQDhAAMAAQYS04MjQ2LWRkYzJkMmViYjQ2YQ==="
             s = Sign(padded_secret_key)
             assert s.sign('value')

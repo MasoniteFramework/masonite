@@ -50,6 +50,22 @@ $ sudo apt-get install python3.6-dev libssl-dev
 
 With windows you will need to have the latest OpenSSL version. Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
 
+## Mac
+
+With Mac you will install openssl through `brew`.
+
+```
+brew install openssl
+```
+
+If the Python 3 was newly installed, you may need to run commmand like
+
+```
+/Applications/Python\ 3.6/Install\ Certificates.command
+```
+
+to install certificates.
+
 ### Python 3.7
 
 If you are using [Python 3.7](https://www.python.org/downloads/windows/), add it to PATH Environment variable.

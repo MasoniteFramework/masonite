@@ -72,7 +72,7 @@ class TestUnitTest(UnitTest):
         assert isinstance(self.json('POST', '/test/json/response/1', {'id': 1}), MockJson)
 
     def test_json_returns_200_OK(self):
-        json = self.json('POST', '/test/json/response/1', {'id': 1})
+        json = self.json('/test/json/response/1', {'id': 1}, method="POST")
         assert json.status('200 OK')
         assert json.contains('success')
 

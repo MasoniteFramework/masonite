@@ -25,11 +25,11 @@ class UnitTest:
     def routes(self, routes): 
         self.container.bind('WebRoutes', self.container.make('WebRoutes') + routes)
 
-    def json(self, request_method, url, data):
+    def json(self, url, data, method='POST'):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = url
         wsgi['CONTENT_TYPE'] = 'application/json'
-        wsgi['REQUEST_METHOD'] = request_method
+        wsgi['REQUEST_METHOD'] = method
         wsgi['CONTENT_LENGTH'] = len(str(json.dumps(data)))
         wsgi['wsgi.input'] = io.StringIO(json.dumps(data))
         self.container = TestSuite().create_container(wsgi=wsgi).container

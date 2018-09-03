@@ -37,6 +37,7 @@ Also be sure to join the [Slack channel](https://masoniteframework.gitbooks.io/d
 
 - Python 3.4 +
 - OpenSSL (latest version)
+- Pip
 
 ## Linux
 

@@ -48,8 +48,24 @@ class App:
 
         return self
 
+    def simple(self, obj):
+        """Easy way to bind classes into the container by using passing the object only.
+        Automatically generates the key for the binding process.
+
+        Arguments:
+            class_obj {object} -- The object you want to bind
+
+        Returns:
+            self
+        """
+
+        self.bind("{module}.{name}".format(
+            module=obj.__module__, name=obj.__name__), obj)
+
+        return self
+
     def make(self, name):
-        """Retreives a class from the container by key.
+        """Retrieves a class from the container by key.
 
         Arguments:
             name {string} -- Key in the container that you want to get.
@@ -114,7 +130,7 @@ class App:
                 provider_list.append(self._find_parameter(value))
             else:
                 raise ContainerError(
-                    "This container is not set to resolve parameters. You can set this in the container" \
+                    "This container is not set to resolve parameters. You can set this in the container"
                     "constructor using the 'resolve_parameters=True' keyword argument.")
 
         return obj(*provider_list)
@@ -186,7 +202,6 @@ class App:
         raise ContainerError(
             'The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
 
-
     def _find_parameter(self, parameter):
         """Find a parameter in the container
 
@@ -195,7 +210,7 @@ class App:
 
         Raises:
             ContainerError -- Thrown when the dependency is not found in the container.
-            
+
         Returns:
             object -- Returns the object found in the container
         """
@@ -205,9 +220,9 @@ class App:
             obj = self.providers[parameter]
             self.fire_hook('resolve', parameter, obj)
             return obj
-        raise ContainerError(	
-            'The dependency with the key of {0} could not be found in the container'.format(	
-                parameter)	
+        raise ContainerError(
+            'The dependency with the key of {0} could not be found in the container'.format(
+                parameter)
         )
 
     def on_bind(self, key, obj):

@@ -8,3 +8,4 @@ omit =
     masonite/commands/*
     masonite/contracts/*
     masonite/snippets/*
+    .travis.yml

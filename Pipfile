@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+libsass = "*"
+whitenoise = "*"
+python-dotenv = "*"
+"validator.py" = "==1.2.5"
+cryptography = "==2.3"
+bcrypt = "==3.1.4"
+requests = "==2.18.4"
+"boto3" = "==1.5.24"
+tldextract = "==2.2.0"
+pusher = "==1.7.4"
+ably = "==1.0.1"
+pendulum = "==1.4.4"
+cleo = "==0.6.5"
+pytest = "*"
+coveralls = "*"
+"Jinja2" = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

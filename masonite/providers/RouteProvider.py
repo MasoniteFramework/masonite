@@ -14,17 +14,6 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def create_matchurl(self, router, route):
-        # Compiles the given route to regex
-        regex = router.compile_route_to_regex(route)
-
-        if route.route_url.endswith('/'):
-            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
-        else:
-            matchurl = re.compile(regex.replace(r'\/$', r'$'))
-
-        return matchurl
-
     def boot(self, router: Route, request: Request):
 
         # All routes joined
@@ -154,3 +143,24 @@ class RouteProvider(ServiceProvider):
                 break
             else:
                 self.app.bind('Response', 'Route not found. Error 404')
+
+    def create_matchurl(self, router, route):
+        """Creates a regex string for router.url to be matched against
+
+        Arguments:
+            router {masonite.routes.Route} -- The Masonite route object
+            route {masonite.routes.BaseHttpRoute} -- The current route being executed.
+
+        Returns:
+            string -- compiled regex string
+        """
+
+        # Compiles the given route to regex
+        regex = router.compile_route_to_regex(route)
+
+        if route.route_url.endswith('/'):
+            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
+        else:
+            matchurl = re.compile(regex.replace(r'\/$', r'$'))
+
+        return matchurl

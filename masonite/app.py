@@ -59,10 +59,17 @@ class App:
             self
         """
 
-        self.bind("{module}.{name}".format(
-            module=obj.__module__, name=obj.__name__), obj)
+        # Checks to see if object is an uninitiated class object
+        if hasattr(obj, '__name__'):
+            self.bind("{module}.{name}".format(
+                module=obj.__module__, name=obj.__name__), obj)
+            return self
 
-        return self
+        # Checks to see if object is an initiated class object
+        if hasattr(obj, '__class__'):
+            self.bind("{module}.{name}".format(
+                module=obj.__module__, name=obj.__class__.__name__), obj)
+            return self
 
     def make(self, name):
         """Retrieves a class from the container by key.

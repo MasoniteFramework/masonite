@@ -1,6 +1,7 @@
 """ Upload Manager Module """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import UploadManagerContract
+from masonite.managers import Manager
 
 
 class UploadManager(Manager):

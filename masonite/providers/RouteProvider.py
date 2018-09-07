@@ -1,12 +1,10 @@
 """ A RouteProvider Service Provider """
 
-import json
-import re
-
 from masonite.provider import ServiceProvider
 from masonite.view import View
 from masonite.request import Request
 from masonite.routes import Route
+from masonite.helpers.routes import create_matchurl
 
 
 class RouteProvider(ServiceProvider):
@@ -31,7 +29,7 @@ class RouteProvider(ServiceProvider):
             |
             """
 
-            matchurl = self.create_matchurl(router, route)
+            matchurl = create_matchurl(router, route)
 
             """
             |--------------------------------------------------------------------------
@@ -143,24 +141,3 @@ class RouteProvider(ServiceProvider):
                 break
             else:
                 self.app.bind('Response', 'Route not found. Error 404')
-
-    def create_matchurl(self, router, route):
-        """Creates a regex string for router.url to be matched against
-
-        Arguments:
-            router {masonite.routes.Route} -- The Masonite route object
-            route {masonite.routes.BaseHttpRoute} -- The current route being executed.
-
-        Returns:
-            string -- compiled regex string
-        """
-
-        # Compiles the given route to regex
-        regex = router.compile_route_to_regex(route)
-
-        if route.route_url.endswith('/'):
-            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
-        else:
-            matchurl = re.compile(regex.replace(r'\/$', r'$'))
-
-        return matchurl

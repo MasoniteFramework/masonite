@@ -1,9 +1,14 @@
+""" Helper Functions for RouteProvider """
+
+import re
+
+
 def flatten_routes(routes):
     """Flattens the grouped routes into a single list of routes.
-    
+
     Arguments:
         routes {list} -- This can be a multi dementional list which can flatten all lists into a single list.
-    
+
     Returns:
         list -- Returns the flatten list.
     """
@@ -22,11 +27,11 @@ def flatten_routes(routes):
 
 def get(url, controller):
     """Shortcut for Get HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         controller {string|object} -- This can be a string controller or a normal object controller
-    
+
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
@@ -37,15 +42,15 @@ def get(url, controller):
 
 def post(url, controller):
     """Shortcut for Post HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         controller {string|object} -- This can be a string controller or a normal object controller
-    
+
     Returns:
         masonite.routes.Post -- The Masonite Post class.
     """
-    
+
     from masonite.routes import Post
 
     return Post().route(url, controller)
@@ -53,11 +58,11 @@ def post(url, controller):
 
 def delete(url, controller):
     """Shortcut for Delete HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         controller {string|object} -- This can be a string controller or a normal object controller
-    
+
     Returns:
         masonite.routes.Delete -- The Masonite Delete class.
     """
@@ -69,11 +74,11 @@ def delete(url, controller):
 
 def put(url, controller):
     """Shortcut for Put HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         controller {string|object} -- This can be a string controller or a normal object controller
-    
+
     Returns:
         masonite.routes.Put -- The Masonite Put class.
     """
@@ -84,11 +89,11 @@ def put(url, controller):
 
 def patch(url, controller):
     """Shortcut for Patch HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         controller {string|object} -- This can be a string controller or a normal object controller
-    
+
     Returns:
         masonite.routes.Patch -- The Masonite Patch class.
     """
@@ -100,11 +105,11 @@ def patch(url, controller):
 
 def group(url, route_list):
     """Shortcut for GET HTTP class.
-    
+
     Arguments:
         url {string} -- The url you want to use for the route
         route_list {list} -- A list of routes
-    
+
     Returns:
         list -- Returns the list route
     """
@@ -114,16 +119,17 @@ def group(url, route_list):
 
     return route_list
 
+
 def compile_route_to_regex(route):
     """Compiles a route to regex
-    
+
     Arguments:
         route {masonite.routes.Route} -- The Masonite route object
-    
+
     Returns:
         string -- Returns the regex of the route.
     """
-    
+
     # Split the route
     split_given_route = route.split('/')
 
@@ -155,3 +161,25 @@ def compile_route_to_regex(route):
     regex += '$'
 
     return regex
+
+
+def create_matchurl(router, route):
+    """Creates a regex string for router.url to be matched against
+
+    Arguments:
+        router {masonite.routes.Route} -- The Masonite route object
+        route {masonite.routes.BaseHttpRoute} -- The current route being executed.
+
+    Returns:
+        string -- compiled regex string
+    """
+
+    # Compiles the given route to regex
+    regex = router.compile_route_to_regex(route)
+
+    if route.route_url.endswith('/'):
+        matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
+    else:
+        matchurl = re.compile(regex.replace(r'\/$', r'$'))
+
+    return matchurl

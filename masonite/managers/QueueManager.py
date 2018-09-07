@@ -1,9 +1,10 @@
 """ Queue Manager Module """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import QueueManagerContract
+from masonite.managers import Manager
 
 
-class QueueManager(Manager):
+class QueueManager(Manager, QueueManagerContract):
     """Manages all queue drivers.
 
     Arguments:

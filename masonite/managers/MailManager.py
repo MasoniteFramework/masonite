@@ -1,9 +1,10 @@
 """ Mail Manager Module """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import MailManagerContract
+from masonite.managers import Manager
 
 
-class MailManager(Manager):
+class MailManager(Manager, MailManagerContract):
     """Manages all mail drivers.
 
     Arguments:

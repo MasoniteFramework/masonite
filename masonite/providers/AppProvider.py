@@ -6,7 +6,7 @@ from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                InfoCommand, InstallCommand, JobCommand,
                                KeyCommand, MakeMigrationCommand,
-                               MigrateCommand, MigrateRefreshCommand,
+                               MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
                                ModelCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
@@ -47,6 +47,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteMigrateCommand', MigrateCommand())
         self.app.bind('MasoniteMigrateRefreshCommand', MigrateRefreshCommand())
         self.app.bind('MasoniteMigrateResetCommand', MigrateResetCommand())
+        self.app.bind('MasoniteMigrateStatusCommand', MigrateStatusCommand())
         self.app.bind('MasoniteMigrateRollbackCommand',
                       MigrateRollbackCommand())
         self.app.bind('MasoniteModelCommand', ModelCommand())

@@ -58,7 +58,6 @@ DRIVERS = {
         'port': os.getenv('MAIL_PORT', '465'),
         'username': os.getenv('MAIL_USERNAME', 'username'),
         'password': os.getenv('MAIL_PASSWORD', 'password'),
-        'ssl': True
     },
     'mailgun': {
         'secret': os.getenv('MAILGUN_SECRET', 'key-XX'),

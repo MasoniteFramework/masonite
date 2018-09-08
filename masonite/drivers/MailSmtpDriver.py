@@ -40,12 +40,14 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
         # Send the message via our own SMTP server.
         if 'ssl' in config and config['ssl'] is True:
-            s = smtplib.SMTP_SSL('{0}:{1}'.format(config['host'], config['port']))
+            self.smtp = smtplib.SMTP_SSL('{0}:{1}'.format(config['host'], config['port']))
         else:
-            s = smtplib.SMTP('{0}:{1}'.format(config['host'], config['port']))
-        s.login(config['username'], config['password'])
+            self.smtp = smtplib.SMTP('{0}:{1}'.format(
+                config['host'], config['port']))
 
-        # s.send_message(message)
-        s.sendmail(self.config.FROM['name'],
+        self.smtp.login(config['username'], config['password'])
+
+        # self.smtp.send_message(message)
+        self.smtp.sendmail(self.config.FROM['name'],
                    self.to_address, message.as_string())
-        s.quit()
+        self.smtp.quit()

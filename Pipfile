@@ -4,5 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-waitress = "==1.1.0"
 masonite = "==2.1.0b1"
+
+[dev-packages]
+waitress = "==1.1.0"
+
+[scripts]
+postgres = "pipenv install psycopg2"
+mysql = "pipenv install PyMySQL"
+key = "craft key --store"

@@ -26,7 +26,7 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
         builtins.route = request.route
-        builtins.mail = manager.helper
+        builtins.mail_helper = manager.helper
 
         view.share(
             {

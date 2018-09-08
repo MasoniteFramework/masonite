@@ -106,4 +106,4 @@ class TestMailManager:
         mail_driver = MailManager(self.app).driver('smtp')
 
         with pytest.raises(ssl.SSLError):
-            mail_driver.send('test')
+            mail_driver.to('test@email.com').send('test')

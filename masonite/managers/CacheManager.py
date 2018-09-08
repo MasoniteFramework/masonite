@@ -1,9 +1,10 @@
 """ Cache Manager """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import CacheManagerContract
+from masonite.managers import Manager
 
 
-class CacheManager(Manager):
+class CacheManager(Manager, CacheManagerContract):
     """Manages all cache drivers.
 
     Arguments:

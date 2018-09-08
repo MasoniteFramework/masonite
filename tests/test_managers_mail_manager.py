@@ -102,5 +102,4 @@ class TestMailManager:
         assert isinstance(mail_driver.driver('test'), Mailgun)
     
     def test_mail_helper_method_resolves_a_driver(self):
-        print(mail())
         assert isinstance(mail(), MailContract)

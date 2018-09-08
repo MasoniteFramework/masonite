@@ -39,7 +39,10 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         message.attach(message_contents)
 
         # Send the message via our own SMTP server.
-        s = smtplib.SMTP('{0}:{1}'.format(config['host'], config['port']))
+        if config['ssl']:
+            s = smtplib.SMTP_SSL('{0}:{1}'.format(config['host'], config['port']))
+        else:
+            s = smtplib.SMTP('{0}:{1}'.format(config['host'], config['port']))
         s.login(config['username'], config['password'])
 
         # s.send_message(message)

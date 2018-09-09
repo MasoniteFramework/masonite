@@ -21,6 +21,9 @@ class TestCsrf:
         assert 'csrf_field' in self.app.make('ViewClass').dictionary
         assert 'input' in self.app.make('ViewClass').dictionary['csrf_field']
 
+    def test_middleware_does_not_need_safe_filter(self):
+        assert '&lt;' not in self.app.make('ViewClass').render('csrf_field').rendered_template
+
     def test_verify_token(self):
         token = self.request.get_cookie('csrf_token', decrypt=False)
         assert self.csrf.verify_csrf_token(token)

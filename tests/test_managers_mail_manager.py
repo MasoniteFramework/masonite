@@ -8,6 +8,7 @@ from masonite.drivers import MailSmtpDriver as MailDriver
 from masonite.drivers import MailMailgunDriver as Mailgun
 from masonite.contracts import MailManagerContract
 from masonite.view import View
+from masonite.contracts import MailContract
 
 
 class MailSmtpDriver:
@@ -99,3 +100,6 @@ class TestMailManager:
         mail_driver = MailManager(self.app).driver('smtp')
 
         assert isinstance(mail_driver.driver('test'), Mailgun)
+    
+    def test_mail_helper_method_resolves_a_driver(self):
+        assert isinstance(mail_helper(), MailContract)

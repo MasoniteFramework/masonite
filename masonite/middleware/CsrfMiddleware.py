@@ -3,6 +3,7 @@ from masonite.exceptions import InvalidCSRFToken
 from masonite.request import Request
 from masonite.auth import Csrf
 from masonite.view import View
+from jinja2 import Markup
 
 
 class CsrfMiddleware:
@@ -19,7 +20,8 @@ class CsrfMiddleware:
         token = self.__verify_csrf_token()
 
         self.view.share({
-            'csrf_field': "<input type='hidden' name='__token' value='{0}' />".format(token)
+            'csrf_field': Markup("<input type='hidden' name='__token' value='{0}' />".format(token)),
+            'csrf_token': token
         })
 
     def after(self):

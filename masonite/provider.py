@@ -41,18 +41,38 @@ class ServiceProvider:
         return self
 
     def routes(self, routes):
+        """Adds routes to the container
+        
+        Arguments:
+            routes {list} -- List of routes to add to the container
+        """
+
         web_routes = self.app.make('WebRoutes')
         web_routes += routes
 
     def http_middleware(self, middleware):
+        """Adds HTTP middleware to the container
+        
+        Arguments:
+            middleware {list} -- List of middleware to add
+        """
+
         http_middleware = self.app.make('HttpMiddleware')
         http_middleware += middleware
 
     def route_middleware(self, middleware):
+        """Add route middleware to the container
+        
+        Arguments:
+            middleware {dict} -- A dictionary of route middleware to add
+        """
+
         route_middleware = self.app.make('RouteMiddleware')
         route_middleware.update(middleware)
 
     def migrations(self, *directories):
+        """Add migration directories to the container
+        """
 
         for directory in directories:
             self.app.bind(
@@ -61,13 +81,20 @@ class ServiceProvider:
             )
 
     def commands(self, *commands):
+        """Adds commands to the container. Pass in the commands as arguments.
+        """
 
         for command in commands:
-
             self.app.bind(
                 '{}Command'.format(random_string(4)),
                 command
             )
 
     def assets(self, assets):
+        """Add assets to the container
+        
+        Arguments:
+            assets {dict} -- A dictionary of assets to add
+        """
+        
         self.app.make('Storage').STATICFILES.update(assets)

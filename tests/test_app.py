@@ -1,10 +1,11 @@
+import inspect
+import pytest
+
 from masonite.app import App
 from masonite.request import Request
 from masonite.routes import Get, Post
 from masonite.exceptions import ContainerError
 from masonite.testsuite.TestSuite import generate_wsgi
-import inspect
-import pytest
 
 REQUEST = Request({}).load_environ(generate_wsgi())
 

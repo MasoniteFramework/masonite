@@ -7,6 +7,7 @@ from masonite.helpers.view_helpers import back, set_request_method
 from masonite.provider import ServiceProvider
 from masonite.view import View
 from masonite.request import Request
+from masonite.managers import MailManager
 
 
 class HelpersProvider(ServiceProvider):
@@ -16,7 +17,7 @@ class HelpersProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, view: View, request: Request):
+    def boot(self, view: View, request: Request, manager: MailManager):
         """ Add helper functions to Masonite """
         builtins.view = view.render
         builtins.request = request.helper
@@ -25,6 +26,7 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
         builtins.route = request.route
+        builtins.mail_helper = manager.helper
 
         view.share(
             {

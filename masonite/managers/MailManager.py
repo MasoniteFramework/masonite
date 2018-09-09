@@ -1,9 +1,10 @@
 """ Mail Manager Module """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import MailManagerContract
+from masonite.managers import Manager
 
 
-class MailManager(Manager):
+class MailManager(Manager, MailManagerContract):
     """Manages all mail drivers.
 
     Arguments:
@@ -12,3 +13,11 @@ class MailManager(Manager):
 
     config = 'MailConfig'
     driver_prefix = 'Mail'
+
+    def helper(self):
+        """Helper Method to work with returning the driver from the MailManager
+        
+        Returns:
+            Mail Driver
+        """
+        return self.driver(self.container.make('MailConfig').DRIVER)

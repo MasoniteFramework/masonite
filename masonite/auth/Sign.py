@@ -1,4 +1,6 @@
 """ Cryptographic Signing Module """
+import binascii
+
 from cryptography.fernet import Fernet
 
 from masonite.exceptions import InvalidSecretKey
@@ -10,11 +12,11 @@ class Sign:
 
     def __init__(self, key=None):
         """Sign constructor
-        
+
         Keyword Arguments:
             key {string} -- The secret key to use. If nothing is passed it then it will use
                             the secret key from the config file. (default: {None})
-        
+
         Raises:
             InvalidSecretKey -- Thrown if the secret key does not exist.
         """
@@ -26,34 +28,43 @@ class Sign:
             self.key = application.KEY
 
         if not self.key:
-            raise InvalidSecretKey("The encryption key passed in is: None. Be sure there is a secret key present in your .env file or your config/application.py file.")
+            raise InvalidSecretKey(
+                "The encryption key passed in is: None. Be sure there is a secret key present in your .env file or your config/application.py file.")
 
         self.encryption = None
 
     def sign(self, value):
         """Sign a value using the secret key.
-        
+
         Arguments:
             value {string} -- The value to be encrypted.
-        
+
         Returns:
             string -- Returns the encrypted value.
+
+        Raises:
+            InvalidSecretKey -- Thrown if the secret key has incorrect padding.
         """
 
-        f = Fernet(self.key)
+        try:
+            f = Fernet(self.key)
+        except (binascii.Error, ValueError):
+            raise InvalidSecretKey(
+                "You have passed an invalid secret key of: {}. Make sure you have correctly added your secret key.".format(self.key))
+
         self.encryption = f.encrypt(bytes(value, 'utf-8'))
         return self.encryption.decode('utf-8')
 
     def unsign(self, value=None):
         """Unsigns the value using the secret key.
-        
+
         Keyword Arguments:
             value {string} -- The value to be unencrypted. (default: {None})
-        
+
         Returns:
             string -- Returns the unencrypted value.
         """
-        
+
         f = Fernet(self.key)
 
         if not value:

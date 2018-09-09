@@ -1,8 +1,6 @@
-"""Module for the Service Provider.
-"""
+""" Module for the Service Provider """
 
-import string, random
-
+from masonite.helpers import random_string
 
 
 class ServiceProvider:
@@ -57,22 +55,17 @@ class ServiceProvider:
     def migrations(self, *directories):
 
         for directory in directories:
-            random_string = ''.join(random.choice(
-                string.ascii_uppercase + string.digits) for _ in range(4))
-            
             self.app.bind(
-                '{}_MigrationDirectory'.format(random_string),
+                '{}_MigrationDirectory'.format(random_string(4)),
                 directory
             )
 
     def commands(self, *commands):
 
         for command in commands:
-            random_string = ''.join(random.choice(
-                string.ascii_uppercase + string.digits) for _ in range(4))
-            
+
             self.app.bind(
-                '{}Command'.format(random_string),
+                '{}Command'.format(random_string(4)),
                 command
             )
 

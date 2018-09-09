@@ -50,6 +50,10 @@ class ServiceProvider:
         http_middleware = self.app.make('HttpMiddleware')
         http_middleware += middleware
 
+    def route_middleware(self, middleware):
+        route_middleware = self.app.make('RouteMiddleware')
+        route_middleware.update(middleware)
+
     def migrations(self, *directories):
 
         for directory in directories:

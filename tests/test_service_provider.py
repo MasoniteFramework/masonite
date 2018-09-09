@@ -32,6 +32,11 @@ class LoadProvider(ServiceProvider):
             object
         ])
 
+        self.route_middleware({
+            'route1': object,
+            'route2': object,
+        })
+
         self.migrations('directory/1', 'directory/2')
 
         self.assets({
@@ -78,6 +83,10 @@ class TestServiceProvider:
 
     def test_can_load_http_middleware_into_container(self):
         assert self.app.make('HttpMiddleware')[-2:] == [object, object]
+
+    def test_can_load_route_middleware_into_container(self):
+        assert self.app.make('RouteMiddleware')['route1'] == object
+        assert self.app.make('RouteMiddleware')['route2'] == object
 
     def test_can_load_migrations_into_container(self):
         assert len(self.app.collect('*MigrationDirectory')) == 2

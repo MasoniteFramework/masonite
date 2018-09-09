@@ -1,6 +1,9 @@
 """Module for the Service Provider.
 """
 
+import string, random
+
+
 
 class ServiceProvider:
     """Service provider class. Used as mediator for loading objects or entire features into the container.
@@ -38,3 +41,36 @@ class ServiceProvider:
 
         self.app = app
         return self
+
+    def routes(self, routes):
+        web_routes = self.app.make('WebRoutes')
+        web_routes += routes
+
+    def http_middleware(self, middleware):
+        http_middleware = self.app.make('HttpMiddleware')
+        http_middleware += middleware
+
+    def migrations(self, *directories):
+
+        for directory in directories:
+            random_string = ''.join(random.choice(
+                string.ascii_uppercase + string.digits) for _ in range(4))
+            
+            self.app.bind(
+                '{}_MigrationDirectory'.format(random_string),
+                directory
+            )
+
+    def commands(self, *commands):
+
+        for command in commands:
+            random_string = ''.join(random.choice(
+                string.ascii_uppercase + string.digits) for _ in range(4))
+            
+            self.app.bind(
+                '{}Command'.format(random_string),
+                command
+            )
+
+    def assets(self, assets):
+        self.app.make('Storage').STATICFILES.update(assets)

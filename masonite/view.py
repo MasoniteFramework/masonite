@@ -44,7 +44,9 @@ class View:
 
         self.template = None
         self.environments = []
+        self.extension = '.html'
         self._filters = {}
+        self._tests = {}
 
     def render(self, template, dictionary={}):
         """Get the string contents of the view.
@@ -70,11 +72,17 @@ class View:
         # Check if composers are even set for a speed improvement
         if self.composers:
             self._update_from_composers()
+        
+        if self._tests:
+            self.env.tests.update(self._tests)
 
-        self.rendered_template = self.env.get_template(self.filename).render(
-            self.dictionary)
+        self.rendered_template = self._render()
 
         return self
+    
+    def _render(self):
+        return self.env.get_template(self.filename).render(
+            self.dictionary)
 
     def _update_from_composers(self):
         """Adds data into the view from specified composers.
@@ -214,6 +222,10 @@ class View:
         """
 
         self._filters.update({name: function})
+    
+    def test(self, key, obj):
+        self._tests.update({key: obj})
+        return self
 
     def __load_environment(self, template):
         """Private method for loading all the environments.
@@ -223,12 +235,12 @@ class View:
         """
 
         self.template = template
-        self.filename = template + '.html'
+        self.filename = template + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split
             location = list(filter(None, template.split('/')))
-            self.filename = location[-1] + '.html'
+            self.filename = location[-1] + self.extension
 
             loader = PackageLoader(location[0], '/'.join(location[1:-1]))
 

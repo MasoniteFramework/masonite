@@ -2,7 +2,7 @@
 import os
 from config import application
 
-class MaintainceModeMiddleware:
+class MaintenanceModeMiddleware:
     ''' Middleware To Check Maintaince Mode'''
 
     def __init__(self, Request:

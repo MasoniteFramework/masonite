@@ -1,9 +1,10 @@
 """ Session Manager Module """
 
-from masonite.managers.Manager import Manager
+from masonite.contracts import SessionManagerContract
+from masonite.managers import Manager
 
 
-class SessionManager(Manager):
+class SessionManager(Manager, SessionManagerContract):
     """Manages all session drivers.
 
     Arguments:

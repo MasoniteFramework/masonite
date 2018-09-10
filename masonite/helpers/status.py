@@ -1,5 +1,7 @@
 """ Helper Functions for working with Status Codes"""
 
+from masonite.exceptions import InvalidHTTPStatusCode
+
 statuses = {
     100: '100 Continue',
     101: '101 Switching Protocol',
@@ -77,5 +79,9 @@ def response_statuses(self, status):
     if isinstance(status, str):
         self.app().bind('StatusCode', status)
     elif isinstance(status, int):
-        self.app().bind('StatusCode', statuses[status])
+        try:
+            text_status = statuses[status]
+        except KeyError:
+            raise InvalidHTTPStatusCode
+        self.app().bind('StatusCode', text_status)
     return self

@@ -232,13 +232,20 @@ class TestView:
         self.container.make('ViewClass').set_splice('.')
 
         view = self.container.make('View')
+        self.container.make('ViewClass').composer(
+            'mail/welcome', {'test': 'test'})
+        self.container.make('ViewClass').share(
+            {'test': 'John'})
 
         assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
+        assert view('mail.composers', {'test': 'John'}).rendered_template == 'John'
+        assert view('mail.share').rendered_template == 'John'
         assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
 
         self.container.make('ViewClass').set_splice('@')
 
         assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
+        assert 'John' in view('mail@composers', {'test': 'John'}).rendered_template == 'John'
         assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
 
     def test_can_add_tests_to_view(self):

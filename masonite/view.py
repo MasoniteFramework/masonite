@@ -237,7 +237,7 @@ class View:
         """
 
         self.template = template
-        self.filename = template + self.extension
+        self.filename = template.replace(self._splice, '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split

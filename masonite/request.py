@@ -15,6 +15,7 @@ import tldextract
 from cryptography.fernet import InvalidToken
 
 from masonite.auth.Sign import Sign
+from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.status import response_statuses
@@ -30,7 +31,7 @@ class Request(Extendable):
         Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class have the ability to extend another class at runtime.
     """
 
-    status = response_statuses
+    statuses = response_statuses()
 
     def __init__(self, environ=None):
         """Request class constructor. Initializes several properties and sets various methods 
@@ -242,6 +243,26 @@ class Request(Extendable):
         """
 
         return all((arg in self.request_variables) for arg in args)
+
+
+    def status(self, status):
+        """Sets the HTTP status code.
+
+        Arguments:
+            status {string|integer} -- A string or integer with the standardized status code
+
+        Returns:
+            self
+        """
+        if isinstance(status, str):
+            self.app().bind('StatusCode', status)
+        elif isinstance(status, int):
+            try:
+                text_status = self.statuses[status]
+            except KeyError:
+                raise InvalidHTTPStatusCode
+            self.app().bind('StatusCode', text_status)
+        return self
 
     def get_status_code(self):
         """Returns the current request status code.

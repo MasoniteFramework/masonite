@@ -1,9 +1,9 @@
+""" Migrate Status Command """
 import os
 import sys
+
 from subprocess import check_output
-
 from cleo import Command
-
 from masonite.packages import add_venv_site_packages
 
 
@@ -19,7 +19,8 @@ class MigrateStatusCommand(Command):
         try:
             add_venv_site_packages()
         except ImportError:
-            self.comment('This command must be ran inside of the root of a Masonite project directory')
+            self.comment(
+                'This command must be ran inside of the root of a Masonite project directory')
 
         from wsgi import container
 
@@ -31,14 +32,15 @@ class MigrateStatusCommand(Command):
         for directory in migration_directory:
             self.line('')
             if len(migration_directory) > 1:
-                self.info('Migrate Status: {0}'.format(directory))
+                self.info('Migrate Status: {}'.format(directory))
             try:
                 output = bytes(check_output(
-                        ['orator', 'migrate:status', '-c', 'config/database.py', '-p', directory]
-                    )).decode('utf-8')
+                    ['orator', 'migrate:status', '-c',
+                        'config/database.py', '-p', directory]
+                )).decode('utf-8')
 
                 self.line(
-                    output.replace('Yes', '<info>Yes</info>') \
+                    output.replace('Yes', '<info>Yes</info>')
                     .replace('No', '<comment>No</comment>'))
             except Exception:
                 pass

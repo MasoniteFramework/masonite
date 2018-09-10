@@ -1,4 +1,6 @@
+""" New Validator Command """
 import os
+
 from cleo import Command
 
 
@@ -12,6 +14,7 @@ class ValidatorCommand(Command):
 
     def handle(self):
         validator = self.argument('name')
+        
         if not os.path.isfile('app/validators/{0}.py'.format(validator)):
             if not os.path.exists(os.path.dirname('app/validators/{0}.py'.format(validator))):
                 # Create the path to the validator if it does not exists already

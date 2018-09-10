@@ -1,5 +1,7 @@
-from cleo import Command
+""" New Controller Command """
 import os
+
+from cleo import Command
 
 
 class ControllerCommand(Command):
@@ -18,12 +20,12 @@ class ControllerCommand(Command):
         if not self.option('exact'):
             controller = controller + "Controller"
 
-        if os.path.isfile('app/http/controllers/{0}.py'.format(controller)):
-            self.error('{0} Controller Exists!'.format(controller))
+        if os.path.isfile('app/http/controllers/{}.py'.format(controller)):
+            self.error('{} Controller Exists!'.format(controller))
         else:
-            f = open('app/http/controllers/{0}.py'.format(controller), 'w+')
+            f = open('app/http/controllers/{}.py'.format(controller), 'w+')
             f.write("''' A Module Description '''\n\n")
-            f.write('class {0}:\n'.format(controller))
+            f.write('class {}:\n'.format(controller))
             f.write("    ''' Class Docstring Description '''\n\n")
             f.write('    def show(self):\n')
             f.write('        pass\n')
@@ -42,4 +44,4 @@ class ControllerCommand(Command):
                 f.write('    def destroy(self):\n')
                 f.write('        pass\n')
 
-            self.info('{0} Created Successfully!'.format(controller))
+            self.info('{} Created Successfully!'.format(controller))

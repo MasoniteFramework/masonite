@@ -1,9 +1,9 @@
+""" Run Migration Command """
 import os
 import sys
+
 from subprocess import check_output
-
 from cleo import Command
-
 from masonite.packages import add_venv_site_packages
 
 
@@ -19,7 +19,8 @@ class MigrateCommand(Command):
         try:
             add_venv_site_packages()
         except ImportError:
-            self.comment('This command must be ran inside of the root of a Masonite project directory')
+            self.comment(
+                'This command must be ran inside of the root of a Masonite project directory')
 
         from wsgi import container
 
@@ -31,14 +32,15 @@ class MigrateCommand(Command):
         for directory in migration_directory:
             self.line('')
             if len(migration_directory) > 1:
-                self.info('Migrating: {0}'.format(directory))
+                self.info('Migrating: {}'.format(directory))
             try:
                 output = bytes(check_output(
-                        ['orator', 'migrate', '-c', 'config/database.py', '-p', directory, '-f']
-                    )).decode('utf-8')
+                    ['orator', 'migrate', '-c',
+                        'config/database.py', '-p', directory, '-f']
+                )).decode('utf-8')
 
                 self.line(
-                    output.replace('OK', '<info>OK</info>') \
+                    output.replace('OK', '<info>OK</info>')
                     .replace('Migrated', '<info>Migrated</info><fg=cyan>') + '</>'
                 )
             except Exception:

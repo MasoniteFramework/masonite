@@ -1,11 +1,11 @@
-
+""" Serve Masonite Application Command """
 import os
 import sys
 import time
 import subprocess
 import threading
-
 import waitress
+
 from cleo import Command
 
 
@@ -33,7 +33,7 @@ class ServeCommand(Command):
             application,
             host=self.option('host'),
             port=self.option('port'))
-    
+
     def _check_patch(self):
         patched = False
 
@@ -46,17 +46,22 @@ class ServeCommand(Command):
             if line.startswith("for provider in container.make('Providers'):"):
                 patched = True
                 break
-        
+
         if not patched:
             print('\033[93mWARNING: {}\033[0m'.format(
-                "Your application does not have a 2.0 patch! You can read more about this patch here: https://dev.to/josephmancuso/masonite-framework-20-patch-3op2"))
+                "Your application does not have a 2.0 patch! You can read more about this patch here: \
+                https://dev.to/josephmancuso/masonite-framework-20-patch-3op2"))
 
     def _run_with_reloader(self, extra_files=None, interval=1):
         """Run the given function in an independent python interpreter."""
         import signal
         from wsgi import application
-        reloader = WatchdogReloaderLoop(extra_files, interval, log_func=self.comment)
+
+        reloader = WatchdogReloaderLoop(
+            extra_files, interval, log_func=self.comment)
+
         signal.signal(signal.SIGTERM, lambda *args: sys.exit(0))
+
         try:
             if os.environ.get('MASONITE_RUN_MAIN') == 'true':
                 t = threading.Thread(target=self._run_application, args=())
@@ -67,6 +72,7 @@ class ServeCommand(Command):
                 sys.exit(reloader.restart_with_reloader())
         except KeyboardInterrupt:
             pass
+
 
 '''
 |--------------------------------------------------------------------------
@@ -99,13 +105,16 @@ def _iter_module_files():
     for module in list(sys.modules.values()):
         if module is None:
             continue
+
         filename = getattr(module, '__file__', None)
+
         if filename:
             if os.path.isdir(filename) and \
                os.path.exists(os.path.join(filename, "__init__.py")):
                 filename = os.path.join(filename, "__init__.py")
 
             old = None
+
             while not os.path.isfile(filename):
                 old = filename
                 filename = os.path.dirname(filename)
@@ -128,8 +137,10 @@ def _find_observable_paths(extra_files=None):
 
     for module in list(sys.modules.values()):
         fn = getattr(module, '__file__', None)
+
         if fn is None:
             continue
+
         fn = os.path.abspath(fn)
         rv.add(os.path.dirname(fn))
 
@@ -143,11 +154,14 @@ def _get_args_for_reloading():
     """
     rv = [sys.executable]
     py_script = sys.argv[0]
+
     if os.name == 'nt' and not os.path.exists(py_script) and \
        os.path.exists(py_script + '.exe'):
         py_script += '.exe'
+
     if os.path.splitext(rv[0])[1] == '.exe' and os.path.splitext(py_script)[1] == '.exe':
         rv.pop(0)
+
     rv.append(py_script)
     rv.extend(sys.argv[1:])
     return rv
@@ -157,6 +171,7 @@ def _find_common_roots(paths):
     """Out of some paths it finds the common roots that need monitoring."""
     paths = [x.split(os.path.sep) for x in paths]
     root = {}
+
     for chunks in sorted(paths, key=len, reverse=True):
         node = root
         for chunk in chunks:
@@ -170,6 +185,7 @@ def _find_common_roots(paths):
             _walk(child, path + (prefix,))
         if not node:
             rv.add('/'.join(path))
+
     _walk(root, ())
     return rv
 
@@ -200,7 +216,7 @@ class ReloaderLoop(object):
         but running the reloader thread.
         """
         while 1:
-            self._log('Restarting with %s' % self.name)
+            self._log('Restarting with {}'.format(self.name))
             args = _get_args_for_reloading()
             new_environ = os.environ.copy()
             new_environ['MASONITE_RUN_MAIN'] = 'true'
@@ -216,7 +232,7 @@ class ReloaderLoop(object):
 
     def log_reload(self, filename):
         filename = os.path.abspath(filename)
-        self._log('Detected change in %r, reloading' % filename)
+        self._log('Detected change in {0!r}, reloading'.format(filename))
 
 
 class WatchdogReloaderLoop(ReloaderLoop):
@@ -230,7 +246,9 @@ class WatchdogReloaderLoop(ReloaderLoop):
         def _check_modification(filename):
             if filename in self.extra_files:
                 self.trigger_reload(filename)
+
             dirname = os.path.dirname(filename)
+
             if dirname.startswith(tuple(self.observable_paths)):
                 if filename.endswith(('.pyc', '.pyo', '.py')):
                     self.trigger_reload(filename)
@@ -251,12 +269,12 @@ class WatchdogReloaderLoop(ReloaderLoop):
                 _check_modification(event.src_path)
 
         reloader_name = Observer.__name__.lower()
+
         if reloader_name.endswith('observer'):
             reloader_name = reloader_name[:-8]
         reloader_name += ' reloader'
 
         self.name = reloader_name
-
         self.observer_class = Observer
         self.event_handler = _CustomHandler()
         self.should_reload = False
@@ -277,6 +295,7 @@ class WatchdogReloaderLoop(ReloaderLoop):
             while not self.should_reload:
                 to_delete = set(watches)
                 paths = _find_observable_paths(self.extra_files)
+
                 for path in paths:
                     if path not in watches:
                         try:
@@ -288,10 +307,12 @@ class WatchdogReloaderLoop(ReloaderLoop):
                             # iteration.
                             watches[path] = None
                     to_delete.discard(path)
+
                 for path in to_delete:
                     watch = watches.pop(path, None)
                     if watch is not None:
                         observer.unschedule(watch)
+
                 self.observable_paths = paths
                 self._sleep(self.interval)
         finally:

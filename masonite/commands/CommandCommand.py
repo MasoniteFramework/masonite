@@ -1,4 +1,6 @@
+""" Creates New Command Command """
 import os
+
 from cleo import Command
 
 
@@ -15,14 +17,17 @@ class CommandCommand(Command):
         if not os.path.isfile('app/commands/{0}.py'.format(command)):
             if not os.path.exists(os.path.dirname('app/commands/{0}.py'.format(command))):
                 # Create the path to the command if it does not exist
-                os.makedirs(os.path.dirname('app/commands/{0}.py'.format(command)))
+                os.makedirs(os.path.dirname(
+                    'app/commands/{}.py'.format(command)))
 
-            f = open('app/commands/{0}.py'.format(command), 'w+')
+            f = open('app/commands/{}.py'.format(command), 'w+')
 
-            f.write('""" A {0} Command """\n'.format(command))
+            f.write('""" A {} Command """\n'.format(command))
             f.write('from cleo import Command\n\n\n')
-            f.write('class {0}(Command):\n    """\n    Description of command\n\n    '.format(command))
-            f.write('command:name\n        {argument : description}\n    """\n\n    ')
+            f.write(
+                'class {}(Command):\n    """\n    Description of command\n\n    '.format(command))
+            f.write(
+                'command:name\n        {argument : description}\n    """\n\n    ')
             f.write('def handle(self):\n        pass')
 
             self.info('Command Created Successfully!')

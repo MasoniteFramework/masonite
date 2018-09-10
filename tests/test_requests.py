@@ -332,6 +332,14 @@ class TestRequest:
         request.status('200 OK')
         assert request.get_status_code() == '200 OK'
 
+    def test_request_sets_int_status_code(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request.get_status_code() == '500 Internal Server Error'
+
     def test_request_sets_request_method(self):
         wsgi = generate_wsgi()
         wsgi['QUERY_STRING'] = '__method=PUT'

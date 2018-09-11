@@ -40,8 +40,7 @@ class MigrateCommand(Command):
                 )).decode('utf-8')
 
                 self.line(
-                    output.replace('OK', '<info>OK</info>')
-                    .replace('Migrated', '<info>Migrated</info><fg=cyan>') + '</>'
+                    output.replace('OK', '<info>OK</info>').replace('Migrated', '<info>Migrated</info><fg=cyan>') + '</>'
                 )
             except Exception:
                 pass

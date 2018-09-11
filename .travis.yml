@@ -27,5 +27,8 @@ deploy:
     tags: true
     python: 3.6
 
-after_success:
-  coveralls
+jobs:
+  include:
+    - stage: coverage
+      python: 3.6
+      script: coveralls

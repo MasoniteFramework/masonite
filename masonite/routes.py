@@ -118,51 +118,6 @@ class Route:
 
         return False
 
-    # def compile_route_to_regex(self, route):
-        """Compiles the given route to a regex string
-
-        Arguments:
-            route {string} -- URI of the route to compile.
-
-        Returns:
-            string -- Compiled URI string.
-        """
-
-        # Split the route
-        split_given_route = route.route_url.split('/')
-
-        # compile the provided url into regex
-        url_list = []
-        regex = '^'
-        for regex_route in split_given_route:
-            if '@' in regex_route:
-                if ':' in regex_route:
-                    try:
-                        regex += self.route_compilers[regex_route.split(':')[
-                            1]]
-                    except KeyError:
-                        raise InvalidRouteCompileException(
-                            'Route compiler "{}" is not an available route compiler. '
-                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
-                                regex_route.split(':')[1])
-                        )
-                else:
-                    regex += self.route_compilers['default']
-
-                regex += r'\/'
-
-                # append the variable name passed @(variable):int to a list
-                url_list.append(
-                    regex_route.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
-                )
-            else:
-                regex += regex_route + r'\/'
-
-        self.url_list = url_list
-        regex += '$'
-        return regex
-
     def compile(self, key, to=''):
         self.route_compilers.update({key: to})
         return self

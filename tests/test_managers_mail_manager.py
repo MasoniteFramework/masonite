@@ -98,12 +98,3 @@ class TestMailManager:
         mail_driver = MailManager(self.app).driver('smtp')
 
         assert isinstance(mail_driver.driver('test'), Mailgun)
-
-    def test_mail_driver_uses_smtp_ssl(self):
-        self.app.bind('MailSmtpDriver', MailDriver)
-        self.app.make('MailConfig').DRIVERS['smtp']['ssl'] = True
-
-        mail_driver = MailManager(self.app).driver('smtp')
-
-        with pytest.raises(ssl.SSLError):
-            mail_driver.to('test@email.com').send('test')

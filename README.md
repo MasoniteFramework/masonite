@@ -16,7 +16,7 @@
 # Contributing
 
 Contributing to Masonite is simple:
-* Hop on [Slack Chanell](http://slack.masoniteproject.com/)! to ask any questions you need.
+* Hop on [Slack Channel](http://slack.masoniteproject.com/)! to ask any questions you need.
 * Read the [How To Contribute](https://masoniteframework.gitbook.io/docs/prologue/how-to-contribute) documentation to see ways to contribtue to the project.
 * Read the [Contributing Guide](https://masoniteframework.gitbook.io/docs/prologue/contributing-guide) to learn how to contribute to the core source code development of the project.
 * Read the [Installation](https://masoniteframework.gitbook.io/docs/prologue/introduction-and-installaton) documentation on how to get started creating a Masonite project.

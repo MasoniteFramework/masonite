@@ -118,7 +118,7 @@ class Route:
 
         return False
 
-    def compile_route_to_regex(self, route):
+    # def compile_route_to_regex(self, route):
         """Compiles the given route to a regex string
 
         Arguments:
@@ -370,6 +370,51 @@ class BaseHttpRoute:
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
+
+    def compile_route_to_regex(self, router):
+        """Compiles the given route to a regex string
+
+        Arguments:
+            route {string} -- URI of the route to compile.
+
+        Returns:
+            string -- Compiled URI string.
+        """
+
+        # Split the route
+        split_given_route = self.route_url.split('/')
+
+        # compile the provided url into regex
+        url_list = []
+        regex = '^'
+        for regex_route in split_given_route:
+            if '@' in regex_route:
+                if ':' in regex_route:
+                    try:
+                        regex += router.route_compilers[regex_route.split(':')[
+                            1]]
+                    except KeyError:
+                        raise InvalidRouteCompileException(
+                            'Route compiler "{}" is not an available route compiler. '
+                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
+                                regex_route.split(':')[1])
+                        )
+                else:
+                    regex += router.route_compilers['default']
+
+                regex += r'\/'
+
+                # append the variable name passed @(variable):int to a list
+                url_list.append(
+                    regex_route.replace('@', '').replace(
+                        ':int', '').replace(':string', '')
+                )
+            else:
+                regex += regex_route + r'\/'
+
+        router.url_list = url_list
+        regex += '$'
+        return regex
 
 
 class Get(BaseHttpRoute):

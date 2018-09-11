@@ -11,7 +11,7 @@ matrix:
       dist: xenial
       sudo: true
     - python: 3.6
-      script: coveralls
+      script: travis_retry coverage run -m pytest && coveralls
 
 install:
 - pip install masonite_cli

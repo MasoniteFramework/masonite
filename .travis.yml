@@ -10,6 +10,8 @@ matrix:
     - python: 3.7
       dist: xenial
       sudo: true
+    - python: 3.6
+      script: coveralls
 
 install:
 - pip install masonite_cli
@@ -26,9 +28,3 @@ deploy:
   on:
     tags: true
     python: 3.6
-
-jobs:
-  include:
-    - stage: coverage
-      python: 3.6
-      script: coveralls

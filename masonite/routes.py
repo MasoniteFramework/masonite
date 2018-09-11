@@ -9,13 +9,14 @@ from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 from masonite.view import View
 
+
 class Route:
     """Route class used to handle routing.
     """
 
     route_compilers = {
         'int': r'(\d+)',
-        'integer': r'(\d+)', 
+        'integer': r'(\d+)',
         'string': r'([a-zA-Z]+)',
         'default': r'([\w.-]+)'
     }
@@ -141,7 +142,7 @@ class Route:
                             1]]
                     except KeyError:
                         raise InvalidRouteCompileException(
-                            'Route compiler "{}" is not an available route compiler. ' \
+                            'Route compiler "{}" is not an available route compiler. '
                             'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
                                 regex_route.split(':')[1])
                         )
@@ -204,6 +205,10 @@ class BaseHttpRoute:
         self.route_url = route
         return self
 
+    def view(self, route, template, dictionary={}):
+        view_route = ViewRoute(self.method_type, route, template, dictionary)
+        return view_route
+
     def _find_controller(self, controller):
         """Finds the controller to attach to the route.
 
@@ -251,7 +256,7 @@ class BaseHttpRoute:
 
         except Exception as e:
             print('\033[93mWarning in routes/web.py!', e, '\033[0m')
-        
+
     def get_response(self):
         # Resolve Controller Constructor
         controller = self.request.app().resolve(self.controller)
@@ -262,7 +267,7 @@ class BaseHttpRoute:
 
         if isinstance(response, View):
             response = response.rendered_template
-        
+
         return response
 
     def domain(self, domain):
@@ -402,6 +407,7 @@ class Put(BaseHttpRoute):
         self.method_type = 'PUT'
         self.list_middleware = []
 
+
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests 
     """
@@ -413,6 +419,7 @@ class Patch(BaseHttpRoute):
         self.method_type = 'PATCH'
         self.list_middleware = []
 
+
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests 
     """
@@ -423,6 +430,29 @@ class Delete(BaseHttpRoute):
 
         self.method_type = 'DELETE'
         self.list_middleware = []
+
+
+class ViewRoute(BaseHttpRoute):
+
+    def __init__(self, method_type, route, template, dictionary):
+        """Class used for view routes. This class should be returned when a view is called on an HTTP route.
+        This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
+        
+        Arguments:
+            method_type {string} -- The method type (GET, POST, PUT etc)
+            route {string} -- The current route (/test/url)
+            template {string} -- The template to use (dashboard/user)
+            dictionary {dict} -- The dictionary to use to render the template.
+        """
+        self.list_middleware = []
+        self.method_type = method_type
+        self.route_url = route
+        self.template = template
+        self.dictionary = dictionary
+
+    def get_response(self):
+        return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
+
 
 class RouteGroup():
     """Class for specifying Route Groups

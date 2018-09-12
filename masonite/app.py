@@ -130,7 +130,7 @@ class App:
             else:
                 raise ContainerError(
                     "This container is not set to resolve parameters. You can set this in the container"
-                    "constructor using the 'resolve_parameters=True' keyword argument.")
+                    " constructor using the 'resolve_parameters=True' keyword argument.")
 
         return obj(*provider_list)
 

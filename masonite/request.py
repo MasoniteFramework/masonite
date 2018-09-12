@@ -209,14 +209,14 @@ class Request(Extendable):
         if isinstance(value, list):
 
             # If the list contains MiniFieldStorage objects then loop through and get the values.
-            if any(isinstance(x, MiniFieldStorage) for x in value):
-                values = [x.value for x in value]
+            if any(isinstance(storage_obj, MiniFieldStorage) for storage_obj in value):
+                values = [storage_obj.value for storage_obj in value]
 
                 # If there is only 1 element in the list then return the only value in the list
                 if len(values) == 1:
                     return values[0]
                 return values
-                
+
             return value[0]
 
         if isinstance(value, dict):

@@ -8,6 +8,7 @@ of this class.
 """
 
 import re
+from cgi import MiniFieldStorage
 from http import cookies
 from urllib.parse import parse_qs
 
@@ -24,16 +25,15 @@ class Request(Extendable):
     """Handles many different aspects of a single request.
     This is the object passed through to the controllers
     as a request parameter
-    
+
     Arguments:
         Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class have the ability to extend another class at runtime.
     """
 
-
     def __init__(self, environ=None):
         """Request class constructor. Initializes several properties and sets various methods 
         depending on the environtment.
-        
+
         Keyword Arguments:
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
@@ -55,13 +55,13 @@ class Request(Extendable):
 
     def input(self, name, default=False):
         """Gets a specific input value
-        
+
         Arguments:
             name {string} -- Key of the input data
-        
+
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
-        
+
         Returns:
             string
         """
@@ -69,7 +69,7 @@ class Request(Extendable):
 
     def is_post(self):
         """Checks if the current request is a POST request
-        
+
         Returns:
             bool
         """
@@ -80,7 +80,7 @@ class Request(Extendable):
 
     def is_not_get_request(self):
         """Checks if the current request is not a get request.
-        
+
         Returns:
             bool
         """
@@ -91,7 +91,7 @@ class Request(Extendable):
 
     def __set_request_method(self):
         """Private method for manually setting the request method.
-        
+
         Returns:
             bool
         """
@@ -103,10 +103,10 @@ class Request(Extendable):
 
     def key(self, key):
         """Sets the encryption key.
-        
+
         Arguments:
             key {string} -- Encryption key
-        
+
         Returns:
             self
         """
@@ -116,10 +116,10 @@ class Request(Extendable):
 
     def all(self, internal_variables=True):
         """Gets all the input data.
-        
+
         Keyword Arguments:
             internal_variables {bool} -- Get the internal framework variables as well (default: {True})
-        
+
         Returns:
             dict
         """
@@ -130,12 +130,12 @@ class Request(Extendable):
                 if not key.startswith('__'):
                     without_internals.update({key: value})
             return without_internals
-        
+
         return self.request_variables
 
     def only(self, *names):
         """Returns the specified request variables in a dictionary.
-        
+
         Returns:
             dict
         """
@@ -149,10 +149,10 @@ class Request(Extendable):
 
     def load_app(self, app):
         """Loads the container into the request class
-        
+
         Arguments:
             app {masonite.app.App} -- Application Container
-        
+
         Returns:
             self
         """
@@ -162,10 +162,10 @@ class Request(Extendable):
 
     def load_environ(self, environ):
         """Loads the wsgi environment and sets various properties.
-        
+
         Arguments:
             environ {dict} -- WSGI environ
-        
+
         Returns:
             self
         """
@@ -184,7 +184,7 @@ class Request(Extendable):
 
     def _set_standardized_request_variables(self, variables):
         """The input data is not perfect so we have to standardize it into a dictionary
-        
+
         Arguments:
             variables {string|dict}
         """
@@ -194,19 +194,29 @@ class Request(Extendable):
 
         for name in variables.keys():
             value = self._get_standardized_value(variables[name])
-            self.request_variables[name] = value
+            self.request_variables[name.replace('[]', '')] = value
 
     def _get_standardized_value(self, value):
         """Get the standardized value based on the type of the value parameter
-        
+
         Arguments:
             value {list|dict|cgi.FileStorage|string}    
-        
+
         Returns:
             string|bool
         """
 
         if isinstance(value, list):
+
+            # If the list contains MiniFieldStorage objects then loop through and get the values.
+            if any(isinstance(x, MiniFieldStorage) for x in value):
+                values = [x.value for x in value]
+
+                # If there is only 1 element in the list then return the only value in the list
+                if len(values) == 1:
+                    return values[0]
+                return values
+                
             return value[0]
 
         if isinstance(value, dict):
@@ -222,7 +232,7 @@ class Request(Extendable):
 
     def app(self):
         """Returns the application container.
-        
+
         Returns:
             masonite.app.App -- Application container
         """
@@ -231,7 +241,7 @@ class Request(Extendable):
 
     def has(self, *args):
         """Check if all given keys in request variable exists
-        
+
         Returns:
             bool
         """
@@ -240,10 +250,10 @@ class Request(Extendable):
 
     def status(self, status):
         """Sets the HTTP status code.
-        
+
         Arguments:
             status {string} -- A string with the standardized status code
-        
+
         Returns:
             self
         """
@@ -253,16 +263,16 @@ class Request(Extendable):
 
     def get_status_code(self):
         """Returns the current request status code.
-        
+
         Returns:
             string -- Returns the status code (404 Not Found, 200 OK, etc)
         """
 
         return self.app().make('StatusCode')
-    
+
     def get_request_method(self):
         """Gets the current request method.
-        
+
         Returns:
             string -- returns GET, POST, PUT, etc
         """
@@ -271,18 +281,18 @@ class Request(Extendable):
 
     def header(self, key, value=None, http_prefix=True):
         """Sets or gets a header depending on if value is passed in or not.
-        
+
         Arguments:
             key {string} -- The header you want to set or get.
-        
+
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
             http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
-        
+
         Returns:
             string|True|None -- [description]
         """
-        
+
         # Get Headers
         if value is None:
             if 'HTTP_{0}'.format(key) in self.environ:
@@ -303,7 +313,7 @@ class Request(Extendable):
 
     def get_headers(self):
         """Returns all current headers to be set.
-        
+
         Returns:
             dict -- Dictionary of all headers.
         """
@@ -321,10 +331,10 @@ class Request(Extendable):
         """Loads the params into the class.
         These parameters are where the developer can retrieve the
         /url/@variable:string/ from the url.
-        
+
         Arguments:
             params {dict} -- Dictionary of parameters to store on the class.
-        
+
         Returns:
             self
         """
@@ -336,10 +346,10 @@ class Request(Extendable):
         """Retrieves the param from the URL.
         The "parameter" parameter in this method should be the name of the
         @variable passed into the url in web.py.
-        
+
         Arguments:
             parameter {string} -- Specific argument to return.
-        
+
         Returns:
             string|False -- Returns False if key does not exist.
         """
@@ -351,17 +361,17 @@ class Request(Extendable):
     def cookie(self, key, value, encrypt=True,
                http_only="HttpOnly;", path='/', expires=''):
         """Sets a cookie in the browser
-        
+
         Arguments:
             key {string} -- Name of the cookie you want set.
             value {string} -- Value of the cookie you want set.
-        
+
         Keyword Arguments:
             encrypt {bool} -- Whether or not you want to encrypt the cookie (default: {True})
             http_only {str} -- If the cookie is HttpOnly or not (default: {"HttpOnly;"})
             path {str} -- The path of the cookie to be set to. (default: {'/'})
             expires {string} -- When the cookie expires (5 minutes, 1 minute, 10 hours, etc) (default: {''})
-        
+
         Returns:
             self
         """
@@ -385,7 +395,7 @@ class Request(Extendable):
 
     def get_cookies(self):
         """Retrieve all cookies from the browser.
-        
+
         Returns:
             dict -- Returns all the cookies.
         """
@@ -394,15 +404,15 @@ class Request(Extendable):
 
     def get_cookie(self, provided_cookie, decrypt=True):
         """Retrieves a specific cookie from the browser
-        
+
         Arguments:
             provided_cookie {string} -- Name of the cookie to retrieve
-        
+
         Keyword Arguments:
             decrypt {bool} -- Whether Masonite should try to decrypt the cookie.
                               This should only be True if the cookie was encrypted
                               in the first place.  (default: {True})
-        
+
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
@@ -426,12 +436,12 @@ class Request(Extendable):
         """Whether a new cookie should append on to the string of cookies to be set
         or create a new string. This string is used by the browser to interpret how
         handle setting a cookie.
-        
+
         Arguments:
             key {string} -- Name of cookie to be stored
             value {string} -- Value of cookie to be stored
         """
-        
+
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
             self.environ['HTTP_COOKIE'] += ';{0}={1}'.format(
                 key, value)
@@ -441,10 +451,10 @@ class Request(Extendable):
 
     def delete_cookie(self, key):
         """Delete cookie
-        
+
         Arguments:
             key {string} -- Name of cookie to be deleted.
-        
+
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
@@ -466,10 +476,10 @@ class Request(Extendable):
 
     def set_user(self, user_model):
         """Loads the user into the class
-        
+
         Arguments:
             user_model {app.User.User} -- Defaults to loading this class unless specifically changed.
-        
+
         Returns:
             self
         """
@@ -479,7 +489,7 @@ class Request(Extendable):
 
     def user(self):
         """Loads the user into the class.
-        
+
         Returns:
             app.User.User|None -- Returns None if the user is not loaded or logged in.
         """
@@ -488,15 +498,15 @@ class Request(Extendable):
 
     def redirect(self, route, params={}):
         """Redirect the user based on the route specified
-        
+
         Arguments:
             route {string} -- URI of the route (/dashboard/user)
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to set for the URI.
                              Use this when the URI has something like
                              /dashboard/user/@id. (default: {{}})
-        
+
         Returns:
             self
         """
@@ -506,15 +516,15 @@ class Request(Extendable):
 
     def redirect_to(self, route_name, params={}):
         """Redirect to a named route.
-        
+
         Arguments:
             route_name {string} -- Name of a named route.
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to set for the URI.
                              Use this when the URI has something like
                              /dashboard/user/@id. (default: {{}})
-        
+
         Returns:
             self
         """
@@ -524,14 +534,14 @@ class Request(Extendable):
         self.redirect_url = self._get_named_route(route_name, params)
 
         return self
-    
+
     def _get_named_route(self, name, params):
         """Searches the list of routes and returns the route with the name passed.  
-        
+
         Arguments:
             name {string} -- Route name to search for (dashboard.user).
             params {dict} -- Dictionary of items to pass to the named route.
-        
+
         Returns:
             string|None -- Returns None if the route was not found or returns the
                            compiled URI.
@@ -544,16 +554,16 @@ class Request(Extendable):
                 return self.compile_route_to_url(route.route_url, params)
 
         return None
-    
+
     def _get_route_from_controller(self, controller):
         """Get the route using the controller. 
         This finds the route with the attached controller and returns that route.
         This does not compile the URI but actually returns the Route object.
-        
+
         Arguments:
             controller {string|object} -- Can pass in either a string controller
                                           or the controller itself (the object)
-        
+
         Returns:
             masonite.routes.Route|None -- Returns None if the route could not be found.
         """
@@ -571,30 +581,30 @@ class Request(Extendable):
             if route.controller.__name__ == controller[0] and route.controller_method == controller[1] and route.module_location == module_location:
                 return route
 
-    def url_from_controller(self, controller, params = {}):
+    def url_from_controller(self, controller, params={}):
         """Returns the compiled URI using a controller.
-        
+
         Arguments:
             controller {string|object} -- Can be a string controller or a controller object.
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})
-        
+
         Returns:
             masonite.routes.Route|None -- Returns None if the route could not be found.
         """
 
         return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
-    
-    def route(self, name, params = {}):
+
+    def route(self, name, params={}):
         """Gets a route URI by its name.
-        
+
         Arguments:
             name {string} -- Name of the route.
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})
-        
+
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
@@ -606,16 +616,16 @@ class Request(Extendable):
     def reset_redirections(self):
         """Resets the redirections because of this class acting like a singleton pattern.
         """
-        
+
         self.redirect_url = False
         self.redirect_route = False
 
     def back(self, default=None):
         """Returns a URI for redirection depending on several use cases.
-        
+
         Keyword Arguments:
             default {string} -- Default value if nothing can be found. (default: {None})
-        
+
         Returns:
             self
         """
@@ -625,33 +635,33 @@ class Request(Extendable):
             return self.redirect(default)
         elif not redirect_url and not default:
             return self.redirect(self.path)  # Some global default?
-        
+
         return self.redirect(redirect_url)
-    
+
     def is_named_route(self, name, params={}):
         """Checks if the current URI is a specific named route.
-        
+
         Arguments:
             name {string} -- The name of a route.
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route. (default: {{}})
-        
+
         Returns:
             bool
         """
 
         if self._get_named_route(name, params) == self.path:
             return True
-        
+
         return False
 
     def contains(self, route):
         """If the specified URI is in the current URI path.
-        
+
         Arguments:
             route {string} -- Part of a URI (/dashboard)
-        
+
         Returns:
             bool
         """
@@ -661,13 +671,13 @@ class Request(Extendable):
     def compile_route_to_url(self, route, params={}):
         """Compile the route url into a usable url
         Converts /url/@id into /url/1. Used for redirection
-        
+
         Arguments:
             route {string} -- An uncompiled route (/dashboard/@user:string/@id:int)
-        
+
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route (default: {{}})
-        
+
         Returns:
             string -- Returns a compiled string (/dashboard/joseph/1)
         """
@@ -701,7 +711,7 @@ class Request(Extendable):
             compiled_url = compiled_url.replace('//', '/')
 
         return compiled_url
-    
+
     def activate_subdomains(self):
         """Activates subdomains abilities
         """
@@ -710,11 +720,11 @@ class Request(Extendable):
 
     def has_subdomain(self):
         """Checks if the current URI has a subdomain
-        
+
         Returns:
             bool
         """
-        
+
         if self._activate_subdomains:
             url = tldextract.extract(self.environ['HTTP_HOST'])
 
@@ -727,10 +737,10 @@ class Request(Extendable):
 
     def send(self, params):
         """DEPRECATED :: sets a dictionary to be compiled for a route
-        
+
         Arguments:
             params {dict} -- Dictionary of parameters you want to pass to the route.
-        
+
         Returns:
             self
         """
@@ -740,17 +750,17 @@ class Request(Extendable):
 
     def helper(self):
         """Dummy method to work with returning the class. Used for helper methods in the View class.
-        
+
         Returns:
             self
         """
 
         return self
-    
+
     def pop(self, *input_variables):
         """Deletes keys from the request input.
         """
-        
+
         for key in input_variables:
             if key in self.request_variables:
                 del self.request_variables[key]

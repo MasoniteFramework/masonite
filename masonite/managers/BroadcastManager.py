@@ -1,9 +1,10 @@
 """ Broadcast Manager Module """
 
+from masonite.contracts import BroadcastManagerContract
 from masonite.managers import Manager
 
 
-class BroadcastManager(Manager):
+class BroadcastManager(Manager, BroadcastManagerContract):
     """Manages all broadcast drivers.
 
     Arguments:

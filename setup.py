@@ -13,6 +13,7 @@ setup(
         'masonite.testsuite',
         'masonite.queues',
         'masonite.contracts',
+        'masonite.contracts.managers',
         'masonite.helpers',
         'masonite.middleware',
     ],

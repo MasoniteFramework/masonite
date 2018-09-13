@@ -1,21 +1,14 @@
 ''' Maintainance Mode Middleware '''
 import os
+from masonite.request import Request
 from config import application
 
 class MaintenanceModeMiddleware:
-    ''' Middleware To Check Maintaince Mode'''
 
-    def __init__(self, Request:
-        ''' Inject Any Dependencies From The Service Container '''
-        self.request = Request
+    def __init__(self, request: Request):
+        self.request = request
 
-
-    def before(self):
-        ''' Run This Middleware Before The Route Executes '''
+    def after(self):
         down = os.path.exists(os.path.join(application.BASE_DIRECTORY, 'bootstrap/down'))
         if down is True:
             self.request.status('503 Service Unavailable')
-            return # todo return response request lifecycle should stop 
-    def after(self):
-        ''' Run This Middleware After The Route Executes '''
-        pass

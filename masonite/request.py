@@ -19,6 +19,7 @@ from masonite.auth.Sign import Sign
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.time import cookie_expire_time
+from masonite.helpers import dot
 
 
 class Request(Extendable):
@@ -65,6 +66,9 @@ class Request(Extendable):
         Returns:
             string
         """
+
+        if '.' in name:
+            name = dot(name, "{1}[{.}]")
         return self.request_variables.get(name, default)
 
     def is_post(self):

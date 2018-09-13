@@ -132,6 +132,11 @@ class TestRequest:
         self.request._set_standardized_request_variables(storages)
         assert self.request.input('test[index]') == '1'
 
+    def test_request_mini_field_storage_with_dot_notation(self):
+        storages = {'test[index]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test.index') == '1'
+
     def test_request_mini_field_storage_returns_a_list(self):
         storages = {'test': [MiniFieldStorage(
             'key', '1'), MiniFieldStorage('key', '2')]}

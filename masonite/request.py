@@ -196,13 +196,9 @@ class Request(Extendable):
             variables {string|dict}
         """
 
-        if isinstance(variables, dict):
-            self.request_variables = variables
-            return
 
         if isinstance(variables, str):
             variables = parse_qs(variables)
-
 
         for name in variables.keys():
             value = self._get_standardized_value(variables[name])
@@ -231,6 +227,14 @@ class Request(Extendable):
             return value[0]
 
         if isinstance(value, dict):
+            return value
+
+        try:
+            return int(value)
+        except ValueError:
+            pass
+        
+        if isinstance(value, str):
             return value
 
         if not value.filename:

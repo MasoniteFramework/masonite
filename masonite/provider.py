@@ -86,7 +86,7 @@ class ServiceProvider:
 
         for command in commands:
             self.app.bind(
-                '{}Command'.format(random_string(4)),
+                '{}Command'.format(command.__class__.__name__.replace('Command', '')),
                 command
             )
 

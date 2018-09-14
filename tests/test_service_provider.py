@@ -15,6 +15,11 @@ class ContainerTest(ServiceProvider):
     def testboot(self, request: Request, Get: Get):
         return request
 
+class Mock1Command:
+    pass
+
+class Mock2Command:
+    pass
 
 ROUTE1 = Get().route('/url/here', None)
 ROUTE2 = Get().route('/test/url', None)
@@ -43,7 +48,7 @@ class LoadProvider(ServiceProvider):
             '/some/alias': '/some/location'
         })
 
-        self.commands(object, object)
+        self.commands(Mock1Command(), Mock2Command())
 
 class TestServiceProvider:
 
@@ -95,5 +100,6 @@ class TestServiceProvider:
         assert self.app.make('Storage').STATICFILES['/some/alias'] == '/some/location'
 
     def test_can_load_commands_into_container(self):
-        assert self.app.collect('*Command')
+        assert self.app.make('Mock1Command')
+        assert self.app.make('Mock2Command')
 

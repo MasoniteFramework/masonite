@@ -2,9 +2,10 @@
 import os
 
 from cleo import Command
+from masonite.commands import BaseScaffoldCommand
 
 
-class ProviderCommand(Command):
+class ProviderCommand(BaseScaffoldCommand):
     """
     Creates a new Service Provider
 
@@ -12,23 +13,6 @@ class ProviderCommand(Command):
         {name : Name of the Service Provider you want to create}
     """
 
-    def handle(self):
-        provider = self.argument('name')
-
-        if not os.path.isfile('app/providers/{}.py'.format(provider)):
-            if not os.path.exists(os.path.dirname('app/providers/{}.py'.format(provider))):
-                # Create the path to the service provider if it does not exist
-                os.makedirs(os.path.dirname(
-                    'app/providers/{}.py'.format(provider)))
-
-            f = open('app/providers/{}.py'.format(provider), 'w+')
-
-            f.write("''' A {} Service Provider '''\n".format(provider))
-            f.write('from masonite.provider import ServiceProvider\n\n')
-            f.write("class {}(ServiceProvider):\n\n    ".format(provider))
-            f.write("def register(self):\n        pass\n\n    ")
-            f.write("def boot(self):\n        pass\n")
-
-            self.info('Service Provider Created Successfully!')
-        else:
-            self.comment('Service Provider Already Exists!')
+    scaffold_name = 'Service Provider'
+    base_directory = 'app/providers/'
+    template = '/masonite/snippets/scaffold/provider'

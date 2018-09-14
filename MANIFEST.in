@@ -1,4 +1,5 @@
 include masonite/snippets/exceptions/css/*
 include masonite/snippets/*
+include masonite/snippets/scaffold/*
 include masonite/snippets/auth/controllers/*
 include masonite/snippets/auth/templates/auth/*

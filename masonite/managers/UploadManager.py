@@ -4,7 +4,7 @@ from masonite.contracts import UploadManagerContract
 from masonite.managers import Manager
 
 
-class UploadManager(Manager):
+class UploadManager(Manager, UploadManagerContract):
     """Manages all upload drivers.
 
     Arguments:

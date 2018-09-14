@@ -1,12 +1,14 @@
-from config import mail
+import ssl
+
 import pytest
 
+from config import mail
 from masonite.app import App
+from masonite.contracts import MailManagerContract
+from masonite.drivers import MailMailgunDriver as Mailgun
+from masonite.drivers import MailSmtpDriver as MailDriver
 from masonite.exceptions import DriverNotFound
 from masonite.managers import MailManager
-from masonite.drivers import MailSmtpDriver as MailDriver
-from masonite.drivers import MailMailgunDriver as Mailgun
-from masonite.contracts import MailManagerContract
 from masonite.view import View
 
 
@@ -54,12 +56,10 @@ class TestMailManager:
         assert mailManager.manage_driver == None
 
     def test_does_not_raise_drivernotfound_exception(self):
-
         mailManager = MailManager(self.app)
 
     def test_manager_sets_driver(self):
         self.app.bind('MailMailtrapDriver', Mailgun)
-
         mailManager = MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):

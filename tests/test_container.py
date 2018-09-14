@@ -30,12 +30,6 @@ class TestContainer:
     def test_container_gets_direct_class(self):
         assert isinstance(self.app.make('Request'), Request)
 
-    def test_container_resolves_object(self):
-        assert isinstance(self.app.resolve(self._function_test), MockObject.__class__)
-
-    def _function_test(self, MockObject):
-        return MockObject
-
     def test_container_resolving_annotation(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), MockObject.__class__)
 
@@ -72,13 +66,6 @@ class TestContainer:
     
     def _function_test_contracts(self, upload: UploadContract):
         return upload
-
-    def _function_test_contract_and_annotations(self, UploadDiskDriver, request: Request, MockObject):
-        return MockObject
-
-    def test_container_injects_dependencies_in_any_order(self):
-        self.app.bind('UploadDiskDriver', UploadDiskDriver)
-        assert isinstance(self.app.resolve(self._function_test_contract_and_annotations), MockObject.__class__)
 
     def _function_not_in_container(self, NotIn):
         return NotIn

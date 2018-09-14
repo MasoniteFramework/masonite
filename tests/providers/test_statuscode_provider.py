@@ -12,14 +12,14 @@ class TestStatusCode:
         self.app.bind('Request', Request(None).load_app(self.app))
         self.app.bind('ViewClass', View(self.app))
         self.app.bind('View', self.app.make('ViewClass').render)
-        self.provider = StatusCodeProvider().load_app(self.app).boot(self.app.make('StatusCode'), self.app.make('Request'))
+        self.provider = StatusCodeProvider().load_app(self.app).boot()
     
     def test_provider_returns_masonite_view(self):
         assert '404 Not Found' in self.app.make('Response')
         assert self.app.make('Headers')
     
     def test_provider_returns_none_on_200_OK(self):
-        self.provider = StatusCodeProvider().load_app(self.app).boot('200 OK', self.app.make('Request'))
+        self.provider = StatusCodeProvider().load_app(self.app).boot()
         assert self.provider is None
 
 class MockApplicationConfig:

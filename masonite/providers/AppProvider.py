@@ -6,7 +6,7 @@ from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                InfoCommand, InstallCommand, JobCommand,
                                KeyCommand, MakeMigrationCommand,
-                               MigrateCommand, MigrateRefreshCommand,
+                               MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
                                ModelCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
@@ -33,6 +33,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
+        self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
 
         # Insert Commands
         self.app.bind('MasoniteAuthCommand', AuthCommand())
@@ -46,6 +47,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteMigrateCommand', MigrateCommand())
         self.app.bind('MasoniteMigrateRefreshCommand', MigrateRefreshCommand())
         self.app.bind('MasoniteMigrateResetCommand', MigrateResetCommand())
+        self.app.bind('MasoniteMigrateStatusCommand', MigrateStatusCommand())
         self.app.bind('MasoniteMigrateRollbackCommand',
                       MigrateRollbackCommand())
         self.app.bind('MasoniteModelCommand', ModelCommand())
@@ -59,12 +61,19 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
 
         self._autoload(application.AUTOLOAD)
+        self._set_application_debug_level()
 
-    def boot(self, Environ, Request, Route):
+    def boot(self, request: Request, route: Route):
         self.app.bind('Headers', [])
         self.app.bind('StatusCode', '404 Not Found')
-        Route.load_environ(Environ)
-        Request.load_environ(Environ).load_app(self.app)
+        route.load_environ(self.app.make('Environ'))
+        request.load_environ(self.app.make('Environ')).load_app(self.app)
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
+    
+    def _set_application_debug_level(self):
+        if self.app.make('Application').DEBUG == 'True':
+            self.app.make('Application').DEBUG == True
+        elif self.app.make('Application').DEBUG == 'False':
+            self.app.make('Application').DEBUG == False

@@ -16,8 +16,10 @@ import tldextract
 from cryptography.fernet import InvalidToken
 
 from masonite.auth.Sign import Sign
+from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
+from masonite.helpers.status import response_statuses
 from masonite.helpers.time import cookie_expire_time
 from masonite.helpers import dot
 
@@ -30,6 +32,8 @@ class Request(Extendable):
     Arguments:
         Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class have the ability to extend another class at runtime.
     """
+
+    statuses = response_statuses()
 
     def __init__(self, environ=None):
         """Request class constructor. Initializes several properties and sets various methods 
@@ -178,7 +182,6 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
-
         self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
@@ -192,6 +195,7 @@ class Request(Extendable):
         Arguments:
             variables {string|dict}
         """
+
 
         if isinstance(variables, str):
             variables = parse_qs(variables)
@@ -209,7 +213,6 @@ class Request(Extendable):
         Returns:
             string|bool
         """
-
         if isinstance(value, list):
 
             # If the list contains MiniFieldStorage objects then loop through and get the values.
@@ -224,6 +227,14 @@ class Request(Extendable):
             return value[0]
 
         if isinstance(value, dict):
+            return value
+
+        try:
+            return int(value)
+        except ValueError:
+            pass
+        
+        if isinstance(value, str):
             return value
 
         if not value.filename:
@@ -252,17 +263,24 @@ class Request(Extendable):
 
         return all((arg in self.request_variables) for arg in args)
 
+
     def status(self, status):
         """Sets the HTTP status code.
 
         Arguments:
-            status {string} -- A string with the standardized status code
+            status {string|integer} -- A string or integer with the standardized status code
 
         Returns:
             self
         """
-
-        self.app().bind('StatusCode', status)
+        if isinstance(status, str):
+            self.app().bind('StatusCode', status)
+        elif isinstance(status, int):
+            try:
+                text_status = self.statuses[status]
+            except KeyError:
+                raise InvalidHTTPStatusCode
+            self.app().bind('StatusCode', text_status)
         return self
 
     def get_status_code(self):

@@ -28,7 +28,7 @@ class ExtendClass2:
 class MockWsgiInput():
 
     def read(self, value):
-        return '{"id": 1}'
+        return '{"id": 1, "test": "testing"}'
 
 
 def get_third_path(self):
@@ -105,9 +105,9 @@ class TestExtends:
         json_wsgi['CONTENT_TYPE'] = 'application/json'
         json_wsgi['QUERY_STRING'] = ''
         json_wsgi['wsgi.input'] = MockWsgiInput()
-
         Route(json_wsgi)
         request_obj = Request(json_wsgi)
 
         assert isinstance(request_obj.request_variables, dict)
-        assert request_obj.input('payload') == {'id': 1}
+        assert request_obj.input('id') == 1
+        assert request_obj.input('test') == 'testing'

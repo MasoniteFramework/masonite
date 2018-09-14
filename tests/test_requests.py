@@ -1,3 +1,5 @@
+import pytest
+
 from config import application, providers
 from pydoc import locate
 from app.http.test_controllers.TestController import TestController
@@ -5,6 +7,7 @@ from cgi import MiniFieldStorage
 
 from masonite.request import Request
 from masonite.app import App
+from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.routes import Get, Route
 from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
@@ -357,6 +360,22 @@ class TestRequest:
 
         request.status('200 OK')
         assert request.get_status_code() == '200 OK'
+
+    def test_request_sets_int_status_code(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request.get_status_code() == '500 Internal Server Error'
+    
+    def test_request_sets_invalid_int_status_code(self):
+        with pytest.raises(InvalidHTTPStatusCode):
+            app = App()
+            app.bind('Request', self.request)
+            request = app.make('Request').load_app(app)
+
+            request.status(600)
 
     def test_request_sets_request_method(self):
         wsgi = generate_wsgi()

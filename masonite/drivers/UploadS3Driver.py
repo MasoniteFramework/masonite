@@ -1,8 +1,10 @@
 """ Upload S3 Driver """
 
-from masonite.contracts.UploadContract import UploadContract
-from masonite.drivers.BaseUploadDriver import BaseUploadDriver
+from masonite.contracts import UploadContract
+from masonite.drivers import BaseUploadDriver
 from masonite.exceptions import DriverLibraryNotFound
+from masonite.managers import UploadManager
+from masonite.app import App
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):
@@ -10,7 +12,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
     Amazon S3 Upload driver
     """
 
-    def __init__(self, UploadManager, StorageConfig):
+    def __init__(self, upload: UploadManager, app: App):
         """Upload Disk Driver Constructor
 
         Arguments:
@@ -18,8 +20,8 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             StorageConfig {config.storage} -- Storage configuration.
         """
 
-        self.upload = UploadManager
-        self.config = StorageConfig
+        self.upload = upload
+        self.config = app.make('StorageConfig')
 
     def store(self, fileitem, location=None):
         """Store the file into Amazon S3 server.

@@ -1,9 +1,13 @@
+import pytest
+
 from config import application, providers
 from pydoc import locate
 from app.http.test_controllers.TestController import TestController
+from cgi import MiniFieldStorage
 
 from masonite.request import Request
 from masonite.app import App
+from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.routes import Get, Route
 from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
@@ -116,6 +120,31 @@ class TestRequest:
     def test_request_no_input_returns_false(self):
         assert self.request.input('notavailable') == False
 
+    def test_request_mini_field_storage_returns_single_value(self):
+        storages = {'test': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == '1'
+
+    def test_request_mini_field_storage_doesnt_return_brackets(self):
+        storages = {'test[]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == '1'
+
+    def test_request_mini_field_storage_index(self):
+        storages = {'test[index]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test[index]') == '1'
+
+    def test_request_mini_field_storage_with_dot_notation(self):
+        storages = {'test[index]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test.index') == '1'
+
+    def test_request_mini_field_storage_returns_a_list(self):
+        storages = {'test': [MiniFieldStorage(
+            'key', '1'), MiniFieldStorage('key', '2')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == ['1', '2']
 
     def test_request_get_cookies_returns_cookies(self):
         assert self.request.get_cookies() == self.request.cookies
@@ -331,6 +360,22 @@ class TestRequest:
 
         request.status('200 OK')
         assert request.get_status_code() == '200 OK'
+
+    def test_request_sets_int_status_code(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request.get_status_code() == '500 Internal Server Error'
+    
+    def test_request_sets_invalid_int_status_code(self):
+        with pytest.raises(InvalidHTTPStatusCode):
+            app = App()
+            app.bind('Request', self.request)
+            request = app.make('Request').load_app(app)
+
+            request.status(600)
 
     def test_request_sets_request_method(self):
         wsgi = generate_wsgi()

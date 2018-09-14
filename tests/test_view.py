@@ -1,14 +1,15 @@
-import time
 import glob
+import time
+
+import pytest
+from jinja2 import FileSystemLoader, PackageLoader
 
 from config import cache
 from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
-from masonite.managers.CacheManager import CacheManager
-from masonite.view import view, View
 from masonite.exceptions import RequiredContainerBindingNotFound
-import pytest
-from jinja2 import FileSystemLoader, PackageLoader
+from masonite.managers.CacheManager import CacheManager
+from masonite.view import View, view
 
 
 class TestView:
@@ -33,8 +34,7 @@ class TestView:
 
         assert view.exists('index')
         assert view.exists('not_available') is False
-    
-    
+
     def test_global_view_exists(self):
         view = self.container.make('ViewClass')
 
@@ -44,8 +44,10 @@ class TestView:
     def test_view_gets_global_template(self):
         view = self.container.make('View')
 
-        assert view('/storage/test', {'test': 'test'}).rendered_template == 'test'
-        assert view('/storage/static/test', {'test': 'test'}).rendered_template == 'test'
+        assert view('/storage/test', {'test': 'test'}
+                    ).rendered_template == 'test'
+        assert view('/storage/static/test',
+                    {'test': 'test'}).rendered_template == 'test'
 
     def test_view_extends_without_dictionary_parameters(self):
         view = self.container.make('ViewClass')
@@ -64,14 +66,16 @@ class TestView:
         self.container.make('ViewClass').composer('test', {'test': 'test'})
         view = self.container.make('View')
 
-        assert self.container.make('ViewClass').composers == {'test': {'test': 'test'}}
+        assert self.container.make('ViewClass').composers == {
+            'test': {'test': 'test'}}
         assert view('test').rendered_template == 'test'
 
     def test_composers_load_all_views_with_astericks(self):
 
         self.container.make('ViewClass').composer('*', {'test': 'test'})
 
-        assert self.container.make('ViewClass').composers == {'*': {'test': 'test'}}
+        assert self.container.make('ViewClass').composers == {
+            '*': {'test': 'test'}}
 
         view = self.container.make('View')
         assert view('test').rendered_template == 'test'
@@ -79,7 +83,8 @@ class TestView:
     def test_composers_with_wildcard_base_view(self):
         self.container.make('ViewClass').composer('mail*', {'to': 'test_user'})
 
-        assert self.container.make('ViewClass').composers == {'mail*': {'to': 'test_user'}}
+        assert self.container.make('ViewClass').composers == {
+            'mail*': {'to': 'test_user'}}
 
         view = self.container.make('View')
         assert 'test_user' in view('mail/welcome').rendered_template
@@ -87,7 +92,8 @@ class TestView:
     def test_composers_with_wildcard_base_view_route(self):
         self.container.make('ViewClass').composer('mail*', {'to': 'test_user'})
 
-        assert self.container.make('ViewClass').composers == {'mail*': {'to': 'test_user'}}
+        assert self.container.make('ViewClass').composers == {
+            'mail*': {'to': 'test_user'}}
 
         view = self.container.make('View')
         assert 'test_user' in view('mail/welcome').rendered_template
@@ -97,26 +103,32 @@ class TestView:
         self.container.make('ViewClass').add_environment('storage')
 
         view = self.container.make('View')
-        assert view('/storage/templates/tests/test', {'test': 'testing'}).rendered_template == 'testing'
+        assert view('/storage/templates/tests/test',
+                    {'test': 'testing'}).rendered_template == 'testing'
 
     def test_composers_with_wildcard_lower_directory_view(self):
-        self.container.make('ViewClass').composer('mail/welcome*', {'to': 'test_user'})
+        self.container.make('ViewClass').composer(
+            'mail/welcome*', {'to': 'test_user'})
 
-        assert self.container.make('ViewClass').composers == {'mail/welcome*': {'to': 'test_user'}}
+        assert self.container.make('ViewClass').composers == {
+            'mail/welcome*': {'to': 'test_user'}}
 
         view = self.container.make('View')
         assert 'test_user' in view('mail/welcome').rendered_template
-    
-    def test_composers_with_wildcard_lower_directory_view_and_incorrect_shortend_wildcard(self):
-        self.container.make('ViewClass').composer('mail/wel*', {'to': 'test_user'})
 
-        assert self.container.make('ViewClass').composers == {'mail/wel*': {'to': 'test_user'}}
+    def test_composers_with_wildcard_lower_directory_view_and_incorrect_shortend_wildcard(self):
+        self.container.make('ViewClass').composer(
+            'mail/wel*', {'to': 'test_user'})
+
+        assert self.container.make('ViewClass').composers == {
+            'mail/wel*': {'to': 'test_user'}}
 
         view = self.container.make('View')
         assert 'test_user' not in view('mail/welcome').rendered_template
 
     def test_composers_load_all_views_with_list(self):
-        self.container.make('ViewClass').composer(['home', 'test'], {'test': 'test'})
+        self.container.make('ViewClass').composer(
+            ['home', 'test'], {'test': 'test'})
 
         assert self.container.make('ViewClass').composers == {
             'home': {'test': 'test'}, 'test': {'test': 'test'}}
@@ -137,7 +149,8 @@ class TestView:
 
         viewclass.add_environment('storage', loader=FileSystemLoader)
 
-        assert viewclass.render('test_location', {'test': 'testing'}).rendered_template == 'testing'
+        assert viewclass.render(
+            'test_location', {'test': 'testing'}).rendered_template == 'testing'
 
     def test_view_throws_exception_without_cache_binding(self):
         view = self.container.make('View')
@@ -151,8 +164,9 @@ class TestView:
         view.filter('slug', self._filter_slug)
 
         assert view._filters == {'slug': self._filter_slug}
-        assert view.render('filter', {'test': 'test slug'}).rendered_template == 'test-slug'
-    
+        assert view.render(
+            'filter', {'test': 'test slug'}).rendered_template == 'test-slug'
+
     @staticmethod
     def _filter_slug(item):
         return item.replace(' ', '-')
@@ -163,7 +177,8 @@ class TestView:
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)
-        self.container.bind('Cache', self.container.make('CacheManager').driver('disk'))
+        self.container.bind('Cache', self.container.make(
+            'CacheManager').driver('disk'))
 
         view = self.container.make('View')
 
@@ -171,7 +186,8 @@ class TestView:
             'test_cache', {'test': 'test'}
         ).cache_for(1, 'second').rendered_template == 'test'
 
-        assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'test'
+        assert open(glob.glob('bootstrap/cache/test_cache:*')
+                    [0]).read() == 'test'
 
         time.sleep(2)
 
@@ -181,7 +197,8 @@ class TestView:
 
         time.sleep(2)
 
-        assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'macho'
+        assert open(glob.glob('bootstrap/cache/test_cache:*')
+                    [0]).read() == 'macho'
 
         assert view(
             'test_cache', {'test': 'macho'}
@@ -189,7 +206,8 @@ class TestView:
 
         time.sleep(1)
 
-        assert open(glob.glob('bootstrap/cache/test_cache:*')[0]).read() == 'macho'
+        assert open(glob.glob('bootstrap/cache/test_cache:*')
+                    [0]).read() == 'macho'
 
         assert view(
             'test_cache', {'test': 'macho'}
@@ -200,7 +218,8 @@ class TestView:
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)
-        self.container.bind('Cache', self.container.make('CacheManager').driver('disk'))
+        self.container.bind('Cache', self.container.make(
+            'CacheManager').driver('disk'))
 
         view = self.container.make('View')
 
@@ -213,11 +232,41 @@ class TestView:
         self.container.make('ViewClass').set_splice('.')
 
         view = self.container.make('View')
+        self.container.make('ViewClass').composer(
+            'mail/welcome', {'test': 'test'})
+        self.container.make('ViewClass').share(
+            {'test': 'John'})
 
         assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
+        assert view('mail.composers', {'test': 'John'}).rendered_template == 'John'
+        assert view('mail.share').rendered_template == 'John'
         assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
 
         self.container.make('ViewClass').set_splice('@')
 
         assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
+        assert 'John' in view('mail@composers', {'test': 'John'}).rendered_template == 'John'
         assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
+
+    def test_can_add_tests_to_view(self):
+        view = self.container.make('ViewClass')
+
+        view.test('admin', self._is_admin)
+
+        assert view._tests == {'admin': self._is_admin}
+
+        user = MockAdminUser
+        assert view.render(
+            'admin_test', {'user': user}).rendered_template == 'True'
+
+        user.admin = 0
+
+        assert view.render(
+            'admin_test', {'user': user}).rendered_template == 'False'
+
+    def _is_admin(self, obj):
+        return obj.admin == 1
+
+
+class MockAdminUser:
+    admin = 1

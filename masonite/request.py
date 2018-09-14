@@ -607,6 +607,7 @@ class Request(Extendable):
 
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})
+            full {bool} -- Specifies whether the full application url should be returned or not. (default: {False})
 
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.

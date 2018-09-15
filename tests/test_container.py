@@ -13,11 +13,13 @@ class GetObject(MockObject):
     
     def find(self):
         return 1
-
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
+
+class MakeObject:
+    pass
 
 class TestContainer:
 
@@ -107,6 +109,10 @@ class TestContainer:
 
     def test_container_makes_from_class(self):
         assert isinstance(self.app.make(Request), Request)
+
+    def test_container_can_bind_and_make_from_class_key(self):
+        self.app.bind(MakeObject, MakeObject)
+        assert self.app.make(MakeObject) == MakeObject
         
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']

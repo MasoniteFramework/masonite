@@ -60,11 +60,10 @@ class App():
             object -- Returns the object that is fetched.
         """
 
-        if isinstance(name, str):
-            if self.has(name):
-                obj = self.providers[name]
-                self.fire_hook('make', name, obj)
-                return obj
+        if name in self.providers:
+            obj = self.providers[name]
+            self.fire_hook('make', name, obj)
+            return obj
         elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)

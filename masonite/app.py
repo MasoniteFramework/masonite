@@ -306,8 +306,6 @@ class App():
         """
 
         for dummy, provider_class in self.providers.items():
-            print('obj', obj)
-            print('type', type(obj))
             if obj == provider_class or obj == provider_class.__class__:
                 return_obj = provider_class
                 self.fire_hook('resolve', obj, return_obj)

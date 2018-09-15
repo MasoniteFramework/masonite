@@ -120,7 +120,6 @@ class TestContainer:
         self.app.providers = {}
 
         self.app.bind('UploadDriver', UploadDiskDriver)
-        self.app.bind('UploadContract', UploadContract)
         assert self.app.make(UploadContract) == UploadDiskDriver
 
     def test_strict_container_raises_exception(self):

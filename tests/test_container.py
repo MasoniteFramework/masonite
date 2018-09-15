@@ -13,11 +13,13 @@ class GetObject(MockObject):
     
     def find(self):
         return 1
-
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
+
+class MakeObject:
+    pass
 
 class TestContainer:
 
@@ -104,6 +106,27 @@ class TestContainer:
         
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
+
+    def test_container_makes_from_class(self):
+        assert isinstance(self.app.make(Request), Request)
+
+    def test_container_can_bind_and_make_from_class_key(self):
+        self.app.bind(MakeObject, MakeObject)
+        assert self.app.make(MakeObject) == MakeObject
+        
+    def test_container_makes_from_base_class(self):
+        del self.app.providers['MockObject']
+        assert self.app.make(MockObject) == GetObject
+
+    def test_container_has_obj(self):
+        assert self.app.has('Request')
+        assert self.app.has(Request)
+
+    def test_container_makes_from_contract(self):
+        self.app.providers = {}
+
+        self.app.bind('UploadDriver', UploadDiskDriver)
+        assert self.app.make(UploadContract) == UploadDiskDriver
 
     def test_strict_container_raises_exception(self):
         self.app = App(strict=True)

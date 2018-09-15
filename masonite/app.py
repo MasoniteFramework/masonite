@@ -287,23 +287,29 @@ class App():
 
 
     def _find_obj(self, obj):
+        """Find an object in the container
+        
+        Arguments:
+            obj {object} -- Any object in the container
+        
+        Raises:
+            MissingContainerBindingNotFound -- Raised when the object cannot be found.
+        
+        Returns:
+            object -- Returns the object in the container
+        """
+
         for dummy, provider_class in self.providers.items():
 
             if obj == provider_class or obj == provider_class.__class__:
-                obj = provider_class
-                # self.fire_hook('resolve', parameter, obj)
-                return obj
-            elif inspect.isclass(provider_class) and issubclass(provider_class, obj) or issubclass(provider_class.__class__, obj):
-                obj = provider_class
-                # self.fire_hook('resolve', parameter, obj)
-                return obj
+                return_obj = provider_class
+                self.fire_hook('resolve', obj, return_obj)
+                return return_obj
+            elif inspect.isclass(provider_class) and issubclass(provider_class.__class__, obj.__class__):
+                return_obj = provider_class
+                self.fire_hook('resolve', obj, return_obj)
+                return return_obj
 
-        for provider, provider_class in self.providers.items():
-            if obj == provider_class or obj == provider_class.__class__:
-                return provider_class
-            elif inspect.isclass(provider_class) and issubclass(provider_class, obj.__class__):
-                return provider_class
-
-        raise ContainerError(
+        raise MissingContainerBindingNotFound(
             'The dependency with the {0} annotation could not be resolved by the container'.format(obj))
 

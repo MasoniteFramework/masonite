@@ -38,7 +38,7 @@ class TestContainer:
 
     def test_container_resolving_instance_of_object(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
-    
+
     def test_container_resolving_similiar_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
 
@@ -107,3 +107,13 @@ class TestContainer:
         self.app.bind('Request', 'override')
         assert self.app.make('Request') == 'test'
 
+    def test_app_simple_bind(self):
+        app = App()
+        app.simple(Request)
+        assert app.providers == {'masonite.request.Request': Request}
+
+    def test_app_simple_bind_init(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.providers == {'masonite.request.Request': req}

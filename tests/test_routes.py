@@ -3,6 +3,8 @@ from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
+from masonite.exceptions import InvalidRouteCompileException
+import pytest
 
 
 class TestRoutes:
@@ -33,13 +35,26 @@ class TestRoutes:
     def test_compile_route_to_regex(self):
         assert self.route.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
         assert self.route.compile_route_to_regex(Get().route(
-            'test/@route', None)) == '^test\\/(\\w+)\\/$'
+            'test/@route', None)) == '^test\\/([\\w.-]+)\\/$'
 
         assert self.route.compile_route_to_regex(Get().route(
             'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
 
         assert self.route.compile_route_to_regex(Get().route(
             'test/@route:string', None)) == '^test\\/([a-zA-Z]+)\\/$'
+
+    def test_route_can_add_compilers(self):
+        assert self.route.compile_route_to_regex(Get().route(
+            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
+        
+        self.route.compile('year', r'[0-9]{4}')
+
+        assert self.route.compile_route_to_regex(Get().route(
+            'test/@route:year', None)) == '^test\\/[0-9]{4}\\/$'
+
+        with pytest.raises(InvalidRouteCompileException):
+            self.route.compile_route_to_regex(Get().route(
+                'test/@route:slug', None))
 
     def test_route_gets_controllers(self):
         assert Get().route('test/url', 'TestController@show')
@@ -60,21 +75,19 @@ class TestRoutes:
         assert routes[1].route_url == '/example/test/2'
 
     def test_group_route_sets_middleware(self):
-        routes = group('/example', [
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
-        ])
-
-        assert routes[0].route_url == '/example/test/1'
-
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
-        ], middleware=['auth', 'user'])
+            Get().route('/test/1', 'TestController@show').middleware('another'),
+            Get().route('/test/2', 'TestController@show'),
+            RouteGroup([
+                Get().route('/test/3', 'TestController@show'),
+                Get().route('/test/4', 'TestController@show')
+            ], middleware=('test', 'test2'))
+        ], middleware=('auth', 'user'))
 
         assert isinstance(routes, list)
-
-        assert routes[0].list_middleware == ('auth', 'user')
+        assert ['another', 'auth', 'user'] == routes[0].list_middleware
+        assert ['auth', 'user'] == routes[1].list_middleware
+        assert ['test', 'test2', 'auth', 'user'] == routes[2].list_middleware
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([
@@ -99,8 +112,15 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
+    def test_group_route_sets_name_for_none_route(self):
+        look_for = []
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show').name('create'),
+            Get().route('/test/2', 'TestController@show')
+        ], name='post.')
+
         assert routes[0].named_route == 'post.create'
-        assert routes[1].named_route == 'post.edit'
+        assert routes[1].named_route == None
 
     def test_flatten_flattens_multiple_lists(self):
         routes = [

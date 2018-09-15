@@ -15,11 +15,12 @@ from urllib.parse import parse_qs
 import tldextract
 from cryptography.fernet import InvalidToken
 
+from config import application
 from masonite.auth.Sign import Sign
+from masonite.helpers import dot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.time import cookie_expire_time
-from masonite.helpers import dot
 
 
 class Request(Extendable):
@@ -533,8 +534,6 @@ class Request(Extendable):
             self
         """
 
-        web_routes = self.container.make('WebRoutes')
-
         self.redirect_url = self._get_named_route(route_name, params)
 
         return self
@@ -600,7 +599,7 @@ class Request(Extendable):
 
         return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
 
-    def route(self, name, params={}):
+    def route(self, name, params={}, full=False):
         """Gets a route URI by its name.
 
         Arguments:
@@ -608,12 +607,14 @@ class Request(Extendable):
 
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})
+            full {bool} -- Specifies whether the full application url should be returned or not. (default: {False})
 
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
 
-        web_routes = self.container.make('WebRoutes')
+        if full:
+            return application.URL + self._get_named_route(name, params)
 
         return self._get_named_route(name, params)
 

@@ -59,8 +59,7 @@ class App:
             self
         """
 
-        self.bind("{}.{}".format(
-            obj.__module__, obj.__name__ if hasattr(obj, '__name__') else obj.__class__.__name__), obj)
+        self.bind(obj if inspect.isclass(obj) else obj.__class__, obj)
         return self
 
     def make(self, name):
@@ -77,6 +76,7 @@ class App:
         """
 
         if name in self.providers:
+            print('inside app')
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
             return obj

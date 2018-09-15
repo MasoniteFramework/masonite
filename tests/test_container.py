@@ -133,10 +133,16 @@ class TestContainer:
     def test_app_simple_bind(self):
         app = App()
         app.simple(Request)
-        assert app.providers == {'masonite.request.Request': Request}
+        assert app.providers == {Request: Request}
 
     def test_app_simple_bind_init(self):
         app = App()
         req = Request()
         app.simple(req)
-        assert app.providers == {'masonite.request.Request': req}
+        assert app.providers == {Request: req}
+
+    def test_app_make_after_simple_bind(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.make(Request) == req

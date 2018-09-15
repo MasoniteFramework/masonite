@@ -82,8 +82,14 @@ class App():
             bool
         """
 
-        if name in self.providers:
+        if isinstance(name, str) and name in self.providers:
             return True
+        else:
+            try:
+                self._find_obj(name)
+                return True
+            except MissingContainerBindingNotFound:
+                return False
 
         return False
 

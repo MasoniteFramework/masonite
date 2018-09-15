@@ -112,13 +112,17 @@ class TestContainer:
         del self.app.providers['MockObject']
         assert self.app.make(MockObject) == GetObject
 
+    def test_container_has_obj(self):
+        assert self.app.has('Request')
+        assert self.app.has(Request)
+
     def test_container_makes_from_contract(self):
         self.app.providers = {}
 
         self.app.bind('UploadDriver', UploadDiskDriver)
         self.app.bind('UploadContract', UploadContract)
         assert self.app.make(UploadContract) == UploadDiskDriver
-        
+
     def test_strict_container_raises_exception(self):
         self.app = App(strict=True)
 

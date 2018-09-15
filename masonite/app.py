@@ -59,12 +59,13 @@ class App():
         Returns:
             object -- Returns the object that is fetched.
         """
-        
-        if self.has(name) and isinstance(name, str):
-            obj = self.providers[name]
-            self.fire_hook('make', name, obj)
-            return obj
-        elif self._find_obj(name):
+
+        if isinstance(name, str):
+            if self.has(name):
+                obj = self.providers[name]
+                self.fire_hook('make', name, obj)
+                return obj
+        elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
             return obj
@@ -82,8 +83,8 @@ class App():
             bool
         """
 
-        if isinstance(name, str) and name in self.providers:
-            return True
+        if isinstance(name, str):
+            return name in self.providers
         else:
             try:
                 self._find_obj(name)
@@ -201,7 +202,7 @@ class App():
         """
 
         for dummy, provider_class in self.providers.items():
-            
+
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
@@ -275,47 +276,46 @@ class App():
 
     def _bind_hook(self, hook, key, obj):
         """Internal method used to abstract away the logic for binding an listener to the container hooks.
-        
+
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)
             key {string|object} -- The key to save for the listener
             obj {object} -- Should be a function or class method
-        
+
         Returns:
             self
         """
-        
+
         if key in self._hooks[hook]:
             self._hooks[hook][key].append(obj)
         else:
             self._hooks[hook].update({key: [obj]})
         return self
 
-
     def _find_obj(self, obj):
         """Find an object in the container
-        
+
         Arguments:
             obj {object} -- Any object in the container
-        
+
         Raises:
             MissingContainerBindingNotFound -- Raised when the object cannot be found.
-        
+
         Returns:
             object -- Returns the object in the container
         """
 
         for dummy, provider_class in self.providers.items():
-
+            print('obj', obj)
+            print('type', type(obj))
             if obj == provider_class or obj == provider_class.__class__:
                 return_obj = provider_class
                 self.fire_hook('resolve', obj, return_obj)
                 return return_obj
-            elif inspect.isclass(provider_class) and issubclass(provider_class.__class__, obj.__class__):
+            elif inspect.isclass(provider_class) and issubclass(provider_class, obj) or issubclass(provider_class.__class__, obj):
                 return_obj = provider_class
                 self.fire_hook('resolve', obj, return_obj)
                 return return_obj
 
         raise MissingContainerBindingNotFound(
             'The dependency with the {0} annotation could not be resolved by the container'.format(obj))
-

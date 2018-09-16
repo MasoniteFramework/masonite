@@ -300,7 +300,7 @@ class Request(Extendable):
 
         return self.environ['REQUEST_METHOD']
 
-    def header(self, key, value=None, http_prefix=True):
+    def header(self, key, value=None, http_prefix=None):
         """Sets or gets a header depending on if "value" is passed in or not.
 
         Arguments:

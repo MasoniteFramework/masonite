@@ -366,6 +366,14 @@ class TestRequest:
         assert request.header('test_dict') == 'test_value'
         assert request.header('test_dict1') == 'test_value1'
 
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        }, http_prefix = True)
+
+        assert request.header('HTTP_test_dict') == 'test_value'
+        assert request.header('HTTP_test_dict1') == 'test_value1'
+
     def test_request_gets_all_headers(self):
         app = App()
         app.bind('Request', Request(wsgi_request))

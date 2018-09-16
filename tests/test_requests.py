@@ -353,6 +353,18 @@ class TestRequest:
         request.header('TEST', 'set_this', http_prefix = None)
         assert request.header('TEST') == 'set_this'
 
+    def test_request_sets_headers_with_dictionary(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        })
+
+        assert request.header('test_dict') == 'test_value'
+        assert request.header('test_dict1') == 'test_value1'
 
     def test_request_gets_all_headers(self):
         app = App()

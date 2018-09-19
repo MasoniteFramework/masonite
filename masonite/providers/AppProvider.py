@@ -4,13 +4,13 @@ from config import application, middleware, storage
 
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
-                               InfoCommand, InstallCommand, JobCommand,
-                               KeyCommand, MakeMigrationCommand,
+                               DownCommand, InfoCommand, InstallCommand, 
+                               JobCommand, KeyCommand, MakeMigrationCommand,
                                MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
                                ModelCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
-                               TinkerCommand, ViewCommand, ValidatorCommand)
+                               TinkerCommand, UpCommand, ViewCommand, ValidatorCommand)
 
 from masonite.exception_handler import ExceptionHandler
 from masonite.helpers.routes import flatten_routes
@@ -39,6 +39,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteAuthCommand', AuthCommand())
         self.app.bind('MasoniteCommandCommand', CommandCommand())
         self.app.bind('MasoniteControllerCommand', ControllerCommand())
+        self.app.bind('MasoniteDownCommand', DownCommand())
         self.app.bind('MasoniteInfoCommand', InfoCommand())
         self.app.bind('MasoniteInstallCommand', InstallCommand())
         self.app.bind('MasoniteJobCommand', JobCommand())
@@ -58,6 +59,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
+        self.app.bind('MasoniteUpCommand', UpCommand())
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
 
         self._autoload(application.AUTOLOAD)

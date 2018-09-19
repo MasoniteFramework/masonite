@@ -4,25 +4,33 @@ from abc import ABC, abstractmethod
 class SessionContract(ABC):
 
     @abstractmethod
-    def get(self): pass
+    def get(self):
+        pass
 
     @abstractmethod
-    def set(self): pass
+    def set(self):
+        pass
 
     @abstractmethod
-    def has(self): pass
+    def has(self):
+        pass
 
     @abstractmethod
-    def all(self): pass
+    def all(self):
+        pass
 
     @abstractmethod
-    def delete(self): pass
+    def delete(self):
+        pass
 
     @abstractmethod
-    def flash(self): pass
+    def flash(self):
+        pass
 
     @abstractmethod
-    def reset(self): pass
+    def reset(self):
+        pass
 
     @abstractmethod
-    def helper(self): pass
+    def helper(self):
+        pass

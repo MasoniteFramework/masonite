@@ -18,7 +18,7 @@ from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
-from routes import api, web
+from routes import web
 
 
 class AppProvider(ServiceProvider):

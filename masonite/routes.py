@@ -5,7 +5,6 @@ import cgi
 import importlib
 import json
 
-from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 from masonite.view import View
 

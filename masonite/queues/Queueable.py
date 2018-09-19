@@ -1,5 +1,6 @@
 """ Base Queue Module """
 
+
 class Queueable:
     """Makes classes Queueable.
     """

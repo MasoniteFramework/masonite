@@ -1,6 +1,7 @@
 """The base class that all drivers inherit from.
 """
 
+
 class BaseDriver:
     """Base driver class.
     """

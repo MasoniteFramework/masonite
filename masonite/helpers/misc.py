@@ -17,7 +17,8 @@ def random_string(length=4):
     return "".join(
         random.choice(string.ascii_uppercase + string.digits) for _ in range(length)
     )
-  
+
+
 def dot(data, compile_to=None):
     notation_list = data.split('.')
 

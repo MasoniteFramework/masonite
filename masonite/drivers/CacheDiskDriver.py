@@ -9,6 +9,7 @@ from masonite.contracts import CacheContract
 from masonite.drivers import BaseDriver
 from masonite.app import App
 
+
 class CacheDiskDriver(CacheContract, BaseDriver):
     """Class for the cache disk driver.
     """

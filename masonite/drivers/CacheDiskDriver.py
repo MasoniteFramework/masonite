@@ -9,13 +9,14 @@ from masonite.contracts import CacheContract
 from masonite.drivers import BaseDriver
 from masonite.app import App
 
+
 class CacheDiskDriver(CacheContract, BaseDriver):
     """Class for the cache disk driver.
     """
 
     def __init__(self, app: App):
         """Cache disk driver constructor
-        
+
         Arguments:
             CacheConfig {config.cache} -- Cache configuration module.
             Application {config.application} -- Application configuration module.
@@ -27,15 +28,15 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
     def store(self, key, value, extension=".txt", location=None):
         """Stores content in cache file.
-        
+
         Arguments:
             key {string} -- The key to store the cache file into
             value {string} -- The value you want to store in the cache
-        
+
         Keyword Arguments:
             extension {string} -- the extension you want to append to the file (default: {".txt"})
             location {string} -- The path you want to store the cache into. (default: {None})
-        
+
         Returns:
             string -- Returns the key
         """
@@ -55,20 +56,20 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
     def store_for(self, key, value, cache_time, cache_type, extension=".txt", location=None):
         """Store the cache for a specific amount of time.
-        
+
         Arguments:
             key {string} -- The key to store the cache file into
             value {string} -- The value you want to store in the cache
             cache_time {int|string} -- The time as a string or an integer (1, 2, 5, 100, etc)
             cache_type {string} -- The type of time to store for (minute, minutes, hours, seconds, etc)
-        
+
         Keyword Arguments:
             extension {string} -- the extension you want to append to the file (default: {".txt"})
             location {string} -- The path you want to store the cache into. (default: {None})
-        
+
         Raises:
             ValueError -- Thrown if an invalid cache type was caught (like houes instead of hours).
-        
+
         Returns:
             string -- Returns the key
         """
@@ -157,7 +158,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
         return key
 
-    def cache_exists(self, key):
+    def exists(self, key):
         """
         Check if the cache exists
         """

@@ -29,8 +29,10 @@ class ContainerError(Exception):
 class InvalidCSRFToken(Exception):
     pass
 
+
 class InvalidHTTPStatusCode(Exception):
     pass
+
 
 class RouteMiddlewareNotFound(Exception):
     pass

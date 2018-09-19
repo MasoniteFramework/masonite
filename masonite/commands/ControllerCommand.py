@@ -1,5 +1,4 @@
 """ New Controller Command """
-import os
 from masonite.view import View
 from masonite.app import App
 from masonite.helpers.filesystem import make_directory

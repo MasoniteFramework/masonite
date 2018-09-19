@@ -16,7 +16,7 @@ class MailManager(Manager, MailManagerContract):
 
     def helper(self):
         """Helper Method to work with returning the driver from the MailManager
-        
+
         Returns:
             Mail Driver
         """

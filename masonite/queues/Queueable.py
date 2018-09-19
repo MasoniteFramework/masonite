@@ -1,5 +1,6 @@
 """ Base Queue Module """
 
+
 class Queueable:
     """Makes classes Queueable.
     """
@@ -12,9 +13,9 @@ class Queueable:
 
     def dispatch(self):
         """Responsible for dispatching the job to the Queue service
-        
+
         Returns:
             self.handle
         """
-        
+
         return self.handle

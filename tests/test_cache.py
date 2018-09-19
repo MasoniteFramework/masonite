@@ -27,7 +27,7 @@ class TestCache:
 
         content = self.app.make('Cache').get(key)
         assert content == "macho"
-        assert self.app.make('Cache').cache_exists(key)
+        assert self.app.make('Cache').exists(key)
         assert self.app.make('Cache').is_valid(key)
         self.app.make('Cache').delete(key)
 
@@ -43,7 +43,7 @@ class TestCache:
 
         content = self.app.make('Cache').get(key)
         assert content == "macho"
-        assert self.app.make('Cache').cache_exists(key)
+        assert self.app.make('Cache').exists(key)
         assert self.app.make('Cache').is_valid(key)
         self.app.make('Cache').delete(key)
 

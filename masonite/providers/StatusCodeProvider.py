@@ -10,7 +10,7 @@ class ServerErrorExceptionHook:
         if app.make('Application').DEBUG:
             return
 
-        app.make('Request').status('500 Internal Server Error')
+        app.make('Request').status(500)
         if app.make('ViewClass').exists('errors/500'):
             rendered_view = app.make('View')('errors/500').rendered_template
         else:
@@ -33,7 +33,7 @@ class StatusCodeProvider(ServiceProvider):
         if self.app.make('StatusCode') == '200 OK':
             return
 
-        if self.app.make('StatusCode') in ('500 Internal Server Error', '404 Not Found'):
+        if self.app.make('StatusCode') in ('500 Internal Server Error', '404 Not Found', '503 Service Unavailable'):
             if self.app.make('ViewClass').exists('errors/{}'.format(self.app.make('StatusCode').split(' ')[0])):
                 rendered_view = self.app.make('View')(
                     'errors/{}'.format(self.app.make('StatusCode').split(' ')[0])).rendered_template

@@ -1,11 +1,13 @@
-from cleo import Command
+""" Run Seed Command """
 import subprocess
 import os
+
+from cleo import Command
 
 
 class SeedRunCommand(Command):
     """
-    Create a seeder to seed a database.
+    Run seed for database.
 
     seed:run
         {table=None : Name of the table to seed}
@@ -20,7 +22,8 @@ class SeedRunCommand(Command):
             seeder = ''
 
         subprocess.call([
-            "orator db:seed -p databases/seeds -c config/database.py -f {}".format(seeder),
+            "orator db:seed -p databases/seeds -c config/database.py -f {}".format(
+                seeder),
         ], shell=True)
 
         self.check_init_file()

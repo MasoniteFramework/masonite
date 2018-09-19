@@ -1,3 +1,4 @@
+""" New Job Command """
 import os
 
 from cleo import Command

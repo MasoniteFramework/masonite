@@ -78,7 +78,7 @@ class RouteProvider(ServiceProvider):
                     print(route.method_type + ' Route: ' + router.url)
 
                 if request.get_status_code() == '404 Not Found':
-                    request.status('200 OK')
+                    request.status(200)
 
                     # Get the response from the route. This data is typically the
                     # output of the controller method

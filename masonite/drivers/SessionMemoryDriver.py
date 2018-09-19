@@ -124,6 +124,7 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
             return True
         
         return False
+
     def __get_client_address(self):
         """
         Get ip from the client

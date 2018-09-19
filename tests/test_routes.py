@@ -1,7 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
-from masonite.helpers.routes import group, flatten_routes
+from masonite.helpers.routes import group, flatten_routes, create_matchurl
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException
 import pytest
@@ -146,3 +146,24 @@ class TestRoutes:
 
         assert routes[3].route_url == '/dashboard/test/1'
         assert routes[3].named_route == 'post.update'
+
+    def test_route_with_without_trailing_slash(self):
+        get_route = Get().route('test/route', None)
+
+        self.route.url = 'test/route'
+        matchurl = create_matchurl(self.route, get_route)
+        assert matchurl.match(self.route.url)
+
+        self.route.url = 'test/route/'
+        matchurl = create_matchurl(self.route, get_route)
+        assert matchurl.match(self.route.url)
+
+        get_route_trailing_slash = Get().route('test/route/', None)
+
+        self.route.url = 'test/route'
+        matchurl = create_matchurl(self.route, get_route_trailing_slash)
+        assert matchurl.match(self.route.url)
+
+        self.route.url = 'test/route/'
+        matchurl = create_matchurl(self.route, get_route_trailing_slash)
+        assert matchurl.match(self.route.url)

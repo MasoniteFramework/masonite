@@ -21,6 +21,7 @@ class TestRouteProvider:
         self.app.bind('Request', Request(
             self.app.make('Environ')).load_app(self.app))
         self.app.bind('Headers', [])
+        self.app.bind('StatusCode', '404 Not Found')
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
         view = View(self.app)
         self.app.bind('ViewClass', view)

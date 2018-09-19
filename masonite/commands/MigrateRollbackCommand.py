@@ -1,8 +1,8 @@
+""" Migrate Rollback Command """
 import os
 import sys
 
 from cleo import Command
-
 from masonite.packages import add_venv_site_packages
 
 
@@ -46,7 +46,6 @@ class MigrateRollbackCommand(Command):
 
         # Rollback the migrations
         for migration in migration_list:
-
             try:
                 migrator.rollback(migration)
                 for note in migrator.get_notes():

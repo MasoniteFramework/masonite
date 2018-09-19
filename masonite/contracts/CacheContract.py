@@ -16,4 +16,4 @@ class CacheContract(ABC):
     def is_valid(self): pass
 
     @abstractmethod
-    def cache_exists(self): pass
+    def exists(self): pass

@@ -73,14 +73,14 @@ class View:
         # Check if composers are even set for a speed improvement
         if self.composers:
             self._update_from_composers()
-        
+
         if self._tests:
             self.env.tests.update(self._tests)
 
         self.rendered_template = self._render()
 
         return self
-    
+
     def _render(self):
         return self.env.get_template(self.filename).render(
             self.dictionary)
@@ -223,7 +223,7 @@ class View:
         """
 
         self._filters.update({name: function})
-    
+
     def test(self, key, obj):
         self._tests.update({key: obj})
         return self
@@ -311,7 +311,7 @@ class View:
         driver_cache = self.container.make('Cache')
         self.rendered_template = driver_cache.get(self.template)
         return self
-    
+
     def set_splice(self, splice):
         self._splice = splice
         return self

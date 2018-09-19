@@ -436,7 +436,7 @@ class ViewRoute(BaseHttpRoute):
     def __init__(self, method_type, route, template, dictionary):
         """Class used for view routes. This class should be returned when a view is called on an HTTP route.
         This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
-        
+
         Arguments:
             method_type {string} -- The method type (GET, POST, PUT etc)
             route {string} -- The current route (/test/url)

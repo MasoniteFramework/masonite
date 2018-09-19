@@ -73,7 +73,7 @@ class AppProvider(ServiceProvider):
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
-    
+
     def _set_application_debug_level(self):
         if self.app.make('Application').DEBUG == 'True':
             self.app.make('Application').DEBUG == True

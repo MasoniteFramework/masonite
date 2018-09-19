@@ -175,7 +175,7 @@ def create_matchurl(router, route):
     """
 
     # Compiles the given route to regex
-    regex = router.compile_route_to_regex(route)
+    regex = route.compile_route_to_regex(router)
 
     if route.route_url.endswith('/'):
         if router.url.endswith('/'):

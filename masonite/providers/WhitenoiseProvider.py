@@ -13,8 +13,9 @@ class WhitenoiseProvider(ServiceProvider):
         pass
 
     def boot(self):
-        """ Wraps the WSGI server in a whitenoise container """
-        
+        """Wraps the WSGI server in a whitenoise container
+        """
+
         self.app.bind('WSGI', WhiteNoise(
             self.app.make('WSGI'), root=self.app.make('Application').STATIC_ROOT))
 

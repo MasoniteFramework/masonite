@@ -9,13 +9,14 @@ from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 from masonite.view import View
 
+
 class Route:
     """Route class used to handle routing.
     """
 
     route_compilers = {
         'int': r'(\d+)',
-        'integer': r'(\d+)', 
+        'integer': r'(\d+)',
         'string': r'([a-zA-Z]+)',
         'default': r'([\w.-]+)'
     }
@@ -117,51 +118,6 @@ class Route:
 
         return False
 
-    def compile_route_to_regex(self, route):
-        """Compiles the given route to a regex string
-
-        Arguments:
-            route {string} -- URI of the route to compile.
-
-        Returns:
-            string -- Compiled URI string.
-        """
-
-        # Split the route
-        split_given_route = route.route_url.split('/')
-
-        # compile the provided url into regex
-        url_list = []
-        regex = '^'
-        for regex_route in split_given_route:
-            if '@' in regex_route:
-                if ':' in regex_route:
-                    try:
-                        regex += self.route_compilers[regex_route.split(':')[
-                            1]]
-                    except KeyError:
-                        raise InvalidRouteCompileException(
-                            'Route compiler "{}" is not an available route compiler. ' \
-                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
-                                regex_route.split(':')[1])
-                        )
-                else:
-                    regex += self.route_compilers['default']
-
-                regex += r'\/'
-
-                # append the variable name passed @(variable):int to a list
-                url_list.append(
-                    regex_route.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
-                )
-            else:
-                regex += regex_route + r'\/'
-
-        self.url_list = url_list
-        regex += '$'
-        return regex
-
     def compile(self, key, to=''):
         self.route_compilers.update({key: to})
         return self
@@ -203,6 +159,10 @@ class BaseHttpRoute:
         self._find_controller(output)
         self.route_url = route
         return self
+
+    def view(self, route, template, dictionary={}):
+        view_route = ViewRoute(self.method_type, route, template, dictionary)
+        return view_route
 
     def _find_controller(self, controller):
         """Finds the controller to attach to the route.
@@ -251,7 +211,7 @@ class BaseHttpRoute:
 
         except Exception as e:
             print('\033[93mWarning in routes/web.py!', e, '\033[0m')
-        
+
     def get_response(self):
         # Resolve Controller Constructor
         controller = self.request.app().resolve(self.controller)
@@ -262,7 +222,7 @@ class BaseHttpRoute:
 
         if isinstance(response, View):
             response = response.rendered_template
-        
+
         return response
 
     def domain(self, domain):
@@ -366,6 +326,51 @@ class BaseHttpRoute:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
 
+    def compile_route_to_regex(self, router):
+        """Compiles the given route to a regex string
+
+        Arguments:
+            route {string} -- URI of the route to compile.
+
+        Returns:
+            string -- Compiled URI string.
+        """
+
+        # Split the route
+        split_given_route = self.route_url.split('/')
+
+        # compile the provided url into regex
+        url_list = []
+        regex = '^'
+        for regex_route in split_given_route:
+            if '@' in regex_route:
+                if ':' in regex_route:
+                    try:
+                        regex += router.route_compilers[regex_route.split(':')[
+                            1]]
+                    except KeyError:
+                        raise InvalidRouteCompileException(
+                            'Route compiler "{}" is not an available route compiler. '
+                            'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
+                                regex_route.split(':')[1])
+                        )
+                else:
+                    regex += router.route_compilers['default']
+
+                regex += r'\/'
+
+                # append the variable name passed @(variable):int to a list
+                url_list.append(
+                    regex_route.replace('@', '').replace(
+                        ':int', '').replace(':string', '')
+                )
+            else:
+                regex += regex_route + r'\/'
+
+        router.url_list = url_list
+        regex += '$'
+        return regex
+
 
 class Get(BaseHttpRoute):
     """Class for specifying GET requests
@@ -402,6 +407,7 @@ class Put(BaseHttpRoute):
         self.method_type = 'PUT'
         self.list_middleware = []
 
+
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests 
     """
@@ -413,6 +419,7 @@ class Patch(BaseHttpRoute):
         self.method_type = 'PATCH'
         self.list_middleware = []
 
+
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests 
     """
@@ -423,6 +430,29 @@ class Delete(BaseHttpRoute):
 
         self.method_type = 'DELETE'
         self.list_middleware = []
+
+
+class ViewRoute(BaseHttpRoute):
+
+    def __init__(self, method_type, route, template, dictionary):
+        """Class used for view routes. This class should be returned when a view is called on an HTTP route.
+        This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
+        
+        Arguments:
+            method_type {string} -- The method type (GET, POST, PUT etc)
+            route {string} -- The current route (/test/url)
+            template {string} -- The template to use (dashboard/user)
+            dictionary {dict} -- The dictionary to use to render the template.
+        """
+        self.list_middleware = []
+        self.method_type = method_type
+        self.route_url = route
+        self.template = template
+        self.dictionary = dictionary
+
+    def get_response(self):
+        return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
+
 
 class RouteGroup():
     """Class for specifying Route Groups

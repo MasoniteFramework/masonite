@@ -20,15 +20,6 @@ class TestApp:
         self.app.bind('test2', object)
         assert self.app.providers == {'test1': object, 'test2': object}
 
-    def test_app_simple_bind(self):
-        self.app.simple(Request)
-        assert self.app.providers == {'masonite.request.Request': Request}
-
-    def test_app_simple_bind_init(self):
-        req = Request()
-        self.app.simple(req)
-        assert self.app.providers == {'masonite.request.Request': req}
-
     def test_app_makes(self):
         self.app.bind('Request', REQUEST)
         assert self.app.make('Request').cookies == []

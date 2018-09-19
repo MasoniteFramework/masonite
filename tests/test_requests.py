@@ -3,6 +3,7 @@ import pytest
 from config import application, providers
 from pydoc import locate
 from app.http.test_controllers.TestController import TestController
+from cgi import MiniFieldStorage
 
 from masonite.request import Request
 from masonite.app import App
@@ -119,6 +120,36 @@ class TestRequest:
     def test_request_no_input_returns_false(self):
         assert self.request.input('notavailable') == False
 
+    def test_request_mini_field_storage_returns_single_value(self):
+        storages = {'test': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == '1'
+
+    def test_request_can_get_string_value(self):
+        storages = {'test': 'value'}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == 'value'
+
+    def test_request_mini_field_storage_doesnt_return_brackets(self):
+        storages = {'test[]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == '1'
+
+    def test_request_mini_field_storage_index(self):
+        storages = {'test[index]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test[index]') == '1'
+
+    def test_request_mini_field_storage_with_dot_notation(self):
+        storages = {'test[index]': [MiniFieldStorage('key', '1')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test.index') == '1'
+
+    def test_request_mini_field_storage_returns_a_list(self):
+        storages = {'test': [MiniFieldStorage(
+            'key', '1'), MiniFieldStorage('key', '2')]}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == ['1', '2']
 
     def test_request_get_cookies_returns_cookies(self):
         assert self.request.get_cookies() == self.request.cookies
@@ -241,6 +272,17 @@ class TestRequest:
         assert request.route('test.url') == '/test/url'
         assert request.route('test.id', {'id': 1}) == '/test/url/1'
 
+    def test_request_route_returns_full_url(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
+
+        assert request.route('test.url', full=True) == 'http://localhost/test/url'
+
     def test_redirect_compiles_url_with_multiple_slashes(self):
         app = App()
         app.bind('Request', self.request)
@@ -332,7 +374,7 @@ class TestRequest:
         app.bind('StatusCode', '404 Not Found')
         request = app.make('Request').load_app(app)
 
-        request.status('200 OK')
+        request.status(200)
         assert request.get_status_code() == '200 OK'
 
     def test_request_sets_int_status_code(self):

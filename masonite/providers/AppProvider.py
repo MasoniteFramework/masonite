@@ -4,7 +4,7 @@ from config import application, middleware, storage
 
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
-                               DownCommand, InfoCommand, InstallCommand, 
+                               DownCommand, InfoCommand, InstallCommand,
                                JobCommand, KeyCommand, MakeMigrationCommand,
                                MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
@@ -73,7 +73,7 @@ class AppProvider(ServiceProvider):
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
-    
+
     def _set_application_debug_level(self):
         if self.app.make('Application').DEBUG == 'True':
             self.app.make('Application').DEBUG == True

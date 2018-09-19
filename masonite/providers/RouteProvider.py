@@ -41,8 +41,8 @@ class RouteProvider(ServiceProvider):
 
                 """Get URL Parameters
                     This will create a dictionary of parameters given. This is sort of a short
-                    but complex way to retrieve the url parameters. 
-                    This is the code used to convert /url/@firstname/@lastname 
+                    but complex way to retrieve the url parameters.
+                    This is the code used to convert /url/@firstname/@lastname
                     to {'firstmane': 'joseph', 'lastname': 'mancuso'}.
                 """
 

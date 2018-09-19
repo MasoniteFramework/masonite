@@ -42,7 +42,7 @@ class App:
             raise StrictContainerException(
                 'You cannot override a key inside a strict container')
 
-        if self.override or not name in self.providers:
+        if self.override or name not in self.providers:
             self.fire_hook('bind', name, class_obj)
             self.providers.update({name: class_obj})
 
@@ -119,7 +119,7 @@ class App:
         return self
 
     def resolve(self, obj):
-        """Takes an object such as a function or class method and resolves it's 
+        """Takes an object such as a function or class method and resolves it's
         parameters from objects in the container.
 
         Arguments:

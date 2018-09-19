@@ -32,7 +32,7 @@ class SeedRunCommand(Command):
         os.makedirs(os.path.dirname(
             'databases/seeds/__init__.py'), exist_ok=True)
 
-        if not 'sys.path.append(os.getcwd())' in open('databases/seeds/__init__.py').read():
+        if 'sys.path.append(os.getcwd())' not in open('databases/seeds/__init__.py').read():
             f = open('databases/seeds/__init__.py', 'w+')
             f.write('import os\nimport sys\nsys.path.append(os.getcwd())\n')
             f.close()

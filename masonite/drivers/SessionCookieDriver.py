@@ -85,7 +85,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             bool -- If the key was deleted or not
         """
 
-        data = self.__collect_data()
+        self.__collect_data()
 
         if self.request.get_cookie('s_{}'.format(key)):
             self.request.delete_cookie('s_{}'.format(key))

@@ -11,14 +11,14 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
 
     def send(self, message=None):
         """Sends the message through the Mailgun service.
-        
+
         Keyword Arguments:
             message {string} -- The message to be sent to Mailgun. (default: {None})
-        
+
         Returns:
             requests.post -- Returns the response as a requests object.
         """
-        
+
         if not message:
             message = self.message_body
 

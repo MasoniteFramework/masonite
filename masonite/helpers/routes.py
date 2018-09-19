@@ -188,5 +188,4 @@ def create_matchurl(router, route):
         else:
             matchurl = re.compile(regex.replace(r'\/$', r'$'))
 
-   
     return matchurl

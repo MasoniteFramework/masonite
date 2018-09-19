@@ -157,7 +157,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
         return key
 
-    def cache_exists(self, key):
+    def exists(self, key):
         """
         Check if the cache exists
         """

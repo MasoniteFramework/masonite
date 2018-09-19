@@ -96,8 +96,6 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         Keyword Arguments:
             flash_only {bool} -- If only flash data should be deleted. (default: {False})
         """
-
-
         ip = self.__get_client_address()
 
         if flash_only:

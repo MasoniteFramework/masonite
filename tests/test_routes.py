@@ -1,7 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
-from masonite.helpers.routes import group, flatten_routes, create_matchurl
+from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException
 import pytest

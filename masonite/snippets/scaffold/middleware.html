@@ -1,0 +1,17 @@
+""" {{ class }} Middleware """
+
+class {{ class }}Middleware:
+    """{{ class }} Middleware
+    """
+
+    def __init__(self, Request):
+        """ Inject Any Dependencies From The Service Container """
+        self.request = Request
+
+    def before(self):
+        """ Run This Middleware Before The Route Executes """
+        pass
+
+    def after(self):
+        """" Run This Middleware After The Route Executes """
+        pass

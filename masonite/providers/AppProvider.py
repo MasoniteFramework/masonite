@@ -5,9 +5,9 @@ from config import application, middleware, storage
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand, 
-                               JobCommand, KeyCommand, MakeMigrationCommand,
-                               MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
-                               MigrateResetCommand, MigrateRollbackCommand,
+                               JobCommand, KeyCommand, MiddlewareCommand,
+                               MakeMigrationCommand, MigrateCommand, MigrateRefreshCommand,
+                               MigrateStatusCommand,MigrateResetCommand, MigrateRollbackCommand,
                                ModelCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
                                TinkerCommand, UpCommand, ViewCommand, ValidatorCommand)
@@ -45,6 +45,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteJobCommand', JobCommand())
         self.app.bind('MasoniteKeyCommand', KeyCommand())
         self.app.bind('MasoniteMakeMigrationCommand', MakeMigrationCommand())
+        self.app.bind('MasoniteMiddlewareCommand', MiddlewareCommand())
         self.app.bind('MasoniteMigrateCommand', MigrateCommand())
         self.app.bind('MasoniteMigrateRefreshCommand', MigrateRefreshCommand())
         self.app.bind('MasoniteMigrateResetCommand', MigrateResetCommand())

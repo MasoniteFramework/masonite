@@ -8,6 +8,7 @@ from .InstallCommand import InstallCommand
 from .JobCommand import JobCommand
 from .KeyCommand import KeyCommand
 from .MakeMigrationCommand import MakeMigrationCommand
+from .MiddlewareCommand import MiddlewareCommand
 from .MigrateCommand import MigrateCommand
 from .MigrateRefreshCommand import MigrateRefreshCommand
 from .MigrateResetCommand import MigrateResetCommand

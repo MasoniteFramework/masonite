@@ -374,7 +374,7 @@ class TestRequest:
         app.bind('StatusCode', '404 Not Found')
         request = app.make('Request').load_app(app)
 
-        request.status('200 OK')
+        request.status(200)
         assert request.get_status_code() == '200 OK'
 
     def test_request_sets_int_status_code(self):

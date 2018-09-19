@@ -42,7 +42,7 @@ class App:
             raise StrictContainerException(
                 'You cannot override a key inside a strict container')
 
-        if self.override or not name in self.providers:
+        if self.override or name not in self.providers:
             self.fire_hook('bind', name, class_obj)
             self.providers.update({name: class_obj})
 

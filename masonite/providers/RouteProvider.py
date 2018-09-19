@@ -1,7 +1,6 @@
 """ A RouteProvider Service Provider """
 
 from masonite.provider import ServiceProvider
-from masonite.view import View
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.helpers.routes import create_matchurl

@@ -1,5 +1,3 @@
-import os
-
 from cleo import Command
 
 from masonite.app import App

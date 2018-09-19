@@ -1,4 +1,4 @@
-""" Test Maintenance Mode Midddlewar """
+""" Test Maintenance Mode Midddleware """
 import os
 
 from masonite.app import App

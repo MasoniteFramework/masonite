@@ -1,3 +1,4 @@
+""" New Key Command """
 from cleo import Command
 from cryptography.fernet import Fernet
 
@@ -22,13 +23,13 @@ class KeyCommand(Command):
             # change the line that starts with KEY=
             for line_number, line in enumerate(data):
                 if line.startswith('KEY='):
-                    data[line_number] = 'KEY={0}\n'.format(key)
+                    data[line_number] = 'KEY={}\n'.format(key)
                     break
 
             # and write everything back
             with open('.env', 'w') as file:
                 file.writelines(data)
 
-            self.info('Key added to your .env file: {0}'.format(key))
+            self.info('Key added to your .env file: {}'.format(key))
         else:
-            self.info("Key: {0}".format(key))
+            self.info("Key: {}".format(key))

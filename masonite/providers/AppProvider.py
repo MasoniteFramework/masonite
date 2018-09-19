@@ -75,7 +75,7 @@ class AppProvider(ServiceProvider):
         Autoload(self.app).load(directories)
 
     def _set_application_debug_level(self):
-        if self.app.make('Application').DEBUG is 'True':
-            self.app.make('Application').DEBUG is True
-        elif self.app.make('Application').DEBUG is 'False':
-            self.app.make('Application').DEBUG is False
+        if self.app.make('Application').DEBUG == 'True':
+            self.app.make('Application').DEBUG == True
+        elif self.app.make('Application').DEBUG == 'False':
+            self.app.make('Application').DEBUG == False

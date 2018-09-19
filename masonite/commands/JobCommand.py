@@ -1,6 +1,7 @@
 """ New Job Command """
 from cleo import Command
 
+
 class JobCommand(Command):
     """
     Creates a new Job

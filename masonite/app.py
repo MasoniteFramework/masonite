@@ -119,7 +119,7 @@ class App:
         return self
 
     def resolve(self, obj):
-        """Takes an object such as a function or class method and resolves it's 
+        """Takes an object such as a function or class method and resolves it's
         parameters from objects in the container.
 
         Arguments:

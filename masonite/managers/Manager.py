@@ -31,7 +31,7 @@ class Manager:
             container {masonite.app.App} -- The container class
 
         Returns:
-            self    
+            self
         """
 
         self.container = container

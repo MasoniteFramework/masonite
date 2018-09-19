@@ -12,7 +12,7 @@ class BaseDriver:
         """Returns an instance of the driver specified.
         
         Arguments:
-            driver {string} -- String representation of the driver to be resolved from the container. 
+            driver {string} -- String representation of the driver to be resolved from the container.
                                This can be values like "s3" or "disk"
         
         Returns:

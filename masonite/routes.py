@@ -384,7 +384,7 @@ class Get(BaseHttpRoute):
 
 
 class Post(BaseHttpRoute):
-    """Class for specifying POST requests 
+    """Class for specifying POST requests
     """
 
     def __init__(self):
@@ -396,7 +396,7 @@ class Post(BaseHttpRoute):
 
 
 class Put(BaseHttpRoute):
-    """Class for specifying PUT requests 
+    """Class for specifying PUT requests
     """
 
     def __init__(self):
@@ -408,7 +408,7 @@ class Put(BaseHttpRoute):
 
 
 class Patch(BaseHttpRoute):
-    """Class for specifying Patch requests 
+    """Class for specifying Patch requests
     """
 
     def __init__(self):
@@ -420,7 +420,7 @@ class Patch(BaseHttpRoute):
 
 
 class Delete(BaseHttpRoute):
-    """Class for specifying Delete requests 
+    """Class for specifying Delete requests
     """
 
     def __init__(self):

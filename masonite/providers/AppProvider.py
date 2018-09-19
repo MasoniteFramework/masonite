@@ -4,7 +4,7 @@ from config import application, middleware, storage
 
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
-                               DownCommand, InfoCommand, InstallCommand, 
+                               DownCommand, InfoCommand, InstallCommand,
                                JobCommand, KeyCommand, MakeMigrationCommand,
                                MigrateCommand, MigrateRefreshCommand, MigrateStatusCommand,
                                MigrateResetCommand, MigrateRollbackCommand,

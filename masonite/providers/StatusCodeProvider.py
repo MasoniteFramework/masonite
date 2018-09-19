@@ -1,7 +1,6 @@
 """ A StatusProvider Service Provider """
 
 from masonite.provider import ServiceProvider
-from masonite.request import Request
 
 
 class ServerErrorExceptionHook:

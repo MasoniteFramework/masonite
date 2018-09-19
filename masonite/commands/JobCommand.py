@@ -1,9 +1,5 @@
 """ New Job Command """
-import os
-
 from cleo import Command
-
-from masonite.commands import BaseScaffoldCommand
 
 
 class JobCommand(Command):

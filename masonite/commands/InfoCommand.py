@@ -8,7 +8,6 @@ import psutil
 from cleo import Command
 from tabulate import tabulate
 
-from masonite.environment import LoadEnvironment
 from masonite.info import VERSION
 
 

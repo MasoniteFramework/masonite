@@ -11,5 +11,4 @@ class MaintenanceModeMiddleware:
     def before(self):
         down = os.path.exists(os.path.join(application.BASE_DIRECTORY, 'bootstrap/down'))
         if down is True:
-            self.request.status('503 Service Unavailable')
-            self.request.redirect_url = ''
+            self.request.status(503)

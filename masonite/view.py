@@ -283,7 +283,7 @@ class View:
             bool
         """
 
-        return self.container.make('Cache').cache_exists(self.template)
+        return self.container.make('Cache').exists(self.template)
 
     def __is_expired_cache(self):
         """Check if cache is expired.

@@ -35,7 +35,8 @@ class StartResponseProvider(ServiceProvider):
 
             self.app.bind('Response', 'redirecting ...')
 
-        request.reset_headers()
-        request.cookies = []
+        Request.url_params = {}
+        Request.reset_headers()
+        Request.cookies = []
         if self.app.has('Session') and self.app.make('StatusCode') == '200 OK':
             self.app.make('Session').reset(flash_only=True)

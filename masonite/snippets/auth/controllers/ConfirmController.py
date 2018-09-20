@@ -19,9 +19,29 @@ class ConfirmController:
         pass
 
     def verify_show(self, request: Request, view: View):
+        """Show the Verify Email page for unverified users.
+
+        Arguments:
+            Request {masonite.request.request} -- The Masonite request class.
+            Request {masonite.view.view} -- The Masonite view class.
+
+        Returns:
+            [type] -- [description]
+        """
+
         return view.render('auth/verify', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def confirm_email(self, request: Request, view: View):
+        """Confirm User email and show the correct response.
+
+        Arguments:
+            Request {masonite.request.request} -- The Masonite request class.
+            Request {masonite.view.view} -- The Masonite view class.
+
+        Returns:
+            [type] -- [description]
+        """
+
         sign = Sign()
         token = sign.unsign(request.param('id'))
 

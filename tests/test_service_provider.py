@@ -59,7 +59,7 @@ class TestServiceProvider:
     def setup_method(self):
         self.app = TestSuite().create_container().container
         self.provider = ServiceProvider()
-        self.provider.load_app(self.app).boot()
+        self.provider.load_app(self.app).register()
         self.load_provider = LoadProvider()
         self.load_provider.load_app(self.app).boot()
 
@@ -79,16 +79,12 @@ class TestServiceProvider:
         self.app.bind('Get', Get().route('url', None))
 
         assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
-    
+
     def test_can_call_container_with_annotation_with_self_parameter(self):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
 
         assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
-        
-    def test_service_provider_sets_on_app_object(self):
-        assert 'Request' in self.app.providers 
-        assert self.app.make('Request') == object
 
     def test_can_load_routes_into_container(self):
         assert len(self.app.make('WebRoutes')) > 2

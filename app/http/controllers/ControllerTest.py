@@ -17,3 +17,6 @@ class ControllerTest:
 
     def returns_a_dict(self):
         return {'id': 1}
+
+    def param(self):
+        return self.request.param('id')

@@ -717,8 +717,7 @@ class Request(Extendable):
             if url:
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
-                    url = url.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
+                    url = url.replace('@', '').split(':')[0]
                     compiled_url += str(params[url]) + '/'
                 else:
                     compiled_url += url + '/'

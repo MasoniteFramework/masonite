@@ -1,6 +1,7 @@
+""" Install Command """
 import os
 import shutil
-from subprocess import call
+import subprocess
 
 from cleo import Command
 
@@ -13,10 +14,10 @@ class InstallCommand(Command):
     """
 
     def handle(self):
-        call(["pip3", "install", "-r", "requirements.txt"])
+        subprocess.call(["pip3", "install", "-r", "requirements.txt"])
 
         # create the .env file if it does not exist
         if not os.path.isfile('.env'):
             shutil.copy('.env-example', '.env')
 
-        call(["craft", "key", "--store"])
+        subprocess.call(["craft", "key", "--store"])

@@ -6,7 +6,7 @@ from masonite.storage import Storage
 
 class SassProvider(ServiceProvider):
 
-    wsgi = False 
+    wsgi = False
 
     def register(self):
 

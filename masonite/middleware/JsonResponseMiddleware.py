@@ -1,6 +1,7 @@
 import json
 from masonite.request import Request
 
+
 class JsonResponseMiddleware:
 
     def __init__(self, request: Request):

@@ -63,7 +63,7 @@ class Autoload:
             instance {object} -- Object to search for instances of.
 
         Keyword Arguments:
-            only_app {bool} -- Only search in the current application namespace. This will not found other classes 
+            only_app {bool} -- Only search in the current application namespace. This will not found other classes
                                that are imported through third party packages. (default: {True})
             instantiate {bool} -- Whether or not to instantiate the classes it finds. (default: {False})
 
@@ -93,7 +93,7 @@ class Autoload:
             directories {list} -- List of directories to search.
 
         Keyword Arguments:
-            only_app {bool} -- Only search in the current application namespace. This will not found other classes 
+            only_app {bool} -- Only search in the current application namespace. This will not found other classes
                                that are imported through third party packages. (default: {True})
             instantiate {bool} -- Whether or not to instantiate the classes it finds. (default: {False})
 

@@ -5,7 +5,6 @@ import cgi
 import importlib
 import json
 
-from config import middleware
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
 from masonite.view import View
 
@@ -383,7 +382,7 @@ class Get(BaseHttpRoute):
 
 
 class Post(BaseHttpRoute):
-    """Class for specifying POST requests 
+    """Class for specifying POST requests
     """
 
     def __init__(self):
@@ -395,7 +394,7 @@ class Post(BaseHttpRoute):
 
 
 class Put(BaseHttpRoute):
-    """Class for specifying PUT requests 
+    """Class for specifying PUT requests
     """
 
     def __init__(self):
@@ -407,7 +406,7 @@ class Put(BaseHttpRoute):
 
 
 class Patch(BaseHttpRoute):
-    """Class for specifying Patch requests 
+    """Class for specifying Patch requests
     """
 
     def __init__(self):
@@ -419,7 +418,7 @@ class Patch(BaseHttpRoute):
 
 
 class Delete(BaseHttpRoute):
-    """Class for specifying Delete requests 
+    """Class for specifying Delete requests
     """
 
     def __init__(self):
@@ -435,7 +434,7 @@ class ViewRoute(BaseHttpRoute):
     def __init__(self, method_type, route, template, dictionary):
         """Class used for view routes. This class should be returned when a view is called on an HTTP route.
         This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
-        
+
         Arguments:
             method_type {string} -- The method type (GET, POST, PUT etc)
             route {string} -- The current route (/test/url)

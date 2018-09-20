@@ -1,8 +1,8 @@
+""" Migrate Rollback Command """
 import os
 import sys
 
 from cleo import Command
-
 from masonite.packages import add_venv_site_packages
 
 
@@ -40,13 +40,12 @@ class MigrateRollbackCommand(Command):
         migration_list = []
         for migration in migrator.get_repository().get_ran():
             for directory in migration_directory:
-                if os.path.exists(os.path.join(directory, migration+'.py')):
+                if os.path.exists(os.path.join(directory, migration + '.py')):
                     migration_list.append(os.path.join(os.getcwd(), directory))
                     break
 
         # Rollback the migrations
         for migration in migration_list:
-
             try:
                 migrator.rollback(migration)
                 for note in migrator.get_notes():

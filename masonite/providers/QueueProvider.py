@@ -15,8 +15,8 @@ class QueueProvider(ServiceProvider):
         self.app.bind('QueueManager', QueueManager)
         self.app.bind('QueueConfig', queue)
 
-    def boot(self, QueueConfig, QueueManager):
+    def boot(self, queue: QueueManager):
         self.app.bind(
             'Queue',
-            QueueManager(self.app).driver(QueueConfig.DRIVER)
+            queue(self.app).driver(self.app.make('QueueConfig').DRIVER)
         )

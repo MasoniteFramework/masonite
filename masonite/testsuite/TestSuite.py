@@ -80,7 +80,7 @@ class TestSuite:
         | Startup the Service Container
         |--------------------------------------------------------------------------
         |
-        | Instantiate the Service Container so we can bind classes into it and 
+        | Instantiate the Service Container so we can bind classes into it and
         | bind the environ variable that is created by the WSGI server into
         | the container.
         |

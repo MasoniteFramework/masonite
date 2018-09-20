@@ -5,6 +5,7 @@ from masonite.drivers import UploadDiskDriver, UploadS3Driver
 from masonite.helpers.static import static
 from masonite.managers import UploadManager
 from masonite.provider import ServiceProvider
+from masonite.view import View
 
 
 class UploadProvider(ServiceProvider):
@@ -17,9 +18,9 @@ class UploadProvider(ServiceProvider):
         self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('UploadManager', UploadManager(self.app))
 
-    def boot(self, UploadManager, StorageConfig, ViewClass):
-        self.app.bind('Upload', UploadManager.driver(StorageConfig.DRIVER))
-        ViewClass.share(
+    def boot(self, manager: UploadManager, view: View):
+        self.app.bind('Upload', manager.driver(self.app.make('StorageConfig').DRIVER))
+        view.share(
             {
                 'static': static,
             }

@@ -13,11 +13,13 @@ class GetObject(MockObject):
     
     def find(self):
         return 1
-
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
+
+class MakeObject:
+    pass
 
 class TestContainer:
 
@@ -30,12 +32,6 @@ class TestContainer:
     def test_container_gets_direct_class(self):
         assert isinstance(self.app.make('Request'), Request)
 
-    def test_container_resolves_object(self):
-        assert isinstance(self.app.resolve(self._function_test), MockObject.__class__)
-
-    def _function_test(self, MockObject):
-        return MockObject
-
     def test_container_resolving_annotation(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), MockObject.__class__)
 
@@ -44,7 +40,7 @@ class TestContainer:
 
     def test_container_resolving_instance_of_object(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
-    
+
     def test_container_resolving_similiar_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
 
@@ -73,13 +69,6 @@ class TestContainer:
     def _function_test_contracts(self, upload: UploadContract):
         return upload
 
-    def _function_test_contract_and_annotations(self, UploadDiskDriver, request: Request, MockObject):
-        return MockObject
-
-    def test_container_injects_dependencies_in_any_order(self):
-        self.app.bind('UploadDiskDriver', UploadDiskDriver)
-        assert isinstance(self.app.resolve(self._function_test_contract_and_annotations), MockObject.__class__)
-
     def _function_not_in_container(self, NotIn):
         return NotIn
 
@@ -105,6 +94,27 @@ class TestContainer:
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
 
+    def test_container_makes_from_class(self):
+        assert isinstance(self.app.make(Request), Request)
+
+    def test_container_can_bind_and_make_from_class_key(self):
+        self.app.bind(MakeObject, MakeObject)
+        assert self.app.make(MakeObject) == MakeObject
+        
+    def test_container_makes_from_base_class(self):
+        del self.app.providers['MockObject']
+        assert self.app.make(MockObject) == GetObject
+
+    def test_container_has_obj(self):
+        assert self.app.has('Request')
+        assert self.app.has(Request)
+
+    def test_container_makes_from_contract(self):
+        self.app.providers = {}
+
+        self.app.bind('UploadDriver', UploadDiskDriver)
+        assert self.app.make(UploadContract) == UploadDiskDriver
+
     def test_strict_container_raises_exception(self):
         self.app = App(strict=True)
 
@@ -120,3 +130,19 @@ class TestContainer:
         self.app.bind('Request', 'override')
         assert self.app.make('Request') == 'test'
 
+    def test_app_simple_bind(self):
+        app = App()
+        app.simple(Request)
+        assert app.providers == {Request: Request}
+
+    def test_app_simple_bind_init(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.providers == {Request: req}
+
+    def test_app_make_after_simple_bind(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.make(Request) == req

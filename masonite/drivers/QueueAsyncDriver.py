@@ -2,22 +2,23 @@
 
 import threading
 
-from masonite.contracts.QueueContract import QueueContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import QueueContract
+from masonite.drivers import BaseDriver
+from masonite.app import App
 
 
 class QueueAsyncDriver(QueueContract, BaseDriver):
     """Queue Aysnc Driver
     """
 
-    def __init__(self, Container):
+    def __init__(self, app: App):
         """Queue Async Driver
 
         Arguments:
             Container {masonite.app.App} -- The application container.
         """
 
-        self.container = Container
+        self.container = app
 
     def push(self, *objects):
         """Push objects onto the async stack.

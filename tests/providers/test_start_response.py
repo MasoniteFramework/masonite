@@ -19,19 +19,19 @@ class TestResponseProvider:
 
     def test_response_boot_throws_response_exception(self):
         with pytest.raises(ResponseError):
-            self.provider.boot(self.app.make('Request'), self.app.make('Response'), self.app.make('Headers'))
+            self.provider.boot(self.app.make('Request'))
 
     def test_response_encodes_header_response_to_bytes(self):
         encoded_bytes = bytes('test', 'utf-8')
         self.app.bind('Response', 'test')
         self.app.bind('StatusCode', '200 OK')
 
-        self.provider.boot(self.app.make('Request'), self.app.make('Response'), self.app.make('Headers'))
+        self.provider.boot(self.app.make('Request'))
 
         assert self.app.make('Headers')[0] == ("Content-Length", str(len(encoded_bytes)))
 
     def test_redirect_sets_redirection_headers(self):
         self.app.make('Request').redirect_url = '/redirection'
-        self.provider.boot(self.app.make('Request'), self.app.make('Response'), self.app.make('Headers'))
+        self.provider.boot(self.app.make('Request'))
         assert self.app.make('StatusCode') == '302 OK'
         assert ('Location', '/redirection') in self.app.make('Headers')

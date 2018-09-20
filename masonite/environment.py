@@ -4,14 +4,14 @@
 import os
 from pathlib import Path
 
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 
 
 class LoadEnvironment:
     """This class is used for loading the environment from .env and .env.* files.
     """
 
-    def __init__(self, env=None, override=False, only=None):
+    def __init__(self, env=None, override=True, only=None):
         """LoadEnvironment constructor.
 
         Keyword Arguments:

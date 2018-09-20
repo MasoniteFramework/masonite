@@ -4,13 +4,17 @@ from abc import ABC, abstractmethod
 class MailContract(ABC):
 
     @abstractmethod
-    def to(self): pass
+    def to(self):
+        pass
 
     @abstractmethod
-    def template(self): pass
+    def template(self):
+        pass
 
     @abstractmethod
-    def send_from(self): pass
+    def send_from(self):
+        pass
 
     @abstractmethod
-    def subject(self): pass
+    def subject(self):
+        pass

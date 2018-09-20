@@ -33,28 +33,31 @@ class TestRoutes:
 
 
     def test_compile_route_to_regex(self):
-        assert self.route.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route', None)) == '^test\\/([\\w.-]+)\\/$'
+        get_route = Get().route('test/route', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/route\\/$'
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
+        get_route = Get().route('test/@route', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/([\\w.-]+)\\/$'
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:string', None)) == '^test\\/([a-zA-Z]+)\\/$'
+        get_route = Get().route('test/@route:int', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
+
+        get_route = Get().route('test/@route:string', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/([a-zA-Z]+)\\/$'
 
     def test_route_can_add_compilers(self):
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
+        get_route = Get().route('test/@route:int', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
         
         self.route.compile('year', r'[0-9]{4}')
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:year', None)) == '^test\\/[0-9]{4}\\/$'
+        get_route = Get().route('test/@route:year', None)
 
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/[0-9]{4}\\/$'
+
+        get_route = Get().route('test/@route:slug', None)
         with pytest.raises(InvalidRouteCompileException):
-            self.route.compile_route_to_regex(Get().route(
-                'test/@route:slug', None))
+            get_route.compile_route_to_regex(self.route)
 
     def test_route_gets_controllers(self):
         assert Get().route('test/url', 'TestController@show')

@@ -1,5 +1,7 @@
+""" Starts Interactive Console Command """
 import code
 import sys
+
 from cleo import Command
 
 BANNER = """Masonite Python {} Console

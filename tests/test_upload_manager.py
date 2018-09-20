@@ -28,6 +28,7 @@ class TestUploadManager:
 
     def setup_method(self):
         self.app = App()
+        self.app.bind('Container', self.app)
         self.app.bind('Test', object)
         self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
@@ -124,6 +125,7 @@ if os.environ.get('S3_BUCKET'):
 
         def setup_method(self):
             self.app = App()
+            self.app.bind('Container', self.app)
 
             self.app.bind('Application', application)
             self.app.bind('StorageConfig', storage)

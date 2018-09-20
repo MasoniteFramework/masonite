@@ -76,7 +76,7 @@ class App:
         """
 
         if name in self.providers:
-            print('inside app')
+            # print('inside app')
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
             return obj

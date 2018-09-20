@@ -5,7 +5,7 @@ from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
-
+from masonite.auth.MustVerifyEmail import MustVerifyEmail
 
 class RegisterController:
     """The RegisterController class.
@@ -14,7 +14,6 @@ class RegisterController:
     def __init__(self):
         """The RegisterController Constructor
         """
-
         pass
 
     def show(self, request: Request, view: View):
@@ -41,11 +40,14 @@ class RegisterController:
 
         password = bcrypt_password(request.input('password'))
 
-        auth.AUTH['model'].create(
+        user = auth.AUTH['model'].create(
             name=request.input('name'),
             password=password,
             email=request.input('email'),
         )
+
+        if isinstance(user, MustVerifyEmail):
+            user.verify_email()
 
         # Login the user
         if Auth(request).login(request.input(auth.AUTH['model'].__auth__), request.input('password')):

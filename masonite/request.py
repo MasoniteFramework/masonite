@@ -231,7 +231,7 @@ class Request(Extendable):
 
         try:
             return int(value)
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
         if isinstance(value, str):
@@ -718,7 +718,7 @@ class Request(Extendable):
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
                     url = url.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
+                        ':int', '').replace(':string', '').replace(':signed', '')
                     compiled_url += str(params[url]) + '/'
                 else:
                     compiled_url += url + '/'

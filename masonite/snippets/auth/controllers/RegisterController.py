@@ -47,7 +47,7 @@ class RegisterController:
         )
 
         if isinstance(user, MustVerifyEmail):
-            user.verify_email()
+            request.app().resolve(user.verify_email)
 
         # Login the user
         if Auth(request).login(request.input(auth.AUTH['model'].__auth__), request.input('password')):

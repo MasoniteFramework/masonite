@@ -6,7 +6,7 @@ from masonite.view import View
 
 
 class HomeController:
-    """Home Dashboard Controller 
+    """Home Dashboard Controller
     """
 
     def __init__(self):

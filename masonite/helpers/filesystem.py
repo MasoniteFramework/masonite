@@ -1,4 +1,4 @@
-import os 
+import os
 
 
 def make_directory(directory):

@@ -3,6 +3,7 @@ import os
 from masonite.request import Request
 from config import application
 
+
 class MaintenanceModeMiddleware:
 
     def __init__(self, request: Request):

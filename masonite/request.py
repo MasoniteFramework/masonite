@@ -155,7 +155,7 @@ class Request(Extendable):
             only_vars[name] = self.request_variables.get(name)
 
         return only_vars
-    
+
     def without(self, *names):
         """Returns the request variables in a dictionary without specified values.
 

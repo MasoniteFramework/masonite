@@ -14,7 +14,7 @@ class ConfirmController:
     """
 
     def __init__(self):
-        """The RegisterController Constructor
+        """The ConfirmController Constructor
         """
         pass
 

@@ -64,3 +64,12 @@ class ConfirmController:
 
 
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+
+        def send_verify_email(self, request: Request):
+            user = request.user()
+
+            if isinstance(user, MustVerifyEmail):
+                request.app().resolve(user.verify_email)
+
+            return request.redirect('/home')
+

@@ -492,3 +492,7 @@ class TestRequest:
         self.request.request_variables = {'__back': '/login'}
         self.request.back(default='/home')
         assert self.request.redirect_url == '/login'
+
+    def test_request_without(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.without('__token') == {'application': 'Masonite'}

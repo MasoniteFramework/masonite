@@ -156,6 +156,21 @@ class Request(Extendable):
 
         return only_vars
 
+    def without(self, *names):
+        """Returns the request variables in a dictionary without specified values.
+
+        Returns:
+            dict
+        """
+
+        only_vars = {}
+
+        for name in self.request_variables.keys():
+            if name not in names:
+                only_vars[name] = self.request_variables.get(name)
+
+        return only_vars
+
     def load_app(self, app):
         """Loads the container into the request class
 

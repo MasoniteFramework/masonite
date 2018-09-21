@@ -37,7 +37,7 @@ class Request(Extendable):
     statuses = response_statuses()
 
     def __init__(self, environ=None):
-        """Request class constructor. Initializes several properties and sets various methods 
+        """Request class constructor. Initializes several properties and sets various methods
         depending on the environtment.
 
         Keyword Arguments:
@@ -156,6 +156,21 @@ class Request(Extendable):
 
         return only_vars
 
+    def without(self, *names):
+        """Returns the request variables in a dictionary without specified values.
+
+        Returns:
+            dict
+        """
+
+        only_vars = {}
+
+        for name in self.request_variables.keys():
+            if name not in names:
+                only_vars[name] = self.request_variables.get(name)
+
+        return only_vars
+
     def load_app(self, app):
         """Loads the container into the request class
 
@@ -208,7 +223,7 @@ class Request(Extendable):
         """Get the standardized value based on the type of the value parameter
 
         Arguments:
-            value {list|dict|cgi.FileStorage|string}    
+            value {list|dict|cgi.FileStorage|string}
 
         Returns:
             string|bool
@@ -566,7 +581,7 @@ class Request(Extendable):
         return self
 
     def _get_named_route(self, name, params):
-        """Searches the list of routes and returns the route with the name passed.  
+        """Searches the list of routes and returns the route with the name passed.
 
         Arguments:
             name {string} -- Route name to search for (dashboard.user).
@@ -586,7 +601,7 @@ class Request(Extendable):
         return None
 
     def _get_route_from_controller(self, controller):
-        """Get the route using the controller. 
+        """Get the route using the controller.
         This finds the route with the attached controller and returns that route.
         This does not compile the URI but actually returns the Route object.
 
@@ -728,8 +743,7 @@ class Request(Extendable):
             if url:
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
-                    url = url.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
+                    url = url.replace('@', '').split(':')[0]
                     compiled_url += str(params[url]) + '/'
                 else:
                     compiled_url += url + '/'

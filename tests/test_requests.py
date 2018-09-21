@@ -326,6 +326,18 @@ class TestRequest:
             'id': '1',
             'test': 'user',
         }
+        assert request.compile_route_to_url(route, params) == '/test/1/user'
+
+    def test_request_compiles_custom_route_compiler(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        route = 'test/@id:signed'
+        params = {
+            'id': '1',
+        }
+        assert request.compile_route_to_url(route, params) == '/test/1'
 
 
     def test_redirect_compiles_url_with_http(self):
@@ -479,7 +491,11 @@ class TestRequest:
 
     def test_contains_for_path_with_alpha_contains(self):
         self.request.path = '/test/path/joe' 
-        assert self.request.contains('/test/path/*:string')    
+        assert self.request.contains('/test/path/*:string')   
+
+    def test_contains_for_route_compilers(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:signed')    
 
     def test_contains_multiple_asteriks(self):
         self.request.path = '/dashboard/user/edit/1' 
@@ -496,3 +512,7 @@ class TestRequest:
         self.request.request_variables = {'__back': '/login'}
         self.request.back(default='/home')
         assert self.request.redirect_url == '/login'
+
+    def test_request_without(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.without('__token') == {'application': 'Masonite'}

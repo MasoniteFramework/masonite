@@ -1,7 +1,4 @@
 """ New Providers Command """
-import os
-
-from cleo import Command
 from masonite.commands import BaseScaffoldCommand
 
 

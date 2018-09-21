@@ -55,7 +55,6 @@ class ServeCommand(Command):
     def _run_with_reloader(self, extra_files=None, interval=1):
         """Run the given function in an independent python interpreter."""
         import signal
-        from wsgi import application
 
         reloader = WatchdogReloaderLoop(
             extra_files, interval, log_func=self.comment)

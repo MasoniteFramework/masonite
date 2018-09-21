@@ -315,19 +315,25 @@ class Request(Extendable):
 
         return self.environ['REQUEST_METHOD']
 
-    def header(self, key, value=None, http_prefix=True):
-        """Sets or gets a header depending on if value is passed in or not.
+    def header(self, key, value=None, http_prefix=None):
+        """Sets or gets a header depending on if "value" is passed in or not.
 
         Arguments:
-            key {string} -- The header you want to set or get.
+            key {string|dict} -- The header you want to set or get. If the key is a dictionary, loop through each key pair 
+                                    and add them to the headers.
 
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
             http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
-            string|True|None -- [description]
+            string|None|True -- Either return the value if getting a header, None if it doesn't exist or True if setting the headers.
         """
+
+        if isinstance(key, dict):
+            for key, value in key.items():
+                self._set_header(key, value, http_prefix)
+            return True
 
         # Get Headers
         if value is None:
@@ -338,14 +344,19 @@ class Request(Extendable):
             else:
                 return None
 
+        self._set_header(key, value, http_prefix)
+
+        return True
+    
+    def _set_header(self, key, value, http_prefix):
         # Set Headers
         if http_prefix:
+            print('http_prefix', http_prefix)
             self.environ['HTTP_{0}'.format(key)] = str(value)
             self._headers.append(('HTTP_{0}'.format(key), str(value)))
         else:
             self.environ[key] = str(value)
             self._headers.append((key, str(value)))
-        return True
 
     def get_headers(self):
         """Returns all current headers to be set.

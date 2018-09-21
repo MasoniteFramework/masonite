@@ -235,10 +235,10 @@ class TestRequest:
         request.environ['HTTP_HOST'] = 'test.localhost.com'
 
         request.header('TEST', 'set_this')
-        assert request.header('HTTP_TEST') == 'set_this'
-
-        request.header('TEST', 'set_this', http_prefix = None)
         assert request.header('TEST') == 'set_this'
+
+        request.header('TEST', 'set_this', http_prefix = True)
+        assert request.header('HTTP_TEST') == 'set_this'
 
 
     def test_redirect_compiles_url(self):
@@ -365,11 +365,31 @@ class TestRequest:
         request = app.make('Request').load_app(app)
 
         request.header('TEST', 'set_this')
-        assert request.header('HTTP_TEST') == 'set_this'
-
-        request.header('TEST', 'set_this', http_prefix = None)
         assert request.header('TEST') == 'set_this'
 
+        request.header('TEST', 'set_this', http_prefix = True)
+        assert request.header('HTTP_TEST') == 'set_this'
+
+    def test_request_sets_headers_with_dictionary(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        })
+
+        assert request.header('test_dict') == 'test_value'
+        assert request.header('test_dict1') == 'test_value1'
+
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        }, http_prefix = True)
+
+        assert request.header('HTTP_test_dict') == 'test_value'
+        assert request.header('HTTP_test_dict1') == 'test_value1'
 
     def test_request_gets_all_headers(self):
         app = App()
@@ -378,7 +398,7 @@ class TestRequest:
 
         request.header('TEST1', 'set_this_item')
         request.header('TEST2', 'set_this_item', http_prefix = None)
-        assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+        assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
     def test_request_sets_status_code(self):
         app = App()

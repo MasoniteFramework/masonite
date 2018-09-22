@@ -9,9 +9,8 @@ class VerifyEmailMiddleware:
 
     def before(self):
         user = self.request.user()
-        if(user.verified_at is None){
+        if user.verified_at is None:
             self.request.redirect('/email/verify')
-        }
 
     def after(self):
         pass

@@ -400,13 +400,13 @@ class TestRequest:
         request.header('TEST2', 'set_this_item', http_prefix = None)
         assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
-    def test_request_sets_status_code(self):
+    def test_request_sets_str_status_code(self):
         app = App()
         app.bind('Request', self.request)
         app.bind('StatusCode', '404 Not Found')
         request = app.make('Request').load_app(app)
 
-        request.status(200)
+        request.status('200 OK')
         assert request.get_status_code() == '200 OK'
 
     def test_request_sets_int_status_code(self):

@@ -246,7 +246,7 @@ class Request(Extendable):
 
         try:
             return int(value)
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
         if isinstance(value, str):

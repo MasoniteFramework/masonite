@@ -178,7 +178,7 @@ class TestRequest:
         container.bind('Environ', wsgi_request)
 
         for provider in container.make('Providers').PROVIDERS:
-            container.resolve(provider().load_app(container).register)
+            provider().load_app(container).register()
 
         container.bind('Response', 'test')
         container.bind('WebRoutes', [
@@ -192,7 +192,7 @@ class TestRequest:
         for provider in container.make('Providers').PROVIDERS:
             located_provider = provider().load_app(container)
 
-            container.resolve(provider().load_app(container).boot)
+            container.resolve(located_provider.boot)
 
         assert container.make('Request').input('application') == 'Masonite'
         assert container.make('Request').all() == {'application': 'Masonite'}

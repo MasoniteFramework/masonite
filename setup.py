@@ -16,6 +16,7 @@ setup(
         'masonite.contracts.managers',
         'masonite.helpers',
         'masonite.middleware',
+        'masonite.testing',
     ],
     version=VERSION,
     install_requires=[

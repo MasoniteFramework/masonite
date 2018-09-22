@@ -516,3 +516,8 @@ class TestRequest:
     def test_request_without(self):
         self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
         assert self.request.without('__token') == {'application': 'Masonite'}
+
+    def test_request_only_returns_specified_values(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.only('application') == {'application': 'Masonite'}
+        assert self.request.only('__token') == {'__token': 'testing'}

@@ -337,7 +337,6 @@ class BaseHttpRoute:
 
         # Split the route
         split_given_route = self.route_url.split('/')
-
         # compile the provided url into regex
         url_list = []
         regex = '^'
@@ -360,8 +359,7 @@ class BaseHttpRoute:
 
                 # append the variable name passed @(variable):int to a list
                 url_list.append(
-                    regex_route.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
+                    regex_route.replace('@', '').split(':')[0]
                 )
             else:
                 regex += regex_route + r'\/'

@@ -178,7 +178,7 @@ class TestRequest:
         container.bind('Environ', wsgi_request)
 
         for provider in container.make('Providers').PROVIDERS:
-            container.resolve(provider().load_app(container).register)
+            provider().load_app(container).register()
 
         container.bind('Response', 'test')
         container.bind('WebRoutes', [
@@ -192,7 +192,7 @@ class TestRequest:
         for provider in container.make('Providers').PROVIDERS:
             located_provider = provider().load_app(container)
 
-            container.resolve(provider().load_app(container).boot)
+            container.resolve(located_provider.boot)
 
         assert container.make('Request').input('application') == 'Masonite'
         assert container.make('Request').all() == {'application': 'Masonite'}
@@ -235,10 +235,10 @@ class TestRequest:
         request.environ['HTTP_HOST'] = 'test.localhost.com'
 
         request.header('TEST', 'set_this')
-        assert request.header('HTTP_TEST') == 'set_this'
-
-        request.header('TEST', 'set_this', http_prefix = None)
         assert request.header('TEST') == 'set_this'
+
+        request.header('TEST', 'set_this', http_prefix = True)
+        assert request.header('HTTP_TEST') == 'set_this'
 
 
     def test_redirect_compiles_url(self):
@@ -326,6 +326,18 @@ class TestRequest:
             'id': '1',
             'test': 'user',
         }
+        assert request.compile_route_to_url(route, params) == '/test/1/user'
+
+    def test_request_compiles_custom_route_compiler(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        route = 'test/@id:signed'
+        params = {
+            'id': '1',
+        }
+        assert request.compile_route_to_url(route, params) == '/test/1'
 
 
     def test_redirect_compiles_url_with_http(self):
@@ -353,11 +365,31 @@ class TestRequest:
         request = app.make('Request').load_app(app)
 
         request.header('TEST', 'set_this')
-        assert request.header('HTTP_TEST') == 'set_this'
-
-        request.header('TEST', 'set_this', http_prefix = None)
         assert request.header('TEST') == 'set_this'
 
+        request.header('TEST', 'set_this', http_prefix = True)
+        assert request.header('HTTP_TEST') == 'set_this'
+
+    def test_request_sets_headers_with_dictionary(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        })
+
+        assert request.header('test_dict') == 'test_value'
+        assert request.header('test_dict1') == 'test_value1'
+
+        request.header({
+            'test_dict': 'test_value',
+            'test_dict1': 'test_value1'
+        }, http_prefix = True)
+
+        assert request.header('HTTP_test_dict') == 'test_value'
+        assert request.header('HTTP_test_dict1') == 'test_value1'
 
     def test_request_gets_all_headers(self):
         app = App()
@@ -366,15 +398,15 @@ class TestRequest:
 
         request.header('TEST1', 'set_this_item')
         request.header('TEST2', 'set_this_item', http_prefix = None)
-        assert request.get_headers() == [('HTTP_TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+        assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
-    def test_request_sets_status_code(self):
+    def test_request_sets_str_status_code(self):
         app = App()
         app.bind('Request', self.request)
         app.bind('StatusCode', '404 Not Found')
         request = app.make('Request').load_app(app)
 
-        request.status(200)
+        request.status('200 OK')
         assert request.get_status_code() == '200 OK'
 
     def test_request_sets_int_status_code(self):
@@ -459,7 +491,11 @@ class TestRequest:
 
     def test_contains_for_path_with_alpha_contains(self):
         self.request.path = '/test/path/joe' 
-        assert self.request.contains('/test/path/*:string')    
+        assert self.request.contains('/test/path/*:string')   
+
+    def test_contains_for_route_compilers(self):
+        self.request.path = '/test/path/joe' 
+        assert self.request.contains('/test/path/*:signed')    
 
     def test_contains_multiple_asteriks(self):
         self.request.path = '/dashboard/user/edit/1' 
@@ -476,3 +512,12 @@ class TestRequest:
         self.request.request_variables = {'__back': '/login'}
         self.request.back(default='/home')
         assert self.request.redirect_url == '/login'
+
+    def test_request_without(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.without('__token') == {'application': 'Masonite'}
+
+    def test_request_only_returns_specified_values(self):
+        self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
+        assert self.request.only('application') == {'application': 'Masonite'}
+        assert self.request.only('__token') == {'__token': 'testing'}

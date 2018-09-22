@@ -15,6 +15,10 @@ class ContainerTest(ServiceProvider):
     def testboot(self, request: Request, Get: Get):
         return request
 
+class ServiceProviderTest(ServiceProvider):
+
+    def register(self):
+        self.app.bind('Request', object)
 class Mock1Command:
     pass
 
@@ -55,7 +59,7 @@ class TestServiceProvider:
     def setup_method(self):
         self.app = TestSuite().create_container().container
         self.provider = ServiceProvider()
-        self.provider.load_app(self.app).boot()
+        self.provider.load_app(self.app).register()
         self.load_provider = LoadProvider()
         self.load_provider.load_app(self.app).boot()
 
@@ -75,7 +79,7 @@ class TestServiceProvider:
         self.app.bind('Get', Get().route('url', None))
 
         assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
-    
+
     def test_can_call_container_with_annotation_with_self_parameter(self):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))

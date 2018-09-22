@@ -32,6 +32,7 @@ DATABASES = {
     'default': {
         'driver': os.environ.get('DB_DRIVER'),
         'host': os.environ.get('DB_HOST'),
+        'port': os.environ.get('DB_PORT'),
         'database': os.environ.get('DB_DATABASE'),
         'user': os.environ.get('DB_USERNAME'),
         'password': os.environ.get('DB_PASSWORD'),

@@ -11,7 +11,7 @@ class UnitTest:
 
     def controller(self): pass
 
-    def get(self, url): 
+    def get(self, url):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = url
         self.container = TestSuite().create_container(wsgi=wsgi).container
@@ -22,7 +22,7 @@ class UnitTest:
             if route.route_url == url and (route.method_type == method or not method):
                 return MockRoute(route, self.container)
 
-    def routes(self, routes): 
+    def routes(self, routes):
         self.container.bind('WebRoutes', self.container.make('WebRoutes') + routes)
 
     def json(self, url, data, method='POST'):

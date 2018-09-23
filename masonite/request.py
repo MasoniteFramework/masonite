@@ -347,7 +347,7 @@ class Request(Extendable):
         self._set_header(key, value, http_prefix)
 
         return True
-    
+
     def _set_header(self, key, value, http_prefix):
         # Set Headers
         if http_prefix:

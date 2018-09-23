@@ -74,7 +74,7 @@ class TestSuite:
 
         for provider in container.make('Providers'):
             container.resolve(provider.boot)
-        
+
         """
         |--------------------------------------------------------------------------
         | Startup the Service Container

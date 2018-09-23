@@ -43,7 +43,7 @@ HTTP_MIDDLEWARE = [
 """
 
 ROUTE_MIDDLEWARE = {
-    'auth':  AuthenticationMiddleware,
+    'auth': AuthenticationMiddleware,
     'test': MiddlewareTest,
     'middleware.test': [
         MiddlewareTest,

@@ -8,4 +8,3 @@ class DatabaseSeeder(Seeder):
         Run the database seeds.
         """
         pass
-

@@ -1,6 +1,7 @@
 from masonite.request import Request
 from masonite.view import View
 
+
 class ControllerTest:
 
     def __init__(self, request: Request):

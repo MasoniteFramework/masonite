@@ -1,24 +1,14 @@
-from dotenv import find_dotenv, load_dotenv
+""" Mail Settings """
+
 import os
 
-
 """
 |--------------------------------------------------------------------------
-| Load Environment Variables
+| From Address
 |--------------------------------------------------------------------------
 |
-| Take environment variables from the .env file and load them in.
-|
-"""
-
-load_dotenv(find_dotenv())
-
-"""
-|--------------------------------------------------------------------------
-| From Email Address
-|--------------------------------------------------------------------------
-|
-| This value will be used for the default address when sending emails.
+| This value will be used for the default address when sending emails from
+| your application.
 |
 """
 
@@ -43,12 +33,10 @@ DRIVER = os.getenv('MAIL_DRIVER', 'smtp')
 
 """
 |--------------------------------------------------------------------------
-| Application Name
+| Mail Drivers
 |--------------------------------------------------------------------------
 |
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
+| Different drivers you can use for sending email.
 |
 """
 

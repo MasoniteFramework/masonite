@@ -46,7 +46,6 @@ class TestSuite:
         container.bind('Application', application)
         container.bind('Container', container)
 
-
         container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])

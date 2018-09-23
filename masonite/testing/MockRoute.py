@@ -2,6 +2,7 @@ from masonite.testsuite import generate_wsgi, TestSuite
 from masonite.app import App
 import io
 
+
 class MockRoute:
 
     def __init__(self, route, container):

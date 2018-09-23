@@ -4,12 +4,14 @@ import json
 import io
 # from masonite.testing.MockJson import MockJson
 
+
 class UnitTest:
 
     def setup_method(self):
         self.container = TestSuite().create_container().container
 
-    def controller(self): pass
+    def controller(self):
+        pass
 
     def get(self, url):
         wsgi = generate_wsgi()

@@ -215,9 +215,12 @@ class Request(Extendable):
         if isinstance(variables, str):
             variables = parse_qs(variables)
 
-        for name in variables.keys():
-            value = self._get_standardized_value(variables[name])
-            self.request_variables[name.replace('[]', '')] = value
+        try:
+            for name in variables.keys():
+                value = self._get_standardized_value(variables[name])
+                self.request_variables[name.replace('[]', '')] = value
+        except TypeError:
+            self.request_variables = {}
 
     def _get_standardized_value(self, value):
         """Get the standardized value based on the type of the value parameter

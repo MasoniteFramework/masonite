@@ -221,7 +221,7 @@ class TestRequest:
         request.header('TEST', 'set_this')
         assert request.header('TEST') == 'set_this'
 
-        request.header('TEST', 'set_this', http_prefix = True)
+        request.header('TEST', 'set_this', http_prefix=True)
         assert request.header('HTTP_TEST') == 'set_this'
 
     def test_redirect_compiles_url(self):
@@ -344,7 +344,7 @@ class TestRequest:
         request.header('TEST', 'set_this')
         assert request.header('TEST') == 'set_this'
 
-        request.header('TEST', 'set_this', http_prefix = True)
+        request.header('TEST', 'set_this', http_prefix=True)
         assert request.header('HTTP_TEST') == 'set_this'
 
     def test_request_sets_headers_with_dictionary(self):
@@ -363,7 +363,7 @@ class TestRequest:
         request.header({
             'test_dict': 'test_value',
             'test_dict1': 'test_value1'
-        }, http_prefix = True)
+        }, http_prefix=True)
 
         assert request.header('HTTP_test_dict') == 'test_value'
         assert request.header('HTTP_test_dict1') == 'test_value1'
@@ -374,7 +374,7 @@ class TestRequest:
         request = app.make('Request').load_app(app)
 
         request.header('TEST1', 'set_this_item')
-        request.header('TEST2', 'set_this_item', http_prefix = None)
+        request.header('TEST2', 'set_this_item', http_prefix=None)
         assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
 
     def test_request_sets_str_status_code(self):

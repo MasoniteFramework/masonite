@@ -133,7 +133,7 @@ class TestRoutes:
                     RouteGroup([
                         Get().route('/test/3', 'TestController@show').name('update'),
                         Get().route('/test/4', 'TestController@show').name('delete'),
-                    ], middleware = ('auth')),
+                    ], middleware=('auth')),
                 ], name='post.')
             ], prefix='/dashboard')
         ]

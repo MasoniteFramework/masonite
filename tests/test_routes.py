@@ -20,7 +20,6 @@ class TestRoutes:
         assert callable(Patch)
         assert callable(Delete)
 
-
     def test_route_get_returns_output(self):
         assert self.route.get('url', 'output') == 'output'
 
@@ -30,7 +29,6 @@ class TestRoutes:
     def test_route_is_post(self):
         self.route.environ['REQUEST_METHOD'] = 'POST'
         assert self.route.is_post() == True
-
 
     def test_compile_route_to_regex(self):
         get_route = Get().route('test/route', None)
@@ -63,10 +61,8 @@ class TestRoutes:
         assert Get().route('test/url', 'TestController@show')
         assert Get().route('test/url', '/app.http.test_controllers.TestController@show')
 
-
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
-
 
     def test_group_route(self):
         routes = group('/example', [

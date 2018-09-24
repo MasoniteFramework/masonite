@@ -40,8 +40,6 @@ class TestAutoload:
         classes = Autoload().instances(['app/http/controllers'], object, only_app=False)
         assert 'TestController' in classes
         assert 'Command' in classes
-    
-
 
     def test_autoload_does_not_instantiate_classes(self):
         classes = Autoload().instances(['app/http/controllers'], object)

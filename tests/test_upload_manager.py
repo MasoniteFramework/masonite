@@ -117,8 +117,6 @@ class ImageMock():
     def read(self):
         return bytes('file read', 'utf-8')
 
-
-
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:
@@ -137,14 +135,12 @@ if os.environ.get('S3_BUCKET'):
         def test_upload_file_for_s3(self):
             assert self.app.make('Upload').driver('s3').store(ImageMock()) == 'test.jpg'
 
-
         def test_upload_manage_accept_files(self):
             """
             This test is responsible for checking if you upload
             a file correctly with a valid extension.
             """
             assert UploadManager(self.app).driver('s3').accept('jpg', 'png').store(ImageMock())
-
 
         def test_upload_manage_accept_files_error(self):
             """

@@ -36,7 +36,6 @@ class TestProviders:
 
         assert self.app.make('Request')
 
-
     def test_normal_app_containers(self):
         self.app = TestSuite().create_container()
         assert self.app.get_container().make('Request')

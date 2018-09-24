@@ -22,7 +22,6 @@ class TestController:
         controller = Controller().load_app(app)
         assert controller.app.providers == {'object': object}
 
-
     def test_string_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
 
@@ -39,10 +38,8 @@ class TestController:
         assert route.controller_method == 'show'
         assert isinstance(response, Request.__class__)
 
-
     def test_object_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
-
         # Create the route
         route = get('/url', ControllerTest.show)
 

@@ -2,6 +2,7 @@ libsass
 Jinja2
 whitenoise
 python-dotenv
+flake8
 
 validator.py==1.2.5
 cryptography==2.3

@@ -8,7 +8,7 @@ class TestRequestRoutes:
     def setup_method(self):
         self.request = Request(generate_wsgi()).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
-        
+
         self.request.activate_subdomains()
 
     def test_get_initialized(self):

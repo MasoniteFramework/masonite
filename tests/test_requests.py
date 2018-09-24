@@ -43,7 +43,7 @@ class TestRequest:
 
     def test_request_all_should_return_params(self):
         assert self.request.all() == {'application': 'Masonite'}
-    
+
     def test_request_all_without_internal_request_variables(self):
         self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
         assert self.request.all() == {'__token': 'testing', 'application': 'Masonite'}
@@ -241,7 +241,7 @@ class TestRequest:
         route = '/'
 
         assert request.compile_route_to_url(route) == '/'
-    
+
     def test_request_route_returns_url(self):
         app = App()
         app.bind('Request', self.request)
@@ -393,7 +393,7 @@ class TestRequest:
 
         request.status(500)
         assert request.get_status_code() == '500 Internal Server Error'
-    
+
     def test_request_sets_invalid_int_status_code(self):
         with pytest.raises(InvalidHTTPStatusCode):
             app = App()
@@ -410,7 +410,7 @@ class TestRequest:
         assert request.has('__method')
         assert request.input('__method') == 'PUT'
         assert request.get_request_method() == 'PUT'
-    
+
     def test_request_has_should_pop_variables_from_input(self):
         self.request.request_variables.update({'key1': 'test', 'key2': 'test'})
         self.request.pop('key1', 'key2')
@@ -419,7 +419,7 @@ class TestRequest:
         assert self.request.request_variables == {'application': 'Masonite'}
         self.request.pop('application')
         assert self.request.request_variables == {}
-        
+
     def test_is_named_route(self):
         app = App()
         app.bind('Request', self.request)
@@ -476,7 +476,7 @@ class TestRequest:
     def test_contains_multiple_asteriks(self):
         self.request.path = '/dashboard/user/edit/1'
         assert self.request.contains('/dashboard/user/*:string/*:int')
-        
+
     def test_back_returns_correct_url(self):
         self.request.path = '/dashboard/create'
         self.request.back()

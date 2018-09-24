@@ -38,7 +38,7 @@ class TestMiddleware:
 
         self.provider = RouteProvider()
         self.provider.app = self.app
-    
+
     def test_route_middleware_runs(self):
         self.app.resolve(self.provider.boot)
         assert self.app.make('Request').path == '/test/middleware'

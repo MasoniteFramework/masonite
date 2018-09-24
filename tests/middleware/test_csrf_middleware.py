@@ -19,7 +19,7 @@ class TestCSRFMiddleware:
         self.request = self.app.make('Request')
 
         self.middleware = CsrfMiddleware(self.request, Csrf(self.request), self.view)
-    
+
     def test_middleware_shares_correct_input(self):
         self.middleware.before()
         assert 'csrf_field' in self.view.dictionary

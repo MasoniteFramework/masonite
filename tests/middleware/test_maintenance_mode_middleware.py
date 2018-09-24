@@ -29,7 +29,7 @@ class TestMaintenanceModeMiddleware:
         down.close()
         self.middleware.before()
         assert request.get_status_code() == '503 Service Unavailable'
-        
+
     def test_maintenance_mode_middleware_is_not_down(self):
         app = App()
         app.bind('Request', self.request)

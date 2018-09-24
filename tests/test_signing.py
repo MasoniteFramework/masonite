@@ -12,7 +12,7 @@ class TestSigning:
     def test_unsigning_returns_decrypted_value_with_parameter(self):
         s = Sign(self.secret_key)
         assert s.unsign(s.sign('value')) == 'value'
-    
+
     def test_unsigning_returns_decrypted_value_without_parameter(self):
         s = Sign(self.secret_key)
         assert s.unsign(s.sign('value')) == 'value'

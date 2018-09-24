@@ -46,7 +46,7 @@ class TestRoutes:
     def test_route_can_add_compilers(self):
         get_route = Get().route('test/@route:int', None)
         assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
-        
+
         self.route.compile('year', r'[0-9]{4}')
 
         get_route = Get().route('test/@route:year', None)

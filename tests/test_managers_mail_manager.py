@@ -44,7 +44,7 @@ class TestMailManager:
     def test_mail_manager_resolves_from_contract(self):
         self.app.bind('MailManager', MailManager())
         assert self.app.resolve(self._test_resolve) == self.app.make('MailManager')
-    
+
     def _test_resolve(self, mail: MailManagerContract):
         return mail
 
@@ -102,6 +102,6 @@ class TestMailManager:
         mail_driver = MailManager(self.app).driver('smtp')
 
         assert isinstance(mail_driver.driver('test'), Mailgun)
-    
+
     def test_mail_helper_method_resolves_a_driver(self):
         assert isinstance(mail_helper(), MailContract)

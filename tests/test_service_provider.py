@@ -29,6 +29,7 @@ class Mock1Command:
 class Mock2Command:
     pass
 
+
 ROUTE1 = Get().route('/url/here', None)
 ROUTE2 = Get().route('/test/url', None)
 

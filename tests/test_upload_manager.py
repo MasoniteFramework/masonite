@@ -118,6 +118,7 @@ class ImageMock():
     def read(self):
         return bytes('file read', 'utf-8')
 
+
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:

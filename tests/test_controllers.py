@@ -15,13 +15,6 @@ class TestController:
         controller = Controller().load_app(self.app)
         assert controller.app.providers == {'object': object}
 
-    def test_controller_loads_app(self):
-        app = App()
-        app.bind('object', object)
-
-        controller = Controller().load_app(app)
-        assert controller.app.providers == {'object': object}
-
     def test_string_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
 

@@ -75,4 +75,3 @@ class TestUnitTest(UnitTest):
         json = self.json('/test/json/response/1', {'id': 1}, method="POST")
         assert json.status('200 OK')
         assert json.contains('success')
-

@@ -25,7 +25,7 @@ class TestMaintenanceModeMiddleware:
         app.bind('StatusCode', '200 OK')
         request = app.make('Request').load_app(app)
         down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
-        down =  open(down_path, 'w+')
+        down = open(down_path, 'w+')
         down.close()
         self.middleware.before()
         assert request.get_status_code() == '503 Service Unavailable'

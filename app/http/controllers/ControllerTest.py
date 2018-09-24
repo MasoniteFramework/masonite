@@ -9,7 +9,7 @@ class ControllerTest:
 
     def show(self):
         return self.request
-    
+
     def test(self):
         return 'test'
 

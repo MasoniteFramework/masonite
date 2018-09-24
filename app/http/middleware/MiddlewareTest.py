@@ -2,6 +2,7 @@
 
 from masonite.request import Request
 
+
 class MiddlewareTest:
     ''' Middleware class which loads the current user into the request '''
 

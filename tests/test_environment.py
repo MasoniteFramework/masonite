@@ -27,7 +27,3 @@ class TestEnvironment:
         LoadEnvironment(only='local')
         assert 'LOCAL' in os.environ
         assert os.environ.get('LOCAL') == 'TEST'
-    
-
-    
-

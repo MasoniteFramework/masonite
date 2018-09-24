@@ -112,4 +112,3 @@ class TestServiceProvider:
     def test_can_load_commands_into_container(self):
         assert self.app.make('Mock1Command')
         assert self.app.make('Mock2Command')
-

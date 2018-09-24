@@ -47,5 +47,3 @@ class TestMiddleware:
         self.app.resolve(self.provider.boot)
         assert self.app.make('Request').path == '/test/middleware'
         assert self.app.make('Request').environ['HTTP_TEST'] == 'test'
-
-

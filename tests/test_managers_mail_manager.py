@@ -39,7 +39,7 @@ class TestMailManager:
 
     def test_mail_manager_loads_container(self):
         mailManager = MailManager()
-        assert mailManager.load_container(self.app) 
+        assert mailManager.load_container(self.app)
 
     def test_mail_manager_resolves_from_contract(self):
         self.app.bind('MailManager', MailManager())

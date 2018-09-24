@@ -452,29 +452,29 @@ class TestRequest:
 
     def test_contains_for_path_detection(self):
         self.request.path = '/test/path'
-        assert self.request.contains('/test/*')        
-        assert self.request.contains('/test/path')        
-        assert not self.request.contains('/test/wrong')     
+        assert self.request.contains('/test/*')
+        assert self.request.contains('/test/path')
+        assert not self.request.contains('/test/wrong')
 
     def test_contains_for_path_with_digit(self):
         self.request.path = '/test/path/1'
-        assert self.request.contains('/test/path/*')    
-        assert self.request.contains('/test/path/*:int')   
+        assert self.request.contains('/test/path/*')
+        assert self.request.contains('/test/path/*:int')
 
     def test_contains_for_path_with_digit_and_wrong_contains(self):
-        self.request.path = '/test/path/joe' 
-        assert not self.request.contains('/test/path/*:int')    
+        self.request.path = '/test/path/joe'
+        assert not self.request.contains('/test/path/*:int')
 
     def test_contains_for_path_with_alpha_contains(self):
-        self.request.path = '/test/path/joe' 
-        assert self.request.contains('/test/path/*:string')   
+        self.request.path = '/test/path/joe'
+        assert self.request.contains('/test/path/*:string')
 
     def test_contains_for_route_compilers(self):
-        self.request.path = '/test/path/joe' 
-        assert self.request.contains('/test/path/*:signed')    
+        self.request.path = '/test/path/joe'
+        assert self.request.contains('/test/path/*:signed')
 
     def test_contains_multiple_asteriks(self):
-        self.request.path = '/dashboard/user/edit/1' 
+        self.request.path = '/dashboard/user/edit/1'
         assert self.request.contains('/dashboard/user/*:string/*:int')
         
     def test_back_returns_correct_url(self):

@@ -12,7 +12,7 @@ class TestCSRFMiddleware:
 
     def setup_method(self):
         self.app = App()
-        self.request = Request(generate_wsgi())    
+        self.request = Request(generate_wsgi())
         self.view = View(self.app)
         self.app.bind('Request', self.request)
 

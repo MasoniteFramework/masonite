@@ -16,7 +16,7 @@ class TestAutoload:
 
     def test_autoload_instantiates_classes(self):
         classes = Autoload().collect(['app/http/test_controllers'], instantiate=True)
-        assert classes['TestController'].test == True  
+        assert classes['TestController'].test == True
 
     def test_autoload_loads_from_directories_with_trailing_slash_raises_exception(self):
         with pytest.raises(InvalidAutoloadPath):

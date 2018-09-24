@@ -17,7 +17,7 @@ class TestUnitTest(UnitTest):
         ])
 
     def test_unit_test_has_route(self):
-        assert self.route('/testing') 
+        assert self.route('/testing')
         assert not self.route('/also/testing')
 
     def test_unit_test_has_route_name(self):

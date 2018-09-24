@@ -91,6 +91,4 @@ class TestRequestRoutes:
 
     def test_route_changes_module_location(self):
         get = Get().module('app.test')
-        post = Get().module('app.test')
-
         assert get.module_location == 'app.test'

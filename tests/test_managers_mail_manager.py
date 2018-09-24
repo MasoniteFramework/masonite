@@ -60,15 +60,15 @@ class TestMailManager:
         assert mailManager.manage_driver == None
 
     def test_does_not_raise_drivernotfound_exception(self):
-        mailManager = MailManager(self.app)
+        MailManager(self.app)
 
     def test_manager_sets_driver(self):
         self.app.bind('MailMailtrapDriver', Mailgun)
-        mailManager = MailManager(self.app).driver('mailtrap')
+        MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):
         with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
-            mailManager = MailManager(self.app).driver('mailtrap')
+            MailManager(self.app).driver('mailtrap')
 
     def test_drivers_are_resolvable_by_container(self):
         self.app.bind('MailSmtpDriver', MailDriver)

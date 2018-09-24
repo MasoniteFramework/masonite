@@ -105,14 +105,12 @@ class TestRoutes:
         assert routes[0].route_url == '/dashboard/test/1'
 
     def test_group_route_sets_name(self):
-        look_for = []
-        routes = RouteGroup([
+        RouteGroup([
             Get().route('/test/1', 'TestController@show').name('create'),
             Get().route('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
     def test_group_route_sets_name_for_none_route(self):
-        look_for = []
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show').name('create'),
             Get().route('/test/2', 'TestController@show')

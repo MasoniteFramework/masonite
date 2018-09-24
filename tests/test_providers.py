@@ -30,7 +30,7 @@ class TestProviders:
         self.app.bind('Response', 'Route not found. Error 404')
 
         for provider in self.app.make('Providers').PROVIDERS:
-            located_provider = provider().load_app(self.app)
+            provider().load_app(self.app)
 
             self.app.resolve(provider().load_app(self.app).boot)
 

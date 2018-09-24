@@ -1,5 +1,4 @@
-import os
-from cleo import Command
+""" New Model Command """
 from masonite.commands import BaseScaffoldCommand
 
 

@@ -1,3 +1,4 @@
+""" New Authentication System Command """
 import os
 import shutil
 
@@ -40,6 +41,6 @@ class AuthCommand(Command):
 
         # move templates
         shutil.copytree(module_path + "/../snippets/auth/templates/auth",
-                        os.getcwd()+"/resources/templates/auth")
+                        os.getcwd() + "/resources/templates/auth")
 
         self.info('Project Scaffolded. You now have 5 new controllers, 7 new templates and 9 new routes')

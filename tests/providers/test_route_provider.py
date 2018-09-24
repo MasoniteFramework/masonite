@@ -21,6 +21,7 @@ class TestRouteProvider:
         self.app.bind('Request', Request(
             self.app.make('Environ')).load_app(self.app))
         self.app.bind('Headers', [])
+        self.app.bind('StatusCode', '404 Not Found')
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
         view = View(self.app)
         self.app.bind('ViewClass', view)
@@ -110,6 +111,29 @@ class TestRouteProvider:
         )
 
         assert self.app.make('Request').param('endpoint') == 'user-endpoint'
+
+    def test_param_returns_param(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.param)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == '1'
+
+    def test_custom_route_compiler_returns_param(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.make('Route').compile('signed', r'([\w.-]+)')
+        self.app.bind('WebRoutes', [get('/test/@id:signed', ControllerTest.param)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == '1'
 
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'

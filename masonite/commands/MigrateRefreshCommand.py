@@ -1,3 +1,5 @@
+""" Migrate Refresh Command """
+
 from cleo import Command
 
 

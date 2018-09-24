@@ -42,7 +42,7 @@ class ServiceProvider:
 
     def routes(self, routes):
         """Adds routes to the container
-        
+
         Arguments:
             routes {list} -- List of routes to add to the container
         """
@@ -52,7 +52,7 @@ class ServiceProvider:
 
     def http_middleware(self, middleware):
         """Adds HTTP middleware to the container
-        
+
         Arguments:
             middleware {list} -- List of middleware to add
         """
@@ -62,7 +62,7 @@ class ServiceProvider:
 
     def route_middleware(self, middleware):
         """Add route middleware to the container
-        
+
         Arguments:
             middleware {dict} -- A dictionary of route middleware to add
         """
@@ -92,9 +92,9 @@ class ServiceProvider:
 
     def assets(self, assets):
         """Add assets to the container
-        
+
         Arguments:
             assets {dict} -- A dictionary of assets to add
         """
-        
+
         self.app.make('Storage').STATICFILES.update(assets)

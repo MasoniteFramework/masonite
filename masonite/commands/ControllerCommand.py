@@ -1,8 +1,9 @@
-from cleo import Command
-import os
+""" New Controller Command """
 from masonite.view import View
 from masonite.app import App
 from masonite.helpers.filesystem import make_directory
+
+from cleo import Command
 
 
 class ControllerCommand(Command):

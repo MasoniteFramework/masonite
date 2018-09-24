@@ -1,7 +1,6 @@
 """ A RouteProvider Service Provider """
 
 from masonite.provider import ServiceProvider
-from masonite.view import View
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.helpers.routes import create_matchurl
@@ -13,7 +12,6 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, router: Route, request: Request):
-
         # All routes joined
         for route in self.app.make('WebRoutes'):
 
@@ -42,16 +40,15 @@ class RouteProvider(ServiceProvider):
 
                 """Get URL Parameters
                     This will create a dictionary of parameters given. This is sort of a short
-                    but complex way to retrieve the url parameters. 
-                    This is the code used to convert /url/@firstname/@lastname 
+                    but complex way to retrieve the url parameters.
+                    This is the code used to convert /url/@firstname/@lastname
                     to {'firstmane': 'joseph', 'lastname': 'mancuso'}.
                 """
 
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[router.generated_url_list()[
-                            index]] = value
+                        parameter_dict[router.generated_url_list()[index]] = value
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass
@@ -77,9 +74,8 @@ class RouteProvider(ServiceProvider):
                 if self.app.make('Application').DEBUG:
                     print(route.method_type + ' Route: ' + router.url)
 
-
-                if not request.redirect_url:
-                    request.status('200 OK')
+                if request.get_status_code() == '404 Not Found':
+                    request.status(200)
 
                     # Get the response from the route. This data is typically the
                     # output of the controller method

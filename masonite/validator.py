@@ -1,7 +1,7 @@
 """Validation Module.
 """
 
-from validator import *
+import validator
 
 
 class Validator:
@@ -77,7 +77,7 @@ class Validator:
                 validation: self.get(validation)
             })
 
-        return validate(self.validation_dictionary, validation_dict)
+        return validator.validate(self.validation_dictionary, validation_dict)
 
     def get(self, validation):
         """Gets a key in the validation input and runs it through a cast method if one exists.

@@ -1,4 +1,4 @@
-from masonite.routes import Route, Get, Post
+from masonite.routes import Get
 from routes import web
 
 

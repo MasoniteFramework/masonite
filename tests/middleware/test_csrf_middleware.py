@@ -7,6 +7,7 @@ from masonite.testsuite.TestSuite import generate_wsgi
 import pytest
 from masonite.exceptions import InvalidCSRFToken
 
+
 class TestCSRFMiddleware:
 
     def setup_method(self):

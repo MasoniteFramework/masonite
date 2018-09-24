@@ -5,6 +5,7 @@ from masonite.request import Request
 
 wsgi_request = generate_wsgi()
 
+
 class ExtendClass:
 
     path = None
@@ -15,6 +16,7 @@ class ExtendClass:
     def get_another_path(self):
         return self.path
 
+
 class ExtendClass2:
 
     path = None
@@ -24,6 +26,7 @@ class ExtendClass2:
 
     def get_another_path2(self):
         return self.path
+
 
 class MockWsgiInput():
 

@@ -9,6 +9,7 @@ from app.http.middleware.TestMiddleware import TestMiddleware as MiddlewareTest
 from app.http.middleware.TestHttpMiddleware import TestHttpMiddleware as MiddlewareHttpTest
 from config import application
 
+
 class TestMiddleware:
 
     def setup_method(self):

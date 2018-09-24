@@ -4,6 +4,7 @@ from masonite.view import View
 from masonite.app import App
 from masonite.providers.StatusCodeProvider import ServerErrorExceptionHook
 
+
 class TestStatusCode:
 
     def setup_method(self):
@@ -22,8 +23,10 @@ class TestStatusCode:
         self.provider = StatusCodeProvider().load_app(self.app).boot()
         assert self.provider is None
 
+
 class MockApplicationConfig:
     DEBUG = 'True'
+
 
 class TestServerErrorExceptionHook:
 

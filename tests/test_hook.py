@@ -6,6 +6,7 @@ class SentryExceptionHookMock:
     def load(self, app):
         return 'loaded'
 
+
 class TestFrameworkHooks:
 
     def setup_method(self):

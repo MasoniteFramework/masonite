@@ -1,6 +1,7 @@
 from masonite.environment import LoadEnvironment
 import os
 
+
 class TestEnvironment:
 
     def test_environment_loaded_correctly(self):

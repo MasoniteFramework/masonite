@@ -4,6 +4,7 @@ from masonite.packages import create_or_append_config, create_controller, append
 
 PACKAGE_DIRECTORY = os.getcwd()
 
+
 class TestPackage:
 
     def test_create_config(self):

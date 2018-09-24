@@ -20,9 +20,11 @@ class MailSmtpDriver:
 
     def send(self, message):
         return message
-    
+
+
 class User:
     pass
+
 
 class TestMailManager:
 

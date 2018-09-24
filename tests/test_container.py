@@ -9,17 +9,22 @@ import pytest
 class MockObject:
     pass
 
+
 class GetObject(MockObject):
     
     def find(self):
         return 1
+
+
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
 
+
 class MakeObject:
     pass
+
 
 class TestContainer:
 

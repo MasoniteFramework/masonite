@@ -5,10 +5,12 @@ from config import queue
 
 from masonite.queues.Queueable import Queueable
 
+
 class Job(Queueable):
 
     def handle(self):
         return 'test'
+
 
 class TestAsyncDriver:
 

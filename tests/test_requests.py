@@ -22,6 +22,7 @@ WEB_ROUTES = flatten_routes([
 
 wsgi_request = generate_wsgi()
 
+
 class TestRequest:
 
     def setup_method(self):

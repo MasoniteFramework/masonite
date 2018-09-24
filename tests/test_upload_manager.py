@@ -9,6 +9,7 @@ from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from masonite.helpers import static
 
+
 class TestStaticTemplateHelper:
     
     def setup_method(self):

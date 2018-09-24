@@ -1,5 +1,6 @@
 from masonite.testsuite.TestSuite import TestSuite
 
+
 class TestTestSuite:
 
     def setup_method(self):

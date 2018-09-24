@@ -2,8 +2,10 @@ from masonite.testing import UnitTest, MockRequest, MockJson
 from masonite.routes import Get
 from app.http.controllers.TestController import TestController as ControllerTest
 
+
 class MockUser:
     admin = 0
+
 
 class TestUnitTest(UnitTest):
 

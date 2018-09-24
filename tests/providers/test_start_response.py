@@ -5,6 +5,7 @@ from masonite.app import App
 from masonite.exceptions import ResponseError
 import pytest
 
+
 class TestResponseProvider:
 
     def setup_method(self):

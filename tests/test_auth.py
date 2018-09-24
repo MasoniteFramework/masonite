@@ -2,6 +2,7 @@ from masonite.auth import Auth
 from masonite.request import Request
 from masonite.testsuite.TestSuite import generate_wsgi
 
+
 class MockUser():
 
     __auth__ = 'email'
@@ -22,6 +23,7 @@ class MockUser():
         if self.id == id:
             return self
         return False
+
 
 class TestAuth:
 

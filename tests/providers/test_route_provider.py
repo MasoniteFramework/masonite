@@ -40,17 +40,37 @@ class TestRouteProvider:
 
         assert self.app.make('Response') == 'test'
 
-    def test_controller_does_not_return_with_non_matching_end_slash(self):
-        self.app.make('Route').url = '/view'
-        self.app.bind(
-            'WebRoutes', [get('/view/', ControllerTest.returns_a_view)])
+        self.app.make('Route').url = '/view/'
+        self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request')
         )
 
-        assert self.app.make('Response') == 'Route not found. Error 404'
+        assert self.app.make('Response') == 'test'
+
+    def test_controller_that_return_a_view_with_trailing_slash(self):
+
+        self.app.make('Route').url = '/view/'
+        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == 'test'
+
+        self.app.make('Route').url = '/view'
+        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == 'test'
 
     def test_match_route_returns_controller(self):
         self.app.make('Route').url = '/view'

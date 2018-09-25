@@ -31,9 +31,9 @@ class TestUnitTest(UnitTest):
     def test_unit_test_has_controller(self):
         assert self.route('/testing').has_controller(ControllerTest)
 
-    # def test_user_can_be_loaded(self):
-    #     assert not self.route('/unit/test').user(None).can_view()
-    #     assert self.route('/unit/test').user(MockUser).can_view()
+    def test_user_can_be_loaded(self):
+        assert not self.route('/unit/test').user(None).can_view()
+        assert self.route('/unit/test').user(MockUser).can_view()
 
     def test_view_contains(self):
         assert self.route('/test/route').contains('test')

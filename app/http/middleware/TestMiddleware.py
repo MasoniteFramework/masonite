@@ -1,5 +1,6 @@
 from masonite.request import Request
 
+
 class TestMiddleware:
     ''' Test Middleware '''
 

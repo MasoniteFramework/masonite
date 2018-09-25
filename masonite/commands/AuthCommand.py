@@ -30,14 +30,14 @@ class AuthCommand(Command):
         f.write(']\n')
 
         # move controllers
-        shutil.copyfile(module_path+"/../snippets/auth/controllers/LoginController.py",
-                        os.getcwd()+"/app/http/controllers/LoginController.py")
-        shutil.copyfile(module_path+"/../snippets/auth/controllers/RegisterController.py",
-                        os.getcwd()+"/app/http/controllers/RegisterController.py")
-        shutil.copyfile(module_path+"/../snippets/auth/controllers/HomeController.py",
-                        os.getcwd()+"/app/http/controllers/HomeController.py")
-        shutil.copyfile(module_path+"/../snippets/auth/controllers/ConfirmController.py",
-                        os.getcwd()+"/app/http/controllers/ConfirmController.py")
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/LoginController.py",
+                        os.getcwd() + "/app/http/controllers/LoginController.py")
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/RegisterController.py",
+                        os.getcwd() + "/app/http/controllers/RegisterController.py")
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/HomeController.py",
+                        os.getcwd() + "/app/http/controllers/HomeController.py")
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/ConfirmController.py",
+                        os.getcwd() + "/app/http/controllers/ConfirmController.py")
 
         # move templates
         shutil.copytree(module_path + "/../snippets/auth/templates/auth",

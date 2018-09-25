@@ -393,6 +393,18 @@ class Post(BaseHttpRoute):
         self.list_middleware = []
 
 
+class Match(BaseHttpRoute):
+    """Class for specifying POST requests
+    """
+
+    def __init__(self, method_type=['GET']):
+        """Post constructor
+        """
+
+        self.method_type = method_type
+        self.list_middleware = []
+
+
 class Put(BaseHttpRoute):
     """Class for specifying PUT requests
     """

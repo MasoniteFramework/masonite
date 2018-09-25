@@ -1,6 +1,6 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
+from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException
@@ -67,6 +67,8 @@ class TestRoutes:
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
 
+    def test_route_can_have_multiple_routes(self):
+        assert Match(['GET', 'POST']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']
 
     def test_group_route(self):
         routes = group('/example', [

@@ -13,3 +13,11 @@ class MailManager(Manager, MailManagerContract):
 
     config = 'MailConfig'
     driver_prefix = 'Mail'
+
+    def helper(self):
+        """Helper Method to work with returning the driver from the MailManager
+
+        Returns:
+            Mail Driver
+        """
+        return self.driver(self.container.make('MailConfig').DRIVER)

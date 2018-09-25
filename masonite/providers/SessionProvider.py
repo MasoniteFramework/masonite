@@ -4,6 +4,8 @@ from config import session
 from masonite.drivers import SessionCookieDriver, SessionMemoryDriver
 from masonite.managers import SessionManager
 from masonite.provider import ServiceProvider
+from masonite.view import View
+from masonite.request import Request
 
 
 class SessionProvider(ServiceProvider):
@@ -14,11 +16,10 @@ class SessionProvider(ServiceProvider):
         self.app.bind('SessionCookieDriver', SessionCookieDriver)
         self.app.bind('SessionManager', SessionManager(self.app))
 
-    def boot(self, Environ, Request, ViewClass, SessionManager, SessionConfig):
-        self.app.bind('Session', SessionManager.driver(SessionConfig.DRIVER))
-        Session = self.app.make('Session')
-        Request.session = Session
+    def boot(self, request: Request, view: View, session: SessionManager):
+        self.app.bind('Session', session.driver(self.app.make('SessionConfig').DRIVER))
+        request.session = self.app.make('Session')
 
-        ViewClass.share({
-            'session': Session.helper
+        view.share({
+            'session': self.app.make('Session').helper
         })

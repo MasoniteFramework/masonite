@@ -3,13 +3,14 @@ language: python
 python:
 - '3.4'
 - '3.5'
-- '3.6'
 
 matrix:
   include:
     - python: 3.7
       dist: xenial
       sudo: true
+    - python: 3.6
+      script: travis_retry coverage run -m pytest && coveralls
 
 install:
 - pip install masonite_cli
@@ -28,6 +29,3 @@ deploy:
   on:
     tags: true
     python: 3.6
-
-after_success:
-  coveralls

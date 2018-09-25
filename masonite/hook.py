@@ -1,12 +1,14 @@
 """Module for the Hook class.
 """
 
+from masonite.app import App
+
 
 class Hook:
     """Hook class is responsible for finding and firing framework hooks.
     """
 
-    def __init__(self, app):
+    def __init__(self, app: App):
         """Hook constructor
 
         Arguments:

@@ -1,4 +1,4 @@
-
+""" List Routes Command """
 from cleo import Command
 from tabulate import tabulate
 

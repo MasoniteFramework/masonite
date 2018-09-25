@@ -218,6 +218,8 @@ class TestRouteProvider:
 
 class Middleware:
 
-    def before(): pass
+    def before():
+        pass
 
-    def after(): pass
+    def after():
+        pass

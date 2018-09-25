@@ -1,3 +1,4 @@
+""" Web Routes """
 from masonite.helpers.routes import group
 from masonite.routes import Get, Post
 

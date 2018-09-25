@@ -46,7 +46,6 @@ class TestSuite:
         container.bind('Application', application)
         container.bind('Container', container)
 
-
         container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])
@@ -74,7 +73,7 @@ class TestSuite:
 
         for provider in container.make('Providers'):
             container.resolve(provider.boot)
-        
+
         """
         |--------------------------------------------------------------------------
         | Startup the Service Container

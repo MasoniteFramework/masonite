@@ -215,9 +215,12 @@ class Request(Extendable):
         if isinstance(variables, str):
             variables = parse_qs(variables)
 
-        for name in variables.keys():
-            value = self._get_standardized_value(variables[name])
-            self.request_variables[name.replace('[]', '')] = value
+        try:
+            for name in variables.keys():
+                value = self._get_standardized_value(variables[name])
+                self.request_variables[name.replace('[]', '')] = value
+        except TypeError:
+            self.request_variables = {}
 
     def _get_standardized_value(self, value):
         """Get the standardized value based on the type of the value parameter
@@ -319,7 +322,7 @@ class Request(Extendable):
         """Sets or gets a header depending on if "value" is passed in or not.
 
         Arguments:
-            key {string|dict} -- The header you want to set or get. If the key is a dictionary, loop through each key pair 
+            key {string|dict} -- The header you want to set or get. If the key is a dictionary, loop through each key pair
                                     and add them to the headers.
 
         Keyword Arguments:
@@ -347,7 +350,7 @@ class Request(Extendable):
         self._set_header(key, value, http_prefix)
 
         return True
-    
+
     def _set_header(self, key, value, http_prefix):
         # Set Headers
         if http_prefix:

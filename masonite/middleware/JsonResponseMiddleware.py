@@ -9,7 +9,7 @@ class JsonResponseMiddleware:
 
     def after(self):
         if not self.request.header('Content-Type'):
-            if isinstance(self.request.app().make('Response'), dict):
+            if isinstance(self.request.app().make('Response'), dict) or isinstance(self.request.app().make('Response'), list):
                 self.request.header(
                     'Content-Type', 'application/json; charset=utf-8', http_prefix=None)
                 self.request.app().bind(

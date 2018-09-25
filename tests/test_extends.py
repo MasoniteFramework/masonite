@@ -5,6 +5,7 @@ from masonite.request import Request
 
 wsgi_request = generate_wsgi()
 
+
 class ExtendClass:
 
     path = None
@@ -15,6 +16,7 @@ class ExtendClass:
     def get_another_path(self):
         return self.path
 
+
 class ExtendClass2:
 
     path = None
@@ -24,6 +26,7 @@ class ExtendClass2:
 
     def get_another_path2(self):
         return self.path
+
 
 class MockWsgiInput():
 
@@ -64,7 +67,6 @@ class TestExtends:
         request.extend(ExtendClass.get_another_path)
         assert request.get_another_path() == '/'
 
-
     def test_gets_input_with_all_request_methods(self):
         app = App()
         wsgi_request['QUERY_STRING'] = 'hey=test'
@@ -87,7 +89,6 @@ class TestExtends:
         request.environ['REQUEST_METHOD'] = 'DELETE'
         assert request.input('hey') == 'test'
 
-
     def test_hidden_form_request_method_changes_request_method(self):
         app = App()
         wsgi_request['QUERY_STRING'] = '__method=PUT'
@@ -97,7 +98,6 @@ class TestExtends:
         request = app.make('Request').load_app(app)
 
         assert request.environ['REQUEST_METHOD'] == 'PUT'
-
 
     def test_get_json_input(self):
         json_wsgi = wsgi_request

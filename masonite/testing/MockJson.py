@@ -1,6 +1,7 @@
 from masonite.testsuite import TestSuite, generate_wsgi
 from masonite.testing import BaseRequest
 
+
 class MockJson(BaseRequest):
 
     def __init__(self, url, container):

@@ -20,5 +20,5 @@ class CacheContract(ABC):
         pass
 
     @abstractmethod
-    def exists(self): 
+    def exists(self):
         pass

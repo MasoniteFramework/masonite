@@ -12,7 +12,6 @@ class RouteProvider(ServiceProvider):
         pass
 
     def boot(self, router: Route, request: Request):
-
         # All routes joined
         for route in self.app.make('WebRoutes'):
 
@@ -49,8 +48,7 @@ class RouteProvider(ServiceProvider):
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[router.generated_url_list()[
-                            index]] = value
+                        parameter_dict[router.generated_url_list()[index]] = value
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass

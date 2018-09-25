@@ -2,6 +2,7 @@
 
 from masonite.request import Request
 
+
 class AddAttributeMiddleware:
     ''' Middleware class which loads the current user into the request '''
 
@@ -16,4 +17,3 @@ class AddAttributeMiddleware:
     def after(self):
         ''' Run This Middleware After The Route Executes '''
         pass
-

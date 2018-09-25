@@ -15,14 +15,24 @@ class ContainerTest(ServiceProvider):
     def testboot(self, request: Request, Get: Get):
         return request
 
+
+class ServiceProviderTest(ServiceProvider):
+
+    def register(self):
+        self.app.bind('Request', object)
+
+
 class Mock1Command:
     pass
+
 
 class Mock2Command:
     pass
 
+
 ROUTE1 = Get().route('/url/here', None)
 ROUTE2 = Get().route('/test/url', None)
+
 
 class LoadProvider(ServiceProvider):
 
@@ -45,17 +55,18 @@ class LoadProvider(ServiceProvider):
         self.migrations('directory/1', 'directory/2')
 
         self.assets({
-            '/some/alias': '/some/location'
+            'storage/static': '/some/location'
         })
 
         self.commands(Mock1Command(), Mock2Command())
+
 
 class TestServiceProvider:
 
     def setup_method(self):
         self.app = TestSuite().create_container().container
         self.provider = ServiceProvider()
-        self.provider.load_app(self.app).boot()
+        self.provider.load_app(self.app).register()
         self.load_provider = LoadProvider()
         self.load_provider.load_app(self.app).boot()
 
@@ -75,7 +86,7 @@ class TestServiceProvider:
         self.app.bind('Get', Get().route('url', None))
 
         assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
-    
+
     def test_can_call_container_with_annotation_with_self_parameter(self):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
@@ -97,9 +108,8 @@ class TestServiceProvider:
         assert len(self.app.collect('*MigrationDirectory')) == 2
 
     def test_can_load_assets_into_container(self):
-        assert self.app.make('Storage').STATICFILES['/some/alias'] == '/some/location'
+        assert self.app.make('Storage').STATICFILES['storage/static'] == '/some/location'
 
     def test_can_load_commands_into_container(self):
         assert self.app.make('Mock1Command')
         assert self.app.make('Mock2Command')
-

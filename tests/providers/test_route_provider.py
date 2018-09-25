@@ -40,17 +40,37 @@ class TestRouteProvider:
 
         assert self.app.make('Response') == 'test'
 
-    def test_controller_does_not_return_with_non_matching_end_slash(self):
-        self.app.make('Route').url = '/view'
-        self.app.bind(
-            'WebRoutes', [get('/view/', ControllerTest.returns_a_view)])
+        self.app.make('Route').url = '/view/'
+        self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request')
         )
 
-        assert self.app.make('Response') == 'Route not found. Error 404'
+        assert self.app.make('Response') == 'test'
+
+    def test_controller_that_return_a_view_with_trailing_slash(self):
+
+        self.app.make('Route').url = '/view/'
+        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == 'test'
+
+        self.app.make('Route').url = '/view'
+        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == 'test'
 
     def test_provider_runs_through_routes(self):
         self.app.make('Route').url = '/test'
@@ -111,6 +131,29 @@ class TestRouteProvider:
         )
 
         assert self.app.make('Request').param('endpoint') == 'user-endpoint'
+
+    def test_param_returns_param(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.param)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == '1'
+
+    def test_custom_route_compiler_returns_param(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.make('Route').compile('signed', r'([\w.-]+)')
+        self.app.bind('WebRoutes', [get('/test/@id:signed', ControllerTest.param)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == '1'
 
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'
@@ -175,6 +218,8 @@ class TestRouteProvider:
 
 class Middleware:
 
-    def before(): pass
+    def before():
+        pass
 
-    def after(): pass
+    def after():
+        pass

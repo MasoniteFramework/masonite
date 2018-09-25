@@ -5,7 +5,7 @@ from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
-from masonite.auth.MustVerifyEmail import MustVerifyEmail
+from masonite.auth import MustVerifyEmail
 
 class RegisterController:
     """The RegisterController class.

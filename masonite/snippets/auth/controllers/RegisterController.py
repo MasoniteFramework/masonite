@@ -7,6 +7,7 @@ from masonite.request import Request
 from masonite.view import View
 from masonite.auth import MustVerifyEmail
 
+
 class RegisterController:
     """The RegisterController class.
     """

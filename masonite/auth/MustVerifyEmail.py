@@ -19,6 +19,5 @@ class MustVerifyEmail:
         link = '{0}/email/verify/{1}'.format(request.environ['HTTP_HOST'], token)
 
         mail.to(self.email) \
-                     .template('auth/verifymail', { 'name': self.name, 'email': self.email, 'link':link }) \
-                     .subject('Please Confirm Your Email').send()
-        
+            .template('auth/verifymail', {'name': self.name, 'email': self.email, 'link': link}) \
+            .subject('Please Confirm Your Email').send()

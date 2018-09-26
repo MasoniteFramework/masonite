@@ -1,5 +1,6 @@
 """ The ConfirmController Module """
-import time, datetime
+import time
+import datetime
 
 from masonite.auth import Auth
 from masonite.auth.Sign import Sign
@@ -50,26 +51,24 @@ class ConfirmController:
             if len(tokenParts) > 1:
                 id = tokenParts[0]
                 user = User.find(id)
-                
+
                 if user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))
                     now = datetime.datetime.now()
-                    timestamp_plus_10 = timestamp + datetime.timedelta(minutes = 10)
-                
+                    timestamp_plus_10 = timestamp + datetime.timedelta(minutes=10)
+
                     if now < timestamp_plus_10:
                         user.verified_at = datetime.datetime.now()
                         user.save()
 
                         return view.render('auth/confirm', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
-
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
-        def send_verify_email(self, request: Request):
-            user = request.user()
+    def send_verify_email(self, request: Request):
+        user = request.user()
 
-            if isinstance(user, MustVerifyEmail):
-                request.app().resolve(user.verify_email)
+        if isinstance(user, MustVerifyEmail):
+            request.app().resolve(user.verify_email)
 
-            return request.redirect('/home')
-
+        return request.redirect('/home')

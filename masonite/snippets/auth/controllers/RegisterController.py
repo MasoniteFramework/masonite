@@ -5,6 +5,7 @@ from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
+from masonite.auth import MustVerifyEmail
 from masonite.managers import MailManager
 
 
@@ -38,7 +39,6 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        from masonite.auth.MustVerifyEmail import MustVerifyEmail
 
         password = bcrypt_password(request.input('password'))
 

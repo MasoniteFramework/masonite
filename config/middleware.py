@@ -41,5 +41,5 @@ HTTP_MIDDLEWARE = [
 
 ROUTE_MIDDLEWARE = {
     'auth':  AuthenticationMiddleware,
-    'verify_email': VerifyEmailMiddleware
+    'verified': VerifyEmailMiddleware
 }

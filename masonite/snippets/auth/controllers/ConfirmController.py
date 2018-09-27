@@ -6,7 +6,7 @@ from masonite.auth import Auth
 from masonite.auth.Sign import Sign
 from masonite.request import Request
 from masonite.view import View
-from masonite.auth.MustVerifyEmail import MustVerifyEmail
+from masonite.auth import MustVerifyEmail
 from app.User import User
 
 

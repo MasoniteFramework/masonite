@@ -3,15 +3,13 @@
 import time
 
 from masonite.auth.Sign import Sign
-from masonite.managers import MailManager
-from masonite.request import Request
 
 
 class MustVerifyEmail:
     """Class To Verify User Email
     """
 
-    def verify_email(self, mail_manager: MailManager, request: Request):
+    def verify_email(self, mail_manager, request):
         mail = mail_manager.helper()
         sign = Sign()
 

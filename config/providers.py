@@ -14,6 +14,7 @@ from masonite.providers import (
     BroadcastProvider,
     CacheProvider
 )
+from events.providers import EventProvider
 
 PROVIDERS = [
     # Framework Providers
@@ -31,4 +32,5 @@ PROVIDERS = [
     UploadProvider,
     BroadcastProvider,
     CacheProvider,
+    EventProvider,
 ]

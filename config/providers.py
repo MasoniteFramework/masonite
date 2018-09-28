@@ -1,22 +1,11 @@
 """ Providers Configuration File """
 
-from masonite.providers import (
-    AppProvider,
-    SessionProvider,
-    RouteProvider,
-    StatusCodeProvider,
-    StartResponseProvider,
-    SassProvider,
-    WhitenoiseProvider,
-    MailProvider,
-    UploadProvider,
-    ViewProvider,
-    HelpersProvider,
-    QueueProvider,
-    BroadcastProvider,
-    CacheProvider,
-    CsrfProvider,
-)
+from masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
+                                CsrfProvider, HelpersProvider, MailProvider,
+                                QueueProvider, RouteProvider, SassProvider,
+                                SessionProvider, StartResponseProvider,
+                                StatusCodeProvider, UploadProvider,
+                                ViewProvider, WhitenoiseProvider)
 
 """Providers List
 Providers are a simple way to remove or add functionality for Masonite

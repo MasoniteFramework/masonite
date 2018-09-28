@@ -1,6 +1,7 @@
 """ Authentication Settings """
 
 import os
+
 from app.User import User
 
 """Authentication Model

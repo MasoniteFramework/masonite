@@ -5,6 +5,7 @@ from masonite.middleware import JsonResponseMiddleware
 from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
 from app.http.middleware.CsrfMiddleware import CsrfMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
+from app.http.middleware.VerifyEmailMiddleware import VerifyEmailMiddleware
 
 """HTTP Middleware
 HTTP middleware is middleware that will be ran on every request. Middleware
@@ -30,4 +31,5 @@ a string with the full module path of the middleware class
 
 ROUTE_MIDDLEWARE = {
     'auth':  AuthenticationMiddleware,
+    'verified': VerifyEmailMiddleware
 }

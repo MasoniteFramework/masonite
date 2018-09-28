@@ -6,7 +6,7 @@ import os
 The default driver you will like to use for storing uploads. You may add
 additional drivers as you need or pip install additional drivers.
 
-Supported: 'disk', 's3'
+Supported: 'disk', 's3', 'rackspace', 'googlecloud', 'azure'
 """
 
 DRIVER = os.getenv('STORAGE_DRIVER', 'disk')
@@ -23,7 +23,21 @@ DRIVERS = {
         'client': os.getenv('S3_CLIENT', 'AxJz...'),
         'secret': os.getenv('S3_SECRET', 'HkZj...'),
         'bucket': os.getenv('S3_BUCKET', 's3bucket'),
-    }
+    },   
+    'rackspace': {
+        'username': os.getenv('RACKSPACE_USERNAME', 'username'),
+        'secret': os.getenv('RACKSPACE_SECRET', '3cd5b0e8...'),
+        'container': os.getenv('RACKSPACE_CONTAINER', 'masonite'),
+        'region': os.getenv('RACKSPACE_REGION', 'IAD'),
+        'location': 'http://03c8...rackcdn.com/'
+    },
+    'azure': {
+        'name': os.getenv('AZURE_NAME', 'masonite'),
+        'secret': os.getenv('AZURE_SECRET', 'RykG8qsa4kTOddF=='),
+        'connection': os.getenv('AZURE_CONNECTION', 'DefaultEndpointsProtocol=https;AccountName=...'),
+        'container': os.getenv('AZURE_CONTAINER', 'masonite'),
+        'location': 'https://masonite.blob.core.windows.net/container/'
+    },
 }
 
 

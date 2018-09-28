@@ -1,8 +1,7 @@
 """ View Module """
 
 
-from jinja2 import (ChoiceLoader, Environment, FileSystemLoader, PackageLoader,
-                    select_autoescape)
+from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound
@@ -23,6 +22,8 @@ def view(template='index', dictionary={}):
 class View:
     """View class. Responsible for handling everything involved with views and view environments.
     """
+
+    _splice = '/'
 
     def __init__(self, container):
         """View constructor.
@@ -72,14 +73,14 @@ class View:
         # Check if composers are even set for a speed improvement
         if self.composers:
             self._update_from_composers()
-        
+
         if self._tests:
             self.env.tests.update(self._tests)
 
         self.rendered_template = self._render()
 
         return self
-    
+
     def _render(self):
         return self.env.get_template(self.filename).render(
             self.dictionary)
@@ -100,7 +101,7 @@ class View:
         compiled_string = ''
 
         # Check for wildcard view composers
-        for template in self.template.split('/'):
+        for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
             if '{}*'.format(compiled_string) in self.composers:
@@ -137,7 +138,7 @@ class View:
         pass
 
     def share(self, dictionary):
-        """Shares data to all templates.    
+        """Shares data to all templates.
 
         Arguments:
             dictionary {dict} -- Dictionary of key value pairs to add to all views.
@@ -205,7 +206,7 @@ class View:
         # loader(package_name, location)
         # /dashboard/templates/dashboard
         if loader == PackageLoader:
-            template_location = template_location.split('/')
+            template_location = template_location.split(self._splice)
 
             self.environments.append(
                 loader(template_location[0], '/'.join(template_location[1:])))
@@ -222,7 +223,7 @@ class View:
         """
 
         self._filters.update({name: function})
-    
+
     def test(self, key, obj):
         self._tests.update({key: obj})
         return self
@@ -235,7 +236,7 @@ class View:
         """
 
         self.template = template
-        self.filename = template + self.extension
+        self.filename = template.replace(self._splice, '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split
@@ -282,7 +283,7 @@ class View:
             bool
         """
 
-        return self.container.make('Cache').cache_exists(self.template)
+        return self.container.make('Cache').exists(self.template)
 
     def __is_expired_cache(self):
         """Check if cache is expired.
@@ -309,4 +310,8 @@ class View:
 
         driver_cache = self.container.make('Cache')
         self.rendered_template = driver_cache.get(self.template)
+        return self
+
+    def set_splice(self, splice):
+        self._splice = splice
         return self

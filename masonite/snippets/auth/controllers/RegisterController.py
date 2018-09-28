@@ -1,35 +1,56 @@
-''' A Module Description '''
-from masonite.facades.Auth import Auth
+""" The RegisterController Module """
+
 from config import auth
-import bcrypt
+from masonite.auth import Auth
+from masonite.helpers import password as bcrypt_password
+from masonite.request import Request
+from masonite.view import View
 
 
-class RegisterController(object):
-    ''' Class Docstring Description '''
+class RegisterController:
+    """The RegisterController class.
+    """
 
     def __init__(self):
+        """The RegisterController Constructor
+        """
+
         pass
 
-    def show(self, Request, Application):
-        ''' Show the registration page '''
-        return view('auth/register', {'app': Application, 'Auth': Auth(Request)})
+    def show(self, request: Request, view: View):
+        """Show the registration page.
 
-    def store(self, Request):
-        ''' Register a new user '''
-        # register the user
-        password = bytes(bcrypt.hashpw(
-            bytes(Request.input('password'), 'utf-8'), bcrypt.gensalt()
-        )).decode('utf-8')
+        Arguments:
+            Request {masonite.request.request} -- The Masonite request class.
+
+        Returns:
+            [type] -- [description]
+        """
+
+        return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+
+    def store(self, request: Request):
+        """Register the user with the database.
+
+        Arguments:
+            request {masonite.request.Request} -- The Masonite request class.
+
+        Returns:
+            masonite.request.Request -- The Masonite request class.
+        """
+
+        password = bcrypt_password(request.input('password'))
 
         auth.AUTH['model'].create(
-            name=Request.input('name'),
+            name=request.input('name'),
             password=password,
-            email=Request.input('email'),
+            email=request.input('email'),
         )
 
-        # login the user
-        # redirect to the homepage
-        if Auth(Request).login(Request.input(auth.AUTH['model'].__auth__), Request.input('password')):
-            return Request.redirect('/home')
+        # Login the user
+        if Auth(request).login(request.input(auth.AUTH['model'].__auth__), request.input('password')):
+            # Redirect to the homepage
+            return request.redirect('/home')
 
-        return Request.redirect('/register')
+        # Login failed. Redirect to the register page.
+        return request.redirect('/register')

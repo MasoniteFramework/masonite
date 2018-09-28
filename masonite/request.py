@@ -15,11 +15,14 @@ from urllib.parse import parse_qs
 import tldextract
 from cryptography.fernet import InvalidToken
 
+from config import application
 from masonite.auth.Sign import Sign
+from masonite.exceptions import InvalidHTTPStatusCode
+from masonite.helpers import dot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
+from masonite.helpers.status import response_statuses
 from masonite.helpers.time import cookie_expire_time
-from masonite.helpers import dot
 
 
 class Request(Extendable):
@@ -31,8 +34,10 @@ class Request(Extendable):
         Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class have the ability to extend another class at runtime.
     """
 
+    statuses = response_statuses()
+
     def __init__(self, environ=None):
-        """Request class constructor. Initializes several properties and sets various methods 
+        """Request class constructor. Initializes several properties and sets various methods
         depending on the environtment.
 
         Keyword Arguments:
@@ -151,6 +156,21 @@ class Request(Extendable):
 
         return only_vars
 
+    def without(self, *names):
+        """Returns the request variables in a dictionary without specified values.
+
+        Returns:
+            dict
+        """
+
+        only_vars = {}
+
+        for name in self.request_variables.keys():
+            if name not in names:
+                only_vars[name] = self.request_variables.get(name)
+
+        return only_vars
+
     def load_app(self, app):
         """Loads the container into the request class
 
@@ -178,7 +198,6 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
-
         self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
@@ -196,20 +215,22 @@ class Request(Extendable):
         if isinstance(variables, str):
             variables = parse_qs(variables)
 
-        for name in variables.keys():
-            value = self._get_standardized_value(variables[name])
-            self.request_variables[name.replace('[]', '')] = value
+        try:
+            for name in variables.keys():
+                value = self._get_standardized_value(variables[name])
+                self.request_variables[name.replace('[]', '')] = value
+        except TypeError:
+            self.request_variables = {}
 
     def _get_standardized_value(self, value):
         """Get the standardized value based on the type of the value parameter
 
         Arguments:
-            value {list|dict|cgi.FileStorage|string}    
+            value {list|dict|cgi.FileStorage|string}
 
         Returns:
             string|bool
         """
-
         if isinstance(value, list):
 
             # If the list contains MiniFieldStorage objects then loop through and get the values.
@@ -224,6 +245,14 @@ class Request(Extendable):
             return value[0]
 
         if isinstance(value, dict):
+            return value
+
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            pass
+
+        if isinstance(value, str):
             return value
 
         if not value.filename:
@@ -256,13 +285,19 @@ class Request(Extendable):
         """Sets the HTTP status code.
 
         Arguments:
-            status {string} -- A string with the standardized status code
+            status {string|integer} -- A string or integer with the standardized status code
 
         Returns:
             self
         """
-
-        self.app().bind('StatusCode', status)
+        if isinstance(status, str):
+            self.app().bind('StatusCode', status)
+        elif isinstance(status, int):
+            try:
+                text_status = self.statuses[status]
+            except KeyError:
+                raise InvalidHTTPStatusCode
+            self.app().bind('StatusCode', text_status)
         return self
 
     def get_status_code(self):
@@ -283,19 +318,25 @@ class Request(Extendable):
 
         return self.environ['REQUEST_METHOD']
 
-    def header(self, key, value=None, http_prefix=True):
-        """Sets or gets a header depending on if value is passed in or not.
+    def header(self, key, value=None, http_prefix=None):
+        """Sets or gets a header depending on if "value" is passed in or not.
 
         Arguments:
-            key {string} -- The header you want to set or get.
+            key {string|dict} -- The header you want to set or get. If the key is a dictionary, loop through each key pair
+                                    and add them to the headers.
 
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
             http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
-            string|True|None -- [description]
+            string|None|True -- Either return the value if getting a header, None if it doesn't exist or True if setting the headers.
         """
+
+        if isinstance(key, dict):
+            for key, value in key.items():
+                self._set_header(key, value, http_prefix)
+            return True
 
         # Get Headers
         if value is None:
@@ -306,14 +347,19 @@ class Request(Extendable):
             else:
                 return None
 
+        self._set_header(key, value, http_prefix)
+
+        return True
+
+    def _set_header(self, key, value, http_prefix):
         # Set Headers
         if http_prefix:
+            print('http_prefix', http_prefix)
             self.environ['HTTP_{0}'.format(key)] = str(value)
             self._headers.append(('HTTP_{0}'.format(key), str(value)))
         else:
             self.environ[key] = str(value)
             self._headers.append((key, str(value)))
-        return True
 
     def get_headers(self):
         """Returns all current headers to be set.
@@ -533,14 +579,12 @@ class Request(Extendable):
             self
         """
 
-        web_routes = self.container.make('WebRoutes')
-
         self.redirect_url = self._get_named_route(route_name, params)
 
         return self
 
     def _get_named_route(self, name, params):
-        """Searches the list of routes and returns the route with the name passed.  
+        """Searches the list of routes and returns the route with the name passed.
 
         Arguments:
             name {string} -- Route name to search for (dashboard.user).
@@ -560,7 +604,7 @@ class Request(Extendable):
         return None
 
     def _get_route_from_controller(self, controller):
-        """Get the route using the controller. 
+        """Get the route using the controller.
         This finds the route with the attached controller and returns that route.
         This does not compile the URI but actually returns the Route object.
 
@@ -600,7 +644,7 @@ class Request(Extendable):
 
         return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
 
-    def route(self, name, params={}):
+    def route(self, name, params={}, full=False):
         """Gets a route URI by its name.
 
         Arguments:
@@ -608,12 +652,14 @@ class Request(Extendable):
 
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})
+            full {bool} -- Specifies whether the full application url should be returned or not. (default: {False})
 
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
 
-        web_routes = self.container.make('WebRoutes')
+        if full:
+            return application.URL + self._get_named_route(name, params)
 
         return self._get_named_route(name, params)
 
@@ -700,8 +746,7 @@ class Request(Extendable):
             if url:
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
-                    url = url.replace('@', '').replace(
-                        ':int', '').replace(':string', '')
+                    url = url.replace('@', '').split(':')[0]
                     compiled_url += str(params[url]) + '/'
                 else:
                     compiled_url += url + '/'

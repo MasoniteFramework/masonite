@@ -1,13 +1,13 @@
+""" Displays Information Command """
 import math
 import os
 import platform
 import sys
-
 import psutil
+
 from cleo import Command
 from tabulate import tabulate
 
-from masonite.environment import LoadEnvironment
 from masonite.info import VERSION
 
 
@@ -47,7 +47,7 @@ class InfoCommand(Command):
 
     def _check_virtual_environment(self):
         if hasattr(sys, 'real_prefix') or 'VIRTUAL_ENV' in os.environ:
-            return u'\u2713'  # currently running in virutal env
+            return u'\u2713'  # currently running in virtual env
         return 'X'
 
     def _get_system_info(self):

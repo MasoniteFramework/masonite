@@ -2,8 +2,9 @@
 
 import os
 
-from masonite.contracts.UploadContract import UploadContract
-from masonite.drivers.BaseUploadDriver import BaseUploadDriver
+from masonite.contracts import UploadContract
+from masonite.drivers import BaseUploadDriver
+from masonite.app import App
 
 
 class UploadDiskDriver(BaseUploadDriver, UploadContract):
@@ -12,7 +13,7 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
 
     file_location = None
 
-    def __init__(self, StorageConfig, Application):
+    def __init__(self, app: App):
         """Upload Disk Driver Constructor
 
         Arguments:
@@ -20,8 +21,8 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
             Application {masonite.app.App} -- The application container.
         """
 
-        self.config = StorageConfig
-        self.appconfig = Application
+        self.config = app.make('StorageConfig')
+        self.appconfig = app.make('Application')
 
     def store(self, fileitem, location=None):
         """Store the file onto a server.

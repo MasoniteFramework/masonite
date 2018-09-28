@@ -8,18 +8,19 @@ from masonite.exceptions import (ContainerError,
                                  StrictContainerException)
 
 
-class App():
+class App:
     """Core of the Service Container. Performs bindings and resolving
     of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True):
+    def __init__(self, strict=False, override=True, resolve_parameters=False):
         """App class constructor
         """
 
         self.providers = {}
         self.strict = strict
         self.override = override
+        self.resolve_parameters = resolve_parameters
         self._hooks = {
             'make': {},
             'bind': {},
@@ -41,14 +42,28 @@ class App():
             raise StrictContainerException(
                 'You cannot override a key inside a strict container')
 
-        if self.override or not name in self.providers:
+        if self.override or name not in self.providers:
             self.fire_hook('bind', name, class_obj)
             self.providers.update({name: class_obj})
 
         return self
 
+    def simple(self, obj):
+        """Easy way to bind classes into the container by using passing the object only.
+        Automatically generates the key for the binding process.
+
+        Arguments:
+            class_obj {object} -- The object you want to bind
+
+        Returns:
+            self
+        """
+
+        self.bind(obj if inspect.isclass(obj) else obj.__class__, obj)
+        return self
+
     def make(self, name):
-        """Retreives a class from the container by key.
+        """Retrieves a class from the container by key.
 
         Arguments:
             name {string} -- Key in the container that you want to get.
@@ -60,8 +75,12 @@ class App():
             object -- Returns the object that is fetched.
         """
 
-        if self.has(name):
+        if name in self.providers:
             obj = self.providers[name]
+            self.fire_hook('make', name, obj)
+            return obj
+        elif inspect.isclass(name):
+            obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
             return obj
 
@@ -78,8 +97,14 @@ class App():
             bool
         """
 
-        if name in self.providers:
-            return True
+        if isinstance(name, str):
+            return name in self.providers
+        else:
+            try:
+                self._find_obj(name)
+                return True
+            except MissingContainerBindingNotFound:
+                return False
 
         return False
 
@@ -94,7 +119,7 @@ class App():
         return self
 
     def resolve(self, obj):
-        """Takes an object such as a function or class method and resolves it's 
+        """Takes an object such as a function or class method and resolves it's
         parameters from objects in the container.
 
         Arguments:
@@ -109,8 +134,12 @@ class App():
         for dummy, value in inspect.signature(obj).parameters.items():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
-            else:
+            elif self.resolve_parameters:
                 provider_list.append(self._find_parameter(value))
+            else:
+                raise ContainerError(
+                    "This container is not set to resolve parameters. You can set this in the container"
+                    " constructor using the 'resolve_parameters=True' keyword argument.")
 
         return obj(*provider_list)
 
@@ -154,29 +183,6 @@ class App():
 
         return provider_list
 
-    def _find_parameter(self, parameter):
-        """Find a parameter in the container
-
-        Arguments:
-            parameter {string} -- Parameter to search for.
-
-        Raises:
-            ContainerError -- Thrown when the dependency is not found in the container.
-
-        Returns:
-            object -- Returns the object found in the container
-        """
-        parameter = str(parameter)
-        if parameter is not 'self' and parameter in self.providers:
-            obj = self.providers[parameter]
-            self.fire_hook('resolve', parameter, obj)
-            return obj
-
-        raise ContainerError(
-            'The dependency with the key of {0} could not be found in the container'.format(
-                parameter)
-        )
-
     def _find_annotated_parameter(self, parameter):
         """Find a given annotation in the container.
 
@@ -191,7 +197,7 @@ class App():
         """
 
         for dummy, provider_class in self.providers.items():
-            
+
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
@@ -203,6 +209,29 @@ class App():
 
         raise ContainerError(
             'The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+
+    def _find_parameter(self, parameter):
+        """Find a parameter in the container
+
+        Arguments:
+            parameter {string} -- Parameter to search for.
+
+        Raises:
+            ContainerError -- Thrown when the dependency is not found in the container.
+
+        Returns:
+            object -- Returns the object found in the container
+        """
+
+        parameter = str(parameter)
+        if parameter is not 'self' and parameter in self.providers:
+            obj = self.providers[parameter]
+            self.fire_hook('resolve', parameter, obj)
+            return obj
+        raise ContainerError(
+            'The dependency with the key of {0} could not be found in the container'.format(
+                parameter)
+        )
 
     def on_bind(self, key, obj):
         """Set some listeners for when a specific key or class in binded to the container
@@ -265,12 +294,12 @@ class App():
 
     def _bind_hook(self, hook, key, obj):
         """Internal method used to abstract away the logic for binding an listener to the container hooks.
-        
+
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)
             key {string|object} -- The key to save for the listener
             obj {object} -- Should be a function or class method
-        
+
         Returns:
             self
         """
@@ -280,3 +309,29 @@ class App():
         else:
             self._hooks[hook].update({key: [obj]})
         return self
+
+    def _find_obj(self, obj):
+        """Find an object in the container
+
+        Arguments:
+            obj {object} -- Any object in the container
+
+        Raises:
+            MissingContainerBindingNotFound -- Raised when the object cannot be found.
+
+        Returns:
+            object -- Returns the object in the container
+        """
+
+        for dummy, provider_class in self.providers.items():
+            if obj == provider_class or obj == provider_class.__class__:
+                return_obj = provider_class
+                self.fire_hook('resolve', obj, return_obj)
+                return return_obj
+            elif inspect.isclass(provider_class) and issubclass(provider_class, obj) or issubclass(provider_class.__class__, obj):
+                return_obj = provider_class
+                self.fire_hook('resolve', obj, return_obj)
+                return return_obj
+
+        raise MissingContainerBindingNotFound(
+            'The dependency with the {0} annotation could not be resolved by the container'.format(obj))

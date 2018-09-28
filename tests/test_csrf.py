@@ -1,5 +1,5 @@
 from masonite.app import App
-from middleware.CsrfMiddleware import CsrfMiddleware
+from masonite.middleware import CsrfMiddleware
 from masonite.auth.Csrf import Csrf
 from masonite.testsuite.TestSuite import TestSuite
 
@@ -20,6 +20,9 @@ class TestCsrf:
     def test_middleware_shares_view(self):
         assert 'csrf_field' in self.app.make('ViewClass').dictionary
         assert 'input' in self.app.make('ViewClass').dictionary['csrf_field']
+
+    def test_middleware_does_not_need_safe_filter(self):
+        assert '&lt;' not in self.app.make('ViewClass').render('csrf_field').rendered_template
 
     def test_verify_token(self):
         token = self.request.get_cookie('csrf_token', decrypt=False)

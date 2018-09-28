@@ -6,7 +6,6 @@ setup(
     packages=[
         'masonite',
         'masonite.auth',
-        'masonite.facades',
         'masonite.providers',
         'masonite.commands',
         'masonite.drivers',
@@ -16,6 +15,8 @@ setup(
         'masonite.contracts',
         'masonite.contracts.managers',
         'masonite.helpers',
+        'masonite.middleware',
+        'masonite.testing',
     ],
     version=VERSION,
     install_requires=[

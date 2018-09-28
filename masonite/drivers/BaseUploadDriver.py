@@ -13,7 +13,7 @@ class BaseUploadDriver(BaseDriver):
 
     def accept(self, *args, **kwargs):
         """Set file types to accept before uploading.
-        
+
         Returns:
             self
         """
@@ -23,10 +23,10 @@ class BaseUploadDriver(BaseDriver):
 
     def validate_extension(self, filename):
         """Checks for valid file extenstions set with the 'accept' method.
-        
+
         Arguments:
             filename {string} -- The filename with file extension to validate.
-        
+
         Raises:
             FileTypeException -- Thrown if the specified file extension is incorrect.
         """
@@ -37,10 +37,10 @@ class BaseUploadDriver(BaseDriver):
 
     def get_location(self, location=None):
         """Get the location of where to upload
-        
+
         Keyword Arguments:
             location {string} -- The path to upload to. If none then this will check for configuration settings. (default: {None})
-        
+
         Returns:
             string -- Returns the location it uploaded to.
         """
@@ -55,5 +55,5 @@ class BaseUploadDriver(BaseDriver):
             return location
         elif isinstance(location, dict):
             return list(location.values())[0]
-        
+
         return location

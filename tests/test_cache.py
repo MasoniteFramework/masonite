@@ -27,12 +27,11 @@ class TestCache:
 
         content = self.app.make('Cache').get(key)
         assert content == "macho"
-        assert self.app.make('Cache').cache_exists(key)
+        assert self.app.make('Cache').exists(key)
         assert self.app.make('Cache').is_valid(key)
         self.app.make('Cache').delete(key)
 
         assert not self.app.make('Cache').is_valid("error")
-
 
     def test_driver_disk_cache_store(self):
         key = "forever_cache_driver_test"
@@ -43,7 +42,7 @@ class TestCache:
 
         content = self.app.make('Cache').get(key)
         assert content == "macho"
-        assert self.app.make('Cache').cache_exists(key)
+        assert self.app.make('Cache').exists(key)
         assert self.app.make('Cache').is_valid(key)
         self.app.make('Cache').delete(key)
 
@@ -52,14 +51,13 @@ class TestCache:
         cache_driver = self.app.make('Cache')
 
         cache_driver.store('key', 'value')
-        cache_driver.store_for('key_time', 'key value', 2, 'seconds')
-
         assert cache_driver.get('key') == 'value'
+
+        cache_driver.store_for('key_time', 'key value', 4, 'seconds')
         assert cache_driver.get('key_time') == 'key value'
 
-
-        for cache_file in glob.glob('bootstrap/cache/key*'):
-            os.remove(cache_file)
+        cache_driver.delete('key')
+        cache_driver.delete('key_time')
 
     def test_cache_expired_before_get(self):
         cache_driver = self.app.make('Cache')
@@ -72,7 +70,6 @@ class TestCache:
 
         assert not cache_driver.is_valid('key_for_1_second')
         assert cache_driver.get('key_for_1_second') is None
-
 
         for cache_file in glob.glob('bootstrap/cache/key*'):
             os.remove(cache_file)
@@ -99,7 +96,5 @@ class TestCache:
         assert cache_driver.get('key_for_1_month') == 'value'
         assert cache_driver.get('key_for_1_year') == 'value'
 
-
         for cache_file in glob.glob('bootstrap/cache/key*'):
             os.remove(cache_file)
-

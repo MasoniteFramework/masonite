@@ -16,5 +16,5 @@ class MailProvider(ServiceProvider):
         self.app.bind('MailMailgunDriver', MailMailgunDriver)
         self.app.bind('MailManager', MailManager(self.app))
 
-    def boot(self, MailConfig, MailManager):
-        self.app.bind('Mail', MailManager.driver(MailConfig.DRIVER))
+    def boot(self, manager: MailManager):
+        self.app.bind('Mail', manager.driver(self.app.make('MailConfig').DRIVER))

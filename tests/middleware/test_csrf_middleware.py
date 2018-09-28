@@ -2,23 +2,24 @@ from masonite.request import Request
 from masonite.view import View
 from masonite.auth.Csrf import Csrf
 from masonite.app import App
-from middleware.CsrfMiddleware import CsrfMiddleware
+from masonite.middleware import CsrfMiddleware
 from masonite.testsuite.TestSuite import generate_wsgi
 import pytest
 from masonite.exceptions import InvalidCSRFToken
+
 
 class TestCSRFMiddleware:
 
     def setup_method(self):
         self.app = App()
-        self.request = Request(generate_wsgi())    
+        self.request = Request(generate_wsgi())
         self.view = View(self.app)
         self.app.bind('Request', self.request)
 
         self.request = self.app.make('Request')
 
         self.middleware = CsrfMiddleware(self.request, Csrf(self.request), self.view)
-    
+
     def test_middleware_shares_correct_input(self):
         self.middleware.before()
         assert 'csrf_field' in self.view.dictionary

@@ -46,7 +46,7 @@ Set the static root of your application that you wil use to store assets
 STATIC_ROOT = os.path.join(BASE_DIRECTORY, 'storage')
 
 """Autoload Directories
-List of directories that are used to find classes and autoload them into 
+List of directories that are used to find classes and autoload them into
 the Service Container. This is initially used to find models and load
 them in but feel free to autoload any directories
 """

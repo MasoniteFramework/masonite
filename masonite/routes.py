@@ -5,7 +5,7 @@ import cgi
 import importlib
 import json
 
-from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException
+from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
 from masonite.view import View
 
 
@@ -401,7 +401,11 @@ class Match(BaseHttpRoute):
         """Post constructor
         """
 
-        self.method_type = method_type
+        if not isinstance(method_type, list):
+            raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
+
+        # Make all method types in list uppercase
+        self.method_type = [x.upper() for x in method_type]
         self.list_middleware = []
 
 

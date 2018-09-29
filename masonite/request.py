@@ -562,6 +562,7 @@ class Request(Extendable):
         """
 
         self.redirect_url = self.compile_route_to_url(route, params)
+        self.status(302)
         return self
 
     def redirect_to(self, route_name, params={}):
@@ -580,6 +581,7 @@ class Request(Extendable):
         """
 
         self.redirect_url = self._get_named_route(route_name, params)
+        self.status(302)
 
         return self
 

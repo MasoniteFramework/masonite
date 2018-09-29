@@ -3,7 +3,7 @@ from masonite.testing import BaseRequest
 
 
 class MockRequest(BaseRequest):
-    
+
     def __init__(self, url, container):
         self.url = url
         self.container = container

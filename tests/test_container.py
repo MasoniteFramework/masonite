@@ -9,17 +9,22 @@ import pytest
 class MockObject:
     pass
 
+
 class GetObject(MockObject):
-    
+
     def find(self):
         return 1
+
+
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
 
+
 class MakeObject:
     pass
+
 
 class TestContainer:
 
@@ -47,7 +52,7 @@ class TestContainer:
         obj = self.app.resolve(self._function_test_find_method_on_similiar_objects)
         assert obj[0] == 2
         assert obj[1] == 1
-    
+
     def _function_test_find_method_on_similiar_objects(self, user: GetAnotherObject, country: GetObject):
         return [user().find(), country().find()]
 
@@ -57,7 +62,7 @@ class TestContainer:
 
     def _function_test_double_annotations(self, mock: MockObject, request: Request):
         return {'mock': MockObject, 'request': Request}
-    
+
     def test_container_resolving_multiple_annotations(self):
         assert isinstance(self.app.resolve(self._function_test_double_annotations)['mock'], MockObject.__class__)
         assert isinstance(self.app.resolve(self._function_test_double_annotations)['request'], Request.__class__)
@@ -65,7 +70,7 @@ class TestContainer:
     def test_container_contract_returns_upload_disk_driver(self):
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         assert isinstance(self.app.resolve(self._function_test_contracts), UploadDiskDriver.__class__)
-    
+
     def _function_test_contracts(self, upload: UploadContract):
         return upload
 
@@ -80,17 +85,17 @@ class TestContainer:
         self.app.bind('ExceptionHook', object)
         self.app.bind('SentryExceptionHook', object)
         self.app.bind('ExceptionHandler', object)
-        
+
         assert self.app.collect('*ExceptionHook') == {'ExceptionHook': object, 'SentryExceptionHook': object}
         assert self.app.collect('Exception*') == {'ExceptionHook': object, 'ExceptionHandler': object}
         assert self.app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
         with pytest.raises(AttributeError):
             self.app.collect('Sentry')
-    
+
     def test_container_collects_correct_subclasses_of_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
         objects = self.app.collect(MockObject)
-        
+
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
 
@@ -100,7 +105,7 @@ class TestContainer:
     def test_container_can_bind_and_make_from_class_key(self):
         self.app.bind(MakeObject, MakeObject)
         assert self.app.make(MakeObject) == MakeObject
-        
+
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']
         assert self.app.make(MockObject) == GetObject

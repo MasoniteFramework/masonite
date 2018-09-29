@@ -2,6 +2,7 @@ from masonite.testsuite import generate_wsgi, TestSuite
 from masonite.app import App
 import io
 
+
 class MockRoute:
 
     def __init__(self, route, container):
@@ -16,7 +17,7 @@ class MockRoute:
 
     def has_controller(self, controller):
         return self.route.controller == controller
-    
+
     def contains(self, value):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
@@ -24,7 +25,7 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
 
         return value in self.container.make('Response')
-    
+
     def status(self, value=None):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
@@ -33,9 +34,9 @@ class MockRoute:
 
         if not value:
             return self.container.make('Request').get_status_code()
-    
+
         return self.container.make('Request').get_status_code() == value
-    
+
     def ok(self):
         return self.status('200 OK')
 
@@ -51,7 +52,7 @@ class MockRoute:
         self._user = obj
         self.container.on_bind('Request', self._bind_user_to_request)
         return self
-    
+
     def is_post(self):
         return self.route.method_type == 'POST'
 
@@ -70,21 +71,21 @@ class MockRoute:
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)
         return self
-    
+
     def has_session(self, key):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
         wsgi['RAW_URI'] = self.route.route_url
         self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
-    
+
     def session(self, key):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
         wsgi['RAW_URI'] = self.route.route_url
         self.container = self._run_container(wsgi).container
         return self.container.make('Session').get(key)
-    
+
     def on_make(self, obj, method):
         self.container.on_make(obj, method)
         return self
@@ -95,7 +96,7 @@ class MockRoute:
 
     def _run_container(self, wsgi):
         return TestSuite().create_container(wsgi, container=self.container)
-    
+
     def _bind_user_to_request(self, request, container):
-        request.set_user(self._user)   
-        return self  
+        request.set_user(self._user)
+        return self

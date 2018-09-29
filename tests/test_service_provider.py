@@ -15,18 +15,24 @@ class ContainerTest(ServiceProvider):
     def testboot(self, request: Request, Get: Get):
         return request
 
+
 class ServiceProviderTest(ServiceProvider):
 
     def register(self):
         self.app.bind('Request', object)
+
+
 class Mock1Command:
     pass
+
 
 class Mock2Command:
     pass
 
+
 ROUTE1 = Get().route('/url/here', None)
 ROUTE2 = Get().route('/test/url', None)
+
 
 class LoadProvider(ServiceProvider):
 
@@ -53,6 +59,7 @@ class LoadProvider(ServiceProvider):
         })
 
         self.commands(Mock1Command(), Mock2Command())
+
 
 class TestServiceProvider:
 
@@ -106,4 +113,3 @@ class TestServiceProvider:
     def test_can_load_commands_into_container(self):
         assert self.app.make('Mock1Command')
         assert self.app.make('Mock2Command')
-

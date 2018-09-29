@@ -35,6 +35,7 @@ def get(url, controller):
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
+    
     from masonite.routes import Get
 
     return Get().route(url, controller)

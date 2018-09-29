@@ -5,8 +5,10 @@ from masonite.hook import Hook
 import pytest
 from masonite.exceptions import MissingContainerBindingNotFound
 
+
 class ApplicationMock:
     DEBUG = True
+
 
 class StorageMock:
     STATICFILES = {}

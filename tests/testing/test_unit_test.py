@@ -2,8 +2,10 @@ from masonite.testing import UnitTest, MockRequest, MockJson
 from masonite.routes import Get
 from app.http.controllers.TestController import TestController as ControllerTest
 
+
 class MockUser:
     admin = 0
+
 
 class TestUnitTest(UnitTest):
 
@@ -15,7 +17,7 @@ class TestUnitTest(UnitTest):
         ])
 
     def test_unit_test_has_route(self):
-        assert self.route('/testing') 
+        assert self.route('/testing')
         assert not self.route('/also/testing')
 
     def test_unit_test_has_route_name(self):
@@ -75,4 +77,3 @@ class TestUnitTest(UnitTest):
         json = self.json('/test/json/response/1', {'id': 1}, method="POST")
         assert json.status('200 OK')
         assert json.contains('success')
-

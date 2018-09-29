@@ -2,14 +2,9 @@
 
 import os
 
-"""
-|--------------------------------------------------------------------------
-| From Address
-|--------------------------------------------------------------------------
-|
-| This value will be used for the default address when sending emails from
-| your application.
-|
+"""From Address
+This value will be used for the default address when sending emails from
+your application.
 """
 
 FROM = {
@@ -17,27 +12,17 @@ FROM = {
     'name': os.getenv('MAIL_FROM_NAME', 'Masonite')
 }
 
-"""
-|--------------------------------------------------------------------------
-| Mail Driver
-|--------------------------------------------------------------------------
-|
-| The default driver you will like to use for sending emails. You may add
-| additional drivers as you need or pip install additional drivers.
-|
-| Supported: 'smtp', 'mailgun'
-|
+"""Mail Driver
+The default driver you will like to use for sending emails. You may add
+additional drivers as you need or pip install additional drivers.
+
+Supported: 'smtp', 'mailgun'
 """
 
 DRIVER = os.getenv('MAIL_DRIVER', 'smtp')
 
-"""
-|--------------------------------------------------------------------------
-| Mail Drivers
-|--------------------------------------------------------------------------
-|
-| Different drivers you can use for sending email.
-|
+"""Mail Drivers
+Different drivers you can use for sending email.
 """
 
 DRIVERS = {

@@ -16,7 +16,7 @@ should contain a simple aggregate of middleware classes.
 HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     CsrfMiddleware,
-    JsonResponseMiddleware
+    JsonResponseMiddleware,
 ]
 
 """Route Middleware
@@ -30,6 +30,6 @@ a string with the full module path of the middleware class
 """
 
 ROUTE_MIDDLEWARE = {
-    'auth':  AuthenticationMiddleware,
-    'verified': VerifyEmailMiddleware
+    'auth': AuthenticationMiddleware,
+    'verified': VerifyEmailMiddleware,
 }

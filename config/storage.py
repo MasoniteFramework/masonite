@@ -23,7 +23,7 @@ DRIVERS = {
         'client': os.getenv('S3_CLIENT', 'AxJz...'),
         'secret': os.getenv('S3_SECRET', 'HkZj...'),
         'bucket': os.getenv('S3_BUCKET', 's3bucket'),
-    },   
+    },
     'rackspace': {
         'username': os.getenv('RACKSPACE_USERNAME', 'username'),
         'secret': os.getenv('RACKSPACE_SECRET', '3cd5b0e8...'),

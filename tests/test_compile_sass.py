@@ -8,3 +8,4 @@ class TestCompileSass:
         Storage().compile_sass()
 
         assert os.path.exists(os.path.join(os.getcwd(), 'storage/compiled/style.css'))
+        os.remove(os.path.join(os.getcwd(), 'storage/compiled/style.css'))

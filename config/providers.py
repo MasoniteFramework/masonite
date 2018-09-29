@@ -17,6 +17,7 @@ from masonite.providers import (
     CacheProvider,
     CsrfProvider,
 )
+from events.providers import EventProvider
 
 """
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ PROVIDERS = [
     StartResponseProvider,
     WhitenoiseProvider,
     ViewProvider,
+    EventProvider,
 
     # Optional Framework Providers
     SassProvider,

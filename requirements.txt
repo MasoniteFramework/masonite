@@ -59,3 +59,4 @@ validator.py==1.2.5
 waitress==1.1.0
 whitenoise==4.0
 wrapt==1.10.11
+flake8==3.5.0

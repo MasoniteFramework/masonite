@@ -10,7 +10,6 @@ from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
 
 
-
 if os.getenv('MAILGUN_SECRET'):
 
     class UserMock:
@@ -34,8 +33,6 @@ if os.getenv('MAILGUN_SECRET'):
 
             assert MailManager(self.app).driver('mailgun').to(user).to_address == 'test@email.com'
 
-
         def test_mail_renders_template(self):
-
             assert 'MasoniteTesting' in MailManager(self.app).driver('mailgun').to(
                 'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body

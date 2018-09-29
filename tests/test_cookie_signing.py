@@ -26,7 +26,6 @@ class TestCookieSigning:
 
         assert self.request.get_cookie('notencrypted', False) == 'value'
 
-
     def test_set_and_get_cookie_with_no_existing_cookies(self):
         self.request.environ['HTTP_COOKIE'] = ''
         self.request.cookie('test', 'testvalue')
@@ -36,7 +35,6 @@ class TestCookieSigning:
         self.request.environ['HTTP_COOKIE'] = 'cookie=true'
         self.request.cookie('test', 'testvalue')
         assert self.request.get_cookie('test') == 'testvalue'
-
 
     def test_set_and_get_cookie_with_http_only(self):
         self.request.cookies = []

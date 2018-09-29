@@ -1,6 +1,6 @@
 from masonite.request import Request
 from masonite.validator import Validator
-from validator import Pattern, Required, validate, Length
+from validator import Pattern, Required, Length
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.helpers import validate
 

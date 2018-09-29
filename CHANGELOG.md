@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.0.19](https://github.com/MasoniteFramework/core/releases/tag/v2.0.19) - 2018-09-02
+
+### Fixed
+- Fixed an issue where the reset migration command was not throwing `QueryExceptions`.
+
+## [2.0.18](https://github.com/MasoniteFramework/core/releases/tag/v2.0.18) - 2018-08-30
+
+### Fixed
+- Fixed issue where route groups were overriding middleware
+
+## [2.0.17](https://github.com/MasoniteFramework/core/releases/tag/v2.0.17) - 2018-08-28
+
+### Fixed
+- Fixed an issue where the autoloader was loading more directories than it was suppose to
+
 ## [2.0.16](https://github.com/MasoniteFramework/core/releases/tag/v2.0.16) - 2018-08-22
 ### Added
 - Added docstrings to nearly all classes

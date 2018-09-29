@@ -17,7 +17,8 @@ class Route:
         'int': r'(\d+)',
         'integer': r'(\d+)',
         'string': r'([a-zA-Z]+)',
-        'default': r'([\w.-]+)'
+        'default': r'([\w.-]+)',
+        'signed': r'([\w\-=]+)'
     }
 
     def __init__(self, environ=None):

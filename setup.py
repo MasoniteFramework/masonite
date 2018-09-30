@@ -27,7 +27,7 @@ setup(
         'tldextract==2.2.0',
         'Jinja2==2.10',
         'python-dotenv==0.9.1',
-        'passlib==2.3.2',
+        'passlib==1.7.1',
         'whitenoise==4.1',
         'pytest==3.6.0',
         'orator==0.9.7',

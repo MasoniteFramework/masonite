@@ -30,7 +30,7 @@ class RouteProvider(ServiceProvider):
                 one match. Routes are executed on a first come, first serve basis
             """
 
-            if matchurl.match(router.url) and route.method_type == self.app.make('Environ')['REQUEST_METHOD']:
+            if matchurl.match(router.url) and request.get_request_method() in route.method_type:
                 route.load_request(request)
                 if request.has_subdomain():
                     # Check if the subdomain matches the routes domain
@@ -53,12 +53,6 @@ class RouteProvider(ServiceProvider):
                 except AttributeError:
                     pass
 
-                """Execute Before Middleware
-                    This is middleware that contains a before method.
-                """
-
-                route.run_middleware('before')
-
                 """Excute HTTP before middleware
                     Only those middleware that have a "before" method are ran.
                 """
@@ -70,9 +64,15 @@ class RouteProvider(ServiceProvider):
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
 
+                """Execute Before Middleware
+                    This is middleware that contains a before method.
+                """
+
+                route.run_middleware('before')
+
                 # Show a helper in the terminal of which route has been visited
                 if self.app.make('Application').DEBUG:
-                    print(route.method_type + ' Route: ' + router.url)
+                    print(request.get_request_method() + ' Route: ' + router.url)
 
                 if request.get_status_code() == '404 Not Found':
                     request.status(200)

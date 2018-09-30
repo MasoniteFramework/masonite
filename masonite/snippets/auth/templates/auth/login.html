@@ -1,30 +1,31 @@
 {% extends 'auth/base.html' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-xs-4 col-xs-offset-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                <form action="/login" method="POST">
-                    {{ csrf_field|safe }}
-
-                    <div class="form-group">
-                        <label for="">Username</label>
-                        <input type="text" name="username" class="form-control">    
+<div class="row my-5">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card rounded-1">
+                    <div class="card-header">
+                        <h5 class="mb-0">Login</h5>
                     </div>
-
-                    <div class="form-group">
-                        <label for="">Password</label>
-                        <input type="password" name="password" class="form-control">    
+                    <div class="card-body">
+                        <form class="form" action="/login" method="POST">
+                            {{ csrf_field|safe }}
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="text" class="form-control form-control-md rounded-0" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control form-control-md rounded-0" name="password">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-md float-right">Login</button>
+                        </form>
                     </div>
-                    
-                    <div class="form-group text-center">
-                        <button type="submit" class="btn btn-success">Login</button>
-                    </div>
-                </form>
                 </div>
-            </div>    
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

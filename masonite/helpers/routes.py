@@ -40,6 +40,22 @@ def get(url, controller):
     return Get().route(url, controller)
 
 
+def match(method_type, url, controller):
+    """Shortcut for Match HTTP class.
+
+    Arguments:
+        method_type {list} -- A list of the method types you want to accept
+        url {string} -- The url you want to use for the route
+        controller {string|object} -- This can be a string controller or a normal object controller
+
+    Returns:
+        masonite.routes.Get -- The Masonite Get class.
+    """
+    from masonite.routes import Match
+
+    return Match(method_type).route(url, controller)
+
+
 def post(url, controller):
     """Shortcut for Post HTTP class.
 
@@ -50,7 +66,6 @@ def post(url, controller):
     Returns:
         masonite.routes.Post -- The Masonite Post class.
     """
-
     from masonite.routes import Post
 
     return Post().route(url, controller)
@@ -66,7 +81,6 @@ def delete(url, controller):
     Returns:
         masonite.routes.Delete -- The Masonite Delete class.
     """
-
     from masonite.routes import Delete
 
     return Delete().route(url, controller)
@@ -97,7 +111,6 @@ def patch(url, controller):
     Returns:
         masonite.routes.Patch -- The Masonite Patch class.
     """
-
     from masonite.routes import Patch
 
     return Patch().route(url, controller)

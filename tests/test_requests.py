@@ -26,8 +26,9 @@ wsgi_request = generate_wsgi()
 class TestRequest:
 
     def setup_method(self):
+        self.app = App()
         self.request = Request(wsgi_request).key(
-            'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+            'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=').load_app(self.app)
 
     def test_request_is_callable(self):
         """ Request should be callable """

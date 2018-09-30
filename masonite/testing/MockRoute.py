@@ -1,6 +1,8 @@
-from masonite.testsuite import generate_wsgi, TestSuite
-from masonite.app import App
 import io
+
+from masonite.app import App
+from masonite.request import Request
+from masonite.testsuite import TestSuite, generate_wsgi
 
 
 class MockRoute:
@@ -50,7 +52,7 @@ class MockRoute:
 
     def user(self, obj):
         self._user = obj
-        self.container.on_bind('Request', self._bind_user_to_request)
+        self.container.on_resolve(Request, self._bind_user_to_request)
         return self
 
     def is_post(self):

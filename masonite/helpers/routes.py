@@ -38,7 +38,6 @@ def get(url, controller):
 
     from masonite.routes import Get
 
-
     return Get().route(url, controller)
 
 
@@ -70,7 +69,6 @@ def post(url, controller):
     """
     from masonite.routes import Post
 
-
     return Post().route(url, controller)
 
 
@@ -85,7 +83,6 @@ def delete(url, controller):
         masonite.routes.Delete -- The Masonite Delete class.
     """
     from masonite.routes import Delete
-
 
     return Delete().route(url, controller)
 
@@ -102,7 +99,6 @@ def put(url, controller):
     """
     from masonite.routes import Put
 
-
     return Put().route(url, controller)
 
 
@@ -117,7 +113,6 @@ def patch(url, controller):
         masonite.routes.Patch -- The Masonite Patch class.
     """
     from masonite.routes import Patch
-
 
     return Patch().route(url, controller)
 

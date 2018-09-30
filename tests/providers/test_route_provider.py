@@ -4,7 +4,7 @@ from masonite.app import App
 from masonite.helpers.routes import get
 from masonite.providers.RouteProvider import RouteProvider
 from masonite.request import Request
-from masonite.routes import Get, Route
+from masonite.routes import Get, Route, Match
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
 
@@ -71,6 +71,18 @@ class TestRouteProvider:
         )
 
         assert self.app.make('Response') == 'test'
+
+    def test_match_route_returns_controller(self):
+        self.app.make('Route').url = '/view'
+        self.app.bind(
+            'WebRoutes', [Match(['GET', 'POST']).route('/view', ControllerTest.returns_a_view)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request')
+        )
+
+        assert self.app.make('Response') == 'hey'
 
     def test_provider_runs_through_routes(self):
         self.app.make('Route').url = '/test'

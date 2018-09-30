@@ -44,7 +44,7 @@ setup(
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',
     url='https://github.com/MasoniteFramework/masonite',
-    keywords=['python web framework', 'python3', 'masonite'],
+    keywords=['masonite', 'python web framework', 'python3'],
     licence='MIT',
     classifiers=[],
     include_package_data=True,

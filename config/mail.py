@@ -62,5 +62,8 @@ DRIVERS = {
     'mailgun': {
         'secret': os.getenv('MAILGUN_SECRET', 'key-XX'),
         'domain': os.getenv('MAILGUN_DOMAIN', 'sandboxXX.mailgun.org')
+    },
+    'log': {
+        
     }
 }

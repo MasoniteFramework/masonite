@@ -10,6 +10,6 @@ masonite = "==2.1.0b1.post1"
 waitress = "==1.1.0"
 
 [scripts]
-postgres = "pipenv install psycopg2"
+postgres = "pipenv install psycopg2-binary"
 mysql = "pipenv install PyMySQL"
 key = "craft key --store"

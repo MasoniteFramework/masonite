@@ -13,7 +13,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
     """
 
     def send(self, message=None):
-        """Sends the message through SMTP.
+        """Prints the message in a log.
 
         Keyword Arguments:
             message {string} -- The message to be printed. (default: { None })

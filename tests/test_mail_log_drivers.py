@@ -53,13 +53,19 @@ class TestMailLogDrivers:
         MailManager(self.app).driver('log').to(user).send('Masonite')
 
         filepath = '{0}/{1}'.format(os.getcwd(), 'mail.log')
-        logfile = open(filepath, 'r')
-        file_string = logfile.read()
-        
+        self.logfile = open(filepath, 'r')
+        file_string = self.logfile.read()
+
         assert 'test@email.com' in file_string
 
-        logfile.close()
-        os.remove(filepath)
+    def teardown_method(self):
+        if hasattr(self, 'logfile') and self.logfile:
+            self.logfile.close()
+
+        filepath = '{0}/{1}'.format(os.getcwd(), 'mail.log')
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+
 
 
 

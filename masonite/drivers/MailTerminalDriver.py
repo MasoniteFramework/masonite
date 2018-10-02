@@ -1,30 +1,27 @@
-""" Log Driver Module """
+""" Terminal Driver Module """
 
 import logging
-import os
 
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers.BaseMailDriver import BaseMailDriver
 
 
-class MailLogDriver(BaseMailDriver, MailContract):
-    """Mail log driver
+class MailTerminalDriver(BaseMailDriver, MailContract):
+    """Mail terminal driver
     """
+
     def __init__(self, MailConfig, View):
         super().__init__(MailConfig, View)
 
-        handler = logging.FileHandler('{0}/{1}'.format(
-            os.getcwd(),
-            os.getenv('MAIL_LOGFILE', 'mail.log')
-            ))
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
-        self.logger.propagate = False
-        self.logger.addHandler(handler)
+        handler = logging.StreamHandler()
         self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(handler)
+        self.logger.propagate = False
 
     def send(self, message=None):
-        """Prints the message in a log.
+        """Prints the message to the terminal.
 
         Keyword Arguments:
             message {string} -- The message to be printed. (default: { None })

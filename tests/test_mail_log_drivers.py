@@ -9,6 +9,7 @@ from masonite.managers.MailManager import MailManager
 from masonite.drivers.MailLogDriver import MailLogDriver
 from masonite.drivers.MailTerminalDriver import MailTerminalDriver
 
+
 class UserMock:
     pass
 
@@ -58,6 +59,15 @@ class TestMailLogDrivers:
 
         assert 'test@email.com' in file_string
 
+    def test_terminal_driver_output(self, capsys):
+        user = UserMock
+        user.email = 'test@email.com'
+
+        MailManager(self.app).driver('terminal').to(user).send('Masonite')
+
+        captured = capsys.readouterr()
+        assert 'test@email.com' in captured.err
+
     def teardown_method(self):
         if hasattr(self, 'logfile') and self.logfile:
             self.logfile.close()
@@ -65,8 +75,3 @@ class TestMailLogDrivers:
         filepath = '{0}/{1}'.format(os.getcwd(), 'mail.log')
         if os.path.isfile(filepath):
             os.remove(filepath)
-
-
-
-
-                

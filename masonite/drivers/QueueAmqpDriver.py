@@ -1,3 +1,5 @@
+""" Driver for AMQP support """
+
 import pickle
 import threading
 

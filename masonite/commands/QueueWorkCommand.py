@@ -25,9 +25,7 @@ class QueueWorkCommand(Command):
 
     queue:work
         {--c|channel=default : The channel to listen on the queue}
-        {--e|exchange=default : The channel to listen on the queue}
         {--f|fair : Send jobs to queues that have no jobs instead of randomly selecting a queue}
-        {--d|durable : Send jobs to queues that have no jobs instead of randomly selecting a queue}
     """
 
     def handle(self):
@@ -50,5 +48,5 @@ class QueueWorkCommand(Command):
             channel.basic_qos(prefetch_count=1)
 
         self.info(' [*] Waiting to process jobs on the "{}" channel. To exit press CTRL+C'.format(
-            self.option('channel'), self.option('exchange')))
+            self.option('channel')))
         channel.start_consuming()

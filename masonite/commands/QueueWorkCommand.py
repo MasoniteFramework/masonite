@@ -1,12 +1,11 @@
 """ A QueueWorkCommand Command """
 
-import pickle
 import inspect
+import pickle
 
 from cleo import Command
 
 from config import queue
-
 from masonite.exceptions import DriverLibraryNotFound
 
 

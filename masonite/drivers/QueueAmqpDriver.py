@@ -1,7 +1,6 @@
 import pickle
 import threading
 
-
 from config import queue
 from masonite.contracts import QueueContract
 from masonite.drivers import BaseDriver
@@ -17,7 +16,7 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
 
     def __init__(self, Container):
         """Queue AMQP Driver
-        
+
         Arguments:
             Container {masonite.app.App} -- The application container.
         """
@@ -50,8 +49,8 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
         for obj in objects:
             # Publish to the channel for each object
             self.channel.basic_publish(exchange='',
-                                  routing_key=listening_channel,
-                                  body=pickle.dumps(obj),
-                                  properties=self.pika.BasicProperties(
-                                      delivery_mode=2,  # make message persistent
-                                  ))
+                                       routing_key=listening_channel,
+                                       body=pickle.dumps(obj),
+                                       properties=self.pika.BasicProperties(
+                                           delivery_mode=2,  # make message persistent
+                                       ))

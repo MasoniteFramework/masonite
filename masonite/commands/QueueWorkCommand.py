@@ -1,5 +1,7 @@
 """ A QueueWorkCommand Command """
+
 import pickle
+import inspect
 
 from cleo import Command
 
@@ -10,7 +12,9 @@ from masonite.exceptions import DriverLibraryNotFound
 
 def callback(ch, method, properties, body):
     from wsgi import container
-    job = container.resolve(pickle.loads(body))
+    job = pickle.loads(body)
+    if inspect.isclass(job):
+        job = container.resolve(job)
     job.handle()
     ch.basic_ack(delivery_tag=method.delivery_tag)
 

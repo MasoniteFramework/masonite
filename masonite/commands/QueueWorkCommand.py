@@ -21,7 +21,7 @@ def callback(ch, method, properties, body):
 
 class QueueWorkCommand(Command):
     """
-    Description of command
+    Start the queue worker
 
     queue:work
         {--c|channel=default : The channel to listen on the queue}

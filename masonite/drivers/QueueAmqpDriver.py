@@ -16,10 +16,12 @@ else:
 class QueueAmqpDriver(QueueContract, BaseDriver):
 
     def __init__(self, Container):
-        """Queue Async Driver
+        """Queue AMQP Driver
+        
         Arguments:
             Container {masonite.app.App} -- The application container.
         """
+
         try:
             import pika
             self.pika = pika
@@ -27,12 +29,15 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
             raise DriverLibraryNotFound(
                 "Could not find the 'pika' library. Run pip install pika to fix this.")
 
+        # Start the connection
         connection = self.pika.BlockingConnection(
             self.pika.ConnectionParameters('localhost')
         )
 
+        # Get the channel
         self.channel = connection.channel()
 
+        # Declare what queue we are working with
         self.channel.queue_declare(queue=listening_channel, durable=True)
 
     def push(self, *objects):
@@ -43,6 +48,7 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
         """
 
         for obj in objects:
+            # Publish to the channel for each object
             self.channel.basic_publish(exchange='',
                                   routing_key=listening_channel,
                                   body=pickle.dumps(obj),

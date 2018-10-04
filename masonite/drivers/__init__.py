@@ -7,6 +7,7 @@ from .CacheDiskDriver import CacheDiskDriver
 from .MailMailgunDriver import MailMailgunDriver
 from .MailSmtpDriver import MailSmtpDriver
 from .QueueAsyncDriver import QueueAsyncDriver
+from .QueueAmqpDriver import QueueAmqpDriver
 from .SessionCookieDriver import SessionCookieDriver
 from .SessionMemoryDriver import SessionMemoryDriver
 from .UploadDiskDriver import UploadDiskDriver

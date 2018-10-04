@@ -7,7 +7,10 @@ from masonite.contracts import QueueContract
 from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
 
-listening_channel = queue.DRIVERS[queue.DRIVER]['channel']
+if 'amqp' in queue.DRIVERS:
+    listening_channel = queue.DRIVERS['amqp']['channel']
+else:
+    listening_channel = 'default'
 
 
 class QueueAmqpDriver(QueueContract, BaseDriver):
@@ -19,12 +22,13 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
         """
         try:
             import pika
+            self.pika = pika
         except ImportError:
             raise DriverLibraryNotFound(
                 "Could not find the 'pika' library. Run pip install pika to fix this.")
 
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters('localhost')
+        connection = self.pika.BlockingConnection(
+            self.pika.ConnectionParameters('localhost')
         )
 
         self.channel = connection.channel()
@@ -42,6 +46,6 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
             self.channel.basic_publish(exchange='',
                                   routing_key=listening_channel,
                                   body=pickle.dumps(obj),
-                                  properties=pika.BasicProperties(
+                                  properties=self.pika.BasicProperties(
                                       delivery_mode=2,  # make message persistent
                                   ))

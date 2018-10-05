@@ -197,7 +197,7 @@ class App:
         Returns:
             object -- Returns the object found in the container.
         """
-        
+
         if parameter.annotation in self.substitutions:
             return self.substitutions[parameter.annotation](parameter.annotation, self)
 

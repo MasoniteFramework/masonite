@@ -8,8 +8,8 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                KeyCommand, MakeMigrationCommand,
                                MigrateCommand, MigrateRefreshCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
-                               ModelCommand, ProviderCommand, RoutesCommand,
-                               SeedCommand, SeedRunCommand, ServeCommand,
+                               ModelCommand, ProviderCommand, QueueWorkCommand, 
+                               RoutesCommand, SeedCommand, SeedRunCommand, ServeCommand,
                                TinkerCommand, ViewCommand, ValidatorCommand)
 
 from masonite.exception_handler import ExceptionHandler
@@ -50,6 +50,7 @@ class AppProvider(ServiceProvider):
                       MigrateRollbackCommand())
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
+        self.app.bind('MasoniteQueueWorkCommand', QueueWorkCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())

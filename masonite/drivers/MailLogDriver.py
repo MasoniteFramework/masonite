@@ -13,7 +13,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
     def __init__(self, MailConfig, View):
         super().__init__(MailConfig, View)
 
-        if 'location' in MailConfig.DRIVERS['log']:
+        if 'log' in MailConfig.DRIVERS and 'location' in MailConfig.DRIVERS['log']:
             log_location = MailConfig.DRIVERS['log']['location']
         else:
             log_location = 'bootstrap/mail'

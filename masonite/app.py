@@ -27,6 +27,8 @@ class App:
             'resolve': {},
         }
 
+        self.substitutions = {}
+
     def bind(self, name, class_obj):
         """Bind classes into the container with a key value pair
 
@@ -195,12 +197,16 @@ class App:
         Returns:
             object -- Returns the object found in the container.
         """
+        
+        if parameter.annotation in self.substitutions:
+            return self.substitutions[parameter.annotation](parameter.annotation, self)
 
         for dummy, provider_class in self.providers.items():
 
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
+
                 return obj
             elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation) or issubclass(provider_class.__class__, parameter.annotation):
                 obj = provider_class
@@ -271,6 +277,10 @@ class App:
         """
 
         return self._bind_hook('resolve', key, obj)
+
+    def substitute(self, obj, callback):
+        self.substitutions.update({obj: callback})
+        return self
 
     def fire_hook(self, action, key, obj):
         """Fires a specific hook based on a key or object

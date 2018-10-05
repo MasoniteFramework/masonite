@@ -17,7 +17,7 @@ class HelpersProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, view: View, request: Request, manager: MailManager):
+    def boot(self, view: View, request: Request):
         """ Add helper functions to Masonite """
         builtins.view = view.render
         builtins.request = request.helper
@@ -26,7 +26,8 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
         builtins.route = request.route
-        builtins.mail_helper = manager.helper
+        if self.app.has(MailManager):
+            builtins.mail_helper = self.app.make(MailManager).helper
 
         view.share(
             {

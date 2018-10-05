@@ -156,7 +156,7 @@ class TestContainer:
     
     def test_can_substitute(self):
         app = App()
-        app.substitute(SubstituteThis, self._substitute)
+        app.swap(SubstituteThis, self._substitute)
 
         assert app.resolve(self._test_substitute) == 'test'
 

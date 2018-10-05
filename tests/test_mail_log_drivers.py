@@ -53,7 +53,7 @@ class TestMailLogDrivers:
 
         MailManager(self.app).driver('log').to(user).send('Masonite')
 
-        filepath = '{0}/{1}'.format(os.getcwd(), 'mail.log')
+        filepath = '{0}/{1}'.format('bootstrap/mail', 'mail.log')
         self.logfile = open(filepath, 'r')
         file_string = self.logfile.read()
 
@@ -72,6 +72,6 @@ class TestMailLogDrivers:
         if hasattr(self, 'logfile') and self.logfile:
             self.logfile.close()
 
-        filepath = '{0}/{1}'.format(os.getcwd(), 'mail.log')
+        filepath = '{0}/{1}'.format('bootstrap/mail', 'mail.log')
         if os.path.isfile(filepath):
             os.remove(filepath)

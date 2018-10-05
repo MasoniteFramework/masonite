@@ -13,8 +13,17 @@ class MailLogDriver(BaseMailDriver, MailContract):
     def __init__(self, MailConfig, View):
         super().__init__(MailConfig, View)
 
+        if 'location' in MailConfig.DRIVERS['log']:
+            log_location = MailConfig.DRIVERS['log']['location']
+        else:
+            log_location = 'bootstrap/mail'
+
+        if not os.path.exists(log_location):
+            # Create the path to the model if it does not exist
+            os.makedirs(log_location)
+
         handler = logging.FileHandler('{0}/{1}'.format(
-            os.getcwd(),
+            log_location,
             os.getenv('MAIL_LOGFILE', 'mail.log')
             ))
         self.logger = logging.getLogger(__name__)

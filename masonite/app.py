@@ -131,7 +131,7 @@ class App:
 
         provider_list = []
 
-        for dummy, value in inspect.signature(obj).parameters.items():
+        for _, value in inspect.signature(obj).parameters.items():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             elif self.resolve_parameters:
@@ -196,7 +196,7 @@ class App:
             object -- Returns the object found in the container.
         """
 
-        for dummy, provider_class in self.providers.items():
+        for _, provider_class in self.providers.items():
 
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
@@ -323,7 +323,7 @@ class App:
             object -- Returns the object in the container
         """
 
-        for dummy, provider_class in self.providers.items():
+        for _, provider_class in self.providers.items():
             if obj == provider_class or obj == provider_class.__class__:
                 return_obj = provider_class
                 self.fire_hook('resolve', obj, return_obj)

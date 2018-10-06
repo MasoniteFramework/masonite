@@ -199,7 +199,10 @@ class App:
         """
 
         if parameter.annotation in self.swaps:
-            return self.swaps[parameter.annotation](parameter.annotation, self)
+            obj = self.swaps[parameter.annotation]
+            if callable(obj):
+                return self.swaps[parameter.annotation](parameter.annotation, self)
+            return obj
 
         for _, provider_class in self.providers.items():
 

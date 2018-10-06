@@ -160,6 +160,12 @@ class TestContainer:
 
         assert app.resolve(self._test_substitute) == 'test'
 
+    def test_can_substitute_with_object(self):
+        app = App()
+        app.swap(SubstituteThis, MakeObject())
+
+        assert isinstance(app.resolve(self._test_substitute), MakeObject)
+
     def _substitute(self, method, container):
         return 'test'
     

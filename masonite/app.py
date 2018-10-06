@@ -27,6 +27,8 @@ class App:
             'resolve': {},
         }
 
+        self.swaps = {}
+
     def bind(self, name, class_obj):
         """Bind classes into the container with a key value pair
 
@@ -196,11 +198,18 @@ class App:
             object -- Returns the object found in the container.
         """
 
+        if parameter.annotation in self.swaps:
+            obj = self.swaps[parameter.annotation]
+            if callable(obj):
+                return self.swaps[parameter.annotation](parameter.annotation, self)
+            return obj
+
         for _, provider_class in self.providers.items():
 
             if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
                 obj = provider_class
                 self.fire_hook('resolve', parameter, obj)
+
                 return obj
             elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation) or issubclass(provider_class.__class__, parameter.annotation):
                 obj = provider_class
@@ -271,6 +280,10 @@ class App:
         """
 
         return self._bind_hook('resolve', key, obj)
+
+    def swap(self, obj, callback):
+        self.swaps.update({obj: callback})
+        return self
 
     def fire_hook(self, action, key, obj):
         """Fires a specific hook based on a key or object

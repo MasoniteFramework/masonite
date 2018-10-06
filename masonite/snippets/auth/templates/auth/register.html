@@ -11,7 +11,7 @@
                     </div>
                     <div class="card-body">
                         <form class="form" action="/register" method="POST">
-                            {{ csrf_field|safe }}
+                            {{ csrf_field }}
                             <div class="form-group">
                                 <label for="">Username</label>
                                 <input type="text" name="name" class="form-control form-control-md rounded-0">

@@ -9,7 +9,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateCommand, MigrateRefreshCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
                                ModelCommand, ModelDocstringCommand, ProviderCommand, RoutesCommand,
-                               SeedCommand, SeedRunCommand, ServeCommand, QueueWorkCommand
+                               SeedCommand, SeedRunCommand, ServeCommand, QueueWorkCommand,
                                TinkerCommand, ViewCommand, ValidatorCommand)
 
 from masonite.exception_handler import ExceptionHandler

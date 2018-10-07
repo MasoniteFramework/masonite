@@ -8,7 +8,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                KeyCommand, MakeMigrationCommand,
                                MigrateCommand, MigrateRefreshCommand,
                                MigrateResetCommand, MigrateRollbackCommand,
-                               ModelCommand, ProviderCommand, RoutesCommand,
+                               ModelCommand, ModelDocstringCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
                                TinkerCommand, ViewCommand, ValidatorCommand)
 
@@ -49,6 +49,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteMigrateRollbackCommand',
                       MigrateRollbackCommand())
         self.app.bind('MasoniteModelCommand', ModelCommand())
+        self.app.bind('MasoniteModelDocstringCommand', ModelDocstringCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())

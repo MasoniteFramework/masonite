@@ -11,6 +11,7 @@ from .MigrateRefreshCommand import MigrateRefreshCommand
 from .MigrateResetCommand import MigrateResetCommand
 from .MigrateRollbackCommand import MigrateRollbackCommand
 from .ModelCommand import ModelCommand
+from .ModelDocstringCommand import ModelDocstringCommand
 from .ProviderCommand import ProviderCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand

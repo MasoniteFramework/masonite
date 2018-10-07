@@ -15,7 +15,7 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 - Added ability to "make" a class from the container
 - Added a way to make a full route
 
-## [2.0.23](https://github.com/MasoniteFramework/core/releases/tag/v2.0.23) - 2018-09-13
+## [2.0.23](https://github.com/MasoniteFramework/core/releases/tag/v2.0.23) - 2018-09-16
 ### Fixed
 - Fixed Issue where url parameters were not resetting at the end of each request and being carried over when the second route does not have any URL parameters.
 

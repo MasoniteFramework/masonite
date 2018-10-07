@@ -51,6 +51,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteModelDocstringCommand', ModelDocstringCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
+        self.app.bind('MasoniteQueueWorkCommand', QueueWorkCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())

@@ -6,9 +6,9 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 
 ## [2.0.25](https://github.com/MasoniteFramework/core/releases/tag/v2.0.25) - 2018-10-07
 ### Added
-- Added 2 new mail drivers: `terminal` and `log`
-- Added `amqp` queue driver and `queue:work` command
-- Added `model:docstring` command
+- [Added 2 new mail drivers: `terminal` and `log`](https://docs.masoniteproject.com/useful-features/mail#terminal-driver)
+- [Added `amqp` queue driver and `queue:work` command](https://docs.masoniteproject.com/useful-features/queues-and-jobs#amqp-driver)
+- [Added `model:docstring` command](https://docs.masoniteproject.com/useful-features/queues-and-jobs#amqp-driver)
 
 ## [2.0.24](https://github.com/MasoniteFramework/core/releases/tag/v2.0.24) - 2018-09-30
 ### Added

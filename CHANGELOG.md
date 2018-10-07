@@ -4,6 +4,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.0.25](https://github.com/MasoniteFramework/core/releases/tag/v2.0.25) - 2018-10-07
+### Added
+- Added 2 new mail drivers: `terminal` and `log`
+- Added `amqp` queue driver and `queue:work` command
+- Added `model:docstring` command
+
+## [2.0.24](https://github.com/MasoniteFramework/core/releases/tag/v2.0.24) - 2018-09-30
+### Added
+- Added ability to "make" a class from the container
+- Added a way to make a full route
+
+## [2.0.23](https://github.com/MasoniteFramework/core/releases/tag/v2.0.23) - 2018-09-13
+### Fixed
+- Fixed Issue where url parameters were not resetting at the end of each request and being carried over when the second route does not have any URL parameters.
+
+## [2.0.22](https://github.com/MasoniteFramework/core/releases/tag/v2.0.22) - 2018-09-13
+### Fixed
+- Fixed Issue where multiple select inputs were not fetching all values and also made it so it will fetch via dot notation
+
+## [2.0.21](https://github.com/MasoniteFramework/core/releases/tag/v2.0.21) - 2018-09-13
+### Fixed
+- Fixed Issue where Masonite was not overriding environment variables that were already set
+
+## [2.0.20](https://github.com/MasoniteFramework/core/releases/tag/v2.0.20) - 2018-09-09
+### Added
+- Contracts to managers
+
+- Better exception handling for invalid secret keys
+
+- Python 3.7 to travis.yml file
+
+- SSL option in config
+
+- View tests
+
+## Changed
+- Made the view class more modular
+
+## [2.0.19](https://github.com/MasoniteFramework/core/releases/tag/v2.0.19) - 2018-09-01
+### Fixed
+- Fixed Issue where the reset migration command was not throwing `QueryExceptions`.
+
+## [2.0.18](https://github.com/MasoniteFramework/core/releases/tag/v2.0.18) - 2018-08-30
+### Fixed
+- Fixed Issue where route groups were overriding middleware
+
+## [2.0.17](https://github.com/MasoniteFramework/core/releases/tag/v2.0.17) - 2018-08-27
+### Fixed
+- Fixed Issue where the autoloader was loading more directories than it was suppose to
+
 ## [2.0.16](https://github.com/MasoniteFramework/core/releases/tag/v2.0.16) - 2018-08-22
 ### Added
 - Added docstrings to nearly all classes

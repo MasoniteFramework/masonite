@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.0.26](https://github.com/MasoniteFramework/core/releases/tag/v2.0.26) - 2018-10-08
+### Fixed
+- [Fixed passing variables into jobs](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-variables-into-jobs)
+
 ## [2.0.25](https://github.com/MasoniteFramework/core/releases/tag/v2.0.25) - 2018-10-07
 ### Added
 - [Added 2 new mail drivers: `terminal` and `log`](https://docs.masoniteproject.com/useful-features/mail#terminal-driver)

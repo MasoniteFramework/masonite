@@ -21,3 +21,9 @@ class MailManager(Manager, MailManagerContract):
             Mail Driver
         """
         return self.driver(self.container.make('MailConfig').DRIVER)
+
+
+class Mail:
+    """Dummy class that will be used to swap out the manager in the container
+    """
+    pass

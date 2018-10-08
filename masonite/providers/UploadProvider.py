@@ -6,6 +6,7 @@ from masonite.helpers.static import static
 from masonite.managers import UploadManager
 from masonite.provider import ServiceProvider
 from masonite.view import View
+from masonite import Upload
 
 
 class UploadProvider(ServiceProvider):
@@ -20,6 +21,7 @@ class UploadProvider(ServiceProvider):
 
     def boot(self, manager: UploadManager, view: View):
         self.app.bind('Upload', manager.driver(self.app.make('StorageConfig').DRIVER))
+        self.app.swap(Upload, manager.driver(self.app.make('StorageConfig').DRIVER))
         view.share(
             {
                 'static': static,

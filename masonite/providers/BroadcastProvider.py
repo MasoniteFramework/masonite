@@ -4,6 +4,7 @@ from config import broadcast
 from masonite.drivers import BroadcastAblyDriver, BroadcastPusherDriver
 from masonite.managers import BroadcastManager
 from masonite.provider import ServiceProvider
+from masonite import Broadcast
 
 
 class BroadcastProvider(ServiceProvider):
@@ -18,3 +19,4 @@ class BroadcastProvider(ServiceProvider):
 
     def boot(self, broadcast: BroadcastManager):
         self.app.bind('Broadcast', self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))
+        self.app.swap(Broadcast, self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))

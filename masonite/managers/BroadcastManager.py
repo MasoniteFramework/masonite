@@ -13,3 +13,9 @@ class BroadcastManager(Manager, BroadcastManagerContract):
 
     config = 'BroadcastConfig'
     driver_prefix = 'Broadcast'
+
+
+class Broadcast:
+    """Dummy class that will be used to swap out the manager in the container
+    """
+    pass

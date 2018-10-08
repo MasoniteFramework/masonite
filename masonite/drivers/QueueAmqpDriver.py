@@ -41,7 +41,7 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
         # Declare what queue we are working with
         self.channel.queue_declare(queue=listening_channel, durable=True)
 
-    def push(self, *objects):
+    def push(self, *objects, args=()):
         """Push objects onto the amqp stack.
 
         Arguments:
@@ -52,7 +52,8 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
             # Publish to the channel for each object
             self.channel.basic_publish(exchange='',
                                        routing_key=listening_channel,
-                                       body=pickle.dumps(obj),
+                                       body=pickle.dumps(
+                                           {'obj': obj, 'args': args}),
                                        properties=self.pika.BasicProperties(
                                            delivery_mode=2,  # make message persistent
                                        ))

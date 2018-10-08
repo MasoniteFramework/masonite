@@ -12,9 +12,11 @@ from masonite.exceptions import DriverLibraryNotFound
 def callback(ch, method, properties, body):
     from wsgi import container
     job = pickle.loads(body)
-    if inspect.isclass(job):
-        job = container.resolve(job)
-    job.handle()
+    obj = job['obj']
+    args = job['args']
+    if inspect.isclass(obj):
+        obj = container.resolve(obj)
+    obj.handle(*args)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

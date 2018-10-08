@@ -5,6 +5,7 @@ from .BaseCacheDriver import BaseCacheDriver
 from .BroadcastAblyDriver import BroadcastAblyDriver
 from .BroadcastPusherDriver import BroadcastPusherDriver
 from .CacheDiskDriver import CacheDiskDriver
+from .CacheRedisDriver import CacheRedisDriver
 from .MailMailgunDriver import MailMailgunDriver
 from .MailSmtpDriver import MailSmtpDriver
 from .QueueAsyncDriver import QueueAsyncDriver

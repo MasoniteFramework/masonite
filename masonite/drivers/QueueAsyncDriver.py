@@ -20,7 +20,7 @@ class QueueAsyncDriver(QueueContract, BaseDriver):
 
         self.container = Container
 
-    def push(self, *objects):
+    def push(self, *objects, args=()):
         """Push objects onto the async stack.
 
         Arguments:
@@ -32,5 +32,5 @@ class QueueAsyncDriver(QueueContract, BaseDriver):
                 obj = self.container.resolve(obj)
                 
             thread = threading.Thread(
-                target=obj.dispatch(), args=(), kwargs={})
+                target=obj.handle, args=args, kwargs={})
             thread.start()

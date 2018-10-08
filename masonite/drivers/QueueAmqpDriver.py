@@ -31,9 +31,13 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
                 "Could not find the 'pika' library. Run pip install pika to fix this.")
 
         # Start the connection
-        connection = self.pika.BlockingConnection(
-            self.pika.ConnectionParameters('localhost')
-        )
+        connection = pika.BlockingConnection(pika.URLParameters('amqp://{}:{}@{}{}/{}'.format(
+            queue.DRIVERS['amqp']['username'],
+            queue.DRIVERS['amqp']['password'],
+            queue.DRIVERS['amqp']['host'],
+            ':' + queue.DRIVERS['amqp']['port'] if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
+            queue.DRIVERS['amqp']['vhost'] if 'vhost' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['vhost'] else '%2F'
+        )))
 
         # Get the channel
         self.channel = connection.channel()

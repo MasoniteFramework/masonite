@@ -1,4 +1,4 @@
-""" Upload Disk Driver """
+"""Upload Disk Driver."""
 
 import os
 
@@ -8,19 +8,17 @@ from masonite.app import App
 
 
 class UploadDiskDriver(BaseUploadDriver, UploadContract):
-    """Upload to and from the file system.
-    """
+    """Upload to and from the file system."""
 
     file_location = None
 
     def __init__(self, app: App):
-        """Upload Disk Driver Constructor
+        """Upload Disk Driver Constructor.
 
         Arguments:
             StorageConfig {config.storage} -- Storage configuration.
             Application {masonite.app.App} -- The application container.
         """
-
         self.config = app.make('StorageConfig')
         self.appconfig = app.make('Application')
 
@@ -36,7 +34,6 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         Returns:
             string -- Returns the file name just saved.
         """
-
         filename = os.path.basename(fileitem.filename)
 
         # Check if is a valid extension
@@ -65,7 +62,6 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         Returns:
             string -- Returns the file name just saved.
         """
-
         filename = os.path.basename(fileitem.filename)
 
         location = self.get_location(location)

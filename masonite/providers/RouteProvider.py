@@ -1,4 +1,4 @@
-""" A RouteProvider Service Provider """
+"""A RouteProvider Service Provider."""
 
 from masonite.provider import ServiceProvider
 from masonite.request import Request

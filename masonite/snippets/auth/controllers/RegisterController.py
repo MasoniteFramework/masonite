@@ -1,4 +1,4 @@
-""" The RegisterController Module """
+"""The RegisterController Module."""
 
 from config import auth
 from masonite.auth import Auth
@@ -10,12 +10,10 @@ from masonite.managers import MailManager
 
 
 class RegisterController:
-    """The RegisterController class.
-    """
+    """The RegisterController class."""
 
     def __init__(self):
-        """The RegisterController Constructor
-        """
+        """The RegisterController Constructor."""
         pass
 
     def show(self, request: Request, view: View):
@@ -27,7 +25,6 @@ class RegisterController:
         Returns:
             [type] -- [description]
         """
-
         return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def store(self, request: Request, mail_manager: MailManager):
@@ -39,7 +36,6 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-
         password = bcrypt_password(request.input('password'))
 
         user = auth.AUTH['model'].create(

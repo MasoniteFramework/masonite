@@ -1,5 +1,4 @@
-"""Module for using the Ably websocket driver
-"""
+"""Module for using the Ably websocket driver."""
 
 from masonite.contracts.BroadcastContract import BroadcastContract
 from masonite.drivers.BaseDriver import BaseDriver
@@ -8,21 +7,19 @@ from masonite.app import App
 
 
 class BroadcastAblyDriver(BroadcastContract, BaseDriver):
-    """Class for the Ably Driver
-    """
+    """Class for the Ably Driver."""
 
     def __init__(self, app: App):
-        """Ably driver constructor
+        """Ably driver constructor.
 
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration setting.
         """
-
         self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):
-        """Sets whether to send data with SSL enabled.
+        """Set whether to send data with SSL enabled.
 
         Arguments:
             boolean {bool} -- Boolean on whether to set SSL.
@@ -30,7 +27,6 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
         Returns:
             self
         """
-
         self.ssl_message = boolean
         return self
 
@@ -50,7 +46,6 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
         Returns:
             string -- Returns the message sent.
         """
-
         try:
             from ably import AblyRest
         except ImportError:

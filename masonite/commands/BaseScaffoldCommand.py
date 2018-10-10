@@ -7,7 +7,7 @@ from masonite.view import View
 
 class BaseScaffoldCommand(Command):
     """
-    Creates a model
+    Creates a model.
 
     model
         {name : Name of the model}

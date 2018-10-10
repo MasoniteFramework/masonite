@@ -1,4 +1,4 @@
-""" An Upload Service Provider """
+"""An Upload Service Provider."""
 
 from config import storage
 from masonite.drivers import UploadDiskDriver, UploadS3Driver

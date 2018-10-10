@@ -1,13 +1,11 @@
-"""Base upload driver module.
-"""
+"""Base upload driver module."""
 
 from masonite.exceptions import FileTypeException
 from masonite.drivers.BaseDriver import BaseDriver
 
 
 class BaseUploadDriver(BaseDriver):
-    """Base class that all upload drivers inherit from.
-    """
+    """Base class that all upload drivers inherit from."""
 
     accept_file_types = None
 
@@ -17,12 +15,11 @@ class BaseUploadDriver(BaseDriver):
         Returns:
             self
         """
-
         self.accept_file_types = args
         return self
 
     def validate_extension(self, filename):
-        """Checks for valid file extenstions set with the 'accept' method.
+        """Check for valid file extenstions set with the 'accept' method.
 
         Arguments:
             filename {string} -- The filename with file extension to validate.
@@ -30,13 +27,12 @@ class BaseUploadDriver(BaseDriver):
         Raises:
             FileTypeException -- Thrown if the specified file extension is incorrect.
         """
-
         if self.accept_file_types is not None:
             if not filename.endswith(self.accept_file_types):
                 raise FileTypeException("The extension file not is valid.")
 
     def get_location(self, location=None):
-        """Get the location of where to upload
+        """Get the location of where to upload.
 
         Keyword Arguments:
             location {string} -- The path to upload to. If none then this will check for configuration settings. (default: {None})
@@ -44,7 +40,6 @@ class BaseUploadDriver(BaseDriver):
         Returns:
             string -- Returns the location it uploaded to.
         """
-
         if not location:
             location = self.config.DRIVERS['disk']['location']
 

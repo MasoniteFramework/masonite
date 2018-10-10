@@ -1,4 +1,4 @@
-""" Run Seed Command """
+"""Run Seed Command."""
 import subprocess
 import os
 

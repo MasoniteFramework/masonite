@@ -1,4 +1,4 @@
-""" New View Command """
+"""New View Command."""
 import os
 
 from cleo import Command
@@ -6,7 +6,7 @@ from cleo import Command
 
 class ViewCommand(Command):
     """
-    Creates a view
+    Creates a view.
 
     view
         {name : Name of the view you would like to create}

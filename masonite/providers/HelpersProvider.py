@@ -1,4 +1,4 @@
-""" A SassProvider Service Provider """
+"""A SassProvider Service Provider."""
 
 import builtins
 import os
@@ -18,7 +18,7 @@ class HelpersProvider(ServiceProvider):
         pass
 
     def boot(self, view: View, request: Request):
-        """ Add helper functions to Masonite """
+        """Add helper functions to Masonite."""
         builtins.view = view.render
         builtins.request = request.helper
         builtins.auth = request.user

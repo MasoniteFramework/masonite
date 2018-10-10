@@ -1,11 +1,11 @@
-""" Down Command """
+"""Down Command."""
 
 from cleo import Command
 
 
 class DownCommand(Command):
     """
-    Puts the sever in a maintenance state
+    Puts the sever in a maintenance state.
 
     down
     """

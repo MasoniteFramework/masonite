@@ -1,4 +1,4 @@
-""" Session Manager Module """
+"""Session Manager Module."""
 
 from masonite.contracts import SessionManagerContract
 from masonite.managers import Manager
@@ -16,6 +16,6 @@ class SessionManager(Manager, SessionManagerContract):
 
 
 class Session:
-    """Dummy class that will be used to swap out the manager in the container
-    """
+    """Dummy class that will be used to swap out the manager in the container."""
+
     pass

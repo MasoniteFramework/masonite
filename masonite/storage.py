@@ -1,5 +1,4 @@
-"""Module for Storage class.
-"""
+"""Module for Storage class."""
 
 import os
 
@@ -7,18 +6,14 @@ from config import application, storage
 
 
 class Storage:
-    """Responsible for compiling Sass.
-    """
+    """Responsible for compiling Sass."""
 
     def __init__(self):
-        """Storage constructor.
-        """
-
+        """Storage constructor."""
         pass
 
     def compile_sass(self):
-        """Compile sass.
-        """
+        """Compile sass."""
         try:
             import sass
         except ImportError as e:

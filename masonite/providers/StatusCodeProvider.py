@@ -1,4 +1,4 @@
-""" A StatusProvider Service Provider """
+"""A StatusProvider Service Provider."""
 
 from masonite.provider import ServiceProvider
 

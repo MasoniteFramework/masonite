@@ -1,10 +1,10 @@
-""" New Model Command """
+"""New Model Command."""
 from masonite.commands import BaseScaffoldCommand
 
 
 class ModelCommand(BaseScaffoldCommand):
     """
-    Creates a model
+    Creates a model.
 
     model
         {name : Name of the model}

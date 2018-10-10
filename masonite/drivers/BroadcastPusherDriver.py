@@ -1,5 +1,4 @@
-"""Module for the Pusher websocket driver.
-"""
+"""Module for the Pusher websocket driver."""
 
 from masonite.contracts import BroadcastContract
 from masonite.drivers import BaseDriver
@@ -8,8 +7,7 @@ from masonite.app import App
 
 
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):
-    """Class for the Pusher websocket driver.
-    """
+    """Class for the Pusher websocket driver."""
 
     def __init__(self, app: App):
         """Pusher driver constructor.
@@ -17,12 +15,11 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration.
         """
-
         self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):
-        """Sets whether to send data with SSL enabled.
+        """Set whether to send data with SSL enabled.
 
         Arguments:
             boolean {bool} -- Boolean on whether to set SSL.
@@ -30,7 +27,6 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Returns:
             self
         """
-
         self.ssl_message = boolean
         return self
 
@@ -50,7 +46,6 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Returns:
             string -- Returns the message sent.
         """
-
         try:
             import pusher
         except ImportError:

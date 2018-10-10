@@ -1,4 +1,4 @@
-""" A RedirectionProvider Service Provider """
+"""A RedirectionProvider Service Provider."""
 
 from config import broadcast
 from masonite.drivers import BroadcastAblyDriver, BroadcastPusherDriver

@@ -1,10 +1,10 @@
-""" New Middleware Command """
+"""New Middleware Command."""
 from masonite.commands import BaseScaffoldCommand
 
 
 class MiddlewareCommand(BaseScaffoldCommand):
     """
-    Creates a middleware
+    Creates a middleware.
 
     middleware
         {name : Name of the middleware}

@@ -1,4 +1,4 @@
-""" New Authentication System Command """
+"""New Authentication System Command."""
 import os
 import shutil
 
@@ -7,7 +7,7 @@ from cleo import Command
 
 class AuthCommand(Command):
     """
-    Creates an authentication system
+    Creates an authentication system.
 
     auth
     """

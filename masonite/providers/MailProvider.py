@@ -1,4 +1,4 @@
-""" A Mail Service Provider """
+"""A Mail Service Provider."""
 
 from config import mail
 from masonite.drivers import MailMailgunDriver, MailSmtpDriver

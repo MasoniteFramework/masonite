@@ -1,4 +1,4 @@
-""" Install Command """
+"""Install Command."""
 import os
 import shutil
 import subprocess
@@ -8,7 +8,7 @@ from cleo import Command
 
 class InstallCommand(Command):
     """
-    Installs all of Masonite's dependencies
+    Installs all of Masonite's dependencies.
 
     install
     """

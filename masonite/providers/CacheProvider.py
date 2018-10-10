@@ -1,4 +1,4 @@
-""" A Cache Service Provider """
+"""A Cache Service Provider."""
 
 from config import cache
 from masonite.drivers import CacheDiskDriver

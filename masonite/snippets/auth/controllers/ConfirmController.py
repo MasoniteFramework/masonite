@@ -1,4 +1,4 @@
-""" The ConfirmController Module """
+"""The ConfirmController Module."""
 import time
 import datetime
 
@@ -11,12 +11,10 @@ from app.User import User
 
 
 class ConfirmController:
-    """The ConfirmController class.
-    """
+    """The ConfirmController class."""
 
     def __init__(self):
-        """The ConfirmController Constructor
-        """
+        """The ConfirmController Constructor."""
         pass
 
     def verify_show(self, request: Request, view: View):
@@ -29,7 +27,6 @@ class ConfirmController:
         Returns:
             [type] -- [description]
         """
-
         return view.render('auth/verify', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def confirm_email(self, request: Request, view: View):
@@ -42,7 +39,6 @@ class ConfirmController:
         Returns:
             [type] -- [description]
         """
-
         sign = Sign()
         token = sign.unsign(request.param('id'))
 
@@ -66,7 +62,7 @@ class ConfirmController:
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def get_user(self, id):
-        """Get the user from the database
+        """Get the user from the database.
 
         Arguments:
             id {str} -- The user id
@@ -74,7 +70,6 @@ class ConfirmController:
         Returns:
             [User] -- [User model]
         """
-
         return User.find(id)
 
     def send_verify_email(self, request: Request):

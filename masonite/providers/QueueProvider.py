@@ -1,4 +1,4 @@
-""" A RedirectionProvider Service Provider """
+"""A RedirectionProvider Service Provider."""
 
 from config import queue
 from masonite.drivers import QueueAsyncDriver

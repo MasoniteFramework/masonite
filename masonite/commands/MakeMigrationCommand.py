@@ -1,4 +1,4 @@
-""" New Migration Command """
+"""New Migration Command."""
 import subprocess
 
 from cleo import Command
@@ -6,7 +6,7 @@ from cleo import Command
 
 class MakeMigrationCommand(Command):
     """
-    Makes a new migration
+    Makes a new migration.
 
     migration
         {name : Name of your migration}

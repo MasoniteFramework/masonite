@@ -1,4 +1,4 @@
-""" Serve Masonite Application Command """
+"""Serve Masonite Application Command."""
 import os
 import sys
 import time
@@ -11,7 +11,7 @@ from cleo import Command
 
 class ServeCommand(Command):
     """
-    Run the Masonite server
+    Run the Masonite server.
 
     serve
         {--port=8000 : Specify which port to run the server}
@@ -95,7 +95,9 @@ iteritems = lambda d, *args, **kwargs: iter(d.items(*args, **kwargs))
 
 
 def _iter_module_files():
-    """This iterates over all relevant Python files.  It goes through all
+    """Iterate over all relevant Python files.
+
+    It goes through all
     loaded files from modules, all files in folders of already loaded modules
     as well as all files reachable through a package.
     """
@@ -126,7 +128,7 @@ def _iter_module_files():
 
 
 def _find_observable_paths(extra_files=None):
-    """Finds all paths that should be observed."""
+    """Find all paths that should be observed."""
     rv = set(os.path.dirname(os.path.abspath(x))
              if os.path.isfile(x) else os.path.abspath(x)
              for x in sys.path)
@@ -147,7 +149,9 @@ def _find_observable_paths(extra_files=None):
 
 
 def _get_args_for_reloading():
-    """Returns the executable. This contains a workaround for windows
+    """Return the executable.
+
+    This contains a workaround for windows
     if the executable is incorrectly reported to not have the .exe
     extension which can cause bugs on reloading.
     """
@@ -211,9 +215,7 @@ class ReloaderLoop(object):
         pass
 
     def restart_with_reloader(self):
-        """Spawn a new Python interpreter with the same arguments as this one,
-        but running the reloader thread.
-        """
+        """Spawn a new Python interpreter with the same arguments as this one, but running the reloader thread."""
         while 1:
             self._log('Restarting with {}'.format(self.name))
             args = _get_args_for_reloading()

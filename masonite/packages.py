@@ -1,4 +1,4 @@
-""" Third party package integrations """
+"""Third party package integrations."""
 import os
 import shutil
 import sys

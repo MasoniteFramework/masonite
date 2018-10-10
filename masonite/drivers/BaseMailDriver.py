@@ -1,5 +1,4 @@
-"""Base mail driver module.
-"""
+"""Base mail driver module."""
 
 from masonite.drivers.BaseDriver import BaseDriver
 from masonite.view import View
@@ -7,8 +6,7 @@ from masonite.app import App
 
 
 class BaseMailDriver(BaseDriver):
-    """Base mail driver class. This class is inherited by all mail drivers.
-    """
+    """Base mail driver class. This class is inherited by all mail drivers."""
 
     def __init__(self, app: App, view: View):
         """Base mail driver constructor.
@@ -17,7 +15,6 @@ class BaseMailDriver(BaseDriver):
             MailConfig {module} -- This is the config.mail module.
             View {object} -- This is the masonite.view.View class.
         """
-
         self.config = app.make('MailConfig')
         self.to_address = None
         self.from_address = self.config.FROM
@@ -26,7 +23,7 @@ class BaseMailDriver(BaseDriver):
         self.view = view
 
     def to(self, user_email):
-        """Sets the user email address who you want to send mail to.
+        """Set the user email address who you want to send mail to.
 
         Arguments:
             user_email {string} -- The user email address.
@@ -34,7 +31,6 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-
         if callable(user_email):
             user_email = user_email.email
 
@@ -42,7 +38,7 @@ class BaseMailDriver(BaseDriver):
         return self
 
     def template(self, template_name, dictionary={}):
-        """Creates an email from a normal Jinja template
+        """Create an email from a normal Jinja template.
 
         Arguments:
             template_name {string} -- The name of the template.
@@ -53,12 +49,11 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-
         self.message_body = self.view.render(template_name, dictionary).rendered_template
         return self
 
     def send_from(self, address):
-        """Sets the from address of who the sender should be.
+        """Set the from address of who the sender should be.
 
         Arguments:
             address {string} -- A name used as the From field in an email.
@@ -66,12 +61,11 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-
         self.from_address = address
         return self
 
     def subject(self, subject):
-        """Sets the subject of an email.
+        """Set the subject of an email.
 
         Arguments:
             subject {string} -- The subject of the email
@@ -79,6 +73,5 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-
         self.message_subject = subject
         return self

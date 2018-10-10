@@ -1,4 +1,4 @@
-""" Displays Information Command """
+"""Displays Information Command."""
 import math
 import os
 import platform
@@ -13,7 +13,7 @@ from masonite.info import VERSION
 
 class InfoCommand(Command):
     """
-    Displays environment info for debugging
+    Displays environment info for debugging.
 
     info
     """

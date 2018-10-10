@@ -1,4 +1,4 @@
-''' CSRF Middleware '''
+"""CSRF Middleware."""
 from masonite.exceptions import InvalidCSRFToken
 from masonite.request import Request
 from masonite.auth import Csrf
@@ -7,7 +7,7 @@ from jinja2 import Markup
 
 
 class CsrfMiddleware:
-    ''' Verify CSRF Token Middleware '''
+    """Verify CSRF Token Middleware."""
 
     exempt = ['/']
 
@@ -28,21 +28,14 @@ class CsrfMiddleware:
         pass
 
     def __in_exempt(self):
-        """
-        Determine if the request has a URI that should pass
-        through CSRF verification.
-        """
-
+        """Determine if the request has a URI that should pass through CSRF verification."""
         if self.request.path in self.exempt:
             return True
         else:
             return False
 
     def __verify_csrf_token(self):
-        """
-        Verify si csrf token in post is valid.
-        """
-
+        """Verify si csrf token in post is valid."""
         if self.request.is_post() and not self.__in_exempt():
             token = self.request.input('__token')
             if not self.csrf.verify_csrf_token(token):

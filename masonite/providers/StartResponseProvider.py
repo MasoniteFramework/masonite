@@ -1,4 +1,4 @@
-""" A StartResponseProvider Service Provider """
+"""A StartResponseProvider Service Provider."""
 
 from masonite.exceptions import ResponseError
 from masonite.provider import ServiceProvider

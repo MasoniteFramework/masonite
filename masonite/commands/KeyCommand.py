@@ -1,11 +1,11 @@
-""" New Key Command """
+"""New Key Command."""
 from cleo import Command
 from cryptography.fernet import Fernet
 
 
 class KeyCommand(Command):
     """
-    Generate a new key
+    Generate a new key.
 
     key
         {--s|--store : Stores the key in the .env file}

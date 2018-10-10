@@ -1,4 +1,4 @@
-""" An AppProvider Service Provider """
+"""An AppProvider Service Provider."""
 
 from config import application, middleware, storage
 

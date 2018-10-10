@@ -1,10 +1,10 @@
-""" Helper Functions for RouteProvider """
+"""Helper Functions for RouteProvider."""
 
 import re
 
 
 def flatten_routes(routes):
-    """Flattens the grouped routes into a single list of routes.
+    """Flatten the grouped routes into a single list of routes.
 
     Arguments:
         routes {list} -- This can be a multi dementional list which can flatten all lists into a single list.
@@ -12,7 +12,6 @@ def flatten_routes(routes):
     Returns:
         list -- Returns the flatten list.
     """
-
     route_collection = []
     for route in routes:
         # Check if a route is a list of routes
@@ -35,7 +34,6 @@ def get(url, controller):
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
-
     from masonite.routes import Get
 
     return Get().route(url, controller)
@@ -127,7 +125,6 @@ def group(url, route_list):
     Returns:
         list -- Returns the list route
     """
-
     for route in route_list:
         route.route_url = url + route.route_url
 
@@ -135,7 +132,7 @@ def group(url, route_list):
 
 
 def compile_route_to_regex(route):
-    """Compiles a route to regex
+    """Compile a route to regex.
 
     Arguments:
         route {masonite.routes.Route} -- The Masonite route object
@@ -143,7 +140,6 @@ def compile_route_to_regex(route):
     Returns:
         string -- Returns the regex of the route.
     """
-
     # Split the route
     split_given_route = route.split('/')
 
@@ -178,7 +174,7 @@ def compile_route_to_regex(route):
 
 
 def create_matchurl(router, route):
-    """Creates a regex string for router.url to be matched against
+    """Create a regex string for router.url to be matched against.
 
     Arguments:
         router {masonite.routes.Route} -- The Masonite route object
@@ -187,7 +183,6 @@ def create_matchurl(router, route):
     Returns:
         string -- compiled regex string
     """
-
     # Compiles the given route to regex
     regex = route.compile_route_to_regex(router)
 

@@ -1,15 +1,13 @@
-"""The base class that all drivers inherit from.
-"""
+"""The base class that all drivers inherit from."""
 
 
 class BaseDriver:
-    """Base driver class.
-    """
+    """Base driver class."""
 
     _manager = None
 
     def driver(self, driver):
-        """Returns an instance of the driver specified.
+        """Return an instance of the driver specified.
 
         Arguments:
             driver {string} -- String representation of the driver to be resolved from the container.
@@ -18,11 +16,10 @@ class BaseDriver:
         Returns:
             masonite.drivers -- Returns an instance of the driver.
         """
-
         return self._manager.driver(driver)
 
     def load_manager(self, manager):
-        """Loads the manager into the driver
+        """Load the manager into the driver.
 
         Arguments:
             manager {masonite.managers} -- Needs to be a Manager class.
@@ -30,6 +27,5 @@ class BaseDriver:
         Returns:
             self
         """
-
         self._manager = manager
         return self

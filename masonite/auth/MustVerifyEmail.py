@@ -1,4 +1,4 @@
-""" Verify Email Module """
+"""Verify Email Module."""
 
 import time
 
@@ -6,8 +6,7 @@ from masonite.auth.Sign import Sign
 
 
 class MustVerifyEmail:
-    """Class To Verify User Email
-    """
+    """Class To Verify User Email."""
 
     def verify_email(self, mail_manager, request):
         mail = mail_manager.helper()

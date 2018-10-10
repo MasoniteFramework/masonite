@@ -1,10 +1,10 @@
-""" New Job Command """
+"""New Job Command."""
 from masonite.commands import BaseScaffoldCommand
 
 
 class JobCommand(BaseScaffoldCommand):
     """
-    Creates a new Job
+    Creates a new Job.
 
     job
         {name : Name of the job you want to create}

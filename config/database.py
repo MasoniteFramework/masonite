@@ -2,6 +2,7 @@
 
 import os
 
+from masonite import env
 from masonite.environment import LoadEnvironment
 from orator import DatabaseManager, Model
 
@@ -19,20 +20,30 @@ format below to create additional connection settings.
 """
 
 DATABASES = {
-    'default': os.environ.get('DB_DRIVER'),
+    'default': env('DB_CONNECTION'),
     'sqlite': {
         'driver': 'sqlite',
-        'database': os.environ.get('DB_DATABASE'),
+        'database': env('DB_DATABASE'),
         'prefix': ''
     },
-    os.environ.get('DB_DRIVER'): {
-        'driver': os.environ.get('DB_DRIVER'),
-        'host': os.environ.get('DB_HOST'),
-        'database': os.environ.get('DB_DATABASE'),
-        'user': os.environ.get('DB_USERNAME'),
-        'password': os.environ.get('DB_PASSWORD'),
+    'mysql': {
+        'driver': env('DB_DRIVER'),
+        'host': env('DB_HOST'),
+        'database': env('DB_DATABASE'),
+        'port': env('DB_PORT'),
+        'user': env('DB_USERNAME'),
+        'password': env('DB_PASSWORD'),
         'prefix': ''
-    }
+    },
+    'postgres': {
+        'driver': env('DB_DRIVER'),
+        'host': env('DB_HOST'),
+        'database': env('DB_DATABASE'),
+        'port': env('DB_PORT'),
+        'user': env('DB_USERNAME'),
+        'password': env('DB_PASSWORD'),
+        'prefix': ''
+    },
 }
 
 DB = DatabaseManager(DATABASES)

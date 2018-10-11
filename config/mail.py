@@ -2,14 +2,16 @@
 
 import os
 
+from masonite import env
+
 """From Address
 This value will be used for the default address when sending emails from
 your application.
 """
 
 FROM = {
-    'address': os.getenv('MAIL_FROM_ADDRESS', 'hello@example.com'),
-    'name': os.getenv('MAIL_FROM_NAME', 'Masonite')
+    'address': env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+    'name': env('MAIL_FROM_NAME', 'Masonite')
 }
 
 """Mail Driver
@@ -19,7 +21,7 @@ additional drivers as you need or pip install additional drivers.
 Supported: 'smtp', 'mailgun'
 """
 
-DRIVER = os.getenv('MAIL_DRIVER', 'smtp')
+DRIVER = env('MAIL_DRIVER', 'smtp')
 
 """Mail Drivers
 Different drivers you can use for sending email.
@@ -27,13 +29,13 @@ Different drivers you can use for sending email.
 
 DRIVERS = {
     'smtp': {
-        'host': os.getenv('MAIL_HOST', 'smtp.mailtrap.io'),
-        'port': os.getenv('MAIL_PORT', '465'),
-        'username': os.getenv('MAIL_USERNAME', 'username'),
-        'password': os.getenv('MAIL_PASSWORD', 'password'),
+        'host': env('MAIL_HOST', 'smtp.mailtrap.io'),
+        'port': env('MAIL_PORT', '465'),
+        'username': env('MAIL_USERNAME', 'username'),
+        'password': env('MAIL_PASSWORD', 'password'),
     },
     'mailgun': {
-        'secret': os.getenv('MAILGUN_SECRET', 'key-XX'),
-        'domain': os.getenv('MAILGUN_DOMAIN', 'sandboxXX.mailgun.org')
+        'secret': env('MAILGUN_SECRET', 'key-XX'),
+        'domain': env('MAILGUN_DOMAIN', 'sandboxXX.mailgun.org')
     }
 }

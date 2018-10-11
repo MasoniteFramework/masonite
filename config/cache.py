@@ -1,6 +1,6 @@
 """ Cache Settings """
 
-import os
+from masonite import env
 
 """Cache Driver
 Caching is a great way to gain an instant speed boost to your application.
@@ -10,7 +10,7 @@ best by caching your templates forever, monthly or every few seconds
 Supported: 'disk'
 """
 
-DRIVER = os.getenv('CACHE_DRIVER', 'disk')
+DRIVER = env('CACHE_DRIVER', 'disk')
 
 """Cache Drivers
 Place all your caching coniguration as a dictionary here. The keys here

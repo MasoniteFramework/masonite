@@ -2,6 +2,8 @@
 
 import os
 
+from masonite import env
+
 from app.User import User
 
 """Authentication Model
@@ -17,6 +19,6 @@ be authenticated.
 """
 
 AUTH = {
-    'driver': os.getenv('AUTH_DRIVER', 'cookie'),
+    'driver': env('AUTH_DRIVER', 'cookie'),
     'model': User,
 }

@@ -2,6 +2,8 @@
 
 import os
 
+from masonite import env
+
 """Application Name
 This value is the name of your application. This value is used when the
 framework needs to place the application's name in a notification or
@@ -16,7 +18,7 @@ stack traces will be shown on every error that occurs within your
 application. If disabled, a simple generic error page is shown
 """
 
-DEBUG = os.getenv('APP_DEBUG', False)
+DEBUG = env('APP_DEBUG', False)
 
 """Secret Key
 This key is used to encrypt and decrypt various values. Out of the box
@@ -25,7 +27,7 @@ it to encrypt and decrypt various values using the Masonite Sign
 class. Read the documentation on Encryption to find out how.
 """
 
-KEY = os.getenv('KEY', None)
+KEY = env('KEY', None)
 
 """Application URL
 Sets the root URL of the application. This is primarily used for testing

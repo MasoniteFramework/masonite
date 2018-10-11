@@ -16,7 +16,7 @@ LoadEnvironment()
 Set connection database settings here as a dictionary. Follow the
 format below to create additional connection settings.
 
-@see Orator migrations documentation for more info
+Supported: 'sqlite', 'mysql', 'postgres'
 """
 
 DATABASES = {

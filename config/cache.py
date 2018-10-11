@@ -15,6 +15,8 @@ DRIVER = env('CACHE_DRIVER', 'disk')
 """Cache Drivers
 Place all your caching coniguration as a dictionary here. The keys here
 should correspond to the driver types supported above.
+
+Supported: 'disk'
 """
 
 DRIVERS = {

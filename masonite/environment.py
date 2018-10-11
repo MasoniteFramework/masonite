@@ -41,3 +41,15 @@ class LoadEnvironment:
         """
         env_path = str(Path('.') / '.env.{}'.format(env))
         load_dotenv(dotenv_path=env_path, override=override)
+
+
+def env(value, default=None):
+    env_var = os.getenv(value, default)
+    if env_var.isnumeric():
+        return int(env_var)
+    elif env_var in ('false', 'False'):
+        return False
+    elif env_var in ('true', 'True'):
+        return True
+    else:
+        return env_var

@@ -4,6 +4,7 @@ from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Route
 from masonite.helpers.routes import create_matchurl
+from config import application
 
 
 class RouteProvider(ServiceProvider):
@@ -71,7 +72,7 @@ class RouteProvider(ServiceProvider):
                 route.run_middleware('before')
 
                 # Show a helper in the terminal of which route has been visited
-                if self.app.make('Application').DEBUG:
+                if application.DEBUG:
                     print(request.get_request_method() + ' Route: ' + router.url)
 
                 if request.get_status_code() == '404 Not Found':

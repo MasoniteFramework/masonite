@@ -9,6 +9,8 @@ import platform
 import sys
 import traceback
 
+from config import application
+
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -56,7 +58,7 @@ class ExceptionHandler:
         self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
-        if not self._app.make('Application').DEBUG:
+        if not application.DEBUG:
             return
 
         # return a view

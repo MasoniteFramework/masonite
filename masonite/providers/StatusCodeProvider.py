@@ -1,12 +1,13 @@
 """A StatusProvider Service Provider."""
 
 from masonite.provider import ServiceProvider
+from config import application
 
 
 class ServerErrorExceptionHook:
 
     def load(self, app):
-        if app.make('Application').DEBUG:
+        if application.DEBUG:
             return
 
         app.make('Request').status(500)

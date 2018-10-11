@@ -1,17 +1,17 @@
 """An AppProvider Service Provider."""
 
 from config import application, middleware, storage
-
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand,
-                               JobCommand, KeyCommand, MiddlewareCommand,
-                               MakeMigrationCommand, MigrateCommand, MigrateRefreshCommand,
-                               MigrateStatusCommand, MigrateResetCommand, MigrateRollbackCommand,
+                               JobCommand, KeyCommand, MakeMigrationCommand,
+                               MiddlewareCommand, MigrateCommand,
+                               MigrateRefreshCommand, MigrateResetCommand,
+                               MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand,
-                               TinkerCommand, UpCommand, ViewCommand, ValidatorCommand)
-
+                               TinkerCommand, UpCommand, ValidatorCommand,
+                               ViewCommand)
 from masonite.exception_handler import ExceptionHandler
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
@@ -64,7 +64,6 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
 
         self._autoload(application.AUTOLOAD)
-        self._set_application_debug_level()
 
     def boot(self, request: Request, route: Route):
         self.app.bind('Headers', [])
@@ -74,9 +73,3 @@ class AppProvider(ServiceProvider):
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
-
-    def _set_application_debug_level(self):
-        if self.app.make('Application').DEBUG == 'True':
-            self.app.make('Application').DEBUG == True
-        elif self.app.make('Application').DEBUG == 'False':
-            self.app.make('Application').DEBUG == False

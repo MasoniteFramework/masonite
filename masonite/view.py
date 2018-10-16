@@ -130,12 +130,6 @@ class View:
 
         return self
 
-    def extend(self):
-        """Extend class.
-        """
-
-        pass
-
     def share(self, dictionary):
         """Shares data to all templates.    
 

@@ -9,7 +9,7 @@ from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
 from masonite.exceptions import RequiredContainerBindingNotFound
 from masonite.managers.CacheManager import CacheManager
-from masonite.view import View, view
+from masonite.view import View
 
 
 class TestView:
@@ -20,9 +20,6 @@ class TestView:
 
         self.container.bind('View', view.render)
         self.container.bind('ViewClass', view)
-
-    def test_view_compiles_jinja(self):
-        assert view('test', {'test': 'test'}) == 'test'
 
     def test_view_extends_dictionary(self):
         view = self.container.make('View')

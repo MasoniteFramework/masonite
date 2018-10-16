@@ -7,16 +7,6 @@ from jinja2.exceptions import TemplateNotFound
 from masonite.exceptions import RequiredContainerBindingNotFound
 
 
-def view(template='index', dictionary={}):
-    """DEPRECATED."""
-    env = Environment(
-        loader=PackageLoader('resources', 'templates'),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
-
-    return env.get_template(template + '.html').render(dictionary)
-
-
 class View:
     """View class. Responsible for handling everything involved with views and view environments."""
 

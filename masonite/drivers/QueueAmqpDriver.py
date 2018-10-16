@@ -23,6 +23,10 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
             Container {masonite.app.App} -- The application container.
         """
 
+        # Start the connection
+        self._connect()
+
+    def _connect(self):
         try:
             import pika
             self.pika = pika
@@ -30,16 +34,30 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
             raise DriverLibraryNotFound(
                 "Could not find the 'pika' library. Run pip install pika to fix this.")
 
-        # Start the connection
-        connection = self.pika.BlockingConnection(
-            self.pika.ConnectionParameters('localhost')
-        )
+        connection = pika.BlockingConnection(pika.URLParameters('amqp://{}:{}@{}{}/{}'.format(
+            queue.DRIVERS['amqp']['username'],
+            queue.DRIVERS['amqp']['password'],
+            queue.DRIVERS['amqp']['host'],
+            ':' +
+            queue.DRIVERS['amqp']['port'] if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
+            queue.DRIVERS['amqp']['vhost'] if 'vhost' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['vhost'] else '%2F'
+        )))
 
         # Get the channel
         self.channel = connection.channel()
 
         # Declare what queue we are working with
         self.channel.queue_declare(queue=listening_channel, durable=True)
+
+    def _publish(self, body):
+        self.channel.basic_publish(exchange='',
+                                   routing_key=listening_channel,
+                                   body=pickle.dumps(
+                                       body
+                                   ),
+                                   properties=self.pika.BasicProperties(
+                                       delivery_mode=2,  # make message persistent
+                                   ))
 
     def push(self, *objects, args=()):
         """Push objects onto the amqp stack.
@@ -50,10 +68,8 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
 
         for obj in objects:
             # Publish to the channel for each object
-            self.channel.basic_publish(exchange='',
-                                       routing_key=listening_channel,
-                                       body=pickle.dumps(
-                                           {'obj': obj, 'args': args}),
-                                       properties=self.pika.BasicProperties(
-                                           delivery_mode=2,  # make message persistent
-                                       ))
+            try:
+                self._publish({'obj': obj, 'args': args})
+            except self.pika.exceptions.ConnectionClosed:
+                self._connect()
+                self._publish({'obj': obj, 'args': args})

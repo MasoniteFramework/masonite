@@ -8,7 +8,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MiddlewareCommand, MigrateCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
-                               ModelCommand, ModelDocstringCommand,  ProviderCommand, RoutesCommand,
+                               ModelCommand, ModelDocstringCommand, ProviderCommand, RoutesCommand,
                                SeedCommand, SeedRunCommand, ServeCommand, QueueWorkCommand,
                                TinkerCommand, UpCommand, ValidatorCommand,
                                ViewCommand)

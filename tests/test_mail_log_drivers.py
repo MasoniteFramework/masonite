@@ -17,19 +17,19 @@ class TestMailLogDrivers:
 
     def setup_method(self):
         self.app = App()
+        self.app = self.app.bind('Container', self.app)
 
         self.app.bind('Test', object)
         self.app.bind('MailConfig', mail)
+        self.app.bind('View', View(self.app))
         self.app.bind('MailLogDriver', MailLogDriver)
         self.app.bind('MailTerminalDriver', MailTerminalDriver)
-        self.app.bind('View', View(self.app))
 
     def test_log_driver(self):
         user = UserMock
         user.email = 'test@email.com'
 
         assert MailManager(self.app).driver('log').to(user).to_address == 'test@email.com'
-
 
     def test_log_mail_renders_template(self):
 

@@ -1,18 +1,19 @@
-""" Terminal Driver Module """
+"""Terminal Driver Module."""
 
 import logging
 
+from masonite.app import App
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers.BaseMailDriver import BaseMailDriver
+from masonite.view import View
 
 
 class MailTerminalDriver(BaseMailDriver, MailContract):
     """Mail terminal driver
     """
 
-    def __init__(self, MailConfig, View):
-        super().__init__(MailConfig, View)
-
+    def __init__(self, app: App, view: View):
+        super().__init__(app, view)
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
         handler = logging.StreamHandler()

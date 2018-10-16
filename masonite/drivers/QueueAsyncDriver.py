@@ -28,7 +28,7 @@ class QueueAsyncDriver(QueueContract, BaseDriver):
         for obj in objects:
             if inspect.isclass(obj):
                 obj = self.container.resolve(obj)
-                
+
             thread = threading.Thread(
                 target=obj.handle, args=args, kwargs={})
             thread.start()

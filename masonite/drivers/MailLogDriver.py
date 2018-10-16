@@ -1,20 +1,22 @@
-""" Log Driver Module """
+"""Log Driver Module."""
 
 import logging
 import os
 
+from masonite.app import App
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers.BaseMailDriver import BaseMailDriver
+from masonite.view import View
 
 
 class MailLogDriver(BaseMailDriver, MailContract):
-    """Mail log driver
+    """Mail log driver.
     """
-    def __init__(self, MailConfig, View):
-        super().__init__(MailConfig, View)
+    def __init__(self, app: App, view: View):
+        super().__init__(app, view)
 
-        if 'log' in MailConfig.DRIVERS and 'location' in MailConfig.DRIVERS['log']:
-            log_location = MailConfig.DRIVERS['log']['location']
+        if 'log' in self.config.DRIVERS and 'location' in self.config.DRIVERS['log']:
+            log_location = self.config.DRIVERS['log']['location']
         else:
             log_location = 'bootstrap/mail'
 
@@ -25,7 +27,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
         handler = logging.FileHandler('{0}/{1}'.format(
             log_location,
             os.getenv('MAIL_LOGFILE', 'mail.log')
-            ))
+        ))
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
         self.logger.propagate = False

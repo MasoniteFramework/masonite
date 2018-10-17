@@ -27,7 +27,7 @@ DATABASES = {
         'prefix': ''
     },
     'mysql': {
-        'driver': env('DB_DRIVER'),
+        'driver': 'mysql',
         'host': env('DB_HOST'),
         'database': env('DB_DATABASE'),
         'port': env('DB_PORT'),
@@ -36,7 +36,7 @@ DATABASES = {
         'prefix': ''
     },
     'postgres': {
-        'driver': env('DB_DRIVER'),
+        'driver': 'postgres',
         'host': env('DB_HOST'),
         'database': env('DB_DATABASE'),
         'port': env('DB_PORT'),

@@ -1,10 +1,10 @@
 """A Cache Service Provider."""
 
 from config import cache
-from masonite.drivers import CacheDiskDriver
+from masonite import Cache
+from masonite.drivers import CacheDiskDriver, CacheRedisDriver
 from masonite.managers import CacheManager
 from masonite.provider import ServiceProvider
-from masonite import Cache
 
 
 class CacheProvider(ServiceProvider):
@@ -14,6 +14,7 @@ class CacheProvider(ServiceProvider):
     def register(self):
         self.app.bind('CacheConfig', cache)
         self.app.bind('CacheDiskDriver', CacheDiskDriver)
+        self.app.bind('CacheRedisDriver', CacheRedisDriver)
         self.app.bind('CacheManager', CacheManager(self.app))
 
     def boot(self, cache: CacheManager):

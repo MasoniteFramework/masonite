@@ -4,12 +4,13 @@ import glob
 import os
 import time
 
+from masonite.app import App
 from masonite.contracts import CacheContract
 from masonite.drivers import BaseDriver
-from masonite.app import App
+from masonite.drivers.BaseCacheDriver import BaseCacheDriver
 
 
-class CacheDiskDriver(CacheContract, BaseDriver):
+class CacheDiskDriver(CacheContract, BaseCacheDriver):
     """Class for the cache disk driver."""
 
     def __init__(self, app: App):
@@ -70,27 +71,8 @@ class CacheDiskDriver(CacheContract, BaseDriver):
             string -- Returns the key
         """
         self.cache_forever = False
-        cache_type = cache_type.lower()
-        calc = 0
 
-        if cache_type in ("second", "seconds"):
-            # Set time now for
-            calc = 1
-        elif cache_type in ("minute", "minutes"):
-            calc = 60
-        elif cache_type in ("hour", "hours"):
-            calc = 60 * 60
-        elif cache_type in ("day", "days"):
-            calc = 60 * 60 * 60
-        elif cache_type in ("month", "months"):
-            calc = 60 * 60 * 60 * 60
-        elif cache_type in ("year", "years"):
-            calc = 60 * 60 * 60 * 60 * 60
-        else:
-            raise ValueError(
-                '{0} is not a valid caching type.'.format(cache_type))
-
-        cache_for_time = cache_time * calc
+        cache_for_time = self.calculate_time(cache_type, cache_time)
 
         cache_for_time = cache_for_time + time.time()
 

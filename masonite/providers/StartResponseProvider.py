@@ -21,22 +21,16 @@ class StartResponseProvider(ServiceProvider):
                     'An acceptable response type was not returned')
 
             self.app.bind('StatusCode', request.get_status_code())
-            headers = self.app.make('Headers')
-            headers += [
-                ("Content-Length", str(len(data)))
-            ] + request.get_cookies() + request.get_headers()
+            request.header('Content-Length', str(len(data)))
         else:
-            self.app.bind('StatusCode', "302 OK")
-            self.app.bind('Headers', [
-                ('Location', request.redirect_url)
-            ] + request.get_cookies())
-
+            request.status(302)
+            request.header('Location', request.redirect_url)
             request.reset_redirections()
-
             self.app.bind('Response', 'redirecting ...')
 
+        self.app.bind('Headers', request.get_headers())
         request.url_params = {}
         request.reset_headers()
         request.cookies = []
-        if self.app.has('Session') and self.app.make('StatusCode') == '200 OK':
+        if self.app.has('Session') and request.get_status_code() == '200 OK':
             self.app.make('Session').reset(flash_only=True)

@@ -32,7 +32,8 @@ class TestResponseProvider:
         assert self.app.make('Headers')[0] == ("Content-Length", str(len(encoded_bytes)))
 
     def test_redirect_sets_redirection_headers(self):
-        self.app.make('Request').redirect_url = '/redirection'
-        self.provider.boot(self.app.make('Request'))
-        assert self.app.make('StatusCode') == '302 OK'
+        request = self.app.make('Request')
+        request.redirect_url = '/redirection'
+        self.provider.boot(request)
+        assert request.get_status_code() == '302 Found'
         assert ('Location', '/redirection') in self.app.make('Headers')

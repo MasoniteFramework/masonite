@@ -12,6 +12,7 @@ cffi==1.11.5
 chardet==3.0.4
 cleo==0.6.5
 coverage==4.5.1
+coveralls
 cryptography==2.3
 docopt==0.6.2
 docutils==0.14
@@ -59,5 +60,3 @@ whitenoise==4.0
 wrapt==1.10.11
 flake8==3.5.0
 pika
-pytest
-coveralls

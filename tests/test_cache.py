@@ -1,11 +1,15 @@
+import glob
+import os
+import time
+
 from config import cache
 from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
 from masonite.drivers.CacheRedisDriver import CacheRedisDriver
+from masonite.environment import LoadEnvironment
 from masonite.managers.CacheManager import CacheManager
-import time
-import glob
-import os
+
+LoadEnvironment()
 
 
 class TestCache:
@@ -18,12 +22,17 @@ class TestCache:
         self.app.bind('CacheManager', CacheManager(self.app))
         self.app.bind('Application', self.app)
         self.app.bind('Cache', self.app.make('CacheManager').driver('disk'))
+        self.drivers = ['disk']
+        if os.environ.get('REDIS_CACHE_DRIVER'):
+            self.drivers.append('redis')
 
     def test_driver_disk_cache_store_for(self):
-        for driver in ('disk', 'redis'):
-            self.app.bind('Cache', self.app.make('CacheManager').driver(driver))
+        for driver in self.drivers:
+            self.app.bind('Cache', self.app.make(
+                'CacheManager').driver(driver))
             key = "cache_driver_test"
-            key_store = self.app.make('Cache').store_for(key, "macho", 5, "seconds")
+            key_store = self.app.make('Cache').store_for(
+                key, "macho", 5, "seconds")
 
             # This return one key like this: cache_driver_test:1519741028.5628147
             assert key == key_store[:len(key)]
@@ -37,8 +46,9 @@ class TestCache:
             assert not self.app.make('Cache').is_valid("error")
 
     def test_driver_disk_cache_store(self):
-        for driver in ('disk', 'redis'):
-            self.app.bind('Cache', self.app.make('CacheManager').driver(driver))
+        for driver in self.drivers:
+            self.app.bind('Cache', self.app.make(
+                'CacheManager').driver(driver))
             key = "forever_cache_driver_test"
             key = self.app.make('Cache').store(key, "macho")
 
@@ -52,8 +62,9 @@ class TestCache:
             self.app.make('Cache').delete(key)
 
     def test_get_cache(self):
-        for driver in ('disk', 'redis'):
-            self.app.bind('Cache', self.app.make('CacheManager').driver(driver))
+        for driver in self.drivers:
+            self.app.bind('Cache', self.app.make(
+                'CacheManager').driver(driver))
 
             cache_driver = self.app.make('Cache')
 
@@ -67,8 +78,9 @@ class TestCache:
             cache_driver.delete('key_time')
 
     def test_cache_expired_before_get(self):
-        for driver in ('disk', 'redis'):
-            self.app.bind('Cache', self.app.make('CacheManager').driver(driver))
+        for driver in self.drivers:
+            self.app.bind('Cache', self.app.make(
+                'CacheManager').driver(driver))
             cache_driver = self.app.make('Cache')
 
             cache_driver.store_for('key_for_1_second', 'value', 1, 'second')
@@ -80,13 +92,13 @@ class TestCache:
             assert not cache_driver.is_valid('key_for_1_second')
             assert cache_driver.get('key_for_1_second') is None
 
-
             for cache_file in glob.glob('bootstrap/cache/key*'):
                 os.remove(cache_file)
 
     def test_cache_sets_times(self):
-        for driver in ('disk', 'redis'):
-            self.app.bind('Cache', self.app.make('CacheManager').driver(driver))
+        for driver in self.drivers:
+            self.app.bind('Cache', self.app.make(
+                'CacheManager').driver(driver))
 
             cache_driver = self.app.make('Cache')
 
@@ -108,7 +120,5 @@ class TestCache:
             assert cache_driver.get('key_for_1_month') == 'value'
             assert cache_driver.get('key_for_1_year') == 'value'
 
-
             for cache_file in glob.glob('bootstrap/cache/key*'):
                 os.remove(cache_file)
-

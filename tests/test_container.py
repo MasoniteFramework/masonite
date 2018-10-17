@@ -153,6 +153,19 @@ class TestContainer:
         req = Request()
         app.simple(req)
         assert app.make(Request) == req
+
+    def test_can_pass_variables(self):
+        app = App()
+        req = Request()
+        app.bind('Request', req)
+        obj = app.resolve(self._test_resolves_variables, 'test1', 'test2')
+        assert obj[0] == 'test1'
+        assert obj[1] == req
+        assert obj[2] == 'test2'
+    
+    def _test_resolves_variables(self, var1, request: Request, var2):
+        return [var1, request, var2]
+
     
     def test_can_substitute(self):
         app = App()
@@ -171,3 +184,4 @@ class TestContainer:
     
     def _test_substitute(self, test: SubstituteThis):
         return test
+

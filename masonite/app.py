@@ -116,8 +116,9 @@ class App:
         """
         return self
 
-    def resolve(self, obj):
-        """Take an object such as a function or class method and resolves it's parameters from objects in the container.
+    def resolve(self, obj, *resolving_arguments):
+        """Takes an object such as a function or class method and resolves it's
+        parameters from objects in the container.
 
         Arguments:
             obj {object} -- The object you want to resolve objects from via this container.
@@ -126,18 +127,26 @@ class App:
             object -- The object you tried resolving but with the correct dependencies injected.
         """
         provider_list = []
+        passing_arguments = list(resolving_arguments)
 
         for _, value in inspect.signature(obj).parameters.items():
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             elif self.resolve_parameters:
                 provider_list.append(self._find_parameter(value))
+            elif resolving_arguments:
+                try:
+                    provider_list.append(passing_arguments.pop(0))
+                except IndexError:
+                    raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
             else:
                 raise ContainerError(
                     "This container is not set to resolve parameters. You can set this in the container"
                     " constructor using the 'resolve_parameters=True' keyword argument.")
-
-        return obj(*provider_list)
+        try:
+            return obj(*provider_list)
+        except TypeError:
+            raise ContainerError('Tried resolving the too many dependencies.')
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.

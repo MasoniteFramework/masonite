@@ -26,7 +26,12 @@ class AuthCommand(Command):
         f.write("Post().route('/register', 'RegisterController@store'),\n    ")
         f.write("Get().route('/home', 'HomeController@show'),\n    ")
         f.write("Get().route('/email/verify', 'ConfirmController@verify_show'),\n    ")
-        f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n")
+        f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
+        f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
+        f.write("Get().route('/password', 'PasswordController@forget'),\n    ")
+        f.write("Post().route('/password', 'PasswordController@send'),\n    ")
+        f.write("Get().route('/password/@token/reset', 'PasswordController@reset'),\n    ")
+        f.write("Post().route('/password/@token/reset', 'PasswordController@update'),\n")
         f.write(']\n')
 
         # move controllers
@@ -38,7 +43,8 @@ class AuthCommand(Command):
                         os.getcwd() + "/app/http/controllers/HomeController.py")
         shutil.copyfile(module_path + "/../snippets/auth/controllers/ConfirmController.py",
                         os.getcwd() + "/app/http/controllers/ConfirmController.py")
-
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/PasswordController.py",
+                        os.getcwd() + "/app/http/controllers/PasswordController.py")
         # move templates
         shutil.copytree(module_path + "/../snippets/auth/templates/auth",
                         os.getcwd() + "/resources/templates/auth")

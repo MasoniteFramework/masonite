@@ -10,6 +10,7 @@ matrix:
       sudo: true
 install:
   - pip install pipenv
-  - pipenv install
+  - pip install masonite-cli
+  - pipenv install --no-lock
   - craft key --store
 script: python -m pytest

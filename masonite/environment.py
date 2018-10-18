@@ -48,6 +48,8 @@ def env(value, default=None):
     env_var = os.getenv(value, default)
     if isinstance(env_var, bool):
         return env_var
+    elif env_var is None:
+        return None
     elif env_var.isnumeric():
         return int(env_var)
     elif env_var in ('false', 'False'):

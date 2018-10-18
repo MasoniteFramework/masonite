@@ -55,3 +55,6 @@ class TestEnv:
         os.environ["test"] = "1"
         assert env('na', 'default') == 'default'
 
+    def test_env_works_with_none(self):
+        assert env('na', None) == None
+

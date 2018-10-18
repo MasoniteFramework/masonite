@@ -76,5 +76,3 @@ class ExceptionHandler:
                                                ).rendered_template
         self._app.bind('Response', rendered_view)
         request.header('Content-Type', str(len(rendered_view)))
-        self._app.bind('Headers', request.get_headers())
-        request.reset_headers()

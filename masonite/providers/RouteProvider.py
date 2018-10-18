@@ -33,8 +33,13 @@ class RouteProvider(ServiceProvider):
 
             if matchurl.match(router.url) and request.get_request_method() in route.method_type:
                 route.load_request(request)
+
+                """Check if subdomains are active and if the route matches on the subdomain
+                    It needs to match to.
+                """
+
                 if request.has_subdomain():
-                    # Check if the subdomain matches the routes domain
+                    # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
                         continue
@@ -65,7 +70,7 @@ class RouteProvider(ServiceProvider):
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
 
-                """Execute Before Middleware
+                """Execute Route Before Middleware
                     This is middleware that contains a before method.
                 """
 
@@ -75,17 +80,23 @@ class RouteProvider(ServiceProvider):
                 if application.DEBUG:
                     print(request.get_request_method() + ' Route: ' + router.url)
 
+                # If no routes have been found and no middleware has changed the status code
                 if request.get_status_code() == '404 Not Found':
+
+                    # Looks like a route is about to execute so let's set the status code to 200
                     request.status(200)
 
-                    # Get the response from the route. This data is typically the
-                    # output of the controller method
+                    """Get the response from the route and set it on the 'Response' key.
+                        This data is typically the output of the controller method depending
+                        on the type of route.
+                    """
+
                     self.app.bind(
                         'Response',
                         route.get_response()
                     )
 
-                """Execute After Route Middleware
+                """Execute Route After Route Middleware
                     This is middleware that contains an after method.
                 """
 
@@ -93,17 +104,21 @@ class RouteProvider(ServiceProvider):
 
                 """Excute HTTP after middleware
                     Only those middleware that have an "after" method are ran.
+                    Check here if the middleware even has the required method.
                 """
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = self.app.resolve(
-                        http_middleware
-                    )
+                    located_middleware = self.app.resolve(http_middleware)
+
                     if hasattr(located_middleware, 'after'):
                         located_middleware.after()
 
-                # Breaks the loop because the incoming route is found and executed.
-                # There is no need to continue searching the route list.
-                break
-            else:
-                self.app.bind('Response', 'Route not found. Error 404')
+                """Return breaks the loop because the incoming route is found and executed.
+                    There is no need to continue searching the route list. First come
+                    first serve around these parts of the woods.
+                """
+                return
+
+        """No Response was found in the for loop so let's set an arbitrary response now.
+        """
+        self.app.bind('Response', 'Route not found. Error 404')

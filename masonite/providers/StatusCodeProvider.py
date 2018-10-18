@@ -1,7 +1,7 @@
 """A StatusProvider Service Provider."""
 
-from masonite.provider import ServiceProvider
 from config import application
+from masonite.provider import ServiceProvider
 
 
 class ServerErrorExceptionHook:
@@ -21,8 +21,6 @@ class ServerErrorExceptionHook:
 
         request.header('Content-Length', str(len(rendered_view)))
         app.bind('Response', rendered_view)
-        app.bind('Headers', request.get_headers())
-        request.reset_headers()
 
 
 class StatusCodeProvider(ServiceProvider):

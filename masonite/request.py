@@ -365,8 +365,26 @@ class Request(Extendable):
 
         Typically ran at the end of the request
         because of this object acts like a singleton.
+
+        Returns:
+            None
         """
         self._headers = []
+
+    def get_and_reset_headers(self):
+        """Gets the headers but resets at the same time.
+
+        This is useful at the end of the WSGI request to prevent
+        Several requests from
+
+        Returns:
+            tuple
+        """
+        headers = self.get_headers()
+        self.reset_headers()
+        self.url_params = {}
+        self.cookies = []
+        return headers
 
     def set_params(self, params):
         """Load the params into the class.

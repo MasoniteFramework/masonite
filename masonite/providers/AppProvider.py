@@ -36,6 +36,19 @@ class AppProvider(ServiceProvider):
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
 
         # Insert Commands
+        self._load_commands()
+
+        self._autoload(application.AUTOLOAD)
+
+    def boot(self, request: Request, route: Route):
+        self.app.bind('StatusCode', '404 Not Found')
+        route.load_environ(self.app.make('Environ'))
+        request.load_environ(self.app.make('Environ')).load_app(self.app)
+
+    def _autoload(self, directories):
+        Autoload(self.app).load(directories)
+
+    def _load_commands(self):
         self.app.bind('MasoniteAuthCommand', AuthCommand())
         self.app.bind('MasoniteCommandCommand', CommandCommand())
         self.app.bind('MasoniteControllerCommand', ControllerCommand())
@@ -64,13 +77,3 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
         self.app.bind('MasoniteUpCommand', UpCommand())
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
-
-        self._autoload(application.AUTOLOAD)
-
-    def boot(self, request: Request, route: Route):
-        self.app.bind('StatusCode', '404 Not Found')
-        route.load_environ(self.app.make('Environ'))
-        request.load_environ(self.app.make('Environ')).load_app(self.app)
-
-    def _autoload(self, directories):
-        Autoload(self.app).load(directories)

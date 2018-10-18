@@ -14,7 +14,6 @@ class TestResponseProvider:
 
         self.app.bind('Response', None)
         self.app.bind('Request', Request(generate_wsgi()).load_app(self.app))
-        self.app.bind('Headers', [])
 
         self.provider.app = self.app
 
@@ -29,11 +28,11 @@ class TestResponseProvider:
 
         self.provider.boot(self.app.make('Request'))
 
-        assert self.app.make('Headers')[0] == ("Content-Length", str(len(encoded_bytes)))
+        assert self.app.make('Request').get_headers()[0] == ("Content-Length", str(len(encoded_bytes)))
 
     def test_redirect_sets_redirection_headers(self):
         request = self.app.make('Request')
         request.redirect_url = '/redirection'
         self.provider.boot(request)
         assert request.get_status_code() == '302 Found'
-        assert ('Location', '/redirection') in self.app.make('Headers')
+        assert ('Location', '/redirection') in request.get_headers()

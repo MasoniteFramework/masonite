@@ -13,7 +13,7 @@ import os
 |
 '''
 
-NAME = os.getenv('APP_NAME', 'Masonite 2.1')
+NAME = os.getenv('APP_NAME', 'Masonite 2.0')
 
 '''
 |--------------------------------------------------------------------------

@@ -2,9 +2,7 @@
 
 import uuid
 
-from masonite import env
-from masonite import Mail
-from masonite import Session
+from masonite import env, Mail, Session
 from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password
 from masonite.request import Request

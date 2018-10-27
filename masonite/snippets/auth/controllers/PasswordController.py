@@ -8,7 +8,7 @@ from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
 
-from app.User import User
+from config.auth import AUTH
 
 
 class PasswordController:
@@ -19,13 +19,13 @@ class PasswordController:
 
     def reset(self, request: Request):
         token = request.param('token')
-        user = User.where('remember_token', token).first()
+        user = AUTH['model].where('remember_token', token).first()
         if user:
             return view('auth/reset', {'token': token, 'app': request.app().make('Application'), 'Auth': Auth(request)})
 
     def send(self, request: Request, session: Session, mail: Mail):
         email = request.input('email')
-        user = User.where('email', email).first()
+        user = AUTH['model].where('email', email).first()
 
         if user:
             if not user.remember_token:
@@ -40,7 +40,7 @@ class PasswordController:
             return request.redirect('/password')
 
     def update(self, request: Request):
-        user = User.where('remember_token', request.param('token')).first()
+        user = AUTH['model].where('remember_token', request.param('token')).first()
         if user:
             user.password = bcrypt_password(request.input('password'))
             user.save()

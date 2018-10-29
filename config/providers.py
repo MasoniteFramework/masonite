@@ -3,8 +3,7 @@
 from masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
                                 CsrfProvider, HelpersProvider, MailProvider,
                                 QueueProvider, RouteProvider, SassProvider,
-                                SessionProvider, StartResponseProvider,
-                                StatusCodeProvider, UploadProvider,
+                                SessionProvider, StatusCodeProvider, UploadProvider,
                                 ViewProvider, WhitenoiseProvider)
 
 """Providers List
@@ -20,7 +19,6 @@ PROVIDERS = [
     SessionProvider,
     RouteProvider,
     StatusCodeProvider,
-    StartResponseProvider,
     WhitenoiseProvider,
     ViewProvider,
 

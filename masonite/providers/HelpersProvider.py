@@ -3,6 +3,7 @@
 import builtins
 import os
 
+from masonite.exception_handler import DD, DumpHandler
 from masonite.helpers.view_helpers import back, set_request_method
 from masonite.provider import ServiceProvider
 
@@ -23,6 +24,7 @@ class HelpersProvider(ServiceProvider):
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
         builtins.route = Request.route
+        builtins.dd = DD(self.app).dump
 
         ViewClass.share(
             {

@@ -14,6 +14,6 @@ ably==1.0.1
 pendulum==1.4.4
 cleo==0.6.5
 pika
-
+pypugjs
 pytest
 coveralls

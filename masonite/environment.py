@@ -44,7 +44,7 @@ class LoadEnvironment:
         self.env(dotenv_path=env_path, override=override)
 
 
-def env(value, default=None):
+def env(value, default=''):
     env_var = os.getenv(value, default)
     if isinstance(env_var, bool):
         return env_var

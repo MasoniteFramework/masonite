@@ -6,9 +6,9 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 
 ## [2.0.32](https://github.com/MasoniteFramework/core/releases/tag/v2.0.32) - 2018-10-31
 ### Added
-- Added Redis cache driver
-- Added `dd()` and custom exception handlers
-- Added ability to add jinja2 extensions
+- [Added Redis cache driver](https://docs.masoniteproject.com/useful-features/caching#redis)
+- [Added `dd()`](https://docs.masoniteproject.com/the-basics/helper-functions#die-and-dump) and [custom exception handlers](https://docs.masoniteproject.com/useful-features/framework-hooks#exception-handlers)
+- [Added ability to add jinja2 extensions](https://docs.masoniteproject.com/useful-features/framework-hooks#exception-handlers)
 
 ## [2.0.31](https://github.com/MasoniteFramework/core/releases/tag/v2.0.31) - 2018-10-31
 ### Security

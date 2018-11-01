@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.0.32](https://github.com/MasoniteFramework/core/releases/tag/v2.0.32) - 2018-10-31
+### Added
+- Added Redis cache driver
+- Added `dd()` and custom exception handlers
+- Added ability to add jinja2 extensions
+
+## [2.0.31](https://github.com/MasoniteFramework/core/releases/tag/v2.0.31) - 2018-10-31
+### Security
+- Security fix because of the `requests` package
+
+## [2.0.30](https://github.com/MasoniteFramework/core/releases/tag/v2.0.30) - 2018-10-16
+### Fixed
+- Fixed issue where `amqp` driver was not reconnecting automatically if the connection was lost
+
+## [2.0.29](https://github.com/MasoniteFramework/core/releases/tag/v2.0.29) - 2018-10-08
+### Fixed
+- Fixed `amqp` driver connection credentials when connecting to remote servers
+
+## [2.0.28](https://github.com/MasoniteFramework/core/releases/tag/v2.0.28) - 2018-10-08
+### Fixed
+- Fixed `amqp` driver not requiring a port
+
+## [2.0.27](https://github.com/MasoniteFramework/core/releases/tag/v2.0.27) - 2018-10-08
+### Fixed
+- Fixed `amqp` driver not accepting a vhost
+
 ## [2.0.26](https://github.com/MasoniteFramework/core/releases/tag/v2.0.26) - 2018-10-08
 ### Fixed
 - [Fixed passing variables into jobs](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-variables-into-jobs)

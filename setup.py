@@ -22,7 +22,7 @@ setup(
         'validator.py==1.2.5',
         'cryptography==2.3',
         'bcrypt==3.1.4',
-        'requests==2.19.1',
+        'requests==2.20.0',
         'tldextract==2.2.0',
         'Jinja2==2.10',
         'python-dotenv==0.8.2',

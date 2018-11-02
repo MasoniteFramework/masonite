@@ -227,6 +227,14 @@ class TestView:
 
     def _is_admin(self, obj):
         return obj.admin == 1
+    
+    def test_can_render_pubjs(self):
+        view = self.container.make('ViewClass')
+        view.add_extension('pypugjs.ext.jinja.PyPugJSExtension')
+        assert view._jinja_extensions == ['jinja2.ext.loopcontrols', 'pypugjs.ext.jinja.PyPugJSExtension']
+
+        assert view.render(
+            'pug/hello.pug', {'name': 'Joe'}).rendered_template == '<p>hello Joe</p>'
 
 class MockAdminUser:
     admin = 1

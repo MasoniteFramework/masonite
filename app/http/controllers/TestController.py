@@ -1,4 +1,5 @@
 from cleo import Command
+from masonite.exceptions import DebugException
 
 class TestController:
 

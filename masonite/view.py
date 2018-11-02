@@ -76,7 +76,6 @@ class View:
             # Try rendering the direct template the user has supplied
             return self.env.get_template(self.template).render(
                 self.dictionary)
-        
 
     def _update_from_composers(self):
         """Add data into the view from specified composers."""
@@ -238,13 +237,13 @@ class View:
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=self._jinja_extensions
             )
-        
+
         else:
             loader = ChoiceLoader(
-                    [PackageLoader('resources', 'templates')] +
-                    self.environments
-                )
-            
+                [PackageLoader('resources', 'templates')] +
+                self.environments
+            )
+
             # Set the searchpath since some packages look for this object
             # This is sort of a hack for now
             loader.searchpath = ''

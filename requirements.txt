@@ -1,2 +1,2 @@
 waitress==1.1.0
-masonite==2.1.0b1.post1
+masonite==2.1.0b3

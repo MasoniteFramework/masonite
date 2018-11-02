@@ -1,10 +1,12 @@
-from subprocess import call
+"""New Migration Command."""
+import subprocess
+
 from cleo import Command
 
 
 class MakeMigrationCommand(Command):
     """
-    Makes a new migration
+    Makes a new migration.
 
     migration
         {name : Name of your migration}
@@ -16,11 +18,11 @@ class MakeMigrationCommand(Command):
         name = self.argument('name')
 
         if self.option('create') != 'False':
-            call(['orator', 'make:migration', name,
-                            '-p', 'databases/migrations', '--table', self.option('create'), '--create'])
+            subprocess.call(['orator', 'make:migration', name,
+                             '-p', 'databases/migrations', '--table', self.option('create'), '--create'])
         elif self.option('table') != 'False':
-            call(['orator', 'make:migration', name,
-                            '-p', 'databases/migrations', '--table', self.option('table')])
+            subprocess.call(['orator', 'make:migration', name,
+                             '-p', 'databases/migrations', '--table', self.option('table')])
         else:
-            call(['orator', 'make:migration', name,
-                            '-p', 'databases/migrations'])
+            subprocess.call(['orator', 'make:migration', name,
+                             '-p', 'databases/migrations'])

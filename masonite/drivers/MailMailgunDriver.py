@@ -1,14 +1,22 @@
+"""Mailgun Driver Module."""
 import requests
+
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers.BaseMailDriver import BaseMailDriver
-from masonite.drivers.BaseDriver import BaseDriver
 
 
 class MailMailgunDriver(BaseMailDriver, MailContract):
-    """
-    Mailgun driver
-    """
+    """Mailgun driver."""
+
     def send(self, message=None):
+        """Send the message through the Mailgun service.
+
+        Keyword Arguments:
+            message {string} -- The message to be sent to Mailgun. (default: {None})
+
+        Returns:
+            requests.post -- Returns the response as a requests object.
+        """
         if not message:
             message = self.message_body
 

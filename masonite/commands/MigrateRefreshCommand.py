@@ -1,9 +1,11 @@
+"""Migrate Refresh Command."""
+
 from cleo import Command
 
 
 class MigrateRefreshCommand(Command):
     """
-    Migrate refresh
+    Migrate refresh.
 
     migrate:refresh
     """

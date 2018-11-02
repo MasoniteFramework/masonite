@@ -1,9 +1,10 @@
-''' A RedirectionProvider Service Provider '''
-from masonite.provider import ServiceProvider
-from masonite.managers.BroadcastManager import BroadcastManager
-from masonite.drivers.BroadcastPusherDriver import BroadcastPusherDriver
-from masonite.drivers.BroadcastAblyDriver import BroadcastAblyDriver
+"""A RedirectionProvider Service Provider."""
+
 from config import broadcast
+from masonite.drivers import BroadcastAblyDriver, BroadcastPusherDriver
+from masonite.managers import BroadcastManager
+from masonite.provider import ServiceProvider
+from masonite import Broadcast
 
 
 class BroadcastProvider(ServiceProvider):
@@ -16,5 +17,6 @@ class BroadcastProvider(ServiceProvider):
         self.app.bind('BroadcastAblyDriver', BroadcastAblyDriver)
         self.app.bind('BroadcastManager', BroadcastManager(self.app))
 
-    def boot(self, BroadcastConfig, BroadcastManager):
-        self.app.bind('Broadcast', self.app.make('BroadcastManager').driver(BroadcastConfig.DRIVER))
+    def boot(self, broadcast: BroadcastManager):
+        self.app.bind('Broadcast', self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))
+        self.app.swap(Broadcast, self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))

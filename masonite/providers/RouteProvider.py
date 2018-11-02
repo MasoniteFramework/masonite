@@ -1,10 +1,10 @@
-""" A RouteProvider Service Provider """
-import re
-import json
-from pydoc import locate
+"""A RouteProvider Service Provider."""
 
 from masonite.provider import ServiceProvider
-from masonite.view import View
+from masonite.request import Request
+from masonite.routes import Route
+from masonite.helpers.routes import create_matchurl
+from config import application
 
 
 class RouteProvider(ServiceProvider):
@@ -12,140 +12,113 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, WebRoutes, Route, Request, Environ, Headers):
+    def boot(self, router: Route, request: Request):
         # All routes joined
-        for route in WebRoutes:
-            router = Route
-            request = Request
+        for route in self.app.make('WebRoutes'):
 
-            # Compiles the given route to regex
-            regex = router.compile_route_to_regex(route)
-
-            """
-            |--------------------------------------------------------------------------
-            | Make a better match for trailing slashes
-            |--------------------------------------------------------------------------
-            |
-            | Sometimes a user will end with a trailing slash. Because the user might
-            | create routes like `/url/route` and `/url/route/` and how the regex
-            | is compiled down, we may need to adjust for urls that end or dont
-            | end with a trailing slash.
-            |
+            """Make a better match for trailing slashes
+            Sometimes a user will end with a trailing slash. Because the user might
+            create routes like `/url/route` and `/url/route/` and how the regex
+            is compiled down, we may need to adjust for urls that end or dont
+            end with a trailing slash.
             """
 
-            if route.route_url.endswith('/'):
-                matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
-            else:
-                matchurl = re.compile(regex.replace(r'\/$', r'$'))
+            matchurl = create_matchurl(router, route)
 
-            # This will create a dictionary of parameters given.
-            # This is sort of a short
-            # but complex way to retrieve the url parameters.
-            # This is the code used to
-            # convert /url/@firstname/@lastname to
-            # {'firstmane': 'joseph', 'lastname': 'mancuso'}
-            try:
-                parameter_dict = {}
-                for index, value in enumerate(matchurl.match(router.url).groups()):
-                    parameter_dict[router.generated_url_list()[index]] = value
-                request.set_params(parameter_dict)
-            except AttributeError:
-                pass
-
-            """
-            |--------------------------------------------------------------------------
-            | Houston, we've got a match
-            |--------------------------------------------------------------------------
-            |
-            | Check to see if a route matches the corresponding router url. If a match
-            | is found, execute that route and break out of the loop. We only need
-            | one match. Routes are executed on a first come, first serve basis
-            |
+            """Houston, we've got a match
+                Check to see if a route matches the corresponding router url. If a match
+                is found, execute that route and break out of the loop. We only need
+                one match. Routes are executed on a first come, first serve basis
             """
 
-            if matchurl.match(router.url) and route.method_type == Environ['REQUEST_METHOD']:
+            if matchurl.match(router.url) and request.get_request_method() in route.method_type:
                 route.load_request(request)
+
+                """Check if subdomains are active and if the route matches on the subdomain
+                    It needs to match to.
+                """
+
                 if request.has_subdomain():
-                    # check if the subdomain matches the routes domain
+                    # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
                         self.app.bind('Response', 'Route not found. Error 404')
                         continue
+
+                """Get URL Parameters
+                    This will create a dictionary of parameters given. This is sort of a short
+                    but complex way to retrieve the url parameters.
+                    This is the code used to convert /url/@firstname/@lastname
+                    to {'firstmane': 'joseph', 'lastname': 'mancuso'}.
                 """
-                |--------------------------------------------------------------------------
-                | Execute Before Middleware
-                |--------------------------------------------------------------------------
-                |
-                | This is middleware that contains a before method.
-                |
+
+                try:
+                    parameter_dict = {}
+                    for index, value in enumerate(matchurl.match(router.url).groups()):
+                        parameter_dict[router.generated_url_list()[index]] = value
+                    request.set_params(parameter_dict)
+                except AttributeError:
+                    pass
+
+                """Excute HTTP before middleware
+                    Only those middleware that have a "before" method are ran.
                 """
 
                 for http_middleware in self.app.make('HttpMiddleware'):
                     located_middleware = self.app.resolve(
-                        locate(http_middleware)
+                        http_middleware
                     )
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
 
-                # Show a helper in the terminal of which route has been visited
-                print(route.method_type + ' Route: ' + router.url)
+                """Execute Route Before Middleware
+                    This is middleware that contains a before method.
+                """
 
-                # Loads the request in so the middleware
-                # specified is able to use the
-                # request object. This is before middleware and is ran
-                # before the request
                 route.run_middleware('before')
 
-                # Get the data from the route. This data is typically the
-                # output of the controller method
-                if not request.redirect_url:
-                    Request.status('200 OK')
+                # Show a helper in the terminal of which route has been visited
+                if application.DEBUG:
+                    print(request.get_request_method() + ' Route: ' + router.url)
 
-                    # Resolve Controller Constructor
-                    controller = self.app.resolve(route.controller)
+                # If no routes have been found and no middleware has changed the status code
+                if request.get_status_code() == '404 Not Found':
 
-                    # Resolve Controller Method
-                    response = self.app.resolve(getattr(controller, route.controller_method))
+                    # Looks like a route is about to execute so let's set the status code to 200
+                    request.status(200)
 
-                    if isinstance(response, View):
-                        response = response.rendered_template
+                    """Get the response from the route and set it on the 'Response' key.
+                        This data is typically the output of the controller method depending
+                        on the type of route.
+                    """
 
                     self.app.bind(
                         'Response',
-                        router.get(route.route, response)
+                        route.get_response()
                     )
 
-                    # If the Content-Type was not set in the view or before this
-                    if not Request.header('Content-Type'):
-                        if isinstance(response, dict):
-                            Request.header('Content-Type', 'application/json; charset=utf-8', http_prefix=None)
-                            self.app.bind(
-                                'Response',
-                                str(json.dumps(response))
-                            )
-                        else:
-                            Request.header('Content-Type', 'text/html; charset=utf-8', http_prefix=None)
+                """Execute Route After Route Middleware
+                    This is middleware that contains an after method.
+                """
 
-                # Loads the request in so the middleware
-                # specified is able to use the
-                # request object. This is after middleware
-                # and is ran after the request
                 route.run_middleware('after')
 
-                """
-                |--------------------------------------------------------------------------
-                | Execute After Middleware
-                |--------------------------------------------------------------------------
-                |
-                | This is middleware with an after method.
-                |
+                """Excute HTTP after middleware
+                    Only those middleware that have an "after" method are ran.
+                    Check here if the middleware even has the required method.
                 """
 
                 for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = self.app.resolve(
-                        locate(http_middleware)
-                    )
+                    located_middleware = self.app.resolve(http_middleware)
+
                     if hasattr(located_middleware, 'after'):
                         located_middleware.after()
-                break
-            else:
-                self.app.bind('Response', 'Route not found. Error 404')
+
+                """Return breaks the loop because the incoming route is found and executed.
+                    There is no need to continue searching the route list. First come
+                    first serve around these parts of the woods.
+                """
+                return
+
+        """No Response was found in the for loop so let's set an arbitrary response now.
+        """
+        self.app.bind('Response', 'Route not found. Error 404')

@@ -1,26 +1,43 @@
+"""Module for the ache disk driver."""
+
 import glob
 import os
 import time
 
-from masonite.contracts.CacheContract import CacheContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.app import App
+from masonite.contracts import CacheContract
+from masonite.drivers import BaseDriver
+from masonite.drivers.BaseCacheDriver import BaseCacheDriver
 
 
-class CacheDiskDriver(CacheContract, BaseDriver):
-    """
-    Cache from the disk driver
-    """
+class CacheDiskDriver(CacheContract, BaseCacheDriver):
+    """Class for the cache disk driver."""
 
-    def __init__(self, CacheConfig, Application):
-        self.config = CacheConfig
-        self.appconfig = Application
+    def __init__(self, app: App):
+        """Cache disk driver constructor.
+
+        Arguments:
+            CacheConfig {config.cache} -- Cache configuration module.
+            Application {config.application} -- Application configuration module.
+        """
+        self.config = app.make('CacheConfig')
+        self.appconfig = app.make('Application')
         self.cache_forever = None
 
     def store(self, key, value, extension=".txt", location=None):
-        """
-        Store content in cache file
-        """
+        """Store content in cache file.
 
+        Arguments:
+            key {string} -- The key to store the cache file into
+            value {string} -- The value you want to store in the cache
+
+        Keyword Arguments:
+            extension {string} -- the extension you want to append to the file (default: {".txt"})
+            location {string} -- The path you want to store the cache into. (default: {None})
+
+        Returns:
+            string -- Returns the key
+        """
         self.cache_forever = True
         if not location:
             location = self.config.DRIVERS['disk']['location']
@@ -35,32 +52,27 @@ class CacheDiskDriver(CacheContract, BaseDriver):
         return key
 
     def store_for(self, key, value, cache_time, cache_type, extension=".txt", location=None):
-        """
-        Store content with time, type and extension
-        """
+        """Store the cache for a specific amount of time.
 
+        Arguments:
+            key {string} -- The key to store the cache file into
+            value {string} -- The value you want to store in the cache
+            cache_time {int|string} -- The time as a string or an integer (1, 2, 5, 100, etc)
+            cache_type {string} -- The type of time to store for (minute, minutes, hours, seconds, etc)
+
+        Keyword Arguments:
+            extension {string} -- the extension you want to append to the file (default: {".txt"})
+            location {string} -- The path you want to store the cache into. (default: {None})
+
+        Raises:
+            ValueError -- Thrown if an invalid cache type was caught (like houes instead of hours).
+
+        Returns:
+            string -- Returns the key
+        """
         self.cache_forever = False
-        cache_type = cache_type.lower()
-        calc = 0
 
-        if cache_type in ("second", "seconds"):
-            # Set time now for
-            calc = 1
-        elif cache_type in ("minute", "minutes"):
-            calc = 60
-        elif cache_type in ("hour", "hours"):
-            calc = 60 * 60
-        elif cache_type in ("day", "days"):
-            calc = 60 * 60 * 60
-        elif cache_type in ("month", "months"):
-            calc = 60 * 60 * 60 * 60
-        elif cache_type in ("year", "years"):
-            calc = 60 * 60 * 60 * 60 * 60
-        else:
-            raise ValueError(
-                '{0} is not a valid caching type.'.format(cache_type))
-
-        cache_for_time = cache_time * calc
+        cache_for_time = self.calculate_time(cache_type, cache_time)
 
         cache_for_time = cache_for_time + time.time()
 
@@ -72,10 +84,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
         return key
 
     def get(self, key):
-        """
-        Get the data from a key in the cache
-        """
-
+        """Get the data from a key in the cache."""
         if not self.is_valid(key):
             return None
 
@@ -95,10 +104,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
         return content
 
     def delete(self, key):
-        """
-        Delete file cache
-        """
-
+        """Delete file cache."""
         cache_path = self.config.DRIVERS['disk']['location'] + "/"
         if self.cache_forever:
             glob_path = cache_path + key + '*'
@@ -109,10 +115,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
             os.remove(template)
 
     def update(self, key, value, location=None):
-        """
-            Updates a specific cache by key
-        """
-
+        """Update a specific cache by key."""
         if not location:
             location = self.config.DRIVERS['disk']['location'] + "/"
 
@@ -123,11 +126,8 @@ class CacheDiskDriver(CacheContract, BaseDriver):
 
         return key
 
-    def cache_exists(self, key):
-        """
-        Check if the cache exists
-        """
-
+    def exists(self, key):
+        """Check if the cache exists."""
         cache_path = self.config.DRIVERS['disk']['location'] + "/"
         if self.cache_forever:
             glob_path = cache_path + key + '*'
@@ -140,10 +140,7 @@ class CacheDiskDriver(CacheContract, BaseDriver):
         return False
 
     def is_valid(self, key):
-        """
-        Check if a valid cache
-        """
-
+        """Check if a valid cache."""
         cache_path = self.config.DRIVERS['disk']['location'] + "/"
         if self.cache_forever:
             glob_path = cache_path + key + '*'

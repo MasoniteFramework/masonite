@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-xs-12">
+        <span class="obj-property">
+            {% if type(getattr(obj, key)) in show_methods %}
+            <span class="obj-property-name">
+                {% if key.startswith('__') %}
+                -
+                {% elif key.startswith('_') %}
+                #
+                {% else %}
+                +
+                {% endif %}
+                {{ key }}
+            </span> -
+            {% if not hasattr(property, '__self__') %}
+            <span class="obj-property-type">{{ type(getattr(obj, key)).__name__ }}</span>
+            {% if type(getattr(obj, key)) == dict %}
+            : {{ len(getattr(obj, key)) }}
+            {% if len(getattr(obj, key)) %}
+                <br>
+                {% for key, value in getattr(obj, key).items() %}
+                    <div class="obj-propert-type-item">{{ key }}: {{ value }}<br></div>
+                {% endfor %}
+            {% endif %}
+            {% elif type(getattr(obj, key)) == list %}
+            : {{ len(getattr(obj, key)) }}
+                {% if len(getattr(obj, key)) %}
+                <br>
+                    {% for key in getattr(obj, key) %}
+                        {% if isinstance(key, Model) %}
+                            <div class="obj-propert-type-item">{{ key }}<br></div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% else %}
+                    {{ property }}
+                {% endif %}
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+</div>

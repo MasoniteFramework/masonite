@@ -1,4 +1,8 @@
 from cleo import Command
+from masonite.exceptions import DebugException
+
+from masonite.request import Request
+
 
 class TestController:
 
@@ -7,3 +11,16 @@ class TestController:
 
     def show(self):
         pass
+
+    def testing(self):
+        return 'test'
+
+    def post_test(self):
+        return 'post_test'
+
+    def json(self):
+        return 'success'
+
+    def session(self, request: Request):
+        request.session.set('test', 'value')
+        return 'session set'

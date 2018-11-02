@@ -1,25 +1,25 @@
+"""Displays Information Command."""
 import math
 import os
 import platform
 import sys
+import psutil
 
 from cleo import Command
-import psutil
 from tabulate import tabulate
-from masonite_cli.application import application
 
 from masonite.info import VERSION
-from masonite.environment import LoadEnvironment
 
 
 class InfoCommand(Command):
     """
-    Displays environment info for debugging
+    Displays environment info for debugging.
 
     info
     """
 
     def handle(self):
+        from masonite_cli.application import application
         rows = []
 
         rows.append(['System Information', self._get_system_info()])
@@ -47,7 +47,7 @@ class InfoCommand(Command):
 
     def _check_virtual_environment(self):
         if hasattr(sys, 'real_prefix') or 'VIRTUAL_ENV' in os.environ:
-            return u'\u2713'  # currently running in virutal env
+            return u'\u2713'  # currently running in virtual env
         return 'X'
 
     def _get_system_info(self):

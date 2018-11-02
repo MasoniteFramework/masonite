@@ -1,43 +1,46 @@
-''' A StatusProvider Service Provider '''
+"""A StatusProvider Service Provider."""
+
+from config import application
 from masonite.provider import ServiceProvider
+
 
 class ServerErrorExceptionHook:
 
     def load(self, app):
-        if app.make('Application').DEBUG == 'True' or app.make('Application').DEBUG == True:
+        if application.DEBUG:
             return
 
-        request = app.make('Request').status('500 Internal Server Error')
+        request = app.make('Request')
+
+        request.status(500)
         if app.make('ViewClass').exists('errors/500'):
             rendered_view = app.make('View')('errors/500').rendered_template
         else:
-            rendered_view = app.make('View')('/masonite/snippets/statuscode', {'code': '500 Internal Server Error'}).rendered_template
+            rendered_view = app.make('View')(
+                '/masonite/snippets/statuscode', {'code': '500 Internal Server Error'}).rendered_template
 
-        headers = [
-            ("Content-Length", str(len(rendered_view)))
-        ]
-        app.bind('Headers', headers)
+        request.header('Content-Length', str(len(rendered_view)))
         app.bind('Response', rendered_view)
+
 
 class StatusCodeProvider(ServiceProvider):
 
     def register(self):
         self.app.bind('ServiceErrorExceptionHook', ServerErrorExceptionHook())
 
-    def boot(self, StatusCode, Request):
-        if StatusCode == '200 OK':
+    def boot(self):
+        request = self.app.make('Request')
+        if request.get_status_code() == '200 OK':
             return
 
-        if StatusCode in ('500 Internal Server Error', '404 Not Found'):
-            if self.app.make('ViewClass').exists('errors/{}'.format(StatusCode.split(' ')[0])):
-                rendered_view = self.app.make('View')('errors/{}'.format(StatusCode.split(' ')[0])).rendered_template
+        if request.get_status_code() in ('500 Internal Server Error', '404 Not Found', '503 Service Unavailable'):
+            if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status_code().split(' ')[0])):
+                rendered_view = self.app.make('View')(
+                    'errors/{}'.format(request.get_status_code().split(' ')[0])).rendered_template
             else:
                 rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
-                    'code': StatusCode
+                    'code': request.get_status_code()
                 }).rendered_template
-            Headers = [
-                ("Content-Length", str(len(rendered_view)))
-            ]
-            self.app.bind('Response', rendered_view)
 
-            self.app.bind('Headers', Headers)
+            self.app.make('Request').header('Content-Length', str(len(rendered_view)))
+            self.app.bind('Response', rendered_view)

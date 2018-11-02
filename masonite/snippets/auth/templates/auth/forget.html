@@ -1,0 +1,38 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+<div class="row my-5">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                {% if session().has('error') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ session().get('error') }}
+                </div>
+                {% endif %}
+                {% if session().has('success') %}
+                <div class="alert alert-success" role="alert">
+                    {{ session().get('success') }}
+                </div>
+                {% endif %}
+                <div class="card rounded-1">
+                    <div class="card-header">
+                        <h5 class="mb-0">Password Reset</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="form" action="/password" method="POST">
+                            {{ csrf_field }}
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="text" class="form-control form-control-md rounded-0" name="email">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-md float-right">Send reset link</button>
+                            <a href="{{ route('forgot.password') }}" class="btn btn-primary btn-md mx-1 float-right">Forgot Password</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

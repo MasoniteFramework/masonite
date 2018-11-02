@@ -85,7 +85,7 @@ class TestRouteProvider:
 
     def test_provider_runs_through_routes(self):
         self.app.make('Route').url = '/test'
-        self.app.bind('WebRoutes', [get('/test', ControllerTest.show)])
+        self.app.bind('WebRoutes', [get('/test', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -97,7 +97,7 @@ class TestRouteProvider:
 
     def test_sets_request_params(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.show)])
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -109,7 +109,7 @@ class TestRouteProvider:
     def test_url_with_dots_finds_route(self):
         self.app.make('Route').url = '/test/user.endpoint'
         self.app.bind(
-            'WebRoutes', [get('/test/@endpoint', ControllerTest.show)])
+            'WebRoutes', [get('/test/@endpoint', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -134,7 +134,7 @@ class TestRouteProvider:
     def test_url_with_dashes_finds_route(self):
         self.app.make('Route').url = '/test/user-endpoint'
         self.app.bind(
-            'WebRoutes', [get('/test/@endpoint', ControllerTest.show)])
+            'WebRoutes', [get('/test/@endpoint', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -169,7 +169,7 @@ class TestRouteProvider:
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'
         self.app.make('Environ')['HTTP_HOST'] = 'subb.domain.com'
-        self.app.bind('WebRoutes', [get('/test', ControllerTest.show)])
+        self.app.bind('WebRoutes', [get('/test', ControllerTest.test)])
 
         request = self.app.make('Request')
         request.activate_subdomains()

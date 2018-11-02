@@ -8,11 +8,12 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MiddlewareCommand, MigrateCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
-                               ModelCommand, ModelDocstringCommand, ProviderCommand, RoutesCommand,
-                               SeedCommand, SeedRunCommand, ServeCommand, QueueWorkCommand,
-                               TinkerCommand, UpCommand, ValidatorCommand,
-                               ViewCommand)
-from masonite.exception_handler import ExceptionHandler
+                               ModelCommand, ModelDocstringCommand,
+                               ProviderCommand, QueueWorkCommand,
+                               RoutesCommand, SeedCommand, SeedRunCommand,
+                               ServeCommand, TinkerCommand, UpCommand,
+                               ValidatorCommand, ViewCommand)
+from masonite.exception_handler import DumpHandler, ExceptionHandler
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
@@ -32,6 +33,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Request', Request())
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
+        self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
 

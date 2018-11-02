@@ -64,3 +64,11 @@ class InvalidRouteCompileException(Exception):
 
 class RouteException(Exception):
     pass
+
+
+class DebugException(Exception):
+    pass
+
+
+class DumpException(Exception):
+    pass

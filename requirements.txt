@@ -5,6 +5,7 @@ attrs==18.2.0
 backpack==0.1
 bcrypt==3.1.4
 blinker==1.4
+requests==2.20.0
 boto3==1.5.24
 botocore==1.8.50
 certifi==2018.8.24
@@ -45,7 +46,6 @@ python-dotenv==0.9.1
 pytz==2018.5
 pytzdata==2018.5
 PyYAML==3.13
-requests==2.18.4
 requests-file==1.4.3
 s3transfer==0.1.13
 simplejson==3.16.0
@@ -60,3 +60,5 @@ whitenoise==4.0
 wrapt==1.10.11
 flake8==3.5.0
 pika
+pypugjs
+pytest

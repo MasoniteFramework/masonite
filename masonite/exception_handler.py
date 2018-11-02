@@ -4,12 +4,17 @@ A module for controlling exceptions handling when an error occurs doing executin
 code in a Masonite application. These errors could are thrown during runtime.
 """
 
+import inspect
 import os
 import platform
 import sys
 import traceback
 
 from config import application
+from masonite.app import App
+from masonite.exceptions import DumpException
+from masonite.request import Request
+from masonite.view import View
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,9 +49,13 @@ class ExceptionHandler:
         """
         self._exception = exception
 
-        self._render()
+        if self._app.has('Exception{}Handler'.format(exception.__class__.__name__)):
 
-    def _render(self):
+            return self._app.resolve(self._app.make('Exception{}Handler'.format(exception.__class__.__name__))).handle(exception)
+
+        self.handle(exception)
+
+    def handle(self, exception):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
         Returns:
@@ -76,3 +85,42 @@ class ExceptionHandler:
                                                ).rendered_template
         self._app.bind('Response', rendered_view)
         request.header('Content-Type', str(len(rendered_view)))
+
+
+class DD:
+
+    def __init__(self, container):
+        self.app = container
+
+    def dump(self, obj):
+        self.app.bind('ObjDump', obj)
+        raise DumpException
+
+
+class DumpHandler:
+
+    def __init__(self, view: View, request: Request, app: App):
+        self.view = view
+        self.request = request
+        self.app = app
+
+    def handle(self, handle):
+        from config.database import Model
+        self.app.make('HookHandler').fire('*ExceptionHook')
+
+        template = self.view.render(
+            '/masonite/snippets/exceptions/dump', {
+                'obj': self.app.make('ObjDump'),
+                'type': type,
+                'list': list,
+                'inspect': inspect,
+                'members': inspect.getmembers(self.app.make('ObjDump'), predicate=inspect.ismethod),
+                'properties': inspect.getmembers(self.app.make('ObjDump')),
+                'hasattr': hasattr,
+                'getattr': getattr,
+                'Model': Model,
+                'isinstance': isinstance,
+                'show_methods': (bool, str, list, dict),
+                'len': len,
+            }).rendered_template
+        self.app.bind('Response', template)

@@ -3,6 +3,7 @@
 import builtins
 import os
 
+from masonite.exception_handler import DD, DumpHandler
 from masonite.helpers.view_helpers import back, set_request_method
 from masonite.provider import ServiceProvider
 from masonite.view import View
@@ -28,6 +29,7 @@ class HelpersProvider(ServiceProvider):
         builtins.route = request.route
         if self.app.has(MailManager):
             builtins.mail_helper = self.app.make(MailManager).helper
+        builtins.dd = DD(self.app).dump
 
         view.share(
             {

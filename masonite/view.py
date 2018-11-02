@@ -32,6 +32,7 @@ class View:
         self.template = None
         self.environments = []
         self.extension = '.html'
+        self._jinja_extensions = ['jinja2.ext.loopcontrols']
         self._filters = {}
         self._tests = {}
 
@@ -67,8 +68,15 @@ class View:
         return self
 
     def _render(self):
-        return self.env.get_template(self.filename).render(
-            self.dictionary)
+        try:
+            # Try rendering the template with '.html' appended
+            return self.env.get_template(self.filename).render(
+                self.dictionary)
+        except TemplateNotFound:
+            # Try rendering the direct template the user has supplied
+            return self.env.get_template(self.template).render(
+                self.dictionary)
+        
 
     def _update_from_composers(self):
         """Add data into the view from specified composers."""
@@ -164,7 +172,7 @@ class View:
         try:
             self.env.get_template(self.filename)
             return True
-        except TemplateNotFound as e:
+        except TemplateNotFound:
             return False
 
     def add_environment(self, template_location, loader=PackageLoader):
@@ -199,6 +207,10 @@ class View:
         self._tests.update({key: obj})
         return self
 
+    def add_extension(self, extension):
+        self._jinja_extensions.append(extension)
+        return self
+
     def __load_environment(self, template):
         """Private method for loading all the environments.
 
@@ -213,23 +225,34 @@ class View:
             location = list(filter(None, template.split('/')))
             self.filename = location[-1] + self.extension
 
-            loader = PackageLoader(location[0], '/'.join(location[1:-1]))
+            loader = ChoiceLoader(
+                [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
+            )
+
+            # Set the searchpath since some packages look for this object
+            # This is sort of a hack for now
+            loader.searchpath = ''
 
             self.env = Environment(
-                loader=ChoiceLoader(
-                    [loader] + self.environments
-                ),
+                loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=['jinja2.ext.loopcontrols']
+                extensions=self._jinja_extensions
             )
+        
         else:
-            self.env = Environment(
-                loader=ChoiceLoader(
+            loader = ChoiceLoader(
                     [PackageLoader('resources', 'templates')] +
                     self.environments
-                ),
+                )
+            
+            # Set the searchpath since some packages look for this object
+            # This is sort of a hack for now
+            loader.searchpath = ''
+
+            self.env = Environment(
+                loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=['jinja2.ext.loopcontrols']
+                extensions=self._jinja_extensions
             )
 
         self.env.filters.update(self._filters)

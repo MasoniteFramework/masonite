@@ -106,6 +106,14 @@ class TestRoutes:
 
         assert routes[0].required_domain == ['www']
 
+    def test_group_adds_methods(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ], add_methods=['OPTIONS'])
+
+        assert routes[0].method_type == ['GET', 'OPTIONS']
+
     def test_group_route_sets_prefix(self):
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show'),

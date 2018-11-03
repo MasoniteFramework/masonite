@@ -28,7 +28,7 @@ MarkupSafe==1.0
 more-itertools==4.3.0
 msgpack-python==0.5.6
 ndg-httpsclient==0.5.1
-orator==0.9.7
+orator==0.9.8
 pastel==0.1.0
 pendulum==1.4.4
 pluggy==0.7.1

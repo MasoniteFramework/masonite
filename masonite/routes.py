@@ -356,7 +356,7 @@ class Get(BaseHttpRoute):
 
     def __init__(self):
         """Get constructor."""
-        self.method_type = 'GET'
+        self.method_type = ['GET']
         self.list_middleware = []
 
 
@@ -365,7 +365,7 @@ class Post(BaseHttpRoute):
 
     def __init__(self):
         """Post constructor."""
-        self.method_type = 'POST'
+        self.method_type = ['POST']
         self.list_middleware = []
 
 
@@ -387,7 +387,7 @@ class Put(BaseHttpRoute):
 
     def __init__(self):
         """Put constructor."""
-        self.method_type = 'PUT'
+        self.method_type = ['PUT']
         self.list_middleware = []
 
 
@@ -396,7 +396,7 @@ class Patch(BaseHttpRoute):
 
     def __init__(self):
         """Patch constructor."""
-        self.method_type = 'PATCH'
+        self.method_type = ['PATCH']
         self.list_middleware = []
 
 
@@ -405,7 +405,7 @@ class Delete(BaseHttpRoute):
 
     def __init__(self):
         """Delete constructor."""
-        self.method_type = 'DELETE'
+        self.method_type = ['DELETE']
         self.list_middleware = []
 
 

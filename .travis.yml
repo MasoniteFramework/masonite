@@ -12,5 +12,4 @@ install:
   - pip install pipenv
   - pip install masonite-cli
   - pipenv install
-  - pipenv run key
 script: python -m pytest

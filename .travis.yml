@@ -11,6 +11,5 @@ matrix:
 install:
   - pip install pipenv
   - pip install masonite-cli
-  - pipenv install --skip-lock
-  - craft key --store
+  - craft install
 script: python -m pytest

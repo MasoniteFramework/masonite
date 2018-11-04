@@ -12,4 +12,5 @@ install:
   - pip install pipenv
   - pip install masonite-cli
   - pipenv install
+  - cp .env-example .env
 script: python -m pytest

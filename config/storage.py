@@ -1,7 +1,5 @@
 """ Storage Settings """
 
-import os
-
 from masonite import env
 
 """Storage Driver

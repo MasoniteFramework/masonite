@@ -1,7 +1,5 @@
 """ Mail Settings """
 
-import os
-
 from masonite import env
 
 """From Address

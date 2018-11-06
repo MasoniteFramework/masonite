@@ -48,7 +48,7 @@ class Request(Extendable):
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
         self.cookies = []
-        self._headers = []
+        self._headers = {}
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
@@ -331,9 +331,7 @@ class Request(Extendable):
 
         # Get Headers
         if value is None:
-            if 'HTTP_{0}'.format(key) in self.environ:
-                return self.environ['HTTP_{0}'.format(key)]
-            elif key in self.environ:
+            if key in self.environ:
                 return self.environ[key]
             else:
                 return None
@@ -346,10 +344,10 @@ class Request(Extendable):
         # Set Headers
         if http_prefix:
             self.environ['HTTP_{0}'.format(key)] = str(value)
-            self._headers.append(('HTTP_{0}'.format(key), str(value)))
+            self._headers.update({'HTTP_{0}'.format(key): str(value)})
         else:
             self.environ[key] = str(value)
-            self._headers.append((key, str(value)))
+            self._headers.update({key: str(value)})
 
     def get_headers(self):
         """Return all current headers to be set.
@@ -358,7 +356,14 @@ class Request(Extendable):
             dict -- Dictionary of all headers.
         """
 
-        return self._headers + self.get_cookies()
+        return self._compile_headers_to_tuple() + self.get_cookies()
+
+    def _compile_headers_to_tuple(self):
+        headers = []
+        for key, value in self._headers.items():
+            headers.append((key, value))
+
+        return headers
 
     def reset_headers(self):
         """Reset all headers being set.
@@ -369,7 +374,7 @@ class Request(Extendable):
         Returns:
             None
         """
-        self._headers = []
+        self._headers = {}
 
     def get_and_reset_headers(self):
         """Gets the headers but resets at the same time.

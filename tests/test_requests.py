@@ -333,7 +333,7 @@ class TestRequest:
         app.bind('Request', self.request)
         request = app.make('Request').load_app(app)
 
-        assert request.header('UPGRADE_INSECURE_REQUESTS') == '1'
+        assert request.header('HTTP_UPGRADE_INSECURE_REQUESTS') == '1'
         assert request.header('RAW_URI') == '/'
         assert request.header('NOT_IN') == None
 
@@ -347,6 +347,16 @@ class TestRequest:
 
         request.header('TEST', 'set_this', http_prefix=True)
         assert request.header('HTTP_TEST') == 'set_this'
+
+    def test_request_cant_set_multiple_headers(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.header('TEST', 'test_this')
+        request.header('TEST', 'test_that')
+
+        assert request.header('TEST') == 'test_that'
 
     def test_request_sets_headers_with_dictionary(self):
         app = App()

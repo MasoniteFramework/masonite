@@ -10,7 +10,7 @@ framework needs to place the application's name in a notification or
 any other location as required by the application or its packages.
 """
 
-NAME = 'Masonite 2.1'
+NAME = env('APP_NAME', 'Masonite 2.1')
 
 """Application Debug Mode
 When your application is in debug mode, detailed error messages with

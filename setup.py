@@ -30,7 +30,7 @@ setup(
         'passlib==1.7.1',
         'whitenoise==4.1',
         'pytest==3.6.0',
-        'orator==0.9.7',
+        'orator>=0.9.7',
         'masonite-scheduler>=1.0.0,<=1.0.99',
         'masonite-events==1.0.1',
         'pendulum==1.5.1',

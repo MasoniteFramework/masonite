@@ -5,8 +5,7 @@ from masonite.request import Request
 
 
 class WelcomeController:
-    """Controller For Welcoming The User
-    """
+    """Controller For Welcoming The User."""
 
     def show(self, view: View, request: Request):
         """Shows the welcome page.

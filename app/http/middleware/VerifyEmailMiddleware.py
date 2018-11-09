@@ -4,8 +4,7 @@ from masonite.request import Request
 
 
 class VerifyEmailMiddleware:
-    """Middleware To Check If The User Has Verified Their Email
-    """
+    """Middleware To Check If The User Has Verified Their Email."""
 
     def __init__(self, request: Request):
         """Inject Any Dependencies From The Service Container
@@ -17,8 +16,7 @@ class VerifyEmailMiddleware:
         self.request = request
 
     def before(self):
-        """Run This Middleware Before The Route Executes
-        """
+        """Run This Middleware Before The Route Executes."""
 
         user = self.request.user()
 
@@ -26,7 +24,6 @@ class VerifyEmailMiddleware:
             self.request.redirect('/email/verify')
 
     def after(self):
-        """Run This Middleware After The Route Executes
-        """
+        """Run This Middleware After The Route Executes."""
 
         pass

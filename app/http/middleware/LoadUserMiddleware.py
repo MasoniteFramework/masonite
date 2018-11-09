@@ -5,8 +5,7 @@ from masonite.request import Request
 
 
 class LoadUserMiddleware:
-    """Middleware class which loads the current user into the request
-    """
+    """Middleware class which loads the current user into the request."""
 
     def __init__(self, request: Request):
         """Inject Any Dependencies From The Service Container
@@ -18,15 +17,13 @@ class LoadUserMiddleware:
         self.request = request
 
     def before(self):
-        """Run This Middleware Before The Route Executes
-        """
+        """Run This Middleware Before The Route Executes."""
 
         self.load_user()
         return self.request
 
     def after(self):
-        """Run This Middleware After The Route Executes
-        """
+        """Run This Middleware After The Route Executes."""
 
         pass
 

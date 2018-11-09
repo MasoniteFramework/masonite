@@ -1,4 +1,4 @@
-""" Storage Settings """
+"""Storage Settings."""
 
 from masonite import env
 
@@ -34,7 +34,10 @@ DRIVERS = {
     'azure': {
         'name': env('AZURE_NAME', 'masonite'),
         'secret': env('AZURE_SECRET', 'RykG8qsa4kTOddF=='),
-        'connection': env('AZURE_CONNECTION', 'DefaultEndpointsProtocol=https;AccountName=...'),
+        'connection': env(
+            'AZURE_CONNECTION',
+            'DefaultEndpointsProtocol=https;AccountName=...'
+        ),
         'container': env('AZURE_CONTAINER', 'masonite'),
         'location': 'https://masonite.blob.core.windows.net/container/'
     },

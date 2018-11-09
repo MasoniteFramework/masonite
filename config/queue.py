@@ -1,4 +1,4 @@
-""" Queue Settings """
+"""Queue Settings."""
 
 from masonite import env
 

@@ -1,4 +1,4 @@
-""" Session Settings """
+"""Session Settings."""
 
 from masonite import env
 

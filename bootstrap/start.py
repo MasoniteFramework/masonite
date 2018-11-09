@@ -1,4 +1,4 @@
-""" Start of Application. This function is the gunicorn server """
+"""Start of Application. This function is the gunicorn server."""
 
 from masonite.environment import LoadEnvironment
 
@@ -10,7 +10,7 @@ LoadEnvironment()
 
 
 def app(environ, start_response):
-    """The WSGI Application Server
+    """The WSGI Application Server.
 
     Arguments:
         environ {dict} -- The WSGI environ dictionary
@@ -19,7 +19,6 @@ def app(environ, start_response):
     Returns:
         WSGI Response
     """
-
     from wsgi import container
 
     """Add Environ To Service Container

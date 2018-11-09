@@ -1,4 +1,4 @@
-"""Base Database Seeder Module"""
+"""Base Database Seeder Module."""
 
 from orator.seeds import Seeder
 

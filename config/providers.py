@@ -1,4 +1,4 @@
-"""Providers Configuration File"""
+"""Providers Configuration File."""
 
 from masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
                                 CsrfProvider, HelpersProvider, MailProvider,

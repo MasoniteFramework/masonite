@@ -1,4 +1,4 @@
-"""Verify Email Middleware"""
+"""Verify Email Middleware."""
 
 from masonite.request import Request
 
@@ -7,7 +7,7 @@ class VerifyEmailMiddleware:
     """Middleware To Check If The User Has Verified Their Email."""
 
     def __init__(self, request: Request):
-        """Inject Any Dependencies From The Service Container
+        """Inject Any Dependencies From The Service Container.
 
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object

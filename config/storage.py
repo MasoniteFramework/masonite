@@ -1,4 +1,4 @@
-"""Storage Settings"""
+"""Storage Settings."""
 
 from masonite import env
 

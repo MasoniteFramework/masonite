@@ -1,4 +1,4 @@
-"""Cache Settings"""
+"""Cache Settings."""
 
 from masonite import env
 

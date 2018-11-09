@@ -1,13 +1,13 @@
-"""Authentication Middleware"""
+"""Authentication Middleware."""
 
 from masonite.request import Request
 
 
 class AuthenticationMiddleware:
-    """Middleware To Check If The User Is Logged In"""
+    """Middleware To Check If The User Is Logged In."""
 
     def __init__(self, request: Request):
-        """Inject Any Dependencies From The Service Container
+        """Inject Any Dependencies From The Service Container.
 
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object

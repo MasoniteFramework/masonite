@@ -37,15 +37,8 @@ setup(
         'watchdog>=0.8,<0.9',
         'waitress>=1.1,<1.2',
         'psutil>=5.4,<5.5',
+        'orator>=0.9,<1',
     ],
-    extra_requires={
-        ':python_version == "3.4"': [
-            'orator==0.9.7',
-        ],
-        ':python_version >= "3.5"': [
-            'orator>=0.9,<0.99',
-        ]
-    },
     description='The core for the Masonite framework',
     author='Joseph Mancuso',
     author_email='idmann509@gmail.com',

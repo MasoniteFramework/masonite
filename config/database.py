@@ -1,4 +1,4 @@
-""" Database Settings """
+"""Database Settings"""
 
 from masonite import env
 from masonite.environment import LoadEnvironment

@@ -1,4 +1,4 @@
-""" Welcome The User To Masonite """
+"""Welcome The User To Masonite"""
 
 from masonite.view import View
 from masonite.request import Request

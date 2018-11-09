@@ -1,4 +1,4 @@
-""" Packages Configuration Settings """
+"""Packages Configuration Settings"""
 
 """Site Packages
 Although not used often, you may have to add several additional package

@@ -1,4 +1,4 @@
-""" First Entry For The WSGI Server """
+"""First Entry For The WSGI Server."""
 
 from masonite.app import App
 from bootstrap.start import app

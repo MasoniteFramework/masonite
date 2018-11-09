@@ -1,4 +1,4 @@
-""" Load User Middleware """
+"""Load User Middleware"""
 
 from masonite.auth import Auth
 from masonite.request import Request

@@ -1,4 +1,4 @@
-""" Middleware Configuration Settings """
+"""Middleware Configuration Settings"""
 
 from masonite.middleware import JsonResponseMiddleware, ResponseMiddleware
 

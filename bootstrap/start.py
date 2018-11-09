@@ -1,4 +1,4 @@
-""" Start of Application. This function is the gunicorn server """
+"""Start of Application. This function is the gunicorn server"""
 
 from masonite.environment import LoadEnvironment
 

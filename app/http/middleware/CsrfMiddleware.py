@@ -1,4 +1,4 @@
-""" CSRF Middleware """
+"""CSRF Middleware"""
 
 from masonite.middleware import CsrfMiddleware as Middleware
 

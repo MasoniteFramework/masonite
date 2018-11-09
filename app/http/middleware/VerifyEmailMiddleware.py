@@ -1,4 +1,4 @@
-""" Verify Email Middleware """
+"""Verify Email Middleware"""
 
 from masonite.request import Request
 

@@ -1,4 +1,4 @@
-""" Broadcast Settings """
+"""Broadcast Settings"""
 
 from masonite import env
 

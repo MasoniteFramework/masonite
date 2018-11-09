@@ -12,16 +12,13 @@ class AuthenticationMiddleware:
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object
         """
-
         self.request = request
 
     def before(self):
         """Run This Middleware Before The Route Executes."""
-
         if not self.request.user():
             self.request.redirect_to('login')
 
     def after(self):
         """Run This Middleware After The Route Executes."""
-
         pass

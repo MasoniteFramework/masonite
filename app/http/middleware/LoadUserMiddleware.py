@@ -13,18 +13,15 @@ class LoadUserMiddleware:
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object.
         """
-
         self.request = request
 
     def before(self):
         """Run This Middleware Before The Route Executes."""
-
         self.load_user()
         return self.request
 
     def after(self):
         """Run This Middleware After The Route Executes."""
-
         pass
 
     def load_user(self):
@@ -33,5 +30,4 @@ class LoadUserMiddleware:
         Arguments:
             request {masonite.request.Request} -- The Masonite request object.
         """
-
         self.request.set_user(Auth(self.request).user())

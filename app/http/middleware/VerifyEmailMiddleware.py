@@ -12,12 +12,10 @@ class VerifyEmailMiddleware:
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object
         """
-
         self.request = request
 
     def before(self):
         """Run This Middleware Before The Route Executes."""
-
         user = self.request.user()
 
         if user and user.verified_at is None:
@@ -25,5 +23,4 @@ class VerifyEmailMiddleware:
 
     def after(self):
         """Run This Middleware After The Route Executes."""
-
         pass

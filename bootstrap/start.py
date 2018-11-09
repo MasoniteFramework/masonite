@@ -19,7 +19,6 @@ def app(environ, start_response):
     Returns:
         WSGI Response
     """
-
     from wsgi import container
 
     """Add Environ To Service Container

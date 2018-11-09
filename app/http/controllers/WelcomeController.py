@@ -8,7 +8,7 @@ class WelcomeController:
     """Controller For Welcoming The User."""
 
     def show(self, view: View, request: Request):
-        """Shows the welcome page.
+        """Show the welcome page.
 
         Arguments:
             view {masonite.view.View} -- The Masonite view class.

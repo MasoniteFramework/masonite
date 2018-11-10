@@ -240,8 +240,8 @@ class View:
 
         else:
             loader = ChoiceLoader(
-                [PackageLoader('resources', 'templates')] +
-                self.environments
+                [PackageLoader('resources', 'templates')]
+                + self.environments
             )
 
             # Set the searchpath since some packages look for this object

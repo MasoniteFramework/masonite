@@ -356,7 +356,7 @@ class Get(BaseHttpRoute):
 
     def __init__(self):
         """Get constructor."""
-        self.method_type = 'GET'
+        self.method_type = ['GET']
         self.list_middleware = []
 
 
@@ -365,7 +365,7 @@ class Post(BaseHttpRoute):
 
     def __init__(self):
         """Post constructor."""
-        self.method_type = 'POST'
+        self.method_type = ['POST']
         self.list_middleware = []
 
 
@@ -387,7 +387,7 @@ class Put(BaseHttpRoute):
 
     def __init__(self):
         """Put constructor."""
-        self.method_type = 'PUT'
+        self.method_type = ['PUT']
         self.list_middleware = []
 
 
@@ -396,7 +396,7 @@ class Patch(BaseHttpRoute):
 
     def __init__(self):
         """Patch constructor."""
-        self.method_type = 'PATCH'
+        self.method_type = ['PATCH']
         self.list_middleware = []
 
 
@@ -405,7 +405,7 @@ class Delete(BaseHttpRoute):
 
     def __init__(self):
         """Delete constructor."""
-        self.method_type = 'DELETE'
+        self.method_type = ['DELETE']
         self.list_middleware = []
 
 
@@ -436,7 +436,7 @@ class ViewRoute(BaseHttpRoute):
 class RouteGroup():
     """Class for specifying Route Groups."""
 
-    def __new__(self, routes=[], middleware=[], domain=[], prefix='', name=''):
+    def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -454,6 +454,9 @@ class RouteGroup():
 
         if middleware:
             self._middleware(self, *middleware)
+
+        if add_methods:
+            self._add_methods(self, *add_methods)
 
         if domain:
             self._domain(self, domain)
@@ -474,6 +477,17 @@ class RouteGroup():
         """
         for route in self.routes:
             route.middleware(*middleware)
+
+        return self.routes
+
+    def _add_methods(self, *methods):
+        """Attach more methods to all routes.
+
+        Returns:
+            list -- Returns list of routes.
+        """
+        for route in self.routes:
+            route.method_type.append(*methods)
 
         return self.routes
 

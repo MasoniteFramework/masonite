@@ -23,7 +23,7 @@ class MockRoute:
     def contains(self, value):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type
+        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
         self.container = self._run_container(wsgi).container
 
         return value in self.container.make('Response')
@@ -31,7 +31,7 @@ class MockRoute:
     def status(self, value=None):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type
+        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
         self.container = self._run_container(wsgi).container
 
         if not value:
@@ -56,19 +56,19 @@ class MockRoute:
         return self
 
     def is_post(self):
-        return self.route.method_type == 'POST'
+        return 'POST' in self.route.method_type
 
     def is_get(self):
-        return self.route.method_type == 'GET'
+        return 'GET' in self.route.method_type
 
     def is_put(self):
-        return self.route.method_type == 'PUT'
+        return 'PUT' in self.route.method_type
 
     def is_patch(self):
-        return self.route.method_type == 'PATCH'
+        return 'PATCH' in self.route.method_type
 
     def is_delete(self):
-        return self.route.method_type == 'DELETE'
+        return 'DELETE' in self.route.method_type
 
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)

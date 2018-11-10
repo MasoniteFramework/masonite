@@ -353,7 +353,7 @@ class Request(Extendable):
         """Return all current headers to be set.
 
         Returns:
-            dict -- Dictionary of all headers.
+            list -- List containing a tuple of headers.
         """
 
         return self._compile_headers_to_tuple() + self.get_cookies()

@@ -14,7 +14,10 @@ LoadEnvironment()
 Set connection database settings here as a dictionary. Follow the
 format below to create additional connection settings.
 
-Supported: 'sqlite', 'mysql', 'postgres'
+Each key is a connection, not a driver. You may have as many
+connections as you need.
+
+Supported Drivers: 'sqlite', 'mysql', 'postgres'
 """
 
 DATABASES = {
@@ -22,7 +25,6 @@ DATABASES = {
     'sqlite': {
         'driver': 'sqlite',
         'database': env('DB_DATABASE'),
-        'prefix': ''
     },
     'mysql': {
         'driver': 'mysql',
@@ -31,7 +33,6 @@ DATABASES = {
         'port': env('DB_PORT'),
         'user': env('DB_USERNAME'),
         'password': env('DB_PASSWORD'),
-        'prefix': ''
     },
     'postgres': {
         'driver': 'postgres',
@@ -40,7 +41,6 @@ DATABASES = {
         'port': env('DB_PORT'),
         'user': env('DB_USERNAME'),
         'password': env('DB_PASSWORD'),
-        'prefix': ''
     },
 }
 

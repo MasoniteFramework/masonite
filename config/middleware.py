@@ -2,9 +2,8 @@
 
 from masonite.middleware import JsonResponseMiddleware, ResponseMiddleware
 
-from app.http.middleware.AuthenticationMiddleware import (
+from app.http.middleware.AuthenticationMiddleware import \
     AuthenticationMiddleware
-)
 from app.http.middleware.CsrfMiddleware import CsrfMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 from app.http.middleware.VerifyEmailMiddleware import VerifyEmailMiddleware
@@ -23,13 +22,9 @@ HTTP_MIDDLEWARE = [
 ]
 
 """Route Middleware
-Route middleware is middleware that is registered with a name and can
-be used in the routes/web.py file. This middleware should really be
-used for middleware on an individual route like a dashboard route.
-
-The Route Middleware is a dictionary with the key being what is specified
-in your route/web.py file (in the .middleware() method) and the value is
-a string with the full module path of the middleware class
+Specify a dictionary of middleware to be used on a per route basis here. The key will 
+be the alias to use on routes and the value can be any middleware class or a list
+of middleware (middleware stacks).
 """
 
 ROUTE_MIDDLEWARE = {

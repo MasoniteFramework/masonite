@@ -4,9 +4,7 @@ from orator.migrations import Migration
 class CreateUsersTable(Migration):
 
     def up(self):
-        """
-        Run the migrations.
-        """
+        """Run the migrations."""
         with self.schema.create('users') as table:
             table.increments('id')
             table.string('name')
@@ -17,7 +15,5 @@ class CreateUsersTable(Migration):
             table.timestamps()
 
     def down(self):
-        """
-        Revert the migrations.
-        """
+        """Revert the migrations."""
         self.schema.drop('users')

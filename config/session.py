@@ -1,6 +1,4 @@
-""" Session Settings """
-
-import os
+"""Session Settings."""
 
 from masonite import env
 

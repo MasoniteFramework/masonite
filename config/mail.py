@@ -1,6 +1,4 @@
-""" Mail Settings """
-
-import os
+"""Mail Settings."""
 
 from masonite import env
 

@@ -1,6 +1,4 @@
-""" Authentication Settings """
-
-import os
+"""Authentication Settings."""
 
 from masonite import env
 

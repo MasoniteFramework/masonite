@@ -1,6 +1,4 @@
-""" Queue Settings """
-
-import os
+"""Queue Settings."""
 
 from masonite import env
 

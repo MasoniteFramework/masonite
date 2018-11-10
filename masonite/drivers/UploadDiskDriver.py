@@ -47,7 +47,6 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
             location += '/'
 
         if isinstance(fileitem, _io.TextIOWrapper):
-            filename = fileitem.name
             open(location + filename, 'wb').write(bytes(fileitem.read(), 'utf-8'))
         else:
             open(location + filename, 'wb').write(fileitem.file.read())

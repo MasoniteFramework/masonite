@@ -21,13 +21,13 @@ class UnitTest:
 
     def route(self, url, method=False):
         for route in self.container.make('WebRoutes'):
-            if route.route_url == url and (route.method_type == method or not method):
+            if route.route_url == url and (method in route.method_type or not method):
                 return MockRoute(route, self.container)
 
     def routes(self, routes):
         self.container.bind('WebRoutes', self.container.make('WebRoutes') + routes)
 
-    def json(self, url, data, method='POST'):
+    def json(self, url, data, method=['POST']):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = url
         wsgi['CONTENT_TYPE'] = 'application/json'

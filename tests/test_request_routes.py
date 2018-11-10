@@ -34,8 +34,8 @@ class TestRequestRoutes:
         assert get.list_middleware == ['auth', 'middleware']
 
     def test_method_type(self):
-        assert Post().method_type == 'POST'
-        assert Get().method_type == 'GET'
+        assert Post().method_type == ['POST']
+        assert Get().method_type == ['GET']
 
     def test_method_type_sets_domain(self):
         get = Get().domain('test')

@@ -16,7 +16,7 @@ class Storage:
         """Compile sass."""
         try:
             import sass
-        except ImportError as e:
+        except ImportError:
             pass
         else:
             matches = []

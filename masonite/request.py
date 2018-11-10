@@ -359,6 +359,12 @@ class Request(Extendable):
         return self._compile_headers_to_tuple() + self.get_cookies()
 
     def _compile_headers_to_tuple(self):
+        """Compiles the current headers to a list of tuples.
+
+        Returns:
+            list -- A list of tuples.
+        """
+
         headers = []
         for key, value in self._headers.items():
             headers.append((key, value))

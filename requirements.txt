@@ -7,3 +7,4 @@ ably==1.0.1
 pika
 pypugjs
 coveralls
+flake8

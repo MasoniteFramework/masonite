@@ -4,14 +4,13 @@ This module is really used for backup only if the masonite CLI cannot import thi
 This can be used by running "python craft"
 """
 
-from cleo import Application, Command
+from cleo import Application
 from masonite import info
 
 from wsgi import container
 
 application = Application('Masonite Version:', info.VERSION)
 
-commands = []
 for key, value in container.providers.items():
     if isinstance(key, str) and key.endswith('Command'):
         application.add(container.make('{0}'.format(key)))

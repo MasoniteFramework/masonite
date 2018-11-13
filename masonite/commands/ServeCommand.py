@@ -18,14 +18,25 @@ class ServeCommand(Command):
         self._check_patch()
 
         if self.option('reload'):
-            # start_reloader will only return in a monitored subprocess
-            reloader = hupper.start_reloader('masonite.commands._devserver.run', worker_args=[
-                # worker args are pickled and then passed to the new process
+            logger = hupper.DefaultLogger(1)
+
+            # worker args are pickled and then passed to the new process
+            worker_args = [
                 self.option("host"), self.option("port"), "wsgi:application",
-            ])
+            ]
+
+            reloader = hupper.Reloader(
+                "masonite.commands._devserver.run",
+                hupper.find_default_monitor_factory(logger),
+                logger,
+                worker_args=worker_args,
+            )
 
             # monitor the env file too
             reloader.watch_files(['.env'])
+
+            # Run the reloader
+            reloader.run()
 
         else:
             from wsgi import application

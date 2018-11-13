@@ -121,15 +121,16 @@ def _import_application(module_name, app_name):
     return getattr(module, app_name)
 
 
-def run(addr, port, wsgi_handler, ipv6=False, httpd_cls=WSGIServer):
+def run(host, port, wsgi_handler, ipv6=False, httpd_cls=WSGIServer):
     if type(wsgi_handler) == str:
         module_name, app_name = _split_module_and_app(wsgi_handler)
         wsgi_handler = _import_application(module_name, app_name)
-
-    server_address = (addr, port)
+    
+    server_address = (host, int(port))
     httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)
     httpd.set_app(wsgi_handler)
     try:
+        print('Serving at: http://{}:{}'.format(host, port))
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass

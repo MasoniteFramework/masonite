@@ -135,6 +135,9 @@ if os.environ.get('S3_BUCKET'):
         def test_upload_file_for_s3(self):
             assert self.app.make('Upload').driver('s3').store(ImageMock()) == 'test.jpg'
 
+        def test_upload_open_file_for_s3(self):
+            assert self.app.make('Upload').driver('s3').store(open('.travis.yml'))
+
 
         def test_upload_manage_accept_files(self):
             """

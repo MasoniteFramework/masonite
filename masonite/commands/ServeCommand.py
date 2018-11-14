@@ -1,5 +1,6 @@
 
 import time
+import os
 
 from hupper.logger import DefaultLogger, LogLevel
 from hupper.reloader import Reloader, find_default_monitor_factory
@@ -46,7 +47,7 @@ class ServeCommand(Command):
         reloader._capture_signals()
         reloader._start_monitor()
         for blob in extra_files:
-            reloader.monitor.add_path(blob)
+            reloader.monitor.add_path(os.path.join(os.getcwd(), blob))
         try:
             while True:
                 if not reloader._run_worker():

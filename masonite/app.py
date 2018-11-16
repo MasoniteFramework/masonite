@@ -145,8 +145,8 @@ class App:
                     " constructor using the 'resolve_parameters=True' keyword argument.")
         try:
             return obj(*provider_list)
-        except TypeError:
-            raise ContainerError('Tried resolving the too many dependencies.')
+        except TypeError as e:
+            raise ContainerError('Either Tried resolving the too many dependencies or {}'.format(str(e)))
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.

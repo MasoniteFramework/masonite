@@ -32,6 +32,7 @@ class WSGIServer(simple_server.WSGIServer):
         else:
             super().handle_error(request, client_address)
 
+
 class ServerHandler(simple_server.ServerHandler):
     http_version = '1.1'
 
@@ -39,6 +40,7 @@ class ServerHandler(simple_server.ServerHandler):
         # Ignore broken pipe errors, otherwise pass on
         if not is_broken_pipe_error():
             super().handle_error()
+
 
 class WSGIRequestHandler(simple_server.WSGIRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -125,7 +127,7 @@ def run(host, port, wsgi_handler, ipv6=False, httpd_cls=WSGIServer):
     if type(wsgi_handler) == str:
         module_name, app_name = _split_module_and_app(wsgi_handler)
         wsgi_handler = _import_application(module_name, app_name)
-    
+
     server_address = (host, int(port))
     httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)
     httpd.set_app(wsgi_handler)

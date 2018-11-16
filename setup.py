@@ -34,10 +34,9 @@ setup(
         'pendulum>=1.5,<1.6',
         'cleo>=0.6,<0.7',
         'tabulate>=0.8,<0.9',
-        'watchdog>=0.8,<0.9',
-        'waitress>=1.1,<1.2',
         'psutil>=5.4,<5.5',
         'orator>=0.9,<1',
+        'hupper>=1.0,<2.0'
     ],
     description='The core for the Masonite framework',
     author='Joseph Mancuso',

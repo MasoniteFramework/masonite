@@ -87,9 +87,6 @@ class RouteProvider(ServiceProvider):
                     if hasattr(located_middleware, 'before'):
                         located_middleware.before()
 
-                # Show a helper in the terminal of which route has been visited
-                print(route.method_type + ' Route: ' + router.url)
-
                 # Loads the request in so the middleware
                 # specified is able to use the
                 # request object. This is before middleware and is ran

@@ -2,6 +2,7 @@
 
 from masonite.provider import ServiceProvider
 from masonite.request import Request
+from masonite.response import Response
 from masonite.routes import Route
 from masonite.helpers.routes import create_matchurl
 from config import application
@@ -12,7 +13,7 @@ class RouteProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, router: Route, request: Request):
+    def boot(self, router: Route, request: Request, response: Response):
         # All routes joined
         for route in self.app.make('WebRoutes'):
 
@@ -41,7 +42,7 @@ class RouteProvider(ServiceProvider):
                 if request.has_subdomain():
                     # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
-                        self.app.bind('Response', 'Route not found. Error 404')
+                        response.view('Route not found. Error 404')
                         continue
 
                 """Get URL Parameters
@@ -81,20 +82,14 @@ class RouteProvider(ServiceProvider):
                     print(request.get_request_method() + ' Route: ' + router.url)
 
                 # If no routes have been found and no middleware has changed the status code
-                if request.get_status_code() == '404 Not Found':
-
-                    # Looks like a route is about to execute so let's set the status code to 200
-                    request.status(200)
+                if request.is_status(404):
 
                     """Get the response from the route and set it on the 'Response' key.
                         This data is typically the output of the controller method depending
                         on the type of route.
                     """
 
-                    self.app.bind(
-                        'Response',
-                        route.get_response()
-                    )
+                    response.view(route.get_response(), status=200)
 
                 """Execute Route After Route Middleware
                     This is middleware that contains an after method.
@@ -121,9 +116,7 @@ class RouteProvider(ServiceProvider):
 
         """No Response was found in the for loop so let's set an arbitrary response now.
         """
-        request.status(404)
-        self.app.bind('Response', 'Route not found. Error 404')
+        response.view('Route not found. Error 404', status=404)
         # If the route exists but not the method is incorrect
         if request.is_status(404) and request.route_exists(request.path):
-            self.app.bind('Response', 'Method not allowed')
-            request.status(405)
+            response.view('Method not allowed', status=405)

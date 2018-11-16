@@ -18,6 +18,7 @@ from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
+from masonite.response import Response
 from masonite.routes import Route
 from routes import web
 
@@ -27,10 +28,10 @@ class AppProvider(ServiceProvider):
     def register(self):
         self.app.bind('HookHandler', Hook(self.app))
         self.app.bind('WebRoutes', flatten_routes(web.ROUTES))
-        self.app.bind('Response', None)
         self.app.bind('Storage', storage)
         self.app.bind('Route', Route())
         self.app.bind('Request', Request())
+        self.app.simple(Response(self.app))
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
@@ -41,6 +42,7 @@ class AppProvider(ServiceProvider):
         self._load_commands()
 
         self._autoload(application.AUTOLOAD)
+
 
     def boot(self, request: Request, route: Route):
         self.app.bind('StatusCode', '404 Not Found')

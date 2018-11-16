@@ -14,6 +14,7 @@ from config import application
 from masonite.app import App
 from masonite.exceptions import DumpException
 from masonite.request import Request
+from masonite.response import Response
 from masonite.view import View
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
@@ -29,6 +30,7 @@ class ExceptionHandler:
             app {masonite.app.App} -- Container object
         """
         self._app = app
+        self.response = self._app.make(Response)
 
         self._register_static_files()
 
@@ -72,7 +74,7 @@ class ExceptionHandler:
             return
 
         # return a view
-        rendered_view = self._app.make('View')('/masonite/snippets/exception',
+        self.response.view(self._app.make('View')('/masonite/snippets/exception',
                                                {
                                                    'exception': self._exception,
                                                    'traceback': traceback,
@@ -82,9 +84,7 @@ class ExceptionHandler:
                                                    'open': open,
                                                    'platform': platform
                                                }
-                                               ).rendered_template
-        self._app.bind('Response', rendered_view)
-        request.header('Content-Length', str(len(rendered_view)))
+                                               ))
 
 
 class DD:
@@ -99,16 +99,17 @@ class DD:
 
 class DumpHandler:
 
-    def __init__(self, view: View, request: Request, app: App):
+    def __init__(self, view: View, request: Request, app: App, response: Response):
         self.view = view
         self.request = request
         self.app = app
+        self.response = response
 
     def handle(self, handle):
         from config.database import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 
-        template = self.view.render(
+        self.response.view(self.view.render(
             '/masonite/snippets/exceptions/dump', {
                 'obj': self.app.make('ObjDump'),
                 'type': type,
@@ -122,5 +123,4 @@ class DumpHandler:
                 'isinstance': isinstance,
                 'show_methods': (bool, str, list, dict),
                 'len': len,
-            }).rendered_template
-        self.app.bind('Response', template)
+            }))

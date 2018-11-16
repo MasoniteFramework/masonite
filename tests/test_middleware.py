@@ -1,5 +1,6 @@
 from masonite.app import App
 from masonite.request import Request
+from masonite.response import Response
 from masonite.view import View
 from masonite.routes import Get, Route
 from masonite.testsuite import generate_wsgi
@@ -19,6 +20,7 @@ class TestMiddleware:
         self.app.make('Environ')
         self.app.bind('StatusCode', '404 Not Found Error')
         self.app.bind('Request', Request(self.app.make('Environ')).load_app(self.app))
+        self.app.simple(Response(self.app))
         self.app.bind('Csrf', Csrf(self.app.make('Request')))
         self.app.bind('Route', Route(self.app.make('Environ')))
 

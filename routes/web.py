@@ -8,6 +8,7 @@ ROUTES = [
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),
     Get().domain('test').route('/test/route', 'TestController@testing'),
+    Get().route('/json_response', 'TestController@json_response'),
     Post().route('/test/post/route', 'TestController@post_test'),
     Get().route('/login', 'TestController@testing').name('login'),
     Get().route('/test/param/@id', 'TestController@testing'),

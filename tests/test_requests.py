@@ -6,6 +6,7 @@ from app.http.test_controllers.TestController import TestController
 from cgi import MiniFieldStorage
 
 from masonite.request import Request
+from masonite.response import Response
 from masonite.app import App
 from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.routes import Get, Route
@@ -29,6 +30,9 @@ class TestRequest:
         self.app = App()
         self.request = Request(wsgi_request).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=').load_app(self.app)
+        self.app.bind('Request', self.request)
+        self.response = Response(self.app)
+        self.app.simple(Response)
 
     def test_request_is_callable(self):
         """ Request should be callable """
@@ -165,6 +169,7 @@ class TestRequest:
         container.bind('Environ', wsgi_request)
 
         for provider in container.make('Providers').PROVIDERS:
+            print(provider)
             provider().load_app(container).register()
 
         container.bind('Response', 'test')

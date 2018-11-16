@@ -22,7 +22,7 @@ DRIVER = os.getenv('CACHE_DRIVER', 'disk')
 | Cache Drivers
 |--------------------------------------------------------------------------
 |
-| Place all your caching coniguration as a dictionary here. The keys here
+| Place all your caching configuration as a dictionary here. The keys here
 | should correspond to the driver types supported above.
 |
 '''

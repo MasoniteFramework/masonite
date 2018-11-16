@@ -12,9 +12,10 @@ class ServeCommand(Command):
     Run the Masonite server
 
     serve
-        {--port=8000 : Specify which port to run the server}
-        {--host=127.0.0.1 : Specify which ip address to run the server}
+        {--p|port=8000 : Specify which port to run the server}
+        {--b|host=127.0.0.1 : Specify which ip address to run the server}
         {--r|reload : Make the server automatically reload on file changes}
+        {--i|reload-interval=1 : Make the server automatically reload on file changes}
     """
 
     def handle(self):
@@ -52,7 +53,7 @@ class ServeCommand(Command):
             while True:
                 if not reloader._run_worker():
                     reloader._wait_for_changes()
-                time.sleep(reloader.reload_interval)
+                time.sleep(float(self.option('reload-interval')))
         except KeyboardInterrupt:
             pass
         finally:

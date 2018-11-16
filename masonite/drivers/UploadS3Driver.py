@@ -39,8 +39,10 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         driver.store(fileitem, location)
         file_location = driver.file_location
 
+        filename = self.get_name(fileitem)
+
         # Check if is a valid extension
-        self.validate_extension(fileitem.filename)
+        self.validate_extension(filename)
 
         try:
             import boto3
@@ -58,10 +60,10 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         s3.meta.client.upload_file(
             file_location,
             self.config.DRIVERS['s3']['bucket'],
-            fileitem.filename
+            filename
         )
 
-        return fileitem.filename
+        return filename
 
     def store_prepend(self, fileitem, prepend, location=None):
         """Store the file onto the Amazon S3 server but with a prepended file name.

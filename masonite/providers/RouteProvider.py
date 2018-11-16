@@ -121,4 +121,9 @@ class RouteProvider(ServiceProvider):
 
         """No Response was found in the for loop so let's set an arbitrary response now.
         """
+        request.status(404)
         self.app.bind('Response', 'Route not found. Error 404')
+        # If the route exists but not the method is incorrect
+        if request.is_status(404) and request.route_exists(request.path):
+            self.app.bind('Response', 'Method not allowed')
+            request.status(405)

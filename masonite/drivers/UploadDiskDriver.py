@@ -1,6 +1,7 @@
 """ Upload Disk Driver """
 
 import os
+import _io
 
 from masonite.contracts.UploadContract import UploadContract
 from masonite.drivers.BaseUploadDriver import BaseUploadDriver
@@ -36,7 +37,7 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
             string -- Returns the file name just saved.
         """
 
-        filename = os.path.basename(fileitem.filename)
+        filename = self.get_name(fileitem)
 
         # Check if is a valid extension
         self.validate_extension(filename)
@@ -45,7 +46,10 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         if not location.endswith('/'):
             location += '/'
 
-        open(location + filename, 'wb').write(fileitem.file.read())
+        if isinstance(fileitem, _io.TextIOWrapper):
+            open(location + filename, 'wb').write(bytes(fileitem.read(), 'utf-8'))
+        else:
+            open(location + filename, 'wb').write(fileitem.file.read())
 
         self.file_location = location + filename
 

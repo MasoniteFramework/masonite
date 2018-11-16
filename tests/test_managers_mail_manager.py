@@ -31,7 +31,8 @@ class TestMailManager:
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)
         self.app.bind('MailConfig', mail)
-        self.app.bind('View', View(self.app))
+        self.app.bind('View', View(self.app).render)
+        self.app.bind('ViewClass', View(self.app))
 
     def test_mail_manager_loads_container(self):
         mailManager = MailManager()
@@ -70,6 +71,13 @@ class TestMailManager:
         self.app.bind('MailSmtpDriver', MailDriver)
 
         assert isinstance(MailManager(self.app).driver('smtp'), MailDriver)
+
+    def test_driver_loads_template(self):
+        self.app.bind('MailSmtpDriver', MailDriver)
+
+        driver = MailManager(self.app).driver('smtp')
+
+        assert driver.template('test', {'test': 'test'}).message_body == 'test'
 
     def test_send_mail(self):
         self.app.bind('MailSmtpDriver', MailDriver)

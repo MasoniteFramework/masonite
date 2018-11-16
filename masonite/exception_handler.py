@@ -84,7 +84,7 @@ class ExceptionHandler:
                                                }
                                                ).rendered_template
         self._app.bind('Response', rendered_view)
-        request.header('Content-Type', str(len(rendered_view)))
+        request.header('Content-Length', str(len(rendered_view)))
 
 
 class DD:

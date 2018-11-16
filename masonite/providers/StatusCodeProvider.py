@@ -30,10 +30,10 @@ class StatusCodeProvider(ServiceProvider):
 
     def boot(self):
         request = self.app.make('Request')
-        if request.get_status_code() == '200 OK':
+        if request.is_status(200):
             return
 
-        if request.get_status_code() in ('500 Internal Server Error', '404 Not Found', '503 Service Unavailable'):
+        if request.get_status() not in (200, 301, 302):
             if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status_code().split(' ')[0])):
                 rendered_view = self.app.make('View')(
                     'errors/{}'.format(request.get_status_code().split(' ')[0])).rendered_template

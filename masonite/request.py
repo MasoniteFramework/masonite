@@ -302,6 +302,28 @@ class Request(Extendable):
         """
         return self.app().make('StatusCode')
 
+    def is_status(self, code):
+        return self._get_status_code_by_value(self.get_status_code()) == code
+
+    def route_exists(self, url):
+        web_routes = self.container.make('WebRoutes')
+
+        for route in web_routes:
+            if route.route_url == url:
+                return True
+
+        return False
+
+    def _get_status_code_by_value(self, value):
+        for key, status in self.statuses.items():
+            if status == value:
+                return key
+
+        return None
+
+    def get_status(self):
+        return self._get_status_code_by_value(self.get_status_code())
+
     def get_request_method(self):
         """Get the current request method.
 

@@ -33,7 +33,7 @@ class StatusCodeProvider(ServiceProvider):
         if request.is_status(200):
             return
 
-        if request.get_status() not in (200,301,302):
+        if request.get_status() not in (200, 301, 302):
             if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status_code().split(' ')[0])):
                 rendered_view = self.app.make('View')(
                     'errors/{}'.format(request.get_status_code().split(' ')[0])).rendered_template

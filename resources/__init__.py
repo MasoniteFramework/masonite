@@ -1,0 +1,1 @@
+"""Resources and template directory which is a module in accordance with Jinja."""

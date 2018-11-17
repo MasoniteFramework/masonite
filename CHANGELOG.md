@@ -6,7 +6,8 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 
 ## [2.0.36](https://github.com/MasoniteFramework/core/releases/tag/v2.0.36) - 2018-11-16
 ### Added
-- Added the `-b`, `-p` and `-i` options to the serve command
+- [Added the `-b`, `-p` and `-i` options to the serve command](https://docs.masoniteproject.com/the-craft-command/introduction#host-and-port)
+- [Added reloading interval `-i` option on the server to reduce the time it takes to restart the server](https://docs.masoniteproject.com/the-craft-command/introduction#reloading-interval)
 
 ### Changed
 - Changed the developer server completely and replaced waitress with a different pure python development server. This fixed both an issue where waitress was not able to serve multiple concurrent requests and bugs with threads.
@@ -17,7 +18,7 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 
 ## [2.0.35](https://github.com/MasoniteFramework/core/releases/tag/v2.0.35) - 2018-11-10
 ### Added
-- Added ability to accept open files for upload drivers
+- [Added ability to accept open files for upload drivers](https://docs.masoniteproject.com/useful-features/uploading#uploading-files)
 
 ## [2.0.34](https://github.com/MasoniteFramework/core/releases/tag/v2.0.34) - 2018-11-09
 ### Fixed

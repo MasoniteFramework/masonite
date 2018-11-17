@@ -1,8 +1,9 @@
 import json
-from masonite.request import Request
-from masonite.response import Response
+
 from masonite.app import App
 from masonite.exceptions import ResponseError
+from masonite.request import Request
+from masonite.response import Response
 
 
 class ResponseMiddleware:
@@ -13,15 +14,7 @@ class ResponseMiddleware:
         self.response = response
 
     def after(self):
-        if not self.request.redirect_url:
-            # Convert the data that is retrieved above to bytes
-            # so the wsgi server can handle it.
-            try:
-                self.response.to_bytes()
-            except TypeError:
-                raise ResponseError(
-                    'An acceptable response type was not returned')
-        else:
+        if self.request.redirect_url:
             self.response.redirect(self.request.redirect_url, status=302)
             self.request.reset_redirections()
 

@@ -1,12 +1,14 @@
 """A StatusProvider Service Provider."""
 
 from config import application
+from masonite.response import Response
 from masonite.provider import ServiceProvider
 
 
 class ServerErrorExceptionHook:
 
     def load(self, app):
+        print('exception')
         if application.DEBUG:
             return
 
@@ -14,13 +16,12 @@ class ServerErrorExceptionHook:
 
         request.status(500)
         if app.make('ViewClass').exists('errors/500'):
-            rendered_view = app.make('View')('errors/500').rendered_template
+            rendered_view = app.make('View')('errors/500')
         else:
             rendered_view = app.make('View')(
-                '/masonite/snippets/statuscode', {'code': '500 Internal Server Error'}).rendered_template
+                '/masonite/snippets/statuscode', {'code': '500 Internal Server Error'})
 
-        request.header('Content-Length', str(len(rendered_view)))
-        app.bind('Response', rendered_view)
+        request.app().make(Response).view(rendered_view)
 
 
 class StatusCodeProvider(ServiceProvider):
@@ -30,17 +31,17 @@ class StatusCodeProvider(ServiceProvider):
 
     def boot(self):
         request = self.app.make('Request')
-        if request.get_status_code() == '200 OK':
+        response = self.app.make(Response)
+        if request.is_status(200):
             return
 
-        if request.get_status_code() in ('500 Internal Server Error', '404 Not Found', '503 Service Unavailable'):
-            if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status_code().split(' ')[0])):
+        if request.get_status() not in (200, 301, 302):
+            if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status())):
                 rendered_view = self.app.make('View')(
-                    'errors/{}'.format(request.get_status_code().split(' ')[0])).rendered_template
+                    'errors/{}'.format(request.get_status()))
             else:
                 rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
                     'code': request.get_status_code()
-                }).rendered_template
+                })
 
-            self.app.make('Request').header('Content-Length', str(len(rendered_view)))
-            self.app.bind('Response', rendered_view)
+            response.view(rendered_view)

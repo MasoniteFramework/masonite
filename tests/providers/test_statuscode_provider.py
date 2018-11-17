@@ -1,5 +1,6 @@
 from masonite.providers import StatusCodeProvider
 from masonite.request import Request
+from masonite.response import Response
 from masonite.view import View
 from masonite.app import App
 from masonite.providers.StatusCodeProvider import ServerErrorExceptionHook
@@ -12,6 +13,7 @@ class TestStatusCode:
         self.app = App()
         self.app.bind('StatusCode', '404 Not Found')
         self.app.bind('Request', Request(None).load_app(self.app).load_environ(generate_wsgi()))
+        self.app.simple(Response(self.app))
         self.app.bind('ViewClass', View(self.app))
         self.app.bind('View', self.app.make('ViewClass').render)
         self.provider = StatusCodeProvider().load_app(self.app).boot()

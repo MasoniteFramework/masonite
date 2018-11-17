@@ -6,6 +6,7 @@ from app.http.test_controllers.TestController import TestController
 from cgi import MiniFieldStorage
 
 from masonite.request import Request
+from masonite.response import Response
 from masonite.app import App
 from masonite.exceptions import InvalidHTTPStatusCode
 from masonite.routes import Get, Route
@@ -29,6 +30,9 @@ class TestRequest:
         self.app = App()
         self.request = Request(wsgi_request).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=').load_app(self.app)
+        self.app.bind('Request', self.request)
+        self.response = Response(self.app)
+        self.app.simple(Response)
 
     def test_request_is_callable(self):
         """ Request should be callable """
@@ -165,6 +169,7 @@ class TestRequest:
         container.bind('Environ', wsgi_request)
 
         for provider in container.make('Providers').PROVIDERS:
+            print(provider)
             provider().load_app(container).register()
 
         container.bind('Response', 'test')
@@ -405,6 +410,30 @@ class TestRequest:
         request.status(500)
         assert request.get_status_code() == '500 Internal Server Error'
 
+    def test_request_gets_int_status(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request.get_status() == 500
+
+    def test_can_get_code_by_value(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request._get_status_code_by_value('500 Internal Server Error') == 500
+
+    def test_is_status_code(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request.status(500)
+        assert request.is_status(500) == True
+
     def test_request_sets_invalid_int_status_code(self):
         with pytest.raises(InvalidHTTPStatusCode):
             app = App()
@@ -445,6 +474,18 @@ class TestRequest:
 
         request.path = '/test/url/1'
         assert request.is_named_route('test.id', {'id': 1})
+
+    def test_route_exists(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', None).name('test.url'),
+            get('/test/url/@id', None).name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
+
+        assert request.route_exists('/test/url') == True
+        assert request.route_exists('/test/Not') == False
 
     def test_request_url_from_controller(self):
         app = App()

@@ -2,6 +2,7 @@
 
 from masonite.exceptions import FileTypeException
 from masonite.drivers.BaseDriver import BaseDriver
+import _io
 
 
 class BaseUploadDriver(BaseDriver):
@@ -52,3 +53,10 @@ class BaseUploadDriver(BaseDriver):
             return list(location.values())[0]
 
         return location
+
+    def get_name(self, fileitem):
+        if isinstance(fileitem, _io.TextIOWrapper):
+            # It is an open() file
+            return fileitem.name
+        else:
+            return fileitem.filename

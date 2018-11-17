@@ -15,10 +15,12 @@ class Response:
         self.request.header('Content-Type', 'application/json; charset=utf-8')
         self.request.status(200)
 
+        return self.data()
+
     def data(self):
         if self.app.has('Response'):
             return self.app.make('Response')
-        
+
         return ''
 
     def view(self, view, status=200):
@@ -26,10 +28,11 @@ class Response:
 
         if isinstance(view, View):
             view = view.rendered_template
-        
+
         self.app.bind('Response', view)
         self.request.header('Content-Length', str(len(view)))
-        
+
+        return self.data()
 
     def redirect(self, location=None, status=302):
         self.request.status(status)
@@ -38,6 +41,6 @@ class Response:
 
         self.request.header('Location', location)
         self.app.bind('Response', 'redirecting ...')
-    
+
     def to_bytes(self):
         return bytes(self.app.make('Response'), 'utf-8')

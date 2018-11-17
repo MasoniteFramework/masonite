@@ -8,7 +8,6 @@ from masonite.provider import ServiceProvider
 class ServerErrorExceptionHook:
 
     def load(self, app):
-        print('exception')
         if application.DEBUG:
             return
 

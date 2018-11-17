@@ -20,7 +20,7 @@ class TestStatusCode:
 
     def test_provider_returns_masonite_view(self):
         assert '404 Not Found' in self.app.make('Response')
-        assert self.app.make('Request').get_headers() == [('Content-Length', '1536')]
+        assert ('Content-Length', '1536') in self.app.make('Request').get_headers()
 
     def test_provider_returns_none_on_200_OK(self):
         self.provider = StatusCodeProvider().load_app(self.app).boot()

@@ -210,7 +210,6 @@ class TestRouteProvider:
             self.app.make(Response)
         )
 
-        assert self.app.make('Response') == '{"id": 1}'
         assert self.app.make('Request').header(
             'Content-Type') == 'application/json; charset=utf-8'
 

@@ -1,6 +1,6 @@
 """ Middleware Configuration Settings """
 
-from masonite.middleware import JsonResponseMiddleware, ResponseMiddleware
+from masonite.middleware import ResponseMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
@@ -24,7 +24,6 @@ HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     # todo
     # CsrfMiddleware,
-    JsonResponseMiddleware,
     ResponseMiddleware,
 ]
 

@@ -25,5 +25,5 @@ class ResponseMiddleware:
             self.response.redirect(self.request.redirect_url, status=302)
             self.request.reset_redirections()
 
-        if self.app.has('Session') and self.request.get_status_code() == '200 OK':
+        if self.app.has('Session') and self.request.is_status(200):
             self.app.make('Session').reset(flash_only=True)

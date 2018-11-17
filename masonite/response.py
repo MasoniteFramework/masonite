@@ -42,5 +42,7 @@ class Response:
         self.request.header('Location', location)
         self.app.bind('Response', 'redirecting ...')
 
+        return self.data()
+
     def to_bytes(self):
         return bytes(self.app.make('Response'), 'utf-8')

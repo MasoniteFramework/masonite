@@ -39,12 +39,12 @@ class Response(Extendable):
 
         if isinstance(view, dict) or isinstance(view, list):
             return self.json(view)
-
-        if isinstance(view, View):
+        elif isinstance(view, View):
             view = view.rendered_template
-
-        if not hasattr(view, '__len__'):
-            raise ResponseError('An acceptable response type was not returned')
+        elif isinstance(view, self.request.__class__):
+            view = self.data()
+        elif view is None:
+            raise ResponseError('Responses cannot be of type: None.')
 
         self.app.bind('Response', view)
 

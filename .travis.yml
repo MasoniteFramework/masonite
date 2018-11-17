@@ -9,8 +9,6 @@ matrix:
       dist: xenial
       sudo: true
 install:
-  - pip install pipenv
   - pip install masonite-cli
-  - pipenv install
-  - cp .env-example .env
+  - craft install
 script: python -m pytest

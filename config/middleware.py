@@ -1,6 +1,6 @@
 """Middleware Configuration Settings."""
 
-from masonite.middleware import JsonResponseMiddleware, ResponseMiddleware
+from masonite.middleware import ResponseMiddleware
 
 from app.http.middleware.AuthenticationMiddleware import \
     AuthenticationMiddleware
@@ -17,7 +17,6 @@ should contain a simple aggregate of middleware classes.
 HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     CsrfMiddleware,
-    JsonResponseMiddleware,
     ResponseMiddleware,
 ]
 

@@ -1,1 +1,1 @@
-masonite==2.1.0b3
+masonite==2.1.0b3.post1

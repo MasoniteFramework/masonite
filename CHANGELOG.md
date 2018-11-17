@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.0.36](https://github.com/MasoniteFramework/core/releases/tag/v2.0.36) - 2018-11-16
+### Added
+- Added the `-b`, `-p` and `-i` options to the serve command
+
+### Changed
+- Changed the developer server completely and replaced waitress with a different pure python development server. This fixed both an issue where waitress was not able to serve multiple concurrent requests and bugs with threads.
+
+### Fixed
+- Fixed issue where the server would crash when there was a syntax error
+
+
+## [2.0.35](https://github.com/MasoniteFramework/core/releases/tag/v2.0.35) - 2018-11-10
+### Added
+- Added ability to accept open files for upload drivers
+
+## [2.0.34](https://github.com/MasoniteFramework/core/releases/tag/v2.0.34) - 2018-11-09
+### Fixed
+- Fixed dependencies not being fixed and made them a range of versions
+
+## [2.0.33](https://github.com/MasoniteFramework/core/releases/tag/v2.0.33) - 2018-11-01
+### Fixed
+- Fixed issue with mail templates throwing 'function' object has no attribute 'render
+
 ## [2.0.32](https://github.com/MasoniteFramework/core/releases/tag/v2.0.32) - 2018-10-31
 ### Added
 - [Added Redis cache driver](https://docs.masoniteproject.com/useful-features/caching#redis)

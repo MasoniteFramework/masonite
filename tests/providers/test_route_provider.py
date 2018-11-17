@@ -33,7 +33,6 @@ class TestRouteProvider:
     def test_controller_that_returns_a_view(self):
         self.app.make('Route').url = '/view'
         self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
-        print(self.app.providers)
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request'),
@@ -45,7 +44,6 @@ class TestRouteProvider:
         self.app.make('Route').url = '/view/'
         self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
         
-        print(self.app.providers)
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request'),
@@ -59,7 +57,6 @@ class TestRouteProvider:
         self.app.make('Route').url = '/view/'
         self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
 
-        print(self.app.providers)
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request'),

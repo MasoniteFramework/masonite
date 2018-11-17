@@ -84,7 +84,7 @@ class ExceptionHandler:
                                                    'open': open,
                                                    'platform': platform
                                                }
-                                               ))
+        ))
 
 
 class DD:

@@ -36,11 +36,15 @@ class Response(Extendable):
 
     def view(self, view, status=200):
         self.request.status(status)
+
         if isinstance(view, dict) or isinstance(view, list):
             return self.json(view)
 
         if isinstance(view, View):
             view = view.rendered_template
+
+        if not hasattr(view, '__len__'):
+            raise ResponseError('An acceptable response type was not returned')
 
         self.app.bind('Response', view)
 

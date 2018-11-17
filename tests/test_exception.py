@@ -5,6 +5,7 @@ from masonite.exception_handler import ExceptionHandler
 from masonite.exceptions import MissingContainerBindingNotFound
 from masonite.hook import Hook
 from masonite.request import Request
+from masonite.response import Response
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
 
@@ -30,10 +31,10 @@ class TestException:
         self.app = App()
         self.app.bind('Application', ApplicationMock)
         self.app.bind('Environ', generate_wsgi())
-        self.app.bind('Response', None)
         self.app.bind('WebRoutes', [])
         self.app.bind('View', View(self.app).render)
-        self.app.bind('Request', Request(None).load_app(self.app))
+        self.app.bind('Request', Request(generate_wsgi()).load_app(self.app))
+        self.app.simple(Response(self.app))
         self.app.bind('StatusCode', '404 Not Found')
         self.app.bind('Storage', StorageMock)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))

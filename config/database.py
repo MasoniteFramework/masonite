@@ -1,3 +1,4 @@
+import logging
 """Database Settings."""
 
 from masonite import env
@@ -25,6 +26,7 @@ DATABASES = {
     'sqlite': {
         'driver': 'sqlite',
         'database': env('DB_DATABASE'),
+        'log_queries': env('DB_LOG'),
     },
     'mysql': {
         'driver': 'mysql',
@@ -33,6 +35,7 @@ DATABASES = {
         'port': env('DB_PORT'),
         'user': env('DB_USERNAME'),
         'password': env('DB_PASSWORD'),
+        'log_queries': env('DB_LOG'),
     },
     'postgres': {
         'driver': 'postgres',
@@ -41,8 +44,22 @@ DATABASES = {
         'port': env('DB_PORT'),
         'user': env('DB_USERNAME'),
         'password': env('DB_PASSWORD'),
+        'log_queries': env('DB_LOG'),
     },
 }
 
 DB = DatabaseManager(DATABASES)
 Model.set_connection_resolver(DB)
+
+
+logger = logging.getLogger('orator.connection.queries')
+logger.setLevel(logging.DEBUG )
+
+formatter = logging.Formatter(
+    'It took %(elapsed_time)sms to execute the query %(query)s'
+)
+
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)

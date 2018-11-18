@@ -1,4 +1,4 @@
-""" New Seeder Command """
+"""New Seeder Command."""
 import subprocess
 import os
 

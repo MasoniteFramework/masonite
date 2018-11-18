@@ -25,6 +25,8 @@ class GetAnotherObject(MockObject):
 class MakeObject:
     pass
 
+class SubstituteThis:
+    pass
 
 class TestContainer:
 
@@ -151,3 +153,35 @@ class TestContainer:
         req = Request()
         app.simple(req)
         assert app.make(Request) == req
+
+    def test_can_pass_variables(self):
+        app = App()
+        req = Request()
+        app.bind('Request', req)
+        obj = app.resolve(self._test_resolves_variables, 'test1', 'test2')
+        assert obj[0] == 'test1'
+        assert obj[1] == req
+        assert obj[2] == 'test2'
+    
+    def _test_resolves_variables(self, var1, request: Request, var2):
+        return [var1, request, var2]
+
+    
+    def test_can_substitute(self):
+        app = App()
+        app.swap(SubstituteThis, self._substitute)
+
+        assert app.resolve(self._test_substitute) == 'test'
+
+    def test_can_substitute_with_object(self):
+        app = App()
+        app.swap(SubstituteThis, MakeObject())
+
+        assert isinstance(app.resolve(self._test_substitute), MakeObject)
+
+    def _substitute(self, method, container):
+        return 'test'
+    
+    def _test_substitute(self, test: SubstituteThis):
+        return test
+

@@ -60,3 +60,15 @@ class StrictContainerException(Exception):
 
 class InvalidRouteCompileException(Exception):
     pass
+
+
+class RouteException(Exception):
+    pass
+
+
+class DebugException(Exception):
+    pass
+
+
+class DumpException(Exception):
+    pass

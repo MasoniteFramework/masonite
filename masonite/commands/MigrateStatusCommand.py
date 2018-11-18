@@ -1,4 +1,4 @@
-""" Migrate Status Command """
+"""Migrate Status Command."""
 import os
 import sys
 
@@ -9,7 +9,7 @@ from masonite.packages import add_venv_site_packages
 
 class MigrateStatusCommand(Command):
     """
-    Migrate status
+    Migrate status.
 
     migrate:status
     """

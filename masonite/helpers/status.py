@@ -1,4 +1,4 @@
-""" Helper Functions for working with Status Codes"""
+"""Helper Functions for working with Status Codes."""
 
 statuses = {
     100: '100 Continue',

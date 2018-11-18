@@ -1,4 +1,4 @@
-""" Upload Manager Module """
+"""Upload Manager Module."""
 
 from masonite.contracts import UploadManagerContract
 from masonite.managers import Manager
@@ -13,3 +13,9 @@ class UploadManager(Manager, UploadManagerContract):
 
     config = 'StorageConfig'
     driver_prefix = 'Upload'
+
+
+class Upload:
+    """Dummy class that will be used to swap out the manager in the container."""
+
+    pass

@@ -1,4 +1,4 @@
-""" New Controller Command """
+"""New Controller Command."""
 from masonite.view import View
 from masonite.app import App
 from masonite.helpers.filesystem import make_directory
@@ -8,7 +8,7 @@ from cleo import Command
 
 class ControllerCommand(Command):
     """
-    Creates a controller
+    Creates a controller.
 
     controller
         {name : Name of the controller you would like to create}

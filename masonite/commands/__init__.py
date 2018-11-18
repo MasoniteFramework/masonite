@@ -8,13 +8,16 @@ from .InstallCommand import InstallCommand
 from .JobCommand import JobCommand
 from .KeyCommand import KeyCommand
 from .MakeMigrationCommand import MakeMigrationCommand
+from .MiddlewareCommand import MiddlewareCommand
 from .MigrateCommand import MigrateCommand
 from .MigrateRefreshCommand import MigrateRefreshCommand
 from .MigrateResetCommand import MigrateResetCommand
 from .MigrateRollbackCommand import MigrateRollbackCommand
 from .MigrateStatusCommand import MigrateStatusCommand
 from .ModelCommand import ModelCommand
+from .ModelDocstringCommand import ModelDocstringCommand
 from .ProviderCommand import ProviderCommand
+from .QueueWorkCommand import QueueWorkCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand
 from .ValidatorCommand import ValidatorCommand

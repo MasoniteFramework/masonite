@@ -1,4 +1,4 @@
-""" Migrate Rollback Command """
+"""Migrate Rollback Command."""
 import os
 import sys
 
@@ -8,7 +8,7 @@ from masonite.packages import add_venv_site_packages
 
 class MigrateRollbackCommand(Command):
     """
-    Migrate Rollback
+    Migrate Rollback.
 
     migrate:rollback
     """

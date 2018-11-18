@@ -34,8 +34,8 @@
             <li>
                 <span style="color: #eb6864">{{ tb[0].__name__ }} &gt; {{ exception }} in 
                     {% for stack in traceback.extract_tb(tb[2])[::-1] %}
-                        {% if not 'site-packages' in stack.filename %}
-                            <u><a style="color: inherit;" href="#{{stack.filename}}">{{ stack.filename }} on line {{ stack.lineno }}</a></u>
+                        {% if not 'site-packages' in stack[0] %}
+                            <u><a style="color: inherit;" href="#{{stack[0]}}">{{ stack[0] }} on line {{ stack[1] }}</a></u>
                             {% break %}
                         {% endif %}
                     {% endfor %}
@@ -53,22 +53,22 @@
             <div class="row">
                 <div class="col-md-12" style="background-color:#f5f5f5;padding-left:0px;margin-left:15px;padding-right:0px;">
                     {% for stack in traceback.extract_tb(tb[2]) %}
-                        {% if not 'site-packages' in stack.filename %}
+                        {% if not 'site-packages' in stack[0] %}
                             {% set local_file_background_color = '#d9ffc2' %}
                         {% else %}
                             {% set local_file_background_color = 'inherit' %}
                         {% endif %}
-                        <div id="{{ stack.filename }}" class="stack-row trace" style="padding:15px;padding-bottom:7px;padding-top:15px;background-color: {{ local_file_background_color }}">
-                            <h4> {{ stack.filename }}, line {{ stack.lineno  }} in {{ stack.name}} </h4>
+                        <div id="{{ stack[0] }}" class="stack-row trace" style="padding:15px;padding-bottom:7px;padding-top:15px;background-color: {{ local_file_background_color }}">
+                            <h4> {{ stack[0] }}, line {{ stack[1]  }} in {{ stack[2]}} </h4>
                             
-                                {% for i, line in enumerate(open(stack.filename)) %}
-                                    {% if stack.lineno - 5 <= i <= stack.lineno + 5  %}
+                                {% for i, line in enumerate(open(stack[0])) %}
+                                    {% if stack[1] - 5 <= i <= stack[1] + 5  %}
                                         
-                                        {% if i == stack.lineno - 1 %}
+                                        {% if i == stack[1] - 1 %}
                                             <div style="background-color: #f1c40f">
                                                 {{ i + 1 }}. {{ line }}
                                             </div>
-                                         {% elif stack.lineno - 3 <= i <= stack.lineno + 1 %} 
+                                         {% elif stack[1] - 3 <= i <= stack[1] + 1 %} 
                                             <div style="background-color: #fee893;">
                                                 {{ i + 1 }}. {{ line }}
                                             </div>

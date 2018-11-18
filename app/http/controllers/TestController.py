@@ -1,4 +1,5 @@
 from cleo import Command
+from masonite.exceptions import DebugException
 
 from masonite.request import Request
 
@@ -13,6 +14,9 @@ class TestController:
 
     def testing(self):
         return 'test'
+
+    def json_response(self):
+        return {'id': 1}
 
     def post_test(self):
         return 'post_test'

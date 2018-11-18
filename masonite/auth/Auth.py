@@ -1,4 +1,4 @@
-""" Authentication Class """
+"""Authentication Class."""
 
 import uuid
 
@@ -6,8 +6,7 @@ import bcrypt
 
 
 class Auth:
-    """This class will be used to authenticate users based on the config/auth.py file
-    """
+    """This class will be used to authenticate users based on the config/auth.py file."""
 
     _once = False
 
@@ -20,7 +19,6 @@ class Auth:
         Keyword Arguments:
             auth_model {object} -- The model you want to authenticate with (default: {None})
         """
-
         self.request = request
 
         if auth_model:
@@ -30,7 +28,7 @@ class Auth:
             self.auth_model = auth.AUTH['model']
 
     def user(self):
-        """Gets the currently logged in user.
+        """Get the currently logged in user.
 
         Raises:
             exception -- Raised when there has been an error handling the user model.
@@ -38,7 +36,6 @@ class Auth:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
-
         try:
             if self.request.get_cookie('token'):
                 return self.auth_model.where(
@@ -64,7 +61,6 @@ class Auth:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
-
         auth_column = self.auth_model.__auth__
         try:
             model = self.auth_model.where(auth_column, name).first()
@@ -88,7 +84,6 @@ class Auth:
         Returns:
             self
         """
-
         self.request.delete_cookie('token')
         return self
 
@@ -101,7 +96,6 @@ class Auth:
         Returns:
             object|False -- Returns the current authenticated user object or False or None if there is none.
         """
-
         model = self.auth_model.find(id)
 
         if model:
@@ -115,11 +109,10 @@ class Auth:
         return False
 
     def once(self):
-        """Logs in the user without saving a cookie
+        """Log in the user without saving a cookie.
 
         Returns:
             self
         """
-
         self._once = True
         return self

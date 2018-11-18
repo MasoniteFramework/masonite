@@ -1,4 +1,4 @@
-""" Upload S3 Driver """
+"""Upload S3 Driver."""
 
 import os
 
@@ -10,18 +10,15 @@ from masonite.app import App
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):
-    """
-    Amazon S3 Upload driver
-    """
+    """Amazon S3 Upload driver."""
 
     def __init__(self, upload: UploadManager, app: App):
-        """Upload Disk Driver Constructor
+        """Upload Disk Driver Constructor.
 
         Arguments:
             UploadManager {masonite.managers.UploadManager} -- The Upload Manager object.
             StorageConfig {config.storage} -- Storage configuration.
         """
-
         self.upload = upload
         self.config = app.make('StorageConfig')
 
@@ -49,6 +46,8 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         driver.store(fileitem, filename, location)
         file_location = driver.file_location
 
+        filename = self.get_name(filename)
+
         try:
             import boto3
         except ImportError:
@@ -67,5 +66,3 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             self.config.DRIVERS['s3']['bucket'],
             filename
         )
-
-        return fileitem.filename

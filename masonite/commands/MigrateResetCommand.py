@@ -1,4 +1,4 @@
-""" Migrate Reset Command """
+"""Migrate Reset Command."""
 import os
 import sys
 
@@ -9,7 +9,7 @@ from orator.exceptions.query import QueryException
 
 class MigrateResetCommand(Command):
     """
-    Migrate reset
+    Migrate reset.
 
     migrate:reset
     """

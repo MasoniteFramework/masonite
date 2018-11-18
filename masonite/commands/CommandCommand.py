@@ -1,10 +1,10 @@
-""" Creates New Command Command """
+"""Creates New Command Command."""
 from masonite.commands import BaseScaffoldCommand
 
 
 class CommandCommand(BaseScaffoldCommand):
     """
-    Creates a new command
+    Creates a new command.
 
     command
         {name : Name of the command you would like to create}

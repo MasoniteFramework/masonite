@@ -14,7 +14,3 @@ class UploadContract(ABC):
     @abstractmethod
     def store(self):
         pass
-
-    @abstractmethod
-    def store_prepend(self):
-        pass

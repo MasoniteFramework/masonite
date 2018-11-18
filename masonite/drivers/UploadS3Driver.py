@@ -1,5 +1,7 @@
 """ Upload S3 Driver """
 
+import os
+
 from masonite.contracts import UploadContract
 from masonite.drivers import BaseUploadDriver
 from masonite.exceptions import DriverLibraryNotFound
@@ -23,7 +25,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         self.upload = upload
         self.config = app.make('StorageConfig')
 
-    def store(self, fileitem, location=None):
+    def store(self, fileitem, filename=None, location=None):
         """Store the file into Amazon S3 server.
 
         Arguments:
@@ -31,6 +33,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
 
         Keyword Arguments:
             location {string} -- The location on disk you would like to store the file. (default: {None})
+            filename {string} -- A new file name you would like to name the file. (default: {None})
 
         Raises:
             DriverLibraryNotFound -- Raises when the boto3 library is not installed.
@@ -39,12 +42,12 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             string -- Returns the file name just saved.
         """
 
-        driver = self.upload.driver('disk')
-        driver.store(fileitem, location)
-        file_location = driver.file_location
+        if filename is None:
+            filename = os.path.basename(fileitem.filename)
 
-        # Check if is a valid extension
-        self.validate_extension(fileitem.filename)
+        driver = self.upload.driver('disk')
+        driver.store(fileitem, filename, location)
+        file_location = driver.file_location
 
         try:
             import boto3
@@ -62,25 +65,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         s3.meta.client.upload_file(
             file_location,
             self.config.DRIVERS['s3']['bucket'],
-            fileitem.filename
+            filename
         )
 
         return fileitem.filename
-
-    def store_prepend(self, fileitem, prepend, location=None):
-        """Store the file onto the Amazon S3 server but with a prepended file name.
-
-        Arguments:
-            fileitem {cgi.Storage} -- Storage object.
-            prepend {string} -- The prefix you want to prepend to the file name.
-
-        Keyword Arguments:
-            location {string} -- The location on disk you would like to store the file. (default: {None})
-
-        Returns:
-            string -- Returns the file name just saved.
-        """
-
-        fileitem.filename = prepend + fileitem.filename
-
-        return self.store(fileitem, location=location)

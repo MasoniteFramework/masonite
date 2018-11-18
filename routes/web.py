@@ -1,6 +1,6 @@
 """Web Routes."""
 
-from masonite.routes import Get
+from masonite.routes import Get, Post
 
 
 ROUTES = [

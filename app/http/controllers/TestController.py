@@ -12,6 +12,10 @@ class TestController:
     def show(self):
         pass
 
+    def change_header(self, request: Request):
+        request.header('Content-Type', 'application/xml')
+        return 'test'
+
     def testing(self):
         return 'test'
 

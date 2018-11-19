@@ -39,9 +39,6 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             string -- Returns the file name just saved.
         """
 
-        if filename is None:
-            filename = os.path.basename(fileitem.filename)
-
         driver = self.upload.driver('disk')
         driver.store(fileitem, location)
         file_location = driver.file_location

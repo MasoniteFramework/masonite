@@ -37,9 +37,9 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
             string -- Returns the file name just saved.
         """
 
-        filename = self.get_name(fileitem)
+        # use the new filename or get it from the fileitem
         if filename is None:
-            filename = os.path.basename(fileitem.filename)
+            filename = self.get_name(fileitem)
 
         # Check if is a valid extension
         self.validate_extension(filename)
@@ -56,25 +56,3 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         self.file_location = location + filename
 
         return filename
-
-    def store_prepend(self, fileitem, prepend, location=None):
-        """Store the file onto a server but with a prepended file name.
-
-        Arguments:
-            fileitem {cgi.Storage} -- Storage object.
-            prepend {string} -- The prefix you want to prepend to the file name.
-
-        Keyword Arguments:
-            location {string} -- The location on disk you would like to store the file. (default: {None})
-
-        Returns:
-            string -- Returns the file name just saved.
-        """
-
-        filename = os.path.basename(fileitem.filename)
-
-        location = self.get_location(location)
-
-        open(location + prepend + filename, 'wb').write(fileitem.file.read())
-
-        return prepend + filename

@@ -1,6 +1,6 @@
 """Middleware Configuration Settings."""
 
-from masonite.middleware import ResponseMiddleware
+from masonite.middleware import ResponseMiddleware, MaintenanceModeMiddleware
 
 from app.http.middleware.AuthenticationMiddleware import \
     AuthenticationMiddleware
@@ -18,6 +18,7 @@ HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     CsrfMiddleware,
     ResponseMiddleware,
+    MaintenanceModeMiddleware,
 ]
 
 """Route Middleware

@@ -19,7 +19,7 @@ install:
 
 script: 
 - travis_retry coverage run -m pytest
-- flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712
+- flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
 
 deploy:
   provider: pypi

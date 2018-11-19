@@ -1,20 +1,19 @@
-""" The RegisterController Module """
+"""The RegisterController Module."""
 
 from config import auth
 from masonite.auth import Auth
 from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
+from masonite.auth import MustVerifyEmail
+from masonite.managers import MailManager
 
 
 class RegisterController:
-    """The RegisterController class.
-    """
+    """The RegisterController class."""
 
     def __init__(self):
-        """The RegisterController Constructor
-        """
-
+        """The RegisterController Constructor."""
         pass
 
     def show(self, request: Request, view: View):
@@ -26,10 +25,9 @@ class RegisterController:
         Returns:
             [type] -- [description]
         """
-
         return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': Auth(request)})
 
-    def store(self, request: Request):
+    def store(self, request: Request, mail_manager: MailManager):
         """Register the user with the database.
 
         Arguments:
@@ -38,14 +36,16 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-
         password = bcrypt_password(request.input('password'))
 
-        auth.AUTH['model'].create(
+        user = auth.AUTH['model'].create(
             name=request.input('name'),
             password=password,
             email=request.input('email'),
         )
+
+        if isinstance(user, MustVerifyEmail):
+            user.verify_email(mail_manager, request)
 
         # Login the user
         if Auth(request).login(request.input(auth.AUTH['model'].__auth__), request.input('password')):

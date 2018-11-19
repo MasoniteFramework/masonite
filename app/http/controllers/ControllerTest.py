@@ -14,7 +14,7 @@ class ControllerTest:
         return 'test'
 
     def returns_a_view(self, view: View):
-        return View('index')
+        return view.render('index')
 
     def returns_a_dict(self):
         return {'id': 1}

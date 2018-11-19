@@ -1,5 +1,9 @@
+
 from masonite.environment import LoadEnvironment
+from masonite import env
+
 import os
+import time
 
 
 class TestEnvironment:
@@ -27,3 +31,31 @@ class TestEnvironment:
         LoadEnvironment(only='local')
         assert 'LOCAL' in os.environ
         assert os.environ.get('LOCAL') == 'TEST'
+
+class TestEnv:
+
+    def test_env_returns_numeric(self):
+        os.environ["numeric"] = "1"
+        assert env('numeric') == 1
+
+    def test_env_returns_numeric_with_default(self):
+        os.environ["numeric"] = "1"
+        assert env('na', '1') == 1
+
+    def test_env_returns_bool(self):
+        os.environ["bool"] = "True"
+        assert env('bool') == True
+        os.environ["bool"] = "true"
+        assert env('bool') == True
+        os.environ["bool"] = "False"
+        assert env('bool') == False
+        os.environ["bool"] = "false"
+        assert env('bool') == False
+
+    def test_env_returns_default(self):
+        os.environ["test"] = "1"
+        assert env('na', 'default') == 'default'
+
+    def test_env_works_with_none(self):
+        assert env('na', None) == None
+

@@ -1,4 +1,4 @@
-""" Upload S3 Driver """
+"""Upload S3 Driver."""
 
 import os
 
@@ -10,18 +10,15 @@ from masonite.app import App
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):
-    """
-    Amazon S3 Upload driver
-    """
+    """Amazon S3 Upload driver."""
 
     def __init__(self, upload: UploadManager, app: App):
-        """Upload Disk Driver Constructor
+        """Upload Disk Driver Constructor.
 
         Arguments:
             UploadManager {masonite.managers.UploadManager} -- The Upload Manager object.
             StorageConfig {config.storage} -- Storage configuration.
         """
-
         self.upload = upload
         self.config = app.make('StorageConfig')
 
@@ -49,6 +46,11 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         driver.store(fileitem, filename, location)
         file_location = driver.file_location
 
+        filename = self.get_name(fileitem)
+
+        # Check if is a valid extension
+        self.validate_extension(filename)
+
         try:
             import boto3
         except ImportError:
@@ -68,4 +70,22 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             filename
         )
 
-        return fileitem.filename
+        return filename
+
+    def store_prepend(self, fileitem, prepend, location=None):
+        """Store the file onto the Amazon S3 server but with a prepended file name.
+
+        Arguments:
+            fileitem {cgi.Storage} -- Storage object.
+            prepend {string} -- The prefix you want to prepend to the file name.
+
+        Keyword Arguments:
+            location {string} -- The location on disk you would like to store the file. (default: {None})
+
+        Returns:
+            string -- Returns the file name just saved.
+        """
+
+        fileitem.filename = prepend + fileitem.filename
+
+        return self.store(fileitem, location=location)

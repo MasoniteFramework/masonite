@@ -8,7 +8,6 @@ from .QueueProvider import QueueProvider
 from .RouteProvider import RouteProvider
 from .SassProvider import SassProvider
 from .SessionProvider import SessionProvider
-from .StartResponseProvider import StartResponseProvider
 from .UploadProvider import UploadProvider
 from .ViewProvider import ViewProvider
 from .WhitenoiseProvider import WhitenoiseProvider

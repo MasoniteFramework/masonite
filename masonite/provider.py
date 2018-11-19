@@ -1,30 +1,23 @@
-""" Module for the Service Provider """
+"""Module for the Service Provider."""
 
 from masonite.helpers import random_string
 
 
 class ServiceProvider:
-    """Service provider class. Used as mediator for loading objects or entire features into the container.
-    """
+    """Service provider class. Used as mediator for loading objects or entire features into the container."""
 
     wsgi = True
 
     def __init__(self):
-        """Service provider constructor
-        """
-
+        """Service provider constructor."""
         self.app = None
 
     def boot(self):
-        """Used to boot things into the container. Typically ran after the register method has been ran.
-        """
-
+        """Use to boot things into the container. Typically ran after the register method has been ran."""
         pass
 
     def register(self):
-        """Used to register objects into the container.
-        """
-
+        """Use to register objects into the container."""
         pass
 
     def load_app(self, app):
@@ -36,44 +29,38 @@ class ServiceProvider:
         Returns:
             self
         """
-
         self.app = app
         return self
 
     def routes(self, routes):
-        """Adds routes to the container
+        """Add routes to the container.
 
         Arguments:
             routes {list} -- List of routes to add to the container
         """
-
         web_routes = self.app.make('WebRoutes')
         web_routes += routes
 
     def http_middleware(self, middleware):
-        """Adds HTTP middleware to the container
+        """Add HTTP middleware to the container.
 
         Arguments:
             middleware {list} -- List of middleware to add
         """
-
         http_middleware = self.app.make('HttpMiddleware')
         http_middleware += middleware
 
     def route_middleware(self, middleware):
-        """Add route middleware to the container
+        """Add route middleware to the container.
 
         Arguments:
             middleware {dict} -- A dictionary of route middleware to add
         """
-
         route_middleware = self.app.make('RouteMiddleware')
         route_middleware.update(middleware)
 
     def migrations(self, *directories):
-        """Add migration directories to the container
-        """
-
+        """Add migration directories to the container."""
         for directory in directories:
             self.app.bind(
                 '{}_MigrationDirectory'.format(random_string(4)),
@@ -81,9 +68,7 @@ class ServiceProvider:
             )
 
     def commands(self, *commands):
-        """Adds commands to the container. Pass in the commands as arguments.
-        """
-
+        """Add commands to the container. Pass in the commands as arguments."""
         for command in commands:
             self.app.bind(
                 '{}Command'.format(command.__class__.__name__.replace('Command', '')),
@@ -91,10 +76,9 @@ class ServiceProvider:
             )
 
     def assets(self, assets):
-        """Add assets to the container
+        """Add assets to the container.
 
         Arguments:
             assets {dict} -- A dictionary of assets to add
         """
-
         self.app.make('Storage').STATICFILES.update(assets)

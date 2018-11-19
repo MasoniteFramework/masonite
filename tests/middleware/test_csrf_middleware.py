@@ -36,3 +36,23 @@ class TestCSRFMiddleware:
         self.request.request_variables.update({'__token': self.request.get_cookie('csrf_token')})
         self.middleware.exempt = []
         self.middleware.before()
+
+    def test_generates_csrf_token(self):
+        assert len(self.middleware.generate_token()) == 30
+
+    def test_generates_token_every_request(self):
+        token1 = self.middleware.verify_token()
+        token2 = self.middleware.verify_token()
+
+        assert len(token1) == 30
+        assert len(token2) == 30
+        assert token1 != token2
+
+    def test_does_not_generate_token_every_request(self):
+        self.middleware.every_request = False
+        token1 = self.middleware.verify_token()
+        token2 = self.middleware.verify_token()
+
+        assert len(token1) == 30
+        assert len(token2) == 30
+        assert token1 == token2

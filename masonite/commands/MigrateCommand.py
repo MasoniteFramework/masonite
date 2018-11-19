@@ -1,4 +1,4 @@
-""" Run Migration Command """
+"""Run Migration Command."""
 import os
 import sys
 
@@ -9,7 +9,7 @@ from masonite.packages import add_venv_site_packages
 
 class MigrateCommand(Command):
     """
-    Run migrations
+    Run migrations.
 
     migrate
     """

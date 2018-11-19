@@ -7,20 +7,23 @@ from masonite.view import View
 
 class BaseScaffoldCommand(Command):
     """
-    Creates a model
+    Creates a model.
 
     model
         {name : Name of the model}
     """
 
     scaffold_name = 'Example'
+    suffix = ''
+    file_extension = '.py'
     base_directory = 'app/example/'
     template = '/masonite/snippets/scaffold/model'
 
     def handle(self):
         class_name = self.argument('name')
         view = View(App())
-        class_directory = self.base_directory + '{}.py'.format(class_name)
+        class_directory = '{}{}{}{}'.format(
+            self.base_directory, class_name, self.suffix, self.file_extension)
 
         if not make_directory(class_directory):
             return self.error('{0} Already Exists!'.format(self.scaffold_name))

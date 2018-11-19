@@ -1,4 +1,4 @@
-""" Starts Interactive Console Command """
+"""Starts Interactive Console Command."""
 import code
 import sys
 

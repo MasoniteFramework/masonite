@@ -66,8 +66,8 @@ def app(environ, start_response):
     | to next.
     |
     """
-
-    start_response(container.make('StatusCode'), container.make('Headers'))
+    
+    start_response(container.make('Request').get_status_code(), container.make('Request').get_and_reset_headers())
 
     """
     |--------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-""" Manager Module """
+"""Manager Module."""
 
 import inspect
 
@@ -8,24 +8,22 @@ from masonite.exceptions import (DriverNotFound,
 
 
 class Manager:
-    """Base Manager Class
-    """
+    """Base Manager Class."""
 
     config = None
     driver_prefix = None
 
     def __init__(self, container=None):
-        """Manager constructor
+        """Manager constructor.
 
         Keyword Arguments:
             container {masonite.app.App} -- The container class (default: {None})
         """
-
         self.manage_driver = None
         self.container = container
 
     def load_container(self, container):
-        """Loads the container into the class and creates the default driver
+        """Load the container into the class and creates the default driver.
 
         Arguments:
             container {masonite.app.App} -- The container class
@@ -33,13 +31,12 @@ class Manager:
         Returns:
             self
         """
-
         self.container = container
         self.create_driver()
         return self
 
     def driver(self, driver):
-        """Creates the driver specified and returns the driver instance.
+        """Create the driver specified and returns the driver instance.
 
         Arguments:
             driver {masonite.drivers.Driver} -- An instance of a Driver class.
@@ -47,12 +44,12 @@ class Manager:
         Returns:
             masonite.drivers.Driver -- Returns a driver which is an instance of the base Driver class.
         """
-
         self.create_driver(driver)
         return self.container.resolve(self.manage_driver).load_manager(self)
 
     def create_driver(self, driver=None):
-        """Creates the driver to be used.
+        """Create the driver to be used.
+
         This could be used as the default driver when the manager is created or called internally on the fly
         to change to a specific driver
 
@@ -63,7 +60,6 @@ class Manager:
             UnacceptableDriverType -- Raised when a driver passed in is not a string or a class
             DriverNotFound -- Raised when the driver can not be found.
         """
-
         if not driver:
             driver = self.container.make(self.config).DRIVER.capitalize()
         else:

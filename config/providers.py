@@ -5,7 +5,6 @@ from masonite.providers import (
     SessionProvider,
     RouteProvider,
     StatusCodeProvider,
-    StartResponseProvider,
     SassProvider,
     WhitenoiseProvider,
     MailProvider,
@@ -17,6 +16,7 @@ from masonite.providers import (
     CacheProvider,
     CsrfProvider,
 )
+from events.providers import EventProvider
 
 """
 |--------------------------------------------------------------------------
@@ -37,9 +37,9 @@ PROVIDERS = [
     SessionProvider,
     RouteProvider,
     StatusCodeProvider,
-    StartResponseProvider,
     WhitenoiseProvider,
     ViewProvider,
+    EventProvider,
 
     # Optional Framework Providers
     SassProvider,

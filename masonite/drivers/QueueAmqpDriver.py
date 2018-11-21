@@ -6,6 +6,7 @@ import threading
 from config import queue
 from masonite.contracts import QueueContract
 from masonite.drivers import BaseDriver
+from masonite.app import App
 from masonite.exceptions import DriverLibraryNotFound
 
 if 'amqp' in queue.DRIVERS:
@@ -16,7 +17,7 @@ else:
 
 class QueueAmqpDriver(QueueContract, BaseDriver):
 
-    def __init__(self, Container):
+    def __init__(self):
         """Queue AMQP Driver
 
         Arguments:

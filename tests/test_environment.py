@@ -56,6 +56,14 @@ class TestEnv:
         os.environ["test"] = "1"
         assert env('na', 'default') == 'default'
 
+    def test_env_returns_false_on_blank_string(self):
+        os.environ["test"] = ""
+        assert env('test', 'default') == 'default'
+
+    def test_env_returns_casted_value_on_blank_string(self):
+        os.environ["test"] = ""
+        assert env('test', '1234') == 1234
+
     def test_env_works_with_none(self):
         assert env('na', None) == None
 

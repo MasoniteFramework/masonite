@@ -18,7 +18,7 @@ Put any configuration settings for your drivers in this configuration setting.
 DRIVERS = {
     'amqp': {
         'username': env('QUEUE_USERNAME', 'guest'),
-        'vhost': env('QUEUE_VHOST', '/'),
+        'vhost': env('QUEUE_VHOST', ''),
         'password': env('QUEUE_PASSWORD', 'guest'),
         'host': env('QUEUE_HOST', 'localhost'),
         'port': env('QUEUE_PORT', '5672'),

@@ -77,6 +77,8 @@ class App:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
             return obj
+        elif name in self.swaps:
+            return self.swaps[name]
         elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)

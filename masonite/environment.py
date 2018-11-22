@@ -49,7 +49,7 @@ def env(value, default='', cast=True):
 
     if not cast:
         return env_var
-    
+
     if env_var == "":
         env_var = default
 

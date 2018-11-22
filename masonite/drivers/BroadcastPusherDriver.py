@@ -53,7 +53,7 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
                 'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
 
         pusher_client = pusher.Pusher(
-            app_id=self.config.DRIVERS['pusher']['app_id'],
+            app_id=str(self.config.DRIVERS['pusher']['app_id']),
             key=self.config.DRIVERS['pusher']['client'],
             secret=self.config.DRIVERS['pusher']['secret'],
             ssl=self.ssl_message

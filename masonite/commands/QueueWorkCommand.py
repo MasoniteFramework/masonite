@@ -40,7 +40,7 @@ class QueueWorkCommand(Command):
             queue.DRIVERS['amqp']['username'],
             queue.DRIVERS['amqp']['password'],
             queue.DRIVERS['amqp']['host'],
-            ':' + queue.DRIVERS['amqp']['port'] if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
+            ':' + str(queue.DRIVERS['amqp']['port']) if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
             queue.DRIVERS['amqp']['vhost'] if 'vhost' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['vhost'] else '%2F'
         )))
         channel = connection.channel()

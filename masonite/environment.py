@@ -50,6 +50,9 @@ def env(value, default='', cast=True):
     if not cast:
         return env_var
 
+    if env_var == "":
+        env_var = default
+
     if isinstance(env_var, bool):
         return env_var
     elif env_var is None:

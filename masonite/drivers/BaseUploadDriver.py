@@ -2,6 +2,7 @@
 
 from masonite.exceptions import FileTypeException
 from masonite.drivers.BaseDriver import BaseDriver
+from masonite.helpers import random_string
 import _io
 
 
@@ -55,8 +56,10 @@ class BaseUploadDriver(BaseDriver):
         return location
 
     def get_name(self, fileitem):
+        return "{}.{}".format(random_string(25).lower(), self.get_extension(fileitem))
+
+    def get_extension(self, fileitem):
         if isinstance(fileitem, _io.TextIOWrapper):
-            # It is an open() file
-            return fileitem.name
+            return fileitem.name.split('.')[-1]
         else:
-            return fileitem.filename
+            return fileitem.filename.split('.')[-1]

@@ -8,6 +8,7 @@ from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from masonite.helpers import static
+from masonite.environment import LoadEnvironment
 
 
 class TestStaticTemplateHelper:
@@ -119,6 +120,7 @@ class ImageMock():
         return bytes('file read', 'utf-8')
 
 
+LoadEnvironment()
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:
@@ -135,11 +137,10 @@ if os.environ.get('S3_BUCKET'):
             self.app.bind('UploadS3Driver', UploadS3Driver)
 
         def test_upload_file_for_s3(self):
-            assert self.app.make('Upload').driver('s3').store(ImageMock()) == 'test.jpg'
+            assert len(self.app.make('Upload').driver('s3').store(ImageMock())) == 29
 
         def test_upload_open_file_for_s3(self):
             assert self.app.make('Upload').driver('s3').store(open('.travis.yml'))
-
 
         def test_upload_manage_accept_files(self):
             """

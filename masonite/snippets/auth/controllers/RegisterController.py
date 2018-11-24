@@ -36,7 +36,6 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-
         user = auth.AUTH['model'].create(
             name=request.input('name'),
             password=bcrypt_password(request.input('password')),

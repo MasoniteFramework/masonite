@@ -100,8 +100,8 @@ class TestUploadManager:
         with pytest.raises(FileTypeException):
             UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
 
-    def test_upload_store_prepend(self):
-        assert self.app.make('UploadManager').driver('disk').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+    def test_upload_with_new_filename(self):
+        assert self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 
 
 class ImageMock():
@@ -155,5 +155,5 @@ if os.environ.get('S3_BUCKET'):
             with pytest.raises(FileTypeException):
                 UploadManager(self.app).driver('s3').accept('png').store(ImageMock())
 
-        def test_upload_store_prepend(self):
-            assert self.app.make('UploadManager').driver('s3').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+        def test_upload_with_new_filename(self):
+            assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'

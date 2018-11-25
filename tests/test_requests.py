@@ -169,7 +169,6 @@ class TestRequest:
         container.bind('Environ', wsgi_request)
 
         for provider in container.make('Providers').PROVIDERS:
-            print(provider)
             provider().load_app(container).register()
 
         container.bind('Response', 'test')

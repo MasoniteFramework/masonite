@@ -8,6 +8,7 @@ from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from masonite.helpers import static
+from masonite.environment import LoadEnvironment
 
 
 class TestStaticTemplateHelper:
@@ -100,8 +101,8 @@ class TestUploadManager:
         with pytest.raises(FileTypeException):
             UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
 
-    def test_upload_store_prepend(self):
-        assert self.app.make('UploadManager').driver('disk').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+    def test_upload_with_new_filename(self):
+        assert self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 
 
 class ImageMock():
@@ -119,6 +120,7 @@ class ImageMock():
         return bytes('file read', 'utf-8')
 
 
+LoadEnvironment()
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:
@@ -135,11 +137,10 @@ if os.environ.get('S3_BUCKET'):
             self.app.bind('UploadS3Driver', UploadS3Driver)
 
         def test_upload_file_for_s3(self):
-            assert self.app.make('Upload').driver('s3').store(ImageMock()) == 'test.jpg'
+            assert len(self.app.make('Upload').driver('s3').store(ImageMock())) == 29
 
         def test_upload_open_file_for_s3(self):
             assert self.app.make('Upload').driver('s3').store(open('.travis.yml'))
-
 
         def test_upload_manage_accept_files(self):
             """
@@ -155,5 +156,5 @@ if os.environ.get('S3_BUCKET'):
             with pytest.raises(FileTypeException):
                 UploadManager(self.app).driver('s3').accept('png').store(ImageMock())
 
-        def test_upload_store_prepend(self):
-            assert self.app.make('UploadManager').driver('s3').store_prepend(ImageMock(), 'hey') == 'heytest.jpg'
+        def test_upload_with_new_filename(self):
+            assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'

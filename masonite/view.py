@@ -228,10 +228,6 @@ class View:
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
 
-            # Set the searchpath since some packages look for this object
-            # This is sort of a hack for now
-            loader.searchpath = ''
-
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),

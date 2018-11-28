@@ -1,6 +1,7 @@
 """First Entry For The WSGI Server."""
 
 from masonite.app import App
+
 from bootstrap.start import app
 from config import application, providers
 

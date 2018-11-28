@@ -339,7 +339,7 @@ class TestRequest:
 
         assert request.header('HTTP_UPGRADE_INSECURE_REQUESTS') == '1'
         assert request.header('RAW_URI') == '/'
-        assert request.header('NOT_IN') == None
+        assert request.header('NOT_IN') == ''
 
     def test_request_sets_correct_header(self):
         app = App()

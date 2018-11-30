@@ -356,7 +356,7 @@ class Request(Extendable):
             if key in self.environ:
                 return self.environ[key]
             else:
-                return None
+                return ''
 
         self._set_header(key, value, http_prefix)
 

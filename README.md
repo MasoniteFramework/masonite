@@ -8,7 +8,6 @@
 <img src="https://travis-ci.org/MasoniteFramework/masonite.svg?branch=master">
 <img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
 <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
-<a href="https://gitter.im/masonite-framework/Lobby"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg" alt="gitter"></a>
 
 </p>
 
@@ -30,7 +29,14 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://masoniteframework.gitbooks.io/docs/content/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
-Also be sure to join the [Slack channel](https://masoniteframework.gitbooks.io/docs/content/)!
+Also be sure to join the [Slack channel](http://slack.masoniteproject.com/)!
+
+
+## Requirements
+
+- Python 3.4 +
+- OpenSSL (latest version)
+- Pip
 
 ## Linux
 
@@ -45,6 +51,38 @@ Instead of `python-dev` you may need to specify your Python version
 ```
 $ sudo apt-get install python3.6-dev libssl-dev
 ```
+
+## Windows
+
+With windows you will need to have the latest OpenSSL version. Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
+
+## Mac
+
+If you do not have the latest version of OpenSSL you will encounter some installation issues with creating new applications since we need to download a zip of the application via GitHub.
+
+With Mac you can install OpenSSL through `brew`.
+
+```
+brew install openssl
+```
+
+Python 3.6 does not come preinstalled with certificates so you may need to install certificates with this command:
+
+```
+/Applications/Python\ 3.6/Install\ Certificates.command
+```
+
+You should now be good to install new Masonite application of Mac :)
+
+### Python 3.7
+
+If you are using [Python 3.7](https://www.python.org/downloads/windows/), add it to your PATH Environment variable.
+
+Open Windows PowerShell and run: `pip install masonite-cli`
+
+Add `C:\Users\%USERNAME%\.AppData\Programs\Python\Python37\Scripts\` to PATH Environment variable.
+
+Note: PATH variables depend on your installation folder
 
 ## Installation:
 
@@ -205,7 +243,7 @@ Inside the `HelloWorldController` we can make our `show` method like this:
 
 ```python
 def show(self):
-    ''' Show Hello World Template '''
+    """ Show Hello World Template """
     return view('helloworld')
 ```
 

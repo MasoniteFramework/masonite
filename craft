@@ -1,0 +1,20 @@
+"""Craft Command.
+
+This module is really used for backup only if the masonite CLI cannot import this for you.
+This can be used by running "python craft". This module is not ran when the CLI can
+successfully import commands for you.
+"""
+
+from cleo import Application
+from masonite import info
+
+from wsgi import container
+
+application = Application('Masonite Version:', info.VERSION)
+
+for key, value in container.providers.items():
+    if isinstance(key, str) and key.endswith('Command'):
+        application.add(container.make('{0}'.format(key)))
+
+if __name__ == '__main__':
+    application.run()

@@ -14,9 +14,15 @@ def callback(ch, method, properties, body):
     job = pickle.loads(body)
     obj = job['obj']
     args = job['args']
+    callback = job['callback']
     if inspect.isclass(obj):
         obj = container.resolve(obj)
-    obj.handle(*args)
+
+    try:
+        getattr(obj, callback)(*args)
+    except AttributeError:
+        obj(*args)
+
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

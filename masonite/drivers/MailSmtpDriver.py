@@ -53,9 +53,8 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             )
             return
 
-        self.smtp.sendmail(self.config.FROM['name'],
+        self._send_mail(self.config.FROM['name'],
                 self.to_address, message.as_string())
-        self.smtp.quit()
 
     def _send_mail(self, *args):
         """Wrapper around sending mail so it can also be used for queues.

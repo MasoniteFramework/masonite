@@ -49,15 +49,15 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             from masonite import Queue
             container.make(Queue).push(
                 self._send_mail,
-                    args=(self.config.FROM['name'], self.to_address, message.as_string())
-                    )
+                args=(self.config.FROM['name'], self.to_address, message.as_string())
+            )
             return
         else:
             # self.smtp.send_message(message)
             self.smtp.sendmail(self.config.FROM['name'],
                     self.to_address, message.as_string())
         self.smtp.quit()
-    
+
     def _send_mail(self, *args):
         """Wrapper around sending mail so it can also be used for queues.
         """

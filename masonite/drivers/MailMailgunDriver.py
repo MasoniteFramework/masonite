@@ -25,13 +25,12 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
         else:
             return self._send_mail(message)
 
-
     def _send_mail(self, message):
         """Wrapper around sending mail so it can also be used with queues.
-        
+
         Arguments:
             message {string|None} -- The message to be sent passed in from the send method.
-        
+
         Returns:
             requests.post
         """

@@ -22,8 +22,8 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
             from wsgi import container
             from masonite import Queue
             return container.make(Queue).push(self._send_mail, args=(message,))
-        else:
-            return self._send_mail(message)
+
+        return self._send_mail(message)
 
     def _send_mail(self, message):
         """Wrapper around sending mail so it can also be used with queues.

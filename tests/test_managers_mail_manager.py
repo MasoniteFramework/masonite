@@ -2,6 +2,10 @@ import ssl
 
 import pytest
 
+from masonite.environment import LoadEnvironment
+
+LoadEnvironment()
+
 from config import mail
 from masonite.app import App
 from masonite.contracts import MailManagerContract
@@ -11,6 +15,7 @@ from masonite.exceptions import DriverNotFound
 from masonite.managers import MailManager
 from masonite.view import View
 from masonite.contracts import MailContract
+from masonite import env
 
 
 class MailSmtpDriver:
@@ -91,6 +96,18 @@ class TestMailManager:
         self.app.bind('MailSmtpDriver', MailDriver)
 
         assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
+
+    def test_send_mail_sends(self):
+        if env('RUN_MAIL'):
+            self.app.bind('MailSmtpDriver', MailDriver)
+
+            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send('hi')
+
+    def test_send_mail_sends_with_queue(self):
+        if env('RUN_MAIL'):
+            self.app.bind('MailSmtpDriver', MailDriver)
+
+            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').queue().send('hi') == None
 
     def test_send_mail_with_subject(self):
         self.app.bind('MailSmtpDriver', MailDriver)

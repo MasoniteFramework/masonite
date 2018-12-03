@@ -40,11 +40,24 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             self.smtp = smtplib.SMTP_SSL('{0}:{1}'.format(config['host'], config['port']))
         else:
             self.smtp = smtplib.SMTP('{0}:{1}'.format(
-                config['host'], config['port']))
+                config['host'], config['port']), timeout=5)
 
         self.smtp.login(config['username'], config['password'])
 
-        # self.smtp.send_message(message)
-        self.smtp.sendmail(self.config.FROM['name'],
-                   self.to_address, message.as_string())
+        if self.queue:
+            from wsgi import container
+            from masonite import Queue
+            container.make(Queue).push(
+                self._send_mail,
+                    args=(self.config.FROM['name'], self.to_address, message.as_string())
+                    )
+            return
+        else:
+            # self.smtp.send_message(message)
+            self.smtp.sendmail(self.config.FROM['name'],
+                    self.to_address, message.as_string())
+        self.smtp.quit()
+    
+    def _send_mail(self, *args):
+        self.smtp.sendmail(*args)
         self.smtp.quit()

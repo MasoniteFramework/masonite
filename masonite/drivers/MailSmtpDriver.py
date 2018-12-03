@@ -40,7 +40,7 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             self.smtp = smtplib.SMTP_SSL('{0}:{1}'.format(config['host'], config['port']))
         else:
             self.smtp = smtplib.SMTP('{0}:{1}'.format(
-                config['host'], config['port']), timeout=5)
+                config['host'], config['port']))
 
         self.smtp.login(config['username'], config['password'])
 

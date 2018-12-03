@@ -27,12 +27,20 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
 
 
     def _send_mail(self, message):
+        """Wrapper around sending mail so it can also be used with queues.
+        
+        Arguments:
+            message {string|None} -- The message to be sent passed in from the send method.
+        
+        Returns:
+            requests.post
+        """
         if not message:
             message = self.message_body
 
         domain = self.config.DRIVERS['mailgun']['domain']
         secret = self.config.DRIVERS['mailgun']['secret']
-        
+
         return requests.post(
             "https://api.mailgun.net/v3/{0}/messages".format(domain),
             auth=("api", secret),

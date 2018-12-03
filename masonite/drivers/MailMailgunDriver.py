@@ -18,7 +18,7 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
             requests.post -- Returns the response as a requests object.
         """
 
-        if self.queue:
+        if self._queue:
             from wsgi import container
             from masonite import Queue
             return container.make(Queue).push(self._send_mail, args=(message,))

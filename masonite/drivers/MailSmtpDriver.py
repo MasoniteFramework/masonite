@@ -44,7 +44,7 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
         self.smtp.login(config['username'], config['password'])
 
-        if self.queue:
+        if self._queue:
             from wsgi import container
             from masonite import Queue
             container.make(Queue).push(
@@ -52,10 +52,9 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
                 args=(self.config.FROM['name'], self.to_address, message.as_string())
             )
             return
-        else:
-            # self.smtp.send_message(message)
-            self.smtp.sendmail(self.config.FROM['name'],
-                    self.to_address, message.as_string())
+
+        self.smtp.sendmail(self.config.FROM['name'],
+                self.to_address, message.as_string())
         self.smtp.quit()
 
     def _send_mail(self, *args):

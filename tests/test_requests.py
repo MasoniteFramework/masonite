@@ -259,6 +259,28 @@ class TestRequest:
         assert request.route('test.url') == '/test/url'
         assert request.route('test.id', {'id': 1}) == '/test/url/1'
 
+    def test_request_redirection(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            get('/test/url', 'TestController@show').name('test.url'),
+            get('/test/url/@id', 'TestController@testing').name('test.id'),
+            get('/test/url/object', TestController.show).name('test.object')
+        ])
+        request = app.make('Request').load_app(app)
+
+        assert request.redirect('/test/url/@id', {'id': 1}).redirect_url == '/test/url/1'
+        request.redirect_url = None
+        assert request.redirect(name='test.url').redirect_url == '/test/url'
+        request.redirect_url = None
+        assert request.redirect(name='test.id', params={'id': 1}).redirect_url == '/test/url/1'
+        request.redirect_url = None
+        assert request.redirect(controller='TestController@show').redirect_url == '/test/url'
+        request.redirect_url = None
+        assert request.redirect(controller=TestController.show).redirect_url == '/test/url/object'
+        request.redirect_url = None
+        assert request.redirect('some/url').redirect_url == '/some/url'
+
     def test_request_route_returns_full_url(self):
         app = App()
         app.bind('Request', self.request)

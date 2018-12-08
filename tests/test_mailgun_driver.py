@@ -1,6 +1,13 @@
-from config import mail
+
 import pytest
 import os
+
+from masonite import env
+from masonite.environment import LoadEnvironment
+
+LoadEnvironment()
+
+
 
 from masonite.app import App
 from masonite.exceptions import DriverNotFound
@@ -8,7 +15,7 @@ from masonite.view import View
 from masonite.managers.MailManager import MailManager
 from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
 from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
-
+from config import mail
 
 if os.getenv('MAILGUN_SECRET'):
 
@@ -36,3 +43,8 @@ if os.getenv('MAILGUN_SECRET'):
         def test_mail_renders_template(self):
             assert 'MasoniteTesting' in MailManager(self.app).driver('mailgun').to(
                 'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
+
+        def test_mail_sends_with_queue_and_without_queue(self):
+            if env('RUN_MAIL'):
+                assert MailManager(self.app).driver('mailgun').to('idmann509@gmail.com').send('test queue') == None
+                assert MailManager(self.app).driver('mailgun').queue().to('idmann509@gmail.com').send('test queue') == None

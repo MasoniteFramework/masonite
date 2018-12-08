@@ -19,7 +19,7 @@ class QueueAsyncDriver(QueueContract, BaseDriver):
         """
         self.container = app
 
-    def push(self, *objects, args=()):
+    def push(self, *objects, args=(), callback='handle'):
         """Push objects onto the async stack.
 
         Arguments:
@@ -29,6 +29,12 @@ class QueueAsyncDriver(QueueContract, BaseDriver):
             if inspect.isclass(obj):
                 obj = self.container.resolve(obj)
 
-            thread = threading.Thread(
-                target=obj.handle, args=args, kwargs={})
+            try:
+                thread = threading.Thread(
+                    target=getattr(obj, callback), args=args, kwargs={})
+            except AttributeError:
+                # Could be wanting to call only a method asyncronously
+                thread = threading.Thread(
+                    target=obj, args=args, kwargs={})
+
             thread.start()

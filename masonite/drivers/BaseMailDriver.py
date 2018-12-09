@@ -21,6 +21,7 @@ class BaseMailDriver(BaseDriver):
         self.message_subject = 'Subject'
         self.message_body = None
         self.view = view
+        self._queue = False
 
     def to(self, user_email):
         """Set the user email address who you want to send mail to.
@@ -35,6 +36,18 @@ class BaseMailDriver(BaseDriver):
             user_email = user_email.email
 
         self.to_address = user_email
+        return self
+
+    def queue(self):
+        """Set the user email address who you want to send mail to.
+
+        Arguments:
+            user_email {string} -- The user email address.
+
+        Returns:
+            self
+        """
+        self._queue = True
         return self
 
     def template(self, template_name, dictionary={}):

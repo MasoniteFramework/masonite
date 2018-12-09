@@ -60,7 +60,7 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
                                        delivery_mode=2,  # make message persistent
                                    ))
 
-    def push(self, *objects, args=()):
+    def push(self, *objects, args=(), callback='handle'):
         """Push objects onto the amqp stack.
 
         Arguments:
@@ -70,7 +70,7 @@ class QueueAmqpDriver(QueueContract, BaseDriver):
         for obj in objects:
             # Publish to the channel for each object
             try:
-                self._publish({'obj': obj, 'args': args})
+                self._publish({'obj': obj, 'args': args, 'callback': callback})
             except self.pika.exceptions.ConnectionClosed:
                 self._connect()
                 self._publish({'obj': obj, 'args': args})

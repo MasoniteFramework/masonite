@@ -598,7 +598,7 @@ class Request(Extendable):
             self
         """
         if name:
-            return self.redirect_to(name, params)
+            return self.redirect_to(name, params, status=status)
         elif route:
             self.redirect_url = self.compile_route_to_url(route, params)
         elif controller:
@@ -607,7 +607,7 @@ class Request(Extendable):
         self.status(status)
         return self
 
-    def redirect_to(self, route_name, params={}):
+    def redirect_to(self, route_name, params={}, status=302):
         """Redirect to a named route.
 
         Arguments:
@@ -622,7 +622,7 @@ class Request(Extendable):
             self
         """
         self.redirect_url = self._get_named_route(route_name, params)
-        self.status(302)
+        self.status(status)
 
         return self
 

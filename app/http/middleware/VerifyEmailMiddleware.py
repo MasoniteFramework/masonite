@@ -1,10 +1,10 @@
-"""Authentication Middleware."""
+"""Verify Email Middleware."""
 
 from masonite.request import Request
 
 
-class AuthenticationMiddleware:
-    """Middleware To Check If The User Is Logged In."""
+class VerifyEmailMiddleware:
+    """Middleware To Check If The User Has Verified Their Email."""
 
     def __init__(self, request: Request):
         """Inject Any Dependencies From The Service Container.
@@ -16,8 +16,10 @@ class AuthenticationMiddleware:
 
     def before(self):
         """Run This Middleware Before The Route Executes."""
-        if not self.request.user():
-            self.request.redirect_to('login')
+        user = self.request.user()
+
+        if user and user.verified_at is None:
+            self.request.redirect('/email/verify')
 
     def after(self):
         """Run This Middleware After The Route Executes."""

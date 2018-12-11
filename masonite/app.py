@@ -131,7 +131,7 @@ class App:
         provider_list = []
         passing_arguments = list(resolving_arguments)
 
-        for _, value in inspect.signature(obj).parameters.items():
+        for _, value in self.get_parameters(obj):
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             elif self.resolve_parameters:

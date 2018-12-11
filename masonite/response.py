@@ -113,6 +113,7 @@ class Response(Extendable):
         if not location:
             location = self.request.redirect_url
 
+        self.request.reset_headers()
         self.request.header('Location', location)
         self.app.bind('Response', 'redirecting ...')
 

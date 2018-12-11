@@ -148,7 +148,7 @@ class App:
         try:
             return obj(*provider_list)
         except TypeError as e:
-            raise ContainerError('Either Tried resolving the too many dependencies or {}'.format(str(e)))
+            raise ContainerError(str(e))
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.
@@ -222,6 +222,9 @@ class App:
 
         raise ContainerError(
             'The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+
+    def get_parameters(self, obj):
+        return inspect.signature(obj).parameters.items()
 
     def _find_parameter(self, parameter):
         """Find a parameter in the container.

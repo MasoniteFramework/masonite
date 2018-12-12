@@ -4,6 +4,7 @@ from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException
+from app.http.controllers.subdirectory.SubController import SubController
 import pytest
 
 
@@ -63,6 +64,11 @@ class TestRoutes:
 
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
+
+    def test_route_gets_deeper_module_controller(self):
+        route = Get().route('test/url', 'subdirectory.SubController@show')
+        assert route.controller
+        assert isinstance(route.controller, SubController.__class__)
 
     def test_route_can_have_multiple_routes(self):
         assert Match(['GET', 'POST']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']

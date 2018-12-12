@@ -42,3 +42,9 @@ class TestResponse:
         self.response.view('foobar')
 
         assert self.app.make('Response') == 'foobar'
+
+    def test_view_can_return_integer_as_string(self):
+        self.response.view(1)
+
+        assert self.app.make('Response') == '1'
+        assert self.request.is_status(200)

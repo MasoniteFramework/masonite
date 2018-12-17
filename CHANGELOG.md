@@ -71,11 +71,15 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 - Changed routes to work without adding a slash at the end
 - Changed all dependencies to the most up to date versions
 
+## [2.0.36](https://github.com/MasoniteFramework/core/releases/tag/v2.0.36) - 2018-11-16
+### Added
+- Added the `-b`, `-p` and `-i` options to the serve command for bind, port and interval.
 
+### Fixed
+- Fixed issue where the server would crash when there was a syntax error.
 
-
-
-
+### Changed
+- Changed the developer server completely and replaced waitress with a different pure python development server.
 
 ## [2.0.35](https://github.com/MasoniteFramework/core/releases/tag/v2.0.35) - 2018-11-10
 ### Added

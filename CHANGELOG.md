@@ -4,6 +4,91 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.1](https://github.com/MasoniteFramework/core/releases/tag/v2.1.1) - 2018-12-16
+### Added
+- [Added queue drivers so any objects can be queued](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-functions-or-methods)
+- Added ShouldQueue class
+- [Added new redirection method options](https://docs.masoniteproject.com/the-basics/requests#redirection)
+
+### Fixed
+- Fixed issue with deeper module controllers
+- Fixed issue when returning integer from a view
+- Fixed container error warning
+
+## [2.1.1](https://github.com/MasoniteFramework/core/releases/tag/v2.1.1) - 2018-12-04
+### Fixed
+- Fixed issue with header redirection
+
+## [2.1.0](https://github.com/MasoniteFramework/core/releases/tag/v2.1.0) - 2018-12-01
+### Added
+- Added middleware classes instead of strings.
+- Added migrate:status command
+- Added a simple container binding
+- Added Mail Helper
+- Added status code mapping and `request.status(int)` features
+- Added several methods to the service provider class to helper bind things into the container
+- Added view Routes
+- Added request.without() method
+- Added port to database dictionary
+- Added way to set an integer as a status code
+- Added a way to set headers with a dictionary
+- Added basic testing framework
+- Added Match routes for multiple route methods
+- Added Masonite events into core
+- Added email verification
+- Added request.without
+- Added craft middleware command
+- Added Headers can be added via a dictionary 
+- Added views can now use dot notation
+- Added swap to container
+- Added masonite env function for cast conversions 
+- Added ability to resolve with normal parameters like `.resolve(obj, var1, var2)`
+- Added password reset to auth command
+- Added Response Middleware and removed the StartResponse provider
+- Added better pep 8 standards
+- Added code of conduct
+- Added test for file system helpers
+- Added Masonite events to core
+- Added Response object
+
+### Removed
+- Removed the arbitrary `payload` input when fetching a json response 308b3b1
+- Removed container Resolving - #255 
+- Removed the need for the |safe filters on Masonite template helpers
+- Removed patch from serve command
+
+### Fixed
+- Fixed param method not working with custom route compilers
+- Fixed issue when removing mailprovider from the optional providers section
+
+### Changed
+- Changed `Auth` class into the `auth` directory and removed the facades directory.
+- Changed cache_exists to cache
+- Changed Request redirections now set status codes
+- Changed and refactored commands to inherit from scaffolding based classes
+- Changed built in templates to bootstrap 4
+- Changed all scaffolding commands to use view templates now
+- Changed routes to work without adding a slash at the end
+- Changed all dependencies to the most up to date versions
+
+
+
+
+
+
+
+## [2.0.35](https://github.com/MasoniteFramework/core/releases/tag/v2.0.35) - 2018-11-10
+### Added
+- Added upload driver's abilities to accept an open file as a file item.
+
+## [2.0.34](https://github.com/MasoniteFramework/core/releases/tag/v2.0.34) - 2018-11-09
+### Fixed
+- Fixed dependencies being fixed to a specific version number
+
+## [2.0.33](https://github.com/MasoniteFramework/core/releases/tag/v2.0.33) - 2018-11-01
+### Fixed
+- Fixed issue with mail templates throwing `'function' object has no attribute 'render`
+
 ## [2.0.32](https://github.com/MasoniteFramework/core/releases/tag/v2.0.32) - 2018-10-31
 ### Added
 - [Added Redis cache driver](https://docs.masoniteproject.com/useful-features/caching#redis)

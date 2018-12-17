@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
-## [2.1.1](https://github.com/MasoniteFramework/core/releases/tag/v2.1.1) - 2018-12-16
+## [2.1.2](https://github.com/MasoniteFramework/core/releases/tag/v2.1.2) - 2018-12-16
 ### Added
 - [Added queue drivers so any objects can be queued](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-functions-or-methods)
 - Added ShouldQueue class

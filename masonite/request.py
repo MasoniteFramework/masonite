@@ -583,7 +583,7 @@ class Request(Extendable):
         """
         return self.user_model
 
-    def redirect(self, route, params={}):
+    def redirect(self, route=None, params={}, name=None, controller=None, status=302):
         """Redirect the user based on the route specified.
 
         Arguments:
@@ -597,11 +597,17 @@ class Request(Extendable):
         Returns:
             self
         """
-        self.redirect_url = self.compile_route_to_url(route, params)
-        self.status(302)
+        if name:
+            return self.redirect_to(name, params, status=status)
+        elif route:
+            self.redirect_url = self.compile_route_to_url(route, params)
+        elif controller:
+            self.redirect_url = self.url_from_controller(controller, params)
+
+        self.status(status)
         return self
 
-    def redirect_to(self, route_name, params={}):
+    def redirect_to(self, route_name, params={}, status=302):
         """Redirect to a named route.
 
         Arguments:
@@ -616,7 +622,7 @@ class Request(Extendable):
             self
         """
         self.redirect_url = self._get_named_route(route_name, params)
-        self.status(302)
+        self.status(status)
 
         return self
 

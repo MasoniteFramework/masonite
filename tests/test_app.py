@@ -24,16 +24,6 @@ class TestApp:
         self.app.bind('Request', REQUEST)
         assert self.app.make('Request').cookies == []
 
-    def test_throws_exception_if_too_many_bindings(self):
-        REQUEST.cookies = ['hey']
-        self.app.bind('Request', REQUEST)
-        self.app.bind('Route', Get().route('test/', None))
-        with pytest.raises(ContainerError, message="should raise error"):
-            self.app.resolve(self._functest)
-
-    def _functest(Request, get: Get, post: Post):
-        return Request.cookies
-
     def test_can_set_container_hook(self):
         self.app.on_bind('Request', self._func_on_bind)
         self.app.bind('Request', REQUEST)

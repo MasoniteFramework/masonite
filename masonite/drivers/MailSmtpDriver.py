@@ -44,7 +44,20 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
         self.smtp.login(config['username'], config['password'])
 
-        # self.smtp.send_message(message)
-        self.smtp.sendmail(self.config.FROM['name'],
-                   self.to_address, message.as_string())
+        if self._queue:
+            from wsgi import container
+            from masonite import Queue
+            container.make(Queue).push(
+                self._send_mail,
+                args=(self.config.FROM['name'], self.to_address, message.as_string())
+            )
+            return
+
+        self._send_mail(self.config.FROM['name'],
+                self.to_address, message.as_string())
+
+    def _send_mail(self, *args):
+        """Wrapper around sending mail so it can also be used for queues.
+        """
+        self.smtp.sendmail(*args)
         self.smtp.quit()

@@ -86,6 +86,8 @@ class Response(Extendable):
 
         if isinstance(view, dict) or isinstance(view, list):
             return self.json(view)
+        elif isinstance(view, int):
+            view = str(view)
         elif isinstance(view, View):
             view = view.rendered_template
         elif isinstance(view, self.request.__class__):

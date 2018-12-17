@@ -169,7 +169,9 @@ class BaseHttpRoute:
             if mod[0].startswith('/'):
                 self.module_location = '.'.join(
                     mod[0].replace('/', '').split('.')[0:-1])
-
+            elif '.' in mod[0]:
+                # This is a deeper module controller
+                self.module_location = self.module_location + '.' + '.'.join(mod[0].split('.')[:-1])
         else:
             if controller is None:
                 return None

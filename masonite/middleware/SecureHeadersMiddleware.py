@@ -3,7 +3,6 @@
 from masonite.request import Request
 
 from config import middleware
-from config.application import DEBUG
 
 
 class SecureHeadersMiddleware:
@@ -35,5 +34,4 @@ class SecureHeadersMiddleware:
             'Pragma': 'no-cache',
         }
         headers.update(middleware.SECURE_HEADERS)
-        if not DEBUG:
-            self.request.header(headers)
+        self.request.header(headers)

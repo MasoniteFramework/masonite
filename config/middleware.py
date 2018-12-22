@@ -1,6 +1,6 @@
 """ Middleware Configuration Settings """
 
-from masonite.middleware import ResponseMiddleware
+from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
@@ -25,6 +25,7 @@ HTTP_MIDDLEWARE = [
     # todo
     # CsrfMiddleware,
     ResponseMiddleware,
+    SecureHeadersMiddleware,
 ]
 
 """
@@ -49,4 +50,16 @@ ROUTE_MIDDLEWARE = {
         MiddlewareTest,
         AddAttributeMiddleware,
     ]
+}
+
+"""Secure Headers to use in masonite.middlware.SecureHeadersMiddleware"""
+
+SECURE_HEADERS = {
+    'Strict-Transport-Security': 'max-age=63072000; includeSubdomains',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'X-XSS-Protection': '1; mode=block',
+    'X-Content-Type-Options': 'sniff-test',
+    'Referrer-Policy': 'no-referrer, strict-origin-when-cross-origin',
+    'Cache-control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
 }

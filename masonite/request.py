@@ -19,7 +19,7 @@ from cryptography.fernet import InvalidToken
 from config import application
 from masonite.auth.Sign import Sign
 from masonite.exceptions import InvalidHTTPStatusCode
-from masonite.helpers import dot
+from masonite.helpers import dot, clean_request_input
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.status import response_statuses
@@ -213,7 +213,7 @@ class Request(Extendable):
 
         try:
             for name in variables.keys():
-                value = self._get_standardized_value(variables[name])
+                value = clean_request_input(self._get_standardized_value(variables[name]))
                 self.request_variables[name.replace('[]', '')] = value
         except TypeError:
             self.request_variables = {}

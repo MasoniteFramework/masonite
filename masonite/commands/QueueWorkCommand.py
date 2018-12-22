@@ -14,9 +14,15 @@ def callback(ch, method, properties, body):
     job = pickle.loads(body)
     obj = job['obj']
     args = job['args']
+    callback = job['callback']
     if inspect.isclass(obj):
         obj = container.resolve(obj)
-    obj.handle(*args)
+
+    try:
+        getattr(obj, callback)(*args)
+    except AttributeError:
+        obj(*args)
+
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
@@ -40,7 +46,7 @@ class QueueWorkCommand(Command):
             queue.DRIVERS['amqp']['username'],
             queue.DRIVERS['amqp']['password'],
             queue.DRIVERS['amqp']['host'],
-            ':' + queue.DRIVERS['amqp']['port'] if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
+            ':' + str(queue.DRIVERS['amqp']['port']) if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
             queue.DRIVERS['amqp']['vhost'] if 'vhost' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['vhost'] else '%2F'
         )))
         channel = connection.channel()

@@ -9,17 +9,26 @@ import pytest
 class MockObject:
     pass
 
+
 class GetObject(MockObject):
-    
+
     def find(self):
         return 1
+
+
 class GetAnotherObject(MockObject):
 
     def find(self):
         return 2
 
+
 class MakeObject:
     pass
+
+
+class SubstituteThis:
+    pass
+
 
 class TestContainer:
 
@@ -32,12 +41,6 @@ class TestContainer:
     def test_container_gets_direct_class(self):
         assert isinstance(self.app.make('Request'), Request)
 
-    def test_container_resolves_object(self):
-        assert isinstance(self.app.resolve(self._function_test), MockObject.__class__)
-
-    def _function_test(self, MockObject):
-        return MockObject
-
     def test_container_resolving_annotation(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), MockObject.__class__)
 
@@ -46,14 +49,14 @@ class TestContainer:
 
     def test_container_resolving_instance_of_object(self):
         assert isinstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
-    
+
     def test_container_resolving_similiar_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
 
         obj = self.app.resolve(self._function_test_find_method_on_similiar_objects)
         assert obj[0] == 2
         assert obj[1] == 1
-    
+
     def _function_test_find_method_on_similiar_objects(self, user: GetAnotherObject, country: GetObject):
         return [user().find(), country().find()]
 
@@ -63,7 +66,7 @@ class TestContainer:
 
     def _function_test_double_annotations(self, mock: MockObject, request: Request):
         return {'mock': MockObject, 'request': Request}
-    
+
     def test_container_resolving_multiple_annotations(self):
         assert isinstance(self.app.resolve(self._function_test_double_annotations)['mock'], MockObject.__class__)
         assert isinstance(self.app.resolve(self._function_test_double_annotations)['request'], Request.__class__)
@@ -71,16 +74,9 @@ class TestContainer:
     def test_container_contract_returns_upload_disk_driver(self):
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         assert isinstance(self.app.resolve(self._function_test_contracts), UploadDiskDriver.__class__)
-    
+
     def _function_test_contracts(self, upload: UploadContract):
         return upload
-
-    def _function_test_contract_and_annotations(self, UploadDiskDriver, request: Request, MockObject):
-        return MockObject
-
-    def test_container_injects_dependencies_in_any_order(self):
-        self.app.bind('UploadDiskDriver', UploadDiskDriver)
-        assert isinstance(self.app.resolve(self._function_test_contract_and_annotations), MockObject.__class__)
 
     def _function_not_in_container(self, NotIn):
         return NotIn
@@ -93,17 +89,17 @@ class TestContainer:
         self.app.bind('ExceptionHook', object)
         self.app.bind('SentryExceptionHook', object)
         self.app.bind('ExceptionHandler', object)
-        
+
         assert self.app.collect('*ExceptionHook') == {'ExceptionHook': object, 'SentryExceptionHook': object}
         assert self.app.collect('Exception*') == {'ExceptionHook': object, 'ExceptionHandler': object}
         assert self.app.collect('Sentry*Hook') == {'SentryExceptionHook': object}
         with pytest.raises(AttributeError):
             self.app.collect('Sentry')
-    
+
     def test_container_collects_correct_subclasses_of_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
         objects = self.app.collect(MockObject)
-        
+
         assert 'GetAnotherObject' in objects
         assert 'GetObject' in objects
 
@@ -113,7 +109,7 @@ class TestContainer:
     def test_container_can_bind_and_make_from_class_key(self):
         self.app.bind(MakeObject, MakeObject)
         assert self.app.make(MakeObject) == MakeObject
-        
+
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']
         assert self.app.make(MockObject) == GetObject
@@ -143,3 +139,55 @@ class TestContainer:
         self.app.bind('Request', 'override')
         assert self.app.make('Request') == 'test'
 
+    def test_app_simple_bind(self):
+        app = App()
+        app.simple(Request)
+        assert app.providers == {Request: Request}
+
+    def test_app_simple_bind_init(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.providers == {Request: req}
+
+    def test_app_make_after_simple_bind(self):
+        app = App()
+        req = Request()
+        app.simple(req)
+        assert app.make(Request) == req
+
+    def test_can_pass_variables(self):
+        app = App()
+        req = Request()
+        app.bind('Request', req)
+        obj = app.resolve(self._test_resolves_variables, 'test1', 'test2')
+        assert obj[0] == 'test1'
+        assert obj[1] == req
+        assert obj[2] == 'test2'
+
+    def _test_resolves_variables(self, var1, request: Request, var2):
+        return [var1, request, var2]
+
+    def test_can_substitute(self):
+        app = App()
+        app.swap(SubstituteThis, self._substitute)
+
+        assert app.resolve(self._test_substitute) == 'test'
+
+    def test_can_substitute_with_object(self):
+        app = App()
+        app.swap(SubstituteThis, MakeObject())
+
+        assert isinstance(app.resolve(self._test_substitute), MakeObject)
+
+    def test_can_substitute_with_make_object(self):
+        app = App()
+        app.swap(SubstituteThis, MakeObject())
+
+        assert isinstance(app.make(SubstituteThis), MakeObject)
+
+    def _substitute(self, method, container):
+        return 'test'
+
+    def _test_substitute(self, test: SubstituteThis):
+        return test

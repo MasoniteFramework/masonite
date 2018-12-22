@@ -1,9 +1,10 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup
+from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.exceptions import InvalidRouteCompileException
+from masonite.exceptions import InvalidRouteCompileException, RouteException
+from app.http.controllers.subdirectory.SubController import SubController
 import pytest
 
 
@@ -20,7 +21,6 @@ class TestRoutes:
         assert callable(Patch)
         assert callable(Delete)
 
-
     def test_route_get_returns_output(self):
         assert self.route.get('url', 'output') == 'output'
 
@@ -31,39 +31,54 @@ class TestRoutes:
         self.route.environ['REQUEST_METHOD'] = 'POST'
         assert self.route.is_post() == True
 
-
     def test_compile_route_to_regex(self):
-        assert self.route.compile_route_to_regex(Get().route('test/route', None)) == '^test\\/route\\/$'
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route', None)) == '^test\\/([\\w.-]+)\\/$'
+        get_route = Get().route('test/route', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/route\\/$'
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
+        get_route = Get().route('test/@route', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/([\\w.-]+)\\/$'
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:string', None)) == '^test\\/([a-zA-Z]+)\\/$'
+        get_route = Get().route('test/@route:int', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
+
+        get_route = Get().route('test/@route:string', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/([a-zA-Z]+)\\/$'
 
     def test_route_can_add_compilers(self):
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:int', None)) == '^test\\/(\\d+)\\/$'
-        
+        get_route = Get().route('test/@route:int', None)
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
+
         self.route.compile('year', r'[0-9]{4}')
 
-        assert self.route.compile_route_to_regex(Get().route(
-            'test/@route:year', None)) == '^test\\/[0-9]{4}\\/$'
+        get_route = Get().route('test/@route:year', None)
 
+        assert get_route.compile_route_to_regex(self.route) == '^test\\/[0-9]{4}\\/$'
+
+        get_route = Get().route('test/@route:slug', None)
         with pytest.raises(InvalidRouteCompileException):
-            self.route.compile_route_to_regex(Get().route(
-                'test/@route:slug', None))
+            get_route.compile_route_to_regex(self.route)
 
     def test_route_gets_controllers(self):
         assert Get().route('test/url', 'TestController@show')
         assert Get().route('test/url', '/app.http.test_controllers.TestController@show')
 
-
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
 
+    def test_route_gets_deeper_module_controller(self):
+        route = Get().route('test/url', 'subdirectory.SubController@show')
+        assert route.controller
+        assert isinstance(route.controller, SubController.__class__)
+
+    def test_route_can_have_multiple_routes(self):
+        assert Match(['GET', 'POST']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']
+
+    def test_match_routes_convert_lowercase_to_uppercase(self):
+        assert Match(['Get', 'Post']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']
+
+    def test_match_routes_raises_exception_with_non_list_method_types(self):
+        with pytest.raises(RouteException):
+            assert Match('get').route('test/url', 'TestController@show').method_type == ['GET', 'POST']
 
     def test_group_route(self):
         routes = group('/example', [
@@ -97,6 +112,14 @@ class TestRoutes:
 
         assert routes[0].required_domain == ['www']
 
+    def test_group_adds_methods(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'TestController@show'),
+            Get().route('/test/2', 'TestController@show')
+        ], add_methods=['OPTIONS'])
+
+        assert routes[0].method_type == ['GET', 'OPTIONS']
+
     def test_group_route_sets_prefix(self):
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show'),
@@ -106,14 +129,12 @@ class TestRoutes:
         assert routes[0].route_url == '/dashboard/test/1'
 
     def test_group_route_sets_name(self):
-        look_for = []
-        routes = RouteGroup([
+        RouteGroup([
             Get().route('/test/1', 'TestController@show').name('create'),
             Get().route('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
     def test_group_route_sets_name_for_none_route(self):
-        look_for = []
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show').name('create'),
             Get().route('/test/2', 'TestController@show')
@@ -134,7 +155,7 @@ class TestRoutes:
                     RouteGroup([
                         Get().route('/test/3', 'TestController@show').name('update'),
                         Get().route('/test/4', 'TestController@show').name('delete'),
-                    ], middleware = ('auth')),
+                    ], middleware=('auth')),
                 ], name='post.')
             ], prefix='/dashboard')
         ]

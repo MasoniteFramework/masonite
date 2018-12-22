@@ -1,21 +1,16 @@
-import os
-from cleo import Command
+"""New View Command."""
+from masonite.commands import BaseScaffoldCommand
 
 
-class ViewCommand(Command):
+class ViewCommand(BaseScaffoldCommand):
     """
-    Creates a view
+    Creates a view.
 
     view
         {name : Name of the view you would like to create}
     """
 
-    def handle(self):
-        name = self.argument('name')
-        if not os.path.isfile('resources/templates/' + name + '.html'):
-            if not os.path.exists(os.path.dirname('resources/templates/{0}.html'.format(name))):
-                os.makedirs(os.path.dirname('resources/templates/{0}.html'.format(name)))
-            open('resources/templates/' + name + '.html', 'w+')
-            self.info('{0} View Created Successfully!'.format(name))
-        else:
-            self.error('{0} View Exists!'.format(name))
+    scaffold_name = "View"
+    template = '/masonite/snippets/scaffold/view'
+    file_extension = '.html'
+    base_directory = 'resources/templates/'

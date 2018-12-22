@@ -6,22 +6,14 @@ from masonite.request import Request
 
 
 class TestController:
-    
+
     def setup_method(self):
         self.app = App()
         self.app.bind('object', object)
-    
+
     def test_controller_loads_app(self):
         controller = Controller().load_app(self.app)
         assert controller.app.providers == {'object': object}
-
-    def test_controller_loads_app(self):
-        app = App()
-        app.bind('object', object)
-
-        controller = Controller().load_app(app)
-        assert controller.app.providers == {'object': object}
-
 
     def test_string_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
@@ -39,10 +31,8 @@ class TestController:
         assert route.controller_method == 'show'
         assert isinstance(response, Request.__class__)
 
-
     def test_object_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
-
         # Create the route
         route = get('/url', ControllerTest.show)
 

@@ -1,15 +1,15 @@
+"""Migrate Reset Command."""
 import os
 import sys
 
 from cleo import Command
-
 from masonite.packages import add_venv_site_packages
 from orator.exceptions.query import QueryException
 
 
 class MigrateResetCommand(Command):
     """
-    Migrate reset
+    Migrate reset.
 
     migrate:reset
     """
@@ -26,7 +26,7 @@ class MigrateResetCommand(Command):
         # Get any migration files from the Service Container
         migration_directory = ['databases/migrations']
         for key, value in container.providers.items():
-            if 'MigrationDirectory' in key:
+            if type(key) == str and 'MigrationDirectory' in key:
                 migration_directory.append(value)
 
         # Load in the Orator migration system

@@ -7,12 +7,16 @@ htmlcov
 .coverage
 **.pyc
 **.DS_Store
+.DS_store
 .env
 .pytest_cache/
-storage/compiled/
+__pycache__
+# storage/compiled/
 uploads/test.jpg
 bootstrap/cache/*.html
 bootstrap/cache/*.txt
+tests/bootstrap/cache/*.html
+tests/bootstrap/cache/*.txt
 /uploads/
 .coverage
 .idea/

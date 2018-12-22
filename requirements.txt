@@ -10,3 +10,4 @@ hupper
 pika
 pypugjs
 coveralls
+flake8

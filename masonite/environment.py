@@ -1,15 +1,11 @@
-"""Module for the LoadEnvironment class.
-"""
+"""Module for the LoadEnvironment class."""
 
 import os
 from pathlib import Path
 
-from dotenv import find_dotenv, load_dotenv
-
 
 class LoadEnvironment:
-    """This class is used for loading the environment from .env and .env.* files.
-    """
+    """This class is used for loading the environment from .env and .env.* files."""
 
     def __init__(self, env=None, override=True, only=None):
         """LoadEnvironment constructor.
@@ -19,13 +15,15 @@ class LoadEnvironment:
             override {bool} -- Whether or not the environment variables found should overwrite existing ones. (default: {False})
             only {string} -- If this is set then it will only load that environment. (default: {None})
         """
+        from dotenv import load_dotenv
+        self.env = load_dotenv
 
         if only:
             self._load_environment(only, override=override)
             return
 
         env_path = str(Path('.') / '.env')
-        load_dotenv(env_path, override=override)
+        self.env(env_path, override=override)
 
         if os.environ.get('APP_ENV'):
             self._load_environment(os.environ.get(
@@ -42,6 +40,28 @@ class LoadEnvironment:
         Keyword Arguments:
             override {bool} -- Whether the environment file should overwrite existing environment keys. (default: {False})
         """
-
         env_path = str(Path('.') / '.env.{}'.format(env))
-        load_dotenv(dotenv_path=env_path, override=override)
+        self.env(dotenv_path=env_path, override=override)
+
+
+def env(value, default='', cast=True):
+    env_var = os.getenv(value, default)
+
+    if not cast:
+        return env_var
+
+    if env_var == "":
+        env_var = default
+
+    if isinstance(env_var, bool):
+        return env_var
+    elif env_var is None:
+        return None
+    elif env_var.isnumeric():
+        return int(env_var)
+    elif env_var in ('false', 'False'):
+        return False
+    elif env_var in ('true', 'True'):
+        return True
+    else:
+        return env_var

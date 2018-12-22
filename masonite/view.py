@@ -1,28 +1,16 @@
-""" View Module """
+"""View Module."""
 
 
-from jinja2 import (ChoiceLoader, Environment, FileSystemLoader, PackageLoader,
-                    select_autoescape)
+from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound
 
 
-def view(template='index', dictionary={}):
-    """DEPRECATED
-    """
-
-    env = Environment(
-        loader=PackageLoader('resources', 'templates'),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
-
-    return env.get_template(template + '.html').render(dictionary)
-
-
 class View:
-    """View class. Responsible for handling everything involved with views and view environments.
-    """
+    """View class. Responsible for handling everything involved with views and view environments."""
+
+    _splice = '/'
 
     def __init__(self, container):
         """View constructor.
@@ -30,7 +18,6 @@ class View:
         Arguments:
             container {masonite.app.App} -- Container object.
         """
-
         self.dictionary = {}
         self.composers = {}
         self.container = container
@@ -61,7 +48,6 @@ class View:
         Returns:
             self
         """
-
         self.__load_environment(template)
 
         self.dictionary.update(dictionary)
@@ -90,12 +76,9 @@ class View:
             # Try rendering the direct template the user has supplied
             return self.env.get_template(self.template).render(
                 self.dictionary)
-        
 
     def _update_from_composers(self):
-        """Adds data into the view from specified composers.
-        """
-
+        """Add data into the view from specified composers."""
         # Check if the template is directly specified in the composer
         if self.template in self.composers:
             self.dictionary.update(self.composers[self.template])
@@ -108,7 +91,7 @@ class View:
         compiled_string = ''
 
         # Check for wildcard view composers
-        for template in self.template.split('/'):
+        for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
             if '{}*'.format(compiled_string) in self.composers:
@@ -119,7 +102,7 @@ class View:
                 compiled_string += '/'
 
     def composer(self, composer_name, dictionary):
-        """Updates composer dictionary.
+        """Update composer dictionary.
 
         Arguments:
             composer_name {string} -- Key to bind dictionary of data to.
@@ -128,7 +111,6 @@ class View:
         Returns:
             self
         """
-
         if isinstance(composer_name, str):
             self.composers[composer_name] = dictionary
 
@@ -139,7 +121,7 @@ class View:
         return self
 
     def share(self, dictionary):
-        """Shares data to all templates.    
+        """Share data to all templates.
 
         Arguments:
             dictionary {dict} -- Dictionary of key value pairs to add to all views.
@@ -147,12 +129,11 @@ class View:
         Returns:
             self
         """
-
         self.dictionary.update(dictionary)
         return self
 
     def cache_for(self, time=None, type=None):
-        """Set time and type for cache
+        """Set time and type for cache.
 
         Keyword Arguments:
             time {string} -- Time to cache template for (default: {None})
@@ -164,7 +145,6 @@ class View:
         Returns:
             self
         """
-
         if not self.container.has('Cache'):
             raise RequiredContainerBindingNotFound(
                 "The 'Cache' container binding is required to use this method and wasn't found in the container. You may be missing a Service Provider"
@@ -186,7 +166,6 @@ class View:
         Returns:
             bool
         """
-
         self.__load_environment(template)
 
         try:
@@ -203,11 +182,10 @@ class View:
 
         Keyword Arguments:
             loader {jinja2.Loader} -- Type of Jinja2 loader to use. (default: {jinja2.PackageLoader})
-        """
-        # loader(package_name, location)
+        """        # loader(package_name, location)
         # /dashboard/templates/dashboard
         if loader == PackageLoader:
-            template_location = template_location.split('/')
+            template_location = template_location.split(self._splice)
 
             self.environments.append(
                 loader(template_location[0], '/'.join(template_location[1:])))
@@ -216,13 +194,12 @@ class View:
                 loader(template_location))
 
     def filter(self, name, function):
-        """Used to add filters to views.
+        """Use to add filters to views.
 
         Arguments:
             name {string} -- Key to bind the filter to.
             function {object} -- Function used for the template filter.
         """
-
         self._filters.update({name: function})
 
     def test(self, key, obj):
@@ -239,9 +216,8 @@ class View:
         Arguments:
             template {string} -- Template to load environment from.
         """
-
         self.template = template
-        self.filename = template + self.extension
+        self.filename = template.replace(self._splice, '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split
@@ -252,22 +228,18 @@ class View:
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
 
-            # Set the searchpath since some packages look for this object
-            # This is sort of a hack for now
-            loader.searchpath = ''
-
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
                 extensions=self._jinja_extensions
             )
-        
+
         else:
             loader = ChoiceLoader(
-                    [PackageLoader('resources', 'templates')] +
-                    self.environments
-                )
-            
+                [PackageLoader('resources', 'templates')]
+                + self.environments
+            )
+
             # Set the searchpath since some packages look for this object
             # This is sort of a hack for now
             loader.searchpath = ''
@@ -286,7 +258,6 @@ class View:
         Arguments:
             template {string} -- Creates the cached templates.
         """
-
         self.container.make('Cache').store_for(
             template, self.rendered_template,
             self.cache_time, self.cache_type, '.html',
@@ -298,8 +269,7 @@ class View:
         Returns:
             bool
         """
-
-        return self.container.make('Cache').cache_exists(self.template)
+        return self.container.make('Cache').exists(self.template)
 
     def __is_expired_cache(self):
         """Check if cache is expired.
@@ -307,7 +277,6 @@ class View:
         Returns:
             bool
         """
-
         # Check if cache_for is set and configurate
         if self.cache_time is None or self.cache_type is None and self.cache:
             return True
@@ -323,7 +292,10 @@ class View:
         Returns:
             self
         """
-
         driver_cache = self.container.make('Cache')
         self.rendered_template = driver_cache.get(self.template)
+        return self
+
+    def set_splice(self, splice):
+        self._splice = splice
         return self

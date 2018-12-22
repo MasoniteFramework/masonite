@@ -1,7 +1,37 @@
+""" Queue Settings """
+
+import os
+
 """
-Queue configuration
+|--------------------------------------------------------------------------
+| Queue Driver
+|--------------------------------------------------------------------------
+|
+| Queues are an excellent way to send intensive and time consuming tasks
+| into the background to improve performance of your application.
+|
+| Supported: 'async'
+|
 """
 
-DRIVER = 'async'
+DRIVER = os.getenv('QUEUE_DRIVER', 'async')
 
-DRIVERS = {}
+"""
+|--------------------------------------------------------------------------
+| Queue Drivers
+|--------------------------------------------------------------------------
+|
+| Put any configuration settings for your drivers in this configuration
+| setting.
+|
+"""
+
+DRIVERS = {
+    'amqp': {
+        'username': 'guest',
+        'password': 'guest',
+        'host': 'localhost',
+        'port': '5672',
+        'channel': 'default',
+    }
+}

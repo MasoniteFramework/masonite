@@ -2,6 +2,10 @@ import ssl
 
 import pytest
 
+from masonite.environment import LoadEnvironment
+
+LoadEnvironment()
+
 from config import mail
 from masonite.app import App
 from masonite.contracts import MailManagerContract
@@ -10,6 +14,8 @@ from masonite.drivers import MailSmtpDriver as MailDriver
 from masonite.exceptions import DriverNotFound
 from masonite.managers import MailManager
 from masonite.view import View
+from masonite.contracts import MailContract
+from masonite import env
 
 
 class MailSmtpDriver:
@@ -19,14 +25,17 @@ class MailSmtpDriver:
 
     def send(self, message):
         return message
-    
+
+
 class User:
     pass
+
 
 class TestMailManager:
 
     def setup_method(self):
         self.app = App()
+        self.app = self.app.bind('Container', self.app)
 
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)
@@ -36,12 +45,12 @@ class TestMailManager:
 
     def test_mail_manager_loads_container(self):
         mailManager = MailManager()
-        assert mailManager.load_container(self.app) 
+        assert mailManager.load_container(self.app)
 
     def test_mail_manager_resolves_from_contract(self):
         self.app.bind('MailManager', MailManager())
         assert self.app.resolve(self._test_resolve) == self.app.make('MailManager')
-    
+
     def _test_resolve(self, mail: MailManagerContract):
         return mail
 
@@ -57,15 +66,15 @@ class TestMailManager:
         assert mailManager.manage_driver == None
 
     def test_does_not_raise_drivernotfound_exception(self):
-        mailManager = MailManager(self.app)
+        MailManager(self.app)
 
     def test_manager_sets_driver(self):
         self.app.bind('MailMailtrapDriver', Mailgun)
-        mailManager = MailManager(self.app).driver('mailtrap')
+        MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):
         with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
-            mailManager = MailManager(self.app).driver('mailtrap')
+            MailManager(self.app).driver('mailtrap')
 
     def test_drivers_are_resolvable_by_container(self):
         self.app.bind('MailSmtpDriver', MailDriver)
@@ -88,6 +97,18 @@ class TestMailManager:
 
         assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
 
+    def test_send_mail_sends(self):
+        if env('RUN_MAIL'):
+            self.app.bind('MailSmtpDriver', MailDriver)
+
+            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send('hi')
+
+    def test_send_mail_sends_with_queue(self):
+        if env('RUN_MAIL'):
+            self.app.bind('MailSmtpDriver', MailDriver)
+
+            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').queue().send('hi') == None
+
     def test_send_mail_with_subject(self):
         self.app.bind('MailSmtpDriver', MailDriver)
 
@@ -106,3 +127,6 @@ class TestMailManager:
         mail_driver = MailManager(self.app).driver('smtp')
 
         assert isinstance(mail_driver.driver('test'), Mailgun)
+
+    def test_mail_helper_method_resolves_a_driver(self):
+        assert isinstance(mail_helper(), MailContract)

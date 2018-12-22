@@ -30,6 +30,10 @@ class InvalidCSRFToken(Exception):
     pass
 
 
+class InvalidHTTPStatusCode(Exception):
+    pass
+
+
 class RouteMiddlewareNotFound(Exception):
     pass
 
@@ -55,6 +59,10 @@ class StrictContainerException(Exception):
 
 
 class InvalidRouteCompileException(Exception):
+    pass
+
+
+class RouteException(Exception):
     pass
 
 

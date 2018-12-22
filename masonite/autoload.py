@@ -1,4 +1,6 @@
-"""Autoloader Module. This contains the class for autoloading classes from directories.
+"""Autoloader Module.
+
+This contains the class for autoloading classes from directories.
 This class is simply used to point at a directory and retrieve all classes in that directory.
 """
 
@@ -11,8 +13,7 @@ from masonite.exceptions import (AutoloadContainerOverwrite, ContainerError,
 
 
 class Autoload:
-    """Autoload class. Used to retrieve all classes from any set of directories.
-    """
+    """Autoload class. Used to retrieve all classes from any set of directories."""
 
     classes = {}
 
@@ -22,7 +23,6 @@ class Autoload:
         Keyword Arguments:
             app {masonite.app.App} -- Container class (default: {None})
         """
-
         self.app = app
 
     def load(self, directories, instantiate=False):
@@ -38,7 +38,6 @@ class Autoload:
             ContainerError -- Thrown when the container is not loaded into the class.
             AutoloadContainerOverwrite -- Thrown when the container already has the key binding.
         """
-
         self.instantiate = instantiate
         if not self.app:
             raise ContainerError(
@@ -56,21 +55,20 @@ class Autoload:
                     self.app.bind(obj[1].__name__, self._can_instantiate(obj))
 
     def instances(self, directories, instance, only_app=True, instantiate=False):
-        """Used to autoload all instances of a specific object
+        """Use to autoload all instances of a specific object.
 
         Arguments:
             directories {list} -- List of directories to search.
             instance {object} -- Object to search for instances of.
 
         Keyword Arguments:
-            only_app {bool} -- Only search in the current application namespace. This will not found other classes 
+            only_app {bool} -- Only search in the current application namespace. This will not found other classes
                                that are imported through third party packages. (default: {True})
             instantiate {bool} -- Whether or not to instantiate the classes it finds. (default: {False})
 
         Returns:
             dict -- Returns a dictionary of classes it found.
         """
-
         self.instantiate = instantiate
 
         for (module_loader, name, ispkg) in pkgutil.iter_modules(directories):
@@ -93,14 +91,13 @@ class Autoload:
             directories {list} -- List of directories to search.
 
         Keyword Arguments:
-            only_app {bool} -- Only search in the current application namespace. This will not found other classes 
+            only_app {bool} -- Only search in the current application namespace. This will not found other classes
                                that are imported through third party packages. (default: {True})
             instantiate {bool} -- Whether or not to instantiate the classes it finds. (default: {False})
 
         Returns:
             dict -- Returns a dictionary of objects found and their key bindings.
         """
-
         self.instantiate = instantiate
 
         for (module_loader, name, ispkg) in pkgutil.iter_modules(directories):
@@ -126,14 +123,13 @@ class Autoload:
         Returns:
             object -- Returns the object being instantiated.
         """
-
         if self.instantiate:
             return obj[1]()
 
         return obj[1]
 
     def _get_module_members(self, module_loader, name):
-        """Gets the module members.
+        """Get the module members.
 
         Arguments:
             module_loader {pkgutil.ModuleLoader} -- Module Loader from the pkgutil library
@@ -145,7 +141,6 @@ class Autoload:
         Returns:
             module -- returns the imported module.
         """
-
         search_path = module_loader.path
         if search_path.endswith('/'):
             raise InvalidAutoloadPath(

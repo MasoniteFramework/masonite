@@ -1,27 +1,25 @@
-"""Module for the Pusher websocket driver.
-"""
+"""Module for the Pusher websocket driver."""
 
-from masonite.contracts.BroadcastContract import BroadcastContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import BroadcastContract
+from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
+from masonite.app import App
 
 
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):
-    """Class for the Pusher websocket driver.
-    """
+    """Class for the Pusher websocket driver."""
 
-    def __init__(self, BroadcastConfig):
+    def __init__(self, app: App):
         """Pusher driver constructor.
 
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration.
         """
-
-        self.config = BroadcastConfig
+        self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):
-        """Sets whether to send data with SSL enabled.
+        """Set whether to send data with SSL enabled.
 
         Arguments:
             boolean {bool} -- Boolean on whether to set SSL.
@@ -29,7 +27,6 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Returns:
             self
         """
-
         self.ssl_message = boolean
         return self
 
@@ -49,7 +46,6 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Returns:
             string -- Returns the message sent.
         """
-
         try:
             import pusher
         except ImportError:
@@ -57,7 +53,7 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
                 'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
 
         pusher_client = pusher.Pusher(
-            app_id=self.config.DRIVERS['pusher']['app_id'],
+            app_id=str(self.config.DRIVERS['pusher']['app_id']),
             key=self.config.DRIVERS['pusher']['client'],
             secret=self.config.DRIVERS['pusher']['secret'],
             ssl=self.ssl_message

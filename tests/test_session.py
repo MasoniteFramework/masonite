@@ -20,7 +20,6 @@ class TestSession:
         self.app.bind('SessionManager', SessionManager(self.app))
         self.app.bind('Application', self.app)
 
-
     def test_session_request(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
@@ -29,7 +28,6 @@ class TestSession:
             assert session.get('username') == 'pep'
             assert session.get('password') == 'secret'
 
-
     def test_session_has_no_data(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
@@ -37,14 +35,12 @@ class TestSession:
             session._flash = {}
             assert session.has('nodata') is False
 
-
     def test_change_ip_address(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
             session.environ['REMOTE_ADDR'] = '111.222.33.44'
             session.set('username', 'pep')
             assert session.get('username') == 'pep'
-
 
     def test_session_get_all_data(self):
         for driver in ('memory', 'cookie'):
@@ -55,7 +51,6 @@ class TestSession:
 
             assert session.all() == {'username': 'pep', 'password': 'secret'}
 
-
     def test_session_has_data(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
@@ -64,7 +59,6 @@ class TestSession:
             session.set('username', 'pep')
             assert session.has('username') is True
             assert session.has('has_password') is False
-
 
     def test_session_helper(self):
         for driver in ('memory', 'cookie'):
@@ -75,7 +69,6 @@ class TestSession:
 
             assert isinstance(helper(), type(session))
 
-
     def test_session_flash_data(self):
         for driver in ('memory', 'cookie'):
             session = self.app.make('SessionManager').driver(driver)
@@ -85,13 +78,11 @@ class TestSession:
             assert session.get('flash_username') == 'pep'
             assert session.get('flash_password') == 'secret'
 
-
     def test_reset_flash_session_memory(self):
         session = self.app.make('SessionManager').driver('memory')
         session.flash('flash_', 'test_pep')
         session.reset(flash_only=True)
         assert session.get('flash_') is None
-
 
     def test_reset_flash_session_driver(self):
         session = self.app.make('SessionManager').driver('cookie')

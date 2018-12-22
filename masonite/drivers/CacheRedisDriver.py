@@ -3,9 +3,9 @@
 
 import os
 
-from masonite.contracts.CacheContract import CacheContract
-from masonite.drivers.BaseCacheDriver import BaseCacheDriver
-
+from config import application, cache
+from masonite.contracts import CacheContract
+from masonite.drivers import BaseCacheDriver
 from masonite.exceptions import DriverLibraryNotFound
 
 
@@ -13,19 +13,19 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
     """Class for the cache redis driver.
     """
 
-    def __init__(self, CacheConfig, Application):
+    def __init__(self):
         """Cache redis driver constructor
-        
+
         Arguments:
             CacheConfig {config.cache} -- Cache configuration module.
             Application {config.application} -- Application configuration module.
         """
 
-        self.appconfig = Application
+        self.appconfig = application
         self.cache_forever = None
         self.app_name = os.getenv('APP_NAME', 'masonite')
 
-        config = CacheConfig.DRIVERS['redis']
+        config = cache.DRIVERS['redis']
 
         try:
             import redis
@@ -42,15 +42,15 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
 
     def store(self, key, value):
         """Stores content in cache file.
-        
+
         Arguments:
             key {string} -- The key to store the cache file into
             value {string} -- The value you want to store in the cache
-        
+
         Keyword Arguments:
             extension {string} -- the extension you want to append to the file (default: {".txt"})
             location {string} -- The path you want to store the cache into. (default: {None})
-        
+
         Returns:
             string -- Returns the key
         """
@@ -63,20 +63,20 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
 
     def store_for(self, key, value, cache_time, cache_type):
         """Store the cache for a specific amount of time.
-        
+
         Arguments:
             key {string} -- The key to store the cache file into
             value {string} -- The value you want to store in the cache
             cache_time {int|string} -- The time as a string or an integer (1, 2, 5, 100, etc)
             cache_type {string} -- The type of time to store for (minute, minutes, hours, seconds, etc)
-        
+
         Keyword Arguments:
             extension {string} -- the extension you want to append to the file (default: {".txt"})
             location {string} -- The path you want to store the cache into. (default: {None})
-        
+
         Raises:
             ValueError -- Thrown if an invalid cache type was caught (like houes instead of hours).
-        
+
         Returns:
             string -- Returns the key
         """
@@ -116,7 +116,7 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
 
         return key
 
-    def cache_exists(self, key):
+    def exists(self, key):
         """
         Check if the cache exists
         """
@@ -128,4 +128,4 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
         Check if a valid cache
         """
 
-        return self.cache_exists(key)
+        return self.exists(key)

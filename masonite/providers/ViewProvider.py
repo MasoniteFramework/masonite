@@ -1,4 +1,4 @@
-""" A View Service Provider """
+"""A View Service Provider."""
 
 from masonite.provider import ServiceProvider
 from masonite.view import View

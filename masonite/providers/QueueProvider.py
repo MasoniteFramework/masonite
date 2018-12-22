@@ -1,9 +1,10 @@
-""" A RedirectionProvider Service Provider """
+"""A RedirectionProvider Service Provider."""
 
 from config import queue
 from masonite.drivers import QueueAsyncDriver, QueueAmqpDriver
 from masonite.managers import QueueManager
 from masonite.provider import ServiceProvider
+from masonite import Queue
 
 
 class QueueProvider(ServiceProvider):
@@ -16,8 +17,6 @@ class QueueProvider(ServiceProvider):
         self.app.bind('QueueManager', QueueManager)
         self.app.bind('QueueConfig', queue)
 
-    def boot(self, QueueConfig, QueueManager):
-        self.app.bind(
-            'Queue',
-            QueueManager(self.app).driver(QueueConfig.DRIVER)
-        )
+    def boot(self, queue: QueueManager):
+        self.app.bind('Queue', queue(self.app).driver(self.app.make('QueueConfig').DRIVER))
+        self.app.swap(Queue, queue(self.app).driver(self.app.make('QueueConfig').DRIVER))

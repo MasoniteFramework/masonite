@@ -34,6 +34,7 @@ class TestUploadManager:
         self.app.bind('Test', object)
         self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
+        self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('Application', application)
         self.app.bind('UploadManager', UploadManager().load_container(self.app))
 
@@ -46,6 +47,10 @@ class TestUploadManager:
     def test_upload_manager_throws_error_with_incorrect_file_type(self):
         with pytest.raises(UnacceptableDriverType):
             self.app.make('UploadManager').driver(static)
+
+    def test_upload_manager_changes_accepted_files(self):
+        self.app.make('UploadManager').driver('disk').accept('yml').accept_file_types == ('yml')
+        self.app.make('UploadManager').driver('s3').accept('yml').accept_file_types == ('yml')
 
     def test_upload_manager_raises_driver_not_found_error(self):
         self.app = App()

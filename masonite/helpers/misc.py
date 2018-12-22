@@ -34,3 +34,16 @@ def dot(data, compile_to=None):
         compiling += notation
         compiling += dot_split[1]
     return compiling
+
+
+def clean_request_input(value):
+    import html
+
+    if isinstance(value, str):
+        return html.escape(value)
+    elif isinstance(value, list):
+        return [html.escape(x) for x in value]
+    elif isinstance(value, int):
+        return value
+    elif isinstance(value, dict):
+        return {key: html.escape(val) for (key, val) in value.items()}

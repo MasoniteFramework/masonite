@@ -38,5 +38,5 @@ class SecureHeadersMiddleware:
             self.headers.update(middleware.SECURE_HEADERS)
         except AttributeError:
             pass
-            
+
         self.request.header(self.headers)

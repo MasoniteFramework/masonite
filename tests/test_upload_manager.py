@@ -78,14 +78,14 @@ class TestUploadManager:
         This test is responsible for checking if you upload a file correctly.
         """
 
-        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'uploads')
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), location='uploads')
 
     def test_upload_file_with_location_from_driver(self):
         """
         This test is responsible for checking if you upload a file correctly.
         """
 
-        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'disk.uploading')
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), location='disk.uploading')
 
     def test_upload_manage_accept_files(self):
         """
@@ -104,6 +104,12 @@ class TestUploadManager:
     def test_upload_with_new_filename(self):
         assert self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 
+    def test_upload_manager_validates_file_ext(self):
+        """
+        This test is responsible for checking if you upload
+        a file correctly with a valid extension.
+        """
+        assert UploadManager(self.app).driver('disk').accept('jpg', 'png').validate_extension('test.png')
 
 class ImageMock():
     """

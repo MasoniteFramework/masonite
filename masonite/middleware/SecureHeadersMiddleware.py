@@ -2,8 +2,6 @@
 
 from masonite.request import Request
 
-from config import middleware
-
 
 class SecureHeadersMiddleware:
     """SecureHeaders Middleware."""
@@ -33,6 +31,8 @@ class SecureHeadersMiddleware:
     def after(self):
         """Run This Middleware After The Route Executes.
         """
+        from config import middleware
+
         try:
             # Try importing secure headers if they exist in the config file
             self.headers.update(middleware.SECURE_HEADERS)

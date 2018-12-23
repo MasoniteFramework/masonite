@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.3](https://github.com/MasoniteFramework/core/releases/tag/v2.1.3) - 2018-12-22
+### Security
+- Fixed possibility of an XSS attack through query strings
+- Fixed possibility of uploading arbitrary files by default
+
+### Fixed
+- Fixed issue where a 400 response was returning a 200 status code
+
 ## [2.1.2](https://github.com/MasoniteFramework/core/releases/tag/v2.1.2) - 2018-12-16
 ### Added
 - [Added queue drivers so any objects can be queued](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-functions-or-methods)

@@ -31,7 +31,7 @@ class BaseUploadDriver(BaseDriver):
         """
         if self.accept_file_types is not None:
             if not filename.endswith(self.accept_file_types):
-                raise FileTypeException("The extension file not is valid.")
+                raise FileTypeException("The file extension is not supported.")
 
         return True
 

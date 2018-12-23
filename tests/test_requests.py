@@ -412,8 +412,7 @@ class TestRequest:
         request = app.make('Request').load_app(app)
 
         request.header('TEST1', 'set_this_item')
-        request.header('TEST2', 'set_this_item', http_prefix=None)
-        assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+        assert request.get_headers() == [('TEST1', 'set_this_item')]
 
     def test_request_sets_str_status_code(self):
         app = App()

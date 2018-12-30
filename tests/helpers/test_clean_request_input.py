@@ -1,4 +1,5 @@
 from masonite.helpers import clean_request_input
+import cgi
 
 class TestCleanRequestInput:
 
@@ -17,3 +18,11 @@ class TestCleanRequestInput:
         assert clean_request_input(
             {'key': '<img """><script>alert(\'hey\')</script>">'}
         ) == {'key': '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;'}
+
+    def test_does_not_clean_field_storage_objects(self):
+        fieldstorage = FieldStorageTest()
+        assert clean_request_input(fieldstorage) == fieldstorage
+
+
+class FieldStorageTest(cgi.FieldStorage):
+    pass

@@ -47,3 +47,5 @@ def clean_request_input(value):
         return value
     elif isinstance(value, dict):
         return {key: html.escape(val) for (key, val) in value.items()}
+
+    return value

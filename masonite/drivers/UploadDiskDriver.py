@@ -5,6 +5,7 @@ import _io
 
 from masonite.contracts import UploadContract
 from masonite.drivers import BaseUploadDriver
+from masonite.helpers.filesystem import make_directory
 from masonite.app import App
 
 
@@ -45,14 +46,16 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         self.validate_extension(filename)
 
         location = self.get_location(location)
-        if not location.endswith('/'):
-            location += '/'
+
+        location = os.path.join(location, filename)
+
+        make_directory(location)
 
         if isinstance(fileitem, _io.TextIOWrapper):
             open(location + filename, 'wb').write(bytes(fileitem.read(), 'utf-8'))
         else:
             open(location + filename, 'wb').write(fileitem.file.read())
 
-        self.file_location = location + filename
+        self.file_location = location
 
         return filename

@@ -43,10 +43,10 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         except ImportError:
             raise DriverLibraryNotFound(
                 'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
-                
+
         driver = self.upload.driver('disk')
         driver.accept_file_types = self.accept_file_types
-        driver.store(fileitem, filename=filename, location=location)
+        driver.store(fileitem, filename=filename, location='storage/temp')
         file_location = driver.file_location
 
         # use the new filename or get it from the fileitem
@@ -55,7 +55,6 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
 
         # Check if is a valid extension
         self.validate_extension(filename)
-
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],

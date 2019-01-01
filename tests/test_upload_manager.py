@@ -1,4 +1,5 @@
 import os
+import shutil
 import pytest
 
 from config import application, storage
@@ -47,6 +48,11 @@ class TestUploadManager:
     def test_upload_manager_throws_error_with_incorrect_file_type(self):
         with pytest.raises(UnacceptableDriverType):
             self.app.make('UploadManager').driver(static)
+
+    def test_disk_driver_creates_directory_if_not_exists(self):
+        self.app.make('UploadManager').driver('disk').store(ImageMock(), location="storage/temp")
+        assert os.path.exists('storage/temp')
+        shutil.rmtree('storage/temp')
 
     def test_upload_manager_changes_accepted_files(self):
         self.app.make('UploadManager').driver('disk').accept('yml').accept_file_types == ('yml')

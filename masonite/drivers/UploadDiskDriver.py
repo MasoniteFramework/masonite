@@ -52,9 +52,9 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
         make_directory(location)
 
         if isinstance(fileitem, _io.TextIOWrapper):
-            open(location + filename, 'wb').write(bytes(fileitem.read(), 'utf-8'))
+            open(location, 'wb').write(bytes(fileitem.read(), 'utf-8'))
         else:
-            open(location + filename, 'wb').write(fileitem.file.read())
+            open(location, 'wb').write(fileitem.file.read())
 
         self.file_location = location
 

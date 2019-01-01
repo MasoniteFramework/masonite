@@ -66,7 +66,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         s3.meta.client.upload_file(
             file_location,
             self.config.DRIVERS['s3']['bucket'],
-            filename
+            os.path.join(location, filename)
         )
 
         return filename

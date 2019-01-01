@@ -2,6 +2,10 @@ import os
 import shutil
 import pytest
 
+from masonite.environment import LoadEnvironment
+
+LoadEnvironment()
+
 from config import application, storage
 from masonite.app import App
 from masonite.exceptions import DriverNotFound, FileTypeException, UnacceptableDriverType
@@ -9,7 +13,6 @@ from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from masonite.helpers import static
-from masonite.environment import LoadEnvironment
 
 
 class TestStaticTemplateHelper:
@@ -137,7 +140,7 @@ class ImageMock():
         return bytes('file read', 'utf-8')
 
 
-LoadEnvironment()
+
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:
@@ -175,3 +178,7 @@ if os.environ.get('S3_BUCKET'):
 
         def test_upload_with_new_filename(self):
             assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
+
+        def test_upload_with_new_filename_and_location_in_s3(self):
+            print(os.environ.get('S3_BUCKET'))
+            assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg', location='3/2') == 'newname.jpg'

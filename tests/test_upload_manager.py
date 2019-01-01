@@ -180,5 +180,4 @@ if os.environ.get('S3_BUCKET'):
             assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 
         def test_upload_with_new_filename_and_location_in_s3(self):
-            print(os.environ.get('S3_BUCKET'))
             assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg', location='3/2') == 'newname.jpg'

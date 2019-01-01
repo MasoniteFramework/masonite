@@ -63,10 +63,15 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
 
         s3 = session.resource('s3')
 
+        if location:
+            location = os.path.join(location, filename)
+        else:
+            location = os.path.join(filename)
+
         s3.meta.client.upload_file(
             file_location,
             self.config.DRIVERS['s3']['bucket'],
-            os.path.join(location, filename)
+            location
         )
 
         return filename

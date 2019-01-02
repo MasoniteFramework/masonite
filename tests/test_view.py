@@ -32,6 +32,15 @@ class TestView:
         assert view.exists('index')
         assert view.exists('not_available') is False
 
+    def test_view_render_does_not_keep_previous_variables(self):
+        view = self.container.make('ViewClass')
+
+        view.render('test', {'var1': 'var1'})
+        view.render('test', {'var2': 'var2'})
+
+        assert 'var1' not in view.dictionary
+        assert 'var2' in view.dictionary
+
     def test_global_view_exists(self):
         view = self.container.make('ViewClass')
 
@@ -139,7 +148,7 @@ class TestView:
         viewclass.share({'test1': 'test1'})
         viewclass.share({'test2': 'test2'})
 
-        assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2'}
+        assert viewclass._shared == {'test1': 'test1', 'test2': 'test2'}
 
     def test_adding_environment(self):
         viewclass = self.container.make('ViewClass')

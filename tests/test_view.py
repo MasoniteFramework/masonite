@@ -149,6 +149,8 @@ class TestView:
         viewclass.share({'test2': 'test2'})
 
         assert viewclass._shared == {'test1': 'test1', 'test2': 'test2'}
+        viewclass.render('test', {'var1': 'var1'})
+        assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2', 'var1': 'var1'}
 
     def test_adding_environment(self):
         viewclass = self.container.make('ViewClass')
@@ -272,7 +274,7 @@ class TestView:
 
     def _is_admin(self, obj):
         return obj.admin == 1
-    
+
     def test_can_render_pubjs(self):
         view = self.container.make('ViewClass')
         view.add_extension('pypugjs.ext.jinja.PyPugJSExtension')

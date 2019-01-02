@@ -22,8 +22,8 @@ class TestCSRFMiddleware:
 
     def test_middleware_shares_correct_input(self):
         self.middleware.before()
-        assert 'csrf_field' in self.view.dictionary
-        assert self.view.dictionary['csrf_field'].startswith("<input type='hidden' name='__token' value='")
+        assert 'csrf_field' in self.view._shared
+        assert self.view._shared['csrf_field'].startswith("<input type='hidden' name='__token' value='")
 
     def test_middleware_throws_exception_on_post(self):
         self.request.environ['REQUEST_METHOD'] = 'POST'

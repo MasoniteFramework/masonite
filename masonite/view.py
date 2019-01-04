@@ -35,6 +35,7 @@ class View:
         self._jinja_extensions = ['jinja2.ext.loopcontrols']
         self._filters = {}
         self._tests = {}
+        self._shared = {}
 
     def render(self, template, dictionary={}):
         """Get the string contents of the view.
@@ -49,8 +50,10 @@ class View:
             self
         """
         self.__load_environment(template)
+        self.dictionary = {}
 
         self.dictionary.update(dictionary)
+        self.dictionary.update(self._shared)
 
         # Check if use cache and return template from cache if exists
         if self.container.has('Cache') and self.__cached_template_exists() and not self.__is_expired_cache():
@@ -129,7 +132,7 @@ class View:
         Returns:
             self
         """
-        self.dictionary.update(dictionary)
+        self._shared.update(dictionary)
         return self
 
     def cache_for(self, time=None, type=None):

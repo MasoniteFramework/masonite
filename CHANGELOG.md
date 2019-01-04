@@ -15,6 +15,9 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 - Changed how S3 temporarily stores file uploads
 - Changed where the exception is thrown in the s3 driver to prevent a temporary file being saved before uploading if the driver is not installed.
 
+### Added
+- Added the ability for disk driver to create directories if they do not exist
+
 ## [2.1.4](https://github.com/MasoniteFramework/core/releases/tag/v2.1.4) - 2018-12-30
 ### Fixed
 - Fixed issue where uploading a file resulted in None being returned.

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
-## [2.1.5](https://github.com/MasoniteFramework/core/releases/tag/v2.1.5) - 2018-01-03
+## [2.1.5](https://github.com/MasoniteFramework/core/releases/tag/v2.1.5) - 2019-01-03
 ### Fixed
 - Fixed issue with LoginController not working properly because of incorrectly specified input
 - Fixed issue with view render method storing variables from previous renders

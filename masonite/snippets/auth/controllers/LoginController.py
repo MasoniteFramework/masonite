@@ -35,7 +35,7 @@ class LoginController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        if Auth(request).login(request.input('username'), request.input('password')):
+        if Auth(request).login(request.input('email'), request.input('password')):
             return request.redirect('/home')
 
         return request.redirect('/login')

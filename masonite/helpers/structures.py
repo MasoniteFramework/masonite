@@ -100,4 +100,4 @@ class Dot:
 
 
 def config(path, default=''):
-    return Dot().locate(path, default)
+    return Dot().locate('config.' + path, default)

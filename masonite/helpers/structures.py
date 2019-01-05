@@ -56,7 +56,7 @@ class Dot:
         """Used for finding both the uppercase and specified version.
 
         Arguments:
-            search_path {string} -- The search path to find the module, dictionary key, object etc. 
+            search_path {string} -- The search path to find the module, dictionary key, object etc.
                                     This is typically in the form of dot notation 'config.application.debug'
 
         Keyword Arguments:

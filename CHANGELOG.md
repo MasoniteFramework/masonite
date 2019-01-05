@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.5](https://github.com/MasoniteFramework/core/releases/tag/v2.1.5) - 2018-01-03
+### Fixed
+- Fixed issue with LoginController not working properly because of incorrectly specified input
+- Fixed issue with view render method storing variables from previous renders
+- Fixed issue with s3 not working properly when using both location and filename
+- Fixed issue with Amazon S3 storing all files in root directory
+
+### Changed
+- Changed how S3 temporarily stores file uploads
+- Changed where the exception is thrown in the s3 driver to prevent a temporary file being saved before uploading if the driver is not installed.
+
+## [2.1.4](https://github.com/MasoniteFramework/core/releases/tag/v2.1.4) - 2018-12-30
+### Fixed
+- Fixed issue where uploading a file resulted in None being returned.
+
 ## [2.1.3](https://github.com/MasoniteFramework/core/releases/tag/v2.1.3) - 2018-12-22
 ### Security
 - Fixed possibility of an XSS attack through query strings

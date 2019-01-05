@@ -36,6 +36,9 @@ DRIVERS = {
         'secret': os.getenv('S3_SECRET', 'HkZj...'),
         'bucket': os.getenv('S3_BUCKET', 's3bucket'),
         'location': 'http://s3.amazon.com/bucket',
+        'test_locations': {
+            'test': 'value'
+        }
     }
 }
 

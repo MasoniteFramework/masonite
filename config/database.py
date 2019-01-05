@@ -29,7 +29,7 @@ LoadEnvironment()
 """
 
 DATABASES = {
-    'default': os.environ.get('DB_DRIVER'),
+    'default': os.environ.get('DB_DRIVER', 'sqlite'),
     'sqlite': {
         'driver': 'sqlite',
         'database': os.environ.get('DB_DATABASE'),

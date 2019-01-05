@@ -1,3 +1,5 @@
+"""A Module For Manipulating Code Structures."""
+
 import pydoc
 
 
@@ -7,10 +9,13 @@ class Dot:
         """Locate the object from the given search path
 
         Arguments:
-            path {[type]} -- [description]
+            search_path {string} -- A search path to fetch the object from like config.application.debug.
+
+        Keyword Arguments:
+            default {string} -- A default string if the search path is not found (default: {''})
 
         Returns:
-            [type] -- [description]
+            any -- Could be a string, object or anything else that is fetched.
         """
         value = self.find(search_path, default)
 
@@ -21,6 +26,18 @@ class Dot:
             return value
 
     def dict_dot(self, search, dictionary):
+        """Takes a dot notation representation of a dictionary and fetches it from the dictionary.
+
+        This will take something like s3.locations and look into the s3 dictionary and fetch the locations
+        key.
+
+        Arguments:
+            search {string} -- The string to search for in the dictionary using dot notation.
+            dictionary {dict} -- The dictionary to search through.
+
+        Returns:
+            string -- The value of the dictionary element.
+        """
         if "." in search:
             key, rest = search.split(".", 1)
             try:
@@ -36,22 +53,33 @@ class Dot:
         return self.dict_dot(dictionary, search)
 
     def find(self, search_path, default=''):
-        """Used for finding both the uppercase and specified version
+        """Used for finding both the uppercase and specified version.
 
         Arguments:
-            path {string} -- The path to find
+            search_path {string} -- The search path to find the module, dictionary key, object etc. 
+                                    This is typically in the form of dot notation 'config.application.debug'
+
+        Keyword Arguments:
+            default {string} -- The default value to return if the search path could not be found. (default: {''})
+
+        Returns:
+            any -- Could be a string, object or anything else that is fetched.
         """
         value = pydoc.locate(search_path)
+
         if value:
             return value
 
         paths = search_path.split('.')
 
         value = pydoc.locate('.'.join(paths[:-1]) + '.' + paths[-1].upper())
+
         if value:
             return value
 
         search_path = -1
+
+        # Go backwards through the dot notation until a match is found.
         while search_path < len(paths):
             value = pydoc.locate('.'.join(paths[:search_path]) + '.' + paths[search_path].upper())
 

@@ -62,13 +62,14 @@ class Dot:
 
             if value:
                 break
-            
+
             if default:
                 return default
 
             search_path -= 1
 
         return value
+
 
 def config(path, default=''):
     return Dot().locate(path, default)

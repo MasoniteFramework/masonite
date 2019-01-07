@@ -180,6 +180,12 @@ class TestContainer:
 
         assert isinstance(app.resolve(self._test_substitute), MakeObject)
 
+    def test_can_use_in_keyword(self):
+        app = App()
+        app.bind('test', 'value')
+
+        assert 'test' in app
+
     def test_can_substitute_with_make_object(self):
         app = App()
         app.swap(SubstituteThis, MakeObject())

@@ -348,3 +348,6 @@ class App:
 
         raise MissingContainerBindingNotFound(
             'The dependency with the {0} annotation could not be resolved by the container'.format(obj))
+
+    def __contains__(self, obj):
+        return self.has(obj)

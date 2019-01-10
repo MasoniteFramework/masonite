@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.6](https://github.com/MasoniteFramework/core/releases/tag/v2.1.6) - 2019-01-09
+### Added
+- [Added config helper](https://docs.masoniteproject.com/the-basics/helper-functions#config) [#517](https://github.com/MasoniteFramework/core/pull/517)
+- [Added ability to use `in` keyword for the container](https://docs.masoniteproject.com/architectural-concepts/service-container#has) [#520](https://github.com/MasoniteFramework/core/pull/520) 
+- [Added ability to use multiple columns to authenticate](https://docs.masoniteproject.com/security/authentication#multiple-authentication-columns) [#521](https://github.com/MasoniteFramework/core/pull/521)
+- [Added ability to specify the user password column](https://docs.masoniteproject.com/security/authentication#changing-the-authentication-password) [#521](https://github.com/MasoniteFramework/core/pull/521)
+
 ## [2.1.5](https://github.com/MasoniteFramework/core/releases/tag/v2.1.5) - 2019-01-03
 ### Fixed
 - Fixed issue with LoginController not working properly because of incorrectly specified input

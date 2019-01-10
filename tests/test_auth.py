@@ -18,9 +18,13 @@ class MockUser():
     __auth__ = 'email'
     password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
     email = 'user@email.com'
+    name = 'testuser123'
     id = 1
 
     def where(self, column, name):
+        return self
+
+    def or_where(self, column, name):
         return self
 
     def first(self):
@@ -60,6 +64,12 @@ class TestAuth:
 
     def test_login_user(self):
         assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        assert self.request.get_cookie('token')
+
+    def test_login_user_with_list_auth_column(self):
+        user = MockUser
+        user.__auth__ = ['email', 'name']
+        assert isinstance(self.auth.login('testuser123', 'secret'), user)
         assert self.request.get_cookie('token')
 
     def test_get_user(self):

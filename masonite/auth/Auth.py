@@ -63,9 +63,23 @@ class Auth:
         """
         auth_column = self.auth_model.__auth__
         try:
-            model = self.auth_model.where(auth_column, name).first()
+            password_column = self.auth_model.password if hasattr(self.auth_model, 'password') else self.auth_model.__password__
+        except AttributeError as e:
+            raise AttributeError('Your model does not have a password column or a designated __password__ attribute. Set the __password__ attribute to the name of your password column.') from e
 
-            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(model.password, 'utf-8')):
+        try:
+            # Try to login multiple or statements if given an auth list
+            if isinstance(auth_column, list):
+                model = self.auth_model.where(auth_column[0], name)
+
+                for authentication_column in auth_column[1:]:
+                    model.or_where(authentication_column, name)
+
+                model = model.first()
+            else:
+                model = self.auth_model.where(auth_column, name).first()
+
+            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(password_column, 'utf-8')):
                 if not self._once:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token

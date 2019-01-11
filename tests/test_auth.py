@@ -79,7 +79,17 @@ class TestAuth:
 
     def test_auth_gets_user_login_attribute(self):
         auth = Auth(self.request, ListUser())
-        assert auth._get_password_column() == 'pass123'
+        assert auth._get_password_value(ListUser()) == 'pass123'
+
+        auth = Auth(self.request, MockUser())
+        assert auth._get_password_value(MockUser()) == '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
+    
+    def test_auth_gets_user_login_attribute_column(self):
+        auth = Auth(self.request, ListUser())
+        assert auth._get_password_column(ListUser()) == 'users_password'
+
+        auth = Auth(self.request, MockUser())
+        assert auth._get_password_column(MockUser()) == 'password'
 
     def test_get_user(self):
         assert self.auth.login_by_id(1)

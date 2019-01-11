@@ -29,7 +29,7 @@ setup(
         'Jinja2>=2,<3',
         'python-dotenv>=0.8,<0.9',
         'passlib>=1.7,<1.8',
-        'whitenoise>=3.3,<3.4',
+        'whitenoise>=3.3',
         'pytest>=3.6,<4',
         'masonite-entry>=0.0.0,<=0.9.99',
         'masonite-scheduler>=1.0.0,<=1.0.99',
@@ -51,7 +51,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',

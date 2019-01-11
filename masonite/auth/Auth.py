@@ -63,7 +63,7 @@ class Auth:
         """
         auth_column = self.auth_model.__auth__
         try:
-            password_column = self.auth_model.password if not hasattr(self.auth_model, '__password__') else self.auth_model.__password__
+            password_column = self._get_password_column()
         except AttributeError as e:
             raise AttributeError('Your model does not have a password column or a designated __password__ attribute. Set the __password__ attribute to the name of your password column.') from e
 
@@ -130,3 +130,6 @@ class Auth:
         """
         self._once = True
         return self
+
+    def _get_password_column(self):
+        return getattr(self.auth_model, self.auth_model.__password__) if hasattr(self.auth_model, '__password__') else self.auth_model.password

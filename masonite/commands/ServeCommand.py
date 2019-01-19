@@ -34,7 +34,7 @@ class ServeCommand(Command):
                 worker_args=worker_args,
             )
 
-            self._run_reloader(reloader, extra_files=[".env"])
+            self._run_reloader(reloader, extra_files=[".env", "storage/"])
 
         else:
             from wsgi import application

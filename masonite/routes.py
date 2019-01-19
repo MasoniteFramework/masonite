@@ -82,6 +82,10 @@ class Route:
 
                 request_body = self.environ['wsgi.input'].read(
                     request_body_size)
+
+                if isinstance(request_body, bytes):
+                    request_body = request_body.decode('utf-8')
+
                 return json.loads(request_body)
             else:
                 fields = cgi.FieldStorage(

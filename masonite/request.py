@@ -210,6 +210,10 @@ class Request(Extendable):
         """
         if isinstance(variables, str):
             variables = parse_qs(variables)
+            t = {}
+            for key, value in variables.items():
+                t[key] = value[0]
+            variables = t
 
         try:
             for name in variables.keys():

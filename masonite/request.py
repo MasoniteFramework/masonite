@@ -233,7 +233,7 @@ class Request(Extendable):
             if any(isinstance(storage_obj, MiniFieldStorage) for storage_obj in value):
                 values = [storage_obj.value for storage_obj in value]
 
-                # TODO: This needs to be removed in 2.2. A breaking change but 
+                # TODO: This needs to be removed in 2.2. A breaking change but
                 # this code will result in inconsistent values
                 # If there is only 1 element in the list then return the only value in the list
                 if len(values) == 1:

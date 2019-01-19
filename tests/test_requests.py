@@ -124,6 +124,11 @@ class TestRequest:
         self.request._set_standardized_request_variables(storages)
         assert self.request.input('test') == 'value'
 
+    def test_request_can_get_list_value(self):
+        storages = {'test': ['foo', 'bar']}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == ['foo', 'bar']
+
     def test_request_mini_field_storage_doesnt_return_brackets(self):
         storages = {'test[]': [MiniFieldStorage('key', '1')]}
         self.request._set_standardized_request_variables(storages)

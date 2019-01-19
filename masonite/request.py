@@ -238,7 +238,7 @@ class Request(Extendable):
                     return values[0]
                 return values
 
-            return value[0]
+            return value
 
         if isinstance(value, dict):
             return value

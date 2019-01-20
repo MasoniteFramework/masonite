@@ -11,7 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qs
+from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -209,7 +209,7 @@ class Request(Extendable):
             variables {string|dict}
         """
         if isinstance(variables, str):
-            variables = parse_qs(variables)
+            variables = dict(parse_qsl(variables))
 
         try:
             for name in variables.keys():
@@ -233,12 +233,14 @@ class Request(Extendable):
             if any(isinstance(storage_obj, MiniFieldStorage) for storage_obj in value):
                 values = [storage_obj.value for storage_obj in value]
 
+                # TODO: This needs to be removed in 2.2. A breaking change but
+                # this code will result in inconsistent values
                 # If there is only 1 element in the list then return the only value in the list
                 if len(values) == 1:
                     return values[0]
                 return values
 
-            return value[0]
+            return value
 
         if isinstance(value, dict):
             return value

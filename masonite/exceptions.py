@@ -72,3 +72,7 @@ class DebugException(Exception):
 
 class DumpException(Exception):
     pass
+
+
+class ViewException(Exception):
+    pass

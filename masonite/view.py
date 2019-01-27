@@ -4,7 +4,7 @@
 from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
-from masonite.exceptions import RequiredContainerBindingNotFound
+from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
 
 
 class View:
@@ -49,6 +49,8 @@ class View:
         Returns:
             self
         """
+        if not isinstance(dictionary, dict):
+            raise ViewException('Second parameter to render method needs to be a dictionary, {} passed.'.format(type(dictionary).__name__))
         self.__load_environment(template)
         self.dictionary = {}
 

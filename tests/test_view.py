@@ -7,7 +7,7 @@ from jinja2 import FileSystemLoader, PackageLoader
 from config import cache
 from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
-from masonite.exceptions import RequiredContainerBindingNotFound
+from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
 from masonite.managers.CacheManager import CacheManager
 from masonite.view import View
 
@@ -282,6 +282,11 @@ class TestView:
 
         assert view.render(
             'pug/hello.pug', {'name': 'Joe'}).rendered_template == '<p>hello Joe</p>'
+
+    def test_throws_exception_on_incorrect_type(self):
+        view = self.container.make('ViewClass')
+        with pytest.raises(ViewException):
+            assert view.render('test', {'', ''})
 
 
 class MockAdminUser:

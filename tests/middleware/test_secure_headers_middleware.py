@@ -1,4 +1,4 @@
-""" Test Maintenance Mode Midddleware """
+""" Test Secure Headers Midddleware """
 import os
 
 from masonite.app import App

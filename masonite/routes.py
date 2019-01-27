@@ -439,6 +439,30 @@ class ViewRoute(BaseHttpRoute):
         return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
 
 
+class Redirect(BaseHttpRoute):
+
+    def __init__(self, current_route, future_route, status=302, methods=['GET']):
+        """Class used for view routes.
+
+        This class should be returned when a view is called on an HTTP route.
+        This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
+
+        Arguments:
+            method_type {string} -- The method type (GET, POST, PUT etc)
+            route {string} -- The current route (/test/url)
+            template {string} -- The template to use (dashboard/user)
+            dictionary {dict} -- The dictionary to use to render the template.
+        """
+        self.list_middleware = []
+        self.method_type = methods
+        self.route_url = current_route
+        self.status = status
+        self.future_route = future_route
+
+    def get_response(self):
+        return self.request.redirect(self.future_route, status=self.status)
+
+
 class RouteGroup():
     """Class for specifying Route Groups."""
 

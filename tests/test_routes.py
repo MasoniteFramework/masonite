@@ -1,6 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match
+from masonite.app import App
+from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match, Redirect
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException
@@ -188,6 +189,32 @@ class TestRoutes:
         assert route.environ['QUERY_STRING'] == {
             "options": ["foo", "bar"]
         }
+    
+    def test_redirect_route(self):
+        route = Redirect('/test1', '/test2')
+        request = Request(generate_wsgi())
+        route.load_request(request)
+        request.load_app(App())
+
+        route.get_response()
+        assert request.is_status(302)
+        assert request.redirect_url == '/test2'
+
+    def test_redirect_can_use_301(self):
+        request = Request(generate_wsgi())
+        route = Redirect('/test1', '/test3', status=301)
+        
+        route.load_request(request)
+        request.load_app(App())
+        route.get_response()
+        assert request.is_status(301)
+        assert request.redirect_url == '/test3'
+
+    def test_redirect_can_change_method_type(self):
+        request = Request(generate_wsgi())
+        route = Redirect('/test1', '/test3', methods=['POST', 'PUT'])
+        assert route.method_type == ['POST', 'PUT']
+
 
 class WsgiInputTestClass:
 

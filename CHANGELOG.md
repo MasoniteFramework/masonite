@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
-## [2.1.13](https://github.com/MasoniteFramework/core/releases/tag/v2.1.13) - 2019-01-19
+## [2.1.13](https://github.com/MasoniteFramework/core/releases/tag/v2.1.13) - 2019-01-26
 ### Fixed
 - Fixed issue where a JSON null value could raise an exception 71d9016
 - Fixed issue where a body type of 0 would throw an exception with the delete method type 9659363

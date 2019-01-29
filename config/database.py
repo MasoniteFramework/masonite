@@ -1,39 +1,52 @@
-""" Database Settings """
-
+"""Database Settings."""
+import logging
 import os
 
+from masonite import env
 from masonite.environment import LoadEnvironment
 from orator import DatabaseManager, Model
 
-"""
-|--------------------------------------------------------------------------
-| Load Environment Variables
-|--------------------------------------------------------------------------
-|
-| Loads in the environment variables when this page is imported.
-|
+"""Load Environment Variables
+Loads in the environment variables when this page is imported.
 """
 
 LoadEnvironment()
 
-"""
-|--------------------------------------------------------------------------
-| Database Settings
-|--------------------------------------------------------------------------
-|
-| Set connection database settings here as a dictionary. Follow the
-| format below to create additional connection settings.
-|
-| @see Orator migrations documentation for more info
-|
+"""Database Settings
+Set connection database settings here as a dictionary. Follow the
+format below to create additional connection settings.
+
+Each key is a connection, not a driver. You may have as many
+connections as you need.
+
+Supported Drivers: 'sqlite', 'mysql', 'postgres'
 """
 
 DATABASES = {
-    'default': os.environ.get('DB_DRIVER', 'sqlite'),
+    'default': env('DB_CONNECTION', 'sqlite'),
     'sqlite': {
         'driver': 'sqlite',
-        'database': os.environ.get('DB_DATABASE'),
+        'database': env('DB_DATABASE'),
+        'log_queries': env('DB_LOG'),
         'prefix': ''
+    },
+    'mysql': {
+        'driver': 'mysql',
+        'host': env('DB_HOST'),
+        'database': env('DB_DATABASE'),
+        'port': env('DB_PORT'),
+        'user': env('DB_USERNAME'),
+        'password': env('DB_PASSWORD'),
+        'log_queries': env('DB_LOG'),
+    },
+    'postgres': {
+        'driver': 'postgres',
+        'host': env('DB_HOST'),
+        'database': env('DB_DATABASE'),
+        'port': env('DB_PORT'),
+        'user': env('DB_USERNAME'),
+        'password': env('DB_PASSWORD'),
+        'log_queries': env('DB_LOG'),
     },
     os.environ.get('DB_DRIVER'): {
         'driver': os.environ.get('DB_DRIVER'),
@@ -47,3 +60,16 @@ DATABASES = {
 
 DB = DatabaseManager(DATABASES)
 Model.set_connection_resolver(DB)
+
+
+logger = logging.getLogger('orator.connection.queries')
+logger.setLevel(logging.DEBUG )
+
+formatter = logging.Formatter(
+    'It took %(elapsed_time)sms to execute the query %(query)s'
+)
+
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)

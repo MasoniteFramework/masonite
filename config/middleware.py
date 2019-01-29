@@ -1,10 +1,10 @@
 """ Middleware Configuration Settings """
-
 from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
 from app.http.middleware.CsrfMiddleware import CsrfMiddleware
+from app.http.middleware.CORSMiddleware import CORSMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 from app.http.middleware.MiddlewareTest import MiddlewareTest
 
@@ -24,6 +24,7 @@ HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     # todo
     # CsrfMiddleware,
+    CORSMiddleware,
     ResponseMiddleware,
     SecureHeadersMiddleware,
 ]

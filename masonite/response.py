@@ -6,6 +6,8 @@ from masonite.exceptions import ResponseError
 from masonite.helpers.Extendable import Extendable
 from masonite.view import View
 
+from orator.support.collection import Collection 
+from orator import Model
 
 class Response(Extendable):
 
@@ -87,6 +89,10 @@ class Response(Extendable):
 
         if isinstance(view, dict) or isinstance(view, list):
             return self.json(view)
+        else if isinstance(view, Collection):
+            return view.serialize()
+        else if isinstance(view, Model):
+            return view.to_json()
         elif isinstance(view, int):
             view = str(view)
         elif isinstance(view, View):

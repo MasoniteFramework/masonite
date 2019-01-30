@@ -90,9 +90,9 @@ class Response(Extendable):
         if isinstance(view, dict) or isinstance(view, list):
             return self.json(view)
         elif isinstance(view, Collection):
-            return view.serialize()
+            view = view.serialize()
         elif isinstance(view, Model):
-            return view.to_json()
+            view = self.json(view.to_dict())
         elif isinstance(view, int):
             view = str(view)
         elif isinstance(view, View):

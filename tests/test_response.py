@@ -5,6 +5,21 @@ from masonite.view import View
 from masonite.app import App
 from app.http.controllers.TestController import TestController as ControllerTest
 
+from orator import Model
+from orator.support.collection import Collection
+
+class MockUser(Model):
+
+    name = 'testuser123'
+    email = 'user@email.com'
+
+    def where(self, column, name):
+        return Collection([self, self])
+
+    def find(self, id):
+        return self
+
+
 class TestResponse:
 
     def setup_method(self):
@@ -54,3 +69,6 @@ class TestResponse:
 
         self.response.view(self.app.resolve(ControllerTest().change_status))
         assert self.request.is_status(203)
+
+    def test_view_should_return_a_json_response_when_retrieve_a_model(self):
+        pass

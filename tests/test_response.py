@@ -10,11 +10,8 @@ from orator.support.collection import Collection
 
 class MockUser(Model):
 
-    name = 'testuser123'
+    name = 'TestUser'
     email = 'user@email.com'
-
-    def where(self, column, name):
-        return Collection([self, self])
 
     def find(self, id):
         return self
@@ -28,7 +25,8 @@ class TestResponse:
         self.app.bind('Request', self.request)
         self.app.bind('StatusCode', '404 Not Found')
         self.response = Response(self.app)
-    
+        self.app.bind('Response', self.response)
+
     def test_can_set_json(self):
         self.response.json({'test': 'value'})
 
@@ -70,5 +68,12 @@ class TestResponse:
         self.response.view(self.app.resolve(ControllerTest().change_status))
         assert self.request.is_status(203)
 
-    def test_view_should_return_a_json_response_when_retrieve_a_model(self):
-        pass
+    def test_view_should_return_a_json_response_when_retrieve_a_user_from_model(self):
+        
+        assert isinstance(MockUser(), Model)
+
+        self.response.view(MockUser().find(1))
+
+        json_response = [{'name':'TestUser', 'email': 'user@email.com' }]
+
+        assert self.app.make('Response') == json_response

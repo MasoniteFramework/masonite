@@ -6,8 +6,9 @@ from masonite.exceptions import ResponseError
 from masonite.helpers.Extendable import Extendable
 from masonite.view import View
 
-from orator.support.collection import Collection 
+from orator.support.collection import Collection
 from orator import Model
+
 
 class Response(Extendable):
 

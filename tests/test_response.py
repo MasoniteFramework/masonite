@@ -10,8 +10,7 @@ from orator.support.collection import Collection
 
 class MockUser(Model):
 
-    name = 'TestUser'
-    email = 'user@email.com'
+
 
     def all(self):
         return Collection([
@@ -20,7 +19,9 @@ class MockUser(Model):
         ])
 
     def find(self, id):
-        return {'name': 'TestUser', 'email': 'user@email.com'}
+        self.name = 'TestUser'
+        self.email = 'user@email.com'
+        return self
 
 
 class TestResponse:
@@ -77,9 +78,13 @@ class TestResponse:
     def test_view_should_return_a_json_response_when_retrieve_a_user_from_model(self):
         
         assert isinstance(MockUser(), Model)
+        self.response.view(MockUser().all())
 
-        assert not MockUser().find(1)
+        json_response = '[{"name": "TestUser", "email": "user@email.com"}, {"name": "TestUser", "email": "user@email.com"}]'
+        assert self.app.make('Response') == json_response
+
         self.response.view(MockUser().find(1))
 
-        json_response = "[{'name':'TestUser', 'email': 'user@email.com'}]"
+        json_response = '{"name": "TestUser", "email": "user@email.com"}'
         assert self.app.make('Response') == json_response
+

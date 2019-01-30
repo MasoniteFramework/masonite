@@ -13,8 +13,14 @@ class MockUser(Model):
     name = 'TestUser'
     email = 'user@email.com'
 
+    def all(self):
+        return Collection([
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            {'name': 'TestUser', 'email': 'user@email.com'}
+        ])
+
     def find(self, id):
-        return self
+        return {'name': 'TestUser', 'email': 'user@email.com'}
 
 
 class TestResponse:
@@ -72,8 +78,8 @@ class TestResponse:
         
         assert isinstance(MockUser(), Model)
 
+        assert not MockUser().find(1)
         self.response.view(MockUser().find(1))
 
-        json_response = [{'name':'TestUser', 'email': 'user@email.com' }]
-
+        json_response = "[{'name':'TestUser', 'email': 'user@email.com'}]"
         assert self.app.make('Response') == json_response

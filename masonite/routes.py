@@ -360,25 +360,29 @@ class BaseHttpRoute:
 class Get(BaseHttpRoute):
     """Class for specifying GET requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Get constructor."""
         self.method_type = ['GET']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Post(BaseHttpRoute):
     """Class for specifying POST requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Post constructor."""
         self.method_type = ['POST']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Match(BaseHttpRoute):
     """Class for specifying POST requests."""
 
-    def __init__(self, method_type=['GET']):
+    def __init__(self, method_type=['GET'], route=None, output=None):
         """Post constructor."""
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
@@ -386,33 +390,41 @@ class Match(BaseHttpRoute):
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Put(BaseHttpRoute):
     """Class for specifying PUT requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Put constructor."""
         self.method_type = ['PUT']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Patch constructor."""
         self.method_type = ['PATCH']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Delete constructor."""
         self.method_type = ['DELETE']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class ViewRoute(BaseHttpRoute):

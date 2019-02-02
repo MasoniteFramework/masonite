@@ -239,7 +239,7 @@ class App:
             object -- Returns the object found in the container
         """
         parameter = str(parameter)
-        if parameter is not 'self' and parameter in self.providers:
+        if parameter != 'self' and parameter in self.providers:
             obj = self.providers[parameter]
             self.fire_hook('resolve', parameter, obj)
             return obj

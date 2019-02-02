@@ -250,7 +250,7 @@ class BaseHttpRoute:
         Returns:
             bool
         """
-        if self.request.has_subdomain() and (self.required_domain is '*' or self.request.subdomain == self.required_domain):
+        if self.request.has_subdomain() and (self.required_domain == '*' or self.request.subdomain == self.required_domain):
             return True
         return False
 

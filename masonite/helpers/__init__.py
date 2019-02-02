@@ -5,3 +5,4 @@ from .misc import random_string, dot, clean_request_input
 from .Extendable import Extendable
 from .time import cookie_expire_time
 from .structures import config, Dot
+from .migrations import has_unmigrated_migrations

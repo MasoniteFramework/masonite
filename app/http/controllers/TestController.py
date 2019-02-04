@@ -16,6 +16,10 @@ class TestController:
         request.header('Content-Type', 'application/xml')
         return 'test'
 
+    def change_status(self, request: Request):
+        request.status(203)
+        return 'test'
+
     def testing(self):
         return 'test'
 

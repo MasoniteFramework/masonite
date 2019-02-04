@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.13](https://github.com/MasoniteFramework/core/releases/tag/v2.1.13) - 2019-01-26
+### Fixed
+- Fixed issue where a JSON null value could raise an exception 71d9016
+- Fixed issue where a body type of 0 would throw an exception with the delete method type 9659363
+- Fixed issue where status code could not be set in a controller 5ede5d8
+
+### Added
+- Added a better exception when passing in a set instead of a dictionary to the render method. This is a common mistake that would throw an ambiguous error
+- [Added route redirection](https://docs.masoniteproject.com/the-basics/routing#redirect-route)
+
+## [2.1.12](https://github.com/MasoniteFramework/core/releases/tag/v2.1.12) - 2019-01-19
+### Fixed
+- Fixed issue where incoming JSON response would only return the first value in a list.
+
+## [2.1.11](https://github.com/MasoniteFramework/core/releases/tag/v2.1.11) - 2019-01-18
+### Fixed
+- Fixed issue when cleaning a multi dimensional dictionary
+
+## [2.1.10](https://github.com/MasoniteFramework/core/releases/tag/v2.1.10) - 2019-01-11
+### Removed
+- Removed ability to set the password column using __password__
+
+## [2.1.9](https://github.com/MasoniteFramework/core/releases/tag/v2.1.9) - 2019-01-11
+### Fixed
+- Fixed issue with auth requiring a __password__ attribute when it should not have been.
+
+## [2.1.8](https://github.com/MasoniteFramework/core/releases/tag/v2.1.8) - 2019-01-10
+### Fixed
+- Fixed issue with whitenoise not auto refreshing static files
+
+## [2.1.7](https://github.com/MasoniteFramework/core/releases/tag/v2.1.7) - 2019-01-10
+### Fixed
+- Fixed issue with storage folder not updating for static assets
+
 ## [2.1.6](https://github.com/MasoniteFramework/core/releases/tag/v2.1.6) - 2019-01-09
 ### Added
 - [Added config helper](https://docs.masoniteproject.com/the-basics/helper-functions#config) [#517](https://github.com/MasoniteFramework/core/pull/517)

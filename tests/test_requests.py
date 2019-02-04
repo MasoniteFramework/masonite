@@ -358,6 +358,22 @@ class TestRequest:
         route = "http://google.com"
 
         assert request.compile_route_to_url(route) == 'http://google.com'
+    
+    def test_can_get_nully_value(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables({
+            "gateway": "RENDIMENTO",
+            "request": {
+                "user": "data"
+            },
+            "response": None,
+            "description": "test only"
+        })
+
+        assert request.input('response') == None
 
     def test_request_gets_correct_header(self):
         app = App()

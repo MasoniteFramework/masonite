@@ -227,6 +227,9 @@ class Request(Extendable):
         Returns:
             string|bool
         """
+        if value is None:
+            return None
+
         if isinstance(value, list):
 
             # If the list contains MiniFieldStorage objects then loop through and get the values.

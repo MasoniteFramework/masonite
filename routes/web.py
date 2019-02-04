@@ -1,10 +1,11 @@
 """ Web Routes """
 from masonite.helpers.routes import group
-from masonite.routes import Get, Post
+from masonite.routes import Get, Post, Redirect
 
 
 ROUTES = [
     Get().route('/test', None).middleware('auth'),
+    Redirect('/redirect', 'test'),
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),
     Get().domain('test').route('/test/route', 'TestController@testing'),

@@ -119,9 +119,9 @@ Thank you for those who have contributed to Masonite!
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| | | | | |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
-| [<img src="https://avatars1.githubusercontent.com/u/6290791?s=460&v=4" width="100px;"/><br /><sub><b>Vaibhav Mule</b></sub>](https://github.com/vaibhavmule) | [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) | [<img src="https://avatars.githubusercontent.com/u/1970073?v=3" width="100px;"/><br /><sub><b>Abram C. Isola</b></sub>](https://github.com/aisola) | [<img src="https://avatars.githubusercontent.com/u/41387624?v=3" width="100px;"/><br /><sub><b>Raphael Schubert</b></sub>](https://github.com/rfschubert) |
+| | | | | | |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| [<img src="https://avatars1.githubusercontent.com/u/6290791?s=460&v=4" width="100px;"/><br /><sub><b>Vaibhav Mule</b></sub>](https://github.com/vaibhavmule) | [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) | [<img src="https://avatars.githubusercontent.com/u/1970073?v=3" width="100px;"/><br /><sub><b>Abram C. Isola</b></sub>](https://github.com/aisola) | [<img src="https://avatars.githubusercontent.com/u/41387624?v=3" width="100px;"/><br /><sub><b>Raphael Schubert</b></sub>](https://github.com/rfschubert) | [<img src="https://avatars.githubusercontent.com/u/16268619?v=3" width="100px;"/><br /><sub><b>Mitch Dennett</b></sub>](https://github.com/mitchdennett) |
 
 ## License
 

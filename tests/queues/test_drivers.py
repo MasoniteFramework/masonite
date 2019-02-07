@@ -39,6 +39,7 @@ class TestAsyncDriver:
         self.app.bind('Container', self.app)
         self.app.bind('QueueManager', QueueManager(self.app))
         self.drivers = ['async']
+       
         if env('RUN_AMQP'):
             self.drivers.append('amqp')
 
@@ -53,3 +54,11 @@ class TestAsyncDriver:
     def test_async_driver_can_run_any_method(self):
         for driver in self.drivers:
             assert self.app.make('QueueManager').driver(driver).push(Random().send) is None
+
+    def test_should_return_default_driver(self):
+
+        assert self.app.make('QueueManager') == 'async'
+
+        assert self.app.make('QueueManager').driver('async') == 'async'
+
+        assert self.app.make('QueueManager').driver('default') == 'async'

@@ -5,6 +5,7 @@ from masonite.routes import Get, Post, Redirect
 
 ROUTES = [
     Get().route('/test', None).middleware('auth'),
+    Get().route('/queue', 'TestController@queue'),
     Redirect('/redirect', 'test'),
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),

@@ -263,6 +263,7 @@ class TestRequest:
 
         assert request.route('test.url') == '/test/url'
         assert request.route('test.id', {'id': 1}) == '/test/url/1'
+        assert request.route('test.id', [1]) == '/test/url/1'
 
     def test_request_redirection(self):
         app = App()
@@ -326,6 +327,21 @@ class TestRequest:
         }
 
         assert request.compile_route_to_url(route, params) == '/test/1'
+
+    def test_redirect_compiles_url_with_list_parameters(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        route = 'test/@id'
+        params = ['1']
+
+        assert request.compile_route_to_url(route, params) == '/test/1'
+
+        route = 'test/@id/@user/test/@slug'
+        params = ['1', '2', '3']
+
+        assert request.compile_route_to_url(route, params) == '/test/1/2/test/3'
 
     def test_redirect_compiles_url_with_multiple_parameters(self):
         app = App()

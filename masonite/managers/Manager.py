@@ -60,7 +60,8 @@ class Manager:
             UnacceptableDriverType -- Raised when a driver passed in is not a string or a class
             DriverNotFound -- Raised when the driver can not be found.
         """
-        if not driver:
+
+        if driver in (None, 'default'):
             driver = self.container.make(self.config).DRIVER.capitalize()
         else:
             if isinstance(driver, str):

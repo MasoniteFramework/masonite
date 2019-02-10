@@ -5,6 +5,25 @@ from masonite.view import View
 from masonite.app import App
 from app.http.controllers.TestController import TestController as ControllerTest
 
+from orator import Model
+from orator.support.collection import Collection
+
+class MockUser(Model):
+
+
+
+    def all(self):
+        return Collection([
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            {'name': 'TestUser', 'email': 'user@email.com'}
+        ])
+
+    def find(self, id):
+        self.name = 'TestUser'
+        self.email = 'user@email.com'
+        return self
+
+
 class TestResponse:
 
     def setup_method(self):
@@ -13,7 +32,8 @@ class TestResponse:
         self.app.bind('Request', self.request)
         self.app.bind('StatusCode', '404 Not Found')
         self.response = Response(self.app)
-    
+        self.app.bind('Response', self.response)
+
     def test_can_set_json(self):
         self.response.json({'test': 'value'})
 
@@ -54,3 +74,17 @@ class TestResponse:
 
         self.response.view(self.app.resolve(ControllerTest().change_status))
         assert self.request.is_status(203)
+
+    def test_view_should_return_a_json_response_when_retrieve_a_user_from_model(self):
+        
+        assert isinstance(MockUser(), Model)
+        self.response.view(MockUser().all())
+
+        json_response = '[{"name": "TestUser", "email": "user@email.com"}, {"name": "TestUser", "email": "user@email.com"}]'
+        assert self.app.make('Response') == json_response
+
+        self.response.view(MockUser().find(1))
+
+        json_response = '{"name": "TestUser", "email": "user@email.com"}'
+        assert self.app.make('Response') == json_response
+

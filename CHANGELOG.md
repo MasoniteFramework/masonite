@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.15](https://github.com/MasoniteFramework/core/releases/tag/v2.1.15) - 2019-02-10
+### Added
+- [Added ability to specify a list as the second parameter to routes instead of a dictionary](https://docs.masoniteproject.com/the-basics/requests#route-parsing)
+- [Added ability to return a model which then returns a JSON response](https://docs.masoniteproject.com/the-basics/controllers#returning-json)
+- [Added ability to show when you have unmigrated migrations](https://docs.masoniteproject.com/the-craft-command/introduction#running-the-wsgi-server)
+- [Added improvements to the queue feature](https://docs.masoniteproject.com/useful-features/queues-and-jobs#queues-and-jobs)
+- Added ability to pass in default as the driver method to get the default driver.
+
+## [2.1.14](https://github.com/MasoniteFramework/core/releases/tag/v2.1.14) - 2019-02-01
+### Fixed
+- Fixed issue with login authentication
+
 ## [2.1.13](https://github.com/MasoniteFramework/core/releases/tag/v2.1.13) - 2019-01-26
 ### Fixed
 - Fixed issue where a JSON null value could raise an exception 71d9016

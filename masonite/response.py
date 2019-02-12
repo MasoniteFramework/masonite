@@ -21,7 +21,7 @@ class Response(Extendable):
         self.app = app
         self.request = self.app.make('Request')
 
-    def json(self, payload):
+    def json(self, payload, status=200):
         """Gets the response ready for a JSON response.
 
         Arguments:
@@ -32,7 +32,7 @@ class Response(Extendable):
         """
         self.app.bind('Response', json.dumps(payload))
         self.make_headers(content_type="application/json; charset=utf-8")
-        self.request.status(200)
+        self.request.status(status)
 
         return self.data()
 
@@ -89,9 +89,9 @@ class Response(Extendable):
             self.request.status(status)
 
         if isinstance(view, dict) or isinstance(view, list):
-            return self.json(view)
+            return self.json(view, status=self.request.get_status())
         elif isinstance(view, Collection) or isinstance(view, Model):
-            view = self.json(view.serialize())
+            return self.json(view.serialize(), status=self.request.get_status())
         elif isinstance(view, int):
             view = str(view)
         elif isinstance(view, View):

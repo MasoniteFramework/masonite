@@ -11,6 +11,16 @@ from app.http.middleware.TestHttpMiddleware import TestHttpMiddleware as Middlew
 from config import application
 
 
+class MiddlewareValueTest:
+
+    def __init__(self, request: Request):
+        self.request = request
+
+    def before(self, value1, value2):
+        self.request.value1 = value1
+        self.request.value2 = value2
+
+
 class TestMiddleware:
 
     def setup_method(self):
@@ -33,8 +43,10 @@ class TestMiddleware:
         self.app.bind('HttpMiddleware', [
             MiddlewareHttpTest
         ])
+
         self.app.bind('RouteMiddleware', {
-            'test': MiddlewareTest
+            'test': MiddlewareTest,
+            'throttle:1,2': MiddlewareValueTest
         })
 
         self.provider = RouteProvider()
@@ -48,3 +60,11 @@ class TestMiddleware:
         self.app.resolve(self.provider.boot)
         assert self.app.make('Request').path == '/test/middleware'
         assert self.app.make('Request').environ['HTTP_TEST'] == 'test'
+
+    def test_route_middleware_can_pass_values(self):
+        route = self.app.make('WebRoutes')[0]
+        route.request = self.app.make('Request')
+        route.list_middleware = ['throttle:1,2']
+        route.run_middleware('before')
+        assert route.request.value1 == '1'
+        assert route.request.value2 == '2'

@@ -301,15 +301,20 @@ class BaseHttpRoute:
         """
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
+            arguments = []
             middleware_to_run = self.request.app().make('RouteMiddleware')[arg]
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
+
+            if ':' in arg:
+                # Splits "name:value1,value2" into ['value1', 'value2']
+                arguments = arg.split(':')[1].split(',')
 
             try:
                 for middleware in middleware_to_run:
                     located_middleware = self.request.app().resolve(middleware)
                     if hasattr(located_middleware, type_of_middleware):
-                        getattr(located_middleware, type_of_middleware)()
+                        getattr(located_middleware, type_of_middleware)(*arguments)
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))

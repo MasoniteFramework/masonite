@@ -66,6 +66,23 @@ class TestRoutes:
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
 
+    def test_route_can_pass_route_values_in_constructor(self):
+        route = Get('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Post('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Put('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Patch('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Delete('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+
+    def test_route_can_pass_route_values_in_constructor_and_use_middleware(self):
+        route = Get('test/url', 'BreakController@show').middleware('auth')
+        assert route.route_url == 'test/url'
+        assert route.list_middleware == ['auth']
+
     def test_route_gets_deeper_module_controller(self):
         route = Get().route('test/url', 'subdirectory.SubController@show')
         assert route.controller

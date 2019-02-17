@@ -213,7 +213,7 @@ class BaseHttpRoute:
 
         # Resolve Controller Method
         response = self.request.app().resolve(
-            getattr(controller, self.controller_method))
+            getattr(controller, self.controller_method), *self.request.url_params.values())
 
         if isinstance(response, View):
             response = response.rendered_template

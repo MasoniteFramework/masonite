@@ -36,7 +36,9 @@ def dot(data, compile_to=None):
     return compiling
 
 
-def clean_request_input(value):
+def clean_request_input(value, clean=True):
+    if not clean:
+        return value
     import html
 
     try:

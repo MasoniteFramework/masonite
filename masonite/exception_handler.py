@@ -77,6 +77,7 @@ class ExceptionHandler:
         self.response.view(self._app.make('View')('/masonite/snippets/exception',
                                                {
                                                    'exception': self._exception,
+                                                   'split_exception': str(self._exception).split(' '),
                                                    'traceback': traceback,
                                                    'tb': sys.exc_info(),
                                                    'app': self._app,

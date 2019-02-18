@@ -3,6 +3,7 @@ from .CacheContract import CacheContract
 from .MailContract import MailContract
 from .QueueContract import QueueContract
 from .SessionContract import SessionContract
+from .StorageContract import StorageContract
 from .UploadContract import UploadContract
 
 from .managers.BroadcastManagerContract import BroadcastManagerContract

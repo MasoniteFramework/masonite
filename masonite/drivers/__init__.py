@@ -15,5 +15,6 @@ from .queue.QueueAsyncDriver import QueueAsyncDriver
 from .queue.QueueAmqpDriver import QueueAmqpDriver
 from .session.SessionCookieDriver import SessionCookieDriver
 from .session.SessionMemoryDriver import SessionMemoryDriver
+from .storage.StorageDiskDriver import StorageDiskDriver
 from .upload.UploadDiskDriver import UploadDiskDriver
 from .upload.UploadS3Driver import UploadS3Driver

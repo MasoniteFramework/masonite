@@ -4,6 +4,8 @@ from masonite.exceptions import DebugException
 from masonite.request import Request
 from masonite import Queue
 from app.jobs.TestJob import TestJob
+from masonite.managers import StorageManager
+from masonite.drivers import StorageDiskDriver
 
 
 class TestController:
@@ -23,7 +25,8 @@ class TestController:
         return 'test'
 
     def testing(self):
-        return 'test'
+        from wsgi import container
+        return StorageManager(container).driver(StorageDiskDriver).download('storage/provision.gif')
 
     def json_response(self):
         return {'id': 1}

@@ -1,7 +1,7 @@
 """Base cache driver module.
 """
 
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.drivers import BaseDriver
 
 
 class BaseCacheDriver(BaseDriver):

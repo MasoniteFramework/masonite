@@ -1,6 +1,6 @@
 """Base mail driver module."""
 
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
 

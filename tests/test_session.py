@@ -1,8 +1,7 @@
 from config import session
 from masonite.app import App
-from masonite.drivers.SessionCookieDriver import SessionCookieDriver
-from masonite.drivers.SessionMemoryDriver import SessionMemoryDriver
-from masonite.managers.SessionManager import SessionManager
+from masonite.drivers import SessionCookieDriver, SessionMemoryDriver
+from masonite.managers import SessionManager
 from masonite.request import Request
 from masonite.testsuite.TestSuite import generate_wsgi
 

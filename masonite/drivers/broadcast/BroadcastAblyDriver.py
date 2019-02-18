@@ -1,7 +1,7 @@
 """Module for using the Ably websocket driver."""
 
-from masonite.contracts.BroadcastContract import BroadcastContract
-from masonite.drivers.BaseDriver import BaseDriver
+from masonite.contracts import BroadcastContract
+from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
 from masonite.app import App
 

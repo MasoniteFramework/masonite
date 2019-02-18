@@ -1,41 +1,28 @@
-"""Log Driver Module."""
+"""Terminal Driver Module."""
 
 import logging
-import os
 
 from masonite.app import App
 from masonite.contracts.MailContract import MailContract
-from masonite.drivers.BaseMailDriver import BaseMailDriver
+from masonite.drivers import BaseMailDriver
 from masonite.view import View
 
 
-class MailLogDriver(BaseMailDriver, MailContract):
-    """Mail log driver.
+class MailTerminalDriver(BaseMailDriver, MailContract):
+    """Mail terminal driver
     """
+
     def __init__(self, app: App, view: View):
         super().__init__(app, view)
-
-        if 'log' in self.config.DRIVERS and 'location' in self.config.DRIVERS['log']:
-            log_location = self.config.DRIVERS['log']['location']
-        else:
-            log_location = 'bootstrap/mail'
-
-        if not os.path.exists(log_location):
-            # Create the path to the model if it does not exist
-            os.makedirs(log_location)
-
-        handler = logging.FileHandler('{0}/{1}'.format(
-            log_location,
-            os.getenv('MAIL_LOGFILE', 'mail.log')
-        ))
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
-        self.logger.propagate = False
-        self.logger.addHandler(handler)
+        handler = logging.StreamHandler()
         self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(handler)
+        self.logger.propagate = False
 
     def send(self, message=None):
-        """Prints the message in a log.
+        """Prints the message to the terminal.
 
         Keyword Arguments:
             message {string} -- The message to be printed. (default: { None })

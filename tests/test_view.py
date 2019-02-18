@@ -6,7 +6,7 @@ from jinja2 import FileSystemLoader, PackageLoader
 
 from config import cache
 from masonite.app import App
-from masonite.drivers.CacheDiskDriver import CacheDiskDriver
+from masonite.drivers import CacheDiskDriver
 from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
 from masonite.managers.CacheManager import CacheManager
 from masonite.view import View

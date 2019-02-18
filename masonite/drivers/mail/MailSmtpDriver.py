@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from masonite.contracts.MailContract import MailContract
-from masonite.drivers.BaseMailDriver import BaseMailDriver
+from masonite.drivers import BaseMailDriver
 
 
 class MailSmtpDriver(BaseMailDriver, MailContract):

@@ -1,7 +1,7 @@
 from masonite.app import App
 from masonite.request import Request
-from masonite.drivers.UploadDiskDriver import UploadDiskDriver
-from masonite.contracts.UploadContract import UploadContract
+from masonite.drivers import UploadDiskDriver
+from masonite.contracts import UploadContract
 from masonite.exceptions import ContainerError, StrictContainerException
 import pytest
 

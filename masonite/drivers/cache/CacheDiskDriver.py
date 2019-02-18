@@ -6,8 +6,7 @@ import time
 
 from masonite.app import App
 from masonite.contracts import CacheContract
-from masonite.drivers import BaseDriver
-from masonite.drivers.BaseCacheDriver import BaseCacheDriver
+from masonite.drivers import BaseCacheDriver
 
 
 class CacheDiskDriver(CacheContract, BaseCacheDriver):

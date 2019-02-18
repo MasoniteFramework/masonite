@@ -10,4 +10,5 @@ from .managers.CacheManagerContract import CacheManagerContract
 from .managers.MailManagerContract import MailManagerContract
 from .managers.QueueManagerContract import QueueManagerContract
 from .managers.SessionManagerContract import SessionManagerContract
+from .managers.StorageManagerContract import StorageManagerContract
 from .managers.UploadManagerContract import UploadManagerContract

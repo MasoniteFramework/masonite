@@ -1,9 +1,9 @@
 """Base upload driver module."""
 
-from masonite.exceptions import FileTypeException
-from masonite.drivers import BaseDriver
-from masonite.helpers import random_string
 import _io
+from masonite.drivers import BaseDriver
+from masonite.exceptions import FileTypeException
+from masonite.helpers import random_string
 
 
 class BaseUploadDriver(BaseDriver):

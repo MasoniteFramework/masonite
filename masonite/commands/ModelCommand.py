@@ -15,6 +15,7 @@ class ModelCommand(Command):
     model
         {name : Name of the model}
         {--m|migration : Create a migration for specified model}
+        {--s|seed=? : Create a database seed}
     """
 
     scaffold_name = "Model"
@@ -44,3 +45,11 @@ class ModelCommand(Command):
                 ('name', 'create_{}_table'.format(model_name)), 
                 ('-c', model_name)
                 ])
+        
+        if self.option('seed'):
+            seed_file = model_name
+            seed_file = self.option('seed')
+
+            self.call('seed', [
+                ('table', seed_file)
+            ])

@@ -14,7 +14,7 @@ class ModelCommand(Command):
 
     model
         {name : Name of the model}
-        {--m|--migration : Create a migration for specified model}
+        {--m|migration : Create a migration for specified model}
     """
 
     scaffold_name = "Model"
@@ -40,6 +40,7 @@ class ModelCommand(Command):
 
         if self.option('migration'):
             model_name = class_name.lower() + 's'
-            subprocess.call(['orator', 'make:migration', 'create_{}_table'.format(model_name),
-                             '-p', 'databases/migrations', '--table',
-                             model_name, '--create'])
+            self.call('migration', [
+                ('name', 'create_{}_table'.format(model_name)), 
+                ('-c', model_name)
+                ])

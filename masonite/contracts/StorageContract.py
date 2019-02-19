@@ -5,62 +5,57 @@ from abc import abstractmethod
 class StorageContract(Contract):
 
     @abstractmethod
-    def put(self): 
+    def put(self):
         pass
 
     @abstractmethod
-    def get(self): 
+    def get(self):
         pass
 
     @abstractmethod
-    def append(self): 
+    def append(self):
         pass
 
     @abstractmethod
-    def delete(self): 
-        pass
-
-
-    @abstractmethod
-    def exists(self): 
+    def delete(self):
         pass
 
     @abstractmethod
-    def driver(self): 
+    def exists(self):
         pass
 
     @abstractmethod
-    def download(self): 
+    def driver(self):
         pass
 
     @abstractmethod
-    def url(self): 
+    def url(self):
         pass
 
     @abstractmethod
-    def size(self): 
+    def size(self):
         pass
 
     @abstractmethod
-    def extension(self): 
+    def extension(self):
         pass
 
     @abstractmethod
-    def upload(self): 
+    def upload(self):
         pass
 
     @abstractmethod
-    def all(self): 
+    def all(self):
         pass
 
     @abstractmethod
-    def make_directory(self): 
+    def make_directory(self):
         pass
 
     @abstractmethod
-    def delete_directory(self): 
+    def delete_directory(self):
         pass
 
     @abstractmethod
-    def move(self): 
+    def move(self):
         pass

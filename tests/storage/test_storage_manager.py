@@ -2,6 +2,7 @@ from masonite.testsuite import TestSuite
 from masonite.managers import StorageManager
 from masonite.drivers import StorageDiskDriver
 from config import storage
+import os
 
 class TestStorage:
 
@@ -50,8 +51,31 @@ class TestStorage:
         driver.put('storage/file.txt', 'HI')
         driver.extension('storage/file.txt') == 'txt'
 
-    def test_storage_download(self):
+    def test_storage_upload(self):
         driver = self.manager.driver('disk')
-        driver.put('storage/file.txt', 'HI')
-        driver.download('storage/file.txt')
+        driver.upload(ImageMock())
 
+    def test_storage_make_directory(self):
+        driver = self.manager.driver('disk')
+        assert driver.make_directory('storage/some_directory') is True
+        assert os.path.isdir('storage/some_directory')
+
+    def test_storage_delete_directory(self):
+        driver = self.manager.driver('disk')
+        assert driver.delete_directory('storage/some_directory') is True
+        assert not os.path.isdir('storage/some_directory')
+
+
+class ImageMock():
+    """
+    Image test for emulate upload file
+    """
+
+    filename = 'test.jpg'
+
+    @property
+    def file(self):
+        return self
+
+    def read(self):
+        return bytes('file read', 'utf-8')

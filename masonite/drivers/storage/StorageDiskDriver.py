@@ -1,9 +1,11 @@
-from masonite.drivers import BaseDriver
-from masonite.contracts import StorageContract
 import os
 import pathlib
-from masonite.helpers.filesystem import make_directory
+import shutil
 
+from masonite import Upload
+from masonite.contracts import StorageContract
+from masonite.drivers import BaseDriver
+from masonite.helpers.filesystem import make_directory
 
 
 class StorageDiskDriver(BaseDriver, StorageContract):
@@ -42,38 +44,31 @@ class StorageDiskDriver(BaseDriver, StorageContract):
     def url(self, location):
         pass
 
-    def download(self, location): 
-        from wsgi import container
-        container.make('Request').header({
-            'Content-Description': 'File Transfer',
-            'Content-Type': 'application/octet-stream',
-            'Content-Disposition': 'attachment; filename={}'.format(self.name(location)),
-            'Content-Transfer-Encoding': 'binary',
-            # 'Cache-Control': 'must-revalidate, post-check=0, pre-check=0',
-        })
-        from wsgi import container
-        request = container.make('Request')
-
-        # with open(location, "rb") as imageFile:
-        #     return str(imageFile.read(), 'utf-8')
-
-        fin = open(location, "rb") 
-        size = os.path.getsize(location) 
-        # start_response("200 OK", [('Content-Type', 'application/zip'), ('Content-length', str(size)), ('Content-Disposition', 'attachment; filename=' + finalModelName + '.zip')])  # return the entire file 
-        if 'wsgi.file_wrapper' in request.environ: 
-            print('has file wrapper', request.environ['wsgi.file_wrapper'](fin, 1024))
-            return request.environ['wsgi.file_wrapper'](fin, 1024) 
-        else:
-            print('nadaa')
-
     def name(self, location):
         return pathlib.Path(location).name
 
-    def upload(self): pass
+    def upload(self, *args, **kwargs):
+        from wsgi import container
+        return container.make(Upload).driver('disk').store(*args, **kwargs)
+
     def all(self): pass
 
     def make_directory(self, location):
-        return make_directory(location)
+        location = os.path.join(os.getcwd(), location)
+        if os.path.isdir(location):
+            return True
 
-    def delete_directory(self): pass
-    def move(self): pass
+        os.mkdir(location)
+        return True
+
+    def delete_directory(self, directory, force=False):
+        if force:
+            shutil.rmtree(directory)
+            return True
+
+        pathlib.Path(directory).rmdir()
+        return True
+
+
+    def move(self, old, new):
+        return shutil.move(old, new)

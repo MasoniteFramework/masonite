@@ -42,10 +42,10 @@ class ModelCommand(Command):
         if self.option('migration'):
             model_name = class_name.lower() + 's'
             self.call('migration', [
-                ('name', 'create_{}_table'.format(model_name)), 
+                ('name', 'create_{}_table'.format(model_name)),
                 ('-c', model_name)
-                ])
-        
+            ])
+
         if self.option('seed'):
             seed_file = model_name
             seed_file = self.option('seed')

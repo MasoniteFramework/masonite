@@ -55,7 +55,7 @@ class Request(Extendable):
         self.user_model = None
         self.subdomain = None
         self._activate_subdomains = False
-        self._status = '404 Not Found'
+        self._status = None
 
         if environ:
             self.load_environ(environ)

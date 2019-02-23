@@ -10,6 +10,7 @@ from masonite.exceptions import QueueException
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
 
+
 class QueueAsyncDriver(BaseQueueDriver, QueueContract):
     """Queue Aysnc Driver."""
 
@@ -21,11 +22,10 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
         """
         self.container = app
 
-
     def _threading(self):
         """ Implements Async by Threading """
 
-        with ThreadPoolExecutor(max_workers = self.workers) as executor:
+        with ThreadPoolExecutor(max_workers=self.workers) as executor:
             for obj in self.objects:
                 if inspect.isclass(obj):
                     obj = self.container.resolve(obj)
@@ -40,7 +40,7 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
     def _multiprocessing(self):
         """ Implements Async by Multiprocesses """
 
-        with ProcessPoolExecutor(max_workers = self.workers) as executor:
+        with ProcessPoolExecutor(max_workers=self.workers) as executor:
             for obj in self.objects:
                 if inspect.isclass(obj):
                     obj = self.container.resolve(obj)

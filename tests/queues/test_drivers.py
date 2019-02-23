@@ -75,3 +75,7 @@ class TestAsyncDriver:
     def test_async_driver_specify_workers(self):
         assert self.app.make('QueueManager').driver('async').push(Job, mode='threading', workers=2) is None
         assert self.app.make('QueueManager').driver('async').push(Job, mode='multiprocess', workers=2) is None
+
+    def test_threading_workers_are_nonnegative(self):
+        with pytest.raises(QueueException, message="Should raise QueueException error"):
+            self.app.make('QueueManager').driver('async').push(Job, mode='threading', workers=-1)

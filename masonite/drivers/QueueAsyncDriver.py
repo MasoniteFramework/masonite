@@ -2,6 +2,7 @@
 
 import inspect
 import threading
+import os
 
 from masonite.app import App
 from masonite.contracts import QueueContract
@@ -24,6 +25,14 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
 
     def _threading(self):
         """ Implements Async by Threading """
+
+        # Necessary for Python 3.4
+        if self.workers is None:
+            # Use this number because ThreadPoolExecutor is often
+            # used to overlap I/O instead of CPU work.
+            self.workers = (os.cpu_count() or 1) * 5
+        if self.workers <= 0:
+            raise QueueException("max_workers must be greater than 0")
 
         with ThreadPoolExecutor(max_workers=self.workers) as executor:
             for obj in self.objects:

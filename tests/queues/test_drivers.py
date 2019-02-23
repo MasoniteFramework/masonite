@@ -2,9 +2,10 @@ from masonite.app import App
 from masonite.drivers import QueueAsyncDriver, QueueAmqpDriver
 from masonite.managers import QueueManager
 from config import queue
-
+from masonite.exceptions import QueueException
 from masonite.queues.Queueable import Queueable
 import os
+import pytest
 from masonite.environment import LoadEnvironment, env
 
 LoadEnvironment()
@@ -60,3 +61,13 @@ class TestAsyncDriver:
         assert isinstance(self.app.make('Queue'), QueueAsyncDriver)
         assert isinstance(self.app.make('Queue').driver('async'), QueueAsyncDriver)
         assert isinstance(self.app.make('Queue').driver('default'), QueueAsyncDriver)
+
+    def test_async_driver_with_threading(self):
+        assert self.app.make('QueueManager').driver('async').push(Job, mode='threading') is None
+
+    def test_async_driver_with_multiprocess(self):
+        assert self.app.make('QueueManager').driver('async').push(Job, mode='multiprocess') is None
+
+    def test_handle_unrecognized_mode(self):
+        with pytest.raises(QueueException, message="Should raise QueueException error"):
+            self.app.make('QueueManager').driver('async').push(Job, mode='blah')

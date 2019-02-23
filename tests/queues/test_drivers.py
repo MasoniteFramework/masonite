@@ -17,6 +17,7 @@ class Job(Queueable):
         print('sending from job handled')
         return 'test'
 
+
 class Random(Queueable):
 
     def send(self):
@@ -41,7 +42,8 @@ class TestAsyncDriver:
         self.app.bind('QueueManager', QueueManager(self.app))
         self.app.bind('Queue', QueueManager(self.app).driver(self.app.make('QueueConfig').DRIVER))
         self.drivers = ['async']
-       
+        self.modes = ['threading', 'multiprocess']
+
         if env('RUN_AMQP'):
             self.drivers.append('amqp')
 
@@ -62,20 +64,19 @@ class TestAsyncDriver:
         assert isinstance(self.app.make('Queue').driver('async'), QueueAsyncDriver)
         assert isinstance(self.app.make('Queue').driver('default'), QueueAsyncDriver)
 
-    def test_async_driver_with_threading(self):
-        assert self.app.make('QueueManager').driver('async').push(Job, mode='threading') is None
-
-    def test_async_driver_with_multiprocess(self):
-        assert self.app.make('QueueManager').driver('async').push(Job, mode='multiprocess') is None
+    def test_async_driver_modes(self):
+        for mode in self.modes:
+            assert self.app.make('QueueManager').driver('async').push(Job, mode=mode) is None
 
     def test_handle_unrecognized_mode(self):
         with pytest.raises(QueueException, message="Should raise QueueException error"):
             self.app.make('QueueManager').driver('async').push(Job, mode='blah')
 
     def test_async_driver_specify_workers(self):
-        assert self.app.make('QueueManager').driver('async').push(Job, mode='threading', workers=2) is None
-        assert self.app.make('QueueManager').driver('async').push(Job, mode='multiprocess', workers=2) is None
+        for mode in self.modes:
+            assert self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=2) is None
 
-    def test_threading_workers_are_nonnegative(self):
+    def test_workers_are_nonnegative(self):
         with pytest.raises(QueueException, message="Should raise QueueException error"):
-            self.app.make('QueueManager').driver('async').push(Job, mode='threading', workers=-1)
+            for mode in self.modes:
+                self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=-1) is None

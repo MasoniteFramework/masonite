@@ -1,7 +1,6 @@
 """Async Driver Method."""
 
 import inspect
-import threading
 import os
 
 from masonite.app import App
@@ -23,60 +22,53 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
         """
         self.container = app
 
-    def _threading(self):
-        """ Implements Async by Threading """
+    def _get_processor(self, mode, max_workers):
+        """ Set processor to use either threads or multiprocesses
 
-        # Necessary for Python 3.4
-        if self.workers is None:
+        Arguments:
+            mode {str} - async mode
+            max_workers {int} - number of threads/processes to use
+        """
+
+        # Necessary for Python 3.4, can be removed in 3.5+
+        if max_workers is None:
             # Use this number because ThreadPoolExecutor is often
             # used to overlap I/O instead of CPU work.
-            self.workers = (os.cpu_count() or 1) * 5
-        if self.workers <= 0:
+            max_workers = (os.cpu_count() or 1) * 5
+        if max_workers <= 0:
             raise QueueException("max_workers must be greater than 0")
 
-        with ThreadPoolExecutor(max_workers=self.workers) as executor:
-            for obj in self.objects:
-                if inspect.isclass(obj):
-                    obj = self.container.resolve(obj)
+        # Determine Mode for Processing
+        if mode == 'threading':
+            processor = ThreadPoolExecutor(max_workers)
+        elif mode == 'multiprocess':
+            processor = ProcessPoolExecutor(max_workers)
+        else:
+            raise QueueException('Queue mode {} not recognized'.format(mode))
+        return processor
 
-                try:
-                    executor.submit(
-                        fn=getattr(obj, self.callback), args=self.args, kwargs=self.kwargs)
-                except AttributeError:
-                    # Could be wanting to call only a method asyncronously
-                    executor.submit(fn=obj, args=self.args, kwargs=self.kwargs)
-
-    def _multiprocessing(self):
-        """ Implements Async by Multiprocesses """
-
-        with ProcessPoolExecutor(max_workers=self.workers) as executor:
-            for obj in self.objects:
-                if inspect.isclass(obj):
-                    obj = self.container.resolve(obj)
-
-                try:
-                    executor.submit(
-                        fn=getattr(obj, self.callback), args=self.args, kwargs=self.kwargs)
-                except AttributeError:
-                    # Could be wanting to call only a method asyncronously
-                    executor.submit(fn=obj, args=self.args, kwargs=self.kwargs)
-
-    def push(self, *objects, args=(), kwargs={}, callback='handle', mode='threading', workers=None):
+    def push(self, *objects, args=(), kwargs={}, **options):
         """Push objects onto the async stack.
 
         Arguments:
             objects {*args of objects} - This can be several objects as parameters into this method.
+            options {**kwargs of options} - Additional options for async driver
         """
 
-        self.workers = workers
-        self.objects = objects
-        self.callback = callback
-        self.args = args
-        self.kwargs = kwargs
+        # Initialize Extra Options
+        callback = options.get('callback', 'handle')
+        mode = options.get('mode', 'threading')
+        workers = options.get('workers', None)
 
-        if mode == 'threading':
-            self._threading()
-        elif mode == 'multiprocess':
-            self._multiprocessing()
-        else:
-            raise QueueException('Queue mode {} not recognized'.format(mode))
+        # Set processor to either use threads or processes
+        processsor = self._get_processor(mode=mode, max_workers=workers)
+
+        with processsor as executor:
+            for obj in objects:
+                obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
+                try:
+                    executor.submit(
+                        fn=getattr(obj, callback), args=args, kwargs=kwargs)
+                except AttributeError:
+                    # Could be wanting to call only a method asyncronously
+                    executor.submit(fn=obj, args=args, kwargs=kwargs)

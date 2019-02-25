@@ -8,6 +8,7 @@ class NoneType:
     def __eq__(self, other):
         return other == None
 
+
 class Optional:
 
     def __init__(self, obj):
@@ -18,7 +19,7 @@ class Optional:
         if hasattr(self.obj, attr):
             return getattr(self.obj, attr)
         return NoneType()
-    
+
     def __call__(self, *args, **kwargs):
         return NoneType()
 

@@ -18,8 +18,8 @@ class TestCsrf:
         assert self.request.get_cookie('csrf_token', decrypt=False)
 
     def test_middleware_shares_view(self):
-        assert 'csrf_field' in self.app.make('ViewClass').dictionary
-        assert 'input' in self.app.make('ViewClass').dictionary['csrf_field']
+        assert 'csrf_field' in self.app.make('ViewClass')._shared
+        assert 'input' in self.app.make('ViewClass')._shared['csrf_field']
 
     def test_middleware_does_not_need_safe_filter(self):
         assert '&lt;' not in self.app.make('ViewClass').render('csrf_field').rendered_template

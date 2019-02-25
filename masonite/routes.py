@@ -82,7 +82,11 @@ class Route:
 
                 request_body = self.environ['wsgi.input'].read(
                     request_body_size)
-                return json.loads(request_body)
+
+                if isinstance(request_body, bytes):
+                    request_body = request_body.decode('utf-8')
+
+                return json.loads(request_body or '{}')
             else:
                 fields = cgi.FieldStorage(
                     fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
@@ -246,7 +250,7 @@ class BaseHttpRoute:
         Returns:
             bool
         """
-        if self.request.has_subdomain() and (self.required_domain is '*' or self.request.subdomain == self.required_domain):
+        if self.request.has_subdomain() and (self.required_domain == '*' or self.request.subdomain == self.required_domain):
             return True
         return False
 
@@ -356,25 +360,29 @@ class BaseHttpRoute:
 class Get(BaseHttpRoute):
     """Class for specifying GET requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Get constructor."""
         self.method_type = ['GET']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Post(BaseHttpRoute):
     """Class for specifying POST requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Post constructor."""
         self.method_type = ['POST']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Match(BaseHttpRoute):
     """Class for specifying POST requests."""
 
-    def __init__(self, method_type=['GET']):
+    def __init__(self, method_type=['GET'], route=None, output=None):
         """Post constructor."""
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
@@ -382,33 +390,41 @@ class Match(BaseHttpRoute):
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Put(BaseHttpRoute):
     """Class for specifying PUT requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Put constructor."""
         self.method_type = ['PUT']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Patch(BaseHttpRoute):
     """Class for specifying Patch requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Patch constructor."""
         self.method_type = ['PATCH']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class Delete(BaseHttpRoute):
     """Class for specifying Delete requests."""
 
-    def __init__(self):
+    def __init__(self, route=None, output=None):
         """Delete constructor."""
         self.method_type = ['DELETE']
         self.list_middleware = []
+        if route and output:
+            self.route(route, output)
 
 
 class ViewRoute(BaseHttpRoute):
@@ -433,6 +449,30 @@ class ViewRoute(BaseHttpRoute):
 
     def get_response(self):
         return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
+
+
+class Redirect(BaseHttpRoute):
+
+    def __init__(self, current_route, future_route, status=302, methods=['GET']):
+        """Class used for view routes.
+
+        This class should be returned when a view is called on an HTTP route.
+        This is useful when returning a view that doesn't need any special logic and only needs a dictionary.
+
+        Arguments:
+            method_type {string} -- The method type (GET, POST, PUT etc)
+            route {string} -- The current route (/test/url)
+            template {string} -- The template to use (dashboard/user)
+            dictionary {dict} -- The dictionary to use to render the template.
+        """
+        self.list_middleware = []
+        self.method_type = methods
+        self.route_url = current_route
+        self.status = status
+        self.future_route = future_route
+
+    def get_response(self):
+        return self.request.redirect(self.future_route, status=self.status)
 
 
 class RouteGroup():

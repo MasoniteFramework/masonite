@@ -1,6 +1,7 @@
 from .BaseDriver import BaseDriver
 from .BaseMailDriver import BaseMailDriver
 from .BaseUploadDriver import BaseUploadDriver
+from .BaseQueueDriver import BaseQueueDriver
 from .BaseCacheDriver import BaseCacheDriver
 from .BroadcastAblyDriver import BroadcastAblyDriver
 from .BroadcastPusherDriver import BroadcastPusherDriver

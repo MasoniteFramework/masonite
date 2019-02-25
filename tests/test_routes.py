@@ -1,6 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
-from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match
+from masonite.app import App
+from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match, Redirect
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException
@@ -64,6 +65,23 @@ class TestRoutes:
 
     def test_route_doesnt_break_on_incorrect_controller(self):
         assert Get().route('test/url', 'BreakController@show')
+
+    def test_route_can_pass_route_values_in_constructor(self):
+        route = Get('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Post('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Put('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Patch('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+        route = Delete('test/url', 'BreakController@show')
+        assert route.route_url == 'test/url'
+
+    def test_route_can_pass_route_values_in_constructor_and_use_middleware(self):
+        route = Get('test/url', 'BreakController@show').middleware('auth')
+        assert route.route_url == 'test/url'
+        assert route.list_middleware == ['auth']
 
     def test_route_gets_deeper_module_controller(self):
         route = Get().route('test/url', 'subdirectory.SubController@show')
@@ -164,3 +182,62 @@ class TestRoutes:
 
         assert routes[3].route_url == '/dashboard/test/1'
         assert routes[3].named_route == 'post.update'
+
+    def test_correctly_parses_json_with_dictionary(self):
+        environ = generate_wsgi()
+        environ['CONTENT_TYPE'] = 'application/json'
+        environ['REQUEST_METHOD'] = 'POST'
+        environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "conta_corrente": {\n        "ocultar": false,\n        "visao_geral": true,\n        "extrato": true\n    }\n}')
+        route = Route(environ)
+        assert route.environ['QUERY_STRING'] == {
+            "conta_corrente": {
+                "ocultar": False,
+                "visao_geral": True,
+                "extrato": True
+            }
+        }
+
+    def test_correctly_parses_json_with_list(self):
+        environ = generate_wsgi()
+        environ['CONTENT_TYPE'] = 'application/json'
+        environ['REQUEST_METHOD'] = 'POST'
+        environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "options": ["foo", "bar"]\n}')
+        route = Route(environ)
+        assert route.environ['QUERY_STRING'] == {
+            "options": ["foo", "bar"]
+        }
+    
+    def test_redirect_route(self):
+        route = Redirect('/test1', '/test2')
+        request = Request(generate_wsgi())
+        route.load_request(request)
+        request.load_app(App())
+
+        route.get_response()
+        assert request.is_status(302)
+        assert request.redirect_url == '/test2'
+
+    def test_redirect_can_use_301(self):
+        request = Request(generate_wsgi())
+        route = Redirect('/test1', '/test3', status=301)
+        
+        route.load_request(request)
+        request.load_app(App())
+        route.get_response()
+        assert request.is_status(301)
+        assert request.redirect_url == '/test3'
+
+    def test_redirect_can_change_method_type(self):
+        request = Request(generate_wsgi())
+        route = Redirect('/test1', '/test3', methods=['POST', 'PUT'])
+        assert route.method_type == ['POST', 'PUT']
+
+
+class WsgiInputTestClass:
+
+    def load(self, byte):
+        self.byte = byte
+        return self
+
+    def read(self, request_body_size):
+        return self.byte

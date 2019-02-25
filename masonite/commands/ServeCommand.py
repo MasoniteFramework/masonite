@@ -5,6 +5,7 @@ import os
 from hupper.logger import DefaultLogger, LogLevel
 from hupper.reloader import Reloader, find_default_monitor_factory
 from cleo import Command
+from masonite.helpers import has_unmigrated_migrations
 
 
 class ServeCommand(Command):
@@ -19,6 +20,9 @@ class ServeCommand(Command):
     """
 
     def handle(self):
+        if has_unmigrated_migrations():
+            self.comment("\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n")
+
         if self.option('reload'):
             logger = DefaultLogger(LogLevel.INFO)
 
@@ -34,7 +38,7 @@ class ServeCommand(Command):
                 worker_args=worker_args,
             )
 
-            self._run_reloader(reloader, extra_files=[".env"])
+            self._run_reloader(reloader, extra_files=[".env", "storage/"])
 
         else:
             from wsgi import application

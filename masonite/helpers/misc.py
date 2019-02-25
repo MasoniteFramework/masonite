@@ -34,3 +34,35 @@ def dot(data, compile_to=None):
         compiling += notation
         compiling += dot_split[1]
     return compiling
+
+
+def clean_request_input(value, clean=True):
+    if not clean:
+        return value
+    import html
+
+    try:
+        if isinstance(value, str):
+            return html.escape(value)
+        elif isinstance(value, list):
+            return [html.escape(x) for x in value]
+        elif isinstance(value, int):
+            return value
+        elif isinstance(value, dict):
+            return {key: html.escape(val) for (key, val) in value.items()}
+    except AttributeError:
+        pass
+
+    return value
+
+
+class HasColoredCommands:
+
+    def success(self, message):
+        print('\033[92m {0} \033[0m'.format(message))
+
+    def warning(self, message):
+        print('\033[93m {0} \033[0m'.format(message))
+
+    def danger(self, message):
+        print('\033[91m {0} \033[0m'.format(message))

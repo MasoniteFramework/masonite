@@ -11,7 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qs
+from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -19,7 +19,7 @@ from cryptography.fernet import InvalidToken
 from config import application
 from masonite.auth.Sign import Sign
 from masonite.exceptions import InvalidHTTPStatusCode
-from masonite.helpers import dot
+from masonite.helpers import dot, clean_request_input, Dot as DictDot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.status import response_statuses
@@ -63,7 +63,7 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name, default=False):
+    def input(self, name, default=False, clean=True):
         """Get a specific input value.
 
         Arguments:
@@ -71,13 +71,20 @@ class Request(Extendable):
 
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
+            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
 
         Returns:
             string
         """
-        if '.' in name:
+        if '.' in name and isinstance(self.request_variables.get(name.split('.')[0]), dict):
+            value = DictDot().dot(name, self.request_variables)
+            if value:
+                return value
+
+        elif '.' in name:
             name = dot(name, "{1}[{.}]")
-        return self.request_variables.get(name, default)
+
+        return clean_request_input(self.request_variables.get(name, default), clean=clean)
 
     def is_post(self):
         """Check if the current request is a POST request.
@@ -125,11 +132,12 @@ class Request(Extendable):
         self.encryption_key = key
         return self
 
-    def all(self, internal_variables=True):
+    def all(self, internal_variables=True, clean=True):
         """Get all the input data.
 
         Keyword Arguments:
             internal_variables {bool} -- Get the internal framework variables as well (default: {True})
+            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
 
         Returns:
             dict
@@ -139,9 +147,9 @@ class Request(Extendable):
             for key, value in self.request_variables.items():
                 if not key.startswith('__'):
                     without_internals.update({key: value})
-            return without_internals
+            return clean_request_input(without_internals, clean=clean)
 
-        return self.request_variables
+        return clean_request_input(self.request_variables, clean=clean)
 
     def only(self, *names):
         """Return the specified request variables in a dictionary.
@@ -209,7 +217,7 @@ class Request(Extendable):
             variables {string|dict}
         """
         if isinstance(variables, str):
-            variables = parse_qs(variables)
+            variables = dict(parse_qsl(variables))
 
         try:
             for name in variables.keys():
@@ -227,18 +235,23 @@ class Request(Extendable):
         Returns:
             string|bool
         """
+        if value is None:
+            return None
+
         if isinstance(value, list):
 
             # If the list contains MiniFieldStorage objects then loop through and get the values.
             if any(isinstance(storage_obj, MiniFieldStorage) for storage_obj in value):
                 values = [storage_obj.value for storage_obj in value]
 
+                # TODO: This needs to be removed in 2.2. A breaking change but
+                # this code will result in inconsistent values
                 # If there is only 1 element in the list then return the only value in the list
                 if len(values) == 1:
                     return values[0]
                 return values
 
-            return value[0]
+            return value
 
         if isinstance(value, dict):
             return value
@@ -782,7 +795,11 @@ class Request(Extendable):
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
                     url = url.replace('@', '').split(':')[0]
-                    compiled_url += str(params[url]) + '/'
+                    if isinstance(params, dict):
+                        compiled_url += str(params[url]) + '/'
+                    elif isinstance(params, list):
+                        compiled_url += str(params[0]) + '/'
+                        del params[0]
                 else:
                     compiled_url += url + '/'
 

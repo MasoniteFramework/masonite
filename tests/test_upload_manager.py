@@ -1,5 +1,10 @@
 import os
+import shutil
 import pytest
+
+from masonite.environment import LoadEnvironment
+
+LoadEnvironment()
 
 from config import application, storage
 from masonite.app import App
@@ -8,7 +13,6 @@ from masonite.managers.UploadManager import UploadManager
 from masonite.drivers.UploadDiskDriver import UploadDiskDriver
 from masonite.drivers.UploadS3Driver import UploadS3Driver
 from masonite.helpers import static
-from masonite.environment import LoadEnvironment
 
 
 class TestStaticTemplateHelper:
@@ -34,6 +38,7 @@ class TestUploadManager:
         self.app.bind('Test', object)
         self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
+        self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('Application', application)
         self.app.bind('UploadManager', UploadManager().load_container(self.app))
 
@@ -46,6 +51,15 @@ class TestUploadManager:
     def test_upload_manager_throws_error_with_incorrect_file_type(self):
         with pytest.raises(UnacceptableDriverType):
             self.app.make('UploadManager').driver(static)
+
+    def test_disk_driver_creates_directory_if_not_exists(self):
+        self.app.make('UploadManager').driver('disk').store(ImageMock(), location="storage/temp")
+        assert os.path.exists('storage/temp')
+        shutil.rmtree('storage/temp')
+
+    def test_upload_manager_changes_accepted_files(self):
+        self.app.make('UploadManager').driver('disk').accept('yml').accept_file_types == ('yml')
+        self.app.make('UploadManager').driver('s3').accept('yml').accept_file_types == ('yml')
 
     def test_upload_manager_raises_driver_not_found_error(self):
         self.app = App()
@@ -78,14 +92,14 @@ class TestUploadManager:
         This test is responsible for checking if you upload a file correctly.
         """
 
-        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'uploads')
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), location='uploads')
 
     def test_upload_file_with_location_from_driver(self):
         """
         This test is responsible for checking if you upload a file correctly.
         """
 
-        assert UploadManager(self.app).driver('disk').store(ImageMock(), 'disk.uploading')
+        assert UploadManager(self.app).driver('disk').store(ImageMock(), location='disk.uploading')
 
     def test_upload_manage_accept_files(self):
         """
@@ -104,6 +118,12 @@ class TestUploadManager:
     def test_upload_with_new_filename(self):
         assert self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 
+    def test_upload_manager_validates_file_ext(self):
+        """
+        This test is responsible for checking if you upload
+        a file correctly with a valid extension.
+        """
+        assert UploadManager(self.app).driver('disk').accept('jpg', 'png').validate_extension('test.png')
 
 class ImageMock():
     """
@@ -120,7 +140,7 @@ class ImageMock():
         return bytes('file read', 'utf-8')
 
 
-LoadEnvironment()
+
 if os.environ.get('S3_BUCKET'):
 
     class TestS3Upload:
@@ -140,7 +160,7 @@ if os.environ.get('S3_BUCKET'):
             assert len(self.app.make('Upload').driver('s3').store(ImageMock())) == 29
 
         def test_upload_open_file_for_s3(self):
-            assert self.app.make('Upload').driver('s3').store(open('.travis.yml'))
+            assert self.app.make('Upload').driver('s3').accept('yml').store(open('.travis.yml'))
 
         def test_upload_manage_accept_files(self):
             """
@@ -158,3 +178,6 @@ if os.environ.get('S3_BUCKET'):
 
         def test_upload_with_new_filename(self):
             assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
+
+        def test_upload_with_new_filename_and_location_in_s3(self):
+            assert self.app.make('UploadManager').driver('s3').store(ImageMock(), filename='newname.jpg', location='3/2') == 'newname.jpg'

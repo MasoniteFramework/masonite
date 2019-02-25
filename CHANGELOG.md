@@ -4,6 +4,174 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.15](https://github.com/MasoniteFramework/core/releases/tag/v2.1.15) - 2019-02-10
+### Added
+- [Added ability to specify a list as the second parameter to routes instead of a dictionary](https://docs.masoniteproject.com/the-basics/requests#route-parsing)
+- [Added ability to return a model which then returns a JSON response](https://docs.masoniteproject.com/the-basics/controllers#returning-json)
+- [Added ability to show when you have unmigrated migrations](https://docs.masoniteproject.com/the-craft-command/introduction#running-the-wsgi-server)
+- [Added improvements to the queue feature](https://docs.masoniteproject.com/useful-features/queues-and-jobs#queues-and-jobs)
+- Added ability to pass in default as the driver method to get the default driver.
+
+## [2.1.14](https://github.com/MasoniteFramework/core/releases/tag/v2.1.14) - 2019-02-01
+### Fixed
+- Fixed issue with login authentication
+
+## [2.1.13](https://github.com/MasoniteFramework/core/releases/tag/v2.1.13) - 2019-01-26
+### Fixed
+- Fixed issue where a JSON null value could raise an exception 71d9016
+- Fixed issue where a body type of 0 would throw an exception with the delete method type 9659363
+- Fixed issue where status code could not be set in a controller 5ede5d8
+
+### Added
+- Added a better exception when passing in a set instead of a dictionary to the render method. This is a common mistake that would throw an ambiguous error
+- [Added route redirection](https://docs.masoniteproject.com/the-basics/routing#redirect-route)
+
+## [2.1.12](https://github.com/MasoniteFramework/core/releases/tag/v2.1.12) - 2019-01-19
+### Fixed
+- Fixed issue where incoming JSON response would only return the first value in a list.
+
+## [2.1.11](https://github.com/MasoniteFramework/core/releases/tag/v2.1.11) - 2019-01-18
+### Fixed
+- Fixed issue when cleaning a multi dimensional dictionary
+
+## [2.1.10](https://github.com/MasoniteFramework/core/releases/tag/v2.1.10) - 2019-01-11
+### Removed
+- Removed ability to set the password column using __password__
+
+## [2.1.9](https://github.com/MasoniteFramework/core/releases/tag/v2.1.9) - 2019-01-11
+### Fixed
+- Fixed issue with auth requiring a __password__ attribute when it should not have been.
+
+## [2.1.8](https://github.com/MasoniteFramework/core/releases/tag/v2.1.8) - 2019-01-10
+### Fixed
+- Fixed issue with whitenoise not auto refreshing static files
+
+## [2.1.7](https://github.com/MasoniteFramework/core/releases/tag/v2.1.7) - 2019-01-10
+### Fixed
+- Fixed issue with storage folder not updating for static assets
+
+## [2.1.6](https://github.com/MasoniteFramework/core/releases/tag/v2.1.6) - 2019-01-09
+### Added
+- [Added config helper](https://docs.masoniteproject.com/the-basics/helper-functions#config) [#517](https://github.com/MasoniteFramework/core/pull/517)
+- [Added ability to use `in` keyword for the container](https://docs.masoniteproject.com/architectural-concepts/service-container#has) [#520](https://github.com/MasoniteFramework/core/pull/520) 
+- [Added ability to use multiple columns to authenticate](https://docs.masoniteproject.com/security/authentication#multiple-authentication-columns) [#521](https://github.com/MasoniteFramework/core/pull/521)
+- [Added ability to specify the user password column](https://docs.masoniteproject.com/security/authentication#changing-the-authentication-password) [#521](https://github.com/MasoniteFramework/core/pull/521)
+
+## [2.1.5](https://github.com/MasoniteFramework/core/releases/tag/v2.1.5) - 2019-01-03
+### Fixed
+- Fixed issue with LoginController not working properly because of incorrectly specified input
+- Fixed issue with view render method storing variables from previous renders
+- Fixed issue with s3 not working properly when using both location and filename
+- Fixed issue with Amazon S3 storing all files in root directory
+
+### Changed
+- Changed how S3 temporarily stores file uploads
+- Changed where the exception is thrown in the s3 driver to prevent a temporary file being saved before uploading if the driver is not installed.
+
+### Added
+- Added the ability for disk driver to create directories if they do not exist
+
+## [2.1.4](https://github.com/MasoniteFramework/core/releases/tag/v2.1.4) - 2018-12-30
+### Fixed
+- Fixed issue where uploading a file resulted in None being returned.
+
+## [2.1.3](https://github.com/MasoniteFramework/core/releases/tag/v2.1.3) - 2018-12-22
+### Security
+- Fixed possibility of an XSS attack through query strings
+- Fixed possibility of uploading arbitrary files by default
+
+### Fixed
+- Fixed issue where a 400 response was returning a 200 status code
+
+## [2.1.2](https://github.com/MasoniteFramework/core/releases/tag/v2.1.2) - 2018-12-16
+### Added
+- [Added queue drivers so any objects can be queued](https://docs.masoniteproject.com/useful-features/queues-and-jobs#passing-functions-or-methods)
+- Added ShouldQueue class
+- [Added new redirection method options](https://docs.masoniteproject.com/the-basics/requests#redirection)
+
+### Fixed
+- Fixed issue with deeper module controllers
+- Fixed issue when returning integer from a view
+- Fixed container error warning
+
+## [2.1.1](https://github.com/MasoniteFramework/core/releases/tag/v2.1.1) - 2018-12-04
+### Fixed
+- Fixed issue with header redirection
+
+## [2.1.0](https://github.com/MasoniteFramework/core/releases/tag/v2.1.0) - 2018-12-01
+### Added
+- Added middleware classes instead of strings.
+- Added migrate:status command
+- Added a simple container binding
+- Added Mail Helper
+- Added status code mapping and `request.status(int)` features
+- Added several methods to the service provider class to helper bind things into the container
+- Added view Routes
+- Added request.without() method
+- Added port to database dictionary
+- Added way to set an integer as a status code
+- Added a way to set headers with a dictionary
+- Added basic testing framework
+- Added Match routes for multiple route methods
+- Added Masonite events into core
+- Added email verification
+- Added request.without
+- Added craft middleware command
+- Added Headers can be added via a dictionary 
+- Added views can now use dot notation
+- Added swap to container
+- Added masonite env function for cast conversions 
+- Added ability to resolve with normal parameters like `.resolve(obj, var1, var2)`
+- Added password reset to auth command
+- Added Response Middleware and removed the StartResponse provider
+- Added better pep 8 standards
+- Added code of conduct
+- Added test for file system helpers
+- Added Masonite events to core
+- Added Response object
+
+### Removed
+- Removed the arbitrary `payload` input when fetching a json response 308b3b1
+- Removed container Resolving - #255 
+- Removed the need for the |safe filters on Masonite template helpers
+- Removed patch from serve command
+
+### Fixed
+- Fixed param method not working with custom route compilers
+- Fixed issue when removing mailprovider from the optional providers section
+
+### Changed
+- Changed `Auth` class into the `auth` directory and removed the facades directory.
+- Changed cache_exists to cache
+- Changed Request redirections now set status codes
+- Changed and refactored commands to inherit from scaffolding based classes
+- Changed built in templates to bootstrap 4
+- Changed all scaffolding commands to use view templates now
+- Changed routes to work without adding a slash at the end
+- Changed all dependencies to the most up to date versions
+
+## [2.0.36](https://github.com/MasoniteFramework/core/releases/tag/v2.0.36) - 2018-11-16
+### Added
+- Added the `-b`, `-p` and `-i` options to the serve command for bind, port and interval.
+
+### Fixed
+- Fixed issue where the server would crash when there was a syntax error.
+
+### Changed
+- Changed the developer server completely and replaced waitress with a different pure python development server.
+
+## [2.0.35](https://github.com/MasoniteFramework/core/releases/tag/v2.0.35) - 2018-11-10
+### Added
+- Added upload driver's abilities to accept an open file as a file item.
+
+## [2.0.34](https://github.com/MasoniteFramework/core/releases/tag/v2.0.34) - 2018-11-09
+### Fixed
+- Fixed dependencies being fixed to a specific version number
+
+## [2.0.33](https://github.com/MasoniteFramework/core/releases/tag/v2.0.33) - 2018-11-01
+### Fixed
+- Fixed issue with mail templates throwing `'function' object has no attribute 'render`
+
 ## [2.0.32](https://github.com/MasoniteFramework/core/releases/tag/v2.0.32) - 2018-10-31
 ### Added
 - [Added Redis cache driver](https://docs.masoniteproject.com/useful-features/caching#redis)

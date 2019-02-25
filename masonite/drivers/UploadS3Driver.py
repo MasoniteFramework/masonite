@@ -38,9 +38,15 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         Returns:
             string -- Returns the file name just saved.
         """
+        try:
+            import boto3
+        except ImportError:
+            raise DriverLibraryNotFound(
+                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
 
         driver = self.upload.driver('disk')
-        driver.store(fileitem, location)
+        driver.accept_file_types = self.accept_file_types
+        driver.store(fileitem, filename=filename, location='storage/temp')
         file_location = driver.file_location
 
         # use the new filename or get it from the fileitem
@@ -50,12 +56,6 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         # Check if is a valid extension
         self.validate_extension(filename)
 
-        try:
-            import boto3
-        except ImportError:
-            raise DriverLibraryNotFound(
-                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
-
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],
             aws_secret_access_key=self.config.DRIVERS['s3']['secret'],
@@ -63,10 +63,15 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
 
         s3 = session.resource('s3')
 
+        if location:
+            location = os.path.join(location, filename)
+        else:
+            location = os.path.join(filename)
+
         s3.meta.client.upload_file(
             file_location,
             self.config.DRIVERS['s3']['bucket'],
-            filename
+            location
         )
 
         return filename

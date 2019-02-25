@@ -7,7 +7,7 @@ from jinja2 import FileSystemLoader, PackageLoader
 from config import cache
 from masonite.app import App
 from masonite.drivers.CacheDiskDriver import CacheDiskDriver
-from masonite.exceptions import RequiredContainerBindingNotFound
+from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
 from masonite.managers.CacheManager import CacheManager
 from masonite.view import View
 
@@ -31,6 +31,15 @@ class TestView:
 
         assert view.exists('index')
         assert view.exists('not_available') is False
+
+    def test_view_render_does_not_keep_previous_variables(self):
+        view = self.container.make('ViewClass')
+
+        view.render('test', {'var1': 'var1'})
+        view.render('test', {'var2': 'var2'})
+
+        assert 'var1' not in view.dictionary
+        assert 'var2' in view.dictionary
 
     def test_global_view_exists(self):
         view = self.container.make('ViewClass')
@@ -139,7 +148,9 @@ class TestView:
         viewclass.share({'test1': 'test1'})
         viewclass.share({'test2': 'test2'})
 
-        assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2'}
+        assert viewclass._shared == {'test1': 'test1', 'test2': 'test2'}
+        viewclass.render('test', {'var1': 'var1'})
+        assert viewclass.dictionary == {'test1': 'test1', 'test2': 'test2', 'var1': 'var1'}
 
     def test_adding_environment(self):
         viewclass = self.container.make('ViewClass')
@@ -263,7 +274,7 @@ class TestView:
 
     def _is_admin(self, obj):
         return obj.admin == 1
-    
+
     def test_can_render_pubjs(self):
         view = self.container.make('ViewClass')
         view.add_extension('pypugjs.ext.jinja.PyPugJSExtension')
@@ -271,6 +282,11 @@ class TestView:
 
         assert view.render(
             'pug/hello.pug', {'name': 'Joe'}).rendered_template == '<p>hello Joe</p>'
+
+    def test_throws_exception_on_incorrect_type(self):
+        view = self.container.make('ViewClass')
+        with pytest.raises(ViewException):
+            assert view.render('test', {'', ''})
 
 
 class MockAdminUser:

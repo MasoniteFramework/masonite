@@ -124,6 +124,11 @@ class TestRequest:
         self.request._set_standardized_request_variables(storages)
         assert self.request.input('test') == 'value'
 
+    def test_request_can_get_list_value(self):
+        storages = {'test': ['foo', 'bar']}
+        self.request._set_standardized_request_variables(storages)
+        assert self.request.input('test') == ['foo', 'bar']
+
     def test_request_mini_field_storage_doesnt_return_brackets(self):
         storages = {'test[]': [MiniFieldStorage('key', '1')]}
         self.request._set_standardized_request_variables(storages)
@@ -258,6 +263,7 @@ class TestRequest:
 
         assert request.route('test.url') == '/test/url'
         assert request.route('test.id', {'id': 1}) == '/test/url/1'
+        assert request.route('test.id', [1]) == '/test/url/1'
 
     def test_request_redirection(self):
         app = App()
@@ -322,6 +328,21 @@ class TestRequest:
 
         assert request.compile_route_to_url(route, params) == '/test/1'
 
+    def test_redirect_compiles_url_with_list_parameters(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        route = 'test/@id'
+        params = ['1']
+
+        assert request.compile_route_to_url(route, params) == '/test/1'
+
+        route = 'test/@id/@user/test/@slug'
+        params = ['1', '2', '3']
+
+        assert request.compile_route_to_url(route, params) == '/test/1/2/test/3'
+
     def test_redirect_compiles_url_with_multiple_parameters(self):
         app = App()
         app.bind('Request', self.request)
@@ -353,6 +374,22 @@ class TestRequest:
         route = "http://google.com"
 
         assert request.compile_route_to_url(route) == 'http://google.com'
+
+    def test_can_get_nully_value(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables({
+            "gateway": "RENDIMENTO",
+            "request": {
+                "user": "data"
+            },
+            "response": None,
+            "description": "test only"
+        })
+
+        assert request.input('response') == None
 
     def test_request_gets_correct_header(self):
         app = App()
@@ -412,8 +449,7 @@ class TestRequest:
         request = app.make('Request').load_app(app)
 
         request.header('TEST1', 'set_this_item')
-        request.header('TEST2', 'set_this_item', http_prefix=None)
-        assert request.get_headers() == [('TEST1', 'set_this_item'), ('TEST2', 'set_this_item')]
+        assert request.get_headers() == [('TEST1', 'set_this_item')]
 
     def test_request_sets_str_status_code(self):
         app = App()
@@ -571,3 +607,31 @@ class TestRequest:
         self.request.request_variables.update({'__token': 'testing', 'application': 'Masonite'})
         assert self.request.only('application') == {'application': 'Masonite'}
         assert self.request.only('__token') == {'__token': 'testing'}
+
+    def test_request_gets_only_clean_output(self):
+        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
+        assert self.request.input('key') == '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;'
+        assert self.request.input('key', clean=False) == '<img """><script>alert(\'hey\')</script>">'
+
+    def test_request_cleans_all_optionally(self):
+        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
+        assert self.request.all()['key'] == '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;'
+        assert self.request.all(clean=False)['key'] == '<img """><script>alert(\'hey\')</script>">'
+
+    def test_request_gets_input_with_dotdict(self):
+        self.request.request_variables = {
+            "key": {
+                "user": "1",
+                        "name": "Joe",
+                        "address": {
+                            "street": "address 1"
+                        }
+            }
+        }
+
+        assert self.request.input('key')['address']['street'] == 'address 1'
+        assert self.request.input('key.address.street') == 'address 1'
+        assert self.request.input('key.') == False
+        assert self.request.input('key.user') == '1'
+        assert self.request.input('key.nothing') == False
+        assert self.request.input('key.nothing', default='test') == 'test'

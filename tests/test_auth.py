@@ -17,10 +17,15 @@ class MockUser():
 
     __auth__ = 'email'
     password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
+    users_password = 'pass123'
     email = 'user@email.com'
+    name = 'testuser123'
     id = 1
 
     def where(self, column, name):
+        return self
+
+    def or_where(self, column, name):
         return self
 
     def first(self):
@@ -38,6 +43,10 @@ class MockUser():
 class MockVerifyUser(MockUser, MustVerifyEmail):
     verified_at = None
     pass
+
+
+class ListUser(MockUser):
+    __password__ = 'users_password'
 
 
 class TestAuth:
@@ -60,6 +69,12 @@ class TestAuth:
 
     def test_login_user(self):
         assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        assert self.request.get_cookie('token')
+
+    def test_login_user_with_list_auth_column(self):
+        user = MockUser
+        user.__auth__ = ['email', 'name']
+        assert isinstance(self.auth.login('testuser123', 'secret'), user)
         assert self.request.get_cookie('token')
 
     def test_get_user(self):
@@ -128,7 +143,6 @@ class TestAuth:
         self.auth = Auth(self.request, MockVerifyUser())
 
         timestamp_plus_11 = datetime.datetime.now() - datetime.timedelta(minutes=11)
-        print(timestamp_plus_11.timestamp())
 
         params = {'id': Sign().sign('{0}::{1}'.format(1, timestamp_plus_11.timestamp()))}
         self.request.set_params(params)

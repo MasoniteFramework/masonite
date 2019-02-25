@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.17](https://github.com/MasoniteFramework/core/releases/tag/v2.1.17) - 2019-02-24
+### Added
+- [Added `-m` and `-s` to the model command to create a migration or a seed](https://docs.masoniteproject.com/the-craft-command/introduction#model-shortcuts)
+- [Added ability to use dot notation to get a dictionary value](https://docs.masoniteproject.com/the-basics/requests#getting-dictionary-input)
+- Added google and stack overflow links to the top of the exception page
+- [Added optional helper](https://docs.masoniteproject.com/the-basics/helper-functions#optional)
+
+### Changed
+- Changed where cleaning happens in the request class. Can now specify on if you want parameters cleaned. 
+
+### Fixed
+- Fixed issue with not being able to set 404 status codes
+
+## [2.1.16](https://github.com/MasoniteFramework/core/releases/tag/v2.1.16) - 2019-02-11
+### Fixed
+- Fixed issue with setting status codes on json responses
+- Fixed issue with specifying exempt CSRF protection routes that contained route parameters
+
 ## [2.1.15](https://github.com/MasoniteFramework/core/releases/tag/v2.1.15) - 2019-02-10
 ### Added
 - [Added ability to specify a list as the second parameter to routes instead of a dictionary](https://docs.masoniteproject.com/the-basics/requests#route-parsing)

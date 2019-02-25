@@ -454,7 +454,7 @@ class TestRequest:
     def test_request_sets_str_status_code(self):
         app = App()
         app.bind('Request', self.request)
-        app.bind('StatusCode', '404 Not Found')
+        app.bind('StatusCode', None)
         request = app.make('Request').load_app(app)
 
         request.status('200 OK')

@@ -85,7 +85,7 @@ class Response(Extendable):
         Returns:
             string|dict|list -- Returns the data to be returned.
         """
-        if self.request.get_status() in (404,):
+        if not self.request.get_status():
             self.request.status(status)
 
         if isinstance(view, dict) or isinstance(view, list):

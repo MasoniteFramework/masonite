@@ -12,7 +12,7 @@ and this project adheres to [Sentimental Versioning](http://sentimentalversionin
 - [Added optional helper](https://docs.masoniteproject.com/the-basics/helper-functions#optional)
 
 ### Changed
-- Changed where cleaning happens in the request class. Can now specify on if you want parameters cleaned. 
+- [Changed where cleaning happens in the request class. Can now specify on if you want parameters cleaned.](https://docs.masoniteproject.com/the-basics/requests#input-cleaning)
 
 ### Fixed
 - Fixed issue with not being able to set 404 status codes

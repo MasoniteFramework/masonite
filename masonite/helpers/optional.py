@@ -6,7 +6,7 @@ class NoneType:
         return None
 
     def __eq__(self, other):
-        return other == None
+        return other is None
 
 
 class Optional:

@@ -85,7 +85,7 @@ class Response(Extendable):
         Returns:
             string|dict|list -- Returns the data to be returned.
         """
-        if self.request.get_status() in (404,):
+        if not self.request.get_status():
             self.request.status(status)
 
         if isinstance(view, dict) or isinstance(view, list):
@@ -100,6 +100,9 @@ class Response(Extendable):
             view = self.data()
         elif view is None:
             raise ResponseError('Responses cannot be of type: None.')
+
+        if not isinstance(view, str):
+            raise ResponseError('Invalid response type of {}'.format(type(view)))
 
         self.app.bind('Response', view)
 

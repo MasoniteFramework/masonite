@@ -1,7 +1,13 @@
-from masonite.helpers import optional, optional_call
+from masonite.helpers import optional
 
 class MockUser:
     id = 1
+
+class CallThis:
+
+    def method(self, var):
+        self.test = var
+        return self
 
 class TestOptional:
 
@@ -12,4 +18,6 @@ class TestOptional:
         assert optional(object).instance() == object
     
     def test_optional_can_handle_method_calls(self):
-        assert optional_call(MockUser).method() == None
+        assert optional(MockUser).method() == None
+        assert not optional(MockUser).method()
+        assert optional(CallThis()).method('test').test == 'test'

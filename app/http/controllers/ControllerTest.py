@@ -21,3 +21,12 @@ class ControllerTest:
 
     def param(self):
         return self.request.param('id')
+
+    def get_param(self, first):
+        self.request.first = first
+        return self.request
+
+    def get_param_and_object(self, first, view: View):
+        self.request.first = first
+        self.request.view = view
+        return self.request

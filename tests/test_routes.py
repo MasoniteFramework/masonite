@@ -25,6 +25,9 @@ class TestRoutes:
     def test_route_get_returns_output(self):
         assert self.route.get('url', 'output') == 'output'
 
+    def test_route_prefixes_forward_slash(self):
+        assert Get().route('some/url', 'TestController@show').route_url == '/some/url'
+
     def test_route_is_not_post(self):
         assert self.route.is_post() == False
 
@@ -34,26 +37,26 @@ class TestRoutes:
 
     def test_compile_route_to_regex(self):
         get_route = Get().route('test/route', None)
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/route\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/route\\/$'
 
         get_route = Get().route('test/@route', None)
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/([\\w.-]+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/([\\w.-]+)\\/$'
 
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/(\\d+)\\/$'
 
         get_route = Get().route('test/@route:string', None)
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/([a-zA-Z]+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/([a-zA-Z]+)\\/$'
 
     def test_route_can_add_compilers(self):
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/(\\d+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/(\\d+)\\/$'
 
         self.route.compile('year', r'[0-9]{4}')
 
         get_route = Get().route('test/@route:year', None)
 
-        assert get_route.compile_route_to_regex(self.route) == '^test\\/[0-9]{4}\\/$'
+        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/[0-9]{4}\\/$'
 
         get_route = Get().route('test/@route:slug', None)
         with pytest.raises(InvalidRouteCompileException):
@@ -68,19 +71,19 @@ class TestRoutes:
 
     def test_route_can_pass_route_values_in_constructor(self):
         route = Get('test/url', 'BreakController@show')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
         route = Post('test/url', 'BreakController@show')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
         route = Put('test/url', 'BreakController@show')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
         route = Patch('test/url', 'BreakController@show')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
         route = Delete('test/url', 'BreakController@show')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
 
     def test_route_can_pass_route_values_in_constructor_and_use_middleware(self):
         route = Get('test/url', 'BreakController@show').middleware('auth')
-        assert route.route_url == 'test/url'
+        assert route.route_url == '/test/url'
         assert route.list_middleware == ['auth']
 
     def test_route_gets_deeper_module_controller(self):

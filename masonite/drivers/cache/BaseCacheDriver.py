@@ -23,13 +23,13 @@ class BaseCacheDriver(BaseDriver):
         elif cache_type in ("minute", "minutes"):
             calc = 60
         elif cache_type in ("hour", "hours"):
-            calc = 60 * 60
+            calc = 60 ** 2
         elif cache_type in ("day", "days"):
-            calc = 60 * 60 * 60
+            calc = 60 ** 3
         elif cache_type in ("month", "months"):
-            calc = 60 * 60 * 60 * 60
+            calc = 60 ** 4
         elif cache_type in ("year", "years"):
-            calc = 60 * 60 * 60 * 60 * 60
+            calc = 60 ** 5
         else:
             raise ValueError(
                 '{0} is not a valid caching type.'.format(cache_type))

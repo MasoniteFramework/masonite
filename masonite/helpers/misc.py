@@ -66,3 +66,18 @@ class HasColoredCommands:
 
     def danger(self, message):
         print('\033[91m {0} \033[0m'.format(message))
+
+
+def compact(*args):
+    import inspect
+    frame = inspect.currentframe()
+    dictionary = {}
+    for arg in args:
+        try:
+            dictionary.update({
+                arg: frame.f_back.f_locals[arg]
+            })
+        except KeyError:
+            raise KeyError('{} is not in the current namespace'.format(arg))
+
+    return dictionary

@@ -85,4 +85,6 @@ class Compact():
                 if value == arg:
                     self.dictionary.update({key: value})
 
+        if len(args) != len(self.dictionary):
+            raise ValueError('Could not find all variables in this namespace')
         return self.dictionary

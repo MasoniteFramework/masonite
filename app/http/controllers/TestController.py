@@ -25,8 +25,7 @@ class TestController:
         return 'test'
 
     def testing(self):
-        from wsgi import container
-        return StorageManager(container).driver(StorageDiskDriver).download('storage/provision.gif')
+        return 'test'
 
     def json_response(self):
         return {'id': 1}

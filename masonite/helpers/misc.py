@@ -85,8 +85,11 @@ class Compact():
             found = []
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
-                    if value in found:
-                        raise AmbiguousError('Cannot contain variables with multiple of the same object in scope')
+                    for f in found:
+                        if value is f:
+                            raise AmbiguousError(
+                                'Cannot contain variables with multiple of the same object in scope. '
+                                'Getting {}'.format(value))
                     self.dictionary.update({key: value})
                     found.append(value)
 

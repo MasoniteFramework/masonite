@@ -10,3 +10,8 @@ class TestCompact:
         x = 'hello'
         y = 'world'
         assert compact('x', 'y') == {'x': 'hello', 'y': 'world'}
+    
+    def test_can_contain_dict(self):
+        x = 'hello'
+        y = 'world'
+        assert compact('x', 'y', {'z': 'foo'}) == {'x': 'hello', 'y': 'world', 'z': 'foo'}

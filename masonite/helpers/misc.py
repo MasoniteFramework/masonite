@@ -68,16 +68,21 @@ class HasColoredCommands:
         print('\033[91m {0} \033[0m'.format(message))
 
 
-def compact(*args):
-    import inspect
-    frame = inspect.currentframe()
-    dictionary = {}
-    for arg in args:
-        try:
-            dictionary.update({
-                arg: frame.f_back.f_locals[arg]
-            })
-        except KeyError:
-            raise KeyError('{} is not in the current namespace'.format(arg))
+class Compact():
 
-    return dictionary
+    def __new__(self, *args):
+        import inspect
+        frame = inspect.currentframe()
+        self.dictionary = {}
+        for arg in args:
+            if isinstance(arg, dict):
+                self.dictionary.update(arg)
+                continue
+            try:
+                self.dictionary.update({
+                    arg: frame.f_back.f_locals[arg]
+                })
+            except KeyError:
+                raise KeyError('{} is not in the current namespace'.format(arg))
+
+        return self.dictionary

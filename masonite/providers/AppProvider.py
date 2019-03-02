@@ -44,7 +44,7 @@ class AppProvider(ServiceProvider):
         self._autoload(application.AUTOLOAD)
 
     def boot(self, request: Request, route: Route):
-        self.app.bind('StatusCode', '404 Not Found')
+        self.app.bind('StatusCode', None)
         route.load_environ(self.app.make('Environ'))
         request.load_environ(self.app.make('Environ')).load_app(self.app)
 

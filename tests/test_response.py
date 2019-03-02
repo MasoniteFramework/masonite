@@ -30,7 +30,7 @@ class TestResponse:
         self.app = App()
         self.request = Request(generate_wsgi()).load_app(self.app)
         self.app.bind('Request', self.request)
-        self.app.bind('StatusCode', '404 Not Found')
+        self.app.bind('StatusCode', None)
         self.response = Response(self.app)
         self.app.bind('Response', self.response)
 
@@ -70,10 +70,15 @@ class TestResponse:
         assert self.app.make('Response') == '1'
         assert self.request.is_status(200)
 
+    def test_view_can_set_own_status_code_to_404(self):
+        self.response.view(self.app.resolve(ControllerTest().change_404))
+        assert self.request.is_status(404)
+
     def test_view_can_set_own_status_code(self):
 
         self.response.view(self.app.resolve(ControllerTest().change_status))
         assert self.request.is_status(203)
+
 
     def test_view_should_return_a_json_response_when_retrieve_a_user_from_model(self):
         

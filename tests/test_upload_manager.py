@@ -1,18 +1,19 @@
 import os
 import shutil
+
 import pytest
-
-from masonite.environment import LoadEnvironment
-
-LoadEnvironment()
 
 from config import application, storage
 from masonite.app import App
-from masonite.exceptions import DriverNotFound, FileTypeException, UnacceptableDriverType
-from masonite.managers.UploadManager import UploadManager
-from masonite.drivers.UploadDiskDriver import UploadDiskDriver
-from masonite.drivers.UploadS3Driver import UploadS3Driver
+from masonite.drivers import UploadDiskDriver, UploadS3Driver
+from masonite.environment import LoadEnvironment
+from masonite.exceptions import (DriverNotFound, FileTypeException,
+                                 UnacceptableDriverType)
 from masonite.helpers import static
+from masonite.managers.UploadManager import UploadManager
+
+LoadEnvironment()
+
 
 
 class TestStaticTemplateHelper:

@@ -73,16 +73,16 @@ class Compact():
     def __new__(self, *args):
         import inspect
         frame = inspect.currentframe()
+
         self.dictionary = {}
         for arg in args:
+
             if isinstance(arg, dict):
                 self.dictionary.update(arg)
                 continue
-            try:
-                self.dictionary.update({
-                    arg: frame.f_back.f_locals[arg]
-                })
-            except KeyError:
-                raise KeyError('{} is not in the current namespace'.format(arg))
+
+            for key, value in frame.f_back.f_locals.items():
+                if value == arg:
+                    self.dictionary.update({key: value})
 
         return self.dictionary

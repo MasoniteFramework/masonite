@@ -27,4 +27,4 @@ class TestCompact:
     def test_compact_works_with_classes(self):
         r = Request(None)
         request = r
-        assert compact(request) == {'request': r}
+        assert 'request' in compact(request)

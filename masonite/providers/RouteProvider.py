@@ -82,7 +82,7 @@ class RouteProvider(ServiceProvider):
                     print(request.get_request_method() + ' Route: ' + router.url)
 
                 # If no routes have been found and no middleware has changed the status code
-                if request.is_status(404):
+                if not request.get_status():
 
                     """Get the response from the route and set it on the 'Response' key.
                         This data is typically the output of the controller method depending

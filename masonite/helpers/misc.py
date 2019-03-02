@@ -84,7 +84,8 @@ class Compact():
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
                     self.dictionary.update({key: value})
+                    break
 
         if len(args) != len(self.dictionary):
-            raise ValueError('Could not find all variables in this namespace')
+            raise ValueError('Could not find all variables in this')
         return self.dictionary

@@ -1,5 +1,7 @@
 from masonite.helpers import compact
 import pytest
+from masonite.request import Request
+
 class TestCompact:
 
     def test_compact_returns_dict_of_local_variable(self):
@@ -21,3 +23,8 @@ class TestCompact:
         y = 'world'
         with pytest.raises(ValueError):
             compact(x, y, 'z')
+
+    def test_compact_works_with_classes(self):
+        r = Request(None)
+        request = r
+        assert compact(request) == {'request': r}

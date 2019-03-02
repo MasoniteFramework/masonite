@@ -115,6 +115,31 @@ class TestRouteProvider:
 
         assert self.app.make('Request').param('id') == '1'
 
+    def test_can_use_resolving_params(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.get_param)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+
+        assert self.app.make('Request').first == '1'
+
+    def test_can_use_resolving_params_and_object(self):
+        self.app.make('Route').url = '/test/1'
+        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.get_param_and_object)])
+
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+
+        assert self.app.make('Request').first == '1'
+        # assert isinstance(self.app.make('Request').view, View)
+
     def test_url_with_dots_finds_route(self):
         self.app.make('Route').url = '/test/user.endpoint'
         self.app.bind(

@@ -76,3 +76,6 @@ class DumpException(Exception):
 
 class ViewException(Exception):
     pass
+
+class AmbiguousError(Exception):
+    pass

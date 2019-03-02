@@ -2,6 +2,7 @@
 
 import random
 import string
+from masonite.exceptions import AmbiguousError
 
 
 def random_string(length=4):
@@ -81,10 +82,13 @@ class Compact():
                 self.dictionary.update(arg)
                 continue
 
+            found = []
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
+                    if value in found:
+                        raise AmbiguousError('Cannot contain variables with multiple of the same object in scope')
                     self.dictionary.update({key: value})
-                    break
+                    found.append(value)
 
         if len(args) != len(self.dictionary):
             raise ValueError('Could not find all variables in this')

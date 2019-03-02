@@ -1,6 +1,7 @@
 from masonite.helpers import compact
 import pytest
 from masonite.request import Request
+from masonite.exceptions import AmbiguousError
 
 class TestCompact:
 
@@ -24,7 +25,12 @@ class TestCompact:
         with pytest.raises(ValueError):
             compact(x, y, 'z')
 
-    def test_compact_works_with_classes(self):
+    def test_compact_throws_exceptions(self):
         r = Request(None)
         request = r
-        assert 'request' in compact(request)
+        with pytest.raises(AmbiguousError):
+            compact(request)
+
+    def test_works_with_classes(self):
+        request = Request(None)
+        assert 'request' in compact(request) 

@@ -22,14 +22,14 @@ class StorageDiskDriver(BaseDriver, StorageContract):
         with open(location) as f:
             return f.read()
 
-    def delete(self, location): 
+    def delete(self, location):
         try:
             os.remove(location)
             return True
         except FileNotFoundError:
             return False
 
-    def exists(self, location): 
+    def exists(self, location):
         return pathlib.Path(location).exists()
 
     def size(self, location):
@@ -68,7 +68,6 @@ class StorageDiskDriver(BaseDriver, StorageContract):
 
         pathlib.Path(directory).rmdir()
         return True
-
 
     def move(self, old, new):
         return shutil.move(old, new)

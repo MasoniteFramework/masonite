@@ -37,12 +37,7 @@ class Auth:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
         try:
-            if self.request.get_cookie('token'):
-                return self.auth_model.where(
-                    'remember_token', self.request.get_cookie('token')
-                ).first()
-
-            return False
+            return self.request.app().make('AuthManager').user(self.auth_model)
         except Exception as exception:
             raise exception
 
@@ -80,7 +75,7 @@ class Auth:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token
                     model.save()
-                    self.request.cookie('token', remember_token)
+                    self.request.app().make('AuthManager').save(remember_token, model=model)
                 return model
 
         except Exception as exception:
@@ -94,7 +89,7 @@ class Auth:
         Returns:
             self
         """
-        self.request.delete_cookie('token')
+        self.request.app().make('AuthManager').delete()
         return self
 
     def login_by_id(self, id):
@@ -113,7 +108,7 @@ class Auth:
                 remember_token = str(uuid.uuid4())
                 model.remember_token = remember_token
                 model.save()
-                self.request.cookie('token', remember_token)
+                self.request.app().make('AuthManager').save(remember_token, model=model)
             return model
 
         return False

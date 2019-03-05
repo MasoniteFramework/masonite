@@ -1,4 +1,5 @@
 from .Manager import Manager
+from .AuthManager import AuthManager
 from .BroadcastManager import BroadcastManager
 from .CacheManager import CacheManager
 from .MailManager import MailManager

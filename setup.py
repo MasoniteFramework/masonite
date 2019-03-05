@@ -9,6 +9,7 @@ setup(
         'masonite.providers',
         'masonite.commands',
         'masonite.drivers',
+        'masonite.drivers.authentication',
         'masonite.managers',
         'masonite.testsuite',
         'masonite.queues',

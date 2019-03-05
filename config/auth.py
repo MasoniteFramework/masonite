@@ -24,3 +24,9 @@ AUTH = {
     'driver': os.getenv('AUTH_DRIVER', 'cookie'),
     'model': User,
 }
+
+DRIVERS = {
+    'jwt': {
+        'reauthentication': True
+    }
+}

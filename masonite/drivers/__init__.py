@@ -3,6 +3,8 @@ from .BaseMailDriver import BaseMailDriver
 from .BaseUploadDriver import BaseUploadDriver
 from .BaseQueueDriver import BaseQueueDriver
 from .BaseCacheDriver import BaseCacheDriver
+from .authentication.AuthCookieDriver import AuthCookieDriver
+from .authentication.AuthJwtDriver import AuthJwtDriver
 from .BroadcastAblyDriver import BroadcastAblyDriver
 from .BroadcastPusherDriver import BroadcastPusherDriver
 from .CacheDiskDriver import CacheDiskDriver

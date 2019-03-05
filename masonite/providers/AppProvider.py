@@ -22,6 +22,9 @@ from masonite.response import Response
 from masonite.routes import Route
 from routes import web
 
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver, AuthJwtDriver
+
 
 class AppProvider(ServiceProvider):
 
@@ -37,6 +40,9 @@ class AppProvider(ServiceProvider):
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthJwtDriver', AuthJwtDriver)
+        self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
 
         # Insert Commands
         self._load_commands()

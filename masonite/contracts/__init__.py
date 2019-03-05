@@ -5,6 +5,7 @@ from .QueueContract import QueueContract
 from .SessionContract import SessionContract
 from .UploadContract import UploadContract
 
+from .managers.AuthManagerContract import AuthManagerContract
 from .managers.BroadcastManagerContract import BroadcastManagerContract
 from .managers.CacheManagerContract import CacheManagerContract
 from .managers.MailManagerContract import MailManagerContract

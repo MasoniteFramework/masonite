@@ -36,5 +36,5 @@ class LoadUserMiddleware:
         Arguments:
             request {masonite.request.Request} -- The Masonite request object.
         """
-
+        
         self.request.set_user(Auth(self.request).user())

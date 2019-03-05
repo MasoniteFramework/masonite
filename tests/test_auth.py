@@ -12,24 +12,50 @@ from masonite.helpers.routes import get
 from masonite.snippets.auth.controllers.ConfirmController import ConfirmController
 from config import application
 
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver, AuthJwtDriver
+
 
 class MockUser():
 
     __auth__ = 'email'
+    __primary_key__ = 'id'
     password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
     users_password = 'pass123'
     email = 'user@email.com'
+    remember_token = '1234-56'
     name = 'testuser123'
+    _found = False
     id = 1
 
+    def serialize(self):
+        return {
+            'password': self.password,
+            'email': self.email,
+            'remember_token': self.remember_token,
+            'name': self.name,
+            '_found': self._found,
+            'id': 1
+        }
+    
+    def hydrate(self, dictionary):
+        self.__dict__.update(dictionary)
+        return self
+
     def where(self, column, name):
+        if getattr(self, column) == name:
+            self._found = True
         return self
 
     def or_where(self, column, name):
+        if getattr(self, column) == name:
+            self._found = True
         return self
 
     def first(self):
-        return self
+        if self._found == True:
+            return self
+        return False
 
     def save(self):
         pass
@@ -55,21 +81,34 @@ class TestAuth:
         self.container = App()
         self.app = self.container
         view = View(self.container)
-        self.request = Request(generate_wsgi())
+        self.request = Request(generate_wsgi()).load_app(self.app)
         self.auth = Auth(self.request, MockUser())
         self.container.bind('View', view.render)
         self.container.bind('ViewClass', view)
         self.app.bind('Application', application)
 
+        self.app.bind('Request', self.request)
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthJwtDriver', AuthJwtDriver)
+        self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
+        self.drivers = ('jwt', 'cookie')
+
     def reset_method(self):
-        self.auth = Auth(self.request, MockUser())
+        for driver in self.drivers:
+            self.app.bind('AuthManager', AuthManager(self.app).driver(driver))
+            self.auth = Auth(self.request, MockUser())
 
     def test_auth(self):
         assert self.auth
 
+    def test_auth_gets_cookie_driver(self):
+        assert isinstance(self.app.make('AuthManager'), AuthCookieDriver)
+
     def test_login_user(self):
-        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
-        assert self.request.get_cookie('token')
+        for driver in self.drivers:
+            self.app.bind('AuthManager', AuthManager(self.app).driver(driver))
+            assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
+            assert self.request.get_cookie('token')
 
     def test_login_user_with_list_auth_column(self):
         user = MockUser
@@ -80,6 +119,13 @@ class TestAuth:
     def test_get_user(self):
         assert self.auth.login_by_id(1)
         assert isinstance(self.auth.user(), MockUser)
+
+    def test_get_user_attributes(self):
+        for driver in self.drivers:
+            self.app.bind('AuthManager', AuthManager(self.app).driver(driver))
+            assert self.auth.login_by_id(1)
+            assert self.auth.user().id == 1
+            assert not hasattr(self.auth.auth_model, 'expired')
 
     def test_get_user_returns_false_if_not_loggedin(self):
         self.auth.login('user@email.com', 'wrong_secret')

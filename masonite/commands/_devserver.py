@@ -75,7 +75,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
             else:
                 level = logging.info
         else:
-            level = loggig.info
+            level = logging.info
 
         level(format, *args, extra=extra)
 

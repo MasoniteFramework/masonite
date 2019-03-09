@@ -566,6 +566,10 @@ class TestRequest:
         assert self.request.contains('/test/path')
         assert not self.request.contains('/test/wrong')
 
+    def test_contains_for_multiple_paths(self):
+        self.request.path = '/test/path/5'
+        assert self.request.contains('/test/*')
+
     def test_contains_for_path_with_digit(self):
         self.request.path = '/test/path/1'
         assert self.request.contains('/test/path/*')

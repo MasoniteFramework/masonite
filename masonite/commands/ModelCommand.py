@@ -1,6 +1,4 @@
 """New Model Command."""
-import subprocess
-
 from masonite.app import App
 from masonite.helpers.filesystem import make_directory
 from masonite.view import View

@@ -51,7 +51,7 @@ class View:
         """
         if not isinstance(dictionary, dict):
             raise ViewException('Second parameter to render method needs to be a dictionary, {} passed.'.format(type(dictionary).__name__))
-        
+
         self.__load_environment(template)
         self.dictionary = {}
 

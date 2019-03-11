@@ -113,7 +113,11 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         except Exception as e:
             self.danger('Job Failed: {}'.format(str(e)))
 
-            if ran < 3 and isinstance(obj, Queueable):
+            if not obj.run_again_on_fail:
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+                return
+
+            if ran < obj.run_times and isinstance(obj, Queueable):
                 time.sleep(1)
                 self.push(obj.__class__, args=args, callback=callback, ran=ran + 1)
             else:

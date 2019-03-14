@@ -376,6 +376,17 @@ class Get(BaseHttpRoute):
             self.route(route, output)
 
 
+class Head(BaseHttpRoute):
+    """Class for specifying HEAD requests."""
+
+    def __init__(self, route=None, output=None):
+        """Head constructor."""
+        self.method_type = ['HEAD']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
 class Post(BaseHttpRoute):
     """Class for specifying POST requests."""
 
@@ -430,6 +441,39 @@ class Delete(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Delete constructor."""
         self.method_type = ['DELETE']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Connect(BaseHttpRoute):
+    """Class for specifying Connect requests."""
+
+    def __init__(self, route=None, output=None):
+        """Connect constructor."""
+        self.method_type = ['CONNECT']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Options(BaseHttpRoute):
+    """Class for specifying GET requests."""
+
+    def __init__(self, route=None, output=None):
+        """Options constructor."""
+        self.method_type = ['OPTIONS']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Trace(BaseHttpRoute):
+    """Class for specifying Trace requests."""
+
+    def __init__(self, route=None, output=None):
+        """Trace constructor."""
+        self.method_type = ['TRACE']
         self.list_middleware = []
         if route and output:
             self.route(route, output)

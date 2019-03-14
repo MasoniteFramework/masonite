@@ -1,7 +1,7 @@
 from masonite.routes import Route
 from masonite.request import Request
 from masonite.app import App
-from masonite.routes import Get, Post, Put, Patch, Delete, RouteGroup, Match, Redirect
+from masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
 from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException

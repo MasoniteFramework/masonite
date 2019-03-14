@@ -50,7 +50,7 @@ class StorageDiskDriver(BaseDriver, StorageContract):
         from wsgi import container
         return container.make(Upload).driver('disk').store(*args, **kwargs)
 
-    def all(self): 
+    def all(self):
         pass
 
     def make_directory(self, location):

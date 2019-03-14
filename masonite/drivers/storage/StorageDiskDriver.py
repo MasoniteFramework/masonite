@@ -5,7 +5,6 @@ import shutil
 from masonite import Upload
 from masonite.contracts import StorageContract
 from masonite.drivers import BaseDriver
-from masonite.helpers.filesystem import make_directory
 
 
 class StorageDiskDriver(BaseDriver, StorageContract):
@@ -51,7 +50,8 @@ class StorageDiskDriver(BaseDriver, StorageContract):
         from wsgi import container
         return container.make(Upload).driver('disk').store(*args, **kwargs)
 
-    def all(self): pass
+    def all(self):
+        pass
 
     def make_directory(self, location):
         location = os.path.join(os.getcwd(), location)

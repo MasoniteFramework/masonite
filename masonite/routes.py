@@ -388,10 +388,10 @@ class Post(BaseHttpRoute):
 
 
 class Match(BaseHttpRoute):
-    """Class for specifying POST requests."""
+    """Class for specifying Match requests."""
 
     def __init__(self, method_type=['GET'], route=None, output=None):
-        """Post constructor."""
+        """Match constructor."""
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
 

@@ -18,7 +18,7 @@ from cryptography.fernet import InvalidToken
 
 from config import application
 from masonite.auth.Sign import Sign
-from masonite.exceptions import InvalidHTTPStatusCode
+from masonite.exceptions import InvalidHTTPStatusCode, RouteException
 from masonite.helpers import dot, clean_request_input, Dot as DictDot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
@@ -712,9 +712,14 @@ class Request(Extendable):
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
         if full:
-            return application.URL + self._get_named_route(name, params)
+            route = application.URL + self._get_named_route(name, params)
+        else:
+            route = self._get_named_route(name, params)
 
-        return self._get_named_route(name, params)
+        if not route:
+            raise RouteException("Route with the name of '{}' was not found.".format(name))
+
+        return route
 
     def reset_redirections(self):
         """Reset the redirections because of this class acting like a singleton pattern."""

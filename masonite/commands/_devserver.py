@@ -58,7 +58,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
             # 0x16 = Handshake, 0x03 = SSL 3.0 or TLS 1.x
             if args[0].startswith('\x16\x03'):
                 extra['status_code'] = 500
-                logger.error(
+                logging.error(
                     "You're accessing the development server over HTTPS, but "
                     "it only supports HTTP.\n", extra=extra,
                 )
@@ -75,7 +75,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
             else:
                 level = logging.info
         else:
-            level = loggig.info
+            level = logging.info
 
         level(format, *args, extra=extra)
 

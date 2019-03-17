@@ -80,3 +80,7 @@ class ViewException(Exception):
 
 class QueueException(Exception):
     pass
+
+
+class AmbiguousError(Exception):
+    pass

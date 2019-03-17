@@ -51,6 +51,7 @@ class View:
         """
         if not isinstance(dictionary, dict):
             raise ViewException('Second parameter to render method needs to be a dictionary, {} passed.'.format(type(dictionary).__name__))
+
         self.__load_environment(template)
         self.dictionary = {}
 
@@ -222,7 +223,7 @@ class View:
             template {string} -- Template to load environment from.
         """
         self.template = template
-        self.filename = template.replace(self._splice, '/') + self.extension
+        self.filename = template.replace(self._splice, '/').replace('.', '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split

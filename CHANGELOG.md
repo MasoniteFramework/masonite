@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.21](https://github.com/MasoniteFramework/core/releases/tag/v2.1.21) - 2019-03-14
+### Added
+- [Added run_again_on_fail and run_times](https://docs.masoniteproject.com/useful-features/queues-and-jobs#specifying-failed-jobs)
+
+## [2.1.20](https://github.com/MasoniteFramework/core/releases/tag/v2.1.20) - 2019-03-09
+### Added
+- [Added compact helper](https://docs.masoniteproject.com/the-basics/helper-functions#compact)
+
+### Fixed
+- Fixed issue with comments on resource controller being flipped.
+- Fixed issue with misspelling of logger
+
+## [2.1.19](https://github.com/MasoniteFramework/core/releases/tag/v2.1.19) - 2019-03-05
+### Fixed
+* Fixed issue with `.` template splices not working
+
+## [2.1.18](https://github.com/MasoniteFramework/core/releases/tag/v2.1.18) - 2019-03-04
+### Added
+- Added a `--connection` option to the `model:doctring` command to use other connections
+
+### Fixed
+- Fixed issue with csrf not being able to correctly detect csrf wildcard routes.
+
 ## [2.1.17](https://github.com/MasoniteFramework/core/releases/tag/v2.1.17) - 2019-02-24
 ### Added
 - [Added `-m` and `-s` to the model command to create a migration or a seed](https://docs.masoniteproject.com/the-craft-command/introduction#model-shortcuts)

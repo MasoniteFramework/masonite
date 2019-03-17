@@ -7,17 +7,10 @@ from config import middleware
 
 
 class CorsMiddleware:
-    """CORS Middleware
-    |--------------------------------------------------------------------------
-    | Create Dictionary of CORS headers
-    |--------------------------------------------------------------------------
-    |
-    | Appends CORS headers to HTTP response
-    |
-    | Ex. cors = {"Access-Control-Allow-Origin": "*",
-    |             "Access-Control-Allow-Headers": "Content-Type",
-    |             "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"}
-    |
+    """Appends CORS headers to HTTP response
+
+        Put any CORS middleware you need as a CORS dictionary inside your 
+        middleware config file.
     """
 
     def __init__(self, request: Request):

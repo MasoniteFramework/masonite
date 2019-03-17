@@ -368,6 +368,8 @@ class Request(Extendable):
         if value is None:
             if key in self.environ:
                 return self.environ[key]
+            elif key.upper().replace('-', '_') in self.environ:
+                return self.environ[key.upper().replace('-', '_')]
             else:
                 return ''
 

@@ -35,12 +35,18 @@ class StatusCodeProvider(ServiceProvider):
             return
 
         if request.get_status() in (500, 405, 404):
-            if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status())):
-                rendered_view = self.app.make('View')(
-                    'errors/{}'.format(request.get_status()))
+            if request.header('Content-Type') == 'application/json':
+                # Returns json response when we want the client to receive a json response
+                json_response = {'error': {'status': request.get_status()}}
+                response.view(json_response, status=request.get_status())
             else:
-                rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
-                    'code': request.get_status_code()
-                })
+                # Returns html response when json is not explicitly specified
+                if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status())):
+                    rendered_view = self.app.make('View')(
+                        'errors/{}'.format(request.get_status()))
+                else:
+                    rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
+                        'code': request.get_status_code()
+                    })
 
-            response.view(rendered_view, status=request.get_status())
+                response.view(rendered_view, status=request.get_status())

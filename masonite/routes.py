@@ -150,7 +150,6 @@ class BaseHttpRoute:
             self
         """
         self._find_controller(output)
-        print(route)
         if not route.startswith('/'):
             route = '/' + route
         self.route_url = route

@@ -18,8 +18,11 @@ class TestConfig:
     def test_config_can_get_dict_default(self):
         assert self.config('sdff.na', 'default') == 'default'
 
+    def test_config_not_found_returns_default(self):
+        assert self.config('application.nothere', 'default') == 'default'
+
     def test_dict_dot_returns_value(self):
-        assert Dot().dict_dot('s3.test', {'s3': {'test': 'value'}}) == 'value'
+        assert Dot().dict_dot('s3.test', {'s3': {'test': 'value'}}, '') == 'value'
 
     def test_config_can_get_dict_value_inside_dict(self):
         assert self.config('database.DATABASES.default') == database.DATABASES['default']
@@ -32,3 +35,6 @@ class TestConfig:
 
     def test_config_can_get_dict_inside_dict_inside_another_dict(self):
         assert self.config('storage.DRIVERS.s3.test_locations.test') == 'value'
+
+    def test_dot_dict(self):
+        assert Dot().dict_dot('async.driver', {'async': {'driver': 'me'}}, 'you') == 'me'

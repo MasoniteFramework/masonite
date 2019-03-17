@@ -715,10 +715,10 @@ class Request(Extendable):
             route = application.URL + self._get_named_route(name, params)
         else:
             route = self._get_named_route(name, params)
-        
+
         if not route:
             raise RouteException("Route with the name of '{}' was not found.".format(name))
-        
+
         return route
 
     def reset_redirections(self):

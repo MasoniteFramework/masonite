@@ -42,7 +42,7 @@ class Response(Extendable):
         Keyword Arguments:
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
-        self.request.header('Content-Length', str(len(self.data())))
+        self.request.header('Content-Length', str(len(self.to_bytes())))
 
         # If the user did not change it directly
         if not self.request.header('Content-Type'):

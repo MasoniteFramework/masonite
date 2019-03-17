@@ -6,8 +6,8 @@ from masonite.app import App
 from masonite.exceptions import DriverNotFound
 from masonite.view import View
 from masonite.managers.MailManager import MailManager
-from masonite.drivers.MailLogDriver import MailLogDriver
-from masonite.drivers.MailTerminalDriver import MailTerminalDriver
+from masonite.drivers import MailLogDriver
+from masonite.drivers import MailTerminalDriver
 
 
 class UserMock:

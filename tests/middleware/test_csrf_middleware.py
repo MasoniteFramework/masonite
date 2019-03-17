@@ -6,17 +6,25 @@ from masonite.middleware import CsrfMiddleware
 from masonite.testsuite.TestSuite import generate_wsgi
 import pytest
 from masonite.exceptions import InvalidCSRFToken
+from masonite.routes import Get, Route
 
 
 class TestCSRFMiddleware:
 
     def setup_method(self):
         self.app = App()
-        self.request = Request(generate_wsgi())
+        wsgi = generate_wsgi()
+        self.request = Request(wsgi)
+        self.route = Route().load_environ(wsgi)
         self.view = View(self.app)
         self.app.bind('Request', self.request)
 
         self.request = self.app.make('Request')
+        self.app.bind('WebRoutes', [
+            Get().route('/test/@route', None),
+            Get().route('/test/10', None),
+        ])
+        self.request.container = self.app
 
         self.middleware = CsrfMiddleware(self.request, Csrf(self.request), self.view)
 
@@ -27,7 +35,33 @@ class TestCSRFMiddleware:
 
     def test_middleware_throws_exception_on_post(self):
         self.request.environ['REQUEST_METHOD'] = 'POST'
+        self.request.path = '/'
         self.middleware.exempt = []
+        with pytest.raises(InvalidCSRFToken):
+            self.middleware.before()
+
+    def test_middleware_can_accept_param_route(self):
+        self.request.environ['REQUEST_METHOD'] = 'POST'
+        self.request.path = '/test/1'
+        self.middleware.exempt = [
+            '/test/@route'
+        ]
+        self.middleware.before()
+
+    def test_middleware_can_exempt(self):
+        self.request.environ['REQUEST_METHOD'] = 'POST'
+        self.request.path = '/test/1'
+        self.middleware.exempt = [
+            '/test/1'
+        ]
+        self.middleware.before()
+
+    def test_middleware_throws_exeption_on_wrong_route(self):
+        self.request.environ['REQUEST_METHOD'] = 'POST'
+        self.request.path = '/test/10'
+        self.middleware.exempt = [
+            '/test/2'
+        ]
         with pytest.raises(InvalidCSRFToken):
             self.middleware.before()
 

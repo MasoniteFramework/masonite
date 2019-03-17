@@ -4,10 +4,9 @@ import time
 
 from config import cache
 from masonite.app import App
-from masonite.drivers.CacheDiskDriver import CacheDiskDriver
-from masonite.drivers.CacheRedisDriver import CacheRedisDriver
+from masonite.drivers import CacheDiskDriver, CacheRedisDriver
 from masonite.environment import LoadEnvironment
-from masonite.managers.CacheManager import CacheManager
+from masonite.managers import CacheManager
 
 LoadEnvironment()
 

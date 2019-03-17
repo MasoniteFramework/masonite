@@ -1,21 +1,22 @@
 
-import pytest
 import os
 
+import pytest
+
+from config import mail
 from masonite import env
+from masonite.app import App
+from masonite.drivers import MailMailgunDriver as Mailgun
+from masonite.drivers import MailSmtpDriver as MailDriver
 from masonite.environment import LoadEnvironment
+from masonite.exceptions import DriverNotFound
+from masonite.managers.MailManager import MailManager
+from masonite.view import View
 
 LoadEnvironment()
 
 
 
-from masonite.app import App
-from masonite.exceptions import DriverNotFound
-from masonite.view import View
-from masonite.managers.MailManager import MailManager
-from masonite.drivers.MailSmtpDriver import MailSmtpDriver as MailDriver
-from masonite.drivers.MailMailgunDriver import MailMailgunDriver as Mailgun
-from config import mail
 
 if os.getenv('MAILGUN_SECRET'):
 

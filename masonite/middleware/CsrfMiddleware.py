@@ -47,11 +47,11 @@ class CsrfMiddleware:
         Returns:
             bool
         """
+        for route in self.exempt:
+            if self.request.contains(route):
+                return True
 
-        if self.request.path in self.exempt:
-            return True
-        else:
-            return False
+        return False
 
     def generate_token(self):
         """Generate a token that will be used for CSRF protection

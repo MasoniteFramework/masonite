@@ -150,6 +150,9 @@ class BaseHttpRoute:
             self
         """
         self._find_controller(output)
+        print(route)
+        if not route.startswith('/'):
+            route = '/' + route
         self.route_url = route
         return self
 
@@ -373,6 +376,17 @@ class Get(BaseHttpRoute):
             self.route(route, output)
 
 
+class Head(BaseHttpRoute):
+    """Class for specifying HEAD requests."""
+
+    def __init__(self, route=None, output=None):
+        """Head constructor."""
+        self.method_type = ['HEAD']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
 class Post(BaseHttpRoute):
     """Class for specifying POST requests."""
 
@@ -385,10 +399,10 @@ class Post(BaseHttpRoute):
 
 
 class Match(BaseHttpRoute):
-    """Class for specifying POST requests."""
+    """Class for specifying Match requests."""
 
     def __init__(self, method_type=['GET'], route=None, output=None):
-        """Post constructor."""
+        """Match constructor."""
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
 
@@ -427,6 +441,39 @@ class Delete(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Delete constructor."""
         self.method_type = ['DELETE']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Connect(BaseHttpRoute):
+    """Class for specifying Connect requests."""
+
+    def __init__(self, route=None, output=None):
+        """Connect constructor."""
+        self.method_type = ['CONNECT']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Options(BaseHttpRoute):
+    """Class for specifying Options requests."""
+
+    def __init__(self, route=None, output=None):
+        """Options constructor."""
+        self.method_type = ['OPTIONS']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Trace(BaseHttpRoute):
+    """Class for specifying Trace requests."""
+
+    def __init__(self, route=None, output=None):
+        """Trace constructor."""
+        self.method_type = ['TRACE']
         self.list_middleware = []
         if route and output:
             self.route(route, output)
@@ -480,7 +527,7 @@ class Redirect(BaseHttpRoute):
         return self.request.redirect(self.future_route, status=self.status)
 
 
-class RouteGroup():
+class RouteGroup:
     """Class for specifying Route Groups."""
 
     def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):

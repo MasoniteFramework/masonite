@@ -6,43 +6,54 @@ class {{ class }}:
     """
 
     def show(self):
-        """Show several resource listings
+        """Show a single resource listing
+        ex. Model.find('id')
+            Get().route("/show", {{ class }}
         """
 
         pass
 
     def index(self):
-        """Show a single resource listing
+        """Show several resource listings
+        ex. Model.all()
+            Get().route("/index", {{ class }}
         """
 
         pass
 
     def create(self):
         """Show form to create new resource listings
+         ex. Get().route("/create", {{ class }}
         """
 
         pass
 
     def store(self):
         """Create a new resource listing
+        ex. Post target to create new Model
+            Post().route("/store", {{ class }})
         """
 
         pass
 
     def edit(self):
         """Show form to edit an existing resource listing
+        ex. Get().route("/edit", {{ class }})
         """
 
         pass
 
     def update(self):
         """Edit an existing resource listing
+        ex. Post target to update new Model
+            Post().route("/update", {{ class }})
         """
 
         pass
 
     def destroy(self):
         """Delete an existing resource listing
+        ex. Delete().route("/destroy", {{ class }})
         """
 
         pass

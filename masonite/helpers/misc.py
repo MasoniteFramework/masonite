@@ -2,6 +2,7 @@
 
 import random
 import string
+from masonite.exceptions import AmbiguousError
 
 
 def random_string(length=4):
@@ -66,3 +67,32 @@ class HasColoredCommands:
 
     def danger(self, message):
         print('\033[91m {0} \033[0m'.format(message))
+
+
+class Compact():
+
+    def __new__(self, *args):
+        import inspect
+        frame = inspect.currentframe()
+
+        self.dictionary = {}
+        for arg in args:
+
+            if isinstance(arg, dict):
+                self.dictionary.update(arg)
+                continue
+
+            found = []
+            for key, value in frame.f_back.f_locals.items():
+                if value == arg:
+                    for f in found:
+                        if value is f:
+                            raise AmbiguousError(
+                                'Cannot contain variables with multiple of the same object in scope. '
+                                'Getting {}'.format(value))
+                    self.dictionary.update({key: value})
+                    found.append(value)
+
+        if len(args) != len(self.dictionary):
+            raise ValueError('Could not find all variables in this')
+        return self.dictionary

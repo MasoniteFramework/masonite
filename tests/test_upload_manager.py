@@ -59,8 +59,8 @@ class TestUploadManager:
         shutil.rmtree('storage/temp')
 
     def test_upload_manager_changes_accepted_files(self):
-        self.app.make('UploadManager').driver('disk').accept('yml').accept_file_types == ('yml')
-        self.app.make('UploadManager').driver('s3').accept('yml').accept_file_types == ('yml')
+        assert self.app.make('UploadManager').driver('disk').accept('yml').accept_file_types == ('yml',)
+        assert self.app.make('UploadManager').driver('s3').accept('yml').accept_file_types == ('yml',)
 
     def test_upload_manager_raises_driver_not_found_error(self):
         self.app = App()

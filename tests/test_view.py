@@ -288,6 +288,10 @@ class TestView:
         with pytest.raises(ViewException):
             assert view.render('test', {'', ''})
 
+    def test_can_use_dot_templates(self):
+        view = self.container.make('ViewClass')
+        assert view.render('mail.share', {'test': 'test'}).rendered_template == 'test'
+
 
 class MockAdminUser:
     admin = 1

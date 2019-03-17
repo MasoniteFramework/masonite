@@ -69,7 +69,7 @@ class HasColoredCommands:
         print('\033[91m {0} \033[0m'.format(message))
 
 
-class Compact():
+class Compact:
 
     def __new__(self, *args):
         import inspect
@@ -86,7 +86,7 @@ class Compact():
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
                     for f in found:
-                        if value is f:
+                        if value is f and f is not None:
                             raise AmbiguousError(
                                 'Cannot contain variables with multiple of the same object in scope. '
                                 'Getting {}'.format(value))

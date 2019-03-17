@@ -7,7 +7,18 @@ import inspect
 class Dot:
 
     def dot(self, search, dictionary, default=None):
-
+        """The search string in dot notation to look into the dictionary for.
+        
+        Arguments:
+            search {string} -- This should be a string in dot notation like 'key.key.value'.
+            dictionary {dict} -- A normal dictionary which will be searched using the search string in dot notation.
+        
+        Keyword Arguments:
+            default {string} -- The default value if nothing is found in the dictionary. (default: {None})
+        
+        Returns:
+            string -- Returns the value found the dictionary or the default value specified above if nothing is found.
+        """
         if '.' not in search:
             return dictionary[search]
 

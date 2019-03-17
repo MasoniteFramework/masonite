@@ -77,9 +77,8 @@ class ExceptionHandler:
         if request.header('Content-Type') == 'application/json':
             stacktrace = []
             for stack in traceback.extract_tb(sys.exc_info()[2]):
-                #  {{ stack[0] }}, line {{ stack[1]  }} in {{ stack[2]}}
                 stacktrace.append("{} line {} in {}".format(stack[0], stack[1], stack[2]))
-  
+
             self.response.view({'error': {'exception': str(self._exception), 'status': 500, 'stacktrace': stacktrace}}, status=request.get_status())
             return
 

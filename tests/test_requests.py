@@ -8,7 +8,7 @@ from cgi import MiniFieldStorage
 from masonite.request import Request
 from masonite.response import Response
 from masonite.app import App
-from masonite.exceptions import InvalidHTTPStatusCode
+from masonite.exceptions import InvalidHTTPStatusCode, RouteException
 from masonite.routes import Get, Route
 from masonite.helpers.routes import flatten_routes, get, group
 from masonite.helpers.time import cookie_expire_time
@@ -264,6 +264,9 @@ class TestRequest:
         assert request.route('test.url') == '/test/url'
         assert request.route('test.id', {'id': 1}) == '/test/url/1'
         assert request.route('test.id', [1]) == '/test/url/1'
+
+        with pytest.raises(RouteException):
+            assert request.route('not.exists', [1])
 
     def test_request_redirection(self):
         app = App()

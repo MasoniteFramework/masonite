@@ -15,12 +15,14 @@ class BaseScaffoldCommand(Command):
 
     scaffold_name = 'Example'
     suffix = ''
+    postfix = ''
     file_extension = '.py'
     base_directory = 'app/example/'
+
     template = '/masonite/snippets/scaffold/model'
 
     def handle(self):
-        class_name = self.argument('name')
+        class_name = self.argument('name') + self.postfix
         view = View(App())
         class_directory = '{}{}{}{}'.format(
             self.base_directory, class_name, self.suffix, self.file_extension)

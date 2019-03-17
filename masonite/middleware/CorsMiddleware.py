@@ -1,9 +1,12 @@
 """ CORS Middleware """
 
 from masonite.request import Request
+from masonite import env
+from masonite.helpers import config
+from config import middleware
 
 
-class CORSMiddleware:
+class CorsMiddleware:
     """CORS Middleware
     |--------------------------------------------------------------------------
     | Create Dictionary of CORS headers
@@ -17,8 +20,6 @@ class CORSMiddleware:
     |
     """
 
-    CORS = {}
-
     def __init__(self, request: Request):
         """Inject Any Dependencies From The Service Container
 
@@ -30,5 +31,5 @@ class CORSMiddleware:
     def after(self):
         """Run This Middleware After The Route Executes
         """
-        for key, value in self.CORS.items():
-            self.request.header(key, value, http_prefix=None)
+        headers = config('middleware.cors') or {}
+        self.request.header(headers)

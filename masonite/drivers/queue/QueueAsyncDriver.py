@@ -9,6 +9,7 @@ from masonite.drivers import BaseQueueDriver
 from masonite.exceptions import QueueException
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
+from masonite.helpers import config
 
 
 class QueueAsyncDriver(BaseQueueDriver, QueueContract):
@@ -57,7 +58,7 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
 
         # Initialize Extra Options
         callback = options.get('callback', 'handle')
-        mode = options.get('mode', 'threading')
+        mode = options.get('mode', config('queue.drivers.async.mode', 'threading'))
         workers = options.get('workers', None)
 
         # Set processor to either use threads or processes

@@ -68,6 +68,9 @@ class TestAsyncDriver:
         for mode in self.modes:
             assert self.app.make('QueueManager').driver('async').push(Job, mode=mode) is None
 
+    def test_async_driver_finds_mode(self):
+        assert self.app.make('QueueManager').driver('async').push(Job) is None
+
     def test_handle_unrecognized_mode(self):
         with pytest.raises(QueueException, message="Should raise QueueException error"):
             self.app.make('QueueManager').driver('async').push(Job, mode='blah')

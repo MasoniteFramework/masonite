@@ -458,7 +458,7 @@ class Connect(BaseHttpRoute):
 
 
 class Options(BaseHttpRoute):
-    """Class for specifying GET requests."""
+    """Class for specifying Options requests."""
 
     def __init__(self, route=None, output=None):
         """Options constructor."""
@@ -527,7 +527,7 @@ class Redirect(BaseHttpRoute):
         return self.request.redirect(self.future_route, status=self.status)
 
 
-class RouteGroup():
+class RouteGroup:
     """Class for specifying Route Groups."""
 
     def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):

@@ -18,8 +18,8 @@ from cryptography.fernet import InvalidToken
 
 from config import application
 from masonite.auth.Sign import Sign
-from masonite.exceptions import InvalidHTTPStatusCode
-from masonite.helpers import dot, clean_request_input
+from masonite.exceptions import InvalidHTTPStatusCode, RouteException
+from masonite.helpers import dot, clean_request_input, Dot as DictDot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.status import response_statuses
@@ -55,7 +55,7 @@ class Request(Extendable):
         self.user_model = None
         self.subdomain = None
         self._activate_subdomains = False
-        self._status = '404 Not Found'
+        self._status = None
 
         if environ:
             self.load_environ(environ)
@@ -63,7 +63,7 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name, default=False):
+    def input(self, name, default=False, clean=True):
         """Get a specific input value.
 
         Arguments:
@@ -71,13 +71,20 @@ class Request(Extendable):
 
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
+            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
 
         Returns:
             string
         """
-        if '.' in name:
+        if '.' in name and isinstance(self.request_variables.get(name.split('.')[0]), dict):
+            value = DictDot().dot(name, self.request_variables)
+            if value:
+                return value
+
+        elif '.' in name:
             name = dot(name, "{1}[{.}]")
-        return self.request_variables.get(name, default)
+
+        return clean_request_input(self.request_variables.get(name, default), clean=clean)
 
     def is_post(self):
         """Check if the current request is a POST request.
@@ -125,11 +132,12 @@ class Request(Extendable):
         self.encryption_key = key
         return self
 
-    def all(self, internal_variables=True):
+    def all(self, internal_variables=True, clean=True):
         """Get all the input data.
 
         Keyword Arguments:
             internal_variables {bool} -- Get the internal framework variables as well (default: {True})
+            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
 
         Returns:
             dict
@@ -139,9 +147,9 @@ class Request(Extendable):
             for key, value in self.request_variables.items():
                 if not key.startswith('__'):
                     without_internals.update({key: value})
-            return without_internals
+            return clean_request_input(without_internals, clean=clean)
 
-        return self.request_variables
+        return clean_request_input(self.request_variables, clean=clean)
 
     def only(self, *names):
         """Return the specified request variables in a dictionary.
@@ -213,7 +221,7 @@ class Request(Extendable):
 
         try:
             for name in variables.keys():
-                value = clean_request_input(self._get_standardized_value(variables[name]))
+                value = self._get_standardized_value(variables[name])
                 self.request_variables[name.replace('[]', '')] = value
         except TypeError:
             self.request_variables = {}
@@ -704,9 +712,14 @@ class Request(Extendable):
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
         if full:
-            return application.URL + self._get_named_route(name, params)
+            route = application.URL + self._get_named_route(name, params)
+        else:
+            route = self._get_named_route(name, params)
 
-        return self._get_named_route(name, params)
+        if not route:
+            raise RouteException("Route with the name of '{}' was not found.".format(name))
+
+        return route
 
     def reset_redirections(self):
         """Reset the redirections because of this class acting like a singleton pattern."""
@@ -787,7 +800,11 @@ class Request(Extendable):
                 # if the url contains a parameter variable like @id:int
                 if '@' in url:
                     url = url.replace('@', '').split(':')[0]
-                    compiled_url += str(params[url]) + '/'
+                    if isinstance(params, dict):
+                        compiled_url += str(params[url]) + '/'
+                    elif isinstance(params, list):
+                        compiled_url += str(params[0]) + '/'
+                        del params[0]
                 else:
                     compiled_url += url + '/'
 

@@ -2,6 +2,8 @@ from cleo import Command
 from masonite.exceptions import DebugException
 
 from masonite.request import Request
+from masonite import Queue
+from app.jobs.TestJob import TestJob
 
 
 class TestController:
@@ -10,7 +12,7 @@ class TestController:
         self.test = True
 
     def show(self):
-        pass
+        return 'show'
 
     def change_header(self, request: Request):
         request.header('Content-Type', 'application/xml')
@@ -18,6 +20,10 @@ class TestController:
 
     def change_status(self, request: Request):
         request.status(203)
+        return 'test'
+
+    def change_404(self, request: Request):
+        request.status(404)
         return 'test'
 
     def testing(self):
@@ -32,6 +38,14 @@ class TestController:
     def json(self):
         return 'success'
 
+    def bad(self):
+        return 5/0
+
     def session(self, request: Request):
         request.session.set('test', 'value')
         return 'session set'
+
+    def queue(self, queue: Queue):
+        # queue.driver('amqp').push(self.bad)
+        queue.driver('amqp').push(TestJob, channel='default')
+        return 'queued'

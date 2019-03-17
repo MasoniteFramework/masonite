@@ -9,7 +9,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ModelDocstringCommand,
-                               ProviderCommand, QueueWorkCommand,
+                               ProviderCommand, QueueWorkCommand, QueueTableCommand,
                                RoutesCommand, SeedCommand, SeedRunCommand,
                                ServeCommand, TinkerCommand, UpCommand,
                                ValidatorCommand, ViewCommand)
@@ -44,7 +44,7 @@ class AppProvider(ServiceProvider):
         self._autoload(application.AUTOLOAD)
 
     def boot(self, request: Request, route: Route):
-        self.app.bind('StatusCode', '404 Not Found')
+        self.app.bind('StatusCode', None)
         route.load_environ(self.app.make('Environ'))
         request.load_environ(self.app.make('Environ')).load_app(self.app)
 
@@ -72,6 +72,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteModelDocstringCommand', ModelDocstringCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
         self.app.bind('MasoniteQueueWorkCommand', QueueWorkCommand())
+        self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())

@@ -154,7 +154,7 @@ def compile_route_to_regex(route):
                 regex += r'([a-zA-Z]+)'
             else:
                 # default
-                regex += r'([\w.-]+)'
+                regex += r'[([\w.-\]+)]+'
             regex += r'\/'
 
             # append the variable name passed @(variable):int to a list

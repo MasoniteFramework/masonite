@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 def make_directory(directory):
@@ -10,3 +11,11 @@ def make_directory(directory):
         return True
 
     return False
+
+
+def copy_migration(directory_file, to='databases/migrations'):
+    import datetime
+    base_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../')
+
+    file_path = os.path.join(base_path, directory_file)
+    shutil.copyfile(file_path, os.path.join(os.getcwd(), to, datetime.datetime.utcnow().strftime("%Y_%m_%d_%H%M%S") + '_' + os.path.basename(directory_file)))

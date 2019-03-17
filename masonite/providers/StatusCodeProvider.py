@@ -36,9 +36,11 @@ class StatusCodeProvider(ServiceProvider):
 
         if request.get_status() in (500, 405, 404):
             if request.header('Content-Type') == 'application/json':
+                # Returns json response when we want the client to receive a json response
                 json_response = {'error': {'status': request.get_status()}}
                 response.view(json_response, status=request.get_status())
             else:
+                # Returns html response when json is not explicitly specified
                 if self.app.make('ViewClass').exists('errors/{}'.format(request.get_status())):
                     rendered_view = self.app.make('View')(
                         'errors/{}'.format(request.get_status()))

@@ -27,6 +27,7 @@ def flatten_routes(routes):
 
 DEPRECATION_STRING = " Please use the class based version of the route. Please visit {} for more information".format('https://docs.masoniteproject.com/prologue/deprecation')
 
+
 @deprecated("The 'get' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def get(url, controller):
     """Shortcut for Get HTTP class.

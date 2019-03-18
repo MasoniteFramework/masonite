@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
-## [2.1.21](https://github.com/MasoniteFramework/core/releases/tag/v2.1.21) - 2019-03-17
+## [2.1.22](https://github.com/MasoniteFramework/core/releases/tag/v2.1.22) - 2019-03-17
 ### Fixed
 - Fixed Auth command not adding route names
 - Fixed issue with compact command not working with multiple None types

@@ -9,7 +9,7 @@ from config import middleware
 class CorsMiddleware:
     """Appends CORS headers to HTTP response
 
-        Put any CORS middleware you need as a CORS dictionary inside your 
+        Put any CORS middleware you need as a CORS dictionary inside your
         middleware config file.
     """
 

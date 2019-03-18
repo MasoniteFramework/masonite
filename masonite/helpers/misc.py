@@ -2,6 +2,8 @@
 
 import random
 import string
+import warnings
+
 from masonite.exceptions import AmbiguousError
 
 
@@ -96,3 +98,15 @@ class Compact:
         if len(args) != len(self.dictionary):
             raise ValueError('Could not find all variables in this')
         return self.dictionary
+
+
+def deprecated(message):
+    def deprecated_decorator(func):
+        def deprecated_func(*args, **kwargs):
+            warnings.warn("{} is a deprecated function. {}".format(func.__name__, message),
+                          category=DeprecationWarning,
+                          stacklevel=2)
+            warnings.simplefilter('default', DeprecationWarning)
+            return func(*args, **kwargs)
+        return deprecated_func
+    return deprecated_decorator

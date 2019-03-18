@@ -1,6 +1,5 @@
 """ Middleware Configuration Settings """
-
-from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware
+from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, CorsMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
@@ -24,6 +23,7 @@ HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     # todo
     # CsrfMiddleware,
+    CorsMiddleware,
     ResponseMiddleware,
     SecureHeadersMiddleware,
 ]
@@ -46,6 +46,7 @@ HTTP_MIDDLEWARE = [
 ROUTE_MIDDLEWARE = {
     'auth': AuthenticationMiddleware,
     'test': MiddlewareTest,
+    'cors': CorsMiddleware,
     'middleware.test': [
         MiddlewareTest,
         AddAttributeMiddleware,
@@ -62,4 +63,12 @@ SECURE_HEADERS = {
     'Referrer-Policy': 'no-referrer, strict-origin-when-cross-origin',
     'Cache-control': 'no-cache, no-store, must-revalidate',
     'Pragma': 'no-cache',
+}
+
+CORS = {
+    'Access-Control-Allow-Origin': "*",
+    "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With",
+    "Access-Control-Max-Age": "3600",
+    "Access-Control-Allow-Credentials": "true"
 }

@@ -11,5 +11,6 @@ class CommandCommand(BaseScaffoldCommand):
     """
 
     scaffold_name = 'Command'
+    postfix = "Command"
     template = '/masonite/snippets/scaffold/command'
     base_directory = 'app/commands/'

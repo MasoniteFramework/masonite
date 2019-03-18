@@ -76,6 +76,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: WSGI',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
+
+        'Framework :: Masonite',
     ],
     include_package_data=True,
 )

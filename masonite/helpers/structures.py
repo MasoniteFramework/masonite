@@ -20,6 +20,9 @@ class Dot:
             string -- Returns the value found the dictionary or the default value specified above if nothing is found.
         """
         if '.' not in search:
+            if search == '':
+                return dictionary
+            # print('search', search, 'dictionary', dictionary)
             return dictionary[search]
 
         searching = search.split('.')

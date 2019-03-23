@@ -1,6 +1,7 @@
 """Helper Functions for RouteProvider."""
 
 import re
+from masonite.helpers import deprecated
 
 
 def flatten_routes(routes):
@@ -24,6 +25,10 @@ def flatten_routes(routes):
     return route_collection
 
 
+DEPRECATION_STRING = " Please use the class based version of the route. Please visit {} for more information".format('https://docs.masoniteproject.com/prologue/deprecation#helper-functions')
+
+
+@deprecated("The 'get' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def get(url, controller):
     """Shortcut for Get HTTP class.
 
@@ -39,6 +44,7 @@ def get(url, controller):
     return Get().route(url, controller)
 
 
+@deprecated("The 'match' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def match(method_type, url, controller):
     """Shortcut for Match HTTP class.
 
@@ -55,6 +61,7 @@ def match(method_type, url, controller):
     return Match(method_type).route(url, controller)
 
 
+@deprecated("The 'post' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def post(url, controller):
     """Shortcut for Post HTTP class.
 
@@ -70,6 +77,7 @@ def post(url, controller):
     return Post().route(url, controller)
 
 
+@deprecated("The 'delete' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def delete(url, controller):
     """Shortcut for Delete HTTP class.
 
@@ -85,6 +93,7 @@ def delete(url, controller):
     return Delete().route(url, controller)
 
 
+@deprecated("The 'put' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def put(url, controller):
     """Shortcut for Put HTTP class.
 
@@ -100,6 +109,7 @@ def put(url, controller):
     return Put().route(url, controller)
 
 
+@deprecated("The 'patch' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def patch(url, controller):
     """Shortcut for Patch HTTP class.
 
@@ -115,6 +125,7 @@ def patch(url, controller):
     return Patch().route(url, controller)
 
 
+@deprecated("The 'group' route helper is deprecated. {}".format(DEPRECATION_STRING))
 def group(url, route_list):
     """Shortcut for GET HTTP class.
 

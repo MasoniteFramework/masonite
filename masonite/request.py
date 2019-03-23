@@ -724,7 +724,6 @@ class Request(Extendable):
         return route
 
     def __getattr__(self, key):
-        print('getting', key)
         inp = self.input(key)
         if inp:
             return inp

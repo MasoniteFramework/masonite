@@ -42,26 +42,26 @@ class TestRoutes:
 
     def test_compile_route_to_regex(self):
         get_route = Get().route('test/route', None)
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/route\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/route\/$'
 
         get_route = Get().route('test/@route', None)
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/([\\w.-]+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/([\w.-]+)\/$'
 
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/(\\d+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/(\d+)\/$'
 
         get_route = Get().route('test/@route:string', None)
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/([a-zA-Z]+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/([a-zA-Z]+)\/$'
 
     def test_route_can_add_compilers(self):
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/(\\d+)\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/(\d+)\/$'
 
         self.route.compile('year', r'[0-9]{4}')
 
         get_route = Get().route('test/@route:year', None)
 
-        assert get_route.compile_route_to_regex(self.route) == '^\/test\\/[0-9]{4}\\/$'
+        assert get_route.compile_route_to_regex(self.route) == r'^test\/[0-9]{4}\/$'
 
         get_route = Get().route('test/@route:slug', None)
         with pytest.raises(InvalidRouteCompileException):

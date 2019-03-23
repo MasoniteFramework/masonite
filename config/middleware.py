@@ -1,5 +1,5 @@
 """ Middleware Configuration Settings """
-from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, CorsMiddleware
+from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, CorsMiddleware, MaintenanceModeMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import \

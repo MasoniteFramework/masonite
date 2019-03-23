@@ -718,6 +718,18 @@ class Request(Extendable):
 
         return self._get_named_route(name, params)
 
+    def __getattr__(self, key):
+        print('getting', key)
+        inp = self.input(key)
+        if inp:
+            return inp
+
+        inp = self.param(key)
+        if inp:
+            return inp
+
+        raise ValueError('No input or parameter of {} found'.format(key))
+
     def reset_redirections(self):
         """Reset the redirections because of this class acting like a singleton pattern."""
         self.redirect_url = False

@@ -237,7 +237,8 @@ class View:
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=self._jinja_extensions
+                extensions=self._jinja_extensions,
+                line_statement_prefix='@'
             )
 
         else:
@@ -253,7 +254,8 @@ class View:
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=self._jinja_extensions
+                extensions=self._jinja_extensions,
+                line_statement_prefix='@'
             )
 
         self.env.filters.update(self._filters)

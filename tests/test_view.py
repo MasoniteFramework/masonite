@@ -292,6 +292,10 @@ class TestView:
         view = self.container.make('ViewClass')
         assert view.render('mail.share', {'test': 'test'}).rendered_template == 'test'
 
+    def test_can_use_at_line_statements(self):
+        view = self.container.make('ViewClass')
+        assert 'test this string' in view.render('line-statements', {'test': 'test this string'}).rendered_template
+
 
 class MockAdminUser:
     admin = 1

@@ -594,6 +594,16 @@ class TestRequest:
         self.request.path = '/dashboard/user/edit/1'
         assert self.request.contains('/dashboard/user/*:string/*:int')
 
+    def test_request_can_get_input_as_properties(self):
+        self.request.request_variables = {'test': 'hey'}
+        assert self.request.test == 'hey'
+        assert self.request.input('test') == 'hey'
+
+    def test_request_can_get_param_as_properties(self):
+        self.request.url_params = {'test': 'hey'}
+        assert self.request.test == 'hey'
+        assert self.request.param('test') == 'hey'
+
     def test_back_returns_correct_url(self):
         self.request.path = '/dashboard/create'
         self.request.back()

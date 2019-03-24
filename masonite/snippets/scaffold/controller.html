@@ -1,9 +1,18 @@
-""" A {{ class }} Module """
+"""A {{ class }} Module."""
 
+from masonite.request import Request
+from masonite.view import View
 
 class {{ class }}:
-    """{{ class }}
-    """
+    """{{ class }} Controller Class."""
+    
+    def __init__(self, request: Request):
+        """{{ class }} Initializer
+        
+        Arguments:
+            request {masonite.request.Request} -- The Masonite Request class.
+        """
+        self.request = request
 
-    def show(self):
+    def show(self, view: View):
         pass

@@ -86,7 +86,8 @@ class TestResponse:
         self.response.view(MockUser().all())
 
         json_response = '[{"name": "TestUser", "email": "user@email.com"}, {"name": "TestUser", "email": "user@email.com"}]'
-        assert self.app.make('Response') == json_response
+        assert '"name": "TestUser"' in self.app.make('Response')
+        assert '"email": "user@email.com"' in self.app.make('Response')
 
         self.response.view(MockUser().find(1))
 

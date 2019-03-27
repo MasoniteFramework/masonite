@@ -115,6 +115,25 @@ class TestUploadManager:
         with pytest.raises(FileTypeException):
             UploadManager(self.app).driver('disk').accept('png').store(ImageMock())
 
+    def test_upload_manage_accept_all_extensions(self):
+        """
+        This test should upload a file correctly by allowing all type files ( .accept('*') )
+        """
+
+        image = ImageMock()
+        image.filename = 'file.pdf'
+
+        print(image.filename)
+        
+        assert UploadManager(self.app).driver('disk').accept('*').store(image)
+
+    def test_upload_manage_should_raise_exception_when_accept_all_extension_and_something_more(self):
+        """
+        This test should raise an error when use something together with '*' when allowing all extensions )
+        """
+        with pytest.raises(ValueError):
+            UploadManager(self.app).driver('disk').accept('*','png').store(ImageMock())
+        
     def test_upload_with_new_filename(self):
         assert self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg') == 'newname.jpg'
 

@@ -117,7 +117,10 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             except AttributeError:
                 obj(*args)
 
-            self.success('[\u2713] Job Successfully Processed')
+            try:
+                self.success('[\u2713] Job Successfully Processed')
+            except UnicodeEncodeError:
+                self.success('[Y] Job Successfully Processed')
         except Exception as e:
             self.danger('Job Failed: {}'.format(str(e)))
 

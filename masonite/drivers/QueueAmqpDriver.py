@@ -30,7 +30,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.connect()
 
     def _publish(self, body):
-        
+
         self.channel.basic_publish(exchange='',
                                    routing_key=self.publishing_channel,
                                    body=pickle.dumps(

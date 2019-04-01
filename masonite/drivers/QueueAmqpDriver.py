@@ -30,7 +30,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.connect()
 
     def _publish(self, body):
-
+        
         self.channel.basic_publish(exchange='',
                                    routing_key=self.publishing_channel,
                                    body=pickle.dumps(
@@ -56,7 +56,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             payload = {'obj': obj, 'args': args, 'callback': callback, 'created': pendulum.now(), 'ran': ran}
             try:
                 self._publish(payload)
-            except self.pika.exceptions.ConnectionClosed:
+            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed):
                 self.connect()
                 self._publish(payload)
 

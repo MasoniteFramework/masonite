@@ -39,6 +39,8 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
                                    properties=self.pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent
                                    ))
+        self.channel.close()
+        self.connection.close()
 
     def push(self, *objects, args=(), callback='handle', ran=1, channel=None):
         """Push objects onto the amqp stack.
@@ -89,7 +91,13 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
         if fair:
             self.channel.basic_qos(prefetch_count=1)
-        return self.channel.start_consuming()
+
+        try:
+            self.channel.start_consuming()
+        finally:
+            self.channel.stop_consuming()
+            self.channel.close()
+            self.connection.close()
 
     def work(self, ch, method, properties, body):
         from wsgi import container
@@ -109,10 +117,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             except AttributeError:
                 obj(*args)
 
-            try:
-                self.success('[\u2713] Job Successfully Processed')
-            except UnicodeEncodeError:
-                self.success('[Y] Job Successfully Processed')
+            self.success('[\u2713] Job Successfully Processed')
         except Exception as e:
             self.danger('Job Failed: {}'.format(str(e)))
 

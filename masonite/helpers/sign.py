@@ -1,5 +1,6 @@
 from masonite.auth import Sign
 
+
 def sign(value):
     """Shortcut for Sign class.
 
@@ -10,6 +11,7 @@ def sign(value):
         string -- The string value after encryption.
     """
     return Sign().sign(value)
+
 
 def encrypt(value):
     """Shortcut for Sign class sign method.
@@ -22,6 +24,7 @@ def encrypt(value):
     """
     return sign(value)
 
+
 def unsign(value):
     """Shortcut for Sign class unsign method.
 
@@ -32,6 +35,7 @@ def unsign(value):
         string -- The string value after decryption.
     """
     return Sign().unsign(value)
+
 
 def decrypt(value):
     """Shortcut for Sign class unsign method.

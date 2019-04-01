@@ -12,6 +12,7 @@ from masonite.view import View
 from masonite.request import Request
 from masonite.managers import MailManager
 
+
 class HelpersProvider(ServiceProvider):
 
     wsgi = False
@@ -39,9 +40,9 @@ class HelpersProvider(ServiceProvider):
                 'request_method': set_request_method,
                 'route': request.route,
                 'back': back,
-                'sign': sign, 
-                'unsign': unsign, 
-                'decrypt': decrypt, 
+                'sign': sign,
+                'unsign': unsign,
+                'decrypt': decrypt,
                 'encrypt': encrypt,
                 'config': config,
                 'optional': optional,

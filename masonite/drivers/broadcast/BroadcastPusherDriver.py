@@ -4,6 +4,7 @@ from masonite.contracts import BroadcastContract
 from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
 from masonite.app import App
+from masonite.helpers import config
 
 
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):

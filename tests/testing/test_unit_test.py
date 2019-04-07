@@ -10,7 +10,7 @@ class MockUser:
     admin = 0
 
 
-class TestUnitTest(UnitTest, unittest.TestCase):
+class TestUnitTest(UnitTest):
 
     def setUp(self):
         super().setUp()
@@ -77,3 +77,9 @@ class TestUnitTest(UnitTest, unittest.TestCase):
         json = self.json('/test/json/response/1', {'id': 1}, method="POST")
         self.assertTrue(json.status('200 OK'))
         self.assertTrue(json.contains('success'))
+
+    def test_can_get_output(self):
+        with self.captureOutput() as (output, _):
+            print('hello world')
+        
+        self.assertEqual(output.getvalue().strip(), 'hello world')

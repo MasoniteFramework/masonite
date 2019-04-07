@@ -4,17 +4,15 @@ from masonite import env
 
 import os
 import time
+import unittest
 
 
-class TestEnvironment:
-
-    def test_environment_loaded_correctly(self):
-        pass
+class TestEnvironment(unittest.TestCase):
 
     def test_environment_loads_custom_env(self):
         LoadEnvironment('local')
-        assert 'LOCAL' in os.environ
-        assert os.environ.get('LOCAL') == 'TEST'
+        self.assertIn('LOCAL', os.environ)
+        self.assertEqual(os.environ.get('LOCAL'), 'TEST')
 
     def test_environment_loads_custom_production_environment(self):
         env_path = os.path.join(os.getcwd(), '.env')
@@ -25,45 +23,45 @@ class TestEnvironment:
 
         LoadEnvironment()
 
-        assert os.environ.get('TEST_PRODUCTION') == 'TEST'
+        self.assertEqual(os.environ.get('TEST_PRODUCTION'), 'TEST')
 
     def test_environment_only_loads(self):
         LoadEnvironment(only='local')
-        assert 'LOCAL' in os.environ
-        assert os.environ.get('LOCAL') == 'TEST'
+        self.assertIn('LOCAL', os.environ)
+        self.assertEqual(os.environ.get('LOCAL'), 'TEST')
 
-class TestEnv:
+class TestEnv(unittest.TestCase):
 
     def test_env_returns_numeric(self):
         os.environ["numeric"] = "1"
-        assert env('numeric') == 1
+        self.assertEqual(env('numeric'), 1)
 
     def test_env_returns_numeric_with_default(self):
         os.environ["numeric"] = "1"
-        assert env('na', '1') == 1
+        self.assertEqual(env('na', '1'), 1)
 
     def test_env_returns_bool(self):
         os.environ["bool"] = "True"
-        assert env('bool') == True
+        self.assertTrue(env('bool'))
         os.environ["bool"] = "true"
-        assert env('bool') == True
+        self.assertTrue(env('bool'))
         os.environ["bool"] = "False"
-        assert env('bool') == False
+        self.assertFalse(env('bool'))
         os.environ["bool"] = "false"
-        assert env('bool') == False
+        self.assertFalse(env('bool'))
 
     def test_env_returns_default(self):
         os.environ["test"] = "1"
-        assert env('na', 'default') == 'default'
+        self.assertEqual(env('na', 'default'), 'default')
 
     def test_env_returns_false_on_blank_string(self):
         os.environ["test"] = ""
-        assert env('test', 'default') == 'default'
+        self.assertEqual(env('test', 'default'), 'default')
 
     def test_env_returns_casted_value_on_blank_string(self):
         os.environ["test"] = ""
-        assert env('test', '1234') == 1234
+        self.assertEqual(env('test', '1234'), 1234)
 
     def test_env_works_with_none(self):
-        assert env('na', None) == None
+        self.assertIsNone(env('na', None))
 

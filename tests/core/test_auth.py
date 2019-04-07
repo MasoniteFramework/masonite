@@ -11,7 +11,7 @@ from masonite.auth import Sign
 from masonite.helpers.routes import get
 from masonite.snippets.auth.controllers.ConfirmController import ConfirmController
 from config import application
-
+import unittest
 
 class MockUser():
 
@@ -49,9 +49,9 @@ class ListUser(MockUser):
     __password__ = 'users_password'
 
 
-class TestAuth:
+class TestAuth(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.container = App()
         self.app = self.container
         view = View(self.container)
@@ -65,52 +65,52 @@ class TestAuth:
         self.auth = Auth(self.request, MockUser())
 
     def test_auth(self):
-        assert self.auth
+        self.assertTrue(self.auth)
 
     def test_login_user(self):
-        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
-        assert self.request.get_cookie('token')
+        self.assertIsInstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        self.assertTrue(self.request.get_cookie('token'))
 
     def test_login_user_with_list_auth_column(self):
         user = MockUser
         user.__auth__ = ['email', 'name']
-        assert isinstance(self.auth.login('testuser123', 'secret'), user)
-        assert self.request.get_cookie('token')
+        self.assertIsInstance(self.auth.login('testuser123', 'secret'), user)
+        self.assertTrue(self.request.get_cookie('token'))
 
     def test_get_user(self):
-        assert self.auth.login_by_id(1)
-        assert isinstance(self.auth.user(), MockUser)
+        self.assertTrue(self.auth.login_by_id(1))
+        self.assertIsInstance(self.auth.user(), MockUser)
 
     def test_get_user_returns_false_if_not_loggedin(self):
         self.auth.login('user@email.com', 'wrong_secret')
-        assert self.auth.user() is False
+        self.assertFalse(self.auth.user())
 
     def test_logout_user(self):
-        assert isinstance(self.auth.login('user@email.com', 'secret'), MockUser)
-        assert self.request.get_cookie('token')
+        self.assertIsInstance(self.auth.login('user@email.com', 'secret'), MockUser)
+        self.assertTrue(self.request.get_cookie('token'))
 
         self.auth.logout()
-        assert not self.request.get_cookie('token')
-        assert not self.auth.user()
+        self.assertFalse(self.request.get_cookie('token'))
+        self.assertFalse(self.auth.user())
 
     def test_login_user_fails(self):
-        assert self.auth.login('user@email.com', 'bad_password') is False
+        self.assertFalse(self.auth.login('user@email.com', 'bad_password'))
 
     def test_login_by_id(self):
-        assert isinstance(self.auth.login_by_id(1), MockUser)
-        assert self.request.get_cookie('token')
+        self.assertIsInstance(self.auth.login_by_id(1), MockUser)
+        self.assertTrue(self.request.get_cookie('token'))
 
-        assert self.auth.login_by_id(2) is False
+        self.assertFalse(self.auth.login_by_id(2))
 
     def test_login_once_does_not_set_cookie(self):
-        assert isinstance(self.auth.once().login_by_id(1), MockUser)
-        assert self.request.get_cookie('token') is None
+        self.assertIsInstance(self.auth.once().login_by_id(1), MockUser)
+        self.assertIsNone(self.request.get_cookie('token'))
 
     def test_user_is_mustverify_instance(self):
         self.auth = Auth(self.request, MockVerifyUser())
-        assert isinstance(self.auth.once().login_by_id(1), MustVerifyEmail)
+        self.assertIsInstance(self.auth.once().login_by_id(1), MustVerifyEmail)
         self.reset_method()
-        assert not isinstance(self.auth.once().login_by_id(1), MustVerifyEmail)
+        self.assertNotIsInstance(self.auth.once().login_by_id(1), MustVerifyEmail)
 
     def get_user(self, id):
         return MockVerifyUser()
@@ -137,7 +137,7 @@ class TestAuth:
         response = self.app.resolve(getattr(controller, route.controller_method))
         self.reset_method()
 
-        assert response.rendered_template == 'confirm'
+        self.assertEqual(response.rendered_template, 'confirm')
 
     def test_confirm_controller_failure(self):
         self.auth = Auth(self.request, MockVerifyUser())
@@ -164,4 +164,4 @@ class TestAuth:
         response = self.app.resolve(getattr(controller, route.controller_method))
         self.reset_method()
 
-        assert response.rendered_template == 'error'
+        self.assertEqual(response.rendered_template, 'error')

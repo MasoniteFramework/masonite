@@ -8,6 +8,7 @@ from masonite.request import Request
 from masonite.response import Response
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
+import unittest
 
 
 class ApplicationMock:
@@ -25,9 +26,9 @@ class MockExceptionHandler:
     def handle(self, exception):
         self.request.header('test', 'test', http_prefix=False)
 
-class TestException:
+class TestException(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app.bind('Application', ApplicationMock)
         self.app.bind('Environ', generate_wsgi())
@@ -44,7 +45,7 @@ class TestException:
 
     def test_exception_renders_view(self):
         self.app.make('ExceptionHandler').load_exception(OSError)
-        assert self.app.make('Response') is not None
+        self.assertIsNotNone(self.app.make('Response'))
 
     def test_exception_uses_custom_exception(self):
         try:
@@ -52,7 +53,7 @@ class TestException:
         except Exception as e:
             self.app.make('ExceptionHandler').load_exception(e)
         
-        assert self.app.make('Request').header('test') == 'test'
+        self.assertEqual(self.app.make('Request').header('test'), 'test')
 
     def test_custom_exception_when_not_registered(self):
         try:
@@ -62,4 +63,4 @@ class TestException:
 
     def test_exception_returns_none_when_debug_is_false(self):
         self.app.make('Application').DEBUG = False
-        assert self.app.make('ExceptionHandler').load_exception(KeyError) is None
+        self.assertIsNone(self.app.make('ExceptionHandler').load_exception(KeyError))

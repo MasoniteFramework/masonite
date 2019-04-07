@@ -13,7 +13,7 @@ class MockUser:
 class TestUnitTest(UnitTest, unittest.TestCase):
 
     def setUp(self):
-        super().setup_method()
+        super().setUp()
 
         self.routes([
             Get().route('/testing', 'TestController@show').name('testing.route').middleware('auth', 'owner')

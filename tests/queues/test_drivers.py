@@ -72,7 +72,7 @@ class TestQueueDrivers(unittest.TestCase):
         self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job), None)
 
     def test_handle_unrecognized_mode(self):
-        with self.assertRaises(QueueException, message="Should raise QueueException error"):
+        with self.assertRaises(QueueException):
             self.app.make('QueueManager').driver('async').push(Job, mode='blah')
 
     def test_async_driver_specify_workers(self):

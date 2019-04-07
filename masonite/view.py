@@ -76,7 +76,6 @@ class View:
     def _render(self):
         try:
             # Try rendering the template with '.html' appended
-            print(self.env.list_templates())
             return self.env.get_template(self.filename).render(
                 self.dictionary)
         except TemplateNotFound:
@@ -234,9 +233,6 @@ class View:
             loader = ChoiceLoader(
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
-
-            print('loading new directory: ', [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments)
-            print([PackageLoader(location[0], '/'.join(location[1:-1]))][0].list_templates())
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),

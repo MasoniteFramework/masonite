@@ -2,12 +2,19 @@ import subprocess
 import unittest
 
 from orator.orm import Factory
+from masonite import env
 
 
 class DatabaseTestCase(unittest.TestCase):
 
+    sqlite = True
+
     def setUp(self):
         self.factory = Factory()
+
+        if self.sqlite and env('DB_CONNECTION') != 'sqlite':
+            raise Exception("Cannot run tests without using the 'sqlite' database.")
+
         self.setUpDatabase()
 
     def make(self, model, factory, amount=50):

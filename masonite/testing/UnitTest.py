@@ -7,7 +7,7 @@ import io
 
 class UnitTest:
 
-    def setup_method(self):
+    def setUp(self):
         self.container = TestSuite().create_container().container
 
     def controller(self):

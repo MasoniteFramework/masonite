@@ -1,9 +1,10 @@
 """Module for the Pusher websocket driver."""
 
+from masonite.app import App
 from masonite.contracts import BroadcastContract
 from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
-from masonite.app import App
+from masonite.helpers import config
 
 
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):
@@ -15,7 +16,6 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration.
         """
-        self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):
@@ -52,10 +52,12 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
             raise DriverLibraryNotFound(
                 'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
 
+        configuration = config('broadcast.drivers.pusher')
+
         pusher_client = pusher.Pusher(
-            app_id=str(self.config.DRIVERS['pusher']['app_id']),
-            key=self.config.DRIVERS['pusher']['client'],
-            secret=self.config.DRIVERS['pusher']['secret'],
+            app_id=str(configuration['app_id']),
+            key=configuration['client'],
+            secret=configuration['secret'],
             ssl=self.ssl_message
         )
 

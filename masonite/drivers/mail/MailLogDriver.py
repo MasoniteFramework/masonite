@@ -27,7 +27,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
         handler = logging.FileHandler('{0}/{1}'.format(
             log_location,
             os.getenv('MAIL_LOGFILE', 'mail.log')
-        ))
+        ), delay=True)
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
         self.logger.propagate = False

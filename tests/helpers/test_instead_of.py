@@ -1,4 +1,5 @@
 from masonite.request import Request
+import unittest
 
 class MockUser:
     pass
@@ -13,19 +14,18 @@ class InsteadOf:
         setattr(self.cls, self.method, value)
         return self.cls
 
-def test_user():
-    return MockUser
+class TestInsteadOf(unittest.TestCase):
 
-def test_instead_of_attribute():
-    request = Request()
+    def test_instead_of_attribute(self):
+        request = Request()
 
-    InsteadOf(request, 'user')._return('awesome')
+        InsteadOf(request, 'user')._return('awesome')
 
-    assert request.user == 'awesome'
+        self.assertEqual(request.user, 'awesome')
 
-def test_instead_of_with_method():
-    request = Request()
+    def test_instead_of_with_method(self):
+        request = Request()
 
-    InsteadOf(request, 'user')._return(test_user)
+        InsteadOf(request, 'user')._return(MockUser)
 
-    assert request.user() == MockUser
+        self.assertIsInstance(request.user(), MockUser)

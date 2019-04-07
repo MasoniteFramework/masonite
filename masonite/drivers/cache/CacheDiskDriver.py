@@ -46,7 +46,8 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
         if not os.path.exists(path):
             self._create_directory(path)
 
-        open(path, 'w').write(value)
+        with open(path, 'w') as file:
+            file.write(value)
 
         return key
 
@@ -96,7 +97,8 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
             glob_path = cache_path + key + ':*'
 
         try:
-            content = open(glob.glob(glob_path)[0], 'r').read()
+            with open(glob.glob(glob_path)[0], 'r') as file:
+                content = file.read()
         except IndexError:
             pass
 
@@ -121,7 +123,8 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
         location = os.path.join(location, key)
         cache = glob.glob(location + ':*')[0]
 
-        open(cache, 'w').write(str(value))
+        with open(cache, 'w') as file:
+            file.write(str(value))
 
         return key
 

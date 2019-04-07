@@ -38,7 +38,7 @@ class StorageDiskDriver(BaseDriver, StorageContract):
             return 0
 
     def extension(self, location):
-        return pathlib.Path(location).suffix
+        return pathlib.Path(location).suffix.replace('.', '')
 
     def url(self, location):
         pass

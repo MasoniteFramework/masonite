@@ -5,7 +5,7 @@ from config import queue
 from masonite.exceptions import QueueException
 from masonite.queues.Queueable import Queueable
 import os
-import pytest
+import unittest
 from masonite.environment import LoadEnvironment, env
 
 LoadEnvironment()
@@ -29,9 +29,9 @@ class Random(Queueable):
         return 'test'
 
 
-class TestAsyncDriver:
+class TestQueueDrivers(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
 
         self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
@@ -49,37 +49,37 @@ class TestAsyncDriver:
 
     def test_async_driver_pushes_to_queue(self):
         for driver in self.drivers:
-            assert self.app.make('QueueManager').driver(driver).push(Job) is None
+            self.assertIsNone(self.app.make('QueueManager').driver(driver).push(Job), None)
 
     def test_async_driver_can_run_any_callback_method(self):
         for driver in self.drivers:
-            assert self.app.make('QueueManager').driver(driver).push(Random, callback="send") is None
+            self.assertIsNone(self.app.make('QueueManager').driver(driver).push(Random, callback="send"), None)
 
     def test_async_driver_can_run_any_method(self):
         for driver in self.drivers:
-            assert self.app.make('QueueManager').driver(driver).push(Random().send) is None
+            self.assertIsNone(self.app.make('QueueManager').driver(driver).push(Random().send), None)
 
     def test_should_return_default_driver(self):
-        assert isinstance(self.app.make('Queue'), QueueAsyncDriver)
-        assert isinstance(self.app.make('Queue').driver('async'), QueueAsyncDriver)
-        assert isinstance(self.app.make('Queue').driver('default'), QueueAsyncDriver)
+        self.assertIsInstance(self.app.make('Queue'), QueueAsyncDriver)
+        self.assertIsInstance(self.app.make('Queue').driver('async'), QueueAsyncDriver)
+        self.assertIsInstance(self.app.make('Queue').driver('default'), QueueAsyncDriver)
 
     def test_async_driver_modes(self):
         for mode in self.modes:
-            assert self.app.make('QueueManager').driver('async').push(Job, mode=mode) is None
+            self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job, mode=mode), None)
 
     def test_async_driver_finds_mode(self):
-        assert self.app.make('QueueManager').driver('async').push(Job) is None
+        self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job), None)
 
     def test_handle_unrecognized_mode(self):
-        with pytest.raises(QueueException, message="Should raise QueueException error"):
+        with self.assertRaises(QueueException):
             self.app.make('QueueManager').driver('async').push(Job, mode='blah')
 
     def test_async_driver_specify_workers(self):
         for mode in self.modes:
-            assert self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=2) is None
+            self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=2), None)
 
     def test_workers_are_nonnegative(self):
-        with pytest.raises(QueueException, message="Should raise QueueException error"):
+        with self.assertRaises(QueueException):
             for mode in self.modes:
-                self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=-1) is None
+                self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=-1))

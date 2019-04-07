@@ -3,7 +3,6 @@ import unittest
 from app.http.controllers.ControllerTest import ControllerTest
 from config import application, middleware
 from masonite.app import App
-from masonite.helpers.routes import get
 from masonite.providers.RouteProvider import RouteProvider
 from masonite.request import Request
 from masonite.response import Response
@@ -34,7 +33,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_controller_that_returns_a_view(self):
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request'),
@@ -44,7 +43,7 @@ class TestRouteProvider(unittest.TestCase):
         self.assertEqual(self.app.make('Response'), 'test')
 
         self.app.make('Route').url = '/view/'
-        self.app.bind('WebRoutes', [get('/view', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -57,7 +56,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_controller_that_return_a_view_with_trailing_slash(self):
 
         self.app.make('Route').url = '/view/'
-        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -68,7 +67,7 @@ class TestRouteProvider(unittest.TestCase):
         self.assertEqual(self.app.make('Response'), 'test')
 
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [get('/view/', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -93,7 +92,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_provider_runs_through_routes(self):
         self.app.make('Route').url = '/test'
-        self.app.bind('WebRoutes', [get('/test', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/test', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -106,7 +105,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_sets_request_params(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/test/@id', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -118,7 +117,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_can_use_resolving_params(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.get_param)])
+        self.app.bind('WebRoutes', [Get('/test/@id', ControllerTest.get_param)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -130,7 +129,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_can_use_resolving_params_and_object(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.get_param_and_object)])
+        self.app.bind('WebRoutes', [Get('/test/@id', ControllerTest.get_param_and_object)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -144,7 +143,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_url_with_dots_finds_route(self):
         self.app.make('Route').url = '/test/user.endpoint'
         self.app.bind(
-            'WebRoutes', [get('/test/@endpoint', ControllerTest.test)])
+            'WebRoutes', [Get('/test/@endpoint', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -171,7 +170,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_url_with_dashes_finds_route(self):
         self.app.make('Route').url = '/test/user-endpoint'
         self.app.bind(
-            'WebRoutes', [get('/test/@endpoint', ControllerTest.test)])
+            'WebRoutes', [Get('/test/@endpoint', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -183,7 +182,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_param_returns_param(self):
         self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [get('/test/@id', ControllerTest.param)])
+        self.app.bind('WebRoutes', [Get('/test/@id', ControllerTest.param)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -196,7 +195,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_custom_route_compiler_returns_param(self):
         self.app.make('Route').url = '/test/1'
         self.app.make('Route').compile('signed', r'([\w.-]+)')
-        self.app.bind('WebRoutes', [get('/test/@id:signed', ControllerTest.param)])
+        self.app.bind('WebRoutes', [Get('/test/@id:signed', ControllerTest.param)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -209,7 +208,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_route_subdomain_ignores_routes(self):
         self.app.make('Route').url = '/test'
         self.app.make('Environ')['HTTP_HOST'] = 'subb.domain.com'
-        self.app.bind('WebRoutes', [get('/test', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/test', ControllerTest.test)])
 
         request = self.app.make('Request')
         request.activate_subdomains()
@@ -225,7 +224,7 @@ class TestRouteProvider(unittest.TestCase):
     def test_controller_returns_json_response_for_dict(self):
         self.app.make('Route').url = '/view'
         self.app.bind(
-            'WebRoutes', [get('/view', ControllerTest.returns_a_dict)])
+            'WebRoutes', [Get('/view', ControllerTest.returns_a_dict)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -240,7 +239,7 @@ class TestRouteProvider(unittest.TestCase):
         self.app.make('Route').url = '/view'
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('WebRoutes', [
-            get('/view', ControllerTest.returns_a_dict).middleware('test')
+            Get('/view', ControllerTest.returns_a_dict).middleware('test')
         ]
         )
 
@@ -256,7 +255,7 @@ class TestRouteProvider(unittest.TestCase):
         self.app.make('Route').url = '/view'
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('WebRoutes', [
-            get('/view', ControllerTest.returns_a_dict).middleware('middleware.test')
+            Get('/view', ControllerTest.returns_a_dict).middleware('middleware.test')
         ]
         )
 

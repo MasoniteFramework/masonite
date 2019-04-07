@@ -16,7 +16,7 @@ class TestValidator(unittest.TestCase):
 
     def test_validator_sets_request(self):
         validator = Validator(self.request)
-        self.assertIsInstance(validator.request, self.request)
+        self.assertEqual(validator.request, self.request)
 
     def test_email_validator_sets_dictionary(self):
         email_validator = Validator(self.request)

@@ -9,6 +9,7 @@ from masonite.providers import RouteProvider
 from app.http.middleware.TestMiddleware import TestMiddleware as MiddlewareTest
 from app.http.middleware.TestHttpMiddleware import TestHttpMiddleware as MiddlewareHttpTest
 from config import application
+import unittest
 
 
 class MiddlewareValueTest:
@@ -21,9 +22,9 @@ class MiddlewareValueTest:
         self.request.value2 = value2
 
 
-class TestMiddleware:
+class TestMiddleware(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app.bind('Environ', generate_wsgi())
         self.app.bind('Application', application)
@@ -54,17 +55,17 @@ class TestMiddleware:
 
     def test_route_middleware_runs(self):
         self.app.resolve(self.provider.boot)
-        assert self.app.make('Request').path == '/test/middleware'
+        self.assertEqual(self.app.make('Request').path, '/test/middleware')
 
     def test_http_middleware_runs(self):
         self.app.resolve(self.provider.boot)
-        assert self.app.make('Request').path == '/test/middleware'
-        assert self.app.make('Request').environ['HTTP_TEST'] == 'test'
+        self.assertEqual(self.app.make('Request').path, '/test/middleware')
+        self.assertEqual(self.app.make('Request').environ['HTTP_TEST'], 'test')
 
     def test_route_middleware_can_pass_values(self):
         route = self.app.make('WebRoutes')[0]
         route.request = self.app.make('Request')
         route.list_middleware = ['throttle:1,2']
         route.run_middleware('before')
-        assert route.request.value1 == '1'
-        assert route.request.value2 == '2'
+        self.assertEqual(route.request.value1, '1')
+        self.assertEqual(route.request.value2, '2')

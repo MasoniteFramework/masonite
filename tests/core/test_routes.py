@@ -6,113 +6,113 @@ from masonite.helpers.routes import group, flatten_routes
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException
 from app.http.controllers.subdirectory.SubController import SubController
-import pytest
+import unittest
 
 
-class TestRoutes:
+class TestRoutes(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.route = Route(generate_wsgi())
         self.request = Request(generate_wsgi())
 
     def test_route_is_callable(self):
-        assert callable(Get)
-        assert callable(Head)
-        assert callable(Post)
-        assert callable(Match)
-        assert callable(Put)
-        assert callable(Patch)
-        assert callable(Delete)
-        assert callable(Connect)
-        assert callable(Options)
-        assert callable(Trace)
+        self.assertTrue(callable(Get))
+        self.assertTrue(callable(Head))
+        self.assertTrue(callable(Post))
+        self.assertTrue(callable(Match))
+        self.assertTrue(callable(Put))
+        self.assertTrue(callable(Patch))
+        self.assertTrue(callable(Delete))
+        self.assertTrue(callable(Connect))
+        self.assertTrue(callable(Options))
+        self.assertTrue(callable(Trace))
 
     def test_route_get_returns_output(self):
-        assert self.route.get('url', 'output') == 'output'
+        self.assertEqual(self.route.get('url', 'output'), 'output')
 
     def test_route_prefixes_forward_slash(self):
-        assert Get().route('some/url', 'TestController@show').route_url == '/some/url'
+        self.assertEqual(Get().route('some/url', 'TestController@show').route_url, '/some/url')
 
     def test_route_is_not_post(self):
-        assert self.route.is_post() == False
+        self.assertEqual(self.route.is_post(), False)
 
     def test_route_is_post(self):
         self.route.environ['REQUEST_METHOD'] = 'POST'
-        assert self.route.is_post() == True
+        self.assertEqual(self.route.is_post(), True)
 
     def test_compile_route_to_regex(self):
         get_route = Get().route('test/route', None)
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/route\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/route\/$')
 
         get_route = Get().route('test/@route', None)
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/([\w.-]+)\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/([\w.-]+)\/$')
 
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/(\d+)\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/(\d+)\/$')
 
         get_route = Get().route('test/@route:string', None)
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/([a-zA-Z]+)\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/([a-zA-Z]+)\/$')
 
     def test_route_can_add_compilers(self):
         get_route = Get().route('test/@route:int', None)
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/(\d+)\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/(\d+)\/$')
 
         self.route.compile('year', r'[0-9]{4}')
 
         get_route = Get().route('test/@route:year', None)
 
-        assert get_route.compile_route_to_regex(self.route) == r'^\/test\/[0-9]{4}\/$'
+        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/[0-9]{4}\/$')
 
         get_route = Get().route('test/@route:slug', None)
-        with pytest.raises(InvalidRouteCompileException):
+        with self.assertRaises(InvalidRouteCompileException):
             get_route.compile_route_to_regex(self.route)
 
     def test_route_gets_controllers(self):
-        assert Get().route('test/url', 'TestController@show')
-        assert Get().route('test/url', '/app.http.test_controllers.TestController@show')
+        self.assertTrue(Get().route('test/url', 'TestController@show'))
+        self.assertTrue(Get().route('test/url', '/app.http.test_controllers.TestController@show'))
 
     def test_route_doesnt_break_on_incorrect_controller(self):
-        assert Get().route('test/url', 'BreakController@show')
+        self.assertTrue(Get().route('test/url', 'BreakController@show'))
 
     def test_route_can_pass_route_values_in_constructor(self):
         route = Get('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Head('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Post('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Put('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Patch('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Delete('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Connect('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Options('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
         route = Trace('test/url', 'BreakController@show')
-        assert route.route_url == '/test/url'
+        self.assertEqual(route.route_url, '/test/url')
 
     def test_route_can_pass_route_values_in_constructor_and_use_middleware(self):
         route = Get('test/url', 'BreakController@show').middleware('auth')
-        assert route.route_url == '/test/url'
-        assert route.list_middleware == ['auth']
+        self.assertEqual(route.route_url, '/test/url')
+        self.assertEqual(route.list_middleware, ['auth'])
 
     def test_route_gets_deeper_module_controller(self):
         route = Get().route('test/url', 'subdirectory.SubController@show')
-        assert route.controller
-        assert isinstance(route.controller, SubController.__class__)
+        self.assertTrue(route.controller)
+        self.assertIsInstance(route.controller, SubController.__class__)
 
     def test_route_can_have_multiple_routes(self):
-        assert Match(['GET', 'POST']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']
+        self.assertEqual(Match(['GET', 'POST']).route('test/url', 'TestController@show').method_type, ['GET', 'POST'])
 
     def test_match_routes_convert_lowercase_to_uppercase(self):
-        assert Match(['Get', 'Post']).route('test/url', 'TestController@show').method_type == ['GET', 'POST']
+        self.assertEqual(Match(['Get', 'Post']).route('test/url', 'TestController@show').method_type, ['GET', 'POST'])
 
     def test_match_routes_raises_exception_with_non_list_method_types(self):
-        with pytest.raises(RouteException):
-            assert Match('get').route('test/url', 'TestController@show').method_type == ['GET', 'POST']
+        with self.assertRaises(RouteException):
+            self.assertEqual(Match('get').route('test/url', 'TestController@show').method_type, ['GET', 'POST'])
 
     def test_group_route(self):
         routes = group('/example', [
@@ -120,8 +120,8 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show')
         ])
 
-        assert routes[0].route_url == '/example/test/1'
-        assert routes[1].route_url == '/example/test/2'
+        self.assertEqual(routes[0].route_url, '/example/test/1')
+        self.assertEqual(routes[1].route_url, '/example/test/2')
 
     def test_group_route_sets_middleware(self):
         routes = RouteGroup([
@@ -133,10 +133,10 @@ class TestRoutes:
             ], middleware=('test', 'test2'))
         ], middleware=('auth', 'user'))
 
-        assert isinstance(routes, list)
-        assert ['another', 'auth', 'user'] == routes[0].list_middleware
-        assert ['auth', 'user'] == routes[1].list_middleware
-        assert ['test', 'test2', 'auth', 'user'] == routes[2].list_middleware
+        self.assertIsInstance(routes, list)
+        self.assertEqual(['another', 'auth', 'user'], routes[0].list_middleware)
+        self.assertEqual(['auth', 'user'], routes[1].list_middleware)
+        self.assertEqual(['test', 'test2', 'auth', 'user'], routes[2].list_middleware)
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([
@@ -144,7 +144,7 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show')
         ], domain=['www'])
 
-        assert routes[0].required_domain == ['www']
+        self.assertEqual(routes[0].required_domain, ['www'])
 
     def test_group_adds_methods(self):
         routes = RouteGroup([
@@ -152,7 +152,7 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show')
         ], add_methods=['OPTIONS'])
 
-        assert routes[0].method_type == ['GET', 'OPTIONS']
+        self.assertEqual(routes[0].method_type, ['GET', 'OPTIONS'])
 
     def test_group_route_sets_prefix(self):
         routes = RouteGroup([
@@ -160,7 +160,7 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show')
         ], prefix='/dashboard')
 
-        assert routes[0].route_url == '/dashboard/test/1'
+        self.assertEqual(routes[0].route_url, '/dashboard/test/1')
 
     def test_group_route_sets_name(self):
         RouteGroup([
@@ -174,8 +174,8 @@ class TestRoutes:
             Get().route('/test/2', 'TestController@show')
         ], name='post.')
 
-        assert routes[0].named_route == 'post.create'
-        assert routes[1].named_route == None
+        self.assertEqual(routes[0].named_route, 'post.create')
+        self.assertEqual(routes[1].named_route, None)
 
     def test_flatten_flattens_multiple_lists(self):
         routes = [
@@ -196,8 +196,8 @@ class TestRoutes:
 
         routes = flatten_routes(routes)
 
-        assert routes[3].route_url == '/dashboard/test/1'
-        assert routes[3].named_route == 'post.update'
+        self.assertEqual(routes[3].route_url, '/dashboard/test/1')
+        self.assertEqual(routes[3].named_route, 'post.update')
 
     def test_correctly_parses_json_with_dictionary(self):
         environ = generate_wsgi()
@@ -205,13 +205,13 @@ class TestRoutes:
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "conta_corrente": {\n        "ocultar": false,\n        "visao_geral": true,\n        "extrato": true\n    }\n}')
         route = Route(environ)
-        assert route.environ['QUERY_STRING'] == {
+        self.assertEqual(route.environ['QUERY_STRING'], {
             "conta_corrente": {
                 "ocultar": False,
                 "visao_geral": True,
                 "extrato": True
             }
-        }
+        })
 
     def test_correctly_parses_json_with_list(self):
         environ = generate_wsgi()
@@ -219,9 +219,9 @@ class TestRoutes:
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "options": ["foo", "bar"]\n}')
         route = Route(environ)
-        assert route.environ['QUERY_STRING'] == {
+        self.assertEqual(route.environ['QUERY_STRING'], {
             "options": ["foo", "bar"]
-        }
+        })
 
     def test_redirect_route(self):
         route = Redirect('/test1', '/test2')
@@ -230,8 +230,8 @@ class TestRoutes:
         request.load_app(App())
 
         route.get_response()
-        assert request.is_status(302)
-        assert request.redirect_url == '/test2'
+        self.assertTrue(request.is_status(302))
+        self.assertEqual(request.redirect_url, '/test2')
 
     def test_redirect_can_use_301(self):
         request = Request(generate_wsgi())
@@ -240,13 +240,12 @@ class TestRoutes:
         route.load_request(request)
         request.load_app(App())
         route.get_response()
-        assert request.is_status(301)
-        assert request.redirect_url == '/test3'
+        self.assertTrue(request.is_status(301))
+        self.assertEqual(request.redirect_url, '/test3')
 
     def test_redirect_can_change_method_type(self):
-        request = Request(generate_wsgi())
         route = Redirect('/test1', '/test3', methods=['POST', 'PUT'])
-        assert route.method_type == ['POST', 'PUT']
+        self.assertEqual(route.method_type, ['POST', 'PUT'])
 
 
 class WsgiInputTestClass:

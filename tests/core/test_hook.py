@@ -1,18 +1,18 @@
 from masonite.app import App
 from masonite.hook import Hook
-
+import unittest
 
 class SentryExceptionHookMock:
     def load(self, app):
         return 'loaded'
 
 
-class TestFrameworkHooks:
+class TestFrameworkHooks(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app.bind('SentryExceptionHook', SentryExceptionHookMock())
         self.app.bind('HookHandler', Hook(self.app))
 
     def test_exception_handler(self):
-        assert self.app.make('HookHandler').fire('*ExceptionHook') is None
+        self.assertIsNone(self.app.make('HookHandler').fire('*ExceptionHook'))

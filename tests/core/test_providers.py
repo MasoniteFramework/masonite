@@ -4,11 +4,11 @@ from config import application, providers
 from masonite.app import App
 from masonite.routes import Get
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
+import unittest
 
+class TestProviders(unittest.TestCase):
 
-class TestProviders:
-
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app.bind('WSGI', object)
 
@@ -34,8 +34,8 @@ class TestProviders:
 
             self.app.resolve(provider().load_app(self.app).boot)
 
-        assert self.app.make('Request')
+        self.assertTrue(self.app.make('Request'))
 
     def test_normal_app_containers(self):
         self.app = TestSuite().create_container()
-        assert self.app.get_container().make('Request')
+        self.assertTrue(self.app.get_container().make('Request'))

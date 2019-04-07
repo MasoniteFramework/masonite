@@ -4,7 +4,7 @@ from masonite.routes import Route
 from masonite.request import Request
 
 wsgi_request = generate_wsgi()
-
+import unittest
 
 class ExtendClass:
 
@@ -38,9 +38,9 @@ def get_third_path(self):
     return self.path
 
 
-class TestExtends:
+class TestExtends(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.request = Request(wsgi_request)
         self.app.bind('Request', self.request)
@@ -52,20 +52,20 @@ class TestExtends:
         request.extend('get_another_path_test', ExtendClass.get_another_path)
         request.extend('get_third_path_test', get_third_path)
 
-        assert request.get_path() == '/'
-        assert request.get_another_path_test() == '/'
-        assert request.get_third_path_test() == '/'
+        self.assertEqual(request.get_path(), '/')
+        self.assertEqual(request.get_another_path_test(), '/')
+        self.assertEqual(request.get_third_path_test(), '/')
 
         request.extend(ExtendClass2)
 
-        assert request.get_path2() == '/'
-        assert request.get_another_path2() == '/'
+        self.assertEqual(request.get_path2(), '/')
+        self.assertEqual(request.get_another_path2(), '/')
 
         request.extend(get_third_path)
-        assert request.get_third_path() == '/'
+        self.assertEqual(request.get_third_path(), '/')
 
         request.extend(ExtendClass.get_another_path)
-        assert request.get_another_path() == '/'
+        self.assertEqual(request.get_another_path(), '/')
 
     def test_gets_input_with_all_request_methods(self):
         app = App()
@@ -75,19 +75,19 @@ class TestExtends:
         request = app.make('Request').load_app(app)
 
         request.environ['REQUEST_METHOD'] = 'GET'
-        assert request.input('hey') == 'test'
+        self.assertEqual(request.input('hey'), 'test')
 
         request.environ['REQUEST_METHOD'] = 'POST'
-        assert request.input('hey') == 'test'
+        self.assertEqual(request.input('hey'), 'test')
 
         request.environ['REQUEST_METHOD'] = 'PUT'
-        assert request.input('hey') == 'test'
+        self.assertEqual(request.input('hey'), 'test')
 
         request.environ['REQUEST_METHOD'] = 'PATCH'
-        assert request.input('hey') == 'test'
+        self.assertEqual(request.input('hey'), 'test')
 
         request.environ['REQUEST_METHOD'] = 'DELETE'
-        assert request.input('hey') == 'test'
+        self.assertEqual(request.input('hey'), 'test')
 
     def test_hidden_form_request_method_changes_request_method(self):
         app = App()
@@ -97,7 +97,7 @@ class TestExtends:
         app.bind('Request', request_class)
         request = app.make('Request').load_app(app)
 
-        assert request.environ['REQUEST_METHOD'] == 'PUT'
+        self.assertEqual(request.environ['REQUEST_METHOD'], 'PUT')
 
     def test_get_json_input(self):
         json_wsgi = wsgi_request
@@ -108,6 +108,6 @@ class TestExtends:
         Route(json_wsgi)
         request_obj = Request(json_wsgi)
 
-        assert isinstance(request_obj.request_variables, dict)
-        assert request_obj.input('id') == 1
-        assert request_obj.input('test') == 'testing'
+        self.assertIsInstance(request_obj.request_variables, dict)
+        self.assertEqual(request_obj.input('id'), 1)
+        self.assertEqual(request_obj.input('test'), 'testing')

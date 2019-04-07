@@ -5,6 +5,7 @@ from masonite.app import App
 from masonite.request import Request
 from masonite.routes import Get
 from masonite.testsuite.TestSuite import generate_wsgi, TestSuite
+import unittest
 
 
 class ContainerTest(ServiceProvider):
@@ -61,9 +62,9 @@ class LoadProvider(ServiceProvider):
         self.commands(Mock1Command(), Mock2Command())
 
 
-class TestServiceProvider:
+class TestServiceProvider(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = TestSuite().create_container().container
         self.provider = ServiceProvider()
         self.provider.load_app(self.app).register()
@@ -71,13 +72,13 @@ class TestServiceProvider:
         self.load_provider.load_app(self.app).boot()
 
     def test_service_provider_loads_app(self):
-        assert self.provider.app == self.app
+        self.assertEqual(self.provider.app, self.app)
 
     def test_can_call_container_with_self_parameter(self):
         self.app.bind('Request', Request({}))
         self.app.bind('Get', Get())
 
-        assert self.app.resolve(ContainerTest().boot) == self.app.make('Request')
+        self.assertEqual(self.app.resolve(ContainerTest().boot), self.app.make('Request'))
 
     def test_can_call_container_with_annotations_from_variable(self):
         request = Request(generate_wsgi())
@@ -85,31 +86,31 @@ class TestServiceProvider:
         self.app.bind('Request', request)
         self.app.bind('Get', Get().route('url', None))
 
-        assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
+        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))
 
     def test_can_call_container_with_annotation_with_self_parameter(self):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
 
-        assert self.app.resolve(ContainerTest().testboot) == self.app.make('Request')
+        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))
 
     def test_can_load_routes_into_container(self):
-        assert len(self.app.make('WebRoutes')) > 2
-        assert self.app.make('WebRoutes')[-2:] == [ROUTE1, ROUTE2]
+        self.assertTrue(len(self.app.make('WebRoutes')) > 2)
+        self.assertEqual(self.app.make('WebRoutes')[-2:], [ROUTE1, ROUTE2])
 
     def test_can_load_http_middleware_into_container(self):
-        assert self.app.make('HttpMiddleware')[-2:] == [object, object]
+        self.assertEqual(self.app.make('HttpMiddleware')[-2:], [object, object])
 
     def test_can_load_route_middleware_into_container(self):
-        assert self.app.make('RouteMiddleware')['route1'] == object
-        assert self.app.make('RouteMiddleware')['route2'] == object
+        self.assertEqual(self.app.make('RouteMiddleware')['route1'], object)
+        self.assertEqual(self.app.make('RouteMiddleware')['route2'], object)
 
     def test_can_load_migrations_into_container(self):
-        assert len(self.app.collect('*MigrationDirectory')) == 2
+        self.assertEqual(len(self.app.collect('*MigrationDirectory')), 2)
 
     def test_can_load_assets_into_container(self):
-        assert self.app.make('Storage').STATICFILES['storage/static'] == '/some/location'
+        self.assertEqual(self.app.make('Storage').STATICFILES['storage/static'], '/some/location')
 
     def test_can_load_commands_into_container(self):
-        assert self.app.make('Mock1Command')
-        assert self.app.make('Mock2Command')
+        self.assertTrue(self.app.make('Mock1Command'))
+        self.assertTrue(self.app.make('Mock2Command'))

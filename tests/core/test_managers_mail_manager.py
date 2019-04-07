@@ -16,6 +16,7 @@ from masonite.managers import MailManager
 from masonite.view import View
 from masonite.contracts import MailContract
 from masonite import env
+import unittest
 
 
 class MailSmtpDriver:
@@ -31,9 +32,9 @@ class User:
     pass
 
 
-class TestMailManager:
+class TestMailManager(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app = self.app.bind('Container', self.app)
 
@@ -45,11 +46,11 @@ class TestMailManager:
 
     def test_mail_manager_loads_container(self):
         mailManager = MailManager()
-        assert mailManager.load_container(self.app)
+        self.assertTrue(mailManager.load_container(self.app))
 
     def test_mail_manager_resolves_from_contract(self):
         self.app.bind('MailManager', MailManager())
-        assert self.app.resolve(self._test_resolve) == self.app.make('MailManager')
+        self.assertEqual(self.app.resolve(self._test_resolve), self.app.make('MailManager'))
 
     def _test_resolve(self, mail: MailManagerContract):
         return mail
@@ -57,13 +58,13 @@ class TestMailManager:
     def test_creates_driver(self):
         mailManager = MailManager()
 
-        assert mailManager.load_container(self.app).manage_driver == object
+        self.assertEqual(mailManager.load_container(self.app).manage_driver, object)
 
     def test_does_not_create_driver_with_initilization_container(self):
 
         mailManager = MailManager(self.app)
 
-        assert mailManager.manage_driver == None
+        self.assertEqual(mailManager.manage_driver, None)
 
     def test_does_not_raise_drivernotfound_exception(self):
         MailManager(self.app)
@@ -79,46 +80,46 @@ class TestMailManager:
     def test_drivers_are_resolvable_by_container(self):
         self.app.bind('MailSmtpDriver', MailDriver)
 
-        assert isinstance(MailManager(self.app).driver('smtp'), MailDriver)
+        self.assertIsInstance(MailManager(self.app).driver('smtp'), MailDriver)
 
     def test_driver_loads_template(self):
         self.app.bind('MailSmtpDriver', MailDriver)
 
         driver = MailManager(self.app).driver('smtp')
 
-        assert driver.template('test', {'test': 'test'}).message_body == 'test'
+        self.assertEqual(driver.template('test', {'test': 'test'}).message_body, 'test')
 
     def test_send_mail(self):
         self.app.bind('MailSmtpDriver', MailDriver)
-        assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com')
+        self.assertTrue(MailManager(self.app).driver('smtp').to('idmann509@gmail.com'))
 
     def test_send_mail_with_from(self):
         self.app.bind('MailSmtpDriver', MailDriver)
 
-        assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address == 'masonite@masonite.com'
+        self.assertEqual(MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send_from('masonite@masonite.com').from_address, 'masonite@masonite.com')
 
     def test_send_mail_sends(self):
         if env('RUN_MAIL'):
             self.app.bind('MailSmtpDriver', MailDriver)
 
-            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send('hi')
+            self.assertTrue(MailManager(self.app).driver('smtp').to('idmann509@gmail.com').send('hi'))
 
     def test_send_mail_sends_with_queue(self):
         if env('RUN_MAIL'):
             self.app.bind('MailSmtpDriver', MailDriver)
 
-            assert MailManager(self.app).driver('smtp').to('idmann509@gmail.com').queue().send('hi') == None
+            self.assertEqual(MailManager(self.app).driver('smtp').to('idmann509@gmail.com').queue().send('hi'), None)
 
     def test_send_mail_with_subject(self):
         self.app.bind('MailSmtpDriver', MailDriver)
 
-        assert MailManager(self.app).driver('smtp').to('').subject('test').message_subject == 'test'
+        self.assertEqual(MailManager(self.app).driver('smtp').to('').subject('test').message_subject, 'test')
 
     def test_send_mail_with_callable(self):
         self.app.bind('MailSmtpDriver', MailDriver)
         user = User
         user.email = 'email@email.com'
-        assert MailManager(self.app).driver('smtp').to(User)
+        self.assertTrue(MailManager(self.app).driver('smtp').to(User))
 
     def test_switch_mail_manager(self):
         self.app.bind('MailSmtpDriver', MailDriver)
@@ -126,7 +127,7 @@ class TestMailManager:
 
         mail_driver = MailManager(self.app).driver('smtp')
 
-        assert isinstance(mail_driver.driver('test'), Mailgun)
+        self.assertIsInstance(mail_driver.driver('test'), Mailgun)
 
     def test_mail_helper_method_resolves_a_driver(self):
-        assert isinstance(mail_helper(), MailContract)
+        self.assertIsInstance(mail_helper(), MailContract)

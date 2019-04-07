@@ -8,14 +8,15 @@ from masonite.view import View
 from masonite.managers.MailManager import MailManager
 from masonite.drivers import MailLogDriver
 from masonite.drivers import MailTerminalDriver
+import unittest
 
 
 class UserMock:
     pass
 
-class TestMailLogDrivers:
+class TestMailLogDrivers(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = App()
         self.app = self.app.bind('Container', self.app)
 
@@ -29,23 +30,23 @@ class TestMailLogDrivers:
         user = UserMock
         user.email = 'test@email.com'
 
-        assert MailManager(self.app).driver('log').to(user).to_address == 'test@email.com'
+        self.assertEqual(MailManager(self.app).driver('log').to(user).to_address, 'test@email.com')
 
     def test_log_mail_renders_template(self):
 
-        assert 'MasoniteTesting' in MailManager(self.app).driver('log').to(
-            'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
+        self.assertIn('MasoniteTesting', MailManager(self.app).driver('log').to(
+            'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body)
 
     def test_terminal_driver(self):
         user = UserMock
         user.email = 'test@email.com'
 
-        assert MailManager(self.app).driver('terminal').to(user).to_address == 'test@email.com'
+        self.assertEqual(MailManager(self.app).driver('terminal').to(user).to_address, 'test@email.com')
 
     def test_terminal_mail_renders_template(self):
 
-        assert 'MasoniteTesting' in MailManager(self.app).driver('terminal').to(
-            'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
+        self.assertIn('MasoniteTesting', MailManager(self.app).driver('terminal').to(
+            'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body)
 
     def test_log_driver_output(self):
         user = UserMock
@@ -57,7 +58,7 @@ class TestMailLogDrivers:
         self.logfile = open(filepath, 'r')
         file_string = self.logfile.read()
 
-        assert 'test@email.com' in file_string
+        self.assertIn('test@email.com', file_string)
 
     def test_terminal_driver_output(self, capsys):
         user = UserMock
@@ -66,9 +67,9 @@ class TestMailLogDrivers:
         MailManager(self.app).driver('terminal').to(user).send('Masonite')
 
         captured = capsys.readouterr()
-        assert 'test@email.com' in captured.err
+        self.assertIn('test@email.com', captured.err)
 
-    def teardown_method(self):
+    def tearDown(self):
         if hasattr(self, 'logfile') and self.logfile:
             self.logfile.close()
 

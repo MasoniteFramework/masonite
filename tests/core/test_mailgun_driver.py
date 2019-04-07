@@ -12,20 +12,18 @@ from masonite.environment import LoadEnvironment
 from masonite.exceptions import DriverNotFound
 from masonite.managers.MailManager import MailManager
 from masonite.view import View
+import unittest
 
 LoadEnvironment()
-
-
-
 
 if os.getenv('MAILGUN_SECRET'):
 
     class UserMock:
         pass
 
-    class TestMailgunDriver:
+    class TestMailgunDriver(unittest.TestCase):
 
-        def setup_method(self):
+        def setUp(self):
             self.app = App()
             self.app.bind('Container', self.app)
 
@@ -39,13 +37,13 @@ if os.getenv('MAILGUN_SECRET'):
             user = UserMock
             user.email = 'test@email.com'
 
-            assert MailManager(self.app).driver('mailgun').to(user).to_address == 'test@email.com'
+            self.assertEqual(MailManager(self.app).driver('mailgun').to(user).to_address, 'test@email.com')
 
         def test_mail_renders_template(self):
-            assert 'MasoniteTesting' in MailManager(self.app).driver('mailgun').to(
-                'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body
+            self.assertIn('MasoniteTesting', MailManager(self.app).driver('mailgun').to(
+                'idmann509@gmail.com').template('mail/welcome', {'to': 'MasoniteTesting'}).message_body)
 
         def test_mail_sends_with_queue_and_without_queue(self):
             if env('RUN_MAIL'):
-                assert MailManager(self.app).driver('mailgun').to('idmann509@gmail.com').send('test queue') == None
-                assert MailManager(self.app).driver('mailgun').queue().to('idmann509@gmail.com').send('test queue') == None
+                self.assertEqual(MailManager(self.app).driver('mailgun').to('idmann509@gmail.com').send('test queue'), None)
+                self.assertEqual(MailManager(self.app).driver('mailgun').queue().to('idmann509@gmail.com').send('test queue'), None)

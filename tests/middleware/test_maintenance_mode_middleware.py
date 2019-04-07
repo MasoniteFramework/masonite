@@ -7,11 +7,12 @@ from masonite.middleware import MaintenanceModeMiddleware
 from masonite.testsuite import generate_wsgi
 
 from config import application
+import unittest
 
 
-class TestMaintenanceModeMiddleware:
+class TestMaintenanceModeMiddleware(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.request = Request(generate_wsgi())
         self.middleware = MaintenanceModeMiddleware(self.request)
         down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
@@ -28,7 +29,7 @@ class TestMaintenanceModeMiddleware:
         down = open(down_path, 'w+')
         down.close()
         self.middleware.before()
-        assert request.get_status_code() == '503 Service Unavailable'
+        self.assertEqual(request.get_status_code(), '503 Service Unavailable')
 
     def test_maintenance_mode_middleware_is_not_down(self):
         app = App()
@@ -36,4 +37,4 @@ class TestMaintenanceModeMiddleware:
         app.bind('StatusCode', '200 OK')
         request = app.make('Request').load_app(app)
         self.middleware.before()
-        assert request.get_status_code() == '200 OK'
+        self.assertEqual(request.get_status_code(), '200 OK')

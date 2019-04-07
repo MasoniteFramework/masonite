@@ -28,4 +28,4 @@ class TestInsteadOf(unittest.TestCase):
 
         InsteadOf(request, 'user')._return(MockUser)
 
-        self.assertEqual(request.user(), MockUser)
+        self.assertIsInstance(request.user(), MockUser)

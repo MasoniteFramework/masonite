@@ -3,10 +3,11 @@ from masonite.managers import StorageManager
 from masonite.drivers import StorageDiskDriver
 from config import storage
 import os
+import unittest
 
-class TestStorage:
+class TestStorage(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.app = TestSuite().create_container().container
         self.app.bind('StorageDiskDriver', StorageDiskDriver)
         self.app.bind('StorageManager', StorageManager(self.app))
@@ -14,42 +15,41 @@ class TestStorage:
         self.manager = self.app.make('Storage')
     
     def test_storage_creates_disk_driver(self):
-        assert isinstance(self.manager.driver('disk'), StorageDiskDriver)
+        self.assertIsInstance(self.manager.driver('disk'), StorageDiskDriver)
 
     def test_storage_puts_file(self):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
-        driver.get('storage/some_file.txt') == 'HI'
+        self.assertEqual(driver.get('storage/some_file.txt'), 'HI')
         
-
     def test_storage_appends_file(self):
         driver = self.manager.driver('disk')
         driver.append('storage/some_file.txt', 'HI')
-        driver.get('storage/some_file.txt') == 'HIHI'
+        self.assertEqual(driver.get('storage/some_file.txt'), 'HIHI')
         
     def test_storage_deletes_file(self):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
-        assert driver.delete('storage/some_file.txt')
+        self.assertTrue(driver.delete('storage/some_file.txt'))
         
     def test_storage_file_exists(self):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
-        assert driver.exists('storage/some_file.txt') is True
-        assert driver.delete('storage/some_file.txt')
-        assert driver.exists('storage/some_file.txt') is False
+        self.assertTrue(driver.exists('storage/some_file.txt'))
+        self.assertTrue(driver.delete('storage/some_file.txt'))
+        self.assertFalse(driver.exists('storage/some_file.txt'))
         
     def test_storage_file_gets_size(self):
         driver = self.manager.driver('disk')
-        assert driver.size('storage/not_exists.txt') == 0
+        self.assertEqual(driver.size('storage/not_exists.txt'), 0)
         driver.put('storage/file.txt', 'HI')
-        assert driver.size('storage/file.txt') == 2
-        assert driver.delete('storage/file.txt')
+        self.assertEqual(driver.size('storage/file.txt'), 2)
+        self.assertTrue(driver.delete('storage/file.txt'))
 
     def test_storage_get_extension(self):
         driver = self.manager.driver('disk')
         driver.put('storage/file.txt', 'HI')
-        driver.extension('storage/file.txt') == 'txt'
+        self.assertEqual(driver.extension('storage/file.txt'), 'txt')
 
     def test_storage_upload(self):
         driver = self.manager.driver('disk')
@@ -57,13 +57,13 @@ class TestStorage:
 
     def test_storage_make_directory(self):
         driver = self.manager.driver('disk')
-        assert driver.make_directory('storage/some_directory') is True
-        assert os.path.isdir('storage/some_directory')
+        self.assertTrue(driver.make_directory('storage/some_directory'))
+        self.assertTrue(os.path.isdir('storage/some_directory'))
 
     def test_storage_delete_directory(self):
         driver = self.manager.driver('disk')
-        assert driver.delete_directory('storage/some_directory') is True
-        assert not os.path.isdir('storage/some_directory')
+        self.assertTrue(driver.delete_directory('storage/some_directory'))
+        self.assertFalse(os.path.isdir('storage/some_directory'))
 
 
 class ImageMock():

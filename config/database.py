@@ -48,14 +48,6 @@ DATABASES = {
         'password': env('DB_PASSWORD'),
         'log_queries': env('DB_LOG'),
     },
-    os.environ.get('DB_DRIVER'): {
-        'driver': os.environ.get('DB_DRIVER'),
-        'host': os.environ.get('DB_HOST'),
-        'database': os.environ.get('DB_DATABASE'),
-        'user': os.environ.get('DB_USERNAME'),
-        'password': os.environ.get('DB_PASSWORD'),
-        'prefix': ''
-    }
 }
 
 DB = DatabaseManager(DATABASES)

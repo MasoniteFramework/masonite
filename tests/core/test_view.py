@@ -49,12 +49,7 @@ class TestView(unittest.TestCase):
 
     def test_view_gets_global_template(self):
         view = self.container.make('View')
-        assert view('/storage/test', {'test': 'test'}
-                    ).rendered_template == 'test'
-        assert view('/storage/static/test',
-                    {'test': 'test'}).rendered_template == 'test'
-        # self.assertEqual(view('/storage/test', {'test': 'test'}).rendered_template, 'test')
-        # self.assertEqual(view('/storage/static/test', {'test': 'test'}).rendered_template, 'test')
+        self.assertEqual(view('/templates/test', {'test': 'test'}).rendered_template, 'test')
 
     def test_view_extends_without_dictionary_parameters(self):
         view = self.container.make('ViewClass')
@@ -106,7 +101,7 @@ class TestView(unittest.TestCase):
         self.container.make('ViewClass').add_environment('storage')
 
         view = self.container.make('View')
-        self.assertEqual(view('/storage/templates/tests/test', {'test': 'testing'}).rendered_template, 'testing')
+        self.assertEqual(view('/templates/tests/test', {'test': 'testing'}).rendered_template, 'testing')
 
     def test_composers_with_wildcard_lower_directory_view(self):
         self.container.make('ViewClass').composer(

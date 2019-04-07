@@ -1,7 +1,7 @@
 """View Module."""
 
 
-from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
+from jinja2 import ChoiceLoader, Environment, PackageLoader, FileSystemLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
@@ -235,8 +235,8 @@ class View:
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
 
-            print('loading new directory: ', location[0], '/'.join(location[1:-1]))
-
+            print('loading new directory: ', [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments)
+            print([PackageLoader(location[0], '/'.join(location[1:-1]))][0].list_templates())
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),

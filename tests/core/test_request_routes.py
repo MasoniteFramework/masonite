@@ -5,7 +5,7 @@ import unittest
 
 class TestRequestRoutes(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.request = Request(generate_wsgi()).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 

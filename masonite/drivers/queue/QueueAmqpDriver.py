@@ -78,7 +78,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
         self.channel = self.connection.channel()
 
-        self.channel.queue_declare(queue=self.publishing_channel, durable=True)
+        self.channel.queue_declare(self.publishing_channel, durable=True)
 
         return self
 
@@ -86,8 +86,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.success('[*] Waiting to process jobs on the "{}" channel. To exit press CTRL+C'.format(
             channel))
 
-        self.channel.basic_consume(self.work,
-                                   queue=channel)
+        self.channel.basic_consume(channel, self.work)
 
         if fair:
             self.channel.basic_qos(prefetch_count=1)

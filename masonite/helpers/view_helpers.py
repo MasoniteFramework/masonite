@@ -25,3 +25,6 @@ def back(location):
         string -- An input string.
     """
     return Markup("<input type='hidden' name='__back' value='{0}'>".format(location))
+
+def hidden(value, name='hidden-input'):
+    return Markup("<input type='hidden' name='{}' value='{}'>".format(name, value))

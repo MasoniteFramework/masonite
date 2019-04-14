@@ -54,6 +54,9 @@ class TestViewHelpers(unittest.TestCase):
         self.request.cookie('test', 'value')
         self.assertEqual(self.view._shared['cookie']('test'), 'value')
 
+    def test_hidden(self):
+        self.assertEqual(self.view._shared['hidden']('test', name='form1'), "<input type='hidden' name='form1' value='test'>")
+
 
 class MockUser:
     id = 1

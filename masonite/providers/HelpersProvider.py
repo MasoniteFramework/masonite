@@ -4,7 +4,7 @@ import builtins
 import os
 
 from masonite.exception_handler import DD, DumpHandler
-from masonite.helpers.view_helpers import back, set_request_method
+from masonite.helpers.view_helpers import back, set_request_method, hidden
 from masonite.helpers.sign import sign, unsign, decrypt, encrypt
 from masonite.helpers import config, optional
 from masonite.provider import ServiceProvider
@@ -47,6 +47,7 @@ class HelpersProvider(ServiceProvider):
                 'config': config,
                 'optional': optional,
                 'dd': builtins.dd,
+                'hidden': hidden,
                 'cookie': request.get_cookie,
                 'url': lambda name, params={}: request.route(name, params, full=True)
             }

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.26](https://github.com/MasoniteFramework/core/releases/tag/v2.1.26) - 2019-03-31
+### Fixed
+- Fixed issue where channel was not reopening after closing for AMQP driver
+
+## [2.1.25](https://github.com/MasoniteFramework/core/releases/tag/v2.1.25) - 2019-03-31
+### Fixed
+- Fixed issue where the amqp driver was not closing connections and channels after use
+
+## [2.1.24](https://github.com/MasoniteFramework/core/releases/tag/v2.1.24) - 2019-03-31
+### Fixed
+- Fixed issue where queue jobs would fail because of a Unicode character (the checkmark) being printed out which would cause the job to fail. Now the command will print out a [Y] character if it cannot print out of a check mark.
+
 ## [2.1.23](https://github.com/MasoniteFramework/core/releases/tag/v2.1.23) - 2019-03-24
 ### Added
 - [Added Cors middleware](https://docs.masoniteproject.com/security/headers#cors).

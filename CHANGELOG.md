@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.1.23](https://github.com/MasoniteFramework/core/releases/tag/v2.1.23) - 2019-03-24
+### Added
+- [Added Cors middleware](https://docs.masoniteproject.com/security/headers#cors).
+- [You can now use `@` line statements inside your jinja templates](https://docs.masoniteproject.com/the-basics/views#view-syntax)
+
+### Changed
+- Command command now appends `Command` to the end of the class name
+- Exception is now thrown when a route name is not found using the `route` method on the request class
+
+### Fixed
+- [x] Fixed deprecation warnings with regex strings in tests
+
 ## [2.1.22](https://github.com/MasoniteFramework/core/releases/tag/v2.1.22) - 2019-03-17
 ### Fixed
 - Fixed Auth command not adding route names

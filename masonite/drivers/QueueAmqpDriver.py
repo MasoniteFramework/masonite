@@ -39,6 +39,8 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
                                    properties=self.pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent
                                    ))
+        self.channel.close()
+        self.connection.close()
 
     def push(self, *objects, args=(), callback='handle', ran=1, channel=None):
         """Push objects onto the amqp stack.
@@ -54,7 +56,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             payload = {'obj': obj, 'args': args, 'callback': callback, 'created': pendulum.now(), 'ran': ran}
             try:
                 self._publish(payload)
-            except self.pika.exceptions.ConnectionClosed:
+            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed):
                 self.connect()
                 self._publish(payload)
 
@@ -89,7 +91,12 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
         self.basic_consume(self.work, channel)
 
-        return self.channel.start_consuming()
+        try:
+            self.channel.start_consuming()
+        finally:
+            self.channel.stop_consuming()
+            self.channel.close()
+            self.connection.close()
 
     def basic_consume(self, callback, queue):
         self.channel.basic_consume(callback, queue=queue)
@@ -112,7 +119,10 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             except AttributeError:
                 obj(*args)
 
-            self.success('[\u2713] Job Successfully Processed')
+            try:
+                self.success('[\u2713] Job Successfully Processed')
+            except UnicodeEncodeError:
+                self.success('[Y] Job Successfully Processed')
         except Exception as e:
             self.danger('Job Failed: {}'.format(str(e)))
 

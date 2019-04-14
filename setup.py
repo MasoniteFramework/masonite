@@ -37,7 +37,6 @@ setup(
         'python-dotenv>=0.8,<0.9',
         'passlib>=1.7,<1.8',
         'whitenoise>=3.3',
-        'pytest>=3.6,<4',
         'masonite-entry>=0.0.0,<=0.9.99',
         'masonite-scheduler>=1.0.0,<=1.0.99',
         'pendulum>=1.5,<1.6',

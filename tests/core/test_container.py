@@ -38,6 +38,7 @@ class TestContainer(unittest.TestCase):
         self.app.bind('Request', Request(None))
         self.app.bind('MockObject', MockObject)
         self.app.bind('GetObject', GetObject)
+        self.app.bind('Container', self.app)
 
     def test_container_gets_direct_class(self):
         self.assertIsInstance(self.app.make('Request'), Request)
@@ -113,17 +114,15 @@ class TestContainer(unittest.TestCase):
 
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']
-        self.assertEqual(self.app.make(MockObject), GetObject)
+        self.assertIsInstance(self.app.make(MockObject), GetObject)
 
     def test_container_has_obj(self):
         assert self.app.has('Request')
         assert self.app.has(Request)
 
     def test_container_makes_from_contract(self):
-        self.app.providers = {}
-
         self.app.bind('UploadDriver', UploadDiskDriver)
-        self.assertEqual(self.app.make(UploadContract), UploadDiskDriver)
+        self.assertIsInstance(self.app.make(UploadContract), UploadDiskDriver)
 
     def test_strict_container_raises_exception(self):
         self.app = App(strict=True)

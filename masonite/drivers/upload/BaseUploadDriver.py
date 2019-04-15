@@ -4,6 +4,7 @@ import _io
 from masonite.drivers import BaseDriver
 from masonite.exceptions import FileTypeException
 from masonite.helpers import random_string
+from masonite.helpers import config
 
 
 class BaseUploadDriver(BaseDriver):
@@ -55,11 +56,11 @@ class BaseUploadDriver(BaseDriver):
             string -- Returns the location it uploaded to.
         """
         if not location:
-            location = self.config.DRIVERS['disk']['location']
+            location = config('storage.drivers.disk.location')
 
         if '.' in location:
             location = location.split('.')
-            return self.config.DRIVERS[location[0]]['location'][location[1]]
+            return config('storage.drivers')[location[0]]['location'][location[1]]
         elif isinstance(location, str):
             return location
         elif isinstance(location, dict):

@@ -36,7 +36,7 @@ class Dot:
 
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
-                
+
                 if dic and type(dic) is not int and len(dic) == 1 and not type(dic[list(dic)[0]]) == dict:
                     possible = dic
 

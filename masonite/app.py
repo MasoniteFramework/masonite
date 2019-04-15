@@ -141,7 +141,6 @@ class App:
         passing_arguments = list(resolving_arguments)
 
         for _, value in self.get_parameters(obj):
-            print('resolving', obj, 'with', value)
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
             elif '=' in str(value):

@@ -74,8 +74,6 @@ class App:
             object -- Returns the object that is fetched.
         """
         
-        print('making', name)
-        
         if name in self.providers:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
@@ -214,7 +212,6 @@ class App:
         Returns:
             object -- Returns the object found in the container.
         """
-        print('finding annotated', parameter)
         if parameter.annotation in self.swaps:
             obj = self.swaps[parameter.annotation]
             if callable(obj):
@@ -252,7 +249,6 @@ class App:
             object -- Returns the object found in the container
         """
         parameter = str(keyword)
-        print('finding', parameter)
 
         if parameter != 'self' and parameter in self.providers:
             obj = self.providers[parameter]

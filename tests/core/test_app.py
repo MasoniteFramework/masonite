@@ -36,6 +36,27 @@ class TestApp(unittest.TestCase):
         mockmail = self.app.make('MockMail')
         self.assertIsInstance(mockmail.request, Request)
 
+    def test_app_makes_different_instances(self):
+        self.app.bind('MockMail', MockMail)
+        self.app.bind('Request', REQUEST)
+        m1 = self.app.make('MockMail')
+        m2 = self.app.make('MockMail')
+
+        self.assertNotEqual(id(m1), id(m2))
+    
+    def test_app_makes_singleton_instance(self):
+        self.app.bind('Request', REQUEST)
+        self.app.singleton('MockMail', MockMail)
+        m1 = self.app.make('MockMail')
+        m2 = self.app.make('MockMail')
+
+        self.assertEqual(id(m1), id(m2))
+        self.assertEqual(id(m1.request), id(m2.request))
+
+        m1.request.test = 'test'
+        self.assertEqual(m2.request.test, 'test')
+    
+
     def test_can_set_container_hook(self):
         self.app.on_bind('Request', self._func_on_bind)
         self.app.bind('Request', REQUEST)

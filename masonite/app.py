@@ -61,6 +61,10 @@ class App:
         self.bind(obj if inspect.isclass(obj) else obj.__class__, obj)
         return self
 
+    def singleton(self, name, class_obj):
+        obj = self.resolve(class_obj)
+        self.bind(name, obj)
+
     def make(self, name):
         """Retrieve a class from the container by key.
 
@@ -73,7 +77,7 @@ class App:
         Returns:
             object -- Returns the object that is fetched.
         """
-        
+
         if name in self.providers:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)

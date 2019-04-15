@@ -45,7 +45,7 @@ class Manager:
             masonite.drivers.Driver -- Returns a driver which is an instance of the base Driver class.
         """
         self.create_driver(driver)
-        return self.container.resolve(self.manage_driver).load_manager(self)
+        return self.manage_driver.load_manager(self)
 
     def create_driver(self, driver=None):
         """Create the driver to be used.
@@ -74,7 +74,7 @@ class Manager:
                 )
                 return
             elif inspect.isclass(driver):
-                self.manage_driver = driver
+                self.manage_driver = self.container.resolve(driver)
                 return
 
             raise UnacceptableDriverType(

@@ -2,7 +2,7 @@ import unittest
 from cgi import MiniFieldStorage
 from pydoc import locate
 
-import pytest
+ 
 
 from app.http.test_controllers.TestController import TestController
 from config import application, providers
@@ -265,7 +265,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.route('test.id', {'id': 1}), '/test/url/1')
         self.assertEqual(request.route('test.id', [1]), '/test/url/1')
 
-        with pytest.raises(RouteException):
+        with self.assertRaises(RouteException):
             self.assertTrue(request.route('not.exists', [1]))
 
     def test_request_redirection(self):
@@ -496,7 +496,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.is_status(500), True)
 
     def test_request_sets_invalid_int_status_code(self):
-        with pytest.raises(InvalidHTTPStatusCode):
+        with self.assertRaises(InvalidHTTPStatusCode):
             app = App()
             app.bind('Request', self.request)
             request = app.make('Request').load_app(app)

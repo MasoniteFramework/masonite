@@ -1,7 +1,7 @@
 import glob
 import time
 
-import pytest
+ 
 from jinja2 import FileSystemLoader, PackageLoader
 
 from config import cache
@@ -150,7 +150,7 @@ class TestView(unittest.TestCase):
     def test_view_throws_exception_without_cache_binding(self):
         view = self.container.make('View')
 
-        with pytest.raises(RequiredContainerBindingNotFound):
+        with self.assertRaises(RequiredContainerBindingNotFound):
             view('test_cache').cache_for('5', 'seconds')
 
     def test_view_can_add_custom_filters(self):
@@ -206,7 +206,7 @@ class TestView(unittest.TestCase):
 
         view = self.container.make('View')
 
-        with pytest.raises(ValueError):
+        with self.assertRaises(ValueError):
             view(
                 'test_exception', {'test': 'test'}
             ).cache_for(1, 'monthss')
@@ -257,7 +257,7 @@ class TestView(unittest.TestCase):
 
     def test_throws_exception_on_incorrect_type(self):
         view = self.container.make('ViewClass')
-        with pytest.raises(ViewException):
+        with self.assertRaises(ViewException):
             assert view.render('test', {'', ''})
 
     def test_can_use_dot_templates(self):

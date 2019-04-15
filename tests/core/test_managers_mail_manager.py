@@ -1,6 +1,6 @@
 import ssl
 
-import pytest
+ 
 
 from masonite.environment import LoadEnvironment
 
@@ -58,7 +58,7 @@ class TestMailManager(unittest.TestCase):
     def test_creates_driver(self):
         mailManager = MailManager()
 
-        self.assertEqual(mailManager.load_container(self.app).manage_driver, object)
+        self.assertIsInstance(mailManager.load_container(self.app).manage_driver, object)
 
     def test_does_not_create_driver_with_initilization_container(self):
 
@@ -74,7 +74,7 @@ class TestMailManager(unittest.TestCase):
         MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):
-        with pytest.raises(DriverNotFound, message="Should raise DriverNotFound error"):
+        with self.assertRaises(DriverNotFound, message="Should raise DriverNotFound error"):
             MailManager(self.app).driver('mailtrap')
 
     def test_drivers_are_resolvable_by_container(self):

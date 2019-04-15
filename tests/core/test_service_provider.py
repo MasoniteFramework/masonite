@@ -66,6 +66,7 @@ class TestServiceProvider(unittest.TestCase):
 
     def setUp(self):
         self.app = TestSuite().create_container().container
+        self.app.resolve_parameters = True
         self.provider = ServiceProvider()
         self.provider.load_app(self.app).register()
         self.load_provider = LoadProvider()
@@ -92,7 +93,7 @@ class TestServiceProvider(unittest.TestCase):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
 
-        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))
+        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request').__class__)
 
     def test_can_load_routes_into_container(self):
         self.assertTrue(len(self.app.make('WebRoutes')) > 2)

@@ -73,15 +73,22 @@ class App:
         Returns:
             object -- Returns the object that is fetched.
         """
+        
+        print('making', name)
+        
         if name in self.providers:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
+            if inspect.isclass(obj):
+                obj = self.resolve(obj)
             return obj
         elif name in self.swaps:
             return self.swaps[name]
         elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
+            if inspect.isclass(obj):
+                obj = self.resolve(obj)
             return obj
 
         raise MissingContainerBindingNotFound(
@@ -132,8 +139,13 @@ class App:
         passing_arguments = list(resolving_arguments)
 
         for _, value in self.get_parameters(obj):
+            print('resolving', obj, 'with', value)
             if ':' in str(value):
                 provider_list.append(self._find_annotated_parameter(value))
+            elif '=' in str(value):
+                provider_list.append(value.default)
+            elif '*' in str(value):
+                continue
             elif self.resolve_parameters:
                 provider_list.append(self._find_parameter(value))
             elif resolving_arguments:
@@ -202,6 +214,7 @@ class App:
         Returns:
             object -- Returns the object found in the container.
         """
+        print('finding annotated', parameter)
         if parameter.annotation in self.swaps:
             obj = self.swaps[parameter.annotation]
             if callable(obj):
@@ -226,11 +239,11 @@ class App:
     def get_parameters(self, obj):
         return inspect.signature(obj).parameters.items()
 
-    def _find_parameter(self, parameter):
+    def _find_parameter(self, keyword):
         """Find a parameter in the container.
 
         Arguments:
-            parameter {string} -- Parameter to search for.
+            parameter {inspect.Paramater} -- Parameter to search for.
 
         Raises:
             ContainerError -- Thrown when the dependency is not found in the container.
@@ -238,13 +251,18 @@ class App:
         Returns:
             object -- Returns the object found in the container
         """
-        parameter = str(parameter)
+        parameter = str(keyword)
+        print('finding', parameter)
+
         if parameter != 'self' and parameter in self.providers:
             obj = self.providers[parameter]
             self.fire_hook('resolve', parameter, obj)
             return obj
+        elif '=' in parameter:
+            return keyword.default
+
         raise ContainerError(
-            'The dependency with the key of {0} could not be found in the container'.format(
+            'The parameter dependency with the key of {0} could not be found in the container'.format(
                 parameter)
         )
 

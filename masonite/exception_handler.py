@@ -53,7 +53,7 @@ class ExceptionHandler:
 
         if self._app.has('Exception{}Handler'.format(exception.__class__.__name__)):
 
-            return self._app.resolve(self._app.make('Exception{}Handler'.format(exception.__class__.__name__))).handle(exception)
+            return self._app.make('Exception{}Handler'.format(exception.__class__.__name__)).handle(exception)
 
         self.handle(exception)
 

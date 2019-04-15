@@ -3,7 +3,7 @@ from masonite.request import Request
 from masonite.drivers import UploadDiskDriver
 from masonite.contracts import UploadContract
 from masonite.exceptions import ContainerError, StrictContainerException
-import pytest
+ 
 import unittest
 
 
@@ -109,7 +109,7 @@ class TestContainer(unittest.TestCase):
 
     def test_container_can_bind_and_make_from_class_key(self):
         self.app.bind(MakeObject, MakeObject)
-        self.assertEqual(self.app.make(MakeObject), MakeObject)
+        self.assertIsInstance(self.app.make(MakeObject), MakeObject)
 
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']

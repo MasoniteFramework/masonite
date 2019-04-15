@@ -321,7 +321,7 @@ class App:
                 inspect.isclass(obj) and \
                 obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
 
-            for hook, hook_list in self._hooks[action].items():
+            for _, hook_list in self._hooks[action].items():
                 for hook_obj in hook_list:
                     hook_obj(obj, self)
 

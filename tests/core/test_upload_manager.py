@@ -69,7 +69,7 @@ class TestUploadManager(unittest.TestCase):
         with self.assertRaises(DriverNotFound):
             self.assertIsNone(self.app.bind(
                 'UploadManager',
-                UploadManager().load_container(self.app)
+                UploadManager(self.app).load_container(self.app)
             ))
 
     def test_upload_manager_switches_drivers(self):

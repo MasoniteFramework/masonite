@@ -8,18 +8,18 @@ from app.http.test_controllers.TestController import TestController
 from config import application, providers
 from masonite.app import App
 from masonite.exceptions import InvalidHTTPStatusCode, RouteException
-from masonite.helpers.routes import flatten_routes, get, group
+from masonite.helpers.routes import flatten_routes
 from masonite.helpers.time import cookie_expire_time
 from masonite.request import Request
 from masonite.response import Response
-from masonite.routes import Get, Route
+from masonite.routes import Get, Route, RouteGroup
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 
 WEB_ROUTES = flatten_routes([
-    get('/test', 'Controller@show').name('test'),
-    group('/a', [
-        get('/account', 'Controller@show').name('a_account'),
-    ])
+    Get('/test', 'Controller@show').name('test'),
+    RouteGroup([
+        Get('/account', 'Controller@show').name('a_account'),
+    ], prefix='/a')
 ])
 
 wsgi_request = generate_wsgi()
@@ -178,9 +178,9 @@ class TestRequest(unittest.TestCase):
 
         container.bind('Response', 'test')
         container.bind('WebRoutes', [
-            Get().route('url', None),
-            Get().route('url/', None),
-            Get().route('url/@firstname', None),
+            Get().route('url', 'TestController@show'),
+            Get().route('url/', 'TestController@show'),
+            Get().route('url/@firstname', 'TestController@show'),
         ])
 
         container.bind('Response', 'Route not found. Error 404')
@@ -256,8 +256,8 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', None).name('test.url'),
-            get('/test/url/@id', None).name('test.id')
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@show').name('test.id')
         ])
         request = app.make('Request').load_app(app)
 
@@ -272,9 +272,9 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', 'TestController@show').name('test.url'),
-            get('/test/url/@id', 'TestController@testing').name('test.id'),
-            get('/test/url/object', TestController.show).name('test.object')
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@testing').name('test.id'),
+            Get('/test/url/object', TestController.show).name('test.object')
         ])
         request = app.make('Request').load_app(app)
 
@@ -294,8 +294,8 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', None).name('test.url'),
-            get('/test/url/@id', None).name('test.id')
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@show').name('test.id')
         ])
         request = app.make('Request').load_app(app)
 
@@ -457,7 +457,7 @@ class TestRequest(unittest.TestCase):
     def test_request_sets_str_status_code(self):
         app = App()
         app.bind('Request', self.request)
-        app.bind('StatusCode', None)
+        app.bind('StatusCode', 'TestController@show')
         request = app.make('Request').load_app(app)
 
         request.status('200 OK')
@@ -525,8 +525,8 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', None).name('test.url'),
-            get('/test/url/@id', None).name('test.id')
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@show').name('test.id')
         ])
         request = app.make('Request').load_app(app)
 
@@ -540,8 +540,8 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', None).name('test.url'),
-            get('/test/url/@id', None).name('test.id')
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@show').name('test.id')
         ])
         request = app.make('Request').load_app(app)
 
@@ -552,9 +552,9 @@ class TestRequest(unittest.TestCase):
         app = App()
         app.bind('Request', self.request)
         app.bind('WebRoutes', [
-            get('/test/url', 'TestController@show').name('test.url'),
-            get('/test/url/@id', 'ControllerTest@show').name('test.id'),
-            get('/test/url/controller/@id', TestController.show).name('test.controller'),
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'ControllerTest@show').name('test.id'),
+            Get('/test/url/controller/@id', TestController.show).name('test.controller'),
         ])
 
         request = app.make('Request').load_app(app)

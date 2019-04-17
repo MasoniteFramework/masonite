@@ -142,7 +142,13 @@ class App:
 
         for _, value in self.get_parameters(obj):
             if ':' in str(value):
-                provider_list.append(self._find_annotated_parameter(value))
+                param = self._find_annotated_parameter(value)
+                print(param)
+                if inspect.isclass(param):
+                    print('is class', param)
+                    param = self.resolve(param)
+                    print('is now', param)
+                provider_list.append(param)
             elif '=' in str(value):
                 provider_list.append(value.default)
             elif '*' in str(value):

@@ -6,6 +6,8 @@ from masonite.exceptions import (DriverNotFound,
                                  MissingContainerBindingNotFound,
                                  UnacceptableDriverType)
 
+from masonite.app import App
+
 
 class Manager:
     """Base Manager Class."""
@@ -13,7 +15,7 @@ class Manager:
     config = None
     driver_prefix = None
 
-    def __init__(self, container=None):
+    def __init__(self, container: App):
         """Manager constructor.
 
         Keyword Arguments:

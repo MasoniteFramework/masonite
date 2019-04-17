@@ -10,6 +10,13 @@ import unittest
 class MockObject:
     pass
 
+class MockSelfObject:
+
+    def __init__(self):
+        self.id = 1
+
+    def get_id(self):
+        return self.id
 
 class GetObject(MockObject):
 
@@ -180,6 +187,12 @@ class TestContainer(unittest.TestCase):
 
         self.assertIsInstance(app.resolve(self._test_substitute), MakeObject)
 
+    def test_instantiates_obj(self):
+        app = App()
+        app.bind('MockSelf', MockSelfObject)
+
+        self.assertEqual(app.resolve(self._test_self_object).id, 1)
+
     def test_can_use_in_keyword(self):
         app = App()
         app.bind('test', 'value')
@@ -197,3 +210,6 @@ class TestContainer(unittest.TestCase):
 
     def _test_substitute(self, test: SubstituteThis):
         return test
+    
+    def _test_self_object(self, obj: MockSelfObject):
+        return obj

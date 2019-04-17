@@ -45,7 +45,7 @@ class TestMailManager(unittest.TestCase):
         self.app.bind('ViewClass', View(self.app))
 
     def test_mail_manager_loads_container(self):
-        mailManager = MailManager()
+        mailManager = MailManager(self.app)
         self.assertTrue(mailManager.load_container(self.app))
 
     def test_mail_manager_resolves_from_contract(self):
@@ -56,9 +56,9 @@ class TestMailManager(unittest.TestCase):
         return mail
 
     def test_creates_driver(self):
-        mailManager = MailManager()
+        mailManager = MailManager(self.app)
 
-        self.assertIsInstance(mailManager.load_container(self.app).manage_driver, object)
+        self.assertIsInstance(mailManager.manage_driver, object)
 
     def test_does_not_create_driver_with_initilization_container(self):
 

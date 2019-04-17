@@ -39,7 +39,7 @@ class TestUploadManager(unittest.TestCase):
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('Application', application)
-        self.app.bind('UploadManager', UploadManager().load_container(self.app))
+        self.app.bind('UploadManager', UploadManager)
 
     def test_upload_manager_grabs_drivers(self):
         self.assertIsInstance(self.app.make('UploadManager').driver('disk'), UploadDiskDriver)
@@ -52,6 +52,7 @@ class TestUploadManager(unittest.TestCase):
             self.app.make('UploadManager').driver(static)
 
     def test_disk_driver_creates_directory_if_not_exists(self):
+        print(self.app.make('UploadManager'))
         self.app.make('UploadManager').driver('disk').store(ImageMock(), location="storage/temp")
         self.assertTrue(os.path.exists('storage/temp'))
         shutil.rmtree('storage/temp')

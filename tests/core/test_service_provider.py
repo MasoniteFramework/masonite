@@ -93,7 +93,7 @@ class TestServiceProvider(unittest.TestCase):
         self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
 
-        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request').__class__)
+        self.assertIsInstance(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))
 
     def test_can_load_routes_into_container(self):
         self.assertTrue(len(self.app.make('WebRoutes')) > 2)

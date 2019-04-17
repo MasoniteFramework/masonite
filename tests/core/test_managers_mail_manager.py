@@ -49,7 +49,7 @@ class TestMailManager(unittest.TestCase):
         self.assertTrue(mailManager.load_container(self.app))
 
     def test_mail_manager_resolves_from_contract(self):
-        self.app.bind('MailManager', MailManager())
+        self.app.singleton('MailManager', MailManager)
         self.assertEqual(self.app.resolve(self._test_resolve), self.app.make('MailManager'))
 
     def _test_resolve(self, mail: MailManagerContract):

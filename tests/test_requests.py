@@ -268,6 +268,18 @@ class TestRequest:
         with pytest.raises(RouteException):
             assert request.route('not.exists', [1])
 
+    def test_request_route_returns_url_without_passing_args_with_current_param(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', [
+            Get('/test/url', 'TestController@show').name('test.url'),
+            Get('/test/url/@id', 'TestController@show').name('test.id')
+        ])
+        request = app.make('Request').load_app(app)
+        request.url_params = {'id': 1}
+
+        self.assertEqual(request.route('test.id'), '/test/url/1')
+
     def test_request_redirection(self):
         app = App()
         app.bind('Request', self.request)

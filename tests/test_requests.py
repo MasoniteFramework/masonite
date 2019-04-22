@@ -278,7 +278,7 @@ class TestRequest:
         request = app.make('Request').load_app(app)
         request.url_params = {'id': 1}
 
-        self.assertEqual(request.route('test.id'), '/test/url/1')
+        assert request.route('test.id') == '/test/url/1'
 
     def test_request_redirection(self):
         app = App()

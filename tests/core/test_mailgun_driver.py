@@ -1,7 +1,7 @@
 
 import os
 
-import pytest
+ 
 
 from config import mail
 from masonite import env

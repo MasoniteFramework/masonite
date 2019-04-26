@@ -12,7 +12,7 @@ if os.getenv('ABLY_SECRET'):
         def setUp(self):
             self.app = TestSuite().create_container().container
             self.app.bind('BroadcastPusherDriver', BroadcastPusherDriver)
-            self.app.bind('BroadcastManager', BroadcastManager().load_container(self.app))
+            self.app.bind('BroadcastManager', BroadcastManager)
 
         def test_broadcast_loads_into_container(self):
             self.app.bind('Broadcast', self.app.make('BroadcastManager').driver('pusher'))

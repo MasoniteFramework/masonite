@@ -13,7 +13,7 @@ class ContainerTest(ServiceProvider):
     def boot(self, request: Request, get: Get):
         return request
 
-    def testboot(self, request: Request, Get: Get):
+    def testboot(self, request: Request, get: Get):
         return request
 
 
@@ -66,6 +66,7 @@ class TestServiceProvider(unittest.TestCase):
 
     def setUp(self):
         self.app = TestSuite().create_container().container
+        self.app.resolve_parameters = True
         self.provider = ServiceProvider()
         self.provider.load_app(self.app).register()
         self.load_provider = LoadProvider()
@@ -84,12 +85,6 @@ class TestServiceProvider(unittest.TestCase):
         request = Request(generate_wsgi())
 
         self.app.bind('Request', request)
-        self.app.bind('Get', Get().route('url', None))
-
-        self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))
-
-    def test_can_call_container_with_annotation_with_self_parameter(self):
-        self.app.bind('Request', Request)
         self.app.bind('Get', Get().route('url', None))
 
         self.assertEqual(self.app.resolve(ContainerTest().testboot), self.app.make('Request'))

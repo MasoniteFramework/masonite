@@ -30,7 +30,7 @@ class TestController(unittest.TestCase):
 
         self.assertIsInstance(route.controller, ControllerTest.__class__)
         self.assertEqual(route.controller_method, 'show')
-        self.assertIsInstance(response, Request.__class__)
+        self.assertIsInstance(response, Request)
 
     def test_object_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
@@ -46,4 +46,4 @@ class TestController(unittest.TestCase):
 
         self.assertIsInstance(route.controller, ControllerTest.__class__)
         self.assertEqual(route.controller_method, 'show')
-        self.assertIsInstance(response, Request.__class__)
+        self.assertIsInstance(response, Request)

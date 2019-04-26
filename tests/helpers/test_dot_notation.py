@@ -1,4 +1,4 @@
-import pytest
+ 
 from masonite.helpers import dot, Dot as DictDot
 import unittest
 
@@ -13,7 +13,7 @@ class TestDot(unittest.TestCase):
         self.assertEqual(dot('hey.dot.another', compile_to="{1}/{.}"), "hey/dot/another")
         self.assertEqual(dot('hey.dot.another', compile_to="{1}/{.}"), "hey/dot/another")
         self.assertEqual(dot('hey.dot.another', compile_to="/{1}/{.}"), "/hey/dot/another")
-        with pytest.raises(ValueError):
+        with self.assertRaises(ValueError):
             self.assertEqual(dot('hey.dot.another', compile_to="{1}//{.}"), "hey/dot/another")
 
     def test_dict_dot(self):

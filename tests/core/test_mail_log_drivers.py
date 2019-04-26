@@ -1,5 +1,5 @@
 from config import mail
-import pytest
+ 
 import os
 
 from masonite.app import App

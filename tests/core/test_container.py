@@ -3,13 +3,20 @@ from masonite.request import Request
 from masonite.drivers import UploadDiskDriver
 from masonite.contracts import UploadContract
 from masonite.exceptions import ContainerError, StrictContainerException
-import pytest
+ 
 import unittest
 
 
 class MockObject:
     pass
 
+class MockSelfObject:
+
+    def __init__(self):
+        self.id = 1
+
+    def get_id(self):
+        return self.id
 
 class GetObject(MockObject):
 
@@ -38,18 +45,21 @@ class TestContainer(unittest.TestCase):
         self.app.bind('Request', Request(None))
         self.app.bind('MockObject', MockObject)
         self.app.bind('GetObject', GetObject)
+        self.app.bind('Container', self.app)
 
     def test_container_gets_direct_class(self):
         self.assertIsInstance(self.app.make('Request'), Request)
 
     def test_container_resolving_annotation(self):
-        self.assertIsInstance(self.app.resolve(self._function_test_annotation), MockObject.__class__)
+        self.assertIsInstance(self.app.resolve(self._function_test_annotation), MockObject)
 
     def _function_test_annotation(self, mock: MockObject):
         return mock
 
     def test_container_resolving_instance_of_object(self):
-        self.assertIsInstance(self.app.resolve(self._function_test_annotation), GetObject.__class__)
+        self.app = App()
+        self.app.bind('Get', GetObject)
+        self.assertIsInstance(self.app.resolve(self._function_test_annotation), GetObject)
 
     def test_container_resolving_similiar_objects(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
@@ -59,22 +69,22 @@ class TestContainer(unittest.TestCase):
         self.assertEqual(obj[1], 1)
 
     def _function_test_find_method_on_similiar_objects(self, user: GetAnotherObject, country: GetObject):
-        return [user().find(), country().find()]
+        return [user.find(), country.find()]
 
     def test_raises_error_when_getting_instances_of_classes(self):
         with self.assertRaises(ContainerError):
             self.assertTrue(self.app.resolve(self._function_test_find_method_on_similiar_objects))
 
     def _function_test_double_annotations(self, mock: MockObject, request: Request):
-        return {'mock': MockObject, 'request': Request}
+        return {'mock': mock, 'request': request}
 
     def test_container_resolving_multiple_annotations(self):
-        self.assertIsInstance(self.app.resolve(self._function_test_double_annotations)['mock'], MockObject.__class__)
-        self.assertIsInstance(self.app.resolve(self._function_test_double_annotations)['request'], Request.__class__)
+        self.assertIsInstance(self.app.resolve(self._function_test_double_annotations)['mock'], MockObject)
+        self.assertIsInstance(self.app.resolve(self._function_test_double_annotations)['request'], Request)
 
     def test_container_contract_returns_upload_disk_driver(self):
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
-        self.assertIsInstance(self.app.resolve(self._function_test_contracts), UploadDiskDriver.__class__)
+        self.assertIsInstance(self.app.resolve(self._function_test_contracts), UploadDiskDriver)
 
     def _function_test_contracts(self, upload: UploadContract):
         return upload
@@ -109,21 +119,19 @@ class TestContainer(unittest.TestCase):
 
     def test_container_can_bind_and_make_from_class_key(self):
         self.app.bind(MakeObject, MakeObject)
-        self.assertEqual(self.app.make(MakeObject), MakeObject)
+        self.assertIsInstance(self.app.make(MakeObject), MakeObject)
 
     def test_container_makes_from_base_class(self):
         del self.app.providers['MockObject']
-        self.assertEqual(self.app.make(MockObject), GetObject)
+        self.assertIsInstance(self.app.make(MockObject), GetObject)
 
     def test_container_has_obj(self):
         assert self.app.has('Request')
         assert self.app.has(Request)
 
     def test_container_makes_from_contract(self):
-        self.app.providers = {}
-
         self.app.bind('UploadDriver', UploadDiskDriver)
-        self.assertEqual(self.app.make(UploadContract), UploadDiskDriver)
+        self.assertIsInstance(self.app.make(UploadContract), UploadDiskDriver)
 
     def test_strict_container_raises_exception(self):
         self.app = App(strict=True)
@@ -181,6 +189,12 @@ class TestContainer(unittest.TestCase):
 
         self.assertIsInstance(app.resolve(self._test_substitute), MakeObject)
 
+    def test_instantiates_obj(self):
+        app = App()
+        app.bind('MockSelf', MockSelfObject)
+
+        self.assertEqual(app.resolve(self._test_self_object).id, 1)
+
     def test_can_use_in_keyword(self):
         app = App()
         app.bind('test', 'value')
@@ -198,3 +212,6 @@ class TestContainer(unittest.TestCase):
 
     def _test_substitute(self, test: SubstituteThis):
         return test
+    
+    def _test_self_object(self, obj: MockSelfObject):
+        return obj

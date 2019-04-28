@@ -26,6 +26,7 @@ class Dot:
             return dictionary[search]
 
         searching = search.split('.')
+        possible = None
         while len(searching) > 0:
             dic = dictionary
             for search in searching:
@@ -33,10 +34,18 @@ class Dot:
                     return default
                 dic = dic.get(search)
 
+                if isinstance(dic, str) and dic.isnumeric():
+                    continue
+
+                if dic and type(dic) is not int and len(dic) == 1 and not type(dic[list(dic)[0]]) == dict:
+                    possible = dic
+
             if not isinstance(dic, dict):
                 return dic
 
             del searching[-1]
+
+        return possible
 
     def locate(self, search_path, default=''):
         """Locate the object from the given search path
@@ -60,7 +69,7 @@ class Dot:
 
         return default
 
-    def dict_dot(self, search, dictionary, default):
+    def dict_dot(self, search, dictionary, default=''):
         """Takes a dot notation representation of a dictionary and fetches it from the dictionary.
 
         This will take something like s3.locations and look into the s3 dictionary and fetch the locations

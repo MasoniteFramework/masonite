@@ -39,3 +39,18 @@ class TestConfig(unittest.TestCase):
 
     def test_dot_dict(self):
         self.assertEqual(Dot().dict_dot('async.driver', {'async': {'driver': 'me'}}, 'you'), 'me')
+
+    def test_dict_dot_works_for_deep_dictionaries(self):
+        dictionary = {
+            'storage': {
+                'drivers': {
+                    'disk': {
+                        'location': {
+                            'uploading': 'uploads/'
+                        }
+                    }
+                }
+            }
+        }
+
+        self.assertEqual(Dot().dict_dot('storage.drivers.disk.location', dictionary)['uploading'], 'uploads/')

@@ -1,5 +1,4 @@
 import inspect
-import pytest
 
 from masonite.app import App
 from masonite.request import Request
@@ -9,6 +8,12 @@ from masonite.testsuite.TestSuite import generate_wsgi
 import unittest
 
 REQUEST = Request({}).load_environ(generate_wsgi())
+
+
+class MockMail:
+
+    def __init__(self, request: Request):
+        self.request = request
 
 
 class TestApp(unittest.TestCase):
@@ -24,6 +29,33 @@ class TestApp(unittest.TestCase):
     def test_app_makes(self):
         self.app.bind('Request', REQUEST)
         self.assertEqual(self.app.make('Request').cookies, [])
+
+    def test_app_makes_and_resolves(self):
+        self.app.bind('Request', REQUEST)
+        self.app.bind('MockMail', MockMail)
+        mockmail = self.app.make('MockMail')
+        self.assertIsInstance(mockmail.request, Request)
+
+    def test_app_makes_different_instances(self):
+        self.app.bind('MockMail', MockMail)
+        self.app.bind('Request', REQUEST)
+        m1 = self.app.make('MockMail')
+        m2 = self.app.make('MockMail')
+
+        self.assertNotEqual(id(m1), id(m2))
+    
+    def test_app_makes_singleton_instance(self):
+        self.app.bind('Request', REQUEST)
+        self.app.singleton('MockMail', MockMail)
+        m1 = self.app.make('MockMail')
+        m2 = self.app.make('MockMail')
+
+        self.assertEqual(id(m1), id(m2))
+        self.assertEqual(id(m1.request), id(m2.request))
+
+        m1.request.test = 'test'
+        self.assertEqual(m2.request.test, 'test')
+    
 
     def test_can_set_container_hook(self):
         self.app.on_bind('Request', self._func_on_bind)

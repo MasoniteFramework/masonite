@@ -30,7 +30,6 @@ PROVIDERS = [
     QueueProvider,
     CacheProvider,
     BroadcastProvider,
-    CacheProvider,
     CsrfProvider,
     HelpersProvider,
 

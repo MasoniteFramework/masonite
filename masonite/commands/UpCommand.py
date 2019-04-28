@@ -7,7 +7,7 @@ from cleo import Command
 
 class UpCommand(Command):
     """
-    Puts the sever in a maintenance state.
+    Brings the server out of maintenance state.
 
     up
     """

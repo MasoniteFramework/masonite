@@ -716,7 +716,11 @@ class Request(Extendable):
         if full:
             route = application.URL + self._get_named_route(name, params)
         else:
-            route = self._get_named_route(name, params)
+            try:
+                route = self._get_named_route(name, params)
+            except KeyError:
+                params.update(self.url_params)
+                route = self._get_named_route(name, params)
 
         if not route:
             raise RouteException("Route with the name of '{}' was not found.".format(name))

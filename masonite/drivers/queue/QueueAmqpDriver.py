@@ -86,10 +86,10 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.success('[*] Waiting to process jobs on the "{}" channel. To exit press CTRL+C'.format(
             channel))
 
-        self.channel.basic_consume(channel, self.work)
-
         if fair:
             self.channel.basic_qos(prefetch_count=1)
+
+        self.basic_consume(self.work, channel)
 
         try:
             self.channel.start_consuming()
@@ -97,6 +97,9 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             self.channel.stop_consuming()
             self.channel.close()
             self.connection.close()
+
+    def basic_consume(self, callback, queue):
+        self.channel.basic_consume(callback, queue=queue)
 
     def work(self, ch, method, properties, body):
         from wsgi import container

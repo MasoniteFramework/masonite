@@ -1,13 +1,18 @@
 
-import unittest
-from masonite.validation.Validator import Validator, required, numeric, json as vjson, length, string
 import json
+import unittest
+
+from masonite.validation.Validator import Validator
+from masonite.validation.Validator import json as vjson
+from masonite.validation.Validator import (length, none, numeric, required,
+                                           string)
+
 
 class TestValidation(unittest.TestCase):
 
     def setUp(self):
         pass
-    
+
     def test_required(self):
         validate = Validator({
             'test': 1
@@ -80,3 +85,15 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate.errors, ['text must be a string'])
 
+    def test_none(self):
+        validate = Validator({
+            'text': None
+        }, none(['text']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'text': 1
+        }, none(['text']))
+
+        self.assertEqual(validate.errors, ['text must be None'])

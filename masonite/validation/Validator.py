@@ -45,6 +45,18 @@ class string(BaseValidation):
 
         return boolean
 
+class none(BaseValidation):
+
+    def handle(self, dictionary):
+        boolean = True
+
+        for key in self.validations:
+            if key in dictionary and dictionary[key] is not None:
+                boolean = False
+                self.error('{} must be None'.format(key))
+
+        return boolean
+
 class length(BaseValidation):
 
     def __init__(self, validations, min=1, max=255):

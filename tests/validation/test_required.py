@@ -2,10 +2,11 @@
 import json
 import unittest
 
-from masonite.validation.Validator import Validator, equals, greater_than, isnt
+from masonite.validation.Validator import (Validator, contains, equals,
+                                           greater_than, in_range, is_in, isnt)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
-                                           required, string, truthy, in_range)
+                                           required, string, truthy)
 
 
 class TestValidation(unittest.TestCase):
@@ -221,12 +222,38 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate.errors, ['test must not be equal to test', 'test length must not be between 1 and 4'])
 
+    def test_contains(self):
+        validate = Validator({
+            'test': 'this is a sentence'
+        }, contains(['test'], 'this'))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'test': 'this is a not sentence'
+        }, contains(['test'], 'test'))
+
+        self.assertEqual(validate.errors, ['test must contain test'])
+
+    def test_is_in(self):
+        validate = Validator({
+            'test': 1
+        }, is_in(['test'], [1,2,3]))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'test': 1
+        }, is_in(['test'], [4, 2, 3]))
+
+        self.assertEqual(validate.errors, ['test must contain an element in [4, 2, 3]'])
+
 
 class TestDotNotationValidation(unittest.TestCase):
 
     def setUp(self):
         pass
-    
+
     def test_dot_required(self):
         validate = Validator({
             'user': {

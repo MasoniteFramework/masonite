@@ -39,7 +39,7 @@ class required(BaseValidation):
 
 class numeric(BaseValidation):
 
-    def handle(self, dictionary, negation=False):
+    def handle(self, dictionary):
         boolean = True
 
         for key in self.validations:
@@ -78,8 +78,8 @@ class none(BaseValidation):
 
 class length(BaseValidation):
 
-    def __init__(self, validations, min=1, max=255):
-        super().__init__(validations)
+    def __init__(self, validations, min=1, max=255, messages={}):
+        super().__init__(validations, messages=messages)
         if isinstance(min, str) and '..' in min:
             self.min = int(min.split('..')[0])
             self.max = int(min.split('..')[1])
@@ -102,8 +102,8 @@ class length(BaseValidation):
 
 class in_range(BaseValidation):
 
-    def __init__(self, validations, min=1, max=255):
-        super().__init__(validations)
+    def __init__(self, validations, min=1, max=255, messages={}):
+        super().__init__(validations, messages=messages)
         self.min = min
         self.max = max
 
@@ -124,8 +124,8 @@ class in_range(BaseValidation):
 
 class equals(BaseValidation):
 
-    def __init__(self, validations, value=''):
-        super().__init__(validations)
+    def __init__(self, validations, value='', messages={}):
+        super().__init__(validations, messages=messages)
         self.value = value
 
     def handle(self, dictionary):
@@ -139,11 +139,45 @@ class equals(BaseValidation):
                 self.error(key, '{} must not be equal to {}'.format(key, self.value))
         return boolean
 
+class contains(BaseValidation):
+
+    def __init__(self, validations, value='', messages={}):
+        super().__init__(validations, messages=messages)
+        self.value = value
+
+    def handle(self, dictionary):
+        boolean = True
+
+        for key in self.validations:
+            if self.value not in self.find(key, dictionary):
+                boolean = False
+                self.error(key, '{} must contain {}'.format(key, self.value))
+            elif self.negated:
+                self.error(key, '{} must not contain {}'.format(key, self.value))
+        return boolean
+
+class is_in(BaseValidation):
+
+    def __init__(self, validations, value='', messages={}):
+        super().__init__(validations, messages=messages)
+        self.value = value
+
+    def handle(self, dictionary):
+        boolean = True
+
+        for key in self.validations:
+            if self.find(key, dictionary) not in self.value:
+                boolean = False
+                self.error(key, '{} must contain an element in {}'.format(key, self.value))
+            elif self.negated:
+                self.error(key, '{} must not contain an element in {}'.format(key, self.value))
+        return boolean
+
 
 class greater_than(BaseValidation):
 
-    def __init__(self, validations, value=''):
-        super().__init__(validations)
+    def __init__(self, validations, value='', messages={}):
+        super().__init__(validations, messages=messages)
         self.value = value
 
     def handle(self, dictionary):
@@ -161,8 +195,8 @@ class greater_than(BaseValidation):
 
 class less_than(BaseValidation):
 
-    def __init__(self, validations, value=''):
-        super().__init__(validations)
+    def __init__(self, validations, value='', messages={}):
+        super().__init__(validations, messages=messages)
         self.value = value
 
     def handle(self, dictionary):
@@ -180,7 +214,7 @@ class less_than(BaseValidation):
 
 class isnt(BaseValidation):
 
-    def __init__(self, *rules, value=''):
+    def __init__(self, *rules, value='', messages={}):
         super().__init__(rules)
         self.value = value
 

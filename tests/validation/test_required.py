@@ -26,6 +26,23 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(len(validate.errors), 0)
 
+    def test_error_message_required(self):
+        validate = Validator({
+            'test': 1
+        }, required(['user', 'email'], messages={
+            'user': 'there must be a user value'
+        }))
+
+        self.assertEqual(validate.errors, ['there must be a user value', 'email is required'])
+
+        validate = Validator({
+            'test': 1
+        }, required(['user', 'email'], messages={
+            'email': 'there must be an email value'
+        }))
+
+        self.assertEqual(validate.errors, ['user is required', 'there must be an email value'])
+
     def test_numeric(self):
         validate = Validator({
             'test': 1
@@ -44,7 +61,7 @@ class TestValidation(unittest.TestCase):
             'test': 'hey'
         }, required(['notin']), numeric(['notin']))
 
-        self.assertEqual(validate.errors, ['notin is required'])
+        self.assertEqual(validate.errors, ['notin is required', 'notin must be a numeric'])
 
     def test_json(self):
         validate = Validator({
@@ -315,7 +332,7 @@ class TestDotNotationValidation(unittest.TestCase):
 
         self.assertEqual(validate.errors, ['user.description length must be between 1 and 10'])
 
-    def test_in_range(self):
+    def test_dot_in_range(self):
         validate = Validator({
             'user': {
                 'id': 1,
@@ -356,3 +373,27 @@ class TestDotNotationValidation(unittest.TestCase):
         }, equals(['user.age'], 'test1'))
 
         self.assertEqual(validate.errors, ['user.age must be equal to test1'])
+
+    def test_dot_error_message_required(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'age': 25
+            }
+        }, required(['user.description'], messages={
+            'user.description': 'You are missing a description'
+        }))
+
+        self.assertEqual(validate.errors, ['You are missing a description'])
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, required(['user.id', 'user.email', 'user.age'], messages={
+            'user.age': 'You are missing a user age'
+        }))
+
+        self.assertEqual(validate.errors, ['You are missing a user age'])

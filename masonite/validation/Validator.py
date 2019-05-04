@@ -2,13 +2,19 @@ from masonite.helpers import Dot as DictDot
 
 class BaseValidation:
 
-    def __init__(self, validations):
+    def __init__(self, validations, messages={}):
         self.errors = []
+        self.messages = messages
         # validations = ['user', 'email']
         self.validations = validations
         self.negated = False
 
-    def error(self, message):
+    def error(self, key, message):
+        # self.custom_errors = ('you need an email', 'you need a username')
+        # self.errors = []
+        if key in self.messages:
+            self.errors.append(self.messages[key])
+            return
         self.errors.append(message)
     
     def find(self, key, dictionary, default=False):
@@ -26,7 +32,7 @@ class required(BaseValidation):
         for key in self.validations:
             if not self.find(key, dictionary):
                 boolean = False
-                self.error('{} is required'.format(key))
+                self.error(key, '{} is required'.format(key))
 
         return boolean
 
@@ -39,7 +45,7 @@ class numeric(BaseValidation):
         for key in self.validations:
             if not str(self.find(key, dictionary)).isdigit():
                 boolean = False
-                self.error('{} must be a numeric'.format(key))
+                self.error(key, '{} must be a numeric'.format(key))
 
         return boolean
 
@@ -52,7 +58,7 @@ class string(BaseValidation):
         for key in self.validations:
             if key in dictionary and not isinstance(dictionary[key], str):
                 boolean = False
-                self.error('{} must be a string'.format(key))
+                self.error(key, '{} must be a string'.format(key))
 
         return boolean
 
@@ -65,7 +71,7 @@ class none(BaseValidation):
         for key in self.validations:
             if self.find(key, dictionary) is not None:
                 boolean = False
-                self.error('{} must be None'.format(key))
+                self.error(key, '{} must be None'.format(key))
 
         return boolean
 
@@ -88,9 +94,9 @@ class length(BaseValidation):
             found = self.find(key, dictionary)
             if len(str(found)) < self.min or len(str(found)) > self.max:
                 boolean = False
-                self.error('{} length must be between {} and {}'.format(key, self.min, self.max))
+                self.error(key, '{} length must be between {} and {}'.format(key, self.min, self.max))
             elif self.negated:
-                self.error('{} length must not be between {} and {}'.format(key, self.min, self.max))
+                self.error(key, '{} length must not be between {} and {}'.format(key, self.min, self.max))
         return boolean
 
 
@@ -108,10 +114,10 @@ class in_range(BaseValidation):
             found = self.find(key, dictionary)
             if found < self.min or found > self.max:
                 boolean = False
-                self.error('{} must be between {} and {}'.format(key, self.min, self.max))
+                self.error(key, '{} must be between {} and {}'.format(key, self.min, self.max))
             elif self.negated:
                 print('its negated')
-                self.error('{} must not be between {} and {}'.format(key, self.min, self.max))
+                self.error(key, '{} must not be between {} and {}'.format(key, self.min, self.max))
 
         return boolean
 
@@ -128,9 +134,9 @@ class equals(BaseValidation):
         for key in self.validations:
             if self.find(key, dictionary) != self.value:
                 boolean = False
-                self.error('{} must be equal to {}'.format(key, self.value))
+                self.error(key, '{} must be equal to {}'.format(key, self.value))
             elif self.negated:
-                self.error('{} must not be equal to {}'.format(key, self.value))
+                self.error(key, '{} must not be equal to {}'.format(key, self.value))
         return boolean
 
 
@@ -146,9 +152,9 @@ class greater_than(BaseValidation):
         for key in self.validations:
             if key in dictionary and not dictionary[key] > self.value:
                 boolean = False
-                self.error('{} must be greater than {}'.format(key, self.value))
+                self.error(key, '{} must be greater than {}'.format(key, self.value))
             elif self.negated:
-                self.error('{} must not be greater than {}'.format(key, self.value))
+                self.error(key, '{} must not be greater than {}'.format(key, self.value))
 
         return boolean
 
@@ -165,9 +171,9 @@ class less_than(BaseValidation):
         for key in self.validations:
             if key in dictionary and not dictionary[key] < self.value:
                 boolean = False
-                self.error('{} must be less than {}'.format(key, self.value))
+                self.error(key, '{} must be less than {}'.format(key, self.value))
             elif self.negated:
-                self.error('{} must not be less than {}'.format(key, self.value))
+                self.error(key, '{} must not be less than {}'.format(key, self.value))
 
         return boolean
 
@@ -192,7 +198,7 @@ class truthy(BaseValidation):
         for key in self.validations:
             if key in dictionary and not dictionary[key]:
                 boolean = False
-                self.error('{} must be a truthy value'.format(key))
+                self.error(key, '{} must be a truthy value'.format(key))
 
         return boolean
 
@@ -206,11 +212,11 @@ class json(BaseValidation):
             for key in self.validations:
                 if not json.loads(self.find(key, dictionary)):
                     boolean = False
-                    self.error('{} must be json'.format(key))
+                    self.error(key, '{} must be json'.format(key))
 
             return boolean
         except (TypeError, json.decoder.JSONDecodeError):
-            self.error('{} must be json'.format(key))
+            self.error(key, '{} must be json'.format(key))
             return False
 
 

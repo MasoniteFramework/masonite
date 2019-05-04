@@ -74,6 +74,23 @@ class length(BaseValidation):
 
         return boolean
 
+class vrange(BaseValidation):
+
+    def __init__(self, validations, min=1, max=255):
+        super().__init__(validations)
+        self.min = min
+        self.max = max
+
+    def handle(self, dictionary, negation=False):
+        boolean = True
+
+        for key in self.validations:
+            if key in dictionary and (dictionary[key] < self.min or dictionary[key] > self.max):
+                boolean = False
+                self.error('{} must be between {} and {}'.format(key, self.min, self.max))
+
+        return boolean
+
 class equals(BaseValidation):
 
     def __init__(self, validations, value=''):

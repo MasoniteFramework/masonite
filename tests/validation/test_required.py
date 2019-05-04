@@ -2,8 +2,9 @@
 import json
 import unittest
 
-from masonite.validation.Validator import (Validator, contains, equals,
-                                           greater_than, in_range, is_in, isnt)
+from masonite.validation.Validator import (Validator, accepted, contains,
+                                           equals, greater_than, in_range,
+                                           is_in, isnt, when)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            required, string, truthy)
@@ -26,6 +27,34 @@ class TestValidation(unittest.TestCase):
         }, required(['test']))
 
         self.assertEqual(len(validate.errors), 0)
+
+    def test_accepted(self):
+        validate = Validator({
+            'terms': 'on'
+        }, accepted(['terms']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'terms': 'test'
+        }, accepted(['terms']))
+
+        self.assertEqual(validate.errors, ['terms must be yes, on, 1 or true'])
+
+    def test_conditional(self):
+        validate = Validator({
+            'terms': 'on'
+        }, when(accepted(['terms'])).then(
+            required(['user'])
+        ))
+
+        self.assertEqual(validate.errors, ['user is required'])
+
+        # validate = Validator({
+        #     'terms': 'test'
+        # }, accepted(['terms']))
+
+        # self.assertEqual(validate.errors, ['terms must be yes, on, 1 or true'])
 
     def test_error_message_required(self):
         validate = Validator({

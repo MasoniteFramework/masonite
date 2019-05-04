@@ -1,5 +1,6 @@
 from masonite.helpers import Dot as DictDot
 
+
 class BaseValidation:
 
     def __init__(self, validations, messages={}):
@@ -16,7 +17,7 @@ class BaseValidation:
             self.errors.append(self.messages[key])
             return
         self.errors.append(message)
-    
+
     def find(self, key, dictionary, default=False):
         return DictDot().dot(key, dictionary, default)
 
@@ -33,6 +34,19 @@ class required(BaseValidation):
             if not self.find(key, dictionary):
                 boolean = False
                 self.error(key, '{} is required'.format(key))
+
+        return boolean
+
+
+class accepted(BaseValidation):
+
+    def handle(self, dictionary):
+        boolean = True
+        for key in self.validations:
+            found = self.find(key, dictionary)
+            if found != True and found != 'on' and found != 'yes' and found != '1' and found != 1:
+                boolean = False
+                self.error(key, '{} must be yes, on, 1 or true'.format(key))
 
         return boolean
 
@@ -139,6 +153,7 @@ class equals(BaseValidation):
                 self.error(key, '{} must not be equal to {}'.format(key, self.value))
         return boolean
 
+
 class contains(BaseValidation):
 
     def __init__(self, validations, value='', messages={}):
@@ -155,6 +170,7 @@ class contains(BaseValidation):
             elif self.negated:
                 self.error(key, '{} must not contain {}'.format(key, self.value))
         return boolean
+
 
 class is_in(BaseValidation):
 
@@ -214,14 +230,35 @@ class less_than(BaseValidation):
 
 class isnt(BaseValidation):
 
-    def __init__(self, *rules, value='', messages={}):
+    def __init__(self, *rules, messages={}):
         super().__init__(rules)
-        self.value = value
 
     def handle(self, dictionary):
         for rule in self.validations:
             if rule.negate().handle(dictionary):
                 self.errors += rule.errors
+
+
+class when(BaseValidation):
+
+    def __init__(self, *rules, messages={}):
+        super().__init__(rules)
+        self.should_run_then = True
+
+    def handle(self, dictionary):
+        self.dictionary = dictionary
+        for rule in self.validations:
+            if not rule.handle(dictionary):
+                self.errors += rule.errors
+
+        if not self.errors:
+            for rule in self.then_rules:
+                if not rule.handle(dictionary):
+                    self.errors += rule.errors
+
+    def then(self, *rules):
+        self.then_rules = rules
+        return self
 
 
 class truthy(BaseValidation):

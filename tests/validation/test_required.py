@@ -5,7 +5,7 @@ import unittest
 from masonite.validation.Validator import Validator
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, none, numeric, required,
-                                           string, equals, truthy, vrange)
+                                           string, equals, truthy, vrange, greater_than)
 
 
 class TestValidation(unittest.TestCase):
@@ -142,3 +142,16 @@ class TestValidation(unittest.TestCase):
         }, vrange(['text'], min=25, max=72))
 
         self.assertEqual(validate.errors, ['text must be between 25 and 72'])
+
+    def test_greater_than(self):
+        validate = Validator({
+            'text': 52
+        }, greater_than(['text'], 25))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'text': 101
+        }, greater_than(['text'], 150))
+
+        self.assertEqual(validate.errors, ['text must be greater than 150'])

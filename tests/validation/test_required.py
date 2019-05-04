@@ -310,3 +310,45 @@ class TestDotNotationValidation(unittest.TestCase):
         }, length(['user.description'], min=1, max=10))
 
         self.assertEqual(validate.errors, ['user.description length must be between 1 and 10'])
+
+    def test_in_range(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'age': 25
+            }
+        }, in_range(['user.age'], min=25, max=72))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'age': 25
+            }
+        }, in_range(['user.age'], min=27, max=72))
+
+        self.assertEqual(validate.errors, ['user.age must be between 27 and 72'])
+
+    def test_dot_equals(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'age': 25
+            }
+        }, equals(['user.age'], 25))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'age': 25
+            }
+        }, equals(['user.age'], 'test1'))
+
+        self.assertEqual(validate.errors, ['user.age must be equal to test1'])

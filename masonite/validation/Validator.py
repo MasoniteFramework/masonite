@@ -105,7 +105,8 @@ class in_range(BaseValidation):
         boolean = True
 
         for key in self.validations:
-            if key in dictionary and (dictionary[key] < self.min or dictionary[key] > self.max):
+            found = self.find(key, dictionary)
+            if found < self.min or found > self.max:
                 boolean = False
                 self.error('{} must be between {} and {}'.format(key, self.min, self.max))
             elif self.negated:
@@ -125,7 +126,7 @@ class equals(BaseValidation):
         boolean = True
 
         for key in self.validations:
-            if key in dictionary and dictionary[key] != self.value:
+            if self.find(key, dictionary) != self.value:
                 boolean = False
                 self.error('{} must be equal to {}'.format(key, self.value))
             elif self.negated:

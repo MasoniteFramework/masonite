@@ -4,6 +4,7 @@ class BaseValidation:
         self.errors = []
         # validations = ['user', 'email']
         self.validations = validations
+        self.negated = False
 
     def error(self, message):
         self.errors.append(message)
@@ -74,7 +75,7 @@ class length(BaseValidation):
 
         return boolean
 
-class vrange(BaseValidation):
+class in_range(BaseValidation):
 
     def __init__(self, validations, min=1, max=255):
         super().__init__(validations)
@@ -88,6 +89,9 @@ class vrange(BaseValidation):
             if key in dictionary and (dictionary[key] < self.min or dictionary[key] > self.max):
                 boolean = False
                 self.error('{} must be between {} and {}'.format(key, self.min, self.max))
+            elif self.negated:
+                print('its negated')
+                self.error('{} must not be between {} and {}'.format(key, self.min, self.max))
 
         return boolean
 
@@ -136,8 +140,24 @@ class less_than(BaseValidation):
             if key in dictionary and not dictionary[key] < self.value:
                 boolean = False
                 self.error('{} must be less than {}'.format(key, self.value))
+            elif self.negated:
+                self.error('{} must not be less than {}'.format(key, self.value))
 
         return boolean
+
+class isnt(BaseValidation):
+
+    def __init__(self, *rules, value=''):
+        super().__init__(rules)
+        self.value = value
+
+    def handle(self, dictionary):
+        for rule in self.validations:
+            print(rule, rule.handle(dictionary))
+            rule.negated = True
+            if rule.handle(dictionary):
+                self.errors += rule.errors
+
 
 class truthy(BaseValidation):
 
@@ -177,4 +197,5 @@ class Validator:
     def validate(self, dictionary, *rules):
         for rule in rules:
             if not rule.handle(dictionary):
+                print('rule errors', rule, rule.errors)
                 self.errors += rule.errors

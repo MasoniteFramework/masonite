@@ -2,10 +2,10 @@
 import json
 import unittest
 
-from masonite.validation.Validator import Validator
+from masonite.validation.Validator import Validator, equals, greater_than, isnt
 from masonite.validation.Validator import json as vjson
-from masonite.validation.Validator import (length, none, numeric, required,
-                                           string, equals, truthy, vrange, greater_than, less_than)
+from masonite.validation.Validator import (length, less_than, none, numeric,
+                                           required, string, truthy, in_range)
 
 
 class TestValidation(unittest.TestCase):
@@ -130,16 +130,16 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate.errors, ['text must be a truthy value'])
 
-    def test_vrange(self):
+    def test_in_range(self):
         validate = Validator({
             'text': 52
-        }, vrange(['text'], min=25, max=72))
+        }, in_range(['text'], min=25, max=72))
 
         self.assertEqual(len(validate.errors), 0)
 
         validate = Validator({
             'text': 101
-        }, vrange(['text'], min=25, max=72))
+        }, in_range(['text'], min=25, max=72))
 
         self.assertEqual(validate.errors, ['text must be between 25 and 72'])
 
@@ -168,3 +168,21 @@ class TestValidation(unittest.TestCase):
         }, less_than(['text'], 75))
 
         self.assertEqual(validate.errors, ['text must be less than 75'])
+
+    def test_isnt(self):
+        validate = Validator({
+            'test': 50
+        }, isnt(
+            in_range(['test'], min=10, max=20)
+        )
+        )
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'test': 15
+        }, isnt(
+            in_range(['test'], min=10, max=20))
+        )
+
+        self.assertEqual(validate.errors, ['test must not be between 10 and 20'])

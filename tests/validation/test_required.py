@@ -212,13 +212,17 @@ class TestDotNotationValidation(unittest.TestCase):
     
     def test_dot_required(self):
         validate = Validator({
-            'user': {'email': 'user@example.com'}
+            'user': {
+                'email': 'user@example.com'
+            }
         }, required(['user.id']))
 
         self.assertEqual(validate.errors, ['user.id is required'])
 
         validate = Validator({
-            'user': {'id': 1}
+            'user': {
+                'id': 1
+            }
         }, required(['user.id']))
 
         self.assertEqual(len(validate.errors), 0)

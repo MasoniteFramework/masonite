@@ -9,6 +9,11 @@ class BaseValidation:
     def error(self, message):
         self.errors.append(message)
 
+    def negate(self):
+        self.negated = True
+        return self
+
+
 class required(BaseValidation):
 
     def handle(self, dictionary):
@@ -33,7 +38,7 @@ class numeric(BaseValidation):
 
         return boolean
 
-    
+
 class string(BaseValidation):
 
     def handle(self, dictionary):
@@ -46,6 +51,7 @@ class string(BaseValidation):
 
         return boolean
 
+
 class none(BaseValidation):
 
     def handle(self, dictionary):
@@ -57,6 +63,7 @@ class none(BaseValidation):
                 self.error('{} must be None'.format(key))
 
         return boolean
+
 
 class length(BaseValidation):
 
@@ -72,8 +79,10 @@ class length(BaseValidation):
             if key in dictionary and (len(dictionary[key]) < self.min or len(dictionary[key]) > self.max):
                 boolean = False
                 self.error('{} length must be between {} and {}'.format(key, self.min, self.max))
-
+            elif self.negated:
+                self.error('{} length must not be between {} and {}'.format(key, self.min, self.max))
         return boolean
+
 
 class in_range(BaseValidation):
 
@@ -95,6 +104,7 @@ class in_range(BaseValidation):
 
         return boolean
 
+
 class equals(BaseValidation):
 
     def __init__(self, validations, value=''):
@@ -108,8 +118,10 @@ class equals(BaseValidation):
             if key in dictionary and dictionary[key] != self.value:
                 boolean = False
                 self.error('{} must be equal to {}'.format(key, self.value))
-
+            elif self.negated:
+                self.error('{} must not be equal to {}'.format(key, self.value))
         return boolean
+
 
 class greater_than(BaseValidation):
 
@@ -124,8 +136,11 @@ class greater_than(BaseValidation):
             if key in dictionary and not dictionary[key] > self.value:
                 boolean = False
                 self.error('{} must be greater than {}'.format(key, self.value))
+            elif self.negated:
+                self.error('{} must not be greater than {}'.format(key, self.value))
 
         return boolean
+
 
 class less_than(BaseValidation):
 
@@ -145,6 +160,7 @@ class less_than(BaseValidation):
 
         return boolean
 
+
 class isnt(BaseValidation):
 
     def __init__(self, *rules, value=''):
@@ -153,9 +169,7 @@ class isnt(BaseValidation):
 
     def handle(self, dictionary):
         for rule in self.validations:
-            print(rule, rule.handle(dictionary))
-            rule.negated = True
-            if rule.handle(dictionary):
+            if rule.negate().handle(dictionary):
                 self.errors += rule.errors
 
 
@@ -171,6 +185,7 @@ class truthy(BaseValidation):
 
         return boolean
 
+
 class json(BaseValidation):
 
     def handle(self, dictionary):
@@ -181,7 +196,7 @@ class json(BaseValidation):
                 if key in dictionary and not json.loads(dictionary[key]):
                     boolean = False
                     self.error('{} must be json'.format(key))
-            
+
             return boolean
         except (TypeError, json.decoder.JSONDecodeError):
             self.error('{} must be json'.format(key))

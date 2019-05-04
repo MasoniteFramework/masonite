@@ -186,3 +186,14 @@ class TestValidation(unittest.TestCase):
         )
 
         self.assertEqual(validate.errors, ['test must not be between 10 and 20'])
+
+    def test_isnt_equals(self):
+        validate = Validator({
+            'test': 'test'
+        }, isnt(
+            equals(['test'], 'test'),
+            length(['test'], min=1, max=4)
+        )
+        )
+
+        self.assertEqual(validate.errors, ['test must not be equal to test', 'test length must not be between 1 and 4'])

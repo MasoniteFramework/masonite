@@ -74,6 +74,34 @@ class length(BaseValidation):
 
         return boolean
 
+class equals(BaseValidation):
+
+    def __init__(self, validations, value=''):
+        super().__init__(validations)
+        self.value = value
+
+    def handle(self, dictionary):
+        boolean = True
+
+        for key in self.validations:
+            if key in dictionary and dictionary[key] != self.value:
+                boolean = False
+                self.error('{} must be equal to {}'.format(key, self.value))
+
+        return boolean
+
+class truthy(BaseValidation):
+
+    def handle(self, dictionary):
+        boolean = True
+
+        for key in self.validations:
+            if key in dictionary and not dictionary[key]:
+                boolean = False
+                self.error('{} must be a truthy value'.format(key))
+
+        return boolean
+
 class json(BaseValidation):
 
     def handle(self, dictionary):

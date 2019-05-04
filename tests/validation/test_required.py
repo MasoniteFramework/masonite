@@ -5,7 +5,7 @@ import unittest
 from masonite.validation.Validator import Validator
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, none, numeric, required,
-                                           string)
+                                           string, equals, truthy)
 
 
 class TestValidation(unittest.TestCase):
@@ -97,3 +97,35 @@ class TestValidation(unittest.TestCase):
         }, none(['text']))
 
         self.assertEqual(validate.errors, ['text must be None'])
+
+    def test_equals(self):
+        validate = Validator({
+            'text': 'test1'
+        }, equals(['text'], 'test1'))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'text': 'test2'
+        }, equals(['text'], 'test1'))
+
+        self.assertEqual(validate.errors, ['text must be equal to test1'])
+
+    def test_truthy(self):
+        validate = Validator({
+            'text': 'value'
+        }, truthy(['text']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'text': 1
+        }, truthy(['text']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'text': False
+        }, truthy(['text']))
+
+        self.assertEqual(validate.errors, ['text must be a truthy value'])

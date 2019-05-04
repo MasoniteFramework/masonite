@@ -6,13 +6,10 @@ class BaseValidation:
     def __init__(self, validations, messages={}):
         self.errors = []
         self.messages = messages
-        # validations = ['user', 'email']
         self.validations = validations
         self.negated = False
 
     def error(self, key, message):
-        # self.custom_errors = ('you need an email', 'you need a username')
-        # self.errors = []
         if key in self.messages:
             self.errors.append(self.messages[key])
             return

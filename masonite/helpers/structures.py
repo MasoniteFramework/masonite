@@ -23,7 +23,10 @@ class Dot:
             if search == '':
                 return dictionary
             # print('search', search, 'dictionary', dictionary)
-            return dictionary[search]
+            try:
+                return dictionary[search]
+            except KeyError:
+                return default
 
         searching = search.split('.')
         possible = None

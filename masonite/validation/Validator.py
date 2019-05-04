@@ -1,3 +1,5 @@
+from masonite.helpers import Dot as DictDot
+
 class BaseValidation:
 
     def __init__(self, validations):
@@ -8,6 +10,9 @@ class BaseValidation:
 
     def error(self, message):
         self.errors.append(message)
+    
+    def find(self, key, dictionary, default=False):
+        return DictDot().dot(key, dictionary, default)
 
     def negate(self):
         self.negated = True
@@ -19,7 +24,7 @@ class required(BaseValidation):
     def handle(self, dictionary):
         boolean = True
         for key in self.validations:
-            if not key in dictionary:
+            if not self.find(key, dictionary):
                 boolean = False
                 self.error('{} is required'.format(key))
 
@@ -32,7 +37,7 @@ class numeric(BaseValidation):
         boolean = True
 
         for key in self.validations:
-            if key in dictionary and not str(dictionary[key]).isdigit():
+            if not str(self.find(key, dictionary)).isdigit():
                 boolean = False
                 self.error('{} must be a numeric'.format(key))
 
@@ -69,8 +74,12 @@ class length(BaseValidation):
 
     def __init__(self, validations, min=1, max=255):
         super().__init__(validations)
-        self.min = min
-        self.max = max
+        if isinstance(min, str) and '..' in min:
+            self.min = int(min.split('..')[0])
+            self.max = int(min.split('..')[1])
+        else:
+            self.min = min
+            self.max = max
 
     def handle(self, dictionary, negation=False):
         boolean = True

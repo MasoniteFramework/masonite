@@ -67,6 +67,12 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(len(validate.errors), 0)
 
         validate = Validator({
+            'json': 'hey'
+        }, length(['json'], '1..10'))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
             'json': 'this is a really long string'
         }, length(['json'], min=1, max=10))
 
@@ -197,3 +203,60 @@ class TestValidation(unittest.TestCase):
         )
 
         self.assertEqual(validate.errors, ['test must not be equal to test', 'test length must not be between 1 and 4'])
+
+
+class TestDotNotationValidation(unittest.TestCase):
+
+    def setUp(self):
+        pass
+    
+    def test_dot_required(self):
+        validate = Validator({
+            'user': {'email': 'user@example.com'}
+        }, required(['user.id']))
+
+        self.assertEqual(validate.errors, ['user.id is required'])
+
+        validate = Validator({
+            'user': {'id': 1}
+        }, required(['user.id']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+    def test_dot_numeric(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, numeric(['user.id']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, numeric(['user.email']))
+
+        self.assertEqual(validate.errors, ['user.email must be a numeric'])
+
+    def test_dot_several_tests(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, required(['user.id', 'user.email']), numeric(['user.id']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, required(['user.id', 'user.email']), numeric(['user.email']))
+
+        self.assertEqual(validate.errors, ['user.email must be a numeric'])

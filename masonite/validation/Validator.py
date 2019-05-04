@@ -55,6 +55,9 @@ class required(BaseValidation):
     def message(self, key):
         return '{} is required'.format(key)
 
+    def negated_message(self, key):
+        return '{} is not required'.format(key)
+
 
 class accepted(BaseValidation):
 
@@ -63,6 +66,9 @@ class accepted(BaseValidation):
 
     def message(self, attribute):
         return '{} terms must be yes, on, 1 or true'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} terms must not be yes, on, 1 or true'.format(attribute)
 
 
 class numeric(BaseValidation):
@@ -73,6 +79,9 @@ class numeric(BaseValidation):
     def message(self, attribute):
         return '{} must be a numeric'.format(attribute)
 
+    def negated_message(self, attribute):
+        return '{} must not be a numeric'.format(attribute)
+
 
 class string(BaseValidation):
 
@@ -81,6 +90,9 @@ class string(BaseValidation):
 
     def message(self, attribute):
         return '{} must be a string'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a string'.format(attribute)
 
 
 class none(BaseValidation):
@@ -91,6 +103,8 @@ class none(BaseValidation):
     def message(self, attribute):
         return '{} must be None'.format(attribute)
 
+    def negated_message(self, attribute):
+        return '{} must not be None'.format(attribute)
 
 class length(BaseValidation):
 
@@ -157,6 +171,9 @@ class contains(BaseValidation):
     def message(self, attribute):
         return '{} must contain {}'.format(attribute, self.value)
 
+    def negated_message(self, attribute):
+        return '{} must not contain {}'.format(attribute, self.value)
+
 
 class is_in(BaseValidation):
 
@@ -169,6 +186,9 @@ class is_in(BaseValidation):
 
     def message(self, attribute):
         return '{} must contain an element in {}'.format(attribute, self.value)
+
+    def negated_message(self, attribute):
+        return '{} must not contain an element in {}'.format(attribute, self.value)
 
 
 class greater_than(BaseValidation):
@@ -183,6 +203,9 @@ class greater_than(BaseValidation):
     def message(self, attribute):
         return '{} must be greater than {}'.format(attribute, self.value)
 
+    def negated_message(self, attribute):
+        return '{} must be greater than {}'.format(attribute, self.value)
+
 
 class less_than(BaseValidation):
 
@@ -195,6 +218,9 @@ class less_than(BaseValidation):
 
     def message(self, attribute):
         return '{} must be less than {}'.format(attribute, self.value)
+
+    def negated_message(self, attribute):
+        return '{} must not be less than {}'.format(attribute, self.value)
 
 
 class isnt(BaseValidation):
@@ -238,6 +264,9 @@ class truthy(BaseValidation):
     def message(self, attribute):
         return '{} must be a truthy value'.format(attribute)
 
+    def negated_message(self, attribute):
+        return '{} must not be a truthy value'.format(attribute)
+
 
 class json(BaseValidation):
 
@@ -250,6 +279,9 @@ class json(BaseValidation):
 
     def message(self, attribute):
         return '{} must be json'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be json'.format(attribute)
 
 
 class Validator:

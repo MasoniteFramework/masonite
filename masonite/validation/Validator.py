@@ -63,7 +63,7 @@ class none(BaseValidation):
         boolean = True
 
         for key in self.validations:
-            if key in dictionary and dictionary[key] is not None:
+            if self.find(key, dictionary) is not None:
                 boolean = False
                 self.error('{} must be None'.format(key))
 
@@ -85,7 +85,8 @@ class length(BaseValidation):
         boolean = True
 
         for key in self.validations:
-            if key in dictionary and (len(dictionary[key]) < self.min or len(dictionary[key]) > self.max):
+            found = self.find(key, dictionary)
+            if len(str(found)) < self.min or len(str(found)) > self.max:
                 boolean = False
                 self.error('{} length must be between {} and {}'.format(key, self.min, self.max))
             elif self.negated:
@@ -202,7 +203,7 @@ class json(BaseValidation):
         boolean = True
         try:
             for key in self.validations:
-                if key in dictionary and not json.loads(dictionary[key]):
+                if not json.loads(self.find(key, dictionary)):
                     boolean = False
                     self.error('{} must be json'.format(key))
 

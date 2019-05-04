@@ -260,3 +260,53 @@ class TestDotNotationValidation(unittest.TestCase):
         }, required(['user.id', 'user.email']), numeric(['user.email']))
 
         self.assertEqual(validate.errors, ['user.email must be a numeric'])
+
+    def test_dot_json(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, vjson(['user.id']))
+
+        self.assertEqual(validate.errors, ['user.id must be json'])
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'payload': json.dumps({'test': 'key'})
+            }
+        }, vjson(['user.payload']))
+
+        self.assertEqual(len(validate.errors), 0)
+
+    def test_dot_length(self):
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com'
+            }
+        }, length(['user.id'], min=1, max=10))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'description': 'this is a really long description'
+            }
+        }, length(['user.id'], '1..10'))
+
+        self.assertEqual(len(validate.errors), 0)
+
+        validate = Validator({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'description': 'this is a really long description'
+            }
+        }, length(['user.description'], min=1, max=10))
+
+        self.assertEqual(validate.errors, ['user.description length must be between 1 and 10'])

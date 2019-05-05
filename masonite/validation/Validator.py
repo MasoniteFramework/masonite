@@ -102,6 +102,41 @@ class accepted(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
 
+class email(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import re
+        return re.compile(r"^[^.].+@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$").match(attribute)
+
+    def message(self, attribute):
+        return '{} must be a valid email address'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a valid email address'.format(attribute)
+
+class active_domain(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import socket
+        try:
+            if '@' in attribute:
+                # validation is for an email address
+                return socket.gethostbyname(
+                    attribute.split('@')[1]
+                )
+
+            return socket.gethostbyname(
+                attribute.replace('https://', '').replace('http://', '').replace('www.', '')
+            )
+        except socket.gaierror:
+            return False
+
+    def message(self, attribute):
+        return '{} must be an active domain name'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be an active domain name'.format(attribute)
+
 
 class numeric(BaseValidation):
 
@@ -353,8 +388,10 @@ class ValidationFactory:
     def __init__(self):
         self.register(
             accepted,
+            active_domain,
             contains,
             equals,
+            email,
             greater_than,
             in_range,
             is_in,

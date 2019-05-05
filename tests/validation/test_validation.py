@@ -5,8 +5,9 @@ import unittest
 from masonite.app import App
 from masonite.providers import ValidationProvider
 from masonite.validation.Validator import (ValidationFactory, Validator,
-                                           accepted, contains, equals,
-                                           greater_than, in_range, is_in, isnt)
+                                           accepted, active_domain, contains,
+                                           email, equals, greater_than,
+                                           in_range, is_in, isnt)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            required, string, truthy, when)
@@ -39,6 +40,35 @@ class TestValidation(unittest.TestCase):
         }, v.numeric(['test']))
 
         self.assertEqual(len(validate), 0)
+
+    def test_email(self):
+        validate = Validator().validate({
+            'email': 'user@example.com'
+        }, email(['email']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'email': 'user'
+        }, email(['email']))
+
+        self.assertEqual(validate, ['email must be a valid email address'])
+
+    def test_active_domain(self):
+        validate = Validator().validate({
+            'domain1': 'google.com',
+            'domain2': 'http://google.com',
+            'domain3': 'https://www.google.com',
+            'email': 'admin@gmail.com'
+        }, active_domain(['domain1', 'domain2', 'domain3', 'email']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'domain1': 'domain',
+        }, active_domain(['domain1']))
+
+        self.assertEqual(validate, ['domain1 must be an active domain name'])
 
     def test_accepted(self):
         validate = Validator().validate({

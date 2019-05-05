@@ -24,6 +24,7 @@ setup(
         'masonite.helpers',
         'masonite.middleware',
         'masonite.testing',
+        'masonite.validation',
     ],
     version=VERSION,
     install_requires=[

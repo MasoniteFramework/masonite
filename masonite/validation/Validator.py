@@ -321,14 +321,15 @@ class json(BaseValidation):
 class Validator:
 
     def __init__(self):
-        self.errors = []
+        pass
 
     def validate(self, dictionary, *rules):
+        errors = []
         for rule in rules:
             rule.handle(dictionary)
-            self.errors += rule.errors
+            errors += rule.errors
 
-        return self
+        return errors
 
     def extend(self, key, obj=None):
         if isinstance(key, dict):
@@ -351,23 +352,22 @@ class ValidationFactory:
 
     def __init__(self):
         self.register(
-            required,
-            json,
             accepted,
-            numeric,
-            string,
-            none,
-            in_range,
-            length,
-            equals,
             contains,
-            is_in,
+            equals,
             greater_than,
-            less_than,
+            in_range,
+            is_in,
             isnt,
-            when,
+            json,
+            length,
+            less_than,
+            none,
+            numeric,
+            required,
+            string,
             truthy,
-            json
+            when,
         )
 
     def register(self, *cls):

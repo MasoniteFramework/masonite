@@ -3,11 +3,12 @@ from masonite.helpers import Dot as DictDot
 
 class BaseValidation:
 
-    def __init__(self, validations, messages={}):
+    def __init__(self, validations, messages={}, raises={}):
         self.errors = []
         self.messages = messages
         self.validations = validations
         self.negated = False
+        self.raises = raises
 
     def passes(self, attribute, key, dictionary):
         return True
@@ -27,6 +28,13 @@ class BaseValidation:
     def negate(self):
         self.negated = True
         return self
+    
+    def raise_exception(self, key):
+        if self.raises is not True and key in self.raises:
+            error = self.raises.get(key)
+            raise error(self.errors[0])
+        
+        raise ValueError(self.errors[0])
 
     def handle(self, dictionary):
         boolean = True
@@ -43,6 +51,9 @@ class BaseValidation:
             if not self.passes(self.find(key, dictionary), key, dictionary):
                 boolean = False
                 self.error(key, self.message(key))
+            
+            if self.errors and self.raises:
+                return self.raise_exception(key)
 
         return boolean
 
@@ -190,8 +201,8 @@ class none(BaseValidation):
 
 class length(BaseValidation):
 
-    def __init__(self, validations, min=1, max=999999, messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, min=1, max=999999, messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         if isinstance(min, str) and '..' in min:
             self.min = int(min.split('..')[0])
             self.max = int(min.split('..')[1])
@@ -211,8 +222,8 @@ class length(BaseValidation):
 
 class in_range(BaseValidation):
 
-    def __init__(self, validations, min=1, max=255, messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, min=1, max=255, messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.min = min
         self.max = max
 
@@ -228,8 +239,8 @@ class in_range(BaseValidation):
 
 class equals(BaseValidation):
 
-    def __init__(self, validations, value='', messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, value='', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.value = value
 
     def passes(self, attribute, key, dictionary):
@@ -244,8 +255,8 @@ class equals(BaseValidation):
 
 class contains(BaseValidation):
 
-    def __init__(self, validations, value='', messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, value='', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.value = value
 
     def passes(self, attribute, key, dictionary):
@@ -260,8 +271,8 @@ class contains(BaseValidation):
 
 class is_in(BaseValidation):
 
-    def __init__(self, validations, value='', messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, value='', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.value = value
 
     def passes(self, attribute, key, dictionary):
@@ -276,8 +287,8 @@ class is_in(BaseValidation):
 
 class greater_than(BaseValidation):
 
-    def __init__(self, validations, value='', messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, value='', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.value = value
 
     def passes(self, attribute, key, dictionary):
@@ -292,8 +303,8 @@ class greater_than(BaseValidation):
 
 class less_than(BaseValidation):
 
-    def __init__(self, validations, value='', messages={}):
-        super().__init__(validations, messages=messages)
+    def __init__(self, validations, value='', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
         self.value = value
 
     def passes(self, attribute, key, dictionary):
@@ -308,7 +319,7 @@ class less_than(BaseValidation):
 
 class isnt(BaseValidation):
 
-    def __init__(self, *rules, messages={}):
+    def __init__(self, *rules, messages={}, raises={}):
         super().__init__(rules)
 
     def handle(self, dictionary):
@@ -319,7 +330,7 @@ class isnt(BaseValidation):
 
 class when(BaseValidation):
 
-    def __init__(self, *rules, messages={}):
+    def __init__(self, *rules, messages={}, raises={}):
         super().__init__(rules)
         self.should_run_then = True
 
@@ -374,9 +385,13 @@ class Validator:
 
     def validate(self, dictionary, *rules):
         errors = []
-        for rule in rules:
-            rule.handle(dictionary)
-            errors += rule.errors
+        try:
+            for rule in rules:
+                rule.handle(dictionary)
+                errors += rule.errors
+        except Exception as e:
+            e.errors = errors
+            raise e
 
         return errors
 

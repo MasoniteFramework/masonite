@@ -97,6 +97,30 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate, ['user must exist'])
 
+    def test_exception(self):
+        with self.assertRaises(AttributeError) as e:
+            validate = Validator().validate({
+                'terms': 'on',
+            }, required(['user'], raises={
+                'user': AttributeError
+            }))
+
+        try:
+            validate = Validator().validate({
+                'terms': 'on',
+            }, required(['user'], raises={
+                'user': AttributeError
+            }))
+        except AttributeError as e:
+            self.assertEquals(str(e), 'user is required')
+        
+        try:
+            validate = Validator().validate({
+                'terms': 'on',
+            }, required(['user'], raises=True))
+        except ValueError as e:
+            self.assertEquals(str(e), 'user is required')
+
     def test_conditional(self):
         validate = Validator().validate({
             'terms': 'on'

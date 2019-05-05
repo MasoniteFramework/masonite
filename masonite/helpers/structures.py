@@ -10,17 +10,17 @@ class Dot:
         """The search string in dot notation to look into the dictionary for.
 
         Arguments:
-            search {string} -- This should be a string in dot notation 
+            search {string} -- This should be a string in dot notation
                                 like 'key.key.value'.
-            dictionary {dict} -- A normal dictionary which will be searched using 
+            dictionary {dict} -- A normal dictionary which will be searched using
                                 the search string in dot notation.
 
         Keyword Arguments:
-            default {string} -- The default value if nothing is found 
+            default {string} -- The default value if nothing is found
                                 in the dictionary. (default: {None})
 
         Returns:
-            string -- Returns the value found the dictionary or the default 
+            string -- Returns the value found the dictionary or the default
                         value specified above if nothing is found.
         """
         if '.' not in search:
@@ -58,11 +58,12 @@ class Dot:
         """Locate the object from the given search path
 
         Arguments:
-            search_path {string} -- A search path to fetch the object from 
-                                    like config.application.debug.
+            search_path {string} -- A search path to fetch the object
+                                    from like config.application.debug.
 
         Keyword Arguments:
-            default {string} -- A default string if the search path is not found (default: {''})
+            default {string} -- A default string if the search path is
+                                not found (default: {''})
 
         Returns:
             any -- Could be a string, object or anything else that is fetched.
@@ -146,13 +147,13 @@ class Dot:
 
 def config(path, default=''):
     """Used to fetch a value from a configuration file
-    
+
     Arguments:
         path {string} -- The search path using dot notation of the value to get
-    
+
     Keyword Arguments:
         default {str} -- The default value if not value and be found (default: {''})
-    
+
     Returns:
         mixed
     """

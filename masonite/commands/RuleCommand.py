@@ -1,7 +1,5 @@
 """New Model Command."""
-from masonite.app import App
 
-from cleo import Command
 from masonite.commands import BaseScaffoldCommand
 
 

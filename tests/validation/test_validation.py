@@ -6,7 +6,7 @@ from masonite.app import App
 from masonite.providers import ValidationProvider
 from masonite.validation.Validator import (ValidationFactory, Validator,
                                            accepted, active_domain, contains,
-                                           email, equals, greater_than,
+                                           email, equals, exists, greater_than,
                                            in_range, is_in, isnt)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
@@ -82,6 +82,20 @@ class TestValidation(unittest.TestCase):
         }, accepted(['terms']))
 
         self.assertEqual(validate, ['terms must be yes, on, 1 or true'])
+        
+    def test_exists(self):
+        validate = Validator().validate({
+            'terms': 'on',
+            'user': 'here',
+        }, exists(['user']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'terms': 'test'
+        }, exists(['user']))
+
+        self.assertEqual(validate, ['user must exist'])
 
     def test_conditional(self):
         validate = Validator().validate({

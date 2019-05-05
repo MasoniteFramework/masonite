@@ -50,13 +50,13 @@ class BaseValidation:
 class required(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
-        """The passing criteria for this rule. 
+        """The passing criteria for this rule.
 
         This should return a True boolean value.
 
         Arguments:
             attribute {mixed} -- The value found within the dictionary
-            key {string} -- The key in the dictionary being searched for. 
+            key {string} -- The key in the dictionary being searched for.
                             This key may or may not exist in the dictionary.
             dictionary {dict} -- The dictionary being searched
 
@@ -102,6 +102,7 @@ class accepted(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
 
+
 class email(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -113,6 +114,18 @@ class email(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a valid email address'.format(attribute)
+
+
+class exists(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        return key in dictionary
+
+    def message(self, attribute):
+        return '{} must exist'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not exist'.format(attribute)
 
 class active_domain(BaseValidation):
 
@@ -392,6 +405,7 @@ class ValidationFactory:
             contains,
             equals,
             email,
+            exists,
             greater_than,
             in_range,
             is_in,

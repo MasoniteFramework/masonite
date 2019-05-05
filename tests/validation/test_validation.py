@@ -385,28 +385,27 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, length(['user.id'], min=1, max=10))
 
-        print('errors are', validate.errors)
         self.assertEqual(len(validate.errors), 0)
 
-        # validate = Validator().validate({
-        #     'user': {
-        #         'id': 1,
-        #         'email': 'user@example.com',
-        #         'description': 'this is a really long description'
-        #     }
-        # }, length(['user.id'], '1..10'))
+        validate = Validator().validate({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'description': 'this is a really long description'
+            }
+        }, length(['user.id'], '1..10'))
 
-        # self.assertEqual(len(validate.errors), 0)
+        self.assertEqual(len(validate.errors), 0)
 
-        # validate = Validator().validate({
-        #     'user': {
-        #         'id': 1,
-        #         'email': 'user@example.com',
-        #         'description': 'this is a really long description'
-        #     }
-        # }, length(['user.description'], min=1, max=10))
+        validate = Validator().validate({
+            'user': {
+                'id': 1,
+                'email': 'user@example.com',
+                'description': 'this is a really long description'
+            }
+        }, length(['user.description'], min=1, max=10))
 
-        # self.assertEqual(validate.errors, ['user.description length must be between 1 and 10'])
+        self.assertEqual(validate.errors, ['user.description length must be between 1 and 10'])
 
     def test_dot_in_range(self):
         validate = Validator().validate({

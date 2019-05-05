@@ -357,7 +357,7 @@ class Request(Extendable):
             http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
-            string|None|True -- Either return the value if getting a header, 
+            string|None|True -- Either return the value if getting a header,
                                 None if it doesn't exist or True if setting the headers.
         """
         if isinstance(key, dict):
@@ -585,7 +585,7 @@ class Request(Extendable):
         """Load the user into the class.
 
         Arguments:
-            user_model {app.User.User} -- Defaults to loading this class 
+            user_model {app.User.User} -- Defaults to loading this class
                                         unless specifically changed.
 
         Returns:
@@ -694,11 +694,11 @@ class Request(Extendable):
         """Return the compiled URI using a controller.
 
         Arguments:
-            controller {string|object} -- Can be a string controller or 
+            controller {string|object} -- Can be a string controller or
                                             a controller object.
 
         Keyword Arguments:
-            params {dict} -- Dictionary of parameters to pass to the route 
+            params {dict} -- Dictionary of parameters to pass to the route
                              for compilation. (default: {{}})
 
         Returns:
@@ -713,9 +713,9 @@ class Request(Extendable):
             name {string} -- Name of the route.
 
         Keyword Arguments:
-            params {dict} -- Dictionary of parameters to pass to the route 
+            params {dict} -- Dictionary of parameters to pass to the route
                              for compilation. (default: {{}})
-            full {bool} -- Specifies whether the full application url should 
+            full {bool} -- Specifies whether the full application url should
                            be returned or not. (default: {False})
 
         Returns:

@@ -127,6 +127,7 @@ class exists(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not exist'.format(attribute)
 
+
 class active_domain(BaseValidation):
 
     def passes(self, attribute, key, dictionary):

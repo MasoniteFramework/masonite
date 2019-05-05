@@ -97,10 +97,10 @@ class accepted(BaseValidation):
         return attribute is True or attribute == 'on' or attribute == 'yes' or attribute == '1' or attribute == 1
 
     def message(self, attribute):
-        return '{} terms must be yes, on, 1 or true'.format(attribute)
+        return '{} must be yes, on, 1 or true'.format(attribute)
 
     def negated_message(self, attribute):
-        return '{} terms must not be yes, on, 1 or true'.format(attribute)
+        return '{} must not be yes, on, 1 or true'.format(attribute)
 
 
 class numeric(BaseValidation):

@@ -26,12 +26,6 @@ class TestValidation(unittest.TestCase):
 
         validate = Validator().validate({
             'test': 1
-        }, Validator.required(['user', 'email']))
-
-        self.assertEqual(validate.errors, ['user is required', 'email is required'])
-
-        validate = Validator().validate({
-            'test': 1
         }, required(['test']))
 
         self.assertEqual(len(validate.errors), 0)

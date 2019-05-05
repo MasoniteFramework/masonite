@@ -880,3 +880,8 @@ class Request(Extendable):
         for key in input_variables:
             if key in self.request_variables:
                 del self.request_variables[key]
+
+    def validate(self, *rules):
+        validator = self.app().make('Validator')
+
+        return validator.validate(self.request_variables, *rules)

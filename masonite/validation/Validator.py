@@ -106,6 +106,7 @@ class none(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be None'.format(attribute)
 
+
 class length(BaseValidation):
 
     def __init__(self, validations, min=1, max=999999, messages={}):
@@ -158,6 +159,7 @@ class equals(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be equal to {}'.format(attribute, self.value)
+
 
 class contains(BaseValidation):
 
@@ -286,11 +288,57 @@ class json(BaseValidation):
 
 class Validator:
 
-    def __init__(self, dictionary, *rules):
+    def __init__(self):
         self.errors = []
-        self.validate(dictionary, *rules)
 
     def validate(self, dictionary, *rules):
         for rule in rules:
             rule.handle(dictionary)
             self.errors += rule.errors
+
+        return self
+
+    def extend(self, key, obj=None):
+        if isinstance(key, dict):
+            self.__dict__.update(key)
+            return self
+
+        self.__dict__.update({key: obj})
+        return self
+
+    def register(self, *cls):
+        for obj in cls:
+            self.__dict__.update({
+                obj.__name__: obj
+            })
+
+class ValidationFactory:
+
+    registry = {}
+
+    def __init__(self):
+        self.register(
+            required,
+            json,
+            accepted,
+            numeric,
+            string,
+            none,
+            in_range,
+            length,
+            equals,
+            contains,
+            is_in,
+            greater_than,
+            less_than,
+            isnt,
+            when,
+            truthy,
+            json
+        )
+
+    def register(self, *cls):
+        for obj in cls:
+            self.registry.update({
+                obj.__name__: obj
+            })

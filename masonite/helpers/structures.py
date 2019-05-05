@@ -40,7 +40,7 @@ class Dot:
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
 
-                if dic and type(dic) is not int and len(dic) == 1 and not type(dic[list(dic)[0]]) == dict:
+                if dic and not isinstance(dic, int) and len(dic) == 1 and not isinstance(dic[list(dic)[0]], dict):
                     possible = dic
 
             if not isinstance(dic, dict):
@@ -140,4 +140,15 @@ class Dot:
 
 
 def config(path, default=''):
+    """Used to fetch a value from a configuration file
+    
+    Arguments:
+        path {string} -- The search path using dot notation of the value to get
+    
+    Keyword Arguments:
+        default {str} -- The default value if not value and be found (default: {''})
+    
+    Returns:
+        mixed
+    """
     return Dot().locate('config.' + path, default)

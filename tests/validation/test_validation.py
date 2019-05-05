@@ -47,11 +47,11 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(len(validate), 0)
 
-        # validate = Validator().validate({
-        #     'terms': 'test'
-        # }, accepted(['terms']))
+        validate = Validator().validate({
+            'terms': 'test'
+        }, accepted(['terms']))
 
-        # self.assertEqual(validate, ['terms must be yes, on, 1 or true'])
+        self.assertEqual(validate, ['terms must be yes, on, 1 or true'])
 
     def test_conditional(self):
         validate = Validator().validate({

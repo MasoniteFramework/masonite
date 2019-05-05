@@ -102,7 +102,7 @@ class Dot:
                                     in the form of dot notation 'config.application.debug'
 
         Keyword Arguments:
-            default {string} -- The default value to return if the search path 
+            default {string} -- The default value to return if the search path
                                 could not be found. (default: {''})
 
         Returns:

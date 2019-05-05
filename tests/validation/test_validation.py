@@ -68,11 +68,11 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate.errors, ['user is required'])
 
-        # validate = Validator().validate({
-        #     'terms': 'test'
-        # }, accepted(['terms']))
+        validate = Validator().validate({
+            'terms': 'test'
+        }, accepted(['terms']))
 
-        # self.assertEqual(validate.errors, ['terms must be yes, on, 1 or true'])
+        self.assertEqual(validate.errors, ['terms must be yes, on, 1 or true'])
 
     def test_error_message_required(self):
         validate = Validator().validate({
@@ -303,13 +303,13 @@ class TestDotNotationValidation(unittest.TestCase):
         pass
 
     def test_dot_required(self):
-        # validate = Validator().validate({
-        #     'user': {
-        #         'email': 'user@example.com'
-        #     }
-        # }, required(['user.id']))
+        validate = Validator().validate({
+            'user': {
+                'email': 'user@example.com'
+            }
+        }, required(['user.id']))
 
-        # self.assertEqual(validate.errors, ['user.id is required'])
+        self.assertEqual(validate.errors, ['user.id is required'])
 
         validate = Validator().validate({
             'user': {

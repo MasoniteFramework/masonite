@@ -172,7 +172,7 @@ class Request(Extendable):
         """
         only_vars = {}
 
-        for name in self.request_variables.keys():
+        for name in self.request_variables:
             if name not in names:
                 only_vars[name] = self.request_variables.get(name)
 
@@ -474,10 +474,12 @@ class Request(Extendable):
             value {string} -- Value of the cookie you want set.
 
         Keyword Arguments:
-            encrypt {bool} -- Whether or not you want to encrypt the cookie (default: {True})
+            encrypt {bool} -- Whether or not you want to encrypt the 
+                                cookie (default: {True})
             http_only {str} -- If the cookie is HttpOnly or not (default: {"HttpOnly;"})
             path {str} -- The path of the cookie to be set to. (default: {'/'})
-            expires {string} -- When the cookie expires (5 minutes, 1 minute, 10 hours, etc) (default: {''})
+            expires {string} -- When the cookie expires 
+                                (5 minutes, 1 minute, 10 hours, etc) (default: {''})
 
         Returns:
             self
@@ -582,7 +584,8 @@ class Request(Extendable):
         """Load the user into the class.
 
         Arguments:
-            user_model {app.User.User} -- Defaults to loading this class unless specifically changed.
+            user_model {app.User.User} -- Defaults to loading this class 
+                                        unless specifically changed.
 
         Returns:
             self
@@ -690,7 +693,8 @@ class Request(Extendable):
         """Return the compiled URI using a controller.
 
         Arguments:
-            controller {string|object} -- Can be a string controller or a controller object.
+            controller {string|object} -- Can be a string controller or 
+                                            a controller object.
 
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route for compilation. (default: {{}})

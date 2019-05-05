@@ -10,14 +10,18 @@ class Dot:
         """The search string in dot notation to look into the dictionary for.
 
         Arguments:
-            search {string} -- This should be a string in dot notation like 'key.key.value'.
-            dictionary {dict} -- A normal dictionary which will be searched using the search string in dot notation.
+            search {string} -- This should be a string in dot notation 
+                                like 'key.key.value'.
+            dictionary {dict} -- A normal dictionary which will be searched using 
+                                the search string in dot notation.
 
         Keyword Arguments:
-            default {string} -- The default value if nothing is found in the dictionary. (default: {None})
+            default {string} -- The default value if nothing is found 
+                                in the dictionary. (default: {None})
 
         Returns:
-            string -- Returns the value found the dictionary or the default value specified above if nothing is found.
+            string -- Returns the value found the dictionary or the default 
+                        value specified above if nothing is found.
         """
         if '.' not in search:
             if search == '':
@@ -30,7 +34,7 @@ class Dot:
 
         searching = search.split('.')
         possible = None
-        while len(searching) > 0:
+        while searching:
             dic = dictionary
             for search in searching:
                 if not dic:
@@ -54,7 +58,8 @@ class Dot:
         """Locate the object from the given search path
 
         Arguments:
-            search_path {string} -- A search path to fetch the object from like config.application.debug.
+            search_path {string} -- A search path to fetch the object from 
+                                    like config.application.debug.
 
         Keyword Arguments:
             default {string} -- A default string if the search path is not found (default: {''})

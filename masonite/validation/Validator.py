@@ -6,7 +6,10 @@ class BaseValidation:
     def __init__(self, validations, messages={}, raises={}):
         self.errors = []
         self.messages = messages
-        self.validations = validations
+        if isinstance(validations, str):
+            self.validations = [validations]
+        else:
+            self.validations = validations
         self.negated = False
         self.raises = raises
 
@@ -112,6 +115,23 @@ class accepted(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
+
+class date(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pendulum
+        try:
+            date = pendulum.parse(attribute)
+            print(date)
+            return date
+        except pendulum.parsing.exceptions.ParserError:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a valid date'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a valid date'.format(attribute)
 
 
 class email(BaseValidation):

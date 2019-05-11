@@ -5,7 +5,7 @@ import unittest
 from masonite.app import App
 from masonite.providers import ValidationProvider
 from masonite.validation.Validator import (ValidationFactory, Validator,
-                                           accepted, active_domain, contains,
+                                           accepted, active_domain, contains, date,
                                            email, equals, exists, greater_than,
                                            in_range, is_in, isnt)
 from masonite.validation.Validator import json as vjson
@@ -96,6 +96,19 @@ class TestValidation(unittest.TestCase):
         }, exists(['user']))
 
         self.assertEqual(validate, ['user must exist'])
+
+    def test_date(self):
+        validate = Validator().validate({
+            'date': '1975-05-21T22:00:00',
+        }, date(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': '1975',
+        }, date(['date']))
+
+        self.assertEqual(validate, ['date must a valid date'])
 
     def test_exception(self):
         with self.assertRaises(AttributeError) as e:

@@ -491,10 +491,7 @@ class Request(Extendable):
         if not http_only:
             http_only = ""
 
-        self.cookies.append(
-            ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
-                key, value, expires, http_only, path)))
-        self.append_cookie(key, value)
+        self.append_cookie(key, '{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
         return self
 
     def get_cookies(self):
@@ -504,6 +501,14 @@ class Request(Extendable):
             dict -- Returns all the cookies.
         """
         return self.cookies
+    
+    def get_raw_cookie(self, provided_cookie):
+        if 'HTTP_COOKIE' in self.environ:
+            grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+            if provided_cookie in grab_cookie:
+                return grab_cookie[provided_cookie]
+
+        return None
 
     def get_cookie(self, provided_cookie, decrypt=True):
         """Retrieve a specific cookie from the browser.
@@ -526,12 +531,12 @@ class Request(Extendable):
                 if decrypt:
                     try:
                         return Sign(self.encryption_key).unsign(
-                            grab_cookie[provided_cookie].value)
-                    except InvalidToken:
+                            grab_cookie[provided_cookie].value.split('=', 1)[1])
+                    except InvalidToken as e:
                         self.delete_cookie(provided_cookie)
                         return None
-                return grab_cookie[provided_cookie].value
-
+                
+                return grab_cookie[provided_cookie].value.split('=', 1)[1]
         return None
 
     def append_cookie(self, key, value):

@@ -40,11 +40,13 @@ class TestCookieSigning:
         self.request.cookies = []
         self.request.cookie('test', 'testvalue', encrypt=False)
         assert self.request.get_cookie('test', decrypt=False) == 'testvalue'
-        assert 'HttpOnly' in self.request.cookies[0][1]
-        assert 'test=testvalue; HttpOnly;Path=/' in self.request.cookies[0][1]
+        assert self.request.get_raw_cookie('test')['httponly']
+        assert '/' in self.request.get_raw_cookie('test')['path']
+        assert 'test=testvalue' in self.request.get_raw_cookie('test').value
 
     def test_set_and_get_cookie_without_http_only(self):
         self.request.cookies = []
         self.request.cookie('test', 'testvalue', http_only=False, encrypt=False)
         assert self.request.get_cookie('test', decrypt=False) == 'testvalue'
-        assert 'test=testvalue; Path=/' in self.request.cookies[0][1]
+        assert 'test=testvalue' in self.request.get_raw_cookie('test').value
+        assert '/' in self.request.get_raw_cookie('test')['path']

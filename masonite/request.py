@@ -501,7 +501,7 @@ class Request(Extendable):
             dict -- Returns all the cookies.
         """
         return self.cookies
-    
+
     def get_raw_cookie(self, provided_cookie):
         if 'HTTP_COOKIE' in self.environ:
             grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
@@ -535,7 +535,7 @@ class Request(Extendable):
                     except InvalidToken:
                         self.delete_cookie(provided_cookie)
                         return None
-                
+
                 return grab_cookie[provided_cookie].value
         return None
 

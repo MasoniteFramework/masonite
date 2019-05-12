@@ -126,7 +126,6 @@ class date(BaseValidation):
         import pendulum
         try:
             date = pendulum.parse(attribute)
-            print(date)
             return date
         except pendulum.parsing.exceptions.ParserError:
             return False
@@ -136,6 +135,23 @@ class date(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a valid date'.format(attribute)
+
+class before_today(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pendulum
+        try:
+            date = pendulum.parse(attribute).diff(pendulum.now(), pendulum.yesterday())
+            print(date.in_days())
+            return date
+        except pendulum.parsing.exceptions.ParserError:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a date before today'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a date before today'.format(attribute)
 
 
 class email(BaseValidation):

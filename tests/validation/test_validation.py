@@ -1,11 +1,12 @@
 
 import json
 import unittest
+import pendulum
 
 from masonite.app import App
 from masonite.providers import ValidationProvider
 from masonite.validation.Validator import (ValidationFactory, Validator,
-                                           accepted, active_domain, contains, date,
+                                           accepted, active_domain, contains, date, before_today,
                                            email, equals, exists, greater_than,
                                            in_range, is_in, isnt)
 from masonite.validation.Validator import json as vjson
@@ -106,10 +107,29 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(len(validate), 0)
 
         validate = Validator().validate({
-            'date': '1975',
+            'date': 'woop',
         }, date(['date']))
 
-        self.assertEqual(validate, ['date must a valid date'])
+        self.assertEqual(validate, {'date': ['date must be a valid date']})
+
+    def test_before_today(self):
+        # validate = Validator().validate({
+        #     'date': '1975-05-21T22:00:00',
+        # }, before_today(['date']))
+
+        # self.assertEqual(len(validate), 0)
+
+        # validate = Validator().validate({
+        #     'date': pendulum.yesterday().to_datetime_string(),
+        # }, before_today(['date']))
+
+        # self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': '2020-05-21T22:00:00',
+        }, date(['date']))
+
+        self.assertEqual(validate, {'date': ['date must be a date before today']})
 
     def test_exception(self):
         with self.assertRaises(AttributeError) as e:

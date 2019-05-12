@@ -35,12 +35,12 @@ class BaseValidation:
     def negate(self):
         self.negated = True
         return self
-    
+
     def raise_exception(self, key):
         if self.raises is not True and key in self.raises:
             error = self.raises.get(key)
             raise error(self.errors[next(iter(self.errors))][0])
-        
+
         raise ValueError(self.errors[next(iter(self.errors))][0])
 
     def handle(self, dictionary):
@@ -58,7 +58,7 @@ class BaseValidation:
             if not self.passes(self.find(key, dictionary), key, dictionary):
                 boolean = False
                 self.error(key, self.message(key))
-            
+
             if self.errors and self.raises:
                 return self.raise_exception(key)
 
@@ -120,6 +120,7 @@ class accepted(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
 
+
 class date(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -136,6 +137,7 @@ class date(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be a valid date'.format(attribute)
 
+
 class before_today(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -150,6 +152,7 @@ class before_today(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a date before today'.format(attribute)
+
 
 class after_today(BaseValidation):
 
@@ -166,6 +169,7 @@ class after_today(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be a date after today'.format(attribute)
 
+
 class is_past(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -180,6 +184,7 @@ class is_past(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a time in the past'.format(attribute)
+
 
 class is_future(BaseValidation):
 
@@ -480,7 +485,7 @@ class Validator:
                         rule_errors.update({error: messages})
 
             return rule_errors
-                    
+
         except Exception as e:
             e.errors = rule_errors
             raise e

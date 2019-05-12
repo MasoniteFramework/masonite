@@ -33,11 +33,11 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         cookie = self.request.get_cookie('s_{0}'.format(key))
         if cookie:
             return self._get_serialization_value(cookie)
-        
+
         cookie = self.request.get_cookie('f_{0}'.format(key))
         if cookie:
             return self._get_serialization_value(cookie)
-        
+
         return None
 
     def set(self, key, value):
@@ -129,7 +129,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             if flash_only:
                 self.request.delete_cookie('f_{0}'.format(cookie))
                 continue
-            
+
             self.request.delete_cookie('s_{0}'.format(cookie))
 
     def helper(self):

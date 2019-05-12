@@ -491,10 +491,10 @@ class Request(Extendable):
         if not http_only:
             http_only = ""
 
+        self.append_cookie(key, '{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
         self.cookies.append(
             ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
                 key, value, expires, http_only, path)))
-        self.append_cookie(key, value)
         return self
 
     def get_cookies(self):
@@ -504,6 +504,14 @@ class Request(Extendable):
             dict -- Returns all the cookies.
         """
         return self.cookies
+
+    def get_raw_cookie(self, provided_cookie):
+        if 'HTTP_COOKIE' in self.environ:
+            grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+            if provided_cookie in grab_cookie:
+                return grab_cookie[provided_cookie]
+
+        return None
 
     def get_cookie(self, provided_cookie, decrypt=True):
         """Retrieve a specific cookie from the browser.
@@ -530,8 +538,8 @@ class Request(Extendable):
                     except InvalidToken:
                         self.delete_cookie(provided_cookie)
                         return None
-                return grab_cookie[provided_cookie].value
 
+                return grab_cookie[provided_cookie].value
         return None
 
     def append_cookie(self, key, value):
@@ -546,11 +554,9 @@ class Request(Extendable):
             value {string} -- Value of cookie to be stored
         """
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            self.environ['HTTP_COOKIE'] += ';{0}={1}'.format(
-                key, value)
+            self.environ['HTTP_COOKIE'] += ';{}'.format(value)
         else:
-            self.environ['HTTP_COOKIE'] = '{0}={1}'.format(
-                key, value)
+            self.environ['HTTP_COOKIE'] = '{}'.format(value)
 
     def delete_cookie(self, key):
         """Delete cookie.
@@ -561,6 +567,10 @@ class Request(Extendable):
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
+        for index, cookie in enumerate(self.cookies):
+            if cookie[1].startswith(key + '='):
+                del self.cookies[index]
+
         self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:

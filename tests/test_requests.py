@@ -91,7 +91,7 @@ class TestRequest:
         time = cookie_expire_time('2 months')
 
         assert self.request.get_cookie('setcookie_expiration') == 'value'
-        assert 'Expires={0}'.format(time) in self.request.cookies[0][1]
+        assert self.request.get_raw_cookie('setcookie_expiration')['expires'] == time
 
     def test_delete_cookie(self):
         self.request.cookies = []

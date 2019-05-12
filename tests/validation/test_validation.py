@@ -23,7 +23,8 @@ class TestValidation(unittest.TestCase):
             'test': 1
         }, required(['user', 'email']))
 
-        self.assertEqual(validate, ['user is required', 'email is required'])
+        self.assertEqual(validate['user'], ['user is required'])
+        self.assertEqual(validate['email'], ['email is required'])
 
         validate = Validator().validate({
             'test': 1
@@ -52,7 +53,7 @@ class TestValidation(unittest.TestCase):
             'email': 'user'
         }, email(['email']))
 
-        self.assertEqual(validate, ['email must be a valid email address'])
+        self.assertEqual(validate, {'email': ['email must be a valid email address']})
 
     def test_active_domain(self):
         validate = Validator().validate({
@@ -68,7 +69,7 @@ class TestValidation(unittest.TestCase):
             'domain1': 'domain',
         }, active_domain(['domain1']))
 
-        self.assertEqual(validate, ['domain1 must be an active domain name'])
+        self.assertEqual(validate, {'domain1': ['domain1 must be an active domain name']})
 
     def test_accepted(self):
         validate = Validator().validate({
@@ -81,7 +82,7 @@ class TestValidation(unittest.TestCase):
             'terms': 'test'
         }, accepted(['terms']))
 
-        self.assertEqual(validate, ['terms must be yes, on, 1 or true'])
+        self.assertEqual(validate, {'terms': ['terms must be yes, on, 1 or true']})
         
     def test_exists(self):
         validate = Validator().validate({
@@ -95,7 +96,7 @@ class TestValidation(unittest.TestCase):
             'terms': 'test'
         }, exists(['user']))
 
-        self.assertEqual(validate, ['user must exist'])
+        self.assertEqual(validate, {'user': ['user must exist']})
 
     def test_date(self):
         validate = Validator().validate({
@@ -141,13 +142,13 @@ class TestValidation(unittest.TestCase):
             required(['user'])
         ))
 
-        self.assertEqual(validate, ['user is required'])
+        self.assertEqual(validate, {'user': ['user is required']})
 
         validate = Validator().validate({
             'terms': 'test'
         }, accepted(['terms']))
 
-        self.assertEqual(validate, ['terms must be yes, on, 1 or true'])
+        self.assertEqual(validate, {'terms': ['terms must be yes, on, 1 or true']})
 
     def test_error_message_required(self):
         validate = Validator().validate({
@@ -156,7 +157,8 @@ class TestValidation(unittest.TestCase):
             'user': 'there must be a user value'
         }))
 
-        self.assertEqual(validate, ['there must be a user value', 'email is required'])
+        self.assertEqual(validate['user'], ['there must be a user value'])
+        self.assertEqual(validate['email'], ['email is required'])
 
         validate = Validator().validate({
             'test': 1
@@ -164,7 +166,8 @@ class TestValidation(unittest.TestCase):
             'email': 'there must be an email value'
         }))
 
-        self.assertEqual(validate, ['user is required', 'there must be an email value'])
+        self.assertEqual(validate['user'], ['user is required'])
+        self.assertEqual(validate['email'], ['there must be an email value'])
 
     def test_numeric(self):
         validate = Validator().validate({
@@ -177,21 +180,21 @@ class TestValidation(unittest.TestCase):
             'test': 'hey'
         }, numeric(['test']))
 
-        self.assertEqual(validate, ['test must be a numeric'])
+        self.assertEqual(validate, {'test': ['test must be a numeric']})
 
     def test_several_tests(self):
         validate = Validator().validate({
             'test': 'hey'
         }, required(['notin']), numeric(['notin']))
 
-        self.assertEqual(validate, ['notin is required', 'notin must be a numeric'])
+        self.assertEqual(validate, {'notin': ['notin is required', 'notin must be a numeric']})
 
     def test_json(self):
         validate = Validator().validate({
             'json': 'hey'
         }, vjson(['json']))
 
-        self.assertEqual(validate, ['json must be json'])
+        self.assertEqual(validate, {'json': ['json must be json']})
 
         validate = Validator().validate({
             'json': json.dumps({'test': 'key'})
@@ -216,7 +219,7 @@ class TestValidation(unittest.TestCase):
             'json': 'this is a really long string'
         }, length(['json'], min=1, max=10))
 
-        self.assertEqual(validate, ['json length must be between 1 and 10'])
+        self.assertEqual(validate, {'json': ['json length must be between 1 and 10']})
 
     def test_string(self):
         validate = Validator().validate({
@@ -229,7 +232,7 @@ class TestValidation(unittest.TestCase):
             'text': 1
         }, string(['text']))
 
-        self.assertEqual(validate, ['text must be a string'])
+        self.assertEqual(validate, {'text': ['text must be a string']})
 
     def test_none(self):
         validate = Validator().validate({
@@ -242,7 +245,7 @@ class TestValidation(unittest.TestCase):
             'text': 1
         }, none(['text']))
 
-        self.assertEqual(validate, ['text must be None'])
+        self.assertEqual(validate, {'text': ['text must be None']})
 
     def test_equals(self):
         validate = Validator().validate({
@@ -255,7 +258,7 @@ class TestValidation(unittest.TestCase):
             'text': 'test2'
         }, equals(['text'], 'test1'))
 
-        self.assertEqual(validate, ['text must be equal to test1'])
+        self.assertEqual(validate, {'text': ['text must be equal to test1']})
 
     def test_truthy(self):
         validate = Validator().validate({
@@ -274,7 +277,7 @@ class TestValidation(unittest.TestCase):
             'text': False
         }, truthy(['text']))
 
-        self.assertEqual(validate, ['text must be a truthy value'])
+        self.assertEqual(validate, {'text': ['text must be a truthy value']})
 
     def test_in_range(self):
         validate = Validator().validate({
@@ -287,7 +290,7 @@ class TestValidation(unittest.TestCase):
             'text': 101
         }, in_range(['text'], min=25, max=72))
 
-        self.assertEqual(validate, ['text must be between 25 and 72'])
+        self.assertEqual(validate, {'text': ['text must be between 25 and 72']})
 
     def test_greater_than(self):
         validate = Validator().validate({
@@ -300,7 +303,7 @@ class TestValidation(unittest.TestCase):
             'text': 101
         }, greater_than(['text'], 150))
 
-        self.assertEqual(validate, ['text must be greater than 150'])
+        self.assertEqual(validate, {'text': ['text must be greater than 150']})
 
     def test_less_than(self):
         validate = Validator().validate({
@@ -313,7 +316,7 @@ class TestValidation(unittest.TestCase):
             'text': 101
         }, less_than(['text'], 75))
 
-        self.assertEqual(validate, ['text must be less than 75'])
+        self.assertEqual(validate, {'text': ['text must be less than 75']})
 
     def test_isnt(self):
         validate = Validator().validate({
@@ -331,7 +334,7 @@ class TestValidation(unittest.TestCase):
             in_range(['test'], min=10, max=20))
         )
 
-        self.assertEqual(validate, ['test must not be between 10 and 20'])
+        self.assertEqual(validate, {'test': ['test must not be between 10 and 20']})
 
     def test_isnt_equals(self):
         validate = Validator().validate({
@@ -342,8 +345,7 @@ class TestValidation(unittest.TestCase):
         )
         )
 
-        # self.assertEqual(validate, ['test must not be equal to test', 'test length must not be between 1 and 4'])
-        self.assertEqual(validate, ['test must not be equal to test'])
+        self.assertEqual(validate, {'test': ['test must not be equal to test']})
 
     def test_contains(self):
         validate = Validator().validate({
@@ -356,7 +358,7 @@ class TestValidation(unittest.TestCase):
             'test': 'this is a not sentence'
         }, contains(['test'], 'test'))
 
-        self.assertEqual(validate, ['test must contain test'])
+        self.assertEqual(validate, {'test': ['test must contain test']})
 
     def test_is_in(self):
         validate = Validator().validate({
@@ -369,7 +371,7 @@ class TestValidation(unittest.TestCase):
             'test': 1
         }, is_in(['test'], [4, 2, 3]))
 
-        self.assertEqual(validate, ['test must contain an element in [4, 2, 3]'])
+        self.assertEqual(validate, {'test': ['test must contain an element in [4, 2, 3]']})
 
 
 class TestDotNotationValidation(unittest.TestCase):
@@ -384,7 +386,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, required(['user.id']))
 
-        self.assertEqual(validate, ['user.id is required'])
+        self.assertEqual(validate, {'user.id': ['user.id is required']})
 
         validate = Validator().validate({
             'user': {
@@ -411,7 +413,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, numeric(['user.email']))
 
-        self.assertEqual(validate, ['user.email must be a numeric'])
+        self.assertEqual(validate, {'user.email': ['user.email must be a numeric']})
 
     def test_dot_several_tests(self):
         validate = Validator().validate({
@@ -430,7 +432,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, required(['user.id', 'user.email']), numeric(['user.email']))
 
-        self.assertEqual(validate, ['user.email must be a numeric'])
+        self.assertEqual(validate, {'user.email': ['user.email must be a numeric']})
 
     def test_dot_json(self):
         validate = Validator().validate({
@@ -440,7 +442,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, vjson(['user.id']))
 
-        self.assertEqual(validate, ['user.id must be json'])
+        self.assertEqual(validate, {'user.id': ['user.id must be json']})
 
         validate = Validator().validate({
             'user': {
@@ -480,7 +482,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, length(['user.description'], min=1, max=10))
 
-        self.assertEqual(validate, ['user.description length must be between 1 and 10'])
+        self.assertEqual(validate, {'user.description': ['user.description length must be between 1 and 10']})
 
     def test_dot_in_range(self):
         validate = Validator().validate({
@@ -501,7 +503,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, in_range(['user.age'], min=27, max=72))
 
-        self.assertEqual(validate, ['user.age must be between 27 and 72'])
+        self.assertEqual(validate, {'user.age': ['user.age must be between 27 and 72']})
 
     def test_dot_equals(self):
         validate = Validator().validate({
@@ -522,7 +524,7 @@ class TestDotNotationValidation(unittest.TestCase):
             }
         }, equals(['user.age'], 'test1'))
 
-        self.assertEqual(validate, ['user.age must be equal to test1'])
+        self.assertEqual(validate, {'user.age': ['user.age must be equal to test1']})
 
     def test_dot_error_message_required(self):
         validate = Validator().validate({
@@ -535,7 +537,7 @@ class TestDotNotationValidation(unittest.TestCase):
             'user.description': 'You are missing a description'
         }))
 
-        self.assertEqual(validate, ['You are missing a description'])
+        self.assertEqual(validate, {'user.description': ['You are missing a description']})
 
         validate = Validator().validate({
             'user': {
@@ -546,18 +548,18 @@ class TestDotNotationValidation(unittest.TestCase):
             'user.age': 'You are missing a user age'
         }))
 
-        self.assertEqual(validate, ['You are missing a user age'])
+        self.assertEqual(validate, {'user.age': ['You are missing a user age']})
 
 
-class TestValidationFactory(unittest.TestCase):
+# class TestValidationFactory(unittest.TestCase):
 
-    def test_can_register(self):
-        factory = ValidationFactory()
-        factory.register(required)
-        self.assertEqual(factory.registry['required'], required)
+#     def test_can_register(self):
+#         factory = ValidationFactory()
+#         factory.register(required)
+#         self.assertEqual(factory.registry['required'], required)
 
 
-class TestValidationProvider(unittest.TestCase):
+# class TestValidationProvider(unittest.TestCase):
 
     def setUp(self):
         from masonite.request import Request
@@ -592,4 +594,4 @@ class TestValidationProvider(unittest.TestCase):
             validate.required(['user'])
         )
 
-        self.assertEqual(validated, ['user is required'])
+        self.assertEqual(validated, {'user': ['user is required']})

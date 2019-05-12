@@ -4,7 +4,7 @@ from masonite.helpers import Dot as DictDot
 class BaseValidation:
 
     def __init__(self, validations, messages={}, raises={}):
-        self.errors = []
+        self.errors = {}
         self.messages = messages
         if isinstance(validations, str):
             self.validations = [validations]
@@ -18,9 +18,13 @@ class BaseValidation:
 
     def error(self, key, message):
         if key in self.messages:
-            self.errors.append(self.messages[key])
+            if key in self.errors:
+                self.errors[key].append(self.messages[key])
+                return
+
+            self.errors.update({key: [self.messages[key]]})
             return
-        self.errors.append(message)
+        self.errors.update({key: [message]})
 
     def find(self, key, dictionary, default=False):
         return DictDot().dot(key, dictionary, default)
@@ -35,9 +39,9 @@ class BaseValidation:
     def raise_exception(self, key):
         if self.raises is not True and key in self.raises:
             error = self.raises.get(key)
-            raise error(self.errors[0])
+            raise error(self.errors[next(iter(self.errors))][0])
         
-        raise ValueError(self.errors[0])
+        raise ValueError(self.errors[next(iter(self.errors))][0])
 
     def handle(self, dictionary):
         boolean = True
@@ -345,7 +349,7 @@ class isnt(BaseValidation):
     def handle(self, dictionary):
         for rule in self.validations:
             rule.negate().handle(dictionary)
-            self.errors += rule.errors
+            self.errors.update(rule.errors)
 
 
 class when(BaseValidation):
@@ -358,12 +362,12 @@ class when(BaseValidation):
         self.dictionary = dictionary
         for rule in self.validations:
             if not rule.handle(dictionary):
-                self.errors += rule.errors
+                self.errors.update(rule.errors)
 
         if not self.errors:
             for rule in self.then_rules:
                 if not rule.handle(dictionary):
-                    self.errors += rule.errors
+                    self.errors.update(rule.errors)
 
     def then(self, *rules):
         self.then_rules = rules
@@ -404,16 +408,25 @@ class Validator:
         pass
 
     def validate(self, dictionary, *rules):
-        errors = []
+        rule_errors = {}
         try:
             for rule in rules:
                 rule.handle(dictionary)
-                errors += rule.errors
+                for error, message in rule.errors.items():
+                    if error not in rule_errors:
+                        rule_errors.update({error: message})
+                    else:
+                        messages = rule_errors[error]
+                        messages += message
+                        rule_errors.update({error: messages})
+
+            return rule_errors
+                    
         except Exception as e:
-            e.errors = errors
+            e.errors = rule_errors
             raise e
 
-        return errors
+        return rule_errors
 
     def extend(self, key, obj=None):
         if isinstance(key, dict):

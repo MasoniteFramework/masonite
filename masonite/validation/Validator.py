@@ -141,9 +141,7 @@ class before_today(BaseValidation):
     def passes(self, attribute, key, dictionary):
         import pendulum
         try:
-            date = pendulum.parse(attribute).diff(pendulum.now(), pendulum.yesterday())
-            print(date.in_days())
-            return date
+            return pendulum.parse(attribute) <= pendulum.yesterday()
         except pendulum.parsing.exceptions.ParserError:
             return False
 
@@ -152,6 +150,51 @@ class before_today(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a date before today'.format(attribute)
+
+class after_today(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pendulum
+        try:
+            return pendulum.parse(attribute) >= pendulum.yesterday()
+        except pendulum.parsing.exceptions.ParserError:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a date after today'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a date after today'.format(attribute)
+
+class is_past(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pendulum
+        try:
+            return pendulum.parse(attribute).is_past()
+        except pendulum.parsing.exceptions.ParserError:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a time in the past'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a time in the past'.format(attribute)
+
+class is_future(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pendulum
+        try:
+            return pendulum.parse(attribute).is_future()
+        except pendulum.parsing.exceptions.ParserError:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a time in the past'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a time in the past'.format(attribute)
 
 
 class email(BaseValidation):
@@ -467,14 +510,18 @@ class ValidationFactory:
         self.register(
             accepted,
             active_domain,
+            after_today,
+            before_today,
             contains,
             equals,
             email,
             exists,
             greater_than,
             in_range,
+            is_future,
             is_in,
             isnt,
+            is_past,
             json,
             length,
             less_than,

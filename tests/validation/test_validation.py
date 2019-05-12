@@ -1,14 +1,17 @@
 
 import json
 import unittest
+
 import pendulum
 
 from masonite.app import App
 from masonite.providers import ValidationProvider
 from masonite.validation.Validator import (ValidationFactory, Validator,
-                                           accepted, active_domain, contains, date, before_today,
-                                           email, equals, exists, greater_than,
-                                           in_range, is_in, isnt)
+                                           accepted, active_domain,
+                                           after_today, before_today, contains,
+                                           date, email, equals, exists,
+                                           greater_than, in_range, is_future,
+                                           is_in, is_past, isnt)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            required, string, truthy, when)
@@ -113,23 +116,80 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(validate, {'date': ['date must be a valid date']})
 
     def test_before_today(self):
-        # validate = Validator().validate({
-        #     'date': '1975-05-21T22:00:00',
-        # }, before_today(['date']))
+        validate = Validator().validate({
+            'date': '1975-05-21T22:00:00',
+        }, before_today(['date']))
 
-        # self.assertEqual(len(validate), 0)
+        self.assertEqual(len(validate), 0)
 
-        # validate = Validator().validate({
-        #     'date': pendulum.yesterday().to_datetime_string(),
-        # }, before_today(['date']))
+        validate = Validator().validate({
+            'date': pendulum.yesterday().to_datetime_string(),
+        }, before_today(['date']))
 
-        # self.assertEqual(len(validate), 0)
+        self.assertEqual(len(validate), 0)
 
         validate = Validator().validate({
             'date': '2020-05-21T22:00:00',
-        }, date(['date']))
+        }, before_today(['date']))
 
         self.assertEqual(validate, {'date': ['date must be a date before today']})
+
+    def test_after_today(self):
+        validate = Validator().validate({
+            'date': '2020-05-21T22:00:00',
+        }, after_today(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': pendulum.tomorrow().to_datetime_string(),
+        }, after_today(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': '1975-05-21T22:00:00',
+        }, after_today(['date']))
+
+        self.assertEqual(validate, {'date': ['date must be a date after today']})
+
+    def test_is_past(self):
+        validate = Validator().validate({
+            'date': '1950-05-21T22:00:00',
+        }, is_past(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': pendulum.yesterday().to_datetime_string(),
+        }, is_past(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': pendulum.tomorrow().to_datetime_string(),
+        }, is_past(['date']))
+
+        self.assertEqual(validate, {'date': ['date must be a time in the past']})
+
+    def test_is_future(self):
+        validate = Validator().validate({
+            'date': '2020-05-21T22:00:00',
+        }, is_future(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': pendulum.tomorrow().to_datetime_string(),
+        }, is_future(['date']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'date': pendulum.yesterday().to_datetime_string(),
+        }, is_future(['date']))
+
+        self.assertEqual(validate, {'date': ['date must be a time in the past']})
 
     def test_exception(self):
         with self.assertRaises(AttributeError) as e:

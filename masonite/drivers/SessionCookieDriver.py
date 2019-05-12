@@ -33,7 +33,11 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         cookie = self.request.get_cookie('s_{0}'.format(key))
         if cookie:
             return self._get_serialization_value(cookie)
-
+        
+        cookie = self.request.get_cookie('f_{0}'.format(key))
+        if cookie:
+            return self._get_serialization_value(cookie)
+        
         return None
 
     def set(self, key, value):
@@ -96,7 +100,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
             cookies_original = self.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
-                if cookie.startswith('s_'):
+                if cookie.startswith('s_') or cookie.startswith('f_'):
                     data = cookie.split("=")
                     cookie_value = self.request.get_cookie(data[0])
                     cookies[data[0][2:]] = cookie_value
@@ -112,7 +116,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, dict):
             value = json.dumps(value)
 
-        self.request.cookie('s_{0}'.format(key), value, expires='2 seconds')
+        self.request.cookie('f_{0}'.format(key), value, expires='2 seconds')
 
     def reset(self, flash_only=False):
         """Delete all session data.
@@ -122,6 +126,10 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         """
         cookies = self.__collect_data()
         for cookie in cookies:
+            if flash_only:
+                self.request.delete_cookie('f_{0}'.format(cookie))
+                continue
+            
             self.request.delete_cookie('s_{0}'.format(cookie))
 
     def helper(self):

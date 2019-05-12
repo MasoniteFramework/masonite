@@ -492,6 +492,9 @@ class Request(Extendable):
             http_only = ""
 
         self.append_cookie(key, '{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
+        self.cookies.append(
+            ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
+                key, value, expires, http_only, path)))
         return self
 
     def get_cookies(self):
@@ -564,6 +567,10 @@ class Request(Extendable):
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
+        for index, cookie in enumerate(self.cookies):
+            if cookie[1].startswith(key + '='):
+                del self.cookies[index]
+                
         self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:

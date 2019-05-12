@@ -100,10 +100,10 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
             cookies_original = self.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
-                if cookie.startswith('s_') or cookie.startswith('f_'):
-                    data = cookie.split("=")
-                    cookie_value = self.request.get_cookie(data[0])
-                    cookies[data[0][2:]] = cookie_value
+                if cookie.strip().startswith('s_') or cookie.strip().startswith('f_'):
+                    data = cookie.split("=", 1)
+                    cookie_name = data[0].replace('s_', '').replace('f_', '').strip()
+                    cookies.update({cookie_name: self.get(cookie_name)})
         return cookies
 
     def flash(self, key, value):

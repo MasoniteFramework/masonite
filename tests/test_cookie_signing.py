@@ -42,11 +42,11 @@ class TestCookieSigning:
         assert self.request.get_cookie('test', decrypt=False) == 'testvalue'
         assert self.request.get_raw_cookie('test')['httponly']
         assert '/' in self.request.get_raw_cookie('test')['path']
-        assert 'test=testvalue' in self.request.get_raw_cookie('test').value
+        assert 'testvalue' in self.request.get_raw_cookie('test').value
 
     def test_set_and_get_cookie_without_http_only(self):
         self.request.cookies = []
         self.request.cookie('test', 'testvalue', http_only=False, encrypt=False)
         assert self.request.get_cookie('test', decrypt=False) == 'testvalue'
-        assert 'test=testvalue' in self.request.get_raw_cookie('test').value
+        assert 'testvalue' in self.request.get_raw_cookie('test').value
         assert '/' in self.request.get_raw_cookie('test')['path']

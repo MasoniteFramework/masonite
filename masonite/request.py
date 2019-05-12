@@ -531,12 +531,12 @@ class Request(Extendable):
                 if decrypt:
                     try:
                         return Sign(self.encryption_key).unsign(
-                            grab_cookie[provided_cookie].value.split('=', 1)[1])
-                    except InvalidToken as e:
+                            grab_cookie[provided_cookie].value)
+                    except InvalidToken:
                         self.delete_cookie(provided_cookie)
                         return None
                 
-                return grab_cookie[provided_cookie].value.split('=', 1)[1]
+                return grab_cookie[provided_cookie].value
         return None
 
     def append_cookie(self, key, value):
@@ -551,11 +551,9 @@ class Request(Extendable):
             value {string} -- Value of cookie to be stored
         """
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            self.environ['HTTP_COOKIE'] += ';{0}={1}'.format(
-                key, value)
+            self.environ['HTTP_COOKIE'] += ';{}'.format(value)
         else:
-            self.environ['HTTP_COOKIE'] = '{0}={1}'.format(
-                key, value)
+            self.environ['HTTP_COOKIE'] = '{}'.format(value)
 
     def delete_cookie(self, key):
         """Delete cookie.

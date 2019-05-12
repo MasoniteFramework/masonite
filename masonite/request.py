@@ -570,7 +570,7 @@ class Request(Extendable):
         for index, cookie in enumerate(self.cookies):
             if cookie[1].startswith(key + '='):
                 del self.cookies[index]
-                
+
         self.cookie(key, '', expires='expired')
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:

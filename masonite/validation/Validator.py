@@ -120,6 +120,22 @@ class accepted(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
 
+class ip(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import socket
+
+        try:
+            socket.inet_aton(attribute)
+            return True
+        except socket.error:
+            return False
+
+    def message(self, attribute):
+        return '{} must be a valid ipv4 address'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a valid ipv4 address'.format(attribute)
 
 class date(BaseValidation):
 
@@ -140,10 +156,14 @@ class date(BaseValidation):
 
 class before_today(BaseValidation):
 
+    def __init__(self, validations, tz='Universal', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.tz = tz
+
     def passes(self, attribute, key, dictionary):
         import pendulum
         try:
-            return pendulum.parse(attribute) <= pendulum.yesterday()
+            return pendulum.parse(attribute, tz=self.tz) <= pendulum.yesterday()
         except pendulum.parsing.exceptions.ParserError:
             return False
 
@@ -156,10 +176,14 @@ class before_today(BaseValidation):
 
 class after_today(BaseValidation):
 
+    def __init__(self, validations, tz='Universal', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.tz = tz
+
     def passes(self, attribute, key, dictionary):
         import pendulum
         try:
-            return pendulum.parse(attribute) >= pendulum.yesterday()
+            return pendulum.parse(attribute, tz=self.tz) >= pendulum.yesterday()
         except pendulum.parsing.exceptions.ParserError:
             return False
 
@@ -172,10 +196,14 @@ class after_today(BaseValidation):
 
 class is_past(BaseValidation):
 
+    def __init__(self, validations, tz='Universal', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.tz = tz
+
     def passes(self, attribute, key, dictionary):
         import pendulum
         try:
-            return pendulum.parse(attribute).is_past()
+            return pendulum.parse(attribute, tz=self.tz).is_past()
         except pendulum.parsing.exceptions.ParserError:
             return False
 
@@ -188,10 +216,14 @@ class is_past(BaseValidation):
 
 class is_future(BaseValidation):
 
+    def __init__(self, validations, tz='Universal', messages={}, raises={}):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.tz = tz
+
     def passes(self, attribute, key, dictionary):
         import pendulum
         try:
-            return pendulum.parse(attribute).is_future()
+            return pendulum.parse(attribute, tz=self.tz).is_future()
         except pendulum.parsing.exceptions.ParserError:
             return False
 
@@ -453,10 +485,10 @@ class truthy(BaseValidation):
 class json(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
-        import json
+        import json as json_module
         try:
-            return json.loads(attribute)
-        except (TypeError, json.decoder.JSONDecodeError):
+            return json_module.loads(str(attribute))
+        except (TypeError, json_module.decoder.JSONDecodeError):
             return False
 
     def message(self, attribute):
@@ -527,6 +559,7 @@ class ValidationFactory:
             is_in,
             isnt,
             is_past,
+            ip,
             json,
             length,
             less_than,

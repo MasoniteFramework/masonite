@@ -10,7 +10,7 @@ from masonite.validation.Validator import (ValidationFactory, Validator,
                                            accepted, active_domain,
                                            after_today, before_today, contains,
                                            date, email, equals, exists,
-                                           greater_than, in_range, is_future,
+                                           greater_than, in_range, ip, is_future,
                                            is_in, is_past, isnt)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
@@ -88,6 +88,19 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate, {'terms': ['terms must be yes, on, 1 or true']})
         
+    def test_ip(self):
+        validate = Validator().validate({
+            'ip': '192.168.1.1'
+        }, ip(['ip']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'ip': 'test'
+        }, ip(['ip']))
+
+        self.assertEqual(validate, {'ip': ['ip must be a valid ipv4 address']})
+        
     def test_exists(self):
         validate = Validator().validate({
             'terms': 'on',
@@ -162,13 +175,13 @@ class TestValidation(unittest.TestCase):
 
         validate = Validator().validate({
             'date': pendulum.yesterday().to_datetime_string(),
-        }, is_past(['date']))
+        }, is_past(['date'], tz='America/New_York'))
 
         self.assertEqual(len(validate), 0)
 
         validate = Validator().validate({
             'date': pendulum.tomorrow().to_datetime_string(),
-        }, is_past(['date']))
+        }, is_past('date', tz='America/New_York'))
 
         self.assertEqual(validate, {'date': ['date must be a time in the past']})
 
@@ -181,7 +194,7 @@ class TestValidation(unittest.TestCase):
 
         validate = Validator().validate({
             'date': pendulum.tomorrow().to_datetime_string(),
-        }, is_future(['date']))
+        }, is_future(['date'], tz='America/New_York'))
 
         self.assertEqual(len(validate), 0)
 

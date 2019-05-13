@@ -206,14 +206,14 @@ class TestValidation(unittest.TestCase):
                 'user': AttributeError
             }))
         except AttributeError as e:
-            self.assertEquals(str(e), 'user is required')
+            self.assertEqual(str(e), 'user is required')
         
         try:
             validate = Validator().validate({
                 'terms': 'on',
             }, required(['user'], raises=True))
         except ValueError as e:
-            self.assertEquals(str(e), 'user is required')
+            self.assertEqual(str(e), 'user is required')
 
     def test_conditional(self):
         validate = Validator().validate({

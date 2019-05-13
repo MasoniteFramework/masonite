@@ -11,7 +11,7 @@ from masonite.validation.Validator import (ValidationFactory, Validator,
                                            after_today, before_today, contains,
                                            date, email, equals, exists,
                                            greater_than, in_range, ip, is_future,
-                                           is_in, is_past, isnt)
+                                           is_in, is_past, isnt, timezone)
 from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            required, string, truthy, when)
@@ -100,6 +100,19 @@ class TestValidation(unittest.TestCase):
         }, ip(['ip']))
 
         self.assertEqual(validate, {'ip': ['ip must be a valid ipv4 address']})
+        
+    def test_timezone(self):
+        validate = Validator().validate({
+            'timezone': 'America/New_York'
+        }, timezone(['timezone']))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'timezone': 'test'
+        }, timezone(['timezone']))
+
+        self.assertEqual(validate, {'timezone': ['timezone must be a valid timezone']})
         
     def test_exists(self):
         validate = Validator().validate({

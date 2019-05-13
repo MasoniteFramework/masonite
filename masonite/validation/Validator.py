@@ -108,6 +108,18 @@ class required(BaseValidation):
         """
         return '{} is not required'.format(key)
 
+class timezone(BaseValidation):
+
+    def passes(self, attribute, key, dictionary):
+        import pytz
+        return attribute in pytz.all_timezones
+
+    def message(self, attribute):
+        return '{} must be a valid timezone'.format(attribute)
+
+    def negated_message(self, attribute):
+        return '{} must not be a valid timezone'.format(attribute)
+
 
 class accepted(BaseValidation):
 
@@ -567,6 +579,7 @@ class ValidationFactory:
             numeric,
             required,
             string,
+            timezone,
             truthy,
             when,
         )

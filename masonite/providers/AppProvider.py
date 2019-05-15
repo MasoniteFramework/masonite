@@ -1,5 +1,6 @@
 """An AppProvider Service Provider."""
 
+from config import application, middleware, storage
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand,
@@ -10,9 +11,9 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                ModelCommand, ModelDocstringCommand,
                                ProviderCommand, QueueTableCommand,
                                QueueWorkCommand, RoutesCommand, RuleCommand,
-                               SeedCommand, SeedRunCommand, ServeCommand,
-                               TinkerCommand, UpCommand, ValidatorCommand,
-                               ViewCommand)
+                               RuleEnclosureCommand, SeedCommand,
+                               SeedRunCommand, ServeCommand, TinkerCommand,
+                               UpCommand, ValidatorCommand, ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
@@ -20,8 +21,6 @@ from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.response import Response
 from masonite.routes import Route
-
-from config import application, middleware, storage
 from routes import web
 
 
@@ -77,6 +76,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
+        self.app.bind('MasoniteRuleEnclosureCommand', RuleEnclosureCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())

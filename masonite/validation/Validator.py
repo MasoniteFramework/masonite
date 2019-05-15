@@ -623,6 +623,7 @@ class ValidationFactory:
             less_than,
             none,
             numeric,
+            phone,
             required,
             string,
             timezone,

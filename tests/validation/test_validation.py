@@ -13,6 +13,7 @@ from masonite.validation.Validator import (ValidationFactory, Validator,
                                            greater_than, in_range, ip, is_future,
                                            is_in, is_past, isnt, timezone)
 from masonite.validation.Validator import json as vjson
+from masonite.validation import RuleEnclosure
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            required, string, truthy, when)
 
@@ -701,3 +702,22 @@ class TestDotNotationValidation(unittest.TestCase):
         )
 
         self.assertEqual(validated, {'user': ['user is required']})
+
+class MockRuleEnclosure(RuleEnclosure):
+
+    def rules(self):
+        return [
+            required(['username', 'email']),
+            accepted('terms')
+        ]
+
+class TestRuleEnclosure(unittest.TestCase):
+
+    def test_enclosure_can_encapsulate_rules(self):
+        validate = Validator().validate({
+            'username': 'user123',
+            'email': 'user@example.com',
+            'terms': 'on'
+        }, MockRuleEnclosure)
+
+        self.assertEqual(len(validate), 0)

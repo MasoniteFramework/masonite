@@ -1,4 +1,6 @@
 from masonite.helpers import Dot as DictDot
+from .RuleEnclosure import RuleEnclosure
+import inspect
 
 
 class BaseValidation:
@@ -519,6 +521,11 @@ class Validator:
         rule_errors = {}
         try:
             for rule in rules:
+                
+                if inspect.isclass(rule) and isinstance(rule(), RuleEnclosure):
+                    rule_errors.update(self.run_enclosure(rule(), dictionary))
+                    continue
+
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
                     if error not in rule_errors:
@@ -534,6 +541,18 @@ class Validator:
             e.errors = rule_errors
             raise e
 
+        return rule_errors
+    
+    def run_enclosure(self, enclosure, dictionary):
+        rule_errors = {}
+        for rule in enclosure.rules():
+            for error, message in rule.errors.items():
+                if error not in rule_errors:
+                    rule_errors.update({error: message})
+                else:
+                    messages = rule_errors[error]
+                    messages += message
+                    rule_errors.update({error: messages})
         return rule_errors
 
     def extend(self, key, obj=None):

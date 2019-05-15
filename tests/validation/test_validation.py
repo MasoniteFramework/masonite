@@ -543,7 +543,7 @@ class TestDotNotationValidation(unittest.TestCase):
     def test_dot_json(self):
         validate = Validator().validate({
             'user': {
-                'id': 1,
+                'id': 'hey',
                 'email': 'user@example.com'
             }
         }, vjson(['user.id']))

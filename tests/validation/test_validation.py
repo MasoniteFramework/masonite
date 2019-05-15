@@ -11,7 +11,7 @@ from masonite.validation.Validator import (ValidationFactory, Validator,
                                            after_today, before_today, contains,
                                            date, email, equals, exists,
                                            greater_than, in_range, ip, is_future,
-                                           is_in, is_past, isnt, timezone)
+                                           is_in, is_past, isnt, phone, timezone)
 from masonite.validation.Validator import json as vjson
 from masonite.validation import RuleEnclosure
 from masonite.validation.Validator import (length, less_than, none, numeric,
@@ -75,6 +75,19 @@ class TestValidation(unittest.TestCase):
         }, active_domain(['domain1']))
 
         self.assertEqual(validate, {'domain1': ['domain1 must be an active domain name']})
+
+    def test_phone(self):
+        validate = Validator().validate({
+            'phone': '876-182-1921'
+        }, phone('phone', pattern='123-456-7890'))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({
+            'phone': '(876)182-1921'
+        }, phone('phone', pattern='123-456-7890'))
+
+        self.assertEqual(validate, {'phone': ['phone must be in the format XXX-XXX-XXXX']})
 
     def test_accepted(self):
         validate = Validator().validate({

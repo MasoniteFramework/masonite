@@ -1,6 +1,7 @@
 from masonite.helpers import Dot as DictDot
 from .RuleEnclosure import RuleEnclosure
 import inspect
+import re
 
 
 class BaseValidation:
@@ -250,8 +251,7 @@ class is_future(BaseValidation):
 
 class email(BaseValidation):
 
-    def passes(self, attribute, key, dictionary):
-        import re
+    def passes(self, attribute, key, dictionary):        
         return re.compile(r"^[^.].+@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$").match(attribute)
 
     def message(self, attribute):
@@ -511,6 +511,33 @@ class json(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be json'.format(attribute)
 
+class phone(BaseValidation):
+
+    def __init__(self, *rules, pattern="123-456-7890", messages={}, raises={}):
+        super().__init__(rules, messages={}, raises={})
+        # 123-456-7890
+        # (123)456-7890
+        self.pattern = pattern
+
+    def passes(self, attribute, key, dictionary):
+        if self.pattern == '(123)456-7890':
+            return re.compile(r"^\(\w{3}\)\w{3}\-\w{4}$").match(attribute)
+        elif self.pattern == '123-456-7890':
+            return re.compile(r"^\w{3}\-\w{3}\-\w{4}$").match(attribute)
+        
+
+    def message(self, attribute):
+        if self.pattern == '(123)456-7890':
+            return '{} must be in the format (XXX)XXX-XXXX'.format(attribute)
+        elif self.pattern == '123-456-7890':
+            return '{} must be in the format XXX-XXX-XXXX'.format(attribute)
+        
+
+    def negated_message(self, attribute):
+        if self.pattern == '(123)456-7890':
+            return '{} must not be in the format (XXX)XXX-XXXX'.format(attribute)
+        elif self.pattern == '123-456-7890':
+            return '{} must not be in the format XXX-XXX-XXXX'.format(attribute)
 
 class Validator:
 

@@ -15,7 +15,7 @@ def set_request_method(method_type):
     return Markup("<input type='hidden' name='__method' value='{0}'>".format(method_type))
 
 
-def back(location):
+def back(location=None):
     """Return an input element for use in telling Masonite which route to redirect back to.
 
     Arguments:
@@ -24,6 +24,10 @@ def back(location):
     Returns:
         string -- An input string.
     """
+    if location is None:
+        from wsgi import container
+        location = container.make('Request').path
+        
     return Markup("<input type='hidden' name='__back' value='{0}'>".format(location))
 
 

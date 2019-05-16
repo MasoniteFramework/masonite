@@ -111,6 +111,7 @@ class required(BaseValidation):
         """
         return '{} is not required'.format(key)
 
+
 class timezone(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -135,6 +136,7 @@ class accepted(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be yes, on, 1 or true'.format(attribute)
 
+
 class ip(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
@@ -151,6 +153,7 @@ class ip(BaseValidation):
 
     def negated_message(self, attribute):
         return '{} must not be a valid ipv4 address'.format(attribute)
+
 
 class date(BaseValidation):
 
@@ -251,7 +254,7 @@ class is_future(BaseValidation):
 
 class email(BaseValidation):
 
-    def passes(self, attribute, key, dictionary):        
+    def passes(self, attribute, key, dictionary):
         return re.compile(r"^[^.].+@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$").match(attribute)
 
     def message(self, attribute):
@@ -511,6 +514,7 @@ class json(BaseValidation):
     def negated_message(self, attribute):
         return '{} must not be json'.format(attribute)
 
+
 class phone(BaseValidation):
 
     def __init__(self, *rules, pattern="123-456-7890", messages={}, raises={}):
@@ -524,20 +528,19 @@ class phone(BaseValidation):
             return re.compile(r"^\(\w{3}\)\w{3}\-\w{4}$").match(attribute)
         elif self.pattern == '123-456-7890':
             return re.compile(r"^\w{3}\-\w{3}\-\w{4}$").match(attribute)
-        
 
     def message(self, attribute):
         if self.pattern == '(123)456-7890':
             return '{} must be in the format (XXX)XXX-XXXX'.format(attribute)
         elif self.pattern == '123-456-7890':
             return '{} must be in the format XXX-XXX-XXXX'.format(attribute)
-        
 
     def negated_message(self, attribute):
         if self.pattern == '(123)456-7890':
             return '{} must not be in the format (XXX)XXX-XXXX'.format(attribute)
         elif self.pattern == '123-456-7890':
             return '{} must not be in the format XXX-XXX-XXXX'.format(attribute)
+
 
 class Validator:
 
@@ -548,7 +551,7 @@ class Validator:
         rule_errors = {}
         try:
             for rule in rules:
-                
+
                 if inspect.isclass(rule) and isinstance(rule(), RuleEnclosure):
                     rule_errors.update(self.run_enclosure(rule(), dictionary))
                     continue
@@ -569,7 +572,7 @@ class Validator:
             raise e
 
         return rule_errors
-    
+
     def run_enclosure(self, enclosure, dictionary):
         rule_errors = {}
         for rule in enclosure.rules():

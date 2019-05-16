@@ -65,9 +65,11 @@ class StorageDiskDriver(BaseDriver, StorageContract):
         if force:
             shutil.rmtree(directory)
             return True
-
-        pathlib.Path(directory).rmdir()
-        return True
+        try:
+            pathlib.Path(directory).rmdir()
+            return True
+        except FileNotFoundError:
+            return True
 
     def move(self, old, new):
         return shutil.move(old, new)

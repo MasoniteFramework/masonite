@@ -2,8 +2,10 @@
 
 from masonite.request import Request
 from masonite.view import View
+from masonite.controllers import Controller
 
-class {{ class }}:
+
+class {{ class }}(Controller):
     """{{ class }} Controller Class."""
     
     def __init__(self, request: Request):

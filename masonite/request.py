@@ -33,7 +33,8 @@ class Request(Extendable):
     as a request parameter
 
     Arguments:
-        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class have the ability to extend another class at runtime.
+        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class 
+        have the ability to extend another class at runtime.
     """
 
     statuses = response_statuses()
@@ -71,7 +72,8 @@ class Request(Extendable):
 
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
-            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
+            clean {bool} -- Whether or not the return value should be 
+                            cleaned (default: {True})
 
         Returns:
             string
@@ -136,8 +138,10 @@ class Request(Extendable):
         """Get all the input data.
 
         Keyword Arguments:
-            internal_variables {bool} -- Get the internal framework variables as well (default: {True})
-            clean {bool} -- Whether or not the return value should be cleaned (default: {True})
+            internal_variables {bool} -- Get the internal framework variables 
+                                            as well (default: {True})
+            clean {bool} -- Whether or not the return value should be 
+                cleaned (default: {True})
 
         Returns:
             dict
@@ -240,7 +244,8 @@ class Request(Extendable):
 
         if isinstance(value, list):
 
-            # If the list contains MiniFieldStorage objects then loop through and get the values.
+            # If the list contains MiniFieldStorage objects then loop
+            # through and get the values.
             if any(isinstance(storage_obj, MiniFieldStorage) for storage_obj in value):
                 values = [storage_obj.value for storage_obj in value]
 
@@ -363,7 +368,7 @@ class Request(Extendable):
         if isinstance(key, dict):
             for key, value in key.items():
                 self._set_header(key, value, http_prefix)
-            return True
+            return 
 
         # Get Headers
         if value is None:
@@ -375,8 +380,6 @@ class Request(Extendable):
                 return ''
 
         self._set_header(key, value, http_prefix)
-
-        return True
 
     def _set_header(self, key, value, http_prefix):
         # Set Headers
@@ -496,7 +499,7 @@ class Request(Extendable):
         if not http_only:
             http_only = ""
 
-        self.append_cookie(key, '{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
+        self.append_cookie('{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
         self.cookies.append(
             ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
                 key, value, expires, http_only, path)))
@@ -547,7 +550,7 @@ class Request(Extendable):
                 return grab_cookie[provided_cookie].value
         return None
 
-    def append_cookie(self, key, value):
+    def append_cookie(self, value):
         """Append cookie to the string or create a new string.
 
         Whether a new cookie should append on to the string of cookies to be set
@@ -812,7 +815,8 @@ class Request(Extendable):
         Converts /url/@id into /url/1. Used for redirection
 
         Arguments:
-            route {string} -- An uncompiled route (/dashboard/@user:string/@id:int)
+            route {string} -- An uncompiled route 
+                                like (/dashboard/@user:string/@id:int)
 
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route (default: {{}})

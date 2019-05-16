@@ -98,8 +98,8 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             self.channel.close()
             self.connection.close()
 
-    def basic_consume(self, callback, queue):
-        self.channel.basic_consume(callback, queue=queue)
+    def basic_consume(self, callback, queue_name):
+        self.channel.basic_consume(callback, queue=queue_name)
 
     def work(self, ch, method, properties, body):
         from wsgi import container

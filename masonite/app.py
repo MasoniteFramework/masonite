@@ -137,7 +137,7 @@ class App:
         Returns:
             object -- The object you tried resolving but with the correct dependencies injected.
         """
-        provider_list = []
+        objects = []
         passing_arguments = list(resolving_arguments)
 
         for _, value in self.get_parameters(obj):
@@ -145,16 +145,16 @@ class App:
                 param = self._find_annotated_parameter(value)
                 if inspect.isclass(param):
                     param = self.resolve(param)
-                provider_list.append(param)
+                objects.append(param)
             elif '=' in str(value):
-                provider_list.append(value.default)
+                objects.append(value.default)
             elif '*' in str(value):
                 continue
             elif self.resolve_parameters:
-                provider_list.append(self._find_parameter(value))
+                objects.append(self._find_parameter(value))
             elif resolving_arguments:
                 try:
-                    provider_list.append(passing_arguments.pop(0))
+                    objects.append(passing_arguments.pop(0))
                 except IndexError:
                     raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
             else:
@@ -162,7 +162,7 @@ class App:
                     "This container is not set to resolve parameters. You can set this in the container"
                     " constructor using the 'resolve_parameters=True' keyword argument.")
         try:
-            return obj(*provider_list)
+            return obj(*objects)
         except TypeError as e:
             raise ContainerError(str(e))
 

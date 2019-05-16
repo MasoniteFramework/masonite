@@ -328,8 +328,8 @@ class App:
                     hook_obj(obj, self)
 
     def _bind_hook(self, hook, key, obj):
-        """Internal method used to abstract away the logic for binding an 
-            listener to the container hooks.
+        """Internal method used to abstract away the logic for binding an
+        listener to the container hooks.
 
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)

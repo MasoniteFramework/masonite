@@ -33,7 +33,7 @@ class Request(Extendable):
     as a request parameter
 
     Arguments:
-        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class 
+        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class
         have the ability to extend another class at runtime.
     """
 
@@ -72,7 +72,7 @@ class Request(Extendable):
 
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
-            clean {bool} -- Whether or not the return value should be 
+            clean {bool} -- Whether or not the return value should be
                             cleaned (default: {True})
 
         Returns:
@@ -138,9 +138,9 @@ class Request(Extendable):
         """Get all the input data.
 
         Keyword Arguments:
-            internal_variables {bool} -- Get the internal framework variables 
+            internal_variables {bool} -- Get the internal framework variables
                                             as well (default: {True})
-            clean {bool} -- Whether or not the return value should be 
+            clean {bool} -- Whether or not the return value should be
                 cleaned (default: {True})
 
         Returns:
@@ -368,7 +368,7 @@ class Request(Extendable):
         if isinstance(key, dict):
             for key, value in key.items():
                 self._set_header(key, value, http_prefix)
-            return 
+            return
 
         # Get Headers
         if value is None:
@@ -815,7 +815,7 @@ class Request(Extendable):
         Converts /url/@id into /url/1. Used for redirection
 
         Arguments:
-            route {string} -- An uncompiled route 
+            route {string} -- An uncompiled route
                                 like (/dashboard/@user:string/@id:int)
 
         Keyword Arguments:

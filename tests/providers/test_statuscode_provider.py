@@ -30,7 +30,9 @@ class TestServerErrorExceptionHook(unittest.TestCase):
 
     def setUp(self):
         self.app = App()
+        self.app.bind('Container', self.app)
         self.app.bind('Request', Request(None).load_app(self.app).load_environ(generate_wsgi()))
+        self.app.simple(Response)
         self.app.bind('Application', MockApplicationConfig)
         self.app.bind('ViewClass', View(self.app))
         self.app.bind('View', self.app.make('ViewClass').render)

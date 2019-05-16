@@ -12,10 +12,6 @@ class TestController(unittest.TestCase):
         self.app = App()
         self.app.bind('object', object)
 
-    def test_controller_loads_app(self):
-        controller = Controller().load_app(self.app)
-        self.assertEqual(controller.app.providers, {'object': object})
-
     def test_string_controller_constructor_resolves_container(self):
         self.app.bind('Request', Request)
 

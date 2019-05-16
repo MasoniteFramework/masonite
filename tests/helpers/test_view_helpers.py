@@ -44,7 +44,7 @@ class TestViewHelpers(unittest.TestCase):
         self.assertEqual(self.view._shared['unsign'](signed), 'secret')
 
     def test_can_get_config(self):
-        self.assertEqual(self.view._shared['config']('application.debug'), True)
+        self.assertEqual(self.view._shared['config']('cache.driver'), 'disk')
 
     def test_optional(self):
         self.assertEqual(self.view._shared['optional'](MockUser).id, 1)

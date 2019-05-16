@@ -41,7 +41,6 @@ class TestAutoload(unittest.TestCase):
     def test_autoload_loads_not_only_from_app_from_directories_and_instances(self):
         classes = Autoload().instances(['app/http/controllers'], object, only_app=False)
         self.assertIn('TestController', classes)
-        self.assertIn('Command', classes)
 
     def test_autoload_does_not_instantiate_classes(self):
         classes = Autoload().instances(['app/http/controllers'], object)
@@ -51,7 +50,6 @@ class TestAutoload(unittest.TestCase):
     def test_collects_classes_only_in_app(self):
         classes = Autoload().collect(['app/http/controllers'], only_app=False)
         self.assertIn('TestController', classes)
-        self.assertIn('Command', classes)
 
     def test_autoload_throws_exception_when_binding_key_that_already_exists(self):
         self.app.bind('Request', Request(None))

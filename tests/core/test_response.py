@@ -46,8 +46,9 @@ class TestResponse(unittest.TestCase):
     def test_redirect(self):
         self.response.redirect('/some/test')
 
+        self.request.header('Location', '/some/test')
         self.assertTrue(self.request.is_status(302))
-        self.assertTrue(self.request.header('Location', '/some/test'))
+        self.assertEqual(self.request.header('Location'), '/some/test')
 
     def test_response_does_not_override_header_from_controller(self):
         self.response.view(self.app.resolve(ControllerTest().change_header))

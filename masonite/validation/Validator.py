@@ -503,9 +503,16 @@ class json(BaseValidation):
 
     def passes(self, attribute, key, dictionary):
         import json as json_module
+
+        # Hacky workaround for Python 3.4
+        try:
+            JsonParseException = json.decoder.JSONDecodeError
+        except AttributeError:
+            JsonParseException = ValueError
+
         try:
             return json_module.loads(str(attribute))
-        except (TypeError, json_module.decoder.JSONDecodeError):
+        except (TypeError, JsonParseException):
             return False
 
     def message(self, attribute):

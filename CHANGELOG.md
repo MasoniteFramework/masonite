@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.2.b2](https://github.com/MasoniteFramework/core/releases/tag/v2.2.b2) - 2019-04-27
+### Added
+- Added a accept(*) to the upload drivers
+- Added a lot more view helpers
+- Added better test case for database tests
+
+### Changed
+- Changed Craft serve command now reloads by default. You can still pass in the -r flag but it is not required. You can also disable reloading by using craft serve -d for --dont-reload
+- Changed all pytest tests to unittests
+
+
+## [2.1.27](https://github.com/MasoniteFramework/core/releases/tag/v2.1.27) - 2019-04-27
+### Added
+- [Added collect helper](https://docs.masoniteproject.com/the-basics/helper-functions#collect)
+- [Added a new way to add URL params to the route method when not specified.](https://docs.masoniteproject.com/the-basics/requests#route-parsing)
+
 ## [2.1.26](https://github.com/MasoniteFramework/core/releases/tag/v2.1.26) - 2019-03-31
 ### Fixed
 - Fixed issue where channel was not reopening after closing for AMQP driver

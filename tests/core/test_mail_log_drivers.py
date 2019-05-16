@@ -3,7 +3,6 @@ from config import mail
 import os
 
 from masonite.app import App
-from masonite.exceptions import DriverNotFound
 from masonite.view import View
 from masonite.managers.MailManager import MailManager
 from masonite.drivers import MailLogDriver

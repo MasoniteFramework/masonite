@@ -1,9 +1,6 @@
 import unittest
+
 from cgi import MiniFieldStorage
-from pydoc import locate
-
- 
-
 from app.http.test_controllers.TestController import TestController
 from config import application, providers
 from masonite.app import App
@@ -12,8 +9,8 @@ from masonite.helpers.routes import flatten_routes
 from masonite.helpers.time import cookie_expire_time
 from masonite.request import Request
 from masonite.response import Response
-from masonite.routes import Get, Route, RouteGroup
-from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
+from masonite.routes import Get, RouteGroup
+from masonite.testsuite.TestSuite import generate_wsgi
 
 WEB_ROUTES = flatten_routes([
     Get('/test', 'Controller@show').name('test'),

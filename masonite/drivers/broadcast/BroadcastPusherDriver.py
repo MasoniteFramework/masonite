@@ -1,6 +1,5 @@
 """Module for the Pusher websocket driver."""
 
-from masonite.app import App
 from masonite.contracts import BroadcastContract
 from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound

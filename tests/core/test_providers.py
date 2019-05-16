@@ -1,4 +1,3 @@
-from pydoc import locate
 from config import application, providers
 
 from masonite.app import App

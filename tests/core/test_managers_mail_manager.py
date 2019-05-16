@@ -1,7 +1,3 @@
-import ssl
-
- 
-
 from masonite.environment import LoadEnvironment
 
 LoadEnvironment()

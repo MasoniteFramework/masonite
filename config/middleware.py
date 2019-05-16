@@ -4,7 +4,6 @@ from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, Cor
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import \
     AuthenticationMiddleware
-from app.http.middleware.CsrfMiddleware import CsrfMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 from app.http.middleware.MiddlewareTest import MiddlewareTest
 from app.http.middleware.VerifyEmailMiddleware import VerifyEmailMiddleware

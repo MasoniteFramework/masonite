@@ -1,13 +1,12 @@
 """User Table Seeder.
 
-You can run this seeder in order to generate users. 
+You can run this seeder in order to generate users.
 
     - Each time it is ran it will generate 50 random users.
     - All users have the password of 'secret'.
     - You can run the seeder by running: craft seed:run.
 """
 
-from orator.orm import Factory
 from orator.seeds import Seeder
 
 from app.User import User

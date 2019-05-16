@@ -85,7 +85,7 @@ class App:
                 obj = self.resolve(obj)
             return obj
         elif name in self.swaps:
-            return self.swaps[name]
+            return self.swaps.get(name)
         elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
@@ -178,7 +178,7 @@ class App:
         Returns:
             dict -- Returns a dictionary of collected objects and their key bindings.
         """
-        provider_list = {}
+        providers = {}
         if isinstance(search, str):
             # Search Can Be:
             #    '*ExceptionHook'
@@ -188,23 +188,23 @@ class App:
                 if isinstance(key, str):
                     if search.startswith('*'):
                         if key.endswith(search.split('*')[1]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     elif search.endswith('*'):
                         if key.startswith(search.split('*')[0]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     elif '*' in search:
                         split_search = search.split('*')
                         if key.startswith(split_search[0]) and key.endswith(split_search[1]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     else:
                         raise AttributeError(
                             "There is no '*' in your collection search")
         else:
             for provider_key, provider_class in self.providers.items():
                 if inspect.isclass(provider_class) and issubclass(provider_class, search):
-                    provider_list.update({provider_key: provider_class})
+                    providers.update({provider_key: provider_class})
 
-        return provider_list
+        return providers
 
     def _find_annotated_parameter(self, parameter):
         """Find a given annotation in the container.
@@ -328,7 +328,8 @@ class App:
                     hook_obj(obj, self)
 
     def _bind_hook(self, hook, key, obj):
-        """Internal method used to abstract away the logic for binding an listener to the container hooks.
+        """Internal method used to abstract away the logic for binding an 
+            listener to the container hooks.
 
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)

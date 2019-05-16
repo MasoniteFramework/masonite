@@ -10,7 +10,7 @@ from masonite.helpers import config
 class BroadcastPusherDriver(BroadcastContract, BaseDriver):
     """Class for the Pusher websocket driver."""
 
-    def __init__(self, app: App):
+    def __init__(self):
         """Pusher driver constructor.
 
         Arguments:

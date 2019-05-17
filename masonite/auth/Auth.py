@@ -4,6 +4,8 @@ import uuid
 
 import bcrypt
 
+from masonite.helpers import password as bcrypt_password
+
 
 class Auth:
     """This class will be used to authenticate users based on the config/auth.py file."""
@@ -132,3 +134,7 @@ class Auth:
 
     def _get_password_column(self, model):
         return 'password' if not hasattr(model, '__password__') else model.__password__
+
+    def register(self, user):
+        user['password'] == bcrypt_password(user['password'])
+        self.auth_model.create(**user)

@@ -2,7 +2,6 @@
 
 from config import auth
 from masonite.auth import Auth
-from masonite.helpers import password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
 from masonite.auth import MustVerifyEmail
@@ -36,17 +35,18 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        user = auth.AUTH['model'].create(
-            name=request.input('name'),
-            password=bcrypt_password(request.input('password')),
-            email=request.input('email'),
-        )
+        auth = Auth(request)
+        user = auth.regster({
+            'name': request.input('name'),
+            'email': request.input('email'),
+            'password': request.input('password')
+        })
 
         if isinstance(user, MustVerifyEmail):
             user.verify_email(mail_manager, request)
 
         # Login the user
-        if Auth(request).login(request.input(auth.AUTH['model'].__auth__), request.input('password')):
+        if auth.login(request.input(auth.AUTH['model'].__auth__), request.input('password')):
             # Redirect to the homepage
             return request.redirect('/home')
 

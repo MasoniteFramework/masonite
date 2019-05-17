@@ -4,13 +4,15 @@ import uuid
 
 import bcrypt
 
+from masonite.request import Request
+
 
 class Auth:
     """This class will be used to authenticate users based on the config/auth.py file."""
 
     _once = False
 
-    def __init__(self, request, auth_model=None):
+    def __init__(self, request: Request, auth_model=None):
         """Auth constructor.
 
         Arguments:

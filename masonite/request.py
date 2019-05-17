@@ -203,7 +203,8 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
-        self._set_standardized_request_variables(environ['QUERY_STRING'])
+        if 'QUERY_STRING' in environ:
+            self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
             self.__set_request_method()

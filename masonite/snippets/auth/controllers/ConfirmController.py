@@ -1,5 +1,4 @@
 """The ConfirmController Module."""
-import time
 import datetime
 
 from masonite.auth import Auth

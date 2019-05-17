@@ -1,5 +1,4 @@
 from masonite.app import App
-from masonite.controllers import Controller
 from masonite.helpers.routes import get
 from app.http.controllers.ControllerTest import ControllerTest
 from masonite.request import Request

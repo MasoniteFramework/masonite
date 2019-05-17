@@ -1,6 +1,5 @@
 import unittest
 
-from masonite.app import App
 from masonite.auth.Csrf import Csrf
 from masonite.middleware import CsrfMiddleware
 from masonite.testsuite.TestSuite import TestSuite

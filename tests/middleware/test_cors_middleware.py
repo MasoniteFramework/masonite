@@ -1,11 +1,7 @@
-import os
-
 from masonite.middleware import CorsMiddleware
-from masonite.app import App
 from masonite.request import Request
 from masonite.testsuite import generate_wsgi, TestSuite
 
-from config import middleware
 import unittest
 
 

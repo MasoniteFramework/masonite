@@ -1,4 +1,4 @@
-from masonite.testsuite import TestSuite, generate_wsgi
+from masonite.testsuite import TestSuite
 from masonite.testing import BaseRequest
 
 

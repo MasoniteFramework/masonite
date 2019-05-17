@@ -14,5 +14,10 @@ name = "python"
 enabled = true
 runtime_version = "3.x.x"
 
-[analyzers.meta]
-max_line_length = 99
+  [analyzers.meta]
+  max_line_length = 99
+
+# Test coverage analyzer
+[[analyzers]]
+name = "test-coverage"
+enabled = true

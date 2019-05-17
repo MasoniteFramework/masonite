@@ -19,6 +19,8 @@ from .ModelDocstringCommand import ModelDocstringCommand
 from .ProviderCommand import ProviderCommand
 from .QueueWorkCommand import QueueWorkCommand
 from .QueueTableCommand import QueueTableCommand
+from .RuleCommand import RuleCommand
+from .RuleEnclosureCommand import RuleEnclosureCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand
 from .ValidatorCommand import ValidatorCommand

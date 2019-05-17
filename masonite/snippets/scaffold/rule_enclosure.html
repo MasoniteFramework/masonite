@@ -1,0 +1,19 @@
+""" A {{ class }} validation enclosure """
+
+from masonite.validation import RuleEnclosure
+
+
+class {{ class }}(RuleEnclosure):
+    """A {{ class }} validation enclosure class.
+    """
+
+    def rules(self):
+        """Used to return a list of rules in order to make some validation
+        more reusable.
+        
+        Returns:
+            list -- List of rules
+        """
+        return [
+            # Rules go here
+        ]

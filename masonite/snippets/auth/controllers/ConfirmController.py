@@ -47,7 +47,7 @@ class ConfirmController:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
                 id = tokenParts[0]
-                user = self.get_user(id)
+                user = self.get_user.find(1)
 
                 if user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))

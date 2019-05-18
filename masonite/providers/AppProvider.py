@@ -39,7 +39,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
-        self.app.bind('Auth', Auth())
+        self.app.bind('Auth', Auth)
 
         # Insert Commands
         self._load_commands()

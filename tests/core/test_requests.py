@@ -585,6 +585,7 @@ class TestRequest(unittest.TestCase):
     def test_contains_can_return_string(self):
         self.request.path = '/test/path/5'
         self.assertEqual(self.request.contains('/test/*', show='active'), 'active')
+        self.assertEqual(self.request.contains('/test/not', show='active'), '')
 
     def test_contains_for_path_with_digit(self):
         self.request.path = '/test/path/1'

@@ -808,9 +808,12 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if show is not None and re.match(compile_route_to_regex(route), self.path):
-            return show
+        if show is not None:
+            if re.match(compile_route_to_regex(route), self.path):
+                return show
             
+            return ''
+
         return re.match(compile_route_to_regex(route), self.path)
 
     def compile_route_to_url(self, route, params={}):

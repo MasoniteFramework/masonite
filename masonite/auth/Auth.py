@@ -6,6 +6,7 @@ import bcrypt
 
 from masonite.app import App
 
+
 class Auth:
     """This class will be used to authenticate users based on the config/auth.py file."""
 

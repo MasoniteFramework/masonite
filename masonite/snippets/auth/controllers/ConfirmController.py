@@ -46,7 +46,6 @@ class ConfirmController:
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
-                id = tokenParts[0]
                 user = self.get_user.find(1)
 
                 if user.verified_at is None:

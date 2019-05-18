@@ -19,33 +19,6 @@ from masonite.view import View
 class User(Model, MustVerifyEmail):
     __guarded__ = []
 
-# class MockUser():
-
-#     __auth__ = 'email'
-#     password = '$2a$04$SXAMKoNuuiv7iO4g4U3ZOemyJJiKAHomUIFfGyH4hyo4LrLjcMqvS'
-#     users_password = 'pass123'
-#     email = 'user@email.com'
-#     name = 'testuser123'
-#     id = 1
-
-#     def where(self, column, name):
-#         return self
-
-#     def or_where(self, column, name):
-#         return self
-
-#     def first(self):
-#         return self
-
-#     def save(self):
-#         pass
-
-#     def find(self, id):
-#         if self.id == id:
-#             return self
-#         return False
-
-
 class TestAuth(DatabaseTestCase):
 
     def setUp(self):

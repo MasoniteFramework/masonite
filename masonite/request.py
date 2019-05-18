@@ -811,7 +811,7 @@ class Request(Extendable):
         if show is not None:
             if re.match(compile_route_to_regex(route), self.path):
                 return show
-            
+
             return ''
 
         return re.match(compile_route_to_regex(route), self.path)

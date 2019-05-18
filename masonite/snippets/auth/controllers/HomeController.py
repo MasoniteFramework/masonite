@@ -11,7 +11,7 @@ class HomeController:
     def __init__(self):
         pass
 
-    def show(self, request: Request, view: View):
-        if not Auth(request).user():
+    def show(self, request: Request, view: View, auth: Auth):
+        if not auth.user():
             request.redirect('/login')
-        return view.render('auth/home', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+        return view.render('auth/home', {'app': request.app().make('Application'), 'Auth': auth})

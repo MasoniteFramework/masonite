@@ -9,6 +9,7 @@ from masonite.response import Response
 from masonite.routes import Get, Match, Route
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
+from masonite.auth import Auth
 
 
 class TestRouteProvider(unittest.TestCase):
@@ -28,6 +29,7 @@ class TestRouteProvider(unittest.TestCase):
         view = View(self.app)
         self.app.bind('ViewClass', view)
         self.app.bind('View', view.render)
+        self.app.bind('Auth', Auth)
         self.provider = RouteProvider()
         self.provider.app = self.app
 

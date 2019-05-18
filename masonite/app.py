@@ -65,7 +65,7 @@ class App:
         obj = self.resolve(class_obj)
         self.bind(name, obj)
 
-    def make(self, name):
+    def make(self, name, *arguments):
         """Retrieve a class from the container by key.
 
         Arguments:
@@ -82,7 +82,7 @@ class App:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
             if inspect.isclass(obj):
-                obj = self.resolve(obj)
+                obj = self.resolve(obj, *arguments)
             return obj
         elif name in self.swaps:
             return self.swaps.get(name)
@@ -90,7 +90,7 @@ class App:
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
             if inspect.isclass(obj):
-                obj = self.resolve(obj)
+                obj = self.resolve(obj, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(

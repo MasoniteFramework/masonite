@@ -35,11 +35,11 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        user = auth_config.AUTH['model'].create(
-            name=request.input('name'),
-            password=bcrypt_password(request.input('password')),
-            email=request.input('email'),
-        )
+        user = auth.register({
+            name: request.input('name'),
+            password: request.input('password'),
+            email: request.input('email'),
+        })
 
         if isinstance(user, MustVerifyEmail):
             user.verify_email(mail_manager, request)

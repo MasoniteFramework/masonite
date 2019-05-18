@@ -28,10 +28,10 @@ class DatabaseTestCase(unittest.TestCase):
         self.factory.register(model, callable_factory)
 
     def setUpDatabase(self):
-        subprocess.run(['craft', 'migrate'])
+        subprocess.call(['craft', 'migrate'])
 
     def tearDownDatabase(self):
-        subprocess.run(['craft', 'migrate:reset'])
+        subprocess.call(['craft', 'migrate:reset'])
 
     def tearDown(self):
         self.tearDownDatabase()

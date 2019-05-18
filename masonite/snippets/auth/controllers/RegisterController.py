@@ -15,7 +15,7 @@ class RegisterController:
         """The RegisterController Constructor."""
         pass
 
-    def show(self, request: Request, view: View):
+    def show(self, request: Request, auth: Auth, view: View):
         """Show the registration page.
 
         Arguments:
@@ -24,9 +24,9 @@ class RegisterController:
         Returns:
             masonite.view.View -- The Masonite View class.
         """
-        return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+        return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def store(self, request: Request, mail_manager: MailManager):
+    def store(self, request: Request, auth: Auth, mail_manager: MailManager):
         """Register the user with the database.
 
         Arguments:
@@ -35,7 +35,6 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        auth = Auth(request)
         user = auth.regster({
             'name': request.input('name'),
             'email': request.input('email'),

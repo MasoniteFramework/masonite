@@ -1,6 +1,3 @@
-import io
-
-from masonite.app import App
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi
 

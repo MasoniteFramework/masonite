@@ -65,7 +65,7 @@ class App:
         obj = self.resolve(class_obj)
         self.bind(name, obj)
 
-    def make(self, name):
+    def make(self, name, *arguments):
         """Retrieve a class from the container by key.
 
         Arguments:
@@ -82,7 +82,7 @@ class App:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
             if inspect.isclass(obj):
-                obj = self.resolve(obj)
+                obj = self.resolve(obj, *arguments)
             return obj
         elif name in self.swaps:
             return self.swaps.get(name)
@@ -90,7 +90,7 @@ class App:
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
             if inspect.isclass(obj):
-                obj = self.resolve(obj)
+                obj = self.resolve(obj, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(
@@ -328,8 +328,8 @@ class App:
                     hook_obj(obj, self)
 
     def _bind_hook(self, hook, key, obj):
-        """Internal method used to abstract away the logic for binding an 
-            listener to the container hooks.
+        """Internal method used to abstract away the logic for binding an
+        listener to the container hooks.
 
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)

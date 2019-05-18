@@ -1,6 +1,7 @@
 """An AppProvider Service Provider."""
 
 from config import application, middleware, storage
+from masonite.auth import Auth
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand,
@@ -38,6 +39,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
         self.app.bind('RouteMiddleware', middleware.ROUTE_MIDDLEWARE)
         self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
+        self.app.bind('Auth', Auth)
 
         # Insert Commands
         self._load_commands()

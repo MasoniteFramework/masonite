@@ -2,7 +2,6 @@
 
 from masonite.app import App
 from masonite.exception_handler import ExceptionHandler
-from masonite.exceptions import MissingContainerBindingNotFound
 from masonite.hook import Hook
 from masonite.request import Request
 from masonite.response import Response

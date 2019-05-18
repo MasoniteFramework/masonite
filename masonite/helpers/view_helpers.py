@@ -27,7 +27,7 @@ def back(location=None):
     if location is None:
         from wsgi import container
         location = container.make('Request').path
-        
+
     return Markup("<input type='hidden' name='__back' value='{0}'>".format(location))
 
 

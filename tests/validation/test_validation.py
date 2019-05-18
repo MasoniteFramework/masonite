@@ -6,16 +6,17 @@ import pendulum
 
 from masonite.app import App
 from masonite.providers import ValidationProvider
+from masonite.validation import RuleEnclosure
 from masonite.validation.Validator import (ValidationFactory, Validator,
                                            accepted, active_domain,
                                            after_today, before_today, contains,
                                            date, email, equals, exists,
-                                           greater_than, in_range, ip, is_future,
-                                           is_in, is_past, isnt, phone, timezone)
+                                           greater_than, in_range, ip,
+                                           is_future, is_in, is_past, isnt)
 from masonite.validation.Validator import json as vjson
-from masonite.validation import RuleEnclosure
 from masonite.validation.Validator import (length, less_than, none, numeric,
-                                           required, string, truthy, when)
+                                           phone, required, string, timezone,
+                                           truthy, when)
 
 
 class TestValidation(unittest.TestCase):
@@ -671,15 +672,15 @@ class TestDotNotationValidation(unittest.TestCase):
         self.assertEqual(validate, {'user.age': ['You are missing a user age']})
 
 
-# class TestValidationFactory(unittest.TestCase):
+class TestValidationFactory(unittest.TestCase):
 
-#     def test_can_register(self):
-#         factory = ValidationFactory()
-#         factory.register(required)
-#         self.assertEqual(factory.registry['required'], required)
+    def test_can_register(self):
+        factory = ValidationFactory()
+        factory.register(required)
+        self.assertEqual(factory.registry['required'], required)
 
 
-# class TestValidationProvider(unittest.TestCase):
+class TestValidationProvider(unittest.TestCase):
 
     def setUp(self):
         from masonite.request import Request

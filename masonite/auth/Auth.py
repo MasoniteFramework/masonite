@@ -5,6 +5,7 @@ import uuid
 import bcrypt
 
 from masonite.helpers import password as bcrypt_password
+from masonite.app import App
 
 
 class Auth:
@@ -12,7 +13,7 @@ class Auth:
 
     _once = False
 
-    def __init__(self, request, auth_model=None):
+    def __init__(self, app: App, auth_model=None):
         """Auth constructor.
 
         Arguments:
@@ -21,7 +22,7 @@ class Auth:
         Keyword Arguments:
             auth_model {object} -- The model you want to authenticate with (default: {None})
         """
-        self.request = request
+        self.request = app.make('Request')
 
         if auth_model:
             self.auth_model = auth_model

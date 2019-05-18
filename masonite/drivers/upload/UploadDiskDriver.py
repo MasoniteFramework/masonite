@@ -6,8 +6,6 @@ import _io
 from masonite.contracts import UploadContract
 from masonite.drivers import BaseUploadDriver
 from masonite.helpers.filesystem import make_directory
-from masonite.app import App
-from masonite.helpers import config
 
 
 class UploadDiskDriver(BaseUploadDriver, UploadContract):

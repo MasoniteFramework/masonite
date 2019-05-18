@@ -1,6 +1,6 @@
 """The RegisterController Module."""
 
-from config import auth
+from config import auth as auth_config
 from masonite.auth import Auth
 from masonite.request import Request
 from masonite.view import View
@@ -15,7 +15,7 @@ class RegisterController:
         """The RegisterController Constructor."""
         pass
 
-    def show(self, request: Request, auth: Auth, view: View):
+    def show(self, request: Request, view: View, auth: Auth):
         """Show the registration page.
 
         Arguments:
@@ -26,7 +26,7 @@ class RegisterController:
         """
         return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def store(self, request: Request, auth: Auth, mail_manager: MailManager):
+    def store(self, request: Request, mail_manager: MailManager, auth: Auth):
         """Register the user with the database.
 
         Arguments:
@@ -35,17 +35,17 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
-        user = auth.regster({
-            'name': request.input('name'),
-            'email': request.input('email'),
-            'password': request.input('password')
-        })
+        user = auth_config.AUTH['model'].create(
+            name=request.input('name'),
+            password=bcrypt_password(request.input('password')),
+            email=request.input('email'),
+        )
 
         if isinstance(user, MustVerifyEmail):
             user.verify_email(mail_manager, request)
 
         # Login the user
-        if auth.login(request.input(auth.AUTH['model'].__auth__), request.input('password')):
+        if auth.login(request.input(auth_config.AUTH['model'].__auth__), request.input('password')):
             # Redirect to the homepage
             return request.redirect('/home')
 

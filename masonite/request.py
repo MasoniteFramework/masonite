@@ -33,7 +33,7 @@ class Request(Extendable):
     as a request parameter
 
     Arguments:
-        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class 
+        Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class
         have the ability to extend another class at runtime.
     """
 
@@ -72,7 +72,7 @@ class Request(Extendable):
 
         Keyword Arguments:
             default {string} -- Default value if input does not exist (default: {False})
-            clean {bool} -- Whether or not the return value should be 
+            clean {bool} -- Whether or not the return value should be
                             cleaned (default: {True})
 
         Returns:
@@ -138,9 +138,9 @@ class Request(Extendable):
         """Get all the input data.
 
         Keyword Arguments:
-            internal_variables {bool} -- Get the internal framework variables 
+            internal_variables {bool} -- Get the internal framework variables
                                             as well (default: {True})
-            clean {bool} -- Whether or not the return value should be 
+            clean {bool} -- Whether or not the return value should be
                 cleaned (default: {True})
 
         Returns:
@@ -207,7 +207,8 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
-        self._set_standardized_request_variables(environ['QUERY_STRING'])
+        if 'QUERY_STRING' in environ:
+            self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
             self.__set_request_method()
@@ -368,7 +369,7 @@ class Request(Extendable):
         if isinstance(key, dict):
             for key, value in key.items():
                 self._set_header(key, value, http_prefix)
-            return 
+            return
 
         # Get Headers
         if value is None:
@@ -798,7 +799,7 @@ class Request(Extendable):
 
         return False
 
-    def contains(self, route):
+    def contains(self, route, show=None):
         """If the specified URI is in the current URI path.
 
         Arguments:
@@ -807,6 +808,12 @@ class Request(Extendable):
         Returns:
             bool
         """
+        if show is not None:
+            if re.match(compile_route_to_regex(route), self.path):
+                return show
+
+            return ''
+
         return re.match(compile_route_to_regex(route), self.path)
 
     def compile_route_to_url(self, route, params={}):
@@ -815,7 +822,7 @@ class Request(Extendable):
         Converts /url/@id into /url/1. Used for redirection
 
         Arguments:
-            route {string} -- An uncompiled route 
+            route {string} -- An uncompiled route
                                 like (/dashboard/@user:string/@id:int)
 
         Keyword Arguments:

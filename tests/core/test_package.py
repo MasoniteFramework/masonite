@@ -1,8 +1,7 @@
 import os
 import unittest
 
-from masonite.packages import (append_api_routes, append_web_routes,
-                               create_controller, create_or_append_config)
+from masonite.packages import (create_controller, create_or_append_config)
 
 PACKAGE_DIRECTORY = os.getcwd()
 

@@ -799,7 +799,7 @@ class Request(Extendable):
 
         return False
 
-    def contains(self, route):
+    def contains(self, route, show=None):
         """If the specified URI is in the current URI path.
 
         Arguments:
@@ -808,6 +808,12 @@ class Request(Extendable):
         Returns:
             bool
         """
+        if show is not None:
+            if re.match(compile_route_to_regex(route), self.path):
+                return show
+
+            return ''
+
         return re.match(compile_route_to_regex(route), self.path)
 
     def compile_route_to_url(self, route, params={}):

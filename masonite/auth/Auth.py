@@ -4,6 +4,7 @@ import uuid
 
 import bcrypt
 
+from masonite.helpers import password as bcrypt_password
 from masonite.app import App
 
 
@@ -99,16 +100,16 @@ class Auth:
         self.request.delete_cookie('token')
         return self
 
-    def login_by_id(self, id):
+    def login_by_id(self, user_id):
         """Login a user by the user ID.
 
         Arguments:
-            id {string|int} -- The ID of the user model record.
+            user_id {string|int} -- The ID of the user model record.
 
         Returns:
             object|False -- Returns the current authenticated user object or False or None if there is none.
         """
-        model = self.auth_model.find(id)
+        model = self.auth_model.find(user_id)
 
         if model:
             if not self._once:
@@ -134,3 +135,7 @@ class Auth:
 
     def _get_password_column(self, model):
         return 'password' if not hasattr(model, '__password__') else model.__password__
+
+    def register(self, user):
+        user['password'] = bcrypt_password(user['password'])
+        self.auth_model.create(**user)

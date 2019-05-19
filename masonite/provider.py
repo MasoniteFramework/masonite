@@ -99,8 +99,6 @@ class ServiceProvider:
         self._publish_migrations += migrations
         if tag is not None:
             self._publish_migrations_tags.update({tag: migrations})
-        
-        
 
     def publish(self, tag=None):
         if tag is not None:
@@ -121,4 +119,3 @@ class ServiceProvider:
         for from_location in publishing_items:
             print(from_location)
             copy_migration(from_location)
-

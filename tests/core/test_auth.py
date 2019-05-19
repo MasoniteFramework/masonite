@@ -52,6 +52,16 @@ class TestAuth(DatabaseTestCase):
     #     self.assertTrue(self.auth.login('testuser123', 'secret'))
     #     self.assertTrue(self.request.get_cookie('token'))
 
+    def test_can_register(self):
+        self.auth.register({
+            'name': 'Joe',
+            'email': 'joe@email.com',
+            'password': 'secret'
+        })
+
+        self.assertTrue(User.where('email', 'joe@email.com').first())
+        self.assertNotEqual(User.where('email', 'joe@email.com').first().password, 'secret')
+
     def test_get_user(self):
         self.assertTrue(self.auth.login_by_id(1))
 

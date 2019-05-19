@@ -137,5 +137,5 @@ class Auth:
         return 'password' if not hasattr(model, '__password__') else model.__password__
 
     def register(self, user):
-        user['password'] == bcrypt_password(user['password'])
+        user['password'] = bcrypt_password(user['password'])
         self.auth_model.create(**user)

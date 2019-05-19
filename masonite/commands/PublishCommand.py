@@ -19,10 +19,9 @@ class PublishCommand(Command):
             if provider.__name__ == self.argument('name'):
                 if self.option('tag') != 'None':
                     provider().publish(tag=self.option('tag'))
-                
-                provider().publish()
-                
-                return
-        
-        raise ValueError('Could not find the {} provider'.format(self.argument('name')))
 
+                provider().publish()
+
+                return
+
+        raise ValueError('Could not find the {} provider'.format(self.argument('name')))

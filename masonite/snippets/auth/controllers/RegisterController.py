@@ -1,6 +1,6 @@
 """The RegisterController Module."""
 
-from config import auth as auth_config
+from config import application, auth as auth_config
 from masonite.auth import Auth
 from masonite.request import Request
 from masonite.view import View
@@ -24,7 +24,7 @@ class RegisterController:
         Returns:
             masonite.view.View -- The Masonite View class.
         """
-        return view.render('auth/register', {'app': request.app().make('Application'), 'Auth': auth})
+        return view.render('auth/register', {'app': application, 'Auth': auth})
 
     def store(self, request: Request, mail_manager: MailManager, auth: Auth):
         """Register the user with the database.
@@ -36,9 +36,9 @@ class RegisterController:
             masonite.request.Request -- The Masonite request class.
         """
         user = auth.register({
-            name: request.input('name'),
-            password: request.input('password'),
-            email: request.input('email'),
+            'name': request.input('name'),
+            'password': request.input('password'),
+            'email': request.input('email'),
         })
 
         if isinstance(user, MustVerifyEmail):

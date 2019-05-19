@@ -100,5 +100,8 @@ class ServiceProvider:
         else:
             publishing_items = self._publishes
 
+        if not len(publishing_items):
+            raise NotImplementedError('This provider does not publish anything')
+
         for from_location, to_location in publishing_items.items():
             append_file(from_location, to_location)

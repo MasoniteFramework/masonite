@@ -150,6 +150,8 @@ class BaseHttpRoute:
             self
         """
         self._find_controller(output)
+        if not route.startswith('/'):
+            route = '/' + route
         self.route_url = route
         return self
 
@@ -213,7 +215,7 @@ class BaseHttpRoute:
 
         # Resolve Controller Method
         response = self.request.app().resolve(
-            getattr(controller, self.controller_method))
+            getattr(controller, self.controller_method), *self.request.url_params.values())
 
         if isinstance(response, View):
             response = response.rendered_template
@@ -301,15 +303,20 @@ class BaseHttpRoute:
         """
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
+            arguments = []
             middleware_to_run = self.request.app().make('RouteMiddleware')[arg]
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
+
+            if ':' in arg:
+                # Splits "name:value1,value2" into ['value1', 'value2']
+                arguments = arg.split(':')[1].split(',')
 
             try:
                 for middleware in middleware_to_run:
                     located_middleware = self.request.app().resolve(middleware)
                     if hasattr(located_middleware, type_of_middleware):
-                        getattr(located_middleware, type_of_middleware)()
+                        getattr(located_middleware, type_of_middleware)(*arguments)
             except KeyError:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
@@ -368,6 +375,17 @@ class Get(BaseHttpRoute):
             self.route(route, output)
 
 
+class Head(BaseHttpRoute):
+    """Class for specifying HEAD requests."""
+
+    def __init__(self, route=None, output=None):
+        """Head constructor."""
+        self.method_type = ['HEAD']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
 class Post(BaseHttpRoute):
     """Class for specifying POST requests."""
 
@@ -380,10 +398,10 @@ class Post(BaseHttpRoute):
 
 
 class Match(BaseHttpRoute):
-    """Class for specifying POST requests."""
+    """Class for specifying Match requests."""
 
     def __init__(self, method_type=['GET'], route=None, output=None):
-        """Post constructor."""
+        """Match constructor."""
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
 
@@ -422,6 +440,39 @@ class Delete(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Delete constructor."""
         self.method_type = ['DELETE']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Connect(BaseHttpRoute):
+    """Class for specifying Connect requests."""
+
+    def __init__(self, route=None, output=None):
+        """Connect constructor."""
+        self.method_type = ['CONNECT']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Options(BaseHttpRoute):
+    """Class for specifying Options requests."""
+
+    def __init__(self, route=None, output=None):
+        """Options constructor."""
+        self.method_type = ['OPTIONS']
+        self.list_middleware = []
+        if route and output:
+            self.route(route, output)
+
+
+class Trace(BaseHttpRoute):
+    """Class for specifying Trace requests."""
+
+    def __init__(self, route=None, output=None):
+        """Trace constructor."""
+        self.method_type = ['TRACE']
         self.list_middleware = []
         if route and output:
             self.route(route, output)
@@ -475,7 +526,7 @@ class Redirect(BaseHttpRoute):
         return self.request.redirect(self.future_route, status=self.status)
 
 
-class RouteGroup():
+class RouteGroup:
     """Class for specifying Route Groups."""
 
     def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):

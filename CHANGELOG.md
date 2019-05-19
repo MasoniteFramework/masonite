@@ -4,6 +4,93 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Sentimental Versioning](http://sentimentalversioning.org/).
 
+## [2.2.b2](https://github.com/MasoniteFramework/core/releases/tag/v2.2.b2) - 2019-04-27
+### Added
+- Added a accept(*) to the upload drivers
+- Added a lot more view helpers
+- Added better test case for database tests
+
+### Changed
+- Changed Craft serve command now reloads by default. You can still pass in the -r flag but it is not required. You can also disable reloading by using craft serve -d for --dont-reload
+- Changed all pytest tests to unittests
+
+
+## [2.1.27](https://github.com/MasoniteFramework/core/releases/tag/v2.1.27) - 2019-04-27
+### Added
+- [Added collect helper](https://docs.masoniteproject.com/the-basics/helper-functions#collect)
+- [Added a new way to add URL params to the route method when not specified.](https://docs.masoniteproject.com/the-basics/requests#route-parsing)
+
+## [2.1.26](https://github.com/MasoniteFramework/core/releases/tag/v2.1.26) - 2019-03-31
+### Fixed
+- Fixed issue where channel was not reopening after closing for AMQP driver
+
+## [2.1.25](https://github.com/MasoniteFramework/core/releases/tag/v2.1.25) - 2019-03-31
+### Fixed
+- Fixed issue where the amqp driver was not closing connections and channels after use
+
+## [2.1.24](https://github.com/MasoniteFramework/core/releases/tag/v2.1.24) - 2019-03-31
+### Fixed
+- Fixed issue where queue jobs would fail because of a Unicode character (the checkmark) being printed out which would cause the job to fail. Now the command will print out a [Y] character if it cannot print out of a check mark.
+
+## [2.1.23](https://github.com/MasoniteFramework/core/releases/tag/v2.1.23) - 2019-03-24
+### Added
+- [Added Cors middleware](https://docs.masoniteproject.com/security/headers#cors).
+- [You can now use `@` line statements inside your jinja templates](https://docs.masoniteproject.com/the-basics/views#view-syntax)
+
+### Changed
+- Command command now appends `Command` to the end of the class name
+- Exception is now thrown when a route name is not found using the `route` method on the request class
+
+### Fixed
+- [x] Fixed deprecation warnings with regex strings in tests
+
+## [2.1.22](https://github.com/MasoniteFramework/core/releases/tag/v2.1.22) - 2019-03-17
+### Fixed
+- Fixed Auth command not adding route names
+- Fixed issue with compact command not working with multiple None types
+- Fixed issue Japanese characters not returning correct content length
+
+## [2.1.21](https://github.com/MasoniteFramework/core/releases/tag/v2.1.21) - 2019-03-14
+### Added
+- [Added run_again_on_fail and run_times](https://docs.masoniteproject.com/useful-features/queues-and-jobs#specifying-failed-jobs)
+
+## [2.1.20](https://github.com/MasoniteFramework/core/releases/tag/v2.1.20) - 2019-03-09
+### Added
+- [Added compact helper](https://docs.masoniteproject.com/the-basics/helper-functions#compact)
+
+### Fixed
+- Fixed issue with comments on resource controller being flipped.
+- Fixed issue with misspelling of logger
+
+## [2.1.19](https://github.com/MasoniteFramework/core/releases/tag/v2.1.19) - 2019-03-05
+### Fixed
+* Fixed issue with `.` template splices not working
+
+## [2.1.18](https://github.com/MasoniteFramework/core/releases/tag/v2.1.18) - 2019-03-04
+### Added
+- Added a `--connection` option to the `model:doctring` command to use other connections
+
+### Fixed
+- Fixed issue with csrf not being able to correctly detect csrf wildcard routes.
+
+## [2.1.17](https://github.com/MasoniteFramework/core/releases/tag/v2.1.17) - 2019-02-24
+### Added
+- [Added `-m` and `-s` to the model command to create a migration or a seed](https://docs.masoniteproject.com/the-craft-command/introduction#model-shortcuts)
+- [Added ability to use dot notation to get a dictionary value](https://docs.masoniteproject.com/the-basics/requests#getting-dictionary-input)
+- Added google and stack overflow links to the top of the exception page
+- [Added optional helper](https://docs.masoniteproject.com/the-basics/helper-functions#optional)
+
+### Changed
+- [Changed where cleaning happens in the request class. Can now specify on if you want parameters cleaned.](https://docs.masoniteproject.com/the-basics/requests#input-cleaning)
+
+### Fixed
+- Fixed issue with not being able to set 404 status codes
+
+## [2.1.16](https://github.com/MasoniteFramework/core/releases/tag/v2.1.16) - 2019-02-11
+### Fixed
+- Fixed issue with setting status codes on json responses
+- Fixed issue with specifying exempt CSRF protection routes that contained route parameters
+
 ## [2.1.15](https://github.com/MasoniteFramework/core/releases/tag/v2.1.15) - 2019-02-10
 ### Added
 - [Added ability to specify a list as the second parameter to routes instead of a dictionary](https://docs.masoniteproject.com/the-basics/requests#route-parsing)

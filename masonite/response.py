@@ -8,11 +8,12 @@ from masonite.view import View
 
 from orator.support.collection import Collection
 from orator import Model
+from masonite.app import App
 
 
 class Response(Extendable):
 
-    def __init__(self, app):
+    def __init__(self, app: App):
         """A Response object to be used to abstract the logic of getting a response ready to be returned.
 
         Arguments:
@@ -42,7 +43,7 @@ class Response(Extendable):
         Keyword Arguments:
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
-        self.request.header('Content-Length', str(len(self.data())))
+        self.request.header('Content-Length', str(len(self.to_bytes())))
 
         # If the user did not change it directly
         if not self.request.header('Content-Type'):
@@ -85,7 +86,7 @@ class Response(Extendable):
         Returns:
             string|dict|list -- Returns the data to be returned.
         """
-        if self.request.get_status() in (404,):
+        if not self.request.get_status():
             self.request.status(status)
 
         if isinstance(view, dict) or isinstance(view, list):

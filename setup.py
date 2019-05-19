@@ -10,6 +10,13 @@ setup(
         'masonite.commands',
         'masonite.drivers',
         'masonite.drivers.authentication',
+        'masonite.drivers.mail',
+        'masonite.drivers.broadcast',
+        'masonite.drivers.cache',
+        'masonite.drivers.queue',
+        'masonite.drivers.session',
+        'masonite.drivers.storage',
+        'masonite.drivers.upload',
         'masonite.managers',
         'masonite.testsuite',
         'masonite.queues',
@@ -18,11 +25,11 @@ setup(
         'masonite.helpers',
         'masonite.middleware',
         'masonite.testing',
+        'masonite.validation',
     ],
     version=VERSION,
     install_requires=[
         'masonite-events>=1.0,<2',
-        'validator.py>=1.2,<1.3',
         'cryptography>=2.3,<2.4',
         'bcrypt>=3.1,<3.2',
         'requests>=2.0,<2.99',
@@ -31,7 +38,6 @@ setup(
         'python-dotenv>=0.8,<0.9',
         'passlib>=1.7,<1.8',
         'whitenoise>=3.3',
-        'pytest>=3.6,<4',
         'masonite-entry>=0.0.0,<=0.9.99',
         'masonite-scheduler>=1.0.0,<=1.0.99',
         'pendulum>=1.5,<1.6',
@@ -52,7 +58,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
@@ -77,6 +83,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: WSGI',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
+
+        'Framework :: Masonite',
     ],
     include_package_data=True,
 )

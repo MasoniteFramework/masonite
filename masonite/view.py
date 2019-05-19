@@ -1,7 +1,7 @@
 """View Module."""
 
 
-from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
+from jinja2 import ChoiceLoader, Environment, PackageLoader, FileSystemLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
@@ -51,6 +51,7 @@ class View:
         """
         if not isinstance(dictionary, dict):
             raise ViewException('Second parameter to render method needs to be a dictionary, {} passed.'.format(type(dictionary).__name__))
+
         self.__load_environment(template)
         self.dictionary = {}
 
@@ -222,7 +223,7 @@ class View:
             template {string} -- Template to load environment from.
         """
         self.template = template
-        self.filename = template.replace(self._splice, '/') + self.extension
+        self.filename = template.replace(self._splice, '/').replace('.', '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split
@@ -232,11 +233,11 @@ class View:
             loader = ChoiceLoader(
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
-
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=self._jinja_extensions
+                extensions=self._jinja_extensions,
+                line_statement_prefix='@'
             )
 
         else:
@@ -252,7 +253,8 @@ class View:
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
-                extensions=self._jinja_extensions
+                extensions=self._jinja_extensions,
+                line_statement_prefix='@'
             )
 
         self.env.filters.update(self._filters)

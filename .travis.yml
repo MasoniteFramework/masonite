@@ -10,7 +10,7 @@ matrix:
       dist: xenial
       sudo: true
     - python: 3.6
-      script: travis_retry coverage run -m pytest && coveralls
+      script: travis_retry coverage run -m pytest && coveralls && coverage xml && curl https://deepsource.io/cli | sh && ./bin/deepsource report --analyzer test-coverage --key python --value-file ./coverage.xml
 
 install:
 - pip install masonite_cli
@@ -18,7 +18,7 @@ install:
 - pip install -r requirements.txt
 
 script: 
-- travis_retry coverage run -m pytest
+- travis_retry coverage run -m pytest && coveralls
 - flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
 
 deploy:

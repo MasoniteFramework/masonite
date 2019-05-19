@@ -61,7 +61,11 @@ class App:
         self.bind(obj if inspect.isclass(obj) else obj.__class__, obj)
         return self
 
-    def make(self, name):
+    def singleton(self, name, class_obj):
+        obj = self.resolve(class_obj)
+        self.bind(name, obj)
+
+    def make(self, name, *arguments):
         """Retrieve a class from the container by key.
 
         Arguments:
@@ -73,15 +77,20 @@ class App:
         Returns:
             object -- Returns the object that is fetched.
         """
+
         if name in self.providers:
             obj = self.providers[name]
             self.fire_hook('make', name, obj)
+            if inspect.isclass(obj):
+                obj = self.resolve(obj, *arguments)
             return obj
         elif name in self.swaps:
-            return self.swaps[name]
+            return self.swaps.get(name)
         elif inspect.isclass(name):
             obj = self._find_obj(name)
             self.fire_hook('make', name, obj)
+            if inspect.isclass(obj):
+                obj = self.resolve(obj, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(
@@ -128,17 +137,24 @@ class App:
         Returns:
             object -- The object you tried resolving but with the correct dependencies injected.
         """
-        provider_list = []
+        objects = []
         passing_arguments = list(resolving_arguments)
 
         for _, value in self.get_parameters(obj):
             if ':' in str(value):
-                provider_list.append(self._find_annotated_parameter(value))
+                param = self._find_annotated_parameter(value)
+                if inspect.isclass(param):
+                    param = self.resolve(param)
+                objects.append(param)
+            elif '=' in str(value):
+                objects.append(value.default)
+            elif '*' in str(value):
+                continue
             elif self.resolve_parameters:
-                provider_list.append(self._find_parameter(value))
+                objects.append(self._find_parameter(value))
             elif resolving_arguments:
                 try:
-                    provider_list.append(passing_arguments.pop(0))
+                    objects.append(passing_arguments.pop(0))
                 except IndexError:
                     raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
             else:
@@ -146,7 +162,7 @@ class App:
                     "This container is not set to resolve parameters. You can set this in the container"
                     " constructor using the 'resolve_parameters=True' keyword argument.")
         try:
-            return obj(*provider_list)
+            return obj(*objects)
         except TypeError as e:
             raise ContainerError(str(e))
 
@@ -162,7 +178,7 @@ class App:
         Returns:
             dict -- Returns a dictionary of collected objects and their key bindings.
         """
-        provider_list = {}
+        providers = {}
         if isinstance(search, str):
             # Search Can Be:
             #    '*ExceptionHook'
@@ -172,23 +188,23 @@ class App:
                 if isinstance(key, str):
                     if search.startswith('*'):
                         if key.endswith(search.split('*')[1]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     elif search.endswith('*'):
                         if key.startswith(search.split('*')[0]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     elif '*' in search:
                         split_search = search.split('*')
                         if key.startswith(split_search[0]) and key.endswith(split_search[1]):
-                            provider_list.update({key: value})
+                            providers.update({key: value})
                     else:
                         raise AttributeError(
                             "There is no '*' in your collection search")
         else:
             for provider_key, provider_class in self.providers.items():
                 if inspect.isclass(provider_class) and issubclass(provider_class, search):
-                    provider_list.update({provider_key: provider_class})
+                    providers.update({provider_key: provider_class})
 
-        return provider_list
+        return providers
 
     def _find_annotated_parameter(self, parameter):
         """Find a given annotation in the container.
@@ -226,11 +242,11 @@ class App:
     def get_parameters(self, obj):
         return inspect.signature(obj).parameters.items()
 
-    def _find_parameter(self, parameter):
+    def _find_parameter(self, keyword):
         """Find a parameter in the container.
 
         Arguments:
-            parameter {string} -- Parameter to search for.
+            parameter {inspect.Paramater} -- Parameter to search for.
 
         Raises:
             ContainerError -- Thrown when the dependency is not found in the container.
@@ -238,13 +254,17 @@ class App:
         Returns:
             object -- Returns the object found in the container
         """
-        parameter = str(parameter)
+        parameter = str(keyword)
+
         if parameter != 'self' and parameter in self.providers:
             obj = self.providers[parameter]
             self.fire_hook('resolve', parameter, obj)
             return obj
+        elif '=' in parameter:
+            return keyword.default
+
         raise ContainerError(
-            'The dependency with the key of {0} could not be found in the container'.format(
+            'The parameter dependency with the key of {0} could not be found in the container'.format(
                 parameter)
         )
 
@@ -303,12 +323,13 @@ class App:
                 inspect.isclass(obj) and \
                 obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
 
-            for hook, hook_list in self._hooks[action].items():
+            for _, hook_list in self._hooks[action].items():
                 for hook_obj in hook_list:
                     hook_obj(obj, self)
 
     def _bind_hook(self, hook, key, obj):
-        """Internal method used to abstract away the logic for binding an listener to the container hooks.
+        """Internal method used to abstract away the logic for binding an
+        listener to the container hooks.
 
         Arguments:
             hook {string} -- The hook you want to listen for (bind|make|resolve)

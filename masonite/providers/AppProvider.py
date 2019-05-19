@@ -1,6 +1,7 @@
 """An AppProvider Service Provider."""
 
 from config import application, middleware, storage
+from masonite.auth import Auth
 from masonite.autoload import Autoload
 from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand,
@@ -9,10 +10,11 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ModelDocstringCommand,
-                               ProviderCommand, QueueWorkCommand, QueueTableCommand,
-                               RoutesCommand, SeedCommand, SeedRunCommand,
-                               ServeCommand, TinkerCommand, UpCommand,
-                               ValidatorCommand, ViewCommand)
+                               ProviderCommand, QueueTableCommand,
+                               QueueWorkCommand, RoutesCommand, RuleCommand,
+                               RuleEnclosureCommand, SeedCommand,
+                               SeedRunCommand, ServeCommand, TinkerCommand,
+                               UpCommand, ValidatorCommand, ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
@@ -43,6 +45,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('AuthCookieDriver', AuthCookieDriver)
         self.app.bind('AuthJwtDriver', AuthJwtDriver)
         self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
+        self.app.bind('Auth', Auth)
 
         # Insert Commands
         self._load_commands()
@@ -50,7 +53,7 @@ class AppProvider(ServiceProvider):
         self._autoload(application.AUTOLOAD)
 
     def boot(self, request: Request, route: Route):
-        self.app.bind('StatusCode', '404 Not Found')
+        self.app.bind('StatusCode', None)
         route.load_environ(self.app.make('Environ'))
         request.load_environ(self.app.make('Environ')).load_app(self.app)
 
@@ -81,9 +84,11 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
+        self.app.bind('MasoniteRuleEnclosureCommand', RuleEnclosureCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
         self.app.bind('MasoniteUpCommand', UpCommand())
         self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
+        self.app.bind('MasoniteRuleCommand', RuleCommand())

@@ -1,6 +1,5 @@
 import datetime
 import time
-import unittest
 
 from config import application
 from config.database import Model

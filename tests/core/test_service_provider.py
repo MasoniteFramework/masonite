@@ -1,8 +1,10 @@
+import os
+import unittest
+
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.routes import Get
-from masonite.testsuite.TestSuite import generate_wsgi, TestSuite
-import unittest
+from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 
 
 class ContainerTest(ServiceProvider):
@@ -106,3 +108,33 @@ class TestServiceProvider(unittest.TestCase):
     def test_can_load_commands_into_container(self):
         self.assertTrue(self.app.make('Mock1Command'))
         self.assertTrue(self.app.make('Mock2Command'))
+
+    def test_can_load_publishing(self):
+        self.load_provider.publishes({
+            'from/directory': 'to/directory'
+        })
+        self.assertEqual(self.load_provider._publishes, {'from/directory': 'to/directory'})
+        # self.assertTrue(self.app.make('Mock2Command'))
+
+    def test_provider_can_publish_with_tags(self):
+        self.load_provider.publishes({
+            'from/directory': 'to/directory'
+        }, tag='config')
+        self.assertEqual(self.load_provider._publishes, {'from/directory': 'to/directory'})
+        self.assertEqual(self.load_provider._publish_tags.get('config'), {'from/directory': 'to/directory'})
+
+    def test_provider_can_publish(self):
+        self.load_provider.publishes({
+            os.path.join(os.getcwd(), 'storage/append_from.txt'): 'storage/append_to.txt'
+        }, tag='config')
+
+        self.load_provider.publish()
+        os.remove(os.path.join(os.getcwd(), 'storage/append_to.txt'))
+
+    def test_provider_can_publish_a_tag(self):
+        self.load_provider.publishes({
+            os.path.join(os.getcwd(), 'storage/append_from.txt'): 'storage/append_to.txt'
+        }, tag='config')
+
+        self.load_provider.publish(tag='config')
+        os.remove(os.path.join(os.getcwd(), 'storage/append_to.txt'))

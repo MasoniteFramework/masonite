@@ -1,6 +1,7 @@
 """Module for the Service Provider."""
 
 from masonite.helpers import random_string
+from .packages import append_file
 
 
 class ServiceProvider:
@@ -11,6 +12,8 @@ class ServiceProvider:
     def __init__(self):
         """Service provider constructor."""
         self.app = None
+        self._publishes = {}
+        self._publish_tags = {}
 
     def boot(self):
         """Use to boot things into the container. Typically ran after the register method has been ran."""
@@ -82,3 +85,20 @@ class ServiceProvider:
             assets {dict} -- A dictionary of assets to add
         """
         self.app.make('Storage').STATICFILES.update(assets)
+
+    def publishes(self, dictionary, tag=None):
+        self._publishes.update(dictionary)
+        if tag is not None:
+            self._publish_tags.update({tag: dictionary})
+
+    def publish(self, tag=None):
+        if tag is not None:
+            if tag not in self._publish_tags:
+                raise AttributeError('This provider does not have the tag: {}'.format(tag))
+
+            publishing_items = self._publish_tags.get(tag)
+        else:
+            publishing_items = self._publishes
+
+        for from_location, to_location in publishing_items.items():
+            append_file(from_location, to_location)

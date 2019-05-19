@@ -46,6 +46,16 @@ def append_web_routes(location):
     package_routes.close()
     print('\033[92mroutes/web.py File Appended!\033[0m')
 
+def append_file(from_location, to_location):
+    from_fp = open(from_location, "r")
+    to_fp = open(os.path.join(os.getcwd(), to_location), 'a')
+
+    to_fp.write(from_fp.read())
+
+    from_fp.close()
+    to_fp.close()
+    print('\033[92m {} has been appended! \033[0m'.format(to_location))
+
 
 def append_api_routes(location):
     # import it into the web.py file

@@ -1,10 +1,12 @@
 import datetime
 import time
 
-from config import application
+from config import application, auth
 from config.database import Model
 from masonite.app import App
 from masonite.auth import Auth, MustVerifyEmail, Sign
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver, AuthJwtDriver
 from masonite.helpers import password as bcrypt_password
 from masonite.helpers.routes import get
 from masonite.request import Request
@@ -38,7 +40,12 @@ class TestAuth(DatabaseTestCase):
         self.container.bind('ViewClass', view)
         self.app.bind('Application', application)
         self.app.bind('Auth', Auth)
+        self.app.bind('AuthConfig', auth)
+        self.app.bind('AuthManager', AuthManager)
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+
         self.auth = self.app.make('Auth', User)
+        self.request.load_app(self.app)
 
     def test_auth(self):
         self.assertTrue(self.auth)

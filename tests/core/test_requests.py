@@ -96,7 +96,7 @@ class TestRequest(unittest.TestCase):
 
         self.assertEqual(self.request.get_cookie('delete_cookie'), 'value')
         self.request.delete_cookie('delete_cookie')
-        assert not self.request.get_cookie('delete_cookie')
+        self.assertFalse(self.request.get_cookie('delete_cookie'))
 
     def test_delete_cookie_with_wrong_key(self):
         self.request.cookies = []
@@ -411,7 +411,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.header('HTTP_UPGRADE_INSECURE_REQUESTS'), '1')
         self.assertEqual(request.header('RAW_URI'), '/')
         self.assertEqual(request.header('NOT_IN'), '')
-        assert not 'text/html' in request.header('NOT_IN')
+        self.assertFalse('text/html' in request.header('NOT_IN'))
 
     def test_request_sets_correct_header(self):
         app = App()
@@ -574,34 +574,39 @@ class TestRequest(unittest.TestCase):
 
     def test_contains_for_path_detection(self):
         self.request.path = '/test/path'
-        assert self.request.contains('/test/*')
-        assert self.request.contains('/test/path')
-        assert not self.request.contains('/test/wrong')
+        self.assertTrue(self.request.contains('/test/*'))
+        self.assertTrue(self.request.contains('/test/path'))
+        self.assertFalse(self.request.contains('/test/wrong'))
 
     def test_contains_for_multiple_paths(self):
         self.request.path = '/test/path/5'
-        assert self.request.contains('/test/*')
+        self.assertTrue(self.request.contains('/test/*'))
+
+    def test_contains_can_return_string(self):
+        self.request.path = '/test/path/5'
+        self.assertEqual(self.request.contains('/test/*', show='active'), 'active')
+        self.assertEqual(self.request.contains('/test/not', show='active'), '')
 
     def test_contains_for_path_with_digit(self):
         self.request.path = '/test/path/1'
-        assert self.request.contains('/test/path/*')
-        assert self.request.contains('/test/path/*:int')
+        self.assertTrue(self.request.contains('/test/path/*'))
+        self.assertTrue(self.request.contains('/test/path/*:int'))
 
     def test_contains_for_path_with_digit_and_wrong_contains(self):
         self.request.path = '/test/path/joe'
-        assert not self.request.contains('/test/path/*:int')
+        self.assertFalse(self.request.contains('/test/path/*:int'))
 
     def test_contains_for_path_with_alpha_contains(self):
         self.request.path = '/test/path/joe'
-        assert self.request.contains('/test/path/*:string')
+        self.assertTrue(self.request.contains('/test/path/*:string'))
 
     def test_contains_for_route_compilers(self):
         self.request.path = '/test/path/joe'
-        assert self.request.contains('/test/path/*:signed')
+        self.assertTrue(self.request.contains('/test/path/*:signed'))
 
     def test_contains_multiple_asteriks(self):
         self.request.path = '/dashboard/user/edit/1'
-        assert self.request.contains('/dashboard/user/*:string/*:int')
+        self.assertTrue(self.request.contains('/dashboard/user/*:string/*:int'))
 
     def test_request_can_get_input_as_properties(self):
         self.request.request_variables = {'test': 'hey'}

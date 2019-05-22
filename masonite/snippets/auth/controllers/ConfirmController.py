@@ -16,24 +16,26 @@ class ConfirmController:
         """The ConfirmController Constructor."""
         pass
 
-    def verify_show(self, request: Request, view: View):
+    def verify_show(self, request: Request, view: View, auth: Auth):
         """Show the Verify Email page for unverified users.
 
         Arguments:
             Request {masonite.request.request} -- The Masonite request class.
             Request {masonite.view.view} -- The Masonite view class.
+            Request {masonite.auth.auth} -- The Masonite Auth class.
 
         Returns:
             [type] -- [description]
         """
-        return view.render('auth/verify', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+        return view.render('auth/verify', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def confirm_email(self, request: Request, view: View):
+    def confirm_email(self, request: Request, view: View, auth: Auth):
         """Confirm User email and show the correct response.
 
         Arguments:
             Request {masonite.request.request} -- The Masonite request class.
             Request {masonite.view.view} -- The Masonite view class.
+            Request {masonite.auth.auth} -- The Masonite Auth class.
 
         Returns:
             [type] -- [description]
@@ -44,8 +46,7 @@ class ConfirmController:
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
-                id = tokenParts[0]
-                user = self.get_user(id)
+                user = self.get_user.find(1)
 
                 if user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))
@@ -56,9 +57,9 @@ class ConfirmController:
                         user.verified_at = datetime.datetime.now()
                         user.save()
 
-                        return view.render('auth/confirm', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+                        return view.render('auth/confirm', {'app': request.app().make('Application'), 'Auth': auth})
 
-        return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': Auth(request)})
+        return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': auth})
 
     def get_user(self, id):
         """Get the user from the database.

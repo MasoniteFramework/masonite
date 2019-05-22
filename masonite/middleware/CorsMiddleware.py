@@ -1,6 +1,5 @@
 """ CORS Middleware """
 
-from masonite import env
 from masonite.helpers import config
 from masonite.request import Request
 

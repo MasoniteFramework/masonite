@@ -37,4 +37,3 @@ class BaseScaffoldCommand(Command):
                                 'class': class_name.split('/')[-1]}).rendered_template
                 )
                 self.info('{} Created Successfully!'.format(self.scaffold_name))
-

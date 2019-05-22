@@ -1,6 +1,4 @@
 from masonite.request import Request
-from masonite.auth.Sign import Sign
-from cryptography.fernet import Fernet
 from masonite.testsuite.TestSuite import generate_wsgi
 import unittest
 

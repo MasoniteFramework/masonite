@@ -608,6 +608,7 @@ class RouteGroup:
         """
         for route in self.routes:
             route.route_url = prefix + route.route_url
+            route.compile_route_to_regex()
 
     def _name(self, name):
         """Name to prefix to all routes.

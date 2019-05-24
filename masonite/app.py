@@ -13,7 +13,7 @@ class App:
     Performs bindings and resolving of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=True):
+    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=False):
         """App class constructor."""
         self.providers = {}
         self.strict = strict
@@ -181,8 +181,8 @@ class App:
                 if not inspect.ismethod(obj):
                     self._remembered[obj] = objects
                 else:
-                    self._remembered["{}.{}.{}".format(
-                        obj.__module__, obj.__self__.__class__.__name__, obj.__name__)] = objects
+                    signature = obj.__module__, obj.__self__.__class__.__name__, obj.__name__
+                    self._remembered[signature] = objects
             return obj(*objects)
         except TypeError as e:
             raise ContainerError(str(e))

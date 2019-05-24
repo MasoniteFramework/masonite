@@ -195,6 +195,9 @@ def create_matchurl(router, route):
         string -- compiled regex string
     """
 
+    if router.url == '/':
+        return re.compile(r'^\/$')
+
     if router.url.endswith('/'):
         matchurl = route._compiled_regex_end
     else:

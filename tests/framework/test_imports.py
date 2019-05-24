@@ -1,3 +1,4 @@
+
 def test_masonite_import():
     """ Application should be able to import Masonite modules """
     try:

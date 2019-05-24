@@ -194,18 +194,13 @@ def create_matchurl(router, route):
     Returns:
         string -- compiled regex string
     """
-    # Compiles the given route to regex
-    regex = route.compile_route_to_regex(router)
 
-    if route.route_url.endswith('/'):
-        if router.url.endswith('/'):
-            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
-        else:
-            matchurl = re.compile(regex.replace(r'\/\/$', r'$'))
+    if router.url == '/':
+        return re.compile(r'^\/$')
+
+    if router.url.endswith('/'):
+        matchurl = route._compiled_regex_end
     else:
-        if router.url.endswith('/'):
-            matchurl = re.compile(regex)
-        else:
-            matchurl = re.compile(regex.replace(r'\/$', r'$'))
+        matchurl = route._compiled_regex
 
     return matchurl

@@ -3,6 +3,7 @@
 import cgi
 import importlib
 import json
+import re
 
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
 from masonite.view import View
@@ -153,6 +154,7 @@ class BaseHttpRoute:
         if not route.startswith('/'):
             route = '/' + route
         self.route_url = route
+        self._compiled_url = self.compile_route_to_regex()
         return self
 
     def view(self, route, template, dictionary={}):
@@ -321,7 +323,7 @@ class BaseHttpRoute:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
 
-    def compile_route_to_regex(self, router):
+    def compile_route_to_regex(self):
         """Compile the given route to a regex string.
 
         Arguments:
@@ -339,7 +341,7 @@ class BaseHttpRoute:
             if '@' in regex_route:
                 if ':' in regex_route:
                     try:
-                        regex += router.route_compilers[regex_route.split(':')[
+                        regex += Route.route_compilers[regex_route.split(':')[
                             1]]
                     except KeyError:
                         raise InvalidRouteCompileException(
@@ -348,7 +350,7 @@ class BaseHttpRoute:
                                 regex_route.split(':')[1])
                         )
                 else:
-                    regex += router.route_compilers['default']
+                    regex += Route.route_compilers['default']
 
                 regex += r'\/'
 
@@ -359,8 +361,12 @@ class BaseHttpRoute:
             else:
                 regex += regex_route + r'\/'
 
-        router.url_list = url_list
+        self.url_list = url_list
         regex += '$'
+
+        self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
+        self._compiled_regex_end = re.compile(regex)
+
         return regex
 
 
@@ -497,6 +503,7 @@ class ViewRoute(BaseHttpRoute):
         self.route_url = route
         self.template = template
         self.dictionary = dictionary
+        self._compiled_url = self.compile_route_to_regex()
 
     def get_response(self):
         return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template

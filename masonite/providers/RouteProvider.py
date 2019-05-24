@@ -55,7 +55,7 @@ class RouteProvider(ServiceProvider):
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[router.generated_url_list()[index]] = value
+                        parameter_dict[route.url_list[index]] = value
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass

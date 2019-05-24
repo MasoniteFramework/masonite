@@ -26,8 +26,6 @@ class RouteProvider(ServiceProvider):
 
             matchurl = create_matchurl(router, route)
 
-            print('match_url', matchurl)
-
             """Houston, we've got a match
                 Check to see if a route matches the corresponding router url. If a match
                 is found, execute that route and break out of the loop. We only need

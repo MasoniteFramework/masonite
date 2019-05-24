@@ -618,6 +618,7 @@ class ValidationFactory:
             after_today,
             before_today,
             contains,
+            date,
             equals,
             email,
             exists,

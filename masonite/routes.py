@@ -3,6 +3,7 @@
 import cgi
 import importlib
 import json
+import re
 
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
 from masonite.view import View
@@ -359,9 +360,13 @@ class BaseHttpRoute:
                 )
             else:
                 regex += regex_route + r'\/'
-        
+
         self.url_list = url_list
         regex += '$'
+
+        self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
+        self._compiled_regex_end = re.compile(regex)
+
         return regex
 
 

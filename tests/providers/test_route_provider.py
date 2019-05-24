@@ -57,8 +57,8 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_controller_that_return_a_view_with_trailing_slash(self):
 
-        self.app.make('Route').url = '/view/'
-        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
+        self.app.make('Route').url = '/view'
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -69,7 +69,7 @@ class TestRouteProvider(unittest.TestCase):
         self.assertEqual(self.app.make('Response'), 'test')
 
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),

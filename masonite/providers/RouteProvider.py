@@ -26,6 +26,8 @@ class RouteProvider(ServiceProvider):
 
             matchurl = create_matchurl(router, route)
 
+            print('match_url', matchurl)
+
             """Houston, we've got a match
                 Check to see if a route matches the corresponding router url. If a match
                 is found, execute that route and break out of the loop. We only need
@@ -55,7 +57,7 @@ class RouteProvider(ServiceProvider):
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[router.generated_url_list()[index]] = value
+                        parameter_dict[route.url_list[index]] = value
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass

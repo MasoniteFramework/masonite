@@ -13,7 +13,7 @@ class App:
     Performs bindings and resolving of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=False):
+    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=True):
         """App class constructor."""
         self.providers = {}
         self.strict = strict

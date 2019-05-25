@@ -147,7 +147,7 @@ class App:
                 return obj(*objects)
             except TypeError as e:
                 raise ContainerError(str(e))
-        elif self.remember and inspect.ismethod(obj) and "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__) in self._remembered:
+        elif self.remember and not passing_arguments and inspect.ismethod(obj) and "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__) in self._remembered:
             location = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
             objects = self._remembered[location]
             try:
@@ -181,7 +181,7 @@ class App:
                 if not inspect.ismethod(obj):
                     self._remembered[obj] = objects
                 else:
-                    signature = obj.__module__, obj.__self__.__class__.__name__, obj.__name__
+                    signature = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
                     self._remembered[signature] = objects
             return obj(*objects)
         except TypeError as e:

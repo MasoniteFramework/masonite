@@ -528,6 +528,7 @@ class Redirect(BaseHttpRoute):
         self.route_url = current_route
         self.status = status
         self.future_route = future_route
+        self._compiled_url = self.compile_route_to_regex()
 
     def get_response(self):
         return self.request.redirect(self.future_route, status=self.status)

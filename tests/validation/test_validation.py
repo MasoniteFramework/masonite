@@ -17,6 +17,9 @@ from masonite.validation.Validator import json as vjson
 from masonite.validation.Validator import (length, less_than, none, numeric,
                                            phone, required, string, timezone,
                                            truthy, when)
+from masonite.managers import SessionManager
+from masonite.drivers import SessionCookieDriver
+from masonite.testsuite import generate_wsgi
 
 
 class TestValidation(unittest.TestCase):
@@ -699,6 +702,7 @@ class TestValidationProvider(unittest.TestCase):
     def test_request_validation(self):
         request = self.app.make('Request')
         validate = self.app.make('Validator')
+        print('validate is', validate)
 
         request.request_variables = {
             'id': 1,
@@ -716,6 +720,30 @@ class TestValidationProvider(unittest.TestCase):
         )
 
         self.assertEqual(validated, {'user': ['user is required']})
+
+    def test_request_validation_redirects_back_with_session(self):
+        wsgi = generate_wsgi()
+        self.app.bind('Application', self.app)
+        self.app.bind('SessionCookieDriver', SessionCookieDriver)
+        self.app.bind('Environ', wsgi)
+
+        request = self.app.make('Request')
+        request.load_environ(wsgi)
+        
+        request.request_variables = {
+            'id': 1,
+            'name': 'Joe'
+        }
+
+        errors = request.validate(
+            required('user')
+        )
+
+        request.session = SessionManager(self.app).driver('cookie')
+
+        self.assertEqual(request.redirect('/login').with_errors(errors).redirect_url, '/login')
+        self.assertEqual(request.redirect('/login').with_errors(errors).session.get('errors'), {'user': ['user is required']})
+
 
 class MockRuleEnclosure(RuleEnclosure):
 

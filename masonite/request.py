@@ -57,6 +57,7 @@ class Request(Extendable):
         self.subdomain = None
         self._activate_subdomains = False
         self._status = None
+        self.request_variables = {}
 
         if environ:
             self.load_environ(environ)
@@ -206,7 +207,6 @@ class Request(Extendable):
         self.environ = environ
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
-        self.request_variables = {}
         if 'QUERY_STRING' in environ:
             self._set_standardized_request_variables(environ['QUERY_STRING'])
 
@@ -284,6 +284,8 @@ class Request(Extendable):
         Returns:
             masonite.app.App -- Application container
         """
+        # if self.container is None:
+        #     raise AttributeError("The container has not been loaded into the Request class. Use the 'load_app' method to load the container.")
         return self.container
 
     def has(self, *args):
@@ -758,7 +760,11 @@ class Request(Extendable):
         if inp:
             return inp
 
-        raise ValueError('No input or parameter of {} found'.format(key))
+        raise AttributeError("class 'Request' has no attribute {}".format(key))
+
+    def with_errors(self, errors):
+        self.session.flash('errors', errors)
+        return self
 
     def reset_redirections(self):
         """Reset the redirections because of this class acting like a singleton pattern."""
@@ -912,5 +918,4 @@ class Request(Extendable):
 
     def validate(self, *rules):
         validator = self.app().make('Validator')
-
         return validator.validate(self.request_variables, *rules)

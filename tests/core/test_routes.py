@@ -42,30 +42,30 @@ class TestRoutes(unittest.TestCase):
 
     def test_compile_route_to_regex(self):
         get_route = Get().route('test/route', None)
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/route\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/route\/$')
 
         get_route = Get().route('test/@route', None)
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/([\w.-]+)\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/([\w.-]+)\/$')
 
         get_route = Get().route('test/@route:int', None)
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/(\d+)\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/(\d+)\/$')
 
         get_route = Get().route('test/@route:string', None)
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/([a-zA-Z]+)\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/([a-zA-Z]+)\/$')
 
     def test_route_can_add_compilers(self):
         get_route = Get().route('test/@route:int', None)
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/(\d+)\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/(\d+)\/$')
 
         self.route.compile('year', r'[0-9]{4}')
 
         get_route = Get().route('test/@route:year', None)
 
-        self.assertEqual(get_route.compile_route_to_regex(self.route), r'^\/test\/[0-9]{4}\/$')
+        self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
+        
 
-        get_route = Get().route('test/@route:slug', None)
         with self.assertRaises(InvalidRouteCompileException):
-            get_route.compile_route_to_regex(self.route)
+            get_route = Get().route('test/@route:slug', None)
 
     def test_route_gets_controllers(self):
         self.assertTrue(Get().route('test/url', 'TestController@show'))

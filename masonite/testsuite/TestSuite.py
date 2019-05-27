@@ -39,7 +39,7 @@ class TestSuite:
 
     def create_container(self, wsgi=generate_wsgi(), container=None, routes=[]):
         if not container:
-            container = App()
+            container = App(remember=False)
 
         container.bind('WSGI', wsgi)
         container.bind('Application', application)

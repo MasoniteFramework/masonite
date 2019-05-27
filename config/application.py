@@ -27,7 +27,7 @@ it to encrypt and decrypt various values using the Masonite Sign
 class. Read the documentation on Encryption to find out how.
 """
 
-KEY = env('KEY', 'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+KEY = 'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY='
 
 """Application URL
 Sets the root URL of the application. This is primarily used for testing

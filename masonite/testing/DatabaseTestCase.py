@@ -28,6 +28,7 @@ class DatabaseTestCase(unittest.TestCase):
         self.factory.register(model, callable_factory)
 
     def setUpDatabase(self):
+        self.tearDownDatabase()
         subprocess.call(['craft', 'migrate'])
 
     def tearDownDatabase(self):

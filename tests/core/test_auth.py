@@ -45,7 +45,6 @@ class TestAuth(DatabaseTestCase):
         self.assertTrue(self.auth)
 
     def test_login_user(self):
-        print(self.auth.auth_model)
         self.assertTrue(self.auth.login('user@email.com', 'secret'))
         self.assertTrue(self.request.get_cookie('token'))
 

@@ -48,10 +48,10 @@ class TestAuth(DatabaseTestCase):
         self.assertTrue(self.auth.login('user@email.com', 'secret'))
         self.assertTrue(self.request.get_cookie('token'))
 
-    def test_can_login_with_second_password(self):
-        self.auth.auth_model.__password__ = 'second_password'
-        self.assertTrue(self.auth.login('user@email.com', 'pass123'))
-        self.assertTrue(self.request.get_cookie('token'))
+    # def test_can_login_with_second_password(self):
+    #     self.auth.auth_model.__password__ = 'second_password'
+    #     self.assertTrue(self.auth.login('user@email.com', 'pass123'))
+    #     self.assertTrue(self.request.get_cookie('token'))
 
     def test_login_user_with_list_auth_column(self):
         self.auth.auth_model.__auth__ = ['name', 'email']

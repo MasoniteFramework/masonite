@@ -43,6 +43,7 @@ class TestAuth(DatabaseTestCase):
         self.app.bind('AuthConfig', auth)
         self.app.bind('AuthManager', AuthManager)
         self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthJwtDriver', AuthJwtDriver)
 
         self.auth = self.app.make('Auth', User)
         self.request.load_app(self.app)
@@ -51,8 +52,10 @@ class TestAuth(DatabaseTestCase):
         self.assertTrue(self.auth)
 
     def test_login_user(self):
-        self.assertTrue(self.auth.login('user@email.com', 'secret'))
-        self.assertTrue(self.request.get_cookie('token'))
+        for driver in ('cookie', 'jwt'):
+            self.auth.driver = driver
+            self.assertTrue(self.auth.login('user@email.com', 'secret'))
+            self.assertTrue(self.request.get_cookie('token'))
 
     # def test_login_user_with_list_auth_column(self):
     #     self.assertTrue(self.auth.login('testuser123', 'secret'))
@@ -65,8 +68,9 @@ class TestAuth(DatabaseTestCase):
             'password': 'secret'
         })
 
-        self.assertTrue(User.where('email', 'joe@email.com').first())
-        self.assertNotEqual(User.where('email', 'joe@email.com').first().password, 'secret')
+        for driver in ('cookie', 'jwt'):
+            self.assertTrue(User.where('email', 'joe@email.com').first())
+            self.assertNotEqual(User.where('email', 'joe@email.com').first().password, 'secret')
 
     def test_get_user(self):
         self.assertTrue(self.auth.login_by_id(1))

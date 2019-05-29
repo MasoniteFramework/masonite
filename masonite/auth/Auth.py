@@ -4,7 +4,7 @@ import uuid
 
 import bcrypt
 
-from masonite.helpers import password as bcrypt_password
+from masonite.helpers import password as bcrypt_password, config
 from masonite.app import App
 
 
@@ -29,6 +29,9 @@ class Auth:
         else:
             from config import auth
             self.auth_model = auth.AUTH['model']
+        
+        self.driver = config('auth.auth.driver', 'cookie')
+
 
     def user(self):
         """Get the currently logged in user.
@@ -40,7 +43,7 @@ class Auth:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
         try:
-            return self.request.app().make('AuthManager').driver('cookie').user(self.auth_model)
+            return self.request.app().make('AuthManager').driver(self.driver).user(self.auth_model)
         except Exception as exception:
             raise exception
 
@@ -78,7 +81,7 @@ class Auth:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token
                     model.save()
-                    self.request.app().make('AuthManager').driver('cookie').save(remember_token, model=model)
+                    self.request.app().make('AuthManager').driver(self.driver).save(remember_token, model=model)
                 return model
 
         except Exception as exception:
@@ -92,7 +95,7 @@ class Auth:
         Returns:
             self
         """
-        self.request.app().make('AuthManager').driver('cookie').delete()
+        self.request.app().make('AuthManager').driver(self.driver).delete()
         return self
 
     def login_by_id(self, user_id):
@@ -111,7 +114,7 @@ class Auth:
                 remember_token = str(uuid.uuid4())
                 model.remember_token = remember_token
                 model.save()
-                self.request.app().make('AuthManager').driver('cookie').save(remember_token, model=model)
+                self.request.app().make('AuthManager').driver(self.driver).save(remember_token, model=model)
             return model
 
         return False

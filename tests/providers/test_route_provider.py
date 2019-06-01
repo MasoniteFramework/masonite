@@ -67,6 +67,18 @@ class TestRouteProvider(unittest.TestCase):
         self.assertEqual(self.app.make('Response'), 'test')
 
 
+    def test_base_route_hits_controller(self):
+        self.app.make('Route').url = '/test'
+        self.app.bind('WebRoutes', [get('/@id', ControllerTest.test)])
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+
+        assert self.app.make('Request').param('id') == 'test'
+        assert self.app.make('Response') == 'test'
+
     def test_controller_that_return_a_view_with_trailing_slash(self):
 
         self.app.make('Route').url = '/view'

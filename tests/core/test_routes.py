@@ -27,9 +27,6 @@ class TestRoutes(unittest.TestCase):
         self.assertTrue(callable(Options))
         self.assertTrue(callable(Trace))
 
-    def test_route_get_returns_output(self):
-        self.assertEqual(self.route.get('url', 'output'), 'output')
-
     def test_route_prefixes_forward_slash(self):
         self.assertEqual(Get().route('some/url', 'TestController@show').route_url, '/some/url')
 
@@ -254,5 +251,5 @@ class WsgiInputTestClass:
         self.byte = byte
         return self
 
-    def read(self, request_body_size):
+    def read(self, _):
         return self.byte

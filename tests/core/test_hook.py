@@ -3,7 +3,7 @@ from masonite.hook import Hook
 import unittest
 
 class SentryExceptionHookMock:
-    def load(self, app):
+    def load(self, _):
         return 'loaded'
 
 

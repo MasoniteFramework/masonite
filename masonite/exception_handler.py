@@ -56,7 +56,7 @@ class ExceptionHandler:
 
         self.handle(exception)
 
-    def handle(self, exception):
+    def handle(self, _):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
         Returns:
@@ -114,7 +114,7 @@ class DumpHandler:
         self.app = app
         self.response = response
 
-    def handle(self, handle):
+    def handle(self, _):
         from config.database import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 

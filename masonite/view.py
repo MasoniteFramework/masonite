@@ -91,7 +91,7 @@ class View:
 
         # Check if there is just an astericks in the composer
         if '*' in self.composers:
-            self.dictionary.update(self.composers['*'])
+            self.dictionary.update(self.composers.get('*'))
 
         # We will append onto this string for an easier way to search through wildcard routes
         compiled_string = ''

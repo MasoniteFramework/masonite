@@ -20,7 +20,7 @@ class Storage:
         else:
             matches = []
             for files in storage.SASSFILES['importFrom']:
-                for root, dirnames, filenames in os.walk(os.path.join(application.BASE_DIRECTORY, files)):
+                for root, _, filenames in os.walk(os.path.join(application.BASE_DIRECTORY, files)):
                     for filename in filenames:
                         if filename.endswith(('.sass', '.scss')) and not filename.startswith('_'):
                             matches.append(os.path.join(root, filename))

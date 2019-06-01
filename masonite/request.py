@@ -586,14 +586,14 @@ class Request(Extendable):
 
         if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
 
-            cookies = self.environ['HTTP_COOKIE'].split(';')
-            for index, cookie in enumerate(cookies):
+            request_cookies = self.environ['HTTP_COOKIE'].split(';')
+            for index, cookie in enumerate(request_cookies):
                 if cookie.startswith(key):
                     # remove that cookie
-                    del cookies[index]
+                    del request_cookies[index]
 
             # put string back together
-            self.environ['HTTP_COOKIE'] = ';'.join(cookies)
+            self.environ['HTTP_COOKIE'] = ';'.join(request_cookies)
             return True
         return False
 

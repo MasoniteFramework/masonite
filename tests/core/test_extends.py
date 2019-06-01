@@ -30,7 +30,7 @@ class ExtendClass2:
 
 class MockWsgiInput():
 
-    def read(self, value):
+    def read(self, _):
         return '{"id": 1, "test": "testing"}'
 
 

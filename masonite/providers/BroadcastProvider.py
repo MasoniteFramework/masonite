@@ -17,6 +17,6 @@ class BroadcastProvider(ServiceProvider):
         self.app.bind('BroadcastAblyDriver', BroadcastAblyDriver)
         self.app.bind('BroadcastManager', BroadcastManager(self.app))
 
-    def boot(self, broadcast: BroadcastManager):
+    def boot(self):
         self.app.bind('Broadcast', self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))
         self.app.swap(Broadcast, self.app.make('BroadcastManager').driver(self.app.make('BroadcastConfig').DRIVER))

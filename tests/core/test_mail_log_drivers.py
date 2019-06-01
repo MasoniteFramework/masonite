@@ -74,7 +74,7 @@ class TestMailLogDrivers(unittest.TestCase):
     def test_terminal_driver_output(self):
         user = UserMock
         user.email = 'test@email.com'
-        with captured_output() as (out, err):
+        with captured_output() as (_, err):
             MailManager(self.app).driver('terminal').to(user).send('Masonite')
 
         # This can go inside or outside the `with` block

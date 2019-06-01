@@ -1,8 +1,6 @@
 """ Test Secure Headers Midddleware """
-import os
 import unittest
 
-from masonite.app import App
 from masonite.middleware import SecureHeadersMiddleware
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi

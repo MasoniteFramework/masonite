@@ -52,20 +52,6 @@ class Route:
 
         return self
 
-    def get(self, route, output=None):
-        """Return the output.
-
-        Arguments:
-            route {masonite.routes.BaseHttpRoute} -- The current route being executed.
-
-        Keyword Arguments:
-            output {string} -- Returns the output (default: {None})
-
-        Returns:
-            string
-        """
-        return output
-
     def set_post_params(self):
         """Return the correct input.
 
@@ -537,7 +523,7 @@ class Redirect(BaseHttpRoute):
 class RouteGroup:
     """Class for specifying Route Groups."""
 
-    def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
+    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -551,24 +537,24 @@ class RouteGroup:
             list -- Returns a list of routes.
         """
         from masonite.helpers.routes import flatten_routes
-        self.routes = flatten_routes(routes)
+        cls.routes = flatten_routes(routes)
 
         if middleware:
-            self._middleware(self, *middleware)
+            cls._middleware(cls, *middleware)
 
         if add_methods:
-            self._add_methods(self, *add_methods)
+            cls._add_methods(cls, *add_methods)
 
         if domain:
-            self._domain(self, domain)
+            cls._domain(cls, domain)
 
         if prefix:
-            self._prefix(self, prefix)
+            cls._prefix(cls, prefix)
 
         if name:
-            self._name(self, name)
+            cls._name(cls, name)
 
-        return self.routes
+        return cls.routes
 
     def _middleware(self, *middleware):
         """Attach middleware to all routes.

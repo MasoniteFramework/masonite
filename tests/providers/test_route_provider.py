@@ -69,7 +69,7 @@ class TestRouteProvider(unittest.TestCase):
 
     def test_base_route_hits_controller(self):
         self.app.make('Route').url = '/test'
-        self.app.bind('WebRoutes', [get('/@id', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/@id', ControllerTest.test)])
         self.provider.boot(
             self.app.make('Route'),
             self.app.make('Request'),

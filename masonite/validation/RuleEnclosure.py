@@ -1,2 +1,0 @@
-class RuleEnclosure:
-    pass

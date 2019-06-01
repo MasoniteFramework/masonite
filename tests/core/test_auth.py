@@ -29,7 +29,8 @@ class TestAuth(DatabaseTestCase):
         User.create({
             'name': 'testuser123',
             'email': 'user@email.com',
-            'password': bcrypt_password('secret')
+            'password': bcrypt_password('secret'),
+            'second_password': bcrypt_password('pass123'),
         })
         self.app.bind('Container', self.app)
         view = View(self.container)
@@ -57,9 +58,15 @@ class TestAuth(DatabaseTestCase):
             self.assertTrue(self.auth.login('user@email.com', 'secret'))
             self.assertTrue(self.request.get_cookie('token'))
 
-    # def test_login_user_with_list_auth_column(self):
-    #     self.assertTrue(self.auth.login('testuser123', 'secret'))
+    # def test_can_login_with_second_password(self):
+    #     self.auth.auth_model.__password__ = 'second_password'
+    #     self.assertTrue(self.auth.login('user@email.com', 'pass123'))
     #     self.assertTrue(self.request.get_cookie('token'))
+
+    def test_login_user_with_list_auth_column(self):
+        self.auth.auth_model.__auth__ = ['name', 'email']
+        self.assertTrue(self.auth.login('testuser123', 'secret'))
+        self.assertTrue(self.request.get_cookie('token'))
 
     def test_can_register(self):
         self.auth.register({
@@ -82,6 +89,7 @@ class TestAuth(DatabaseTestCase):
     def test_logout_user(self):
         self.auth.login('user@email.com', 'secret')
         self.assertTrue(self.request.get_cookie('token'))
+        self.assertTrue(self.auth.user())
 
         self.auth.logout()
         self.assertFalse(self.request.get_cookie('token'))

@@ -1,4 +1,3 @@
-import unittest
 
 from app.http.controllers.TestController import \
     TestController as ControllerTest

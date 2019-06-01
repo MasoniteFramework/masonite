@@ -207,7 +207,7 @@ class TestContainer(unittest.TestCase):
 
         self.assertIsInstance(app.make(SubstituteThis), MakeObject)
 
-    def _substitute(self, method, container):
+    def _substitute(self, _, __):
         return 'test'
 
     def _test_substitute(self, test: SubstituteThis):

@@ -54,11 +54,35 @@ class TestRouteProvider(unittest.TestCase):
         )
 
         # self.assertEqual(self.app.make('Response'), 'test')
+    
+    def test_home_route(self):
+        self.app.make('Route').url = '/'
+        self.app.bind('WebRoutes', [Get('/', ControllerTest.test)])
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+
+        self.assertEqual(self.app.make('Response'), 'test')
+
+
+    def test_base_route_hits_controller(self):
+        self.app.make('Route').url = '/test'
+        self.app.bind('WebRoutes', [Get('/@id', ControllerTest.test)])
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+
+        assert self.app.make('Request').param('id') == 'test'
+        assert self.app.make('Response') == 'test'
 
     def test_controller_that_return_a_view_with_trailing_slash(self):
 
-        self.app.make('Route').url = '/view/'
-        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
+        self.app.make('Route').url = '/view'
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),
@@ -69,7 +93,7 @@ class TestRouteProvider(unittest.TestCase):
         self.assertEqual(self.app.make('Response'), 'test')
 
         self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [Get('/view/', ControllerTest.test)])
+        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
 
         self.provider.boot(
             self.app.make('Route'),

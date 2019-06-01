@@ -13,12 +13,13 @@ class App:
     Performs bindings and resolving of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True, resolve_parameters=False):
+    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=True):
         """App class constructor."""
         self.providers = {}
         self.strict = strict
         self.override = override
         self.resolve_parameters = resolve_parameters
+        self.remember = remember
         self._hooks = {
             'make': {},
             'bind': {},
@@ -26,6 +27,7 @@ class App:
         }
 
         self.swaps = {}
+        self._remembered = {}
 
     def bind(self, name, class_obj):
         """Bind classes into the container with a key value pair.
@@ -139,29 +141,48 @@ class App:
         """
         objects = []
         passing_arguments = list(resolving_arguments)
-
-        for _, value in self.get_parameters(obj):
-            if ':' in str(value):
-                param = self._find_annotated_parameter(value)
-                if inspect.isclass(param):
-                    param = self.resolve(param)
-                objects.append(param)
-            elif '=' in str(value):
-                objects.append(value.default)
-            elif '*' in str(value):
-                continue
-            elif self.resolve_parameters:
-                objects.append(self._find_parameter(value))
-            elif resolving_arguments:
-                try:
-                    objects.append(passing_arguments.pop(0))
-                except IndexError:
-                    raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
-            else:
-                raise ContainerError(
-                    "This container is not set to resolve parameters. You can set this in the container"
-                    " constructor using the 'resolve_parameters=True' keyword argument.")
+        if self.remember and obj in self._remembered:
+            objects = self._remembered[obj]
+            try:
+                return obj(*objects)
+            except TypeError as e:
+                raise ContainerError(str(e))
+        elif self.remember and not passing_arguments and inspect.ismethod(obj) and "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__) in self._remembered:
+            location = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
+            objects = self._remembered[location]
+            try:
+                return obj(*objects)
+            except TypeError as e:
+                raise ContainerError(str(e))
+        else:
+            for _, value in self.get_parameters(obj):
+                if ':' in str(value):
+                    param = self._find_annotated_parameter(value)
+                    if inspect.isclass(param):
+                        param = self.resolve(param)
+                    objects.append(param)
+                elif '=' in str(value):
+                    objects.append(value.default)
+                elif '*' in str(value):
+                    continue
+                elif self.resolve_parameters:
+                    objects.append(self._find_parameter(value))
+                elif resolving_arguments:
+                    try:
+                        objects.append(passing_arguments.pop(0))
+                    except IndexError:
+                        raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
+                else:
+                    raise ContainerError(
+                        "This container is not set to resolve parameters. You can set this in the container"
+                        " constructor using the 'resolve_parameters=True' keyword argument.")
         try:
+            if self.remember:
+                if not inspect.ismethod(obj):
+                    self._remembered[obj] = objects
+                else:
+                    signature = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
+                    self._remembered[signature] = objects
             return obj(*objects)
         except TypeError as e:
             raise ContainerError(str(e))

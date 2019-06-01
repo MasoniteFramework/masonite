@@ -1,11 +1,10 @@
 """A RouteProvider Service Provider."""
 
+from masonite.helpers.routes import create_matchurl
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.response import Response
 from masonite.routes import Route
-from masonite.helpers.routes import create_matchurl
-from config import application
 
 
 class RouteProvider(ServiceProvider):
@@ -15,6 +14,7 @@ class RouteProvider(ServiceProvider):
 
     def boot(self, router: Route, request: Request, response: Response):
         # All routes joined
+        from config import application
         for route in self.app.make('WebRoutes'):
 
             """Make a better match for trailing slashes
@@ -55,7 +55,7 @@ class RouteProvider(ServiceProvider):
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[router.generated_url_list()[index]] = value
+                        parameter_dict[route.url_list[index]] = value
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass

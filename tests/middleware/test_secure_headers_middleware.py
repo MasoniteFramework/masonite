@@ -1,13 +1,10 @@
 """ Test Secure Headers Midddleware """
-import os
-
-from masonite.app import App
-from masonite.request import Request
-from masonite.middleware import SecureHeadersMiddleware
-from masonite.testsuite import generate_wsgi, TestSuite
-
-from config import middleware
 import unittest
+
+from masonite.middleware import SecureHeadersMiddleware
+from masonite.request import Request
+from masonite.testsuite import TestSuite, generate_wsgi
+
 
 class TestSecureHeadersMiddleware(unittest.TestCase):
 

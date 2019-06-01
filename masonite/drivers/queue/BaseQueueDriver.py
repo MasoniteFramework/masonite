@@ -4,20 +4,20 @@ import pickle
 
 import pendulum
 
-from config import queue
 from masonite.drivers import BaseDriver
 from masonite.helpers import HasColoredCommands
-
-if 'amqp' in queue.DRIVERS:
-    listening_channel = queue.DRIVERS['amqp']['channel']
-else:
-    listening_channel = 'default'
 
 
 class BaseQueueDriver(BaseDriver, HasColoredCommands):
 
     def add_to_failed_queue_table(self, payload):
         from config.database import DB as schema
+        from config import queue
+        if 'amqp' in queue.DRIVERS:
+            listening_channel = queue.DRIVERS['amqp']['channel']
+        else:
+            listening_channel = 'default'
+
         if schema.get_schema_builder().has_table('failed_jobs'):
             schema.table('failed_jobs').insert({
                 'driver': 'amqp',

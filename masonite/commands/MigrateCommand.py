@@ -26,7 +26,7 @@ class MigrateCommand(Command):
 
         migration_directory = ['databases/migrations']
         for key, value in container.providers.items():
-            if type(key) == str and 'MigrationDirectory' in key:
+            if isinstance(key, str) and 'MigrationDirectory' in key:
                 migration_directory.append(value)
 
         for directory in migration_directory:

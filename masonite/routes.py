@@ -3,6 +3,7 @@
 import cgi
 import importlib
 import json
+import re
 
 from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
 from masonite.view import View
@@ -50,20 +51,6 @@ class Route:
             self.environ['QUERY_STRING'] = self.set_post_params()
 
         return self
-
-    def get(self, route, output=None):
-        """Return the output.
-
-        Arguments:
-            route {masonite.routes.BaseHttpRoute} -- The current route being executed.
-
-        Keyword Arguments:
-            output {string} -- Returns the output (default: {None})
-
-        Returns:
-            string
-        """
-        return output
 
     def set_post_params(self):
         """Return the correct input.
@@ -153,6 +140,7 @@ class BaseHttpRoute:
         if not route.startswith('/'):
             route = '/' + route
         self.route_url = route
+        self._compiled_url = self.compile_route_to_regex()
         return self
 
     def view(self, route, template, dictionary={}):
@@ -321,7 +309,7 @@ class BaseHttpRoute:
                 raise RouteMiddlewareNotFound(
                     "Could not find the '{0}' route middleware".format(arg))
 
-    def compile_route_to_regex(self, router):
+    def compile_route_to_regex(self):
         """Compile the given route to a regex string.
 
         Arguments:
@@ -339,7 +327,7 @@ class BaseHttpRoute:
             if '@' in regex_route:
                 if ':' in regex_route:
                     try:
-                        regex += router.route_compilers[regex_route.split(':')[
+                        regex += Route.route_compilers[regex_route.split(':')[
                             1]]
                     except KeyError:
                         raise InvalidRouteCompileException(
@@ -348,7 +336,7 @@ class BaseHttpRoute:
                                 regex_route.split(':')[1])
                         )
                 else:
-                    regex += router.route_compilers['default']
+                    regex += Route.route_compilers['default']
 
                 regex += r'\/'
 
@@ -359,8 +347,12 @@ class BaseHttpRoute:
             else:
                 regex += regex_route + r'\/'
 
-        router.url_list = url_list
+        self.url_list = url_list
         regex += '$'
+
+        self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
+        self._compiled_regex_end = re.compile(regex)
+
         return regex
 
 
@@ -497,6 +489,7 @@ class ViewRoute(BaseHttpRoute):
         self.route_url = route
         self.template = template
         self.dictionary = dictionary
+        self._compiled_url = self.compile_route_to_regex()
 
     def get_response(self):
         return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
@@ -521,6 +514,7 @@ class Redirect(BaseHttpRoute):
         self.route_url = current_route
         self.status = status
         self.future_route = future_route
+        self._compiled_url = self.compile_route_to_regex()
 
     def get_response(self):
         return self.request.redirect(self.future_route, status=self.status)
@@ -529,7 +523,7 @@ class Redirect(BaseHttpRoute):
 class RouteGroup:
     """Class for specifying Route Groups."""
 
-    def __new__(self, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
+    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -543,24 +537,24 @@ class RouteGroup:
             list -- Returns a list of routes.
         """
         from masonite.helpers.routes import flatten_routes
-        self.routes = flatten_routes(routes)
+        cls.routes = flatten_routes(routes)
 
         if middleware:
-            self._middleware(self, *middleware)
+            cls._middleware(cls, *middleware)
 
         if add_methods:
-            self._add_methods(self, *add_methods)
+            cls._add_methods(cls, *add_methods)
 
         if domain:
-            self._domain(self, domain)
+            cls._domain(cls, domain)
 
         if prefix:
-            self._prefix(self, prefix)
+            cls._prefix(cls, prefix)
 
         if name:
-            self._name(self, name)
+            cls._name(cls, name)
 
-        return self.routes
+        return cls.routes
 
     def _middleware(self, *middleware):
         """Attach middleware to all routes.
@@ -601,6 +595,7 @@ class RouteGroup:
         """
         for route in self.routes:
             route.route_url = prefix + route.route_url
+            route.compile_route_to_regex()
 
     def _name(self, name):
         """Name to prefix to all routes.

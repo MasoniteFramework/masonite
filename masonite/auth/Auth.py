@@ -76,7 +76,7 @@ class Auth:
             else:
                 model = self.auth_model.where(auth_column, name).first()
 
-            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(model.password, 'utf-8')):
+            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(self._get_password_column(model), 'utf-8')):
                 if not self._once:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token
@@ -128,11 +128,12 @@ class Auth:
         self._once = True
         return self
 
-    def _get_password_value(self, model):
-        return getattr(model, model.__password__) if hasattr(model, '__password__') else model.password
-
     def _get_password_column(self, model):
-        return 'password' if not hasattr(model, '__password__') else model.__password__
+        if hasattr(model, '__password__'):
+            return getattr(model, model.__password__)
+
+        if hasattr(model, 'password'):
+            return getattr(model, 'password')
 
     def register(self, user):
         user['password'] = bcrypt_password(user['password'])

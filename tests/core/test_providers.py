@@ -8,7 +8,7 @@ import unittest
 class TestProviders(unittest.TestCase):
 
     def setUp(self):
-        self.app = App()
+        self.app = App(remember=False)
         self.app.bind('WSGI', object)
 
         self.app.bind('Application', application)
@@ -17,20 +17,18 @@ class TestProviders(unittest.TestCase):
 
     def test_providers_load_into_container(self):
         for provider in self.app.make('Providers').PROVIDERS:
-            self.app.resolve(provider().load_app(self.app).register)
+            provider().load_app(self.app).register()
 
         self.app.bind('Response', 'test')
         self.app.bind('WebRoutes', [
-            Get().route('url', None),
-            Get().route('url/', None),
-            Get().route('url/@firstname', None),
+            Get().route('url', 'TestController@show'),
+            Get().route('url/', 'TestController@show'),
+            Get().route('url/@firstname', 'TestController@show'),
         ])
 
         self.app.bind('Response', 'Route not found. Error 404')
 
         for provider in self.app.make('Providers').PROVIDERS:
-            provider().load_app(self.app)
-
             self.app.resolve(provider().load_app(self.app).boot)
 
         self.assertTrue(self.app.make('Request'))

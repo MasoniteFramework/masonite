@@ -61,16 +61,16 @@ class ConfirmController:
 
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def get_user(self, id):
+    def get_user(self, user_id):
         """Get the user from the database.
 
         Arguments:
-            id {str} -- The user id
+            user_id {str} -- The users id
 
         Returns:
             [User] -- [User model]
         """
-        return User.find(id)
+        return User.find(user_id)
 
     def send_verify_email(self, request: Request):
         user = request.user()

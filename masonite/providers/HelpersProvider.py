@@ -3,7 +3,7 @@
 import builtins
 import os
 
-from masonite.exception_handler import DD, DumpHandler
+from masonite.exception_handler import DD
 from masonite.helpers.view_helpers import back, set_request_method, hidden
 from masonite.helpers.sign import sign, unsign, decrypt, encrypt
 from masonite.helpers import config, optional

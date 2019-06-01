@@ -10,7 +10,6 @@ import platform
 import sys
 import traceback
 
-from config import application
 from masonite.app import App
 from masonite.exceptions import DumpException
 from masonite.request import Request
@@ -57,7 +56,7 @@ class ExceptionHandler:
 
         self.handle(exception)
 
-    def handle(self, exception):
+    def handle(self, _):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
         Returns:
@@ -70,6 +69,7 @@ class ExceptionHandler:
         self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
+        from config import application
         if not application.DEBUG:
             return
 
@@ -114,7 +114,7 @@ class DumpHandler:
         self.app = app
         self.response = response
 
-    def handle(self, handle):
+    def handle(self, _):
         from config.database import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 

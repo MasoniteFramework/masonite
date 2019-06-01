@@ -25,7 +25,7 @@ class MigrateRollbackCommand(Command):
         # Get any migration files from the Service Container
         migration_directory = ['databases/migrations']
         for key, value in container.providers.items():
-            if type(key) == str and 'MigrationDirectory' in key:
+            if isinstance(key, str) and 'MigrationDirectory' in key:
                 migration_directory.append(value)
 
         # Load in the Orator migration system

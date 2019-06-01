@@ -39,7 +39,7 @@ class TestApp(unittest.TestCase):
         m2 = self.app.make('MockMail')
 
         self.assertNotEqual(id(m1), id(m2))
-    
+
     def test_app_makes_singleton_instance(self):
         self.app.bind('Request', REQUEST)
         self.app.singleton('MockMail', MockMail)
@@ -51,7 +51,6 @@ class TestApp(unittest.TestCase):
 
         m1.request.test = 'test'
         self.assertEqual(m2.request.test, 'test')
-    
 
     def test_can_set_container_hook(self):
         self.app.on_bind('Request', self._func_on_bind)
@@ -73,6 +72,7 @@ class TestApp(unittest.TestCase):
         self.app.on_make(Request, self._func_on_make)
         self.app.bind('Request', REQUEST)
         self.assertEqual(self.app.make('Request').path, '/test/on/make')
+        self.assertEqual(self.app.make('Request').path, '/test/on/make')
 
     def _func_on_make(self, request, container):
         request.path = '/test/on/make'
@@ -81,15 +81,18 @@ class TestApp(unittest.TestCase):
         self.app.on_resolve(Request, self._func_on_resolve)
         self.app.bind('Request', REQUEST)
         self.assertEqual(self.app.resolve(self._resolve_request).path, '/on/resolve')
+        self.assertEqual(self.app.resolve(self._resolve_request).path, '/on/resolve')
 
     def test_can_fire_hook_on_resolve_class(self):
         self.app.on_resolve(Request, self._func_on_resolve_class)
         self.app.bind('Request', REQUEST)
         self.assertEqual(self.app.resolve(self._resolve_reques_class).path, '/on/resolve/class')
+        self.assertEqual(self.app.resolve(self._resolve_reques_class).path, '/on/resolve/class')
 
     def test_can_resolve_parameter_with_keyword_argument_setting(self):
         self.app.bind('Request', REQUEST)
         self.app.resolve_parameters = True
+        self.assertEqual(self.app.resolve(self._resolve_parameter), REQUEST)
         self.assertEqual(self.app.resolve(self._resolve_parameter), REQUEST)
 
     def _func_on_resolve(self, request, container):

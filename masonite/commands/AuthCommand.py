@@ -16,23 +16,23 @@ class AuthCommand(Command):
         self.info('Scaffolding Application ...')
         module_path = os.path.dirname(os.path.realpath(__file__))
 
-        f = open('routes/web.py', 'a')
-        # add all the routes
-        f.write('\nROUTES = ROUTES + [\n    ')
-        f.write("Get().route('/login', 'LoginController@show').name('login'),\n    ")
-        f.write("Get().route('/logout', 'LoginController@logout').name('logout'),\n    ")
-        f.write("Post().route('/login', 'LoginController@store'),\n    ")
-        f.write("Get().route('/register', 'RegisterController@show').name('register'),\n    ")
-        f.write("Post().route('/register', 'RegisterController@store'),\n    ")
-        f.write("Get().route('/home', 'HomeController@show').name('home'),\n    ")
-        f.write("Get().route('/email/verify', 'ConfirmController@verify_show').name('verify'),\n    ")
-        f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
-        f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
-        f.write("Get().route('/password', 'PasswordController@forget').name('forgot.password'),\n    ")
-        f.write("Post().route('/password', 'PasswordController@send'),\n    ")
-        f.write("Get().route('/password/@token/reset', 'PasswordController@reset').name('password.reset'),\n    ")
-        f.write("Post().route('/password/@token/reset', 'PasswordController@update'),\n")
-        f.write(']\n')
+        with open('routes/web.py', 'a') as f:
+            # add all the routes
+            f.write('\nROUTES = ROUTES + [\n    ')
+            f.write("Get().route('/login', 'LoginController@show').name('login'),\n    ")
+            f.write("Get().route('/logout', 'LoginController@logout').name('logout'),\n    ")
+            f.write("Post().route('/login', 'LoginController@store'),\n    ")
+            f.write("Get().route('/register', 'RegisterController@show').name('register'),\n    ")
+            f.write("Post().route('/register', 'RegisterController@store'),\n    ")
+            f.write("Get().route('/home', 'HomeController@show').name('home'),\n    ")
+            f.write("Get().route('/email/verify', 'ConfirmController@verify_show').name('verify'),\n    ")
+            f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
+            f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
+            f.write("Get().route('/password', 'PasswordController@forget').name('forgot.password'),\n    ")
+            f.write("Post().route('/password', 'PasswordController@send'),\n    ")
+            f.write("Get().route('/password/@token/reset', 'PasswordController@reset').name('password.reset'),\n    ")
+            f.write("Post().route('/password/@token/reset', 'PasswordController@update'),\n")
+            f.write(']\n')
 
         # move controllers
         shutil.copyfile(module_path + "/../snippets/auth/controllers/LoginController.py",

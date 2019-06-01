@@ -26,17 +26,16 @@ class ControllerCommand(Command):
         if not make_directory('app/http/controllers/{0}.py'.format(controller)):
             return self.error('{0} Controller Exists!'.format(controller))
 
-        f = open('app/http/controllers/{0}.py'.format(controller), 'w+')
-        if view.exists('/masonite/snippets/scaffold/controller'):
-            if self.option('resource'):
-                template = '/masonite/snippets/scaffold/controller_resource'
-            else:
-                template = '/masonite/snippets/scaffold/controller'
+        with open('app/http/controllers/{0}.py'.format(controller), 'w+') as f:
+            if view.exists('/masonite/snippets/scaffold/controller'):
+                if self.option('resource'):
+                    template = '/masonite/snippets/scaffold/controller_resource'
+                else:
+                    template = '/masonite/snippets/scaffold/controller'
 
-            f.write(
-                view.render(
-                    template, {'class': controller.split('/')[-1]}).rendered_template
-            )
+                f.write(
+                    view.render(
+                        template, {'class': controller.split('/')[-1]}).rendered_template
+                )
 
-            self.info('Controller Created Successfully!')
-            return f.close()
+        self.info('Controller Created Successfully!')

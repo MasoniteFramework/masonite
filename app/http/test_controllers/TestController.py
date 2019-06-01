@@ -2,5 +2,5 @@ class TestController:
 
     test = True
 
-    def show():
+    def show(self):
         pass

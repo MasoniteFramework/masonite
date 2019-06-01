@@ -1,4 +1,9 @@
+import unittest
+from cgi import MiniFieldStorage
+from pydoc import locate
 import pytest
+
+ 
 
 from config import application, providers
 from pydoc import locate
@@ -217,6 +222,21 @@ class TestRequest:
         request.reset_redirections()
 
         assert request.redirect_url is False
+
+    def test_redirect_to_throws_exception_when_no_routes_found(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', WEB_ROUTES)
+        request = app.make('Request').load_app(app)
+
+        request.redirect_to('test')
+        request.redirect(name='test')
+
+        with pytest.raises(RouteException):
+            request.redirect_to('notavailable')
+
+        with pytest.raises(RouteException):
+            request.redirect(name='notavailable')
 
     def test_request_has_subdomain_returns_bool(self):
         app = App()

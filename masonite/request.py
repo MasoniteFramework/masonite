@@ -667,7 +667,7 @@ class Request(Extendable):
             if route.named_route == name:
                 return self.compile_route_to_url(route.route_url, params)
 
-        return None
+        raise RouteException("Could not find the route with the name of '{}'".format(name))
 
     def _get_route_from_controller(self, controller):
         """Get the route using the controller.

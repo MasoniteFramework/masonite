@@ -1,5 +1,6 @@
 """Static Helper Module."""
 
+
 def static(alias, file_name):
     """Get the static file location of an asset.
 

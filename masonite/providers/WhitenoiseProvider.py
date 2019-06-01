@@ -5,7 +5,6 @@ from whitenoise import WhiteNoise
 from masonite.provider import ServiceProvider
 
 
-
 class WhitenoiseProvider(ServiceProvider):
 
     wsgi = False

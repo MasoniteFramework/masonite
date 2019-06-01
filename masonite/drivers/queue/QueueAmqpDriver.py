@@ -5,8 +5,6 @@ import pickle
 import time
 
 import pendulum
-
-
 from masonite.contracts import QueueContract
 from masonite.drivers import BaseQueueDriver
 from masonite.exceptions import DriverLibraryNotFound
@@ -24,7 +22,6 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             listening_channel = queue.DRIVERS['amqp']['channel']
         else:
             listening_channel = 'default'
-
 
         # Start the connection
         self.publishing_channel = listening_channel

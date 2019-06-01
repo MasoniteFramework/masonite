@@ -138,12 +138,12 @@ class View:
         self._shared.update(dictionary)
         return self
 
-    def cache_for(self, time=None, type=None):
+    def cache_for(self, time=None, cache_type=None):
         """Set time and type for cache.
 
         Keyword Arguments:
             time {string} -- Time to cache template for (default: {None})
-            type {string} -- Type of the cache. (default: {None})
+            cache_type {string} -- Type of the cache. (default: {None})
 
         Raises:
             RequiredContainerBindingNotFound -- Thrown when the Cache key binding is not found in the container.
@@ -158,7 +158,7 @@ class View:
 
         self.cache = True
         self.cache_time = float(time)
-        self.cache_type = type
+        self.cache_type = cache_type
         if self.__is_expired_cache():
             self.__create_cache_template(self.template)
         return self

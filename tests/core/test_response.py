@@ -20,7 +20,7 @@ class MockUser(Model):
             {'name': 'TestUser', 'email': 'user@email.com'}
         ])
 
-    def find(self, id):
+    def find(self, user_id):
         self.name = 'TestUser'
         self.email = 'user@email.com'
         return self

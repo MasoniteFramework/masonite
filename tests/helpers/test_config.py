@@ -1,8 +1,9 @@
-import pydoc
 
-from masonite.helpers import config, Dot
-from config import database
 import unittest
+
+from masonite.helpers import Dot, config
+
+from config import database
 
 
 class TestConfig(unittest.TestCase):

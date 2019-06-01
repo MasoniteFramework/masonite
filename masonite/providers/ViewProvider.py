@@ -14,4 +14,6 @@ class ViewProvider(ServiceProvider):
         self.app.bind('View', view.render)
 
     def boot(self):
-        pass
+        self.publishes_migrations([
+            'storage/append_from.txt'
+        ])

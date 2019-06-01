@@ -20,14 +20,9 @@ def create_or_append_config(location, name=False):
         print('\033[92mConfiguration File Created!\033[0m')
     else:
         # Append to the file
-        # tempfiles is a list of file handles to your temp files.
-        project_config = open(config_directory + '/' + file_name, "a")
-        package_config = open(location, 'r')
+        with open(config_directory + '/' + file_name, "a") as project_config, open(location, 'r') as package_config:
+            project_config.write(package_config.read())
 
-        project_config.write(package_config.read())
-
-        project_config.close()
-        package_config.close()
         print('\033[92mConfiguration File Appended!\033[0m')
 
 
@@ -35,16 +30,17 @@ def append_web_routes(location):
     # import it into the web.py file
     routes_file = os.path.join(os.getcwd(), 'routes/web.py')
 
-    # Append to the file
-    # tempfiles is a list of file handles to your temp files.
-    project_routes = open(routes_file, "a")
-    package_routes = open(location, 'r')
+    with open(routes_file, "a") as project_routes, open(location, 'r') as package_routes:
+            project_routes.write(package_routes.read())
 
-    project_routes.write(package_routes.read())
-
-    project_routes.close()
-    package_routes.close()
     print('\033[92mroutes/web.py File Appended!\033[0m')
+
+
+def append_file(from_location, to_location):
+    with open(from_location, "r") as from_file_pointer, open(os.path.join(os.getcwd(), to_location), 'a') as to_file_pointer:
+        to_file_pointer.write(from_file_pointer.read())
+
+    print('\033[92m {} has been appended! \033[0m'.format(to_location))
 
 
 def append_api_routes(location):
@@ -52,14 +48,9 @@ def append_api_routes(location):
     api_file = os.path.join(os.getcwd(), 'routes/api.py')
 
     # Append to the file
-    # tempfiles is a list of file handles to your temp files.
-    project_routes = open(api_file, "a")
-    package_routes = open(location, 'r')
+    with open(api_file, "a") as project_routes, open(location, 'r') as package_routes:
+        project_routes.write(package_routes.read())
 
-    project_routes.write(package_routes.read())
-
-    project_routes.close()
-    package_routes.close()
     print('\033[92mroutes/api.py File Appended!\033[0m')
 
 

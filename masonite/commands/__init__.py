@@ -17,6 +17,7 @@ from .MigrateStatusCommand import MigrateStatusCommand
 from .ModelCommand import ModelCommand
 from .ModelDocstringCommand import ModelDocstringCommand
 from .ProviderCommand import ProviderCommand
+from .PublishCommand import PublishCommand
 from .QueueWorkCommand import QueueWorkCommand
 from .QueueTableCommand import QueueTableCommand
 from .RuleCommand import RuleCommand

@@ -9,7 +9,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ModelDocstringCommand,
-                               ProviderCommand, QueueTableCommand,
+                               ProviderCommand, PublishCommand, QueueTableCommand,
                                QueueWorkCommand, RoutesCommand, RuleCommand,
                                RuleEnclosureCommand, SeedCommand,
                                SeedRunCommand, ServeCommand, TinkerCommand,
@@ -74,6 +74,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteModelCommand', ModelCommand())
         self.app.bind('MasoniteModelDocstringCommand', ModelDocstringCommand())
         self.app.bind('MasoniteProviderCommand', ProviderCommand())
+        self.app.bind('MasonitePublishCommand', PublishCommand())
         self.app.bind('MasoniteQueueWorkCommand', QueueWorkCommand())
         self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())

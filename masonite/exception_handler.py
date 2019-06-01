@@ -10,7 +10,6 @@ import platform
 import sys
 import traceback
 
-from config import application
 from masonite.app import App
 from masonite.exceptions import DumpException
 from masonite.request import Request
@@ -70,6 +69,7 @@ class ExceptionHandler:
         self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
+        from config import application
         if not application.DEBUG:
             return
 

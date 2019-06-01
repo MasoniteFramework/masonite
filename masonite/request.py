@@ -16,7 +16,7 @@ from urllib.parse import parse_qsl
 import tldextract
 from cryptography.fernet import InvalidToken
 
-from config import application
+
 from masonite.auth.Sign import Sign
 from masonite.exceptions import InvalidHTTPStatusCode, RouteException
 from masonite.helpers import dot, clean_request_input, Dot as DictDot
@@ -737,6 +737,7 @@ class Request(Extendable):
         Returns:
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
+        from config import application
         if full:
             route = application.URL + self._get_named_route(name, params)
         else:

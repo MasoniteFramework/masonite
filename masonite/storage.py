@@ -2,8 +2,6 @@
 
 import os
 
-from config import application, storage
-
 
 class Storage:
     """Responsible for compiling Sass."""
@@ -14,6 +12,7 @@ class Storage:
 
     def compile_sass(self):
         """Compile sass."""
+        from config import application, storage
         try:
             import sass
         except ImportError:

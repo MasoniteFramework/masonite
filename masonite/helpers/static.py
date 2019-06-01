@@ -1,8 +1,5 @@
 """Static Helper Module."""
 
-from config.storage import DRIVERS
-
-
 def static(alias, file_name):
     """Get the static file location of an asset.
 
@@ -13,6 +10,7 @@ def static(alias, file_name):
     Returns:
         string -- Returns the file location.
     """
+    from config.storage import DRIVERS
     if '.' in alias:
         alias = alias.split('.')
         location = DRIVERS[alias[0]]['location'][alias[1]]

@@ -3,7 +3,7 @@
 
 import os
 
-from config import application, cache
+
 from masonite.contracts import CacheContract
 from masonite.drivers import BaseCacheDriver
 from masonite.exceptions import DriverLibraryNotFound
@@ -20,6 +20,7 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
             CacheConfig {config.cache} -- Cache configuration module.
             Application {config.application} -- Application configuration module.
         """
+        from config import application, cache
 
         self.appconfig = application
         self.cache_forever = None

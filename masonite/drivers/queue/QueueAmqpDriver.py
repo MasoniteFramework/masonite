@@ -6,17 +6,12 @@ import time
 
 import pendulum
 
-from config import queue
+
 from masonite.contracts import QueueContract
 from masonite.drivers import BaseQueueDriver
 from masonite.exceptions import DriverLibraryNotFound
 from masonite.helpers import HasColoredCommands
 from masonite.queues import Queueable
-
-if 'amqp' in queue.DRIVERS:
-    listening_channel = queue.DRIVERS['amqp']['channel']
-else:
-    listening_channel = 'default'
 
 
 class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
@@ -24,6 +19,12 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
     def __init__(self):
         """Queue AMQP Driver
         """
+        from config import queue
+        if 'amqp' in queue.DRIVERS:
+            listening_channel = queue.DRIVERS['amqp']['channel']
+        else:
+            listening_channel = 'default'
+
 
         # Start the connection
         self.publishing_channel = listening_channel

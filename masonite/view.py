@@ -1,7 +1,7 @@
 """View Module."""
 
 
-from jinja2 import ChoiceLoader, Environment, PackageLoader, FileSystemLoader, select_autoescape
+from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
@@ -87,7 +87,7 @@ class View:
         """Add data into the view from specified composers."""
         # Check if the template is directly specified in the composer
         if self.template in self.composers:
-            self.dictionary.update(self.composers[self.template])
+            self.dictionary.update(self.composers.get(self.template))
 
         # Check if there is just an astericks in the composer
         if '*' in self.composers:

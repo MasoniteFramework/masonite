@@ -124,7 +124,7 @@ def _import_application(module_name, app_name):
 
 
 def run(host, port, wsgi_handler, ipv6=False, httpd_cls=WSGIServer):
-    if type(wsgi_handler) == str:
+    if isinstance(wsgi_handler, str):
         module_name, app_name = _split_module_and_app(wsgi_handler)
         wsgi_handler = _import_application(module_name, app_name)
 

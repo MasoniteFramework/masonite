@@ -100,7 +100,7 @@ class View:
         for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
-            if '{}*'.format(compiled_string) in self.composers:
+            if self.composers.get('{}*'.format(compiled_string)):
                 self.dictionary.update(
                     self.composers['{}*'.format(compiled_string)])
             else:

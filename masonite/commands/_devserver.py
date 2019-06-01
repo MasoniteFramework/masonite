@@ -49,7 +49,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         # Short-circuit parent method to not call socket.getfqdn
         return self.client_address[0]
 
-    def log_message(self, format, *args):
+    def log_message(self, _, *args):
         extra = {
             'request': self.request,
             'server_time': self.log_date_time_string(),

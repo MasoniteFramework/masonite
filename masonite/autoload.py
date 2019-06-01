@@ -43,7 +43,7 @@ class Autoload:
             raise ContainerError(
                 'Container not specified. Pass the container into the constructor')
 
-        for (module_loader, name, ispkg) in pkgutil.iter_modules(directories):
+        for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
             for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
 
@@ -71,7 +71,7 @@ class Autoload:
         """
         self.instantiate = instantiate
 
-        for (module_loader, name, ispkg) in pkgutil.iter_modules(directories):
+        for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
             for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
                 if inspect.isclass(obj[1]) and issubclass(obj[1], instance):
@@ -100,7 +100,7 @@ class Autoload:
         """
         self.instantiate = instantiate
 
-        for (module_loader, name, ispkg) in pkgutil.iter_modules(directories):
+        for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
 
             for obj in inspect.getmembers(self._get_module_members(module_loader, name)):

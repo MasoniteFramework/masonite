@@ -31,7 +31,7 @@ def append_web_routes(location):
     routes_file = os.path.join(os.getcwd(), 'routes/web.py')
 
     with open(routes_file, "a") as project_routes, open(location, 'r') as package_routes:
-            project_routes.write(package_routes.read())
+        project_routes.write(package_routes.read())
 
     print('\033[92mroutes/web.py File Appended!\033[0m')
 

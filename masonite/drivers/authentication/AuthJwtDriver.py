@@ -49,6 +49,5 @@ class AuthJwtDriver(BaseDriver):
         token = bytes(token).decode('utf-8')
         self.request.cookie('token', token)
 
-
     def delete(self):
         self.request.delete_cookie('token')

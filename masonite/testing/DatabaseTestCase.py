@@ -16,6 +16,10 @@ class DatabaseTestCase(unittest.TestCase):
             raise Exception("Cannot run tests without using the 'sqlite' database.")
 
         self.setUpDatabase()
+    
+    def refreshDatabase(self):
+        self.tearDownDatabase()
+        self.setUpDatabase()
 
     def make(self, model, factory, amount=50):
         self.registerFactory(model, factory)

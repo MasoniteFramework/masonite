@@ -25,7 +25,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
             expired = token['expired']
             token.pop('expired')
             if not pendulum.parse(expired).is_past():
-                return auth_model.hydrate(token)
+                return auth_model.hydrate(token).first()
             else:
                 if config('auth.drivers.jwt.reauthentication', True):
                     auth_model = Auth(self.request).login_by_id(token[auth_model.__primary_key__])

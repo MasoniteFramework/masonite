@@ -63,6 +63,7 @@ class TestAuth(DatabaseTestCase):
             self.auth.driver = driver
             self.assertTrue(self.auth.login('user@email.com', 'secret'))
             self.assertTrue(self.request.get_cookie('token'))
+            self.assertEqual(self.auth.user().name, 'testuser123')
 
     # def test_can_login_with_second_password(self):
     #     self.auth.auth_model.__password__ = 'second_password'

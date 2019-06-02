@@ -38,13 +38,14 @@ class AuthJwtDriver(BaseDriver):
                 return auth_model
         return False
 
-    def save(self, remember_token, **kwargs):
+    def save(self, _, **kwargs):
+        from config.application import KEY
         model = kwargs.get('model', False)
         serialized_dictionary = model.serialize()
         serialized_dictionary.update({
             'expired': cookie_expire_time('5 minutes')
         })
-        token = self.jwt.encode(serialized_dictionary, 'secret', algorithm='HS256')
+        token = self.jwt.encode(serialized_dictionary, KEY, algorithm='HS256')
         token = bytes(token).decode('utf-8')
         self.request.cookie('token', token)
 

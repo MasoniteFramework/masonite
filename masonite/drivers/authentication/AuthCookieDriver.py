@@ -1,5 +1,4 @@
 
-from masonite.helpers import config
 from masonite.request import Request
 from masonite.drivers import BaseDriver
 
@@ -17,7 +16,7 @@ class AuthCookieDriver(BaseDriver):
         
         return False
 
-    def save(self, remember_token, **kwargs):
+    def save(self, remember_token, **_):
         return self.request.cookie('token', remember_token)
 
     def delete(self):

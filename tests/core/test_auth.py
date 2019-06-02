@@ -87,6 +87,7 @@ class TestAuth(DatabaseTestCase):
         })
 
         for driver in ('cookie', 'jwt'):
+            self.auth.driver = driver
             self.assertTrue(User.where('email', 'joe@email.com').first())
             self.assertNotEqual(User.where('email', 'joe@email.com').first().password, 'secret')
 

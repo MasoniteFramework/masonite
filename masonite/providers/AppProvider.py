@@ -9,14 +9,14 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ModelDocstringCommand,
-                               ProviderCommand, PublishCommand, QueueTableCommand,
-                               QueueWorkCommand, RoutesCommand, RuleCommand,
-                               RuleEnclosureCommand, SeedCommand,
-                               SeedRunCommand, ServeCommand, TinkerCommand,
-                               UpCommand, ValidatorCommand, ViewCommand)
+                               ProviderCommand, PublishCommand,
+                               QueueTableCommand, QueueWorkCommand,
+                               RoutesCommand, SeedCommand, SeedRunCommand,
+                               ServeCommand, TinkerCommand, UpCommand,
+                               ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
-from masonite.helpers.routes import flatten_routes
 from masonite.helpers import config
+from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
@@ -79,11 +79,8 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
-        self.app.bind('MasoniteRuleEnclosureCommand', RuleEnclosureCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
         self.app.bind('MasoniteUpCommand', UpCommand())
-        self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
-        self.app.bind('MasoniteRuleCommand', RuleCommand())

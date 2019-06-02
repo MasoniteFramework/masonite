@@ -1,3 +1,4 @@
+from .AuthContract import AuthContract
 from .BroadcastContract import BroadcastContract
 from .CacheContract import CacheContract
 from .MailContract import MailContract
@@ -6,7 +7,6 @@ from .SessionContract import SessionContract
 from .StorageContract import StorageContract
 from .UploadContract import UploadContract
 
-from .managers.AuthManagerContract import AuthManagerContract
 from .managers.BroadcastManagerContract import BroadcastManagerContract
 from .managers.CacheManagerContract import CacheManagerContract
 from .managers.MailManagerContract import MailManagerContract

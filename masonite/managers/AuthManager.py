@@ -1,10 +1,10 @@
 """Auth Manager Module."""
 
-from masonite.contracts import AuthManagerContract
+from masonite.contracts import AuthContract
 from masonite.managers import Manager
 
 
-class AuthManager(Manager, AuthManagerContract):
+class AuthManager(Manager):
     """Manages all auth drivers.
 
     Arguments:

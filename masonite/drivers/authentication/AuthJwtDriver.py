@@ -1,14 +1,14 @@
 
-from masonite.helpers import config
-from masonite.request import Request
+import pendulum
+from masonite.auth import Auth
+from masonite.contracts import AuthContract
 from masonite.drivers import BaseDriver
 from masonite.exceptions import DriverLibraryNotFound
-import pendulum
-from masonite.helpers import cookie_expire_time
-from masonite.auth import Auth
+from masonite.helpers import config, cookie_expire_time
+from masonite.request import Request
 
 
-class AuthJwtDriver(BaseDriver):
+class AuthJwtDriver(BaseDriver, AuthContract):
 
     def __init__(self, request: Request):
         self.request = request

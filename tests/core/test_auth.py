@@ -180,7 +180,7 @@ class TestAuth(DatabaseTestCase):
             self.app.make('Request').load_app(self.app)
 
             # Create the route
-            route = get('/email/verify/@id', ConfirmController.confirm_email)
+            route = Get('/email/verify/@id', ConfirmController.confirm_email)
 
             ConfirmController.get_user = User
 

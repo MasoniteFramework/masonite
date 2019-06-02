@@ -1,9 +1,10 @@
 
-from masonite.request import Request
+from masonite.contracts import AuthContract
 from masonite.drivers import BaseDriver
+from masonite.request import Request
 
 
-class AuthCookieDriver(BaseDriver):
+class AuthCookieDriver(BaseDriver, AuthContract):
 
     def __init__(self, request: Request):
         self.request = request

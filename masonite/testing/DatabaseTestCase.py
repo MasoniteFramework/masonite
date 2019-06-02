@@ -8,6 +8,8 @@ from masonite import env
 class DatabaseTestCase(unittest.TestCase):
 
     sqlite = True
+    refreshes_database = True
+    has_setup_database = False
 
     def setUp(self):
         self.factory = Factory()
@@ -15,7 +17,23 @@ class DatabaseTestCase(unittest.TestCase):
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
 
-        self.setUpDatabase()
+        if self.has_setup_database:
+            self.setUpFactories()
+
+            self.__class__.has_setup_database = False
+
+        if self.refreshes_database:
+            self.refreshDatabase()
+
+    @classmethod
+    def setUpClass(cls):
+        cls.staticSetUpDatabase()
+        if hasattr(cls, 'setUpFactories'):
+            cls.has_setup_database = True
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.staticTearDownDatabase()
 
     def refreshDatabase(self):
         self.tearDownDatabase()
@@ -34,9 +52,19 @@ class DatabaseTestCase(unittest.TestCase):
     def setUpDatabase(self):
         self.tearDownDatabase()
         subprocess.call(['craft', 'migrate'])
+        self.setUpFactories()
 
     def tearDownDatabase(self):
         subprocess.call(['craft', 'migrate:reset'])
 
+    @staticmethod
+    def staticSetUpDatabase():
+        subprocess.call(['craft', 'migrate'])
+
+    @staticmethod
+    def staticTearDownDatabase():
+        subprocess.call(['craft', 'migrate:reset'])
+
     def tearDown(self):
-        self.tearDownDatabase()
+        if self.refreshes_database:
+            self.tearDownDatabase()

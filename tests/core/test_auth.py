@@ -20,22 +20,19 @@ from masonite.view import View
 class User(Model, MustVerifyEmail):
     __guarded__ = []
 
+
 class TestAuth(DatabaseTestCase):
+
+    refreshes_database = False
 
     def setUp(self):
         super().setUp()
         self.container = App()
         self.app = self.container
-        # User.create({
-        #     'name': 'testuser123',
-        #     'email': 'user@email.com',
-        #     'password': bcrypt_password('secret'),
-        #     'second_password': bcrypt_password('pass123'),
-        # })
-        self.setupDatabase()
         self.app.bind('Container', self.app)
         view = View(self.container)
         self.request = Request(generate_wsgi())
+        self.request.key(application.KEY)
         self.app.bind('Request', self.request)
         # self.auth = Auth(self.request, MockUser())
         self.container.bind('View', view.render)
@@ -50,7 +47,7 @@ class TestAuth(DatabaseTestCase):
         self.auth = self.app.make('Auth', User)
         self.request.load_app(self.app)
 
-    def setupDatabase(self):
+    def setUpFactories(cls):
         User.create({
             'name': 'testuser123',
             'email': 'user@email.com',
@@ -164,7 +161,6 @@ class TestAuth(DatabaseTestCase):
 
             self.assertEqual(response.rendered_template, 'confirm')
             self.refreshDatabase()
-            self.setupDatabase()
 
     def test_confirm_controller_failure(self):
         for driver in ('cookie', 'jwt'):

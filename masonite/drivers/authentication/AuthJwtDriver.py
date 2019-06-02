@@ -19,8 +19,9 @@ class AuthJwtDriver(BaseDriver, AuthContract):
             raise DriverLibraryNotFound("Please install pyjwt by running 'pip install pyjwt'")
 
     def user(self, auth_model):
+        from config.application import KEY
         if self.request.get_cookie('token'):
-            token = self.jwt.decode(self.request.get_cookie('token'), 'secret', algorithms=['HS256'])
+            token = self.jwt.decode(self.request.get_cookie('token'), KEY, algorithms=['HS256'])
             expired = token['expired']
             token.pop('expired')
             if not pendulum.parse(expired).is_past():
@@ -32,7 +33,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
                     auth_model.hydrate(token)
 
                 token.update({
-                    'expired': cookie_expire_time('5 minutes')
+                    'expired': cookie_expire_time(config('auth.drivers.jwt.lifetime', '5 minutes'))
                 })
                 self.request.cookie('token', token)
                 return auth_model

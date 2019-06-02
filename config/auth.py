@@ -23,6 +23,7 @@ AUTH = {
 
 DRIVERS = {
     'jwt': {
-        'reauthentication': True
+        'reauthentication': True,
+        'lifetime': '5 minutes'
     }
 }

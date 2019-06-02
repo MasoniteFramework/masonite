@@ -1,6 +1,5 @@
 """Auth Manager Module."""
 
-from masonite.contracts import AuthContract
 from masonite.managers import Manager
 
 

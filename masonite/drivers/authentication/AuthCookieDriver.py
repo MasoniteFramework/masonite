@@ -13,7 +13,7 @@ class AuthCookieDriver(BaseDriver):
             return auth_model.where(
                 'remember_token', self.request.get_cookie('token')
             ).first()
-        
+
         return False
 
     def save(self, remember_token, **_):

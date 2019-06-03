@@ -47,7 +47,7 @@ class TestAuth(DatabaseTestCase):
         self.auth = self.app.make('Auth', User)
         self.request.load_app(self.app)
 
-    def setUpFactories(cls):
+    def setUpFactories(self):
         User.create({
             'name': 'testuser123',
             'email': 'user@email.com',

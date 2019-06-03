@@ -13,7 +13,7 @@ The versions below are the currently supported bug fixes and security fixes.
 
 ## Reporting a Vulnerability
 
-The best approach to reporting a vulnerability with Masonite is to join the [Slack Channel](https://slack.masoniteproject.com) and messaged
+The best approach to reporting a vulnerability with Masonite is to join the [Slack Channel](http://slack.masoniteproject.com) and messaged
 Joseph Mancuso and tell him about the issue. He will communicate this to his maintainers and get a patch ready and shipped ASAP.
 
 ## LTS Versions

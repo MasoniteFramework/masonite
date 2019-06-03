@@ -29,9 +29,8 @@ class Auth:
         else:
             from config import auth
             self.auth_model = auth.AUTH['model']
-        
-        self.driver = config('auth.auth.driver', 'cookie')
 
+        self.driver = config('auth.auth.driver', 'cookie')
 
     def user(self):
         """Get the currently logged in user.

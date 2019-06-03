@@ -35,7 +35,13 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         """
         from config.application import KEY
         if self.request.get_cookie('token'):
-            token = self.jwt.decode(self.request.get_cookie('token'), KEY, algorithms=['HS256'])
+
+            try:
+                token = self.jwt.decode(self.request.get_cookie('token'), KEY, algorithms=['HS256'])
+            except self.jwt.exceptions.DecodeError:
+                self.delete()
+                return False
+
             expired = token['expired']
             token.pop('expired')
             if not pendulum.parse(expired).is_past():

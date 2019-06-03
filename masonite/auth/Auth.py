@@ -128,6 +128,14 @@ class Auth:
         return self
 
     def _get_password_column(self, model):
+        """Gets the password column to use.
+
+        Arguments:
+            model {orator.orm.Model} -- An Orator type model.
+
+        Returns:
+            string
+        """
         if hasattr(model, '__password__'):
             return getattr(model, model.__password__)
 
@@ -135,5 +143,10 @@ class Auth:
             return getattr(model, 'password')
 
     def register(self, user):
+        """Register the user.
+
+        Arguments:
+            user {dict} -- A dictionary of user data information.
+        """
         user['password'] = bcrypt_password(user['password'])
         self.auth_model.create(**user)

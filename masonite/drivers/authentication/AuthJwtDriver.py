@@ -1,3 +1,4 @@
+"""AuthJWTDriver Module."""
 
 import pendulum
 from masonite.auth import Auth
@@ -11,6 +12,11 @@ from masonite.request import Request
 class AuthJwtDriver(BaseDriver, AuthContract):
 
     def __init__(self, request: Request):
+        """AuthCookieDriver initializer.
+
+        Arguments:
+            request {masonite.request.Request} -- The Masonite request class.
+        """
         self.request = request
         try:
             import jwt
@@ -19,6 +25,14 @@ class AuthJwtDriver(BaseDriver, AuthContract):
             raise DriverLibraryNotFound("Please install pyjwt by running 'pip install pyjwt'")
 
     def user(self, auth_model):
+        """Gets the user based on this driver implementation
+
+        Arguments:
+            auth_model {orator.orm.Model} -- An Orator ORM type object.
+
+        Returns:
+            Model|bool
+        """
         from config.application import KEY
         if self.request.get_cookie('token'):
             token = self.jwt.decode(self.request.get_cookie('token'), KEY, algorithms=['HS256'])
@@ -42,6 +56,16 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         return False
 
     def save(self, _, **kwargs):
+        """Saves the state of authentication.
+
+        In this case the state is saving to a cookie.
+
+        Arguments:
+            remember_token {string} -- A token containing the state.
+
+        Returns:
+            bool
+        """
         from config.application import KEY
         model = kwargs.get('model', False)
         serialized_dictionary = model.serialize()
@@ -53,4 +77,9 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         self.request.cookie('token', token)
 
     def delete(self):
+        """Deletes the state depending on the implementation of this driver.
+
+        Returns:
+            bool
+        """
         self.request.delete_cookie('token')

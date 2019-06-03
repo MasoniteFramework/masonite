@@ -10,6 +10,8 @@ from masonite.routes import Get, Match, Route
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
 from masonite.auth import Auth
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver
 
 
 class TestRouteProvider(unittest.TestCase):
@@ -30,6 +32,8 @@ class TestRouteProvider(unittest.TestCase):
         self.app.bind('ViewClass', view)
         self.app.bind('View', view.render)
         self.app.bind('Auth', Auth)
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
         self.provider = RouteProvider()
         self.provider.app = self.app
 

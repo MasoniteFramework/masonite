@@ -9,6 +9,7 @@ setup(
         'masonite.providers',
         'masonite.commands',
         'masonite.drivers',
+        'masonite.drivers.authentication',
         'masonite.drivers.mail',
         'masonite.drivers.broadcast',
         'masonite.drivers.cache',

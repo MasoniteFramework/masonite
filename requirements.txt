@@ -17,6 +17,7 @@ pendulum>=1.5,<1.6
 pika
 psutil>=5.4,<5.5
 pusher==1.7.4
+pyjwt>=1.7.1
 pypugjs
 python-dotenv>=0.8,<0.9
 pytest

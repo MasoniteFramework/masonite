@@ -49,7 +49,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         # Short-circuit parent method to not call socket.getfqdn
         return self.client_address[0]
 
-    def log_message(self, _, *args):
+    def log_message(self, message_format, *args):
         extra = {
             'request': self.request,
             'server_time': self.log_date_time_string(),
@@ -77,7 +77,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         else:
             level = logging.info
 
-        level(format, *args, extra=extra)
+        level(message_format, *args, extra=extra)
 
     def get_environ(self):
         # Strip all headers with underscores in the name before constructing

@@ -1,0 +1,27 @@
+# Security Policy
+
+## Supported Versions
+
+The versions below are the currently supported bug fixes and security fixes.
+
+| Version   | Bug Fixes            | Security Fixes        | End Of Life        |
+| --------- | -------------------- | ----------------------|------------------- |
+| 2.2.x LTS | :white_check_mark:   | :white_check_mark:    | June 2022
+| 2.1.x     | :white_check_mark:   | :white_check_mark:    | June 2019
+| 2.0.x     | :x:                  | :x:                   | December 2018
+| 1.6.x     | :x:                  | :x:                   | June 2018
+
+## Reporting a Vulnerability
+
+The best approach to reporting a vulnerability with Masonite is to join the [Slack Channel](https://slack.masoniteproject.com) and messaged
+Joseph Mancuso and tell him about the issue. He will communicate this to his maintainers and get a patch ready and shipped ASAP.
+
+## LTS Versions
+
+LTS versions will receieve securtity fixes for 3 years and bug fixes for 2 years.
+
+If you are a company looking to work on Masonite long term, it is recommended to first look at the latest LTS version before looking at other versions.
+Upgrading applications can be costly and you may decide to stay on the same version of Masonite for extended periods of time.
+
+It is recommended to stay on the latest version of Masonite in order to get the most up-to-date features and improvements but that does
+not always align with your businesses goals.

@@ -8,8 +8,9 @@ from masonite import env
 class DatabaseTestCase(unittest.TestCase):
 
     sqlite = True
-    refreshes_database = True
-    has_setup_database = False
+    transactions = True
+    refreshes_database = False
+    _has_setup_database = False
 
     def setUp(self):
         self.factory = Factory()
@@ -17,23 +18,30 @@ class DatabaseTestCase(unittest.TestCase):
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
 
-        if self.has_setup_database:
+        if self._has_setup_database:
             self.setUpFactories()
 
-            self.__class__.has_setup_database = False
+            self.__class__._has_setup_database = False
 
-        if self.refreshes_database:
+        if not self.transactions and self.refreshes_database:
             self.refreshDatabase()
 
     @classmethod
     def setUpClass(cls):
         cls.staticSetUpDatabase()
         if hasattr(cls, 'setUpFactories'):
-            cls.has_setup_database = True
+            cls._has_setup_database = True
+        if cls.transactions:
+            from config.database import DB
+            DB.begin_transaction()
 
     @classmethod
     def tearDownClass(cls):
-        cls.staticTearDownDatabase()
+        from config.database import DB
+        if cls.transactions:
+            DB.rollback()
+        else:
+            cls.staticTearDownDatabase()
 
     def refreshDatabase(self):
         self.tearDownDatabase()
@@ -52,7 +60,8 @@ class DatabaseTestCase(unittest.TestCase):
     def setUpDatabase(self):
         self.tearDownDatabase()
         subprocess.call(['craft', 'migrate'])
-        self.setUpFactories()
+        if hasattr(self, 'setUpFactories'):
+            self.setUpFactories()
 
     def tearDownDatabase(self):
         subprocess.call(['craft', 'migrate:reset'])
@@ -66,5 +75,5 @@ class DatabaseTestCase(unittest.TestCase):
         subprocess.call(['craft', 'migrate:reset'])
 
     def tearDown(self):
-        if self.refreshes_database:
+        if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()

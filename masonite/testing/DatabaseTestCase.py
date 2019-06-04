@@ -31,21 +31,28 @@ class DatabaseTestCase(unittest.TestCase):
         cls.staticSetUpDatabase()
         if hasattr(cls, 'setUpFactories'):
             cls._has_setup_database = True
-        if cls.transactions:
+        if not cls.refreshes_database and cls.transactions:
             from config.database import DB
             DB.begin_transaction()
 
     @classmethod
     def tearDownClass(cls):
-        from config.database import DB
-        if cls.transactions:
+        if not cls.refreshes_database and cls.transactions:
+            from config.database import DB
             DB.rollback()
         else:
             cls.staticTearDownDatabase()
 
     def refreshDatabase(self):
-        self.tearDownDatabase()
-        self.setUpDatabase()
+        if not self.refreshes_database and self.transactions:
+            from config.database import DB
+            DB.rollback()
+            DB.begin_transaction()
+            if hasattr(self, 'setUpFactories'):
+                self.setUpFactories()
+        else:
+            self.tearDownDatabase()
+            self.setUpDatabase()
 
     def make(self, model, factory, amount=50):
         self.registerFactory(model, factory)

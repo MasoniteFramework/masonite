@@ -10,7 +10,7 @@
                         <h5 class="mb-0">Login</h5>
                     </div>
                     <div class="card-body">
-                        <form class="form" action="/login" method="POST">
+                        <form class="form" action="{{ route('login') }}" method="POST">
                             {{ csrf_field }}
                             <div class="form-group">
                                 <label for="">Email</label>
@@ -20,6 +20,10 @@
                                 <label>Password</label>
                                 <input type="password" class="form-control form-control-md rounded-0" name="password">
                             </div>
+                            <a href="{{ route('forgot.password') }}">
+                                <button type="button" class="btn btn-primary btn-md ml-2 float-right">Forgot
+                                    Password</button>
+                            </a>
                             <button type="submit" class="btn btn-success btn-md float-right">Login</button>
                         </form>
                     </div>

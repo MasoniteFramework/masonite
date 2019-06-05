@@ -22,6 +22,7 @@ class TestCase(unittest.TestCase):
         self.container = container
         self.acting_user = False
         self.factory = Factory()
+        self.without_exception_handling()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
@@ -144,4 +145,13 @@ class TestCase(unittest.TestCase):
             for provider in self.container.make('WSGIProviders'):
                 self.container.resolve(provider.boot)
         except Exception as e:
-            self.container.make('ExceptionHandler').load_exception(e)
+            if self._exception_handling:
+                self.container.make('ExceptionHandler').load_exception(e)
+            else:
+                raise e
+
+    def with_exception_handling(self):
+        self._exception_handling = True
+
+    def without_exception_handling(self):
+        self._exception_handling = False

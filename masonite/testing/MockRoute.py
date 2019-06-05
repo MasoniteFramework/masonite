@@ -10,7 +10,6 @@ class MockRoute:
         self.wsgi = wsgi
 
     def is_named(self, name):
-        print(self.route)
         return self.route.named_route == name
 
     def has_middleware(self, *middleware):
@@ -34,7 +33,6 @@ class MockRoute:
     #     return self.container.make('Request').get_status_code() == value
 
     def ok(self):
-        print(self.container.make('Response'))
         return '200 OK' in self.container.make('Request').get_status_code()
 
     def can_view(self):

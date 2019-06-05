@@ -1,5 +1,5 @@
 
-from masonite.testing import DatabaseTestCase
+from masonite.testing import TestCase
 
 from config.database import Model
 from masonite import env
@@ -10,7 +10,7 @@ class User(Model):
 
 
 if env('RUN_DATABASE'):
-    class TestDatabase(DatabaseTestCase):
+    class TestDatabase(TestCase):
 
         def setUp(self):
             super().setUp()

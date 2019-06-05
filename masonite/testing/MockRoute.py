@@ -4,11 +4,13 @@ from masonite.testsuite import TestSuite, generate_wsgi
 
 class MockRoute:
 
-    def __init__(self, route, container):
+    def __init__(self, route, container, wsgi=None):
         self.route = route
         self.container = container
+        self.wsgi = wsgi
 
     def is_named(self, name):
+        print(self.route)
         return self.route.named_route == name
 
     def has_middleware(self, *middleware):
@@ -18,26 +20,22 @@ class MockRoute:
         return self.route.controller == controller
 
     def contains(self, value):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
-        self.container = self._run_container(wsgi).container
-
         return value in self.container.make('Response')
 
-    def status(self, value=None):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
-        self.container = self._run_container(wsgi).container
+    # def status(self, value=None):
+    #     wsgi = generate_wsgi()
+    #     wsgi['PATH_INFO'] = self.route.route_url
+    #     wsgi['REQUEST_METHOD'] = self.route.method_type[0]
+    #     self.container = self._run_container(wsgi).container
 
-        if not value:
-            return self.container.make('Request').get_status_code()
+    #     if not value:
+    #         return self.container.make('Request').get_status_code()
 
-        return self.container.make('Request').get_status_code() == value
+    #     return self.container.make('Request').get_status_code() == value
 
     def ok(self):
-        return self.status('200 OK')
+        print(self.container.make('Response'))
+        return '200 OK' in self.container.make('Request').get_status_code()
 
     def can_view(self):
         wsgi = generate_wsgi()

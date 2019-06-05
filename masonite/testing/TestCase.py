@@ -3,9 +3,14 @@ import unittest
 
 from orator.orm import Factory
 from masonite import env
+from contextlib import contextmanager
+from .MockRoute import MockRoute
+from masonite.testsuite import TestSuite, generate_wsgi
+from masonite.helpers.routes import flatten_routes
+from urllib.parse import urlencode
 
 
-class DatabaseTestCase(unittest.TestCase):
+class TestCase(unittest.TestCase):
 
     sqlite = True
     transactions = True
@@ -13,6 +18,8 @@ class DatabaseTestCase(unittest.TestCase):
     _has_setup_database = False
 
     def setUp(self):
+        from wsgi import container
+        self.container = container
         self.factory = Factory()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
@@ -84,3 +91,49 @@ class DatabaseTestCase(unittest.TestCase):
     def tearDown(self):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
+
+    def get(self, url, params={}):
+        self.run_container({
+            'PATH_INFO': url,
+            'REQUEST_METHOD': 'GET',
+            'QUERY_STRING': urlencode(params)
+        })
+        return self.route(url, 'GET')
+
+    def post(self, url, params={}):
+        self.run_container({
+            'PATH_INFO': url,
+            'REQUEST_METHOD': 'POST',
+            'QUERY_STRING': urlencode(params)
+        })
+
+        self.container.make('Request').request_variables = params
+        return self.route(url, 'POST')
+
+    def route(self, url, method=False):
+        for route in self.container.make('WebRoutes'):
+            if route.route_url == url and (method in route.method_type or not method):
+                return MockRoute(route, self.container)
+
+    def routes(self, routes):
+        self.container.bind('WebRoutes', flatten_routes(self.container.make('WebRoutes') + routes))
+
+    @contextmanager
+    def captureOutput(self):
+        new_out, new_err = StringIO(), StringIO()
+        old_out, old_err = sys.stdout, sys.stderr
+        try:
+            sys.stdout, sys.stderr = new_out, new_err
+            yield sys.stdout, sys.stderr
+        finally:
+            sys.stdout, sys.stderr = old_out, old_err
+
+    def run_container(self, wsgi_values={}):
+        wsgi = generate_wsgi()
+        wsgi.update(wsgi_values)
+        self.container.bind('Environ', wsgi)
+        try:
+            for provider in self.container.make('WSGIProviders'):
+                self.container.resolve(provider.boot)
+        except Exception as e:
+            self.container.make('ExceptionHandler').load_exception(e)

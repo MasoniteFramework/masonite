@@ -1,7 +1,6 @@
 """Web Routes."""
 
-from masonite.helpers.routes import group
-from masonite.routes import Get, Post, Redirect
+from masonite.routes import Get, Post, Redirect, RouteGroup
 
 
 ROUTES = [
@@ -11,14 +10,20 @@ ROUTES = [
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),
     Get().domain('test').route('/test/route', 'TestController@testing'),
-    Get().route('/json_response', 'TestController@json_response'),
-    Post().route('/test/post/route', 'TestController@post_test'),
-    Get().route('/login', 'TestController@testing').name('login'),
-    Get().route('/test/param/@id', 'TestController@testing'),
-    Post().route('/test/json/response/@id', 'TestController@json'),
-    Get().route('/test/set/test/session', 'TestController@session'),
-    group('/example', [
-        Get().route('/test/1', 'TestController@show'),
-        Get().route('/test/2', 'TestController@show')
-    ])
+    Get('/json_response', 'TestController@json_response'),
+    Post('/test/post/route', 'TestController@post_test'),
+    Get('/login', 'TestController@testing').name('login'),
+    Get('/test/param/@id', 'TestController@testing'),
+    Post('/test/json/response/@id', 'TestController@json'),
+    Get('/test/set/test/session', 'TestController@session'),
+    RouteGroup([
+        Get('/test/1', 'TestController@show'),
+        Get('/test/2', 'TestController@show')
+    ], prefix='/example'),
+    RouteGroup([
+        Get('/test/get', 'UnitTestController@show'),
+        Post('/test/post', 'UnitTestController@store').middleware('test'),
+        Get('/test/get/params', 'UnitTestController@get_params').name('get.params'),
+        Post('/test/params', 'UnitTestController@params'),
+    ], prefix="/unit")
 ]

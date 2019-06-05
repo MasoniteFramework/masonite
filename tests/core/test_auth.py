@@ -12,7 +12,7 @@ from masonite.routes import Get
 from masonite.request import Request
 from masonite.snippets.auth.controllers.ConfirmController import \
     ConfirmController
-from masonite.testing import DatabaseTestCase
+from masonite.testing import TestCase
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
 
@@ -21,7 +21,7 @@ class User(Model, MustVerifyEmail):
     __guarded__ = []
 
 
-class TestAuth(DatabaseTestCase):
+class TestAuth(TestCase):
 
     """Start and rollback transactions for this test
     """

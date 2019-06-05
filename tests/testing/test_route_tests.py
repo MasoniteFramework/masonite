@@ -1,5 +1,6 @@
 from routes import web
 from masonite.testing import TestCase
+from app.User import User
 
 
 class TestUnitTest(TestCase):
@@ -8,6 +9,13 @@ class TestUnitTest(TestCase):
         super().setUp()
 
         self.routes(web.ROUTES)
+    
+    def setUpFactories(self):
+        User.create({
+            'name': 'Joe',
+            'email': 'user@example.com',
+            'password': 'secret'
+        })
 
     def test_can_get_route(self):
         self.assertTrue(self.get('/unit/test/get').ok())
@@ -34,4 +42,9 @@ class TestUnitTest(TestCase):
     def test_has_middleware(self):
         self.assertTrue(
             self.post('/unit/test/post').has_middleware('test')
+        )
+
+    def test_can_have_user(self):
+        self.assertTrue(
+            self.acting_as(User.find(1)).post('/unit/test/user').contains('Joe')
         )

@@ -20,6 +20,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         from wsgi import container
         self.container = container
+        self.acting_user = False
         self.factory = Factory()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
@@ -110,6 +111,10 @@ class TestCase(unittest.TestCase):
         self.container.make('Request').request_variables = params
         return self.route(url, 'POST')
 
+    def acting_as(self, user):
+        self.acting_user = user
+        return self
+
     def route(self, url, method=False):
         for route in self.container.make('WebRoutes'):
             if route.route_url == url and (method in route.method_type or not method):
@@ -132,6 +137,7 @@ class TestCase(unittest.TestCase):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
         self.container.bind('Environ', wsgi)
+        self.container.make('Request')._test_user = self.acting_user
         try:
             for provider in self.container.make('WSGIProviders'):
                 self.container.resolve(provider.boot)

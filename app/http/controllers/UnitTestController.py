@@ -27,3 +27,6 @@ class UnitTestController(Controller):
 
     def get_params(self):
         return self.request.input('test')
+
+    def user(self):
+        return self.request.user().name

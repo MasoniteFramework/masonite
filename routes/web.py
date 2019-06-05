@@ -25,5 +25,6 @@ ROUTES = [
         Post('/test/post', 'UnitTestController@store').middleware('test'),
         Get('/test/get/params', 'UnitTestController@get_params').name('get.params'),
         Post('/test/params', 'UnitTestController@params'),
+        Post('/test/user', 'UnitTestController@user'),
     ], prefix="/unit")
 ]

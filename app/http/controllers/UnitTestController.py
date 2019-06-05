@@ -16,7 +16,7 @@ class UnitTestController(Controller):
         """
         self.request = request
 
-    def show(self, view: View):
+    def show(self):
         return 'got'
 
     def store(self):

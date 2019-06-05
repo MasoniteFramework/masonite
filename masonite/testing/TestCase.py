@@ -5,7 +5,7 @@ from orator.orm import Factory
 from masonite import env
 from contextlib import contextmanager
 from .MockRoute import MockRoute
-from masonite.testsuite import TestSuite, generate_wsgi
+from masonite.testsuite import generate_wsgi
 from masonite.helpers.routes import flatten_routes
 from urllib.parse import urlencode
 

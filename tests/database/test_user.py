@@ -1,11 +1,11 @@
 """Example Database Testcase."""
 
-from masonite.testing import DatabaseTestCase
+from masonite.testing import TestCase
 
 from app.User import User
 
 
-class TestUser(DatabaseTestCase):
+class TestUser(TestCase):
 
     def setUp(self):
         """Anytime you override the setUp method you must call the setUp method
@@ -17,7 +17,7 @@ class TestUser(DatabaseTestCase):
         """This runs when the test class first starts up.
         This does not run before every test case.
         """
-        self.make(User, self.users_factory)
+        self.make(User, self.users_factory, 1)
 
     def users_factory(self, faker):
         """Example factory
@@ -36,6 +36,3 @@ class TestUser(DatabaseTestCase):
 
     def test_created_user(self):
         self.assertTrue(User.find(1))
-
-    def test_created_50_users(self):
-        self.assertEqual(User.count(), 50)

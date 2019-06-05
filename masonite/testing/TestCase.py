@@ -102,10 +102,12 @@ class TestCase(unittest.TestCase):
         return self.route(url, 'GET')
 
     def post(self, url, params={}):
+        params.update({'__token': 'tok'})
         self.run_container({
             'PATH_INFO': url,
             'REQUEST_METHOD': 'POST',
-            'QUERY_STRING': urlencode(params)
+            'QUERY_STRING': urlencode(params),
+            'HTTP_COOKIE': 'csrf_token=tok',
         })
 
         self.container.make('Request').request_variables = params

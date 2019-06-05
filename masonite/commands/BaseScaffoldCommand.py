@@ -16,8 +16,10 @@ class BaseScaffoldCommand(Command):
     scaffold_name = 'Example'
     suffix = ''
     postfix = ''
+    prefix = ''
     file_extension = '.py'
     base_directory = 'app/example/'
+    file_to_lower = False
 
     template = '/masonite/snippets/scaffold/model'
 
@@ -26,6 +28,9 @@ class BaseScaffoldCommand(Command):
         view = View(App())
         class_directory = '{}{}{}{}'.format(
             self.base_directory, class_name, self.suffix, self.file_extension)
+        
+        if self.file_to_lower:
+            class_directory = class_directory.lower()
 
         if not make_directory(class_directory):
             return self.error('{0} Already Exists!'.format(self.scaffold_name))
@@ -34,6 +39,6 @@ class BaseScaffoldCommand(Command):
             if view.exists(self.template):
                 f.write(
                     view.render(self.template, {
-                                'class': class_name.split('/')[-1]}).rendered_template
+                                'class': self.prefix + class_name.split('/')[-1]}).rendered_template
                 )
                 self.info('{} Created Successfully!'.format(self.scaffold_name))

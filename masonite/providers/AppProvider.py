@@ -12,7 +12,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                ProviderCommand, PublishCommand,
                                QueueTableCommand, QueueWorkCommand,
                                RoutesCommand, SeedCommand, SeedRunCommand,
-                               ServeCommand, TinkerCommand, UpCommand,
+                               ServeCommand, TestCommand, TinkerCommand, UpCommand,
                                ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
 from masonite.helpers import config
@@ -88,5 +88,6 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
+        self.app.bind('MasoniteTestCommand', TestCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
         self.app.bind('MasoniteUpCommand', UpCommand())

@@ -612,7 +612,7 @@ class Request(Extendable):
             self.user_model = self._test_user
         else:
             self.user_model = user_model
-            
+
         return self
 
     def user(self):

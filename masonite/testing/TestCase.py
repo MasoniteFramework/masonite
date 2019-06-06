@@ -1,13 +1,16 @@
+import io
+import json
 import subprocess
 import unittest
-
-from orator.orm import Factory
-from masonite import env
 from contextlib import contextmanager
-from .MockRoute import MockRoute
-from masonite.testsuite import generate_wsgi
-from masonite.helpers.routes import flatten_routes
 from urllib.parse import urlencode
+
+from masonite import env
+from masonite.helpers.routes import flatten_routes
+from masonite.testsuite import generate_wsgi
+from orator.orm import Factory
+
+from .MockRoute import MockRoute
 
 
 class TestCase(unittest.TestCase):
@@ -101,6 +104,19 @@ class TestCase(unittest.TestCase):
             'QUERY_STRING': urlencode(params)
         })
         return self.route(url, 'GET')
+
+    def json(self, method, url, params={}):
+        params.update({'__token': 'tok'})
+        self.run_container({
+            'PATH_INFO': url,
+            'REQUEST_METHOD': method,
+            'CONTENT_TYPE': 'application/json',
+            'CONTENT_LENGTH': len(str(json.dumps(params))),
+            'wsgi.input': io.StringIO(json.dumps(params)),
+            'HTTP_COOKIE': 'csrf_token=tok',
+        })
+        self.container.make('Request').request_variables = params
+        return self.route(url, method)
 
     def post(self, url, params={}):
         params.update({'__token': 'tok'})

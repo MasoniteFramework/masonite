@@ -26,5 +26,6 @@ ROUTES = [
         Get('/test/get/params', 'UnitTestController@get_params').name('get.params'),
         Post('/test/params', 'UnitTestController@params'),
         Post('/test/user', 'UnitTestController@user'),
+        Post('/test/json', 'UnitTestController@json'),
     ], prefix="/unit")
 ]

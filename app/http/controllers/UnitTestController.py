@@ -29,3 +29,6 @@ class UnitTestController(Controller):
 
     def user(self):
         return self.request.user().name
+
+    def json(self):
+        return self.request.input('test')

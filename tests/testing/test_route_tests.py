@@ -48,3 +48,6 @@ class TestUnitTest(TestCase):
         self.assertTrue(
             self.acting_as(User.find(1)).post('/unit/test/user').contains('Joe')
         )
+
+    def test_json(self):
+        self.assertTrue(self.json('POST', '/unit/test/json', {'test': 'testing'}).contains('testing'))

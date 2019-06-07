@@ -1,6 +1,7 @@
 """Module for the LoadEnvironment class."""
 
 import os
+import sys
 from pathlib import Path
 
 
@@ -17,6 +18,9 @@ class LoadEnvironment:
         """
         from dotenv import load_dotenv
         self.env = load_dotenv
+
+        if "pytest" in sys.modules:
+            env = 'testing'
 
         if only:
             self._load_environment(only, override=override)

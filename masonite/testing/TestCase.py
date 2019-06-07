@@ -26,6 +26,7 @@ class TestCase(unittest.TestCase):
         self.acting_user = False
         self.factory = Factory()
         self.without_exception_handling()
+        self.without_csrf()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
@@ -96,39 +97,44 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
-
-    def get(self, url, params={}):
-        self.run_container({
-            'PATH_INFO': url,
-            'REQUEST_METHOD': 'GET',
-            'QUERY_STRING': urlencode(params)
-        })
-        return self.route(url, 'GET')
-
-    def json(self, method, url, params={}):
-        params.update({'__token': 'tok'})
-        self.run_container({
+    
+    def call(self, method, url, params, wsgi = {}):
+        custom_wsgi = {
             'PATH_INFO': url,
             'REQUEST_METHOD': method,
-            'CONTENT_TYPE': 'application/json',
-            'CONTENT_LENGTH': len(str(json.dumps(params))),
-            'wsgi.input': io.StringIO(json.dumps(params)),
-            'HTTP_COOKIE': 'csrf_token=tok',
-        })
+            'QUERY_STRING': urlencode(params)
+        }
+
+        custom_wsgi.update(wsgi)
+        if not self._with_csrf:
+            custom_wsgi.update({'HTTP_COOKIE': 'csrf_token=tok'})
+            params.update({'__token': 'tok'})
+            
+        self.run_container(custom_wsgi)
         self.container.make('Request').request_variables = params
         return self.route(url, method)
 
-    def post(self, url, params={}):
-        params.update({'__token': 'tok'})
-        self.run_container({
-            'PATH_INFO': url,
-            'REQUEST_METHOD': 'POST',
-            'QUERY_STRING': urlencode(params),
-            'HTTP_COOKIE': 'csrf_token=tok',
+    def get(self, url, params={}):
+        return self.call('GET', url, params)
+
+    def json(self, method, url, params={}):
+        return self.call(method, url, params, wsgi = {
+            'CONTENT_TYPE': 'application/json',
+            'CONTENT_LENGTH': len(str(json.dumps(params))),
+            'wsgi.input': io.StringIO(json.dumps(params)),
         })
 
-        self.container.make('Request').request_variables = params
-        return self.route(url, 'POST')
+    def post(self, url, params={}):
+        return self.call('POST', url, params)
+
+    def put(self, url, params={}):
+        return self.json('PUT', url, params)
+
+    def patch(self, url, params={}):
+        return self.json('PATCH', url, params)
+
+    def delete(self, url, params={}):
+        return self.json('DELETE', url, params)
 
     def acting_as(self, user):
         self.acting_user = user
@@ -171,3 +177,9 @@ class TestCase(unittest.TestCase):
 
     def without_exception_handling(self):
         self._exception_handling = False
+
+    def with_csrf(self):
+        self._with_csrf = True
+
+    def without_csrf(self):
+        self._with_csrf = False

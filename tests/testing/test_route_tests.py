@@ -1,6 +1,7 @@
 from routes import web
 from masonite.testing import TestCase
 from app.User import User
+from masonite.exceptions import InvalidCSRFToken
 
 
 class TestUnitTest(TestCase):
@@ -51,3 +52,11 @@ class TestUnitTest(TestCase):
 
     def test_json(self):
         self.assertTrue(self.json('POST', '/unit/test/json', {'test': 'testing'}).contains('testing'))
+
+    def test_patch(self):
+        self.assertTrue(self.patch('/unit/test/patch', {'test': 'testing'}).contains('testing'))
+
+    def test_csrf(self):
+        self.with_csrf()
+        with self.assertRaises(InvalidCSRFToken) as context:
+            self.assertTrue(self.post('/unit/test/json', {'test': 'testing'}).contains('testing'))

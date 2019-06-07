@@ -32,3 +32,6 @@ class UnitTestController(Controller):
 
     def json(self):
         return self.request.input('test')
+
+    def patch(self):
+        return self.request.input('test')

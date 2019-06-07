@@ -28,7 +28,7 @@ class BaseScaffoldCommand(Command):
         view = View(App())
         class_directory = '{}{}{}{}'.format(
             self.base_directory, class_name, self.suffix, self.file_extension)
-        
+
         if self.file_to_lower:
             class_directory = class_directory.lower()
 

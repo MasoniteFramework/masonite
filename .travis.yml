@@ -24,7 +24,9 @@ jobs:
       dist: xenial   
     - stage: coverage
       python: '3.6'
-      script: coveralls && make deepsource
+      script: 
+        - make coverage
+        - coveralls && make deepsource
 
 script: 
 - make test

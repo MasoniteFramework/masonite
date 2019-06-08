@@ -6,7 +6,7 @@ init:
 test:
 	python -m pytest tests
 ci:
-	make test && flake8
+	make test && make flake8
 flake8:
 	flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
 deepsource:

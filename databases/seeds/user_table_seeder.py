@@ -7,10 +7,10 @@ You can run this seeder in order to generate users.
     - You can run the seeder by running: craft seed:run.
 """
 
-from orator.orm import Factory
 from orator.seeds import Seeder
 
 from app.User import User
+from config.factories import factory
 
 
 class UserTableSeeder(Seeder):
@@ -19,13 +19,4 @@ class UserTableSeeder(Seeder):
         """
         Run the database seeds.
         """
-        self.factory.register(User, self.users_factory)
-
-        self.factory(User, 50).create()
-
-    def users_factory(self, faker):
-        return {
-            'name': faker.name(),
-            'email': faker.email(),
-            'password': '$2b$12$WMgb5Re1NqUr.uSRfQmPQeeGWudk/8/aNbVMpD1dR.Et83vfL8WAu',  # == 'secret'
-        }
+        factory(User, 50).create()

@@ -20,7 +20,8 @@ pusher==1.7.4
 pyjwt>=1.7.1
 pypugjs
 python-dotenv>=0.8,<0.9
-pytest
+pytest==4.6.2
+pytest-cov
 requests>=2.0,<2.99
 tabulate>=0.8,<0.9
 tldextract>=2.2,<2.3

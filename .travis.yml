@@ -28,7 +28,7 @@ jobs:
         - make coverage
         - coveralls && make deepsource
 
-script: 
+script:
 - make test
 
 deploy:

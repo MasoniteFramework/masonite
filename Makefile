@@ -4,9 +4,7 @@ init:
 	pip install -e .
 	pip install -r requirements.txt
 test:
-	python -m pytest tests                                               
-ci:
-	coverage
+	python -m pytest tests
 flake8:
 	flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
 deepsource:

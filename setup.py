@@ -1,8 +1,17 @@
+import os
 from setuptools import setup
-from masonite.info import VERSION
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+meta = {}
+with open(os.path.join(here, 'masonite', '__version__.py'), 'r') as f:
+    exec(f.read(), meta)
+
+with open('README.md', 'r') as f:
+    readme = f.read()
 
 setup(
-    name='masonite',
+    name=meta['__title__'],
     packages=[
         'masonite',
         'masonite.auth',
@@ -25,7 +34,7 @@ setup(
         'masonite.middleware',
         'masonite.testing',
     ],
-    version=VERSION,
+    version=meta['__version__'],
     install_requires=[
         'masonite-events>=1.0,<2',
         'cryptography>=2.3,<2.4',
@@ -45,44 +54,33 @@ setup(
         'orator>=0.9,<1',
         'hupper>=1.0,<2.0'
     ],
-    description='The core for the Masonite framework',
-    author='Joseph Mancuso',
-    author_email='idmann509@gmail.com',
-    url='https://github.com/MasoniteFramework/masonite',
+    description=meta['__description__'],
+    long_description=readme,
+    long_description_content_type='text/markdown',
+    author=meta['__author__'],
+    author_email=['__author_email__'],
+    url=['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
-    licence='MIT',
+    licence=['__licence__'],
+    python_requires=">=3.4",
     classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
-
-        # Indicate who your project is intended for
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
+        'Framework :: Masonite',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-
         'Operating System :: OS Independent',
-
-        # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3 :: Only',
-
-
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
-
-        'Framework :: Masonite',
     ],
     include_package_data=True,
 )

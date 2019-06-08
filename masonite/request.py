@@ -58,6 +58,7 @@ class Request(Extendable):
         self._activate_subdomains = False
         self._status = None
         self.request_variables = {}
+        self._test_user = False
 
         if environ:
             self.load_environ(environ)
@@ -607,7 +608,11 @@ class Request(Extendable):
         Returns:
             self
         """
-        self.user_model = user_model
+        if self._test_user:
+            self.user_model = self._test_user
+        else:
+            self.user_model = user_model
+
         return self
 
     def user(self):

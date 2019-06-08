@@ -20,9 +20,9 @@ class ConfirmController:
         """Show the Verify Email page for unverified users.
 
         Arguments:
-            Request {masonite.request.request} -- The Masonite request class.
-            Request {masonite.view.view} -- The Masonite view class.
-            Request {masonite.auth.auth} -- The Masonite Auth class.
+            request {masonite.request.request} -- The Masonite request class.
+            request {masonite.view.view} -- The Masonite view class.
+            request {masonite.auth.auth} -- The Masonite Auth class.
 
         Returns:
             [type] -- [description]
@@ -33,9 +33,9 @@ class ConfirmController:
         """Confirm User email and show the correct response.
 
         Arguments:
-            Request {masonite.request.request} -- The Masonite request class.
-            Request {masonite.view.view} -- The Masonite view class.
-            Request {masonite.auth.auth} -- The Masonite Auth class.
+            request {masonite.request.request} -- The Masonite request class.
+            request {masonite.view.view} -- The Masonite view class.
+            request {masonite.auth.auth} -- The Masonite Auth class.
 
         Returns:
             [type] -- [description]

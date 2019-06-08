@@ -1,5 +1,5 @@
 """ Middleware Configuration Settings """
-from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, CorsMiddleware, MaintenanceModeMiddleware
+from masonite.middleware import ResponseMiddleware, SecureHeadersMiddleware, CorsMiddleware, CsrfMiddleware, MaintenanceModeMiddleware
 
 from app.http.middleware.AddAttributeMiddleware import AddAttributeMiddleware
 from app.http.middleware.AuthenticationMiddleware import \
@@ -17,7 +17,7 @@ should contain a simple aggregate of middleware classes.
 HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     # todo
-    # CsrfMiddleware,
+    CsrfMiddleware,
     CorsMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,

@@ -48,6 +48,7 @@ class HelpersProvider(ServiceProvider):
                 'optional': optional,
                 'dd': builtins.dd,
                 'hidden': hidden,
+                'exists': view.exists,
                 'cookie': request.get_cookie,
                 'url': lambda name, params={}: request.route(name, params, full=True)
             }

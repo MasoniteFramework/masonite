@@ -58,5 +58,5 @@ class TestUnitTest(TestCase):
 
     def test_csrf(self):
         self.with_csrf()
-        with self.assertRaises(InvalidCSRFToken) as context:
+        with self.assertRaises(InvalidCSRFToken):
             self.assertTrue(self.post('/unit/test/json', {'test': 'testing'}).contains('testing'))

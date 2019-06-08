@@ -19,9 +19,6 @@ class LoadEnvironment:
         from dotenv import load_dotenv
         self.env = load_dotenv
 
-        if "pytest" in sys.modules:
-            self._load_environment('testing', override=override)
-
         if only:
             self._load_environment(only, override=override)
             return
@@ -34,6 +31,9 @@ class LoadEnvironment:
                 'APP_ENV'), override=override)
         if env:
             self._load_environment(env, override=override)
+        
+        if "pytest" in sys.modules:
+            self._load_environment('testing', override=override)
 
     def _load_environment(self, env, override=False):
         """Load the environment depending on the env file.

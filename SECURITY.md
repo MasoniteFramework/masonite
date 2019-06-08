@@ -18,10 +18,10 @@ Joseph Mancuso and tell him about the issue. He will communicate this to his mai
 
 ## LTS Versions
 
-LTS versions will receieve securtity fixes for 3 years and bug fixes for 2 years.
+LTS versions will receive security fixes for 3 years and bug fixes for 2 years.
 
 If you are a company looking to work on Masonite long term, it is recommended to first look at the latest LTS version before looking at other versions.
-Upgrading applications can be costly and you may decide to stay on the same version of Masonite for extended periods of time.
+Upgrading applications can be costly, and you may decide to stay on the same version of Masonite for extended periods.
 
-It is recommended to stay on the latest version of Masonite in order to get the most up-to-date features and improvements but that does
-not always align with your businesses goals.
+It is recommended to stay on the latest version of Masonite to get the most up-to-date features and improvements, but that does
+not always align with your business's goals.

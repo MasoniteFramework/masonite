@@ -7,19 +7,19 @@ jobs:
   include:
     - stage: test
       script:
-        - make test
+        - make ci
       python: '3.4'
     - stage: test
       script:
-        - make test
+        - make ci
       python: '3.5'
     - stage: test
       script:
-        - make test
+        - make ci
       python: '3.6'
     - stage: test
       script:
-        - make test
+        - make ci
       python: '3.7'
       dist: xenial   
     - stage: coverage
@@ -29,7 +29,7 @@ jobs:
         - coveralls && make deepsource
 
 script:
-- make test
+- make ci
 
 deploy:
   provider: pypi

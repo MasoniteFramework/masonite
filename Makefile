@@ -1,10 +1,10 @@
 init:
 	pip install masonite_cli
 	pip install -r requirements.txt
+	pip install -e .	
 test:
 	python -m pytest tests
 ci:
-	pip install -e .
 	make test
 	make lint
 lint:

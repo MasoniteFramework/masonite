@@ -97,8 +97,8 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
-    
-    def call(self, method, url, params, wsgi = {}):
+
+    def call(self, method, url, params, wsgi={}):
         custom_wsgi = {
             'PATH_INFO': url,
             'REQUEST_METHOD': method,
@@ -109,7 +109,7 @@ class TestCase(unittest.TestCase):
         if not self._with_csrf:
             custom_wsgi.update({'HTTP_COOKIE': 'csrf_token=tok'})
             params.update({'__token': 'tok'})
-            
+
         self.run_container(custom_wsgi)
         self.container.make('Request').request_variables = params
         return self.route(url, method)
@@ -118,7 +118,7 @@ class TestCase(unittest.TestCase):
         return self.call('GET', url, params)
 
     def json(self, method, url, params={}):
-        return self.call(method, url, params, wsgi = {
+        return self.call(method, url, params, wsgi={
             'CONTENT_TYPE': 'application/json',
             'CONTENT_LENGTH': len(str(json.dumps(params))),
             'wsgi.input': io.StringIO(json.dumps(params)),

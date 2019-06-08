@@ -9,19 +9,22 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                MigrateRefreshCommand, MigrateResetCommand,
                                MigrateRollbackCommand, MigrateStatusCommand,
                                ModelCommand, ModelDocstringCommand,
-                               ProviderCommand, PublishCommand, QueueTableCommand,
-                               QueueWorkCommand, RoutesCommand, RuleCommand,
-                               RuleEnclosureCommand, SeedCommand,
-                               SeedRunCommand, ServeCommand, TinkerCommand,
-                               UpCommand, ValidatorCommand, ViewCommand)
+                               ProviderCommand, PublishCommand,
+                               QueueTableCommand, QueueWorkCommand,
+                               RoutesCommand, SeedCommand, SeedRunCommand,
+                               ServeCommand, TestCommand, TinkerCommand, UpCommand,
+                               ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
-from masonite.helpers.routes import flatten_routes
 from masonite.helpers import config
+from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
 from masonite.provider import ServiceProvider
 from masonite.request import Request
 from masonite.response import Response
 from masonite.routes import Route
+
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver, AuthJwtDriver
 
 
 class AppProvider(ServiceProvider):
@@ -37,6 +40,9 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthJwtDriver', AuthJwtDriver)
+        self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
         self.app.bind('RouteMiddleware', config('middleware.route_middleware'))
         self.app.bind('HttpMiddleware', config('middleware.http_middleware'))
         self.app.bind('Auth', Auth)
@@ -79,11 +85,9 @@ class AppProvider(ServiceProvider):
         self.app.bind('MasoniteQueueTableCommand', QueueTableCommand())
         self.app.bind('MasoniteViewCommand', ViewCommand())
         self.app.bind('MasoniteRoutesCommand', RoutesCommand())
-        self.app.bind('MasoniteRuleEnclosureCommand', RuleEnclosureCommand())
         self.app.bind('MasoniteServeCommand', ServeCommand())
         self.app.bind('MasoniteSeedCommand', SeedCommand())
         self.app.bind('MasoniteSeedRunCommand', SeedRunCommand())
+        self.app.bind('MasoniteTestCommand', TestCommand())
         self.app.bind('MasoniteTinkerCommand', TinkerCommand())
         self.app.bind('MasoniteUpCommand', UpCommand())
-        self.app.bind('MasoniteValidatorCommand', ValidatorCommand())
-        self.app.bind('MasoniteRuleCommand', RuleCommand())

@@ -3,6 +3,7 @@ import unittest
 from app.http.controllers.ControllerTest import ControllerTest
 from config import application, middleware
 from masonite.app import App
+from masonite.auth import Csrf
 from masonite.providers.RouteProvider import RouteProvider
 from masonite.request import Request
 from masonite.response import Response
@@ -10,6 +11,8 @@ from masonite.routes import Get, Match, Route
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.view import View
 from masonite.auth import Auth
+from masonite.managers import AuthManager
+from masonite.drivers import AuthCookieDriver
 
 
 class TestRouteProvider(unittest.TestCase):
@@ -30,6 +33,9 @@ class TestRouteProvider(unittest.TestCase):
         self.app.bind('ViewClass', view)
         self.app.bind('View', view.render)
         self.app.bind('Auth', Auth)
+        self.app.bind('Csrf', Csrf(self.app.make('Request')))
+        self.app.bind('AuthCookieDriver', AuthCookieDriver)
+        self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
         self.provider = RouteProvider()
         self.provider.app = self.app
 

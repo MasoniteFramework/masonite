@@ -59,10 +59,10 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     author=meta['__author__'],
-    author_email=['__author_email__'],
-    url=['__url__'],
+    author_email=meta['__author_email__'],
+    url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
-    licence=['__licence__'],
+    licence=meta['__licence__'],
     python_requires=">=3.4",
     classifiers=[
         'Development Status :: 5 - Production/Stable',

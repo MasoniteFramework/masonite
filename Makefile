@@ -1,11 +1,12 @@
 init:
+	# only use for .travis.yml
 	pip install masonite_cli
 	pip install -e .
 	pip install -r requirements.txt
 test:
 	python -m pytest tests                                               
 ci:
-	coverage && coveralls && deepsource
+	coverage
 flake8:
 	flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
 deepsource:

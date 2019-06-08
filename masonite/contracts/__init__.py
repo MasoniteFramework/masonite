@@ -1,3 +1,4 @@
+from .AuthContract import AuthContract
 from .BroadcastContract import BroadcastContract
 from .CacheContract import CacheContract
 from .MailContract import MailContract

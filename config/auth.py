@@ -20,3 +20,10 @@ AUTH = {
     'driver': env('AUTH_DRIVER', 'cookie'),
     'model': User,
 }
+
+DRIVERS = {
+    'jwt': {
+        'reauthentication': True,
+        'lifetime': '5 minutes'
+    }
+}

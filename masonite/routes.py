@@ -596,7 +596,7 @@ class RouteGroup:
         for route in self.routes:
             if route.route_url == '/':
                 route.route_url = ''
-                
+
             route.route_url = prefix + route.route_url
             route.compile_route_to_regex()
 

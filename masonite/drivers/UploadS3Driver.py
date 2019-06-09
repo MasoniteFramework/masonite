@@ -54,7 +54,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             filename = self.get_name(fileitem)
 
         # Check if is a valid extension
-        self.validate_extension(filename)
+        self.validate_extension(self.get_name(fileitem))
 
         session = boto3.Session(
             aws_access_key_id=self.config.DRIVERS['s3']['client'],

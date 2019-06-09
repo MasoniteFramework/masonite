@@ -136,7 +136,7 @@ class TestCase(unittest.TestCase):
     def delete(self, url, params={}):
         return self.json('DELETE', url, params)
 
-    def acting_as(self, user):
+    def actingAs(self, user):
         self.acting_user = user
         return self
 

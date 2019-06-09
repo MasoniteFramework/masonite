@@ -47,7 +47,7 @@ class TestUnitTest(TestCase):
 
     def test_can_have_user(self):
         self.assertTrue(
-            self.acting_as(User.find(1)).post('/unit/test/user').contains('Joe')
+            self.actingAs(User.find(1)).post('/unit/test/user').contains('Joe')
         )
 
     def test_json(self):

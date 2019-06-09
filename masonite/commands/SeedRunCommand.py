@@ -26,13 +26,3 @@ class SeedRunCommand(Command):
                 seeder),
         ], shell=True)
 
-        self.check_init_file()
-
-    def check_init_file(self):
-        os.makedirs(os.path.dirname(
-            'databases/seeds/__init__.py'), exist_ok=True)
-
-        with open('databases/seeds/__init__.py') as f:
-            if 'sys.path.append(os.getcwd())' not in f.read():
-                with open('databases/seeds/__init__.py', 'w+') as fp:
-                    fp.write('import os\nimport sys\nsys.path.append(os.getcwd())\n')

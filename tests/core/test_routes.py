@@ -159,6 +159,13 @@ class TestRoutes(unittest.TestCase):
 
         self.assertEqual(routes[0].route_url, '/dashboard/test/1')
 
+    def test_group_route_sets_prefix_no_route(self):
+        routes = RouteGroup([
+            Get('', 'TestController@show'),
+        ], prefix='/dashboard')
+
+        self.assertEqual(routes[0].route_url, '/dashboard')
+
     def test_group_route_sets_name(self):
         RouteGroup([
             Get().route('/test/1', 'TestController@show').name('create'),

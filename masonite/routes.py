@@ -363,7 +363,7 @@ class Get(BaseHttpRoute):
         """Get constructor."""
         self.method_type = ['GET']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -374,7 +374,7 @@ class Head(BaseHttpRoute):
         """Head constructor."""
         self.method_type = ['HEAD']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -385,7 +385,7 @@ class Post(BaseHttpRoute):
         """Post constructor."""
         self.method_type = ['POST']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -400,7 +400,7 @@ class Match(BaseHttpRoute):
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -411,7 +411,7 @@ class Put(BaseHttpRoute):
         """Put constructor."""
         self.method_type = ['PUT']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -422,7 +422,7 @@ class Patch(BaseHttpRoute):
         """Patch constructor."""
         self.method_type = ['PATCH']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -433,7 +433,7 @@ class Delete(BaseHttpRoute):
         """Delete constructor."""
         self.method_type = ['DELETE']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -444,7 +444,7 @@ class Connect(BaseHttpRoute):
         """Connect constructor."""
         self.method_type = ['CONNECT']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -455,7 +455,7 @@ class Options(BaseHttpRoute):
         """Options constructor."""
         self.method_type = ['OPTIONS']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -466,7 +466,7 @@ class Trace(BaseHttpRoute):
         """Trace constructor."""
         self.method_type = ['TRACE']
         self.list_middleware = []
-        if route and output:
+        if route is not None and output is not None:
             self.route(route, output)
 
 
@@ -594,6 +594,9 @@ class RouteGroup:
             prefix {str} -- String to prefix to all Routes.
         """
         for route in self.routes:
+            if route.route_url == '/':
+                route.route_url = ''
+                
             route.route_url = prefix + route.route_url
             route.compile_route_to_regex()
 

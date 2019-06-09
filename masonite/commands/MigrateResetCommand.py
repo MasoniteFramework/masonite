@@ -3,9 +3,8 @@ import os
 import sys
 
 from cleo import Command
-from masonite.packages import add_venv_site_packages
-from orator.exceptions.query import QueryException
 from masonite.helpers.migrations import Migrations
+
 
 class MigrateResetCommand(Command):
     """

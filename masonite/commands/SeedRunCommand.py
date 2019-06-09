@@ -1,6 +1,5 @@
 """Run Seed Command."""
 import subprocess
-import os
 
 from cleo import Command
 
@@ -25,4 +24,3 @@ class SeedRunCommand(Command):
             "orator db:seed -p databases/seeds -c config/database.py -f {}".format(
                 seeder),
         ], shell=True)
-

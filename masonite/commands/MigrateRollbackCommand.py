@@ -3,8 +3,8 @@ import os
 import sys
 
 from cleo import Command
-from masonite.packages import add_venv_site_packages
 from masonite.helpers.migrations import Migrations
+
 
 class MigrateRollbackCommand(Command):
     """

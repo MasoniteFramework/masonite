@@ -2,9 +2,7 @@
 import os
 import sys
 
-from subprocess import check_output
 from cleo import Command
-from masonite.packages import add_venv_site_packages
 from masonite.helpers.migrations import Migrations
 
 
@@ -22,4 +20,3 @@ class MigrateCommand(Command):
         for notes in migrations._notes:
             self.line(notes)
         self.line("")
-        

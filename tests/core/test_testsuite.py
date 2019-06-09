@@ -14,5 +14,5 @@ class TestTestSuite(unittest.TestCase):
         self.assertTrue(self.suite.route('/test').exists())
 
     def test_testsuite_route_should_return_bool_if_has_middleware(self):
-        self.assertTrue(self.suite.route('/test').has_middleware('auth'))
-        self.assertFalse(self.suite.route('/test').has_middleware('none'))
+        self.assertTrue(self.suite.route('/test').hasMiddleware('auth'))
+        self.assertFalse(self.suite.route('/test').hasMiddleware('none'))

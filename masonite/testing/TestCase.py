@@ -25,8 +25,8 @@ class TestCase(unittest.TestCase):
         self.container = container
         self.acting_user = False
         self.factory = Factory()
-        self.without_exception_handling()
-        self.without_csrf()
+        self.withoutExceptionHandling()
+        self.withoutCsrf()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
@@ -172,14 +172,14 @@ class TestCase(unittest.TestCase):
             else:
                 raise e
 
-    def with_exception_handling(self):
+    def withExceptionHandling(self):
         self._exception_handling = True
 
-    def without_exception_handling(self):
+    def withoutExceptionHandling(self):
         self._exception_handling = False
 
-    def with_csrf(self):
+    def withCsrf(self):
         self._with_csrf = True
 
-    def without_csrf(self):
+    def withoutCsrf(self):
         self._with_csrf = False

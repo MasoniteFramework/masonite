@@ -14,5 +14,5 @@ class TestRoute:
     def exists(self):
         return isinstance(self.route, Get)
 
-    def has_middleware(self, middleware):
+    def hasMiddleware(self, middleware):
         return middleware in self.route.list_middleware

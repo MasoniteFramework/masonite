@@ -37,12 +37,12 @@ class TestUnitTest(TestCase):
 
     def test_can_test_route_name(self):
         self.assertTrue(
-            self.get('/unit/test/get/params').is_named('get.params')
+            self.get('/unit/test/get/params').isNamed('get.params')
         )
 
     def test_has_middleware(self):
         self.assertTrue(
-            self.post('/unit/test/post').has_middleware('test')
+            self.post('/unit/test/post').hasMiddleware('test')
         )
 
     def test_can_have_user(self):
@@ -57,6 +57,6 @@ class TestUnitTest(TestCase):
         self.assertTrue(self.patch('/unit/test/patch', {'test': 'testing'}).contains('testing'))
 
     def test_csrf(self):
-        self.with_csrf()
+        self.withCsrf()
         with self.assertRaises(InvalidCSRFToken):
             self.assertTrue(self.post('/unit/test/json', {'test': 'testing'}).contains('testing'))

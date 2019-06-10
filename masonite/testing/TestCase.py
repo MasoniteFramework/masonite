@@ -19,6 +19,7 @@ class TestCase(unittest.TestCase):
     transactions = True
     refreshes_database = False
     _has_setup_database = False
+    _transactions = 0
 
     def setUp(self):
         from wsgi import container
@@ -27,6 +28,9 @@ class TestCase(unittest.TestCase):
         self.factory = Factory()
         self.withoutExceptionHandling()
         self.withoutCsrf()
+        print('transactions', self._transactions)
+        if not self._transactions:
+            self.startTransaction()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
@@ -45,27 +49,36 @@ class TestCase(unittest.TestCase):
         if hasattr(cls, 'setUpFactories'):
             cls._has_setup_database = True
         if not cls.refreshes_database and cls.transactions:
-            from config.database import DB
-            DB.begin_transaction()
+            cls.startTransaction()
 
     @classmethod
     def tearDownClass(cls):
         if not cls.refreshes_database and cls.transactions:
-            from config.database import DB
-            DB.rollback()
+            cls.stopTransaction()
         else:
             cls.staticTearDownDatabase()
 
     def refreshDatabase(self):
         if not self.refreshes_database and self.transactions:
-            from config.database import DB
-            DB.rollback()
-            DB.begin_transaction()
+            self.stopTransaction()
+            self.startTransaction()
             if hasattr(self, 'setUpFactories'):
                 self.setUpFactories()
         else:
             self.tearDownDatabase()
             self.setUpDatabase()
+
+    @classmethod
+    def startTransaction(cls):
+        from config.database import DB
+        DB.begin_transaction()
+        cls._transactions += 1
+
+    @classmethod
+    def stopTransaction(cls):
+        from config.database import DB
+        DB.rollback()
+        cls._transactions -= 1
 
     def make(self, model, factory, amount=50):
         self.registerFactory(model, factory)

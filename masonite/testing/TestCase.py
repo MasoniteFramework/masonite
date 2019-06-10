@@ -28,7 +28,6 @@ class TestCase(unittest.TestCase):
         self.factory = Factory()
         self.withoutExceptionHandling()
         self.withoutCsrf()
-        print('transactions', self._transactions)
         if not self._transactions:
             self.startTransaction()
 
@@ -78,7 +77,8 @@ class TestCase(unittest.TestCase):
     def stopTransaction(cls):
         from config.database import DB
         DB.rollback()
-        cls._transactions -= 1
+        if cls._transactions >= 0:
+            cls._transactions -= 1
 
     def make(self, model, factory, amount=50):
         self.registerFactory(model, factory)

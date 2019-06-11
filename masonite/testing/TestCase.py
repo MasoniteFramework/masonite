@@ -29,7 +29,8 @@ class TestCase(unittest.TestCase):
         self.withoutCsrf()
         if not self._transaction:
             self.startTransaction()
-            self.setUpFactories()
+            if hasattr(self, 'setUpFactories'):
+                self.setUpFactories()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")

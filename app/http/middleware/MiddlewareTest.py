@@ -15,5 +15,5 @@ class MiddlewareTest:
         self.request.path = 'test/middleware/before/ran'
 
     def after(self):
-        ''' Run This Middleware After The Route Executes '''
+        """Run This Middleware After The Route Executes."""
         pass

@@ -15,5 +15,5 @@ class AddAttributeMiddleware:
         self.request.attribute = True
 
     def after(self):
-        ''' Run This Middleware After The Route Executes '''
+        """Run This Middleware After The Route Executes."""
         pass

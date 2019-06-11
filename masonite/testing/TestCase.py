@@ -40,7 +40,7 @@ class TestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.staticSetUpDatabase()
 
     @classmethod
     def tearDownClass(cls):

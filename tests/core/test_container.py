@@ -3,12 +3,13 @@ from masonite.request import Request
 from masonite.drivers import UploadDiskDriver
 from masonite.contracts import UploadContract
 from masonite.exceptions import ContainerError, StrictContainerException
- 
+
 import unittest
 
 
 class MockObject:
     pass
+
 
 class MockSelfObject:
 
@@ -17,6 +18,7 @@ class MockSelfObject:
 
     def get_id(self):
         return self.id
+
 
 class GetObject(MockObject):
 
@@ -212,6 +214,6 @@ class TestContainer(unittest.TestCase):
 
     def _test_substitute(self, test: SubstituteThis):
         return test
-    
+
     def _test_self_object(self, obj: MockSelfObject):
         return obj

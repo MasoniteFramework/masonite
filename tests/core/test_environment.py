@@ -18,6 +18,7 @@ class TestEnvironment(unittest.TestCase):
         self.assertIn('LOCAL', os.environ)
         self.assertEqual(os.environ.get('LOCAL'), 'TEST')
 
+
 class TestEnv(unittest.TestCase):
 
     def test_env_returns_numeric(self):
@@ -52,4 +53,3 @@ class TestEnv(unittest.TestCase):
 
     def test_env_works_with_none(self):
         self.assertIsNone(env('na', None))
-

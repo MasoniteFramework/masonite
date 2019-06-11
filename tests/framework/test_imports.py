@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+
 class TestMasoniteImport(TestCase):
 
     def test_masonite_import(self):

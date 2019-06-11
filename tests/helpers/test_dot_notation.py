@@ -1,6 +1,7 @@
- 
-from masonite.helpers import dot, Dot as DictDot
 import unittest
+
+from masonite.helpers import dot, Dot as DictDot
+
 
 class TestDot(unittest.TestCase):
 

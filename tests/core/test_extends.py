@@ -6,6 +6,7 @@ from masonite.request import Request
 wsgi_request = generate_wsgi()
 import unittest
 
+
 class ExtendClass:
 
     path = None

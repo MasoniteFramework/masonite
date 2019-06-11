@@ -1,6 +1,6 @@
 import glob
 import time
- 
+
 from jinja2 import FileSystemLoader
 
 from config import cache
@@ -10,6 +10,7 @@ from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
 from masonite.managers.CacheManager import CacheManager
 from masonite.view import View
 import unittest
+
 
 class TestView(unittest.TestCase):
 
@@ -85,7 +86,7 @@ class TestView(unittest.TestCase):
         self.assertEqual(self.container.make('ViewClass').composers, {'mail*': {'to': 'test_user'}})
 
         view = self.container.make('View')
-        self.assertIn('test_user' , view('mail/welcome').rendered_template)
+        self.assertIn('test_user', view('mail/welcome').rendered_template)
 
     def test_composers_with_wildcard_base_view_route(self):
         self.container.make('ViewClass').composer('mail*', {'to': 'test_user'})
@@ -93,7 +94,7 @@ class TestView(unittest.TestCase):
         self.assertEqual(self.container.make('ViewClass').composers, {'mail*': {'to': 'test_user'}})
 
         view = self.container.make('View')
-        self.assertIn('test_user' , view('mail/welcome').rendered_template)
+        self.assertIn('test_user', view('mail/welcome').rendered_template)
 
     def test_render_deep_in_file_structure_with_package_loader(self):
 
@@ -109,7 +110,7 @@ class TestView(unittest.TestCase):
         self.assertEqual(self.container.make('ViewClass').composers, {'mail/welcome*': {'to': 'test_user'}})
 
         view = self.container.make('View')
-        self.assertIn('test_user' , view('mail/welcome').rendered_template)
+        self.assertIn('test_user', view('mail/welcome').rendered_template)
 
     def test_composers_with_wildcard_lower_directory_view_and_incorrect_shortend_wildcard(self):
         self.container.make('ViewClass').composer(
@@ -219,16 +220,16 @@ class TestView(unittest.TestCase):
         self.container.make('ViewClass').share(
             {'test': 'John'})
 
-        self.assertIn('John' , view('mail.welcome', {'to': 'John'}).rendered_template)
+        self.assertIn('John', view('mail.welcome', {'to': 'John'}).rendered_template)
         self.assertEqual(view('mail.composers', {'test': 'John'}).rendered_template, 'John')
         self.assertEqual(view('mail.share').rendered_template, 'John')
-        self.assertIn('John' , view('mail/welcome', {'to': 'John'}).rendered_template)
+        self.assertIn('John', view('mail/welcome', {'to': 'John'}).rendered_template)
 
         self.container.make('ViewClass').set_splice('@')
 
-        self.assertIn('John' , view('mail@welcome', {'to': 'John'}).rendered_template)
-        self.assertIn('John' , view('mail@composers', {'test': 'John'}).rendered_template)
-        self.assertIn('John' , view('mail/welcome', {'to': 'John'}).rendered_template)
+        self.assertIn('John', view('mail@welcome', {'to': 'John'}).rendered_template)
+        self.assertIn('John', view('mail@composers', {'test': 'John'}).rendered_template)
+        self.assertIn('John', view('mail/welcome', {'to': 'John'}).rendered_template)
 
     def test_can_add_tests_to_view(self):
         view = self.container.make('ViewClass')
@@ -265,7 +266,7 @@ class TestView(unittest.TestCase):
 
     def test_can_use_at_line_statements(self):
         view = self.container.make('ViewClass')
-        self.assertIn('test this string' , view.render('line-statements', {'test': 'test this string'}).rendered_template)
+        self.assertIn('test this string', view.render('line-statements', {'test': 'test this string'}).rendered_template)
 
 
 class MockAdminUser:

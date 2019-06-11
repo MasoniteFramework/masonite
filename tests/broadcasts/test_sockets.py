@@ -8,7 +8,7 @@ import unittest
 if os.getenv('ABLY_SECRET'):
 
     class TestSockets(unittest.TestCase):
-            
+
         def setUp(self):
             self.app = TestSuite().create_container().container
             self.app.bind('BroadcastPusherDriver', BroadcastPusherDriver)

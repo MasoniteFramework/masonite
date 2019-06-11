@@ -124,7 +124,7 @@ class TestUploadManager(unittest.TestCase):
         image.filename = 'file.pdf'
 
         print(image.filename)
-        
+
         self.assertTrue(UploadManager(self.app).driver('disk').accept('*').store(image))
 
     def test_upload_manage_should_raise_exception_when_accept_all_extension_and_something_more(self):
@@ -132,8 +132,8 @@ class TestUploadManager(unittest.TestCase):
         This test should raise an error when use something together with '*' when allowing all extensions )
         """
         with self.assertRaises(ValueError):
-            UploadManager(self.app).driver('disk').accept('*','png').store(ImageMock())
-        
+            UploadManager(self.app).driver('disk').accept('*', 'png').store(ImageMock())
+
     def test_upload_with_new_filename(self):
         self.assertEqual(self.app.make('UploadManager').driver('disk').store(ImageMock(), filename='newname.jpg'), 'newname.jpg')
 

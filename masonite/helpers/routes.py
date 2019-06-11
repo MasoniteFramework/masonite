@@ -184,7 +184,7 @@ def compile_route_to_regex(route):
     return regex
 
 
-def create_matchurl(router, route):
+def create_matchurl(url, route):
     """Create a regex string for router.url to be matched against.
 
     Arguments:
@@ -195,10 +195,10 @@ def create_matchurl(router, route):
         string -- compiled regex string
     """
 
-    if router.url == '/':
+    if url == '/':
         return re.compile(r'^\/$')
 
-    if router.url.endswith('/'):
+    if url.endswith('/'):
         matchurl = route._compiled_regex_end
     else:
         matchurl = route._compiled_regex

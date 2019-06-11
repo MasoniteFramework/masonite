@@ -35,3 +35,6 @@ class UnitTestController(Controller):
 
     def patch(self):
         return self.request.input('test')
+
+    def param(self):
+        return self.request.param('post_id')

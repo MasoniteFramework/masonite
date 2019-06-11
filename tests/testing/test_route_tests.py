@@ -45,6 +45,11 @@ class TestUnitTest(TestCase):
             self.post('/unit/test/post').hasMiddleware('test')
         )
 
+    def test_can_get_route_param(self):
+        self.assertTrue(
+            self.get('/unit/test/param/1').contains('1')
+        )
+
     def test_can_have_user(self):
         self.assertTrue(
             self.actingAs(User.find(1)).post('/unit/test/user').contains('Joe')

@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from urllib.parse import urlencode
 
 from masonite import env
-from masonite.helpers.routes import flatten_routes
+from masonite.helpers.routes import flatten_routes, create_matchurl
 from masonite.testsuite import generate_wsgi
 from orator.orm import Factory
 
@@ -40,7 +40,7 @@ class TestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.staticSetUpDatabase()
 
     @classmethod
     def tearDownClass(cls):
@@ -150,7 +150,8 @@ class TestCase(unittest.TestCase):
 
     def route(self, url, method=False):
         for route in self.container.make('WebRoutes'):
-            if route.route_url == url and (method in route.method_type or not method):
+            matchurl = create_matchurl(url, route)
+            if matchurl.match(url) and method in route.method_type:
                 return MockRoute(route, self.container)
 
     def routes(self, routes):

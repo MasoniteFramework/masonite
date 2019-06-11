@@ -24,7 +24,7 @@ class RouteProvider(ServiceProvider):
             end with a trailing slash.
             """
 
-            matchurl = create_matchurl(router, route)
+            matchurl = create_matchurl(router.url, route)
 
             """Houston, we've got a match
                 Check to see if a route matches the corresponding router url. If a match

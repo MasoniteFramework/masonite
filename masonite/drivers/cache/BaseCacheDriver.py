@@ -1,12 +1,10 @@
-"""Base cache driver module.
-"""
+"""Base cache driver module."""
 
 from masonite.drivers import BaseDriver
 
 
 class BaseCacheDriver(BaseDriver):
-    """Base class that all cache drivers inherit from.
-    """
+    """Base class that all cache drivers inherit from."""
 
     def calculate_time(self, cache_type, cache_time):
         """Convert time to required unit

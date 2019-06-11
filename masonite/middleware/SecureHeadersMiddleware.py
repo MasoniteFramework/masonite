@@ -24,13 +24,11 @@ class SecureHeadersMiddleware:
         }
 
     def before(self):
-        """Run This Middleware Before The Route Executes.
-        """
+        """Run This Middleware Before The Route Executes."""
         pass
 
     def after(self):
-        """Run This Middleware After The Route Executes.
-        """
+        """Run This Middleware After The Route Executes."""
         from config import middleware
 
         try:

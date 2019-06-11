@@ -9,8 +9,7 @@ from masonite.view import View
 
 
 class MailTerminalDriver(BaseMailDriver, MailContract):
-    """Mail terminal driver
-    """
+    """Mail terminal driver."""
 
     def __init__(self, app: App, view: View):
         super().__init__(app, view)

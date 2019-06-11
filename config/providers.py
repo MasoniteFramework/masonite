@@ -7,8 +7,6 @@ from masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
                                 UploadProvider, ViewProvider,
                                 WhitenoiseProvider)
 
-from events.providers import EventProvider
-
 """Providers List
 Providers are a simple way to remove or add functionality for Masonite
 The providers in this list are either ran on server start or when a
@@ -24,7 +22,6 @@ PROVIDERS = [
     StatusCodeProvider,
     WhitenoiseProvider,
     ViewProvider,
-    EventProvider,
 
     # Optional Framework Providers
     SassProvider,

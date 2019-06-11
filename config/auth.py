@@ -23,7 +23,10 @@ AUTH = {
 
 DRIVERS = {
     'jwt': {
+        """Whether or not to reauthenticate with the database when the token expires."""
         'reauthentication': True,
+
+        """How long the token should live for before being refreshed."""
         'lifetime': '5 minutes'
     }
 }

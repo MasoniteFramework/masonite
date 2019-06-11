@@ -28,6 +28,7 @@ DATABASES = {
         'driver': 'sqlite',
         'database': env('DB_DATABASE', 'masonite.db'),
         'log_queries': env('DB_LOG'),
+        'prefix': ''
     },
     'mysql': {
         'driver': 'mysql',

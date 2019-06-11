@@ -18,8 +18,7 @@ class TestCase(unittest.TestCase):
     sqlite = True
     transactions = True
     refreshes_database = False
-    _has_setup_database = False
-    _transactions = 0
+    _transaction = False
 
     def setUp(self):
         from wsgi import container
@@ -28,32 +27,24 @@ class TestCase(unittest.TestCase):
         self.factory = Factory()
         self.withoutExceptionHandling()
         self.withoutCsrf()
-        if not self._transactions:
+        if not self._transaction:
             self.startTransaction()
+            self.setUpFactories()
 
         if self.sqlite and env('DB_CONNECTION') != 'sqlite':
             raise Exception("Cannot run tests without using the 'sqlite' database.")
-
-        if self._has_setup_database:
-            self.setUpFactories()
-
-            self.__class__._has_setup_database = False
 
         if not self.transactions and self.refreshes_database:
             self.refreshDatabase()
 
     @classmethod
     def setUpClass(cls):
-        cls.staticSetUpDatabase()
-        if hasattr(cls, 'setUpFactories'):
-            cls._has_setup_database = True
-        if not cls.refreshes_database and cls.transactions:
-            cls.startTransaction()
+        pass
 
     @classmethod
     def tearDownClass(cls):
         if not cls.refreshes_database and cls.transactions:
-            cls.stopTransaction()
+            cls.staticStopTransaction()
         else:
             cls.staticTearDownDatabase()
 
@@ -67,18 +58,21 @@ class TestCase(unittest.TestCase):
             self.tearDownDatabase()
             self.setUpDatabase()
 
-    @classmethod
-    def startTransaction(cls):
+    def startTransaction(self):
         from config.database import DB
         DB.begin_transaction()
-        cls._transactions += 1
+        self.__class__._transaction = True
 
-    @classmethod
-    def stopTransaction(cls):
+    def stopTransaction(self):
         from config.database import DB
         DB.rollback()
-        if cls._transactions >= 0:
-            cls._transactions -= 1
+        self.__class__._transaction = False
+
+    @classmethod
+    def staticStopTransaction(cls):
+        from config.database import DB
+        DB.rollback()
+        cls._transaction = False
 
     def make(self, model, factory, amount=50):
         self.registerFactory(model, factory)

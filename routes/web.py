@@ -22,6 +22,7 @@ ROUTES = [
     ], prefix='/example'),
     RouteGroup([
         Get('/test/get', 'UnitTestController@show'),
+        Get('/test/param/@post_id', 'UnitTestController@param'),
         Post('/test/post', 'UnitTestController@store').middleware('test'),
         Get('/test/get/params', 'UnitTestController@get_params').name('get.params'),
         Post('/test/params', 'UnitTestController@params'),

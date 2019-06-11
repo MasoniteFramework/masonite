@@ -1,4 +1,4 @@
-""" A ModelDocstringCommand Command """
+"""A ModelDocstringCommand Command."""
 
 from cleo import Command
 

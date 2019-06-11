@@ -24,7 +24,7 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
         self.container = app
 
     def _get_processor(self, mode, max_workers):
-        """ Set processor to use either threads or multiprocesses
+        """Set processor to use either threads or multiprocesses
 
         Arguments:
             mode {str} - async mode

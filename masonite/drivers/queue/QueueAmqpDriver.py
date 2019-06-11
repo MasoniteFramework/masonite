@@ -1,4 +1,4 @@
-""" Driver for AMQP support """
+"""Driver for AMQP support"""
 
 import inspect
 import pickle

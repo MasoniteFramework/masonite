@@ -3,7 +3,6 @@
 from masonite.view import View
 from masonite.request import Request
 from masonite.controllers import Controller
-from config import application
 
 
 class WelcomeController(Controller):

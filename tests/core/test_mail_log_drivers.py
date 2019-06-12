@@ -1,5 +1,5 @@
 from config import mail
- 
+
 import os
 
 from masonite.app import App
@@ -12,6 +12,7 @@ import sys
 from contextlib import contextmanager
 from _io import StringIO
 
+
 @contextmanager
 def captured_output():
     new_out, new_err = StringIO(), StringIO()
@@ -22,8 +23,10 @@ def captured_output():
     finally:
         sys.stdout, sys.stderr = old_out, old_err
 
+
 class UserMock:
     pass
+
 
 class TestMailLogDrivers(unittest.TestCase):
 

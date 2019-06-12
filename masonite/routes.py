@@ -64,7 +64,7 @@ class Route:
                 try:
                     request_body_size = int(
                         self.environ.get('CONTENT_LENGTH', 0))
-                except (ValueError):
+                except ValueError:
                     request_body_size = 0
 
                 request_body = self.environ['wsgi.input'].read(

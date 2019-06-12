@@ -308,7 +308,7 @@ class TestRequest(unittest.TestCase):
         ])
         request = app.make('Request').load_app(app)
 
-        self.assertEqual(request.route('test.url', full=True), 'http://localhost/test/url')
+        self.assertEqual(request.route('test.url', full=True), 'http://localhost:8000/test/url')
 
     def test_redirect_compiles_url_with_multiple_slashes(self):
         app = App()

@@ -6,6 +6,7 @@ from masonite.request import Request
 from masonite.testsuite.TestSuite import generate_wsgi
 import unittest
 
+
 class TestSession(unittest.TestCase):
 
     def setUp(self):
@@ -103,8 +104,8 @@ class TestSession(unittest.TestCase):
         for driver in ('cookie', 'memory'):
             session = self.app.make('SessionManager').driver(driver)
             session._session = {}
-            session.flash('flash_dict', [1,2,3])
-            self.assertEqual(session.get('flash_dict'), [1,2,3])
+            session.flash('flash_dict', [1, 2, 3])
+            self.assertEqual(session.get('flash_dict'), [1, 2, 3])
 
     def test_reset_serializes_dict(self):
         for driver in ('memory', 'cookie'):

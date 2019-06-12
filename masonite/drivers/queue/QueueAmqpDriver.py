@@ -1,4 +1,4 @@
-""" Driver for AMQP support """
+"""Driver for AMQP support"""
 
 import inspect
 import pickle
@@ -15,8 +15,7 @@ from masonite.queues import Queueable
 class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
     def __init__(self):
-        """Queue AMQP Driver
-        """
+        """Queue AMQP Driver."""
         from config import queue
         if 'amqp' in queue.DRIVERS:
             listening_channel = queue.DRIVERS['amqp']['channel']

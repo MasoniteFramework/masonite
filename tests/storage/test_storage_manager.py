@@ -1,9 +1,11 @@
+import os
+import unittest
+
 from masonite.testsuite import TestSuite
 from masonite.managers import StorageManager
 from masonite.drivers import StorageDiskDriver
 from config import storage
-import os
-import unittest
+
 
 class TestStorage(unittest.TestCase):
 
@@ -13,7 +15,7 @@ class TestStorage(unittest.TestCase):
         self.app.bind('StorageManager', StorageManager(self.app))
         self.app.bind('Storage', StorageManager(self.app).driver(storage.DRIVER))
         self.manager = self.app.make('Storage')
-    
+
     def test_storage_creates_disk_driver(self):
         self.assertIsInstance(self.manager.driver('disk'), StorageDiskDriver)
 
@@ -21,24 +23,24 @@ class TestStorage(unittest.TestCase):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
         self.assertEqual(driver.get('storage/some_file.txt'), 'HI')
-        
+
     def test_storage_appends_file(self):
         driver = self.manager.driver('disk')
         driver.append('storage/some_file.txt', 'HI')
         self.assertEqual(driver.get('storage/some_file.txt'), 'HIHI')
-        
+
     def test_storage_deletes_file(self):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
         self.assertTrue(driver.delete('storage/some_file.txt'))
-        
+
     def test_storage_file_exists(self):
         driver = self.manager.driver('disk')
         driver.put('storage/some_file.txt', 'HI')
         self.assertTrue(driver.exists('storage/some_file.txt'))
         self.assertTrue(driver.delete('storage/some_file.txt'))
         self.assertFalse(driver.exists('storage/some_file.txt'))
-        
+
     def test_storage_file_gets_size(self):
         driver = self.manager.driver('disk')
         self.assertEqual(driver.size('storage/not_exists.txt'), 0)

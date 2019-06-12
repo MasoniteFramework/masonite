@@ -59,7 +59,6 @@ class TestRoutes(unittest.TestCase):
         get_route = Get().route('test/@route:year', None)
 
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
-        
 
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:slug', None)

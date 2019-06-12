@@ -1,8 +1,6 @@
-"""Module for the ache disk driver.
-"""
+"""Module for the ache disk driver."""
 
 import os
-
 
 from masonite.contracts import CacheContract
 from masonite.drivers import BaseCacheDriver
@@ -10,11 +8,10 @@ from masonite.exceptions import DriverLibraryNotFound
 
 
 class CacheRedisDriver(CacheContract, BaseCacheDriver):
-    """Class for the cache redis driver.
-    """
+    """Class for the cache redis driver."""
 
     def __init__(self):
-        """Cache redis driver constructor
+        """Cache redis driver constructor.
 
         Arguments:
             CacheConfig {config.cache} -- Cache configuration module.
@@ -90,24 +87,15 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
         return key
 
     def get(self, key):
-        """
-        Get the data from a key in the cache
-        """
-
+        """Get the data from a key in the cache."""
         return self.connection.get('{0}_cache_{1}'.format(self.app_name, key))
 
     def delete(self, key):
-        """
-        Delete file cache
-        """
-
+        """Delete file cache."""
         self.connection.delete('{0}_cache_{1}'.format(self.app_name, key))
 
     def update(self, key, value):
-        """
-            Updates a specific cache by key
-        """
-
+        """Updates a specific cache by key."""
         time_to_expire = self.connection.ttl('{0}_cache_{1}'.format(self.app_name, key))
 
         if time_to_expire > 0:
@@ -118,15 +106,9 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
         return key
 
     def exists(self, key):
-        """
-        Check if the cache exists
-        """
-
+        """Check if the cache exists."""
         return self.connection.exists('{0}_cache_{1}'.format(self.app_name, key))
 
     def is_valid(self, key):
-        """
-        Check if a valid cache
-        """
-
+        """Check if a valid cache."""
         return self.exists(key)

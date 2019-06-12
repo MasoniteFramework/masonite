@@ -1,4 +1,5 @@
 """Database Settings."""
+
 import logging
 
 from masonite import env

@@ -10,8 +10,7 @@ from masonite.view import View
 
 
 class MailLogDriver(BaseMailDriver, MailContract):
-    """Mail log driver.
-    """
+    """Mail log driver."""
     def __init__(self, app: App, view: View):
         super().__init__(app, view)
 

@@ -2,6 +2,7 @@ from masonite.request import Request
 from masonite.testsuite.TestSuite import generate_wsgi
 import unittest
 
+
 class TestCookieSigning(unittest.TestCase):
 
     def setUp(self):

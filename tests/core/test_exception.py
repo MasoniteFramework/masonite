@@ -1,5 +1,3 @@
- 
-
 from masonite.app import App
 from masonite.exception_handler import ExceptionHandler
 from masonite.hook import Hook
@@ -17,6 +15,7 @@ class ApplicationMock:
 class StorageMock:
     STATICFILES = {}
 
+
 class MockExceptionHandler:
 
     def __init__(self, request: Request):
@@ -24,6 +23,7 @@ class MockExceptionHandler:
 
     def handle(self, _):
         self.request.header('test', 'test', http_prefix=False)
+
 
 class TestException(unittest.TestCase):
 
@@ -51,7 +51,7 @@ class TestException(unittest.TestCase):
             self.app.false()
         except Exception as e:
             self.app.make('ExceptionHandler').load_exception(e)
-        
+
         self.assertEqual(self.app.make('Request').header('test'), 'test')
 
     def test_custom_exception_when_not_registered(self):

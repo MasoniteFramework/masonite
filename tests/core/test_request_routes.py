@@ -3,6 +3,7 @@ from masonite.request import Request
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 import unittest
 
+
 class TestRequestRoutes(unittest.TestCase):
 
     def setUp(self):

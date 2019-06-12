@@ -1,6 +1,7 @@
 from masonite.testsuite.TestSuite import TestSuite
 import unittest
 
+
 class TestTestSuite(unittest.TestCase):
 
     def setUp(self):

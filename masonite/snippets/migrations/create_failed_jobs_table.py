@@ -4,9 +4,7 @@ from orator.migrations import Migration
 class CreateFailedJobsTable(Migration):
 
     def up(self):
-        """
-        Run the migrations.
-        """
+        """Run the migrations."""
         with self.schema.create('failed_jobs') as table:
             table.increments('id')
             table.string('driver')
@@ -16,7 +14,5 @@ class CreateFailedJobsTable(Migration):
             table.timestamps()
 
     def down(self):
-        """
-        Revert the migrations.
-        """
+        """Revert the migrations."""
         self.schema.drop('failed_jobs')

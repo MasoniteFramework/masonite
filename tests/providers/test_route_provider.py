@@ -60,7 +60,7 @@ class TestRouteProvider(unittest.TestCase):
         )
 
         # self.assertEqual(self.app.make('Response'), 'test')
-    
+
     def test_home_route(self):
         self.app.make('Route').url = '/'
         self.app.bind('WebRoutes', [Get('/', ControllerTest.test)])
@@ -71,7 +71,6 @@ class TestRouteProvider(unittest.TestCase):
         )
 
         self.assertEqual(self.app.make('Response'), 'test')
-
 
     def test_base_route_hits_controller(self):
         self.app.make('Route').url = '/test'

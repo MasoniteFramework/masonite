@@ -14,8 +14,7 @@ class UploadDiskDriver(BaseUploadDriver, UploadContract):
     file_location = None
 
     def __init__(self):
-        """Upload Disk Driver Constructor.
-        """
+        """Upload Disk Driver Constructor."""
         pass
 
     def store(self, fileitem, filename=None, location=None):

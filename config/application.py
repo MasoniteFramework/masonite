@@ -27,13 +27,13 @@ it to encrypt and decrypt various values using the Masonite Sign
 class. Read the documentation on Encryption to find out how.
 """
 
-KEY = 'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY='
+KEY = env('KEY', 'mQhQtBZP-WmaJl5FpW2dC0vpnYs2ms1u5AIVqDM8s6w=')
 
 """Application URL
 Sets the root URL of the application. This is primarily used for testing
 """
 
-URL = 'http://localhost'
+URL = env('APP_URL', 'http://localhost:8000')
 
 """Base Directory
 Sets the root path of your project

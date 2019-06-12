@@ -10,7 +10,7 @@ class AuthenticationMiddleware:
         """Inject Any Dependencies From The Service Container.
 
         Arguments:
-            Request {masonite.request.Request} -- The Masonite request object
+            request {masonite.request.Request} -- The Masonite request class.
         """
         self.request = request
 

@@ -1,19 +1,19 @@
-''' Load User Middleware'''
+"""Add Attribute Middleware."""
 
 from masonite.request import Request
 
 
 class AddAttributeMiddleware:
-    ''' Middleware class which loads the current user into the request '''
+    """Middleware class which loads the current user into the request."""
 
     def __init__(self, request: Request):
-        ''' Inject Any Dependencies From The Service Container '''
+        """Inject Any Dependencies From The Service Container."""
         self.request = Request
 
     def before(self):
-        ''' Run This Middleware Before The Route Executes '''
+        """Run This Middleware Before The Route Executes."""
         self.request.attribute = True
 
     def after(self):
-        ''' Run This Middleware After The Route Executes '''
+        """Run This Middleware After The Route Executes."""
         pass

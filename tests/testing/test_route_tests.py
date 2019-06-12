@@ -10,7 +10,7 @@ class TestUnitTest(TestCase):
         super().setUp()
 
         self.routes(web.ROUTES)
-    
+
     def setUpFactories(self):
         User.create({
             'name': 'Joe',

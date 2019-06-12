@@ -6,10 +6,10 @@ from masonite.controllers import Controller
 
 class UnitTestController(Controller):
     """UnitTestController Controller Class."""
-    
+
     def __init__(self, request: Request):
         """UnitTestController Initializer
-        
+
         Arguments:
             request {masonite.request.Request} -- The Masonite Request class.
         """

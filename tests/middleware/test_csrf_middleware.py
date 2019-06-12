@@ -79,7 +79,7 @@ class TestCSRFMiddleware(unittest.TestCase):
         token2 = self.middleware.verify_token()
 
         self.assertEqual(len(token1), 30)
-        self.assertEqual(len(token2),  30)
+        self.assertEqual(len(token2), 30)
         self.assertNotEqual(token1, token2)
 
     def test_does_not_generate_token_every_request(self):

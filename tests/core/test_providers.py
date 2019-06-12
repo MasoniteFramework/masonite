@@ -5,6 +5,7 @@ from masonite.routes import Get
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 import unittest
 
+
 class TestProviders(unittest.TestCase):
 
     def setUp(self):

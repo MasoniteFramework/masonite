@@ -57,7 +57,6 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
                 self.to_address, message.as_string())
 
     def _send_mail(self, *args):
-        """Wrapper around sending mail so it can also be used for queues.
-        """
+        """Wrapper around sending mail so it can also be used for queues."""
         self.smtp.sendmail(*args)
         self.smtp.quit()

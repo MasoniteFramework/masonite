@@ -1,4 +1,4 @@
-""" A QueueWorkCommand Command """
+"""A QueueWorkCommand Command."""
 
 from cleo import Command
 

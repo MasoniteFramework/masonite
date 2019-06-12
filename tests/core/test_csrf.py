@@ -6,7 +6,7 @@ from masonite.testsuite.TestSuite import TestSuite
 
 
 class TestCsrf(unittest.TestCase):
-    
+
     def setUp(self):
         self.app = TestSuite().create_container().container
         self.app.bind('Csrf', Csrf(self.app.make('Request')))

@@ -60,7 +60,7 @@ class TestRouteProvider(unittest.TestCase):
         )
 
         # self.assertEqual(self.app.make('Response'), 'test')
-
+    
     def test_home_route(self):
         self.app.make('Route').url = '/'
         self.app.bind('WebRoutes', [Get('/', ControllerTest.test)])
@@ -71,6 +71,7 @@ class TestRouteProvider(unittest.TestCase):
         )
 
         self.assertEqual(self.app.make('Response'), 'test')
+
 
     def test_base_route_hits_controller(self):
         self.app.make('Route').url = '/test'
@@ -83,6 +84,17 @@ class TestRouteProvider(unittest.TestCase):
 
         assert self.app.make('Request').param('id') == 'test'
         assert self.app.make('Response') == 'test'
+
+    def test_no_base_route_returns_404(self):
+        self.app.make('Route').url = '/'
+        self.app.bind('WebRoutes', [Get('/test', ControllerTest.test)])
+        self.provider.boot(
+            self.app.make('Route'),
+            self.app.make('Request'),
+            self.app.make(Response)
+        )
+        print(self.app.make('Request').get_status_code())
+        assert self.app.make('Request').is_status(404)
 
     def test_controller_that_return_a_view_with_trailing_slash(self):
 

@@ -17,6 +17,7 @@ setup(
         'masonite.auth',
         'masonite.providers',
         'masonite.commands',
+        'masonite.controllers',
         'masonite.drivers',
         'masonite.drivers.authentication',
         'masonite.drivers.mail',

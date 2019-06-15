@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 
 from masonite import env
 from masonite.helpers.routes import flatten_routes, create_matchurl
+from masonite.helpers.migrations import Migrations
 from masonite.testsuite import generate_wsgi
 from orator.orm import Factory
 
@@ -87,20 +88,20 @@ class TestCase(unittest.TestCase):
 
     def setUpDatabase(self):
         self.tearDownDatabase()
-        subprocess.call(['craft', 'migrate'])
+        Migrations().run()
         if hasattr(self, 'setUpFactories'):
             self.setUpFactories()
 
     def tearDownDatabase(self):
-        subprocess.call(['craft', 'migrate:reset'])
+        Migrations().reset()
 
     @staticmethod
     def staticSetUpDatabase():
-        subprocess.call(['craft', 'migrate'])
+        Migrations().run()
 
     @staticmethod
     def staticTearDownDatabase():
-        subprocess.call(['craft', 'migrate:reset'])
+        Migrations().reset()
 
     def tearDown(self):
         if not self.transactions and self.refreshes_database:

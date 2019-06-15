@@ -1,5 +1,6 @@
-import logging
 """Database Settings."""
+
+import logging
 
 from masonite import env
 from masonite.environment import LoadEnvironment
@@ -53,7 +54,7 @@ Model.set_connection_resolver(DB)
 
 
 logger = logging.getLogger('orator.connection.queries')
-logger.setLevel(logging.DEBUG )
+logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter(
     'It took %(elapsed_time)sms to execute the query %(query)s'

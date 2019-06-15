@@ -22,7 +22,7 @@ HTTP_MIDDLEWARE = [
 ]
 
 """Route Middleware
-Specify a dictionary of middleware to be used on a per route basis here. The key will 
+Specify a dictionary of middleware to be used on a per route basis here. The key will
 be the alias to use on routes and the value can be any middleware class or a list
 of middleware (middleware stacks).
 """

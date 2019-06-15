@@ -1,6 +1,6 @@
 """User Table Seeder.
 
-You can run this seeder in order to generate users. 
+You can run this seeder in order to generate users.
 
     - Each time it is ran it will generate 50 random users.
     - All users have the password of 'secret'.

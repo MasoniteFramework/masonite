@@ -15,11 +15,10 @@ from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken
-
-
 from masonite.auth.Sign import Sign
 from masonite.exceptions import InvalidHTTPStatusCode, RouteException
-from masonite.helpers import dot, clean_request_input, Dot as DictDot
+from masonite.helpers import Dot as DictDot
+from masonite.helpers import clean_request_input, dot
 from masonite.helpers.Extendable import Extendable
 from masonite.helpers.routes import compile_route_to_regex
 from masonite.helpers.status import response_statuses
@@ -229,8 +228,11 @@ class Request(Extendable):
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
                 self.request_variables[name.replace('[]', '')] = value
+            return
         except TypeError:
-            self.request_variables = {}
+            pass
+
+        self.request_variables = {}
 
     def _get_standardized_value(self, value):
         """Get the standardized value based on the type of the value parameter.

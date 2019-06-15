@@ -70,6 +70,17 @@ class TestUnitTest(TestCase):
             'count': 10
         }))
 
+    def test_count(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').count(2))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').count(1))
+
+        self.assertTrue(self.json('GET', '/unit/test/json/response').amount(2))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').amount(1))
+
+    def test_has_amount(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 3))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 2))
+
     def test_patch(self):
         self.assertTrue(self.patch('/unit/test/patch', {'test': 'testing'}).contains('testing'))
 

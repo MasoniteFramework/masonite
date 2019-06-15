@@ -35,7 +35,8 @@ class UnitTestController(Controller):
 
     def response(self):
         return {
-            'count': 5
+            'count': 5,
+            'iterable': [1,2,3]
         }
 
     def patch(self):

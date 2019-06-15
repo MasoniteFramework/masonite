@@ -1,6 +1,5 @@
 """Helper Functions for RouteProvider."""
 
-import re
 from masonite.helpers import deprecated
 
 

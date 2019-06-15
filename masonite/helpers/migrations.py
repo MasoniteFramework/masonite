@@ -38,8 +38,7 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                raise e
-                pass
+                self.info(str(e))
 
         return self
 
@@ -52,8 +51,7 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                raise e
-                pass
+                self.info(str(e))
 
         return self
 
@@ -70,8 +68,8 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                raise e
-                pass
+                self.info(str(e))
+
         return self
 
     def ran(self):

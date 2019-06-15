@@ -1,1 +1,1 @@
-https://github.com/MasoniteFramework/core/archive/develop.zip
+https://github.com/MasoniteFramework/core/archive/2.2.zip

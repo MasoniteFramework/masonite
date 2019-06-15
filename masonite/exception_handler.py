@@ -10,7 +10,6 @@ import platform
 import sys
 import traceback
 
-from config import application
 from masonite.app import App
 from masonite.exceptions import DumpException
 from masonite.request import Request
@@ -53,11 +52,11 @@ class ExceptionHandler:
 
         if self._app.has('Exception{}Handler'.format(exception.__class__.__name__)):
 
-            return self._app.resolve(self._app.make('Exception{}Handler'.format(exception.__class__.__name__))).handle(exception)
+            return self._app.make('Exception{}Handler'.format(exception.__class__.__name__)).handle(exception)
 
         self.handle(exception)
 
-    def handle(self, exception):
+    def handle(self, _):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
         Returns:
@@ -70,10 +69,19 @@ class ExceptionHandler:
         self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
+        from config import application
         if not application.DEBUG:
             return
 
         # return a view
+        if request.header('Content-Type') == 'application/json':
+            stacktrace = []
+            for stack in traceback.extract_tb(sys.exc_info()[2]):
+                stacktrace.append("{} line {} in {}".format(stack[0], stack[1], stack[2]))
+
+            self.response.view({'error': {'exception': str(self._exception), 'status': 500, 'stacktrace': stacktrace}}, status=request.get_status())
+            return
+
         self.response.view(self._app.make('View')('/masonite/snippets/exception',
                                                {
                                                    'exception': self._exception,
@@ -106,7 +114,7 @@ class DumpHandler:
         self.app = app
         self.response = response
 
-    def handle(self, handle):
+    def handle(self, _):
         from config.database import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 

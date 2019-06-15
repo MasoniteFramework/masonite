@@ -1,8 +1,7 @@
 from masonite.app import App
 from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
-from config import application, providers
-from pydoc import locate
+
 import io
 
 
@@ -39,13 +38,13 @@ def generate_wsgi():
 class TestSuite:
 
     def create_container(self, wsgi=generate_wsgi(), container=None, routes=[]):
+        from config import application, providers
         if not container:
-            container = App()
+            container = App(remember=False)
 
         container.bind('WSGI', wsgi)
         container.bind('Application', application)
         container.bind('Container', container)
-
         container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])

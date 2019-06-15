@@ -1,5 +1,4 @@
 import requests
-from config import application
 
 
 class TestRequest:
@@ -9,6 +8,7 @@ class TestRequest:
         pass
 
     def get(self, route_url):
+        from config import application
         self.request = requests.get(application.URL + route_url)
         return self
 

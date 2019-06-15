@@ -20,3 +20,4 @@ tests/bootstrap/cache/*.txt
 /uploads/
 .coverage
 .idea/
+masonite.db

@@ -8,11 +8,12 @@ from masonite.view import View
 
 from orator.support.collection import Collection
 from orator import Model
+from masonite.app import App
 
 
 class Response(Extendable):
 
-    def __init__(self, app):
+    def __init__(self, app: App):
         """A Response object to be used to abstract the logic of getting a response ready to be returned.
 
         Arguments:

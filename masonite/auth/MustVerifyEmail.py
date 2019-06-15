@@ -9,6 +9,12 @@ class MustVerifyEmail:
     """Class To Verify User Email."""
 
     def verify_email(self, mail_manager, request):
+        """Sends email for user verification
+
+        Arguments:
+            mail_manager {masonite.managers.MailManager} -- Masonite mail manager class.
+            request {masonite.request.Request} -- Masonite request class.
+        """
         mail = mail_manager.helper()
         sign = Sign()
 

@@ -14,10 +14,8 @@ class TestJob(Queueable):
         pass
 
     def handle(self):
-        """Logic to handle the job
-        """
+        """Logic to handle the job."""
+        return 2 / 0
 
-        return 2/0
-    
     def failed(self, payload, error):
         print('running a failed job hook')

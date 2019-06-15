@@ -2,6 +2,8 @@
 
 import random
 import string
+import warnings
+
 from masonite.exceptions import AmbiguousError
 
 
@@ -71,15 +73,15 @@ class HasColoredCommands:
 
 class Compact:
 
-    def __new__(self, *args):
+    def __new__(cls, *args):
         import inspect
         frame = inspect.currentframe()
 
-        self.dictionary = {}
+        cls.dictionary = {}
         for arg in args:
 
             if isinstance(arg, dict):
-                self.dictionary.update(arg)
+                cls.dictionary.update(arg)
                 continue
 
             found = []
@@ -90,9 +92,21 @@ class Compact:
                             raise AmbiguousError(
                                 'Cannot contain variables with multiple of the same object in scope. '
                                 'Getting {}'.format(value))
-                    self.dictionary.update({key: value})
+                    cls.dictionary.update({key: value})
                     found.append(value)
 
-        if len(args) != len(self.dictionary):
+        if len(args) != len(cls.dictionary):
             raise ValueError('Could not find all variables in this')
-        return self.dictionary
+        return cls.dictionary
+
+
+def deprecated(message):
+    def deprecated_decorator(func):
+        def deprecated_func(*args, **kwargs):
+            warnings.warn("{} is a deprecated function. {}".format(func.__name__, message),
+                          category=DeprecationWarning,
+                          stacklevel=2)
+            warnings.simplefilter('default', DeprecationWarning)
+            return func(*args, **kwargs)
+        return deprecated_func
+    return deprecated_decorator

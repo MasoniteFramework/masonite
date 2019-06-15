@@ -1,12 +1,8 @@
-""" A QueueWorkCommand Command """
-
-import inspect
-import pickle
+"""A QueueWorkCommand Command."""
 
 from cleo import Command
 
 from masonite import Queue
-from masonite.exceptions import DriverLibraryNotFound
 
 
 class QueueWorkCommand(Command):

@@ -78,5 +78,9 @@ class ViewException(Exception):
     pass
 
 
+class QueueException(Exception):
+    pass
+
+
 class AmbiguousError(Exception):
     pass

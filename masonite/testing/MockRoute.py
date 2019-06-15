@@ -1,5 +1,6 @@
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi
+import json
 
 
 class MockRoute:
@@ -31,6 +32,15 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
 
         return self.container.make('Request').get_status_code() == '200 OK'
+
+    def hasJson(self, key, value=''):
+        response = json.loads(self.container.make('Response'))
+        if isinstance(key, dict):
+            for item_key, value in key.items():
+                if response[item_key] != value:
+                    return False
+            return True
+        return key in response and response[key] == value
 
     def user(self, obj):
         self._user = obj

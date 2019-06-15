@@ -2,9 +2,10 @@
 
 from masonite.view import View
 from masonite.request import Request
+from masonite.controllers import Controller
 
 
-class WelcomeController:
+class WelcomeController(Controller):
     """Controller For Welcoming The User."""
 
     def show(self, view: View, request: Request):
@@ -12,11 +13,9 @@ class WelcomeController:
 
         Arguments:
             view {masonite.view.View} -- The Masonite view class.
-            Application {config.application} -- The application config module.
+            request {masonite.request.Request} -- The Masonite request class.
 
         Returns:
             masonite.view.View -- The Masonite view class.
         """
-        return view.render('welcome', {
-            'app': request.app().make('Application')
-        })
+        return view.render('welcome')

@@ -1,41 +1,36 @@
-<!doctype html>
-<html lang="en">
+{% if exists('auth/base') %}
+    {% extends 'auth/base.html' %}
+{% else %}
+    {% extends 'base.html' %}
+{% endif %}
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block css %}
+<!-- Application CSS -->
+<link href="/static/style.css" rel="stylesheet" type="text/css">
+{% endblock %}
 
-    <title>{{ app.NAME }}</title>
+{% block title %} 
+    Welcome To {{ config('application.name', 'Masonite none') }} 
+{% endblock %}
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-    <!-- Application CSS -->
-    <link href="/static/style.css" rel="stylesheet" type="text/css">
-</head>
-
-<body>
-    <div class="flex-center position-ref full-height">
-
-        <div class="content">
-            <div class="title m-b-md">
-                {{ app.NAME }}
-            </div>
-
-            <div class="links">
-                <a href="https://github.com/MasoniteFramework/masonite">The Modern And Developer Centric Python Web Framework</a>
-            </div>
-            <br><br>
-
-            <div class="links">
-                <a href="https://github.com/MasoniteFramework/masonite">Github</a>
-                <a href="https://docs.masoniteproject.com">Documentation</a>
-                <a href="https://github.com/MasoniteFramework/core">Masonite Core</a>
-                <a href="https://slack.masoniteproject.com">Slack</a>
-            </div>
-        </div>
+{% block content %}
+<div class="container text-center">
+    <div class="title m-b-md">
+        {{ config('application.name') }}
     </div>
-</body>
-
-</html>
+    
+    <div class="links">
+        <a href="https://github.com/MasoniteFramework/masonite">The Modern And Developer Centric Python Web
+            Framework</a>
+    </div>
+    <br><br>
+    
+    <div class="links">
+        <a href="https://github.com/MasoniteFramework/masonite">Github</a>
+        <a href="https://docs.masoniteproject.com">Documentation</a>
+        <a href="https://github.com/MasoniteFramework/core">Masonite Core</a>
+        <a href="http://slack.masoniteproject.com">Slack</a>
+        <a href="https://twitter.com/masoniteproject">Twitter</a>
+    </div>
+</div>
+{% endblock %}

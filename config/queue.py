@@ -16,6 +16,9 @@ Put any configuration settings for your drivers in this configuration setting.
 """
 
 DRIVERS = {
+    'async': {
+        'mode': 'threading'
+    },
     'amqp': {
         'username': env('QUEUE_USERNAME', 'guest'),
         'vhost': env('QUEUE_VHOST', ''),

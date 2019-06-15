@@ -33,7 +33,7 @@ KEY = env('KEY', None)
 Sets the root URL of the application. This is primarily used for testing
 """
 
-URL = 'http://localhost:8000'
+URL = env('APP_URL', 'http://localhost:8000')
 
 """Base Directory
 Sets the root path of your project

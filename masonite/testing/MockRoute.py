@@ -57,7 +57,6 @@ class MockRoute:
         except TypeError:
             raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
 
-
     def user(self, obj):
         self._user = obj
         self.container.on_resolve(Request, self._bind_user_to_request)

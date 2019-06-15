@@ -1,48 +1,31 @@
-import io
-
-from masonite.app import App
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi
+import json
 
 
 class MockRoute:
 
-    def __init__(self, route, container):
+    def __init__(self, route, container, wsgi=None):
         self.route = route
         self.container = container
+        self.wsgi = wsgi
 
-    def is_named(self, name):
+    def isNamed(self, name):
         return self.route.named_route == name
 
-    def has_middleware(self, *middleware):
+    def hasMiddleware(self, *middleware):
         return all(elem in self.route.list_middleware for elem in middleware)
 
-    def has_controller(self, controller):
+    def hasController(self, controller):
         return self.route.controller == controller
 
     def contains(self, value):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
-        self.container = self._run_container(wsgi).container
-
         return value in self.container.make('Response')
 
-    def status(self, value=None):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['REQUEST_METHOD'] = self.route.method_type[0]
-        self.container = self._run_container(wsgi).container
-
-        if not value:
-            return self.container.make('Request').get_status_code()
-
-        return self.container.make('Request').get_status_code() == value
-
     def ok(self):
-        return self.status('200 OK')
+        return '200 OK' in self.container.make('Request').get_status_code()
 
-    def can_view(self):
+    def canView(self):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
         wsgi['RAW_URI'] = self.route.route_url
@@ -50,31 +33,40 @@ class MockRoute:
 
         return self.container.make('Request').get_status_code() == '200 OK'
 
+    def hasJson(self, key, value=''):
+        response = json.loads(self.container.make('Response'))
+        if isinstance(key, dict):
+            for item_key, value in key.items():
+                if response[item_key] != value:
+                    return False
+            return True
+        return key in response and response[key] == value
+
     def user(self, obj):
         self._user = obj
         self.container.on_resolve(Request, self._bind_user_to_request)
         return self
 
-    def is_post(self):
+    def isPost(self):
         return 'POST' in self.route.method_type
 
-    def is_get(self):
+    def isGet(self):
         return 'GET' in self.route.method_type
 
-    def is_put(self):
+    def isPut(self):
         return 'PUT' in self.route.method_type
 
-    def is_patch(self):
+    def isPatch(self):
         return 'PATCH' in self.route.method_type
 
-    def is_delete(self):
+    def isDelete(self):
         return 'DELETE' in self.route.method_type
 
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)
         return self
 
-    def has_session(self, key):
+    def hasSession(self, key):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
         wsgi['RAW_URI'] = self.route.route_url

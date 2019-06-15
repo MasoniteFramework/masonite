@@ -1,25 +1,35 @@
 language: python
 
-python:
-- '3.4'
-- '3.5'
+install: "make"
 
-matrix:
+cache: pip
+jobs:
   include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
-    - python: 3.6
-      script: travis_retry coverage run -m pytest && coveralls && coverage xml && curl https://deepsource.io/cli | sh && ./bin/deepsource report --analyzer test-coverage --key python --value-file ./coverage.xml
+    - stage: test
+      script:
+        - make ci
+      python: '3.4'
+    - stage: test
+      script:
+        - make ci
+      python: '3.5'
+    - stage: test
+      script:
+        - make ci
+      python: '3.6'
+    - stage: test
+      script:
+        - make ci
+      python: '3.7'
+      dist: xenial   
+    - stage: coverage
+      python: '3.6'
+      script: 
+        - make coverage
+        - coveralls && make deepsource
 
-install:
-- pip install masonite_cli
-- pip install -e .
-- pip install -r requirements.txt
-
-script: 
-- travis_retry coverage run -m pytest
-- flake8 masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
+script:
+- make ci
 
 deploy:
   provider: pypi

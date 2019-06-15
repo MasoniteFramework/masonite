@@ -1,8 +1,6 @@
-""" A ModelDocstringCommand Command """
+"""A ModelDocstringCommand Command."""
 
 from cleo import Command
-
-from config.database import DB
 
 
 class ModelDocstringCommand(Command):
@@ -13,8 +11,8 @@ class ModelDocstringCommand(Command):
         {table : Name of the table to generate the docstring for}
         {--c|connection=default : The connection to use}
     """
-
     def handle(self):
+        from config.database import DB
         if self.option('connection') == 'default':
             conn = DB.get_schema_manager().list_table_columns(self.argument('table'))
         else:

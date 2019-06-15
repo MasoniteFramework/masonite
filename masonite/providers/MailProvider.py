@@ -1,6 +1,5 @@
 """A Mail Service Provider."""
 
-from config import mail
 from masonite.drivers import MailMailgunDriver, MailSmtpDriver, \
     MailLogDriver, MailTerminalDriver
 from masonite.managers import MailManager
@@ -13,6 +12,7 @@ class MailProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
+        from config import mail
         self.app.bind('MailConfig', mail)
         self.app.bind('MailSmtpDriver', MailSmtpDriver)
         self.app.bind('MailMailgunDriver', MailMailgunDriver)

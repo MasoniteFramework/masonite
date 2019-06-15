@@ -1,16 +1,13 @@
-import os
-
 from masonite.middleware import CorsMiddleware
-from masonite.app import App
 from masonite.request import Request
 from masonite.testsuite import generate_wsgi, TestSuite
 
-from config import middleware
+import unittest
 
 
-class TestCorsMiddleware:
+class TestCorsMiddleware(unittest.TestCase):
 
-    def setup_method(self):
+    def setUp(self):
         self.request = Request(generate_wsgi())
         self.middleware = CorsMiddleware(self.request)
         self.app = TestSuite().create_container().container
@@ -20,4 +17,4 @@ class TestCorsMiddleware:
     def test_secure_headers_middleware(self):
         self.middleware.CORS = {"Access-Control-Allow-Origin": "*"}
         self.middleware.after()
-        assert self.request.header('Access-Control-Allow-Origin') == '*'
+        self.assertEqual(self.request.header('Access-Control-Allow-Origin'), '*')

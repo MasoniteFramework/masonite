@@ -87,11 +87,11 @@ class View:
         """Add data into the view from specified composers."""
         # Check if the template is directly specified in the composer
         if self.template in self.composers:
-            self.dictionary.update(self.composers[self.template])
+            self.dictionary.update(self.composers.get(self.template))
 
         # Check if there is just an astericks in the composer
         if '*' in self.composers:
-            self.dictionary.update(self.composers['*'])
+            self.dictionary.update(self.composers.get('*'))
 
         # We will append onto this string for an easier way to search through wildcard routes
         compiled_string = ''
@@ -100,7 +100,7 @@ class View:
         for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
-            if '{}*'.format(compiled_string) in self.composers:
+            if self.composers.get('{}*'.format(compiled_string)):
                 self.dictionary.update(
                     self.composers['{}*'.format(compiled_string)])
             else:
@@ -138,12 +138,12 @@ class View:
         self._shared.update(dictionary)
         return self
 
-    def cache_for(self, time=None, type=None):
+    def cache_for(self, time=None, cache_type=None):
         """Set time and type for cache.
 
         Keyword Arguments:
             time {string} -- Time to cache template for (default: {None})
-            type {string} -- Type of the cache. (default: {None})
+            cache_type {string} -- Type of the cache. (default: {None})
 
         Raises:
             RequiredContainerBindingNotFound -- Thrown when the Cache key binding is not found in the container.
@@ -158,7 +158,7 @@ class View:
 
         self.cache = True
         self.cache_time = float(time)
-        self.cache_type = type
+        self.cache_type = cache_type
         if self.__is_expired_cache():
             self.__create_cache_template(self.template)
         return self
@@ -233,7 +233,6 @@ class View:
             loader = ChoiceLoader(
                 [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
             )
-
             self.env = Environment(
                 loader=loader,
                 autoescape=select_autoescape(['html', 'xml']),
@@ -243,8 +242,7 @@ class View:
 
         else:
             loader = ChoiceLoader(
-                [PackageLoader('resources', 'templates')]
-                + self.environments
+                [PackageLoader('resources', 'templates')] + self.environments
             )
 
             # Set the searchpath since some packages look for this object

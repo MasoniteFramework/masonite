@@ -8,7 +8,7 @@ import psutil
 from cleo import Command
 from tabulate import tabulate
 
-from masonite.info import VERSION
+from masonite.__version__ import __version__
 
 
 class InfoCommand(Command):
@@ -27,7 +27,7 @@ class InfoCommand(Command):
         rows.append(['System Memory', str(mem) + ' GB'])
         rows.append(['Python Version', self._get_python_info()])
         rows.append(['Virtual Environment', self._check_virtual_environment()])
-        rows.append(['Masonite Version', VERSION])
+        rows.append(['Masonite Version', __version__])
         rows.append(['Craft Version', application._version])
 
         if 'APP_ENV' in os.environ:

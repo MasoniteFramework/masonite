@@ -16,6 +16,7 @@ class ServeCommand(Command):
         {--p|port=8000 : Specify which port to run the server}
         {--b|host=127.0.0.1 : Specify which ip address to run the server}
         {--r|reload : Make the server automatically reload on file changes}
+        {--d|dont-reload : Make the server NOT automatically reload on file changes}
         {--i|reload-interval=1 : Number of seconds to wait to reload after changed are detected}
     """
 
@@ -23,7 +24,7 @@ class ServeCommand(Command):
         if has_unmigrated_migrations():
             self.comment("\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n")
 
-        if self.option('reload'):
+        if not self.option('dont-reload'):
             logger = DefaultLogger(LogLevel.INFO)
 
             # worker args are pickled and then passed to the new process

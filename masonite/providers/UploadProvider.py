@@ -1,6 +1,5 @@
 """An Upload Service Provider."""
 
-from config import storage
 from masonite.drivers import UploadDiskDriver, UploadS3Driver
 from masonite.helpers.static import static
 from masonite.managers import UploadManager
@@ -14,6 +13,7 @@ class UploadProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
+        from config import storage
         self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         self.app.bind('UploadS3Driver', UploadS3Driver)

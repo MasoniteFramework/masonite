@@ -1,6 +1,5 @@
 """Helper Functions for RouteProvider."""
 
-import re
 from masonite.helpers import deprecated
 
 
@@ -184,7 +183,7 @@ def compile_route_to_regex(route):
     return regex
 
 
-def create_matchurl(router, route):
+def create_matchurl(url, route):
     """Create a regex string for router.url to be matched against.
 
     Arguments:
@@ -194,18 +193,10 @@ def create_matchurl(router, route):
     Returns:
         string -- compiled regex string
     """
-    # Compiles the given route to regex
-    regex = route.compile_route_to_regex(router)
 
-    if route.route_url.endswith('/'):
-        if router.url.endswith('/'):
-            matchurl = re.compile(regex.replace(r'\/\/$', r'\/$'))
-        else:
-            matchurl = re.compile(regex.replace(r'\/\/$', r'$'))
-    else:
-        if router.url.endswith('/'):
-            matchurl = re.compile(regex)
-        else:
-            matchurl = re.compile(regex.replace(r'\/$', r'$'))
+    if not url.endswith('/'):
+        return route._compiled_regex
+    elif url == '/':
+        return route._compiled_regex
 
-    return matchurl
+    return route._compiled_regex_end

@@ -1,22 +1,25 @@
-import pytest
+import unittest
+
 from masonite.helpers import dot, Dot as DictDot
 
 
-def test_dot():
-    assert dot('hey.dot', compile_to="{1}[{.}]") == "hey[dot]"
-    assert dot('hey.dot.another', compile_to="{1}[{.}]") == "hey[dot][another]"
-    assert dot('hey.dot.another.and.another', compile_to="{1}[{.}]") == "hey[dot][another][and][another]"
-    assert dot('hey.dot.another.and.another', compile_to="/{1}[{.}]") == "/hey[dot][another][and][another]"
-    assert dot('hey.dot', compile_to="{1}/{.}") == "hey/dot"
-    assert dot('hey.dot.another', compile_to="{1}/{.}") == "hey/dot/another"
-    assert dot('hey.dot.another', compile_to="{1}/{.}") == "hey/dot/another"
-    assert dot('hey.dot.another', compile_to="/{1}/{.}") == "/hey/dot/another"
-    with pytest.raises(ValueError):
-        assert dot('hey.dot.another', compile_to="{1}//{.}") == "hey/dot/another"
+class TestDot(unittest.TestCase):
 
-def test_dict_dot():
-    assert DictDot().dot('key', {'key': 'value'}) == 'value'
-    assert DictDot().dot('key.test', {'key': {'test': 'value'}}) == 'value'
-    assert DictDot().dot('key.test.layer', {'key': {'test': {'layer': 'value'}}}) == 'value'
-    assert DictDot().dot('key.none', {'key': {'test': {'layer': 'value'}}}) == None
-    assert DictDot().dot('key', {'key': {'test': {'layer': 'value'}}}) == {'test': {'layer': 'value'}}
+    def test_dot(self):
+        self.assertEqual(dot('hey.dot', compile_to="{1}[{.}]"), "hey[dot]")
+        self.assertEqual(dot('hey.dot.another', compile_to="{1}[{.}]"), "hey[dot][another]")
+        self.assertEqual(dot('hey.dot.another.and.another', compile_to="{1}[{.}]"), "hey[dot][another][and][another]")
+        self.assertEqual(dot('hey.dot.another.and.another', compile_to="/{1}[{.}]"), "/hey[dot][another][and][another]")
+        self.assertEqual(dot('hey.dot', compile_to="{1}/{.}"), "hey/dot")
+        self.assertEqual(dot('hey.dot.another', compile_to="{1}/{.}"), "hey/dot/another")
+        self.assertEqual(dot('hey.dot.another', compile_to="{1}/{.}"), "hey/dot/another")
+        self.assertEqual(dot('hey.dot.another', compile_to="/{1}/{.}"), "/hey/dot/another")
+        with self.assertRaises(ValueError):
+            self.assertEqual(dot('hey.dot.another', compile_to="{1}//{.}"), "hey/dot/another")
+
+    def test_dict_dot(self):
+        self.assertEqual(DictDot().dot('key', {'key': 'value'}), 'value')
+        self.assertEqual(DictDot().dot('key.test', {'key': {'test': 'value'}}), 'value')
+        self.assertEqual(DictDot().dot('key.test.layer', {'key': {'test': {'layer': 'value'}}}), 'value')
+        self.assertEqual(DictDot().dot('key.none', {'key': {'test': {'layer': 'value'}}}), None)
+        self.assertEqual(DictDot().dot('key', {'key': {'test': {'layer': 'value'}}}), {'test': {'layer': 'value'}})

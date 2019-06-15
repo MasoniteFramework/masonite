@@ -3,7 +3,6 @@
 from whitenoise import WhiteNoise
 
 from masonite.provider import ServiceProvider
-from config import application
 
 
 class WhitenoiseProvider(ServiceProvider):
@@ -15,6 +14,7 @@ class WhitenoiseProvider(ServiceProvider):
 
     def boot(self):
         """Wrap the WSGI server in a whitenoise container."""
+        from config import application
         self.app.bind('WSGI', WhiteNoise(
             self.app.make('WSGI'), root=self.app.make('Application').STATIC_ROOT, autorefresh=application.DEBUG))
 

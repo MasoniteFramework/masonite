@@ -1,2 +1,7 @@
-def test_feature():
-    assert True
+import unittest
+
+
+class TestFeature(unittest.TestCase):
+
+    def test_feature(self):
+        self.assertTrue(True)

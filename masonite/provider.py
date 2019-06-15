@@ -1,6 +1,8 @@
 """Module for the Service Provider."""
 
 from masonite.helpers import random_string
+from masonite.helpers.filesystem import copy_migration
+from .packages import append_file
 
 
 class ServiceProvider:
@@ -11,6 +13,11 @@ class ServiceProvider:
     def __init__(self):
         """Service provider constructor."""
         self.app = None
+        self._publishes = {}
+        self._publish_tags = {}
+
+        self._publish_migrations = []
+        self._publish_migrations_tags = {}
 
     def boot(self):
         """Use to boot things into the container. Typically ran after the register method has been ran."""
@@ -82,3 +89,33 @@ class ServiceProvider:
             assets {dict} -- A dictionary of assets to add
         """
         self.app.make('Storage').STATICFILES.update(assets)
+
+    def publishes(self, dictionary, tag=None):
+        self._publishes.update(dictionary)
+        if tag is not None:
+            self._publish_tags.update({tag: dictionary})
+
+    def publishes_migrations(self, migrations, tag=None):
+        self._publish_migrations += migrations
+        if tag is not None:
+            self._publish_migrations_tags.update({tag: migrations})
+
+    def publish(self, tag=None):
+        if tag is not None:
+            publishing_items = self._publish_tags.get(tag)
+        else:
+            publishing_items = self._publishes
+
+        for from_location, to_location in publishing_items.items():
+            append_file(from_location, to_location)
+
+    def publish_migrations(self, tag=None):
+        if tag is not None:
+            publishing_items = self._publish_migrations_tags.get(tag)
+        else:
+            publishing_items = self._publish_migrations
+
+        print('run pubslish migration', publishing_items)
+        for from_location in publishing_items:
+            print(from_location)
+            copy_migration(from_location)

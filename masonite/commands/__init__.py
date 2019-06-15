@@ -17,13 +17,14 @@ from .MigrateStatusCommand import MigrateStatusCommand
 from .ModelCommand import ModelCommand
 from .ModelDocstringCommand import ModelDocstringCommand
 from .ProviderCommand import ProviderCommand
+from .PublishCommand import PublishCommand
 from .QueueWorkCommand import QueueWorkCommand
 from .QueueTableCommand import QueueTableCommand
 from .ServeCommand import ServeCommand
 from .ViewCommand import ViewCommand
-from .ValidatorCommand import ValidatorCommand
 from .RoutesCommand import RoutesCommand
 from .SeedCommand import SeedCommand
 from .SeedRunCommand import SeedRunCommand
+from .TestCommand import TestCommand
 from .TinkerCommand import TinkerCommand
 from .UpCommand import UpCommand

@@ -70,6 +70,13 @@ class TestUnitTest(TestCase):
             'count': 10
         }))
 
+    def test_multi_json_response(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson({
+            'author.name': 'Joe'
+        }))
+
+        self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson('author.name', 'Joe'))
+
     def test_count(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').count(2))
         self.assertFalse(self.json('GET', '/unit/test/json/response').count(1))

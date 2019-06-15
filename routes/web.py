@@ -29,6 +29,8 @@ ROUTES = [
         Post('/test/user', 'UnitTestController@user'),
         Post('/test/json', 'UnitTestController@json'),
         Get('/test/json/response', 'UnitTestController@response'),
+        Post('/test/json/validate', 'UnitTestController@validate'),
+        Get('/test/json/multi', 'UnitTestController@multi'),
         Patch('/test/patch', 'UnitTestController@patch'),
     ], prefix="/unit")
 ]

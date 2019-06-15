@@ -110,14 +110,19 @@ class TestCase(unittest.TestCase):
     def call(self, method, url, params, wsgi={}):
         custom_wsgi = {
             'PATH_INFO': url,
-            'REQUEST_METHOD': method,
-            'QUERY_STRING': urlencode(params)
+            'REQUEST_METHOD': method
         }
 
         custom_wsgi.update(wsgi)
         if not self._with_csrf:
-            custom_wsgi.update({'HTTP_COOKIE': 'csrf_token=tok'})
             params.update({'__token': 'tok'})
+            custom_wsgi.update({
+                'HTTP_COOKIE': 'csrf_token=tok'
+            })
+
+        custom_wsgi.update({
+            'QUERY_STRING': urlencode(params)
+        })
 
         self.run_container(custom_wsgi)
         self.container.make('Request').request_variables = params

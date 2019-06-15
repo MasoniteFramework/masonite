@@ -39,6 +39,13 @@ class UnitTestController(Controller):
             'iterable': [1,2,3]
         }
 
+    def multi(self):
+        return {
+            'author': {
+                'name': 'Joe'
+            }
+        }
+
     def patch(self):
         return self.request.input('test')
 

@@ -1,6 +1,7 @@
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi
 import json
+from masonite.helpers import Dot
 
 
 class MockRoute:
@@ -37,9 +38,10 @@ class MockRoute:
         response = json.loads(self.container.make('Response'))
         if isinstance(key, dict):
             for item_key, value in key.items():
-                if response[item_key] != value:
+                if not Dot().dot(item_key, response, False) == value:
                     return False
             return True
+        return Dot().dot(key, response, False)
         return key in response and response[key] == value
 
     def count(self, amount):

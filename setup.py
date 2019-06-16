@@ -66,7 +66,7 @@ setup(
     licence=meta['__licence__'],
     python_requires=">=3.4",
     classifiers=[
-        'Development Status :: 5 - Production',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Masonite',
         'Intended Audience :: Developers',

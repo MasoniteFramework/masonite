@@ -33,6 +33,19 @@ class UnitTestController(Controller):
     def json(self):
         return self.request.input('test')
 
+    def response(self):
+        return {
+            'count': 5,
+            'iterable': [1,2,3]
+        }
+
+    def multi(self):
+        return {
+            'author': {
+                'name': 'Joe'
+            }
+        }
+
     def patch(self):
         return self.request.input('test')
 

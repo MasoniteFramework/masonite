@@ -1,5 +1,7 @@
 from masonite.request import Request
 from masonite.testsuite import TestSuite, generate_wsgi
+import json
+from masonite.helpers import Dot
 
 
 class MockRoute:
@@ -31,6 +33,29 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
 
         return self.container.make('Request').get_status_code() == '200 OK'
+
+    def hasJson(self, key, value=''):
+        response = json.loads(self.container.make('Response'))
+        if isinstance(key, dict):
+            for item_key, value in key.items():
+                if not Dot().dot(item_key, response, False) == value:
+                    return False
+            return True
+        return Dot().dot(key, response, False)
+        return key in response and response[key] == value
+
+    def count(self, amount):
+        return len(json.loads(self.container.make('Response'))) == amount
+
+    def amount(self, amount):
+        return self.count(amount)
+
+    def hasAmount(self, key, amount):
+        response = json.loads(self.container.make('Response'))
+        try:
+            return len(response[key]) == amount
+        except TypeError:
+            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
 
     def user(self, obj):
         self._user = obj

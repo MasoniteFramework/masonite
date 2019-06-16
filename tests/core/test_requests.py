@@ -1,8 +1,8 @@
 import unittest
-
 from cgi import MiniFieldStorage
-from app.http.test_controllers.TestController import TestController
-from config import application, providers
+from pydoc import locate
+
+import pytest
 from masonite.app import App
 from masonite.exceptions import InvalidHTTPStatusCode, RouteException
 from masonite.helpers.routes import flatten_routes
@@ -11,6 +11,9 @@ from masonite.request import Request
 from masonite.response import Response
 from masonite.routes import Get, RouteGroup
 from masonite.testsuite.TestSuite import generate_wsgi
+
+from app.http.test_controllers.TestController import TestController
+from config import application, providers
 
 WEB_ROUTES = flatten_routes([
     Get('/test', 'Controller@show').name('test'),
@@ -214,6 +217,21 @@ class TestRequest(unittest.TestCase):
         request.reset_redirections()
 
         self.assertFalse(request.redirect_url)
+
+    def test_redirect_to_throws_exception_when_no_routes_found(self):
+        app = App()
+        app.bind('Request', self.request)
+        app.bind('WebRoutes', WEB_ROUTES)
+        request = app.make('Request').load_app(app)
+
+        request.redirect_to('test')
+        request.redirect(name='test')
+
+        with pytest.raises(RouteException):
+            request.redirect_to('notavailable')
+
+        with pytest.raises(RouteException):
+            request.redirect(name='notavailable')
 
     def test_request_has_subdomain_returns_bool(self):
         app = App()

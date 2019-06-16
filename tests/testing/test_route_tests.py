@@ -57,6 +57,36 @@ class TestUnitTest(TestCase):
 
     def test_json(self):
         self.assertTrue(self.json('POST', '/unit/test/json', {'test': 'testing'}).contains('testing'))
+    
+    def test_json_response(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson('count', 5))
+
+    def test_json_response(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson({
+            'count': 5
+        }))
+        
+        self.assertFalse(self.json('GET', '/unit/test/json/response').hasJson({
+            'count': 10
+        }))
+
+    def test_multi_json_response(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson({
+            'author.name': 'Joe'
+        }))
+
+        self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson('author.name', 'Joe'))
+
+    def test_count(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').count(2))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').count(1))
+
+        self.assertTrue(self.json('GET', '/unit/test/json/response').amount(2))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').amount(1))
+
+    def test_has_amount(self):
+        self.assertTrue(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 3))
+        self.assertFalse(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 2))
 
     def test_patch(self):
         self.assertTrue(self.patch('/unit/test/patch', {'test': 'testing'}).contains('testing'))

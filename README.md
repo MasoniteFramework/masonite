@@ -54,7 +54,7 @@ $ sudo apt-get install python3.6-dev libssl-dev
 
 ## Windows
 
-With windows you will need to have the latest OpenSSL version. Install OpenSSL [32-bit](http://slproweb.com/download/Win32OpenSSL-1_1_0h.exe) or [64-bit](http://slproweb.com/download/Win64OpenSSL-1_1_0h.exe)
+With windows you will need to have the latest OpenSSL version. Install [OpenSSL 32-bit or 64-bit](https://slproweb.com/products/Win32OpenSSL.html).
 
 ## Mac
 

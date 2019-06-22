@@ -198,3 +198,21 @@ class TestCase(unittest.TestCase):
 
     def withoutCsrf(self):
         self._with_csrf = False
+
+    def assertDatabaseHas(self, schema, value):
+        #schema = table.column
+        from config.database import DB
+
+        table = schema.split('.')[0]
+        column = schema.split('.')[1]
+
+        self.assertTrue(DB.table(table).where(column, value).first())
+
+    def assertDatabaseNotHas(self, schema, value):
+        #schema = table.column
+        from config.database import DB
+
+        table = schema.split('.')[0]
+        column = schema.split('.')[1]
+
+        self.assertFalse(DB.table(table).where(column, value).first())

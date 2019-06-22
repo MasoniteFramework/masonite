@@ -95,3 +95,7 @@ class TestUnitTest(TestCase):
         self.withCsrf()
         with self.assertRaises(InvalidCSRFToken):
             self.assertTrue(self.post('/unit/test/json', {'test': 'testing'}).contains('testing'))
+
+    def test_database_has(self):
+        self.assertDatabaseHas('users.email', 'user@example.com')
+        self.assertDatabaseNotHas('users.email', 'joe@example.com')

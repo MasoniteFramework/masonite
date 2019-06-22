@@ -70,6 +70,9 @@ class HasColoredCommands:
     def danger(self, message):
         print('\033[91m {0} \033[0m'.format(message))
 
+    def info(self, message):
+        return self.success(message)
+
 
 class Compact:
 

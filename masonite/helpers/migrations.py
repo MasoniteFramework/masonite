@@ -1,11 +1,11 @@
 import subprocess
 
-from masonite.helpers import config
+from masonite.helpers import config, HasColoredCommands
 from masonite.packages import add_venv_site_packages
 from orator.migrations import DatabaseMigrationRepository, Migrator
 
 
-class Migrations:
+class Migrations(HasColoredCommands):
 
     def __init__(self):
         self._ran = []
@@ -38,7 +38,7 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                self.info(str(e))
+                self.danger(str(e))
 
         return self
 
@@ -51,7 +51,7 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                self.info(str(e))
+                self.danger(str(e))
 
         return self
 
@@ -68,7 +68,7 @@ class Migrations:
                 self._ran.append(self.repository.get_ran())
                 self._notes = self.migrator._notes
             except Exception as e:
-                self.info(str(e))
+                self.danger(str(e))
 
         return self
 

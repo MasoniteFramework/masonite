@@ -67,6 +67,12 @@ class TestAuth(TestCase):
             self.assertTrue(self.request.get_cookie('token'))
             self.assertEqual(self.auth.user().name, 'testuser123')
 
+    def test_login_with_no_password(self):
+        with self.assertRaises(TypeError):
+            for driver in ('cookie', 'jwt'):
+                self.auth.driver = driver
+                self.assertTrue(self.auth.login('nopassword@email.com', None))
+
     # def test_can_login_with_second_password(self):
     #     self.auth.auth_model.__password__ = 'second_password'
     #     self.assertTrue(self.auth.login('user@email.com', 'pass123'))

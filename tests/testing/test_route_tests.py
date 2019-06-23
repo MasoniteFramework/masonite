@@ -61,7 +61,7 @@ class TestUnitTest(TestCase):
     def test_json_response(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson('count', 5))
 
-    def test_json_response(self):
+    def test_json_response_dictionary(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson({
             'count': 5
         }))

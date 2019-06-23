@@ -1,6 +1,5 @@
 import io
 import json
-import subprocess
 import unittest
 from contextlib import contextmanager
 from urllib.parse import urlencode
@@ -209,7 +208,6 @@ class TestCase(unittest.TestCase):
         self.assertTrue(DB.table(table).where(column, value).first())
 
     def assertDatabaseNotHas(self, schema, value):
-        #schema = table.column
         from config.database import DB
 
         table = schema.split('.')[0]

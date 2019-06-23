@@ -1,6 +1,5 @@
 import unittest
 from cgi import MiniFieldStorage
-from pydoc import locate
 
 import pytest
 from masonite.app import App
@@ -684,3 +683,16 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('key.user'), '1')
         self.assertEqual(self.request.input('key.nothing'), False)
         self.assertEqual(self.request.input('key.nothing', default='test'), 'test')
+
+    def test_then_back(self):
+        self.request.redirect('/login')
+        self.assertEqual(self.request.redirect_url, '/login')
+
+        self.request.redirect('/login').then_back('/dashboard')
+
+        self.assertEqual(self.request.redirect_url, '/login?back=/dashboard')
+
+        self.request.path = '/dashboard'
+        self.request.redirect('/login').then_back()
+
+        self.assertEqual(self.request.redirect_url, '/login?back=/dashboard')

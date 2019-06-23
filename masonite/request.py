@@ -11,7 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qsl
+from urllib.parse import parse_qsl, urlencode
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -647,6 +647,10 @@ class Request(Extendable):
             self.redirect_url = self.url_from_controller(controller, params)
 
         self.status(status)
+        return self
+
+    def then_back(self, url=None):
+        self.redirect_url = self.redirect_url + '?' + urlencode({'back': url or self.path}, safe='/')
         return self
 
     def redirect_to(self, route_name, params={}, status=302):

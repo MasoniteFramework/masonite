@@ -199,7 +199,6 @@ class TestCase(unittest.TestCase):
         self._with_csrf = False
 
     def assertDatabaseHas(self, schema, value):
-        #schema = table.column
         from config.database import DB
 
         table = schema.split('.')[0]

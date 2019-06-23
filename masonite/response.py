@@ -46,7 +46,7 @@ class Response(Extendable):
         self.request.header('Content-Length', str(len(self.to_bytes())))
 
         # If the user did not change it directly
-        if not self.request.header('Content-Type'):
+        if not self.request.has_raw_header('Content-Type'):
             self.request.header('Content-Type', content_type)
 
     def data(self):

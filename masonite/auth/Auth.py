@@ -61,6 +61,10 @@ class Auth:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
+
+        if not isinstance(password, str):
+            raise TypeError("Cannot login with password '{}' of type: {}".format(password, type(password)))
+
         auth_column = self.auth_model.__auth__
 
         try:

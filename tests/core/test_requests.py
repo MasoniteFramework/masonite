@@ -1,6 +1,5 @@
 import unittest
 from cgi import MiniFieldStorage
-from pydoc import locate
 
 import pytest
 from masonite.app import App

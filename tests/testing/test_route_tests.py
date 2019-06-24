@@ -61,7 +61,7 @@ class TestUnitTest(TestCase):
     def test_json_response(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson('count', 5))
 
-    def test_json_response(self):
+    def test_json_response_dictionary(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson({
             'count': 5
         }))
@@ -95,3 +95,11 @@ class TestUnitTest(TestCase):
         self.withCsrf()
         with self.assertRaises(InvalidCSRFToken):
             self.assertTrue(self.post('/unit/test/json', {'test': 'testing'}).contains('testing'))
+
+    def test_database_has(self):
+        self.assertDatabaseHas('users.email', 'user@example.com')
+        self.assertDatabaseNotHas('users.email', 'joe@example.com')
+
+    def test_acting_as_none(self):
+        with self.assertRaises(TypeError):
+            self.actingAs(User.find(10)).get('/helloworld')

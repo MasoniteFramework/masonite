@@ -1,6 +1,5 @@
 import io
 import json
-import subprocess
 import unittest
 from contextlib import contextmanager
 from urllib.parse import urlencode
@@ -151,6 +150,8 @@ class TestCase(unittest.TestCase):
         return self.json('DELETE', url, params)
 
     def actingAs(self, user):
+        if not user:
+            raise TypeError("Cannot act as a user of type: {}".format(type(user)))
         self.acting_user = user
         return self
 
@@ -198,3 +199,19 @@ class TestCase(unittest.TestCase):
 
     def withoutCsrf(self):
         self._with_csrf = False
+
+    def assertDatabaseHas(self, schema, value):
+        from config.database import DB
+
+        table = schema.split('.')[0]
+        column = schema.split('.')[1]
+
+        self.assertTrue(DB.table(table).where(column, value).first())
+
+    def assertDatabaseNotHas(self, schema, value):
+        from config.database import DB
+
+        table = schema.split('.')[0]
+        column = schema.split('.')[1]
+
+        self.assertFalse(DB.table(table).where(column, value).first())

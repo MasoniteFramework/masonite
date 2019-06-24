@@ -3,6 +3,7 @@ from masonite.request import Request
 from masonite.app import App
 from masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
 from masonite.helpers.routes import group, flatten_routes
+from masonite.helpers.routes import create_matchurl
 from masonite.testsuite.TestSuite import generate_wsgi
 from masonite.exceptions import InvalidRouteCompileException, RouteException
 from app.http.controllers.subdirectory.SubController import SubController
@@ -61,7 +62,8 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
 
         with self.assertRaises(InvalidRouteCompileException):
-            get_route = Get().route('test/@route:slug', None)
+            get_route = Get().route('test/@route:none', None)
+            create_matchurl('/test/1', get_route)
 
     def test_route_gets_controllers(self):
         self.assertTrue(Get().route('test/url', 'TestController@show'))

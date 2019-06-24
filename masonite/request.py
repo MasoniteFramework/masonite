@@ -652,10 +652,6 @@ class Request(Extendable):
         self.status(status)
         return self
 
-    def then_back(self, url=None):
-        self.redirect_url = self.redirect_url + '?' + urlencode({'back': url or self.path}, safe='/')
-        return self
-
     def redirect_to(self, route_name, params={}, status=302):
         """Redirect to a named route.
 

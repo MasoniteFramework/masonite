@@ -11,7 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qsl, urlencode
+from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken

@@ -396,6 +396,9 @@ class Request(Extendable):
             self.environ[key] = str(value)
             self._headers.update({key: str(value)})
 
+    def has_raw_header(self, key):
+        return key in self._headers
+
     def get_headers(self):
         """Return all current headers to be set.
 

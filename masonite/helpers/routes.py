@@ -194,6 +194,9 @@ def create_matchurl(url, route):
         string -- compiled regex string
     """
 
+    if route._compiled_regex is None:
+        route.compile_route_to_regex()
+
     if not url.endswith('/'):
         return route._compiled_regex
     elif url == '/':

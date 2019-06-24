@@ -150,6 +150,8 @@ class TestCase(unittest.TestCase):
         return self.json('DELETE', url, params)
 
     def actingAs(self, user):
+        if not user:
+            raise TypeError("Cannot act as a user of type: {}".format(type(user)))
         self.acting_user = user
         return self
 

@@ -330,7 +330,7 @@ class BaseHttpRoute:
                         regex += Route.route_compilers[regex_route.split(':')[
                             1]]
                     except KeyError:
-                        if hasattr(self, '_compiled_regex') and self._compiled_regex is None:
+                        if hasattr(self, '_compiled_regex'):
                             raise InvalidRouteCompileException(
                                 'Route compiler "{}" is not an available route compiler. '
                                 'Verify you spelled it correctly or that you have added it using the compile() method.'.format(

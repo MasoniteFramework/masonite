@@ -194,7 +194,7 @@ class BaseHttpRoute:
             # Set the controller method on class. This is a string
             self.controller_method = mod[1]
 
-        except Exception as e:
+        except Exception:
             import sys
             import traceback
             exc_type, exc_obj, exc_tb = sys.exc_info()

@@ -186,11 +186,9 @@ class App:
             return obj(*objects)
         except (TypeError,) as e:
             import sys
-            import os
             import traceback
             exception = ContainerError(str(e))
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
             exception.__class__.extras = [exc_type, exc_obj, exc_tb]
             exception.__class__.tb = traceback.extract_tb(exc_tb)[-1]
             exception.__class__.file = obj.__code__.co_filename

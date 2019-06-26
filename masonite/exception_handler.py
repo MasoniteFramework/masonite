@@ -73,19 +73,19 @@ class ExceptionHandler:
         if not application.DEBUG:
             return
 
-        exc_type, exc_obj, exc_tb = sys.exc_info()
+        exc_type, _, _ = sys.exc_info()
         # return a view
         if request.header('Content-Type') == 'application/json':
             stacktrace = []
             for stack in traceback.extract_tb(sys.exc_info()[2]):
                 stacktrace.append("{} line {} in {}".format(stack[0], stack[1], stack[2]))
-            
+
             if hasattr(exc_type, 'file'):
                 stacktrace.append("{} line {} in {}".format(exc_type.file, exc_type.tb[1], exc_type.tb[2]))
 
             self.response.view({'error': {'exception': str(self._exception), 'status': 500, 'stacktrace': stacktrace}}, status=request.get_status())
             return
-        
+
         if hasattr(exc_type, 'file'):
             last_stacktrace = [[exc_type.file, exc_type.tb[1], exc_type.tb[2]]]
         else:

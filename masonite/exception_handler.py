@@ -87,9 +87,11 @@ class ExceptionHandler:
             return
 
         if hasattr(exc_type, 'file'):
-            last_stacktrace = [[exc_type.file, exc_type.tb[1], exc_type.tb[2]]]
+            last_stacktrace = [[exc_type.file, exc_type.tb[-1][1], exc_type.tb[-1][2]]]
+            second_to_last_stacktrace = [[exc_type.file, exc_type.tb[-2][1], exc_type.tb[-2][2]]]
         else:
             last_stacktrace = []
+            second_to_last_stacktrace = []
 
         self.response.view(self._app.make('View')('/masonite/snippets/exception',
                                                {
@@ -97,7 +99,8 @@ class ExceptionHandler:
                                                    'split_exception': str(self._exception).split(' '),
                                                    'traceback': traceback,
                                                    'tb': sys.exc_info(),
-                                                   'stacktrace': traceback.extract_tb(sys.exc_info()[2]) + last_stacktrace,
+                                                   'stacktrace': traceback.extract_tb(sys.exc_info()[2]) + last_stacktrace + second_to_last_stacktrace,
+                                                   'second_to_last': second_to_last_stacktrace,
                                                    'app': self._app,
                                                    'enumerate': enumerate,
                                                    'open': open,

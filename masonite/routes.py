@@ -195,7 +195,11 @@ class BaseHttpRoute:
             self.controller_method = mod[1]
 
         except Exception as e:
-            print('\033[93mWarning in routes/web.py!', e, '\033[0m')
+            import sys
+            import traceback
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print('\033[93mWarning in routes/web.py!', exc_type, 'in', tb[0], 'on line', tb[1], '\033[0m')
 
     def get_response(self):
         # Resolve Controller Constructor

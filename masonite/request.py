@@ -459,7 +459,7 @@ class Request(Extendable):
         Returns:
             self
         """
-        self.url_params.update(params)
+        self.url_params = params
         return self
 
     def param(self, parameter):

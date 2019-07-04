@@ -41,9 +41,9 @@ class Dot:
                     if '*' in searching:
                         return []
                     return default
-                
+
                 if isinstance(dic, list):
-                    return collect(dic).pluck(searching[searching.index('*')+1]).serialize() 
+                    return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
                 dic = dic.get(search)
 
                 if isinstance(dic, str) and dic.isnumeric():

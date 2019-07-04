@@ -2,7 +2,6 @@ from app.jobs.TestJob import TestJob
 from masonite import Queue
 from masonite.request import Request
 
-
 class TestController:
 
     def __init__(self):
@@ -26,7 +25,7 @@ class TestController:
     def testing(self):
         return 'test'
 
-    def json_response(self):
+    def json_response(self, request: Request):
         return {'id': 1}
 
     def post_test(self):

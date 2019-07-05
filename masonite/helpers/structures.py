@@ -36,7 +36,7 @@ class Dot:
         possible = None
         while searching:
             dic = dictionary
-            for search in searching:
+            for value in searching:
                 if not dic:
                     if '*' in searching:
                         return []
@@ -47,7 +47,7 @@ class Dot:
                         return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
                     except KeyError:
                         return []
-                dic = dic.get(search)
+                dic = dic.get(value)
 
                 if isinstance(dic, str) and dic.isnumeric():
                     continue

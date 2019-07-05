@@ -365,8 +365,8 @@ class Request(Extendable):
                                 None if it doesn't exist or True if setting the headers.
         """
         if isinstance(key, dict):
-            for key, value in key.items():
-                self._set_header(key, value, http_prefix)
+            for dic_key, dic_value in key.items():
+                self._set_header(dic_key, dic_value, http_prefix)
             return
 
         # Get Headers

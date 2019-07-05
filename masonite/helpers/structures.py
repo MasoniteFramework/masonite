@@ -2,6 +2,7 @@
 
 import pydoc
 import inspect
+from orator.support.collection import Collection as collect
 
 
 class Dot:
@@ -26,7 +27,6 @@ class Dot:
         if '.' not in search:
             if search == '':
                 return dictionary
-            # print('search', search, 'dictionary', dictionary)
             try:
                 return dictionary[search]
             except KeyError:
@@ -36,10 +36,18 @@ class Dot:
         possible = None
         while searching:
             dic = dictionary
-            for search in searching:
+            for value in searching:
                 if not dic:
+                    if '*' in searching:
+                        return []
                     return default
-                dic = dic.get(search)
+
+                if isinstance(dic, list):
+                    try:
+                        return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
+                    except KeyError:
+                        return []
+                dic = dic.get(value)
 
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
@@ -51,7 +59,6 @@ class Dot:
                 return dic
 
             del searching[-1]
-
         return possible
 
     def locate(self, search_path, default=''):

@@ -22,4 +22,4 @@ Contributing to Masonite is simple:
 * Read the [Installation](https://docs.masoniteproject.com/#installation) documentation on how to get started creating a Masonite project.
 * Check the [open issues and milestones](https://github.com/MasoniteFramework/core/issues).
 * If you have any questions just [open up an issue](https://github.com/MasoniteFramework/core/issues/new/choose) to discuss with the core maintainers.
-* [Follow Masonite Framework on Twitter](https://twitter.com/masoniteproject) to get updates about tips and tricks, annoucements and releases.
+* [Follow Masonite Framework on Twitter](https://twitter.com/masoniteproject) to get updates about tips and tricks, announcement and releases.

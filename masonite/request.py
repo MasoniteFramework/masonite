@@ -265,11 +265,6 @@ class Request(Extendable):
         if isinstance(value, dict):
             return value
 
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            pass
-
         if isinstance(value, str):
             return value
 

@@ -225,6 +225,7 @@ class Request(Extendable):
             variables = dict(parse_qsl(variables))
 
         try:
+            self.request_variables = {}
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
                 self.request_variables[name.replace('[]', '')] = value

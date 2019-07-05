@@ -262,15 +262,7 @@ class Request(Extendable):
 
             return value
 
-        if isinstance(value, dict):
-            return value
-
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            pass
-
-        if isinstance(value, str):
+        if isinstance(value, (str, int, dict)):
             return value
 
         if not value.filename:

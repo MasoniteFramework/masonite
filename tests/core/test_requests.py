@@ -79,6 +79,18 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.cookie('appendcookie', 'value'), self.request)
         assert 'appendcookie' in self.request.environ['HTTP_COOKIE']
 
+    def test_request_input_can_get_dictionary_elements(self):
+        self.request.request_variables = {
+            "user": {
+                "address": [
+                    {"id": 1, 'street': 'A Street'},
+                    {"id": 2, 'street': 'B Street'}
+                ]
+            }
+        }
+        self.assertEqual(self.request.input('user.address.*.id'), [1,2])
+        self.assertEqual(self.request.input('user.address.*.street'), ['A Street', 'B Street'])
+
     def test_request_sets_and_gets_cookies(self):
         self.request.cookie('setcookie', 'value')
         self.assertEqual(self.request.get_cookie('setcookie'), 'value')

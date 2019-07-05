@@ -118,11 +118,11 @@ class TestCase(unittest.TestCase):
             custom_wsgi.update({
                 'HTTP_COOKIE': 'csrf_token=tok',
                 'CONTENT_LENGTH': len(str(json.dumps(params))),
-                'wsgi.input': io.StringIO(json.dumps(params)),
+                'wsgi.input': io.BytesIO(bytes(json.dumps(params), 'utf-8')),
             })
 
         custom_wsgi.update({
-            'QUERY_STRING': urlencode(params)
+            'QUERY_STRING': urlencode(params),
         })
 
         self.run_container(custom_wsgi)
@@ -136,7 +136,7 @@ class TestCase(unittest.TestCase):
         return self.call(method, url, params, wsgi={
             'CONTENT_TYPE': 'application/json',
             'CONTENT_LENGTH': len(str(json.dumps(params))),
-            'wsgi.input': io.StringIO(json.dumps(params)),
+            'wsgi.input': io.BytesIO(bytes(json.dumps(params), 'utf-8')),
         })
 
     def post(self, url, params={}):

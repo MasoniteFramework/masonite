@@ -57,7 +57,7 @@ poll = args.poll or 5
 if os.getenv('CIRCLE_PR_NUMBER'):
     print('Cannot Build On PR Forks.')
     exit(0)
-
+ 
 if not token:
     print('No token found.')
     exit(1)

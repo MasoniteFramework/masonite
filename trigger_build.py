@@ -48,6 +48,8 @@ args = parser.parse_args()
 repo = args.repo
 branch = args.branch or 'master'
 token = args.token or os.getenv('CIRCLE_TOKEN')
+current_repo = os.getenv('CIRCLE_PROJECT_REPONAME')
+current_user = os.getenv('CIRCLE_PROJECT_USERNAME')
 poll = args.poll or 5
 
 parameters = {}
@@ -59,7 +61,8 @@ for argument in args.build or []:
     value = argument.split('=')[1]
 
     if key == 'BUILD_BRANCH' and value == 'dynamic' and os.getenv('CIRCLE_PULL_REQUEST'):
-        value = requests.get('https://api.github.com/repos/{}/pulls/{}'.format(repo, os.getenv('CIRCLE_BRANCH').replace('pull/', ''))).json()['head']['ref']
+        print('Getting branch from: https://api.github.com/repos/{}/{}/pulls/{}'.format(current_user, current_repo, os.getenv('CIRCLE_BRANCH').replace('pull/', '')))
+        value = requests.get('https://api.github.com/repos/{}/{}/pulls/{}'.format(current_user, current_repo, os.getenv('CIRCLE_BRANCH').replace('pull/', ''))).json()['head']['ref']
     
     parameters.update({key: value})
 

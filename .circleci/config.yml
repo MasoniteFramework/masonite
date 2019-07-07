@@ -1,0 +1,68 @@
+version: 2
+jobs:
+    build:
+      docker:
+        - image: circleci/python:3.6  # primary container for the build job
+      steps:
+        - checkout
+        - run: make
+        - run: make ci
+    python3.4:
+      docker:
+        - image: circleci/python:3.4
+      steps:
+        - checkout
+        - run: make
+        - run: make ci
+    python3.5:
+      docker:
+        - image: circleci/python:3.5
+      steps:
+        - checkout
+        - run: make
+        - run: make ci
+    python3.7:
+      docker:
+        - image: circleci/python:3.7
+      steps:
+        - checkout
+        - run: make
+        - run: make ci
+    Masonite Validation:
+      docker:
+        - image: circleci/python:3.6
+      steps:
+        - checkout
+        - run: python trigger_build.py --repo masoniteframework/validation --branch circle-ci --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
+    Masonite API:
+      docker:
+        - image: circleci/python:3.6
+      steps:
+        - checkout
+        - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
+    Code Coverage:
+      docker:
+        - image: circleci/python:3.6
+      steps:
+        - checkout
+        - run: pip install -r requirements.txt --user
+        - run: make coverage
+        - run: make deepsource
+
+workflows: 
+  version: 2
+  build_and_test:
+    jobs: 
+      - build
+      - python3.4
+      - python3.5
+      - python3.7
+      - Masonite Validation:
+          requires:
+              - build
+      - Masonite API:
+          requires:
+              - build
+      - Code Coverage:
+          requires:
+              - build

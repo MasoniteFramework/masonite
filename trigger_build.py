@@ -50,13 +50,6 @@ branch = args.branch or 'master'
 token = args.token or os.getenv('CIRCLE_TOKEN')
 poll = args.poll or 5
 
-if os.getenv('CIRCLE_PR_NUMBER'):
-    pull_request_info = requests.get('https://api.github.com/repos/{}/pulls/{}'.format(repo, os.getenv('CIRCLE_BRANCH').replace('pull/', '')))
-    repo = os.getenv('CIRCLE_PR_USERNAME') + '/' + os.getenv('CIRCLE_PR_REPONAME')
-    branch = pull_request_info.json()['head']['ref']
-    print('Pull Request #{} Detected. Changing build repo to: {} and branch to {}'.format(os.getenv('CIRCLE_PR_NUMBER'), repo, branch))
-
-
 parameters = {}
 for argument in args.build or []:
     if not '=' in argument:
@@ -65,6 +58,9 @@ for argument in args.build or []:
     key = argument.split('=')[0]
     value = argument.split('=')[1]
 
+    if key == 'BUILD_BRANCH' and value == 'dynamic' and os.getenv('CIRCLE_PULL_REQUEST'):
+        value = requests.get('https://api.github.com/repos/{}/pulls/{}'.format(repo, os.getenv('CIRCLE_BRANCH').replace('pull/', ''))).json()['head']['ref']
+    
     parameters.update({key: value})
 
 build_parameters = {'build_parameters': parameters}

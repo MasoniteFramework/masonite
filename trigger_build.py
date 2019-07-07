@@ -67,7 +67,9 @@ for argument in args.build or []:
     if key == 'BUILD_BRANCH' and value == 'dynamic' and os.getenv('CIRCLE_PULL_REQUEST'):
         print('Getting branch from: https://api.github.com/repos/{}/{}/pulls/{}'.format(current_user, current_repo, os.getenv('CIRCLE_BRANCH').replace('pull/', '')))
         value = requests.get('https://api.github.com/repos/{}/{}/pulls/{}'.format(current_user, current_repo, os.getenv('CIRCLE_BRANCH').replace('pull/', ''))).json()['head']['ref']
-    
+    elif key == 'BUILD_BRANCH' and value == 'dynamic':
+        value = branch
+
     parameters.update({key: value})
 
 build_parameters = {'build_parameters': parameters}

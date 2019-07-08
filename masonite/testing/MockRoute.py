@@ -34,14 +34,14 @@ class MockRoute:
 
         return self.container.make('Request').get_status_code() == '200 OK'
 
-    # def hasJson(self, key, value=''):
-    #     response = json.loads(self.container.make('Response'))
-    #     if isinstance(key, dict):
-    #         for item_key, value in key.items():
-    #             if not Dot().dot(item_key, response, False) == value:
-    #                 return False
-    #         return True
-    #     return Dot().dot(key, response, False)
+    def hasJson(self, key, value=''):
+        response = json.loads(self.container.make('Response'))
+        if isinstance(key, dict):
+            for item_key, value in key.items():
+                if not Dot().dot(item_key, response, False) == value:
+                    return False
+            return True
+        return Dot().dot(key, response, False)
 
     def count(self, amount):
         return len(json.loads(self.container.make('Response'))) == amount

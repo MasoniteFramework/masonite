@@ -1,6 +1,7 @@
 import io
 import json
 import unittest
+import sys
 from contextlib import contextmanager
 from urllib.parse import urlencode
 
@@ -168,11 +169,11 @@ class TestCase(unittest.TestCase):
 
     @contextmanager
     def captureOutput(self):
-        new_out, new_err = StringIO(), StringIO()
+        new_out, new_err = io.StringIO(), io.StringIO()
         old_out, old_err = sys.stdout, sys.stderr
         try:
             sys.stdout, sys.stderr = new_out, new_err
-            yield sys.stdout, sys.stderr
+            yield sys.stdout
         finally:
             sys.stdout, sys.stderr = old_out, old_err
 

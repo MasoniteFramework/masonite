@@ -57,6 +57,20 @@ class MockRoute:
         except TypeError:
             raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
 
+    def assertHasAmount(self, key, amount):
+        response = json.loads(self.container.make('Response'))
+        try:
+            assert len(response[key]) == amount, '{} is not equal to {}'.format(len(response[key]), amount)
+        except TypeError:
+            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
+
+    def assertNotHasAmount(self, key, amount):
+        response = json.loads(self.container.make('Response'))
+        try:
+            assert not len(response[key]) == amount, '{} is equal to {} but should not be'.format(len(response[key]), amount)
+        except TypeError:
+            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
+
     def user(self, obj):
         self._user = obj
         self.container.on_resolve(Request, self._bind_user_to_request)

@@ -193,7 +193,7 @@ class BaseHttpRoute:
 
             # Set the controller method on class. This is a string
             self.controller_method = mod[1]
-        except ModuleNotFoundError:
+        except ImportError:
             print('\033[93mCannot find controller {}. Did you create this one?'.format(get_controller), '\033[0m')
         except Exception:
             import sys

@@ -39,7 +39,7 @@ jobs:
         - image: circleci/python:3.6
       steps:
         - checkout
-        - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
+        - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build BUILD_BRANCH=$CIRCLE_BRANCH
     Code Coverage:
       docker:
         - image: circleci/python:3.6

@@ -184,8 +184,15 @@ class App:
                     signature = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
                     self._remembered[signature] = objects
             return obj(*objects)
-        except TypeError as e:
-            raise ContainerError(str(e))
+        except (TypeError,) as e:
+            import sys
+            import traceback
+            exception = ContainerError(str(e))
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            exception.__class__.extras = [exc_type, exc_obj, exc_tb]
+            exception.__class__.tb = traceback.extract_tb(exc_tb)
+            exception.__class__.file = obj.__code__.co_filename
+            raise exception from e
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.

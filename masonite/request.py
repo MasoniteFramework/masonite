@@ -225,6 +225,7 @@ class Request(Extendable):
             variables = dict(parse_qsl(variables))
 
         try:
+            self.request_variables = {}
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
                 self.request_variables[name.replace('[]', '')] = value
@@ -262,15 +263,7 @@ class Request(Extendable):
 
             return value
 
-        if isinstance(value, dict):
-            return value
-
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            pass
-
-        if isinstance(value, str):
+        if isinstance(value, (str, int, dict)):
             return value
 
         if not value.filename:
@@ -372,8 +365,8 @@ class Request(Extendable):
                                 None if it doesn't exist or True if setting the headers.
         """
         if isinstance(key, dict):
-            for key, value in key.items():
-                self._set_header(key, value, http_prefix)
+            for dic_key, dic_value in key.items():
+                self._set_header(dic_key, dic_value, http_prefix)
             return
 
         # Get Headers
@@ -459,7 +452,7 @@ class Request(Extendable):
         Returns:
             self
         """
-        self.url_params.update(params)
+        self.url_params = params
         return self
 
     def param(self, parameter):

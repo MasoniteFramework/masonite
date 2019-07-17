@@ -42,7 +42,6 @@ class MockRoute:
                     return False
             return True
         return Dot().dot(key, response, False)
-        return key in response and response[key] == value
 
     def count(self, amount):
         return len(json.loads(self.container.make('Response'))) == amount
@@ -87,6 +86,15 @@ class MockRoute:
         wsgi['RAW_URI'] = self.route.route_url
         self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
+
+    def assertParameterEquals(self, param, value):
+        request = self.container.make('Request')
+        if param not in request.url_params:
+            raise AssertionError("Request class does not have the '{}' url parameter".format(param))
+
+    def assertIsStatus(self, status):
+        request = self.container.make('Request')
+        assert request.get_status_code() == status, "{} is not equal to {}".format(request.get_status_code(), status)
 
     def session(self, key):
         wsgi = generate_wsgi()

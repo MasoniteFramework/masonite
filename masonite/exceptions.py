@@ -66,6 +66,10 @@ class RouteException(Exception):
     pass
 
 
+class RouteNotFoundException(Exception):
+    pass
+
+
 class DebugException(Exception):
     pass
 

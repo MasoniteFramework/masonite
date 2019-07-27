@@ -69,12 +69,21 @@ workflows:
       - Masonite Validation:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
       - Masonite API:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
       - Code Coverage:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
       - deploy:
           requires:
               - Masonite Validation

@@ -14,9 +14,9 @@ jobs:
         - run:
             name: init .pypirc
             command: |
-              echo -e "[pypi]" >> ~/.pypirc
-              echo -e "username = levlaz" >> ~/.pypirc
-              echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+                echo -e "[pypi]" >> ~/.pypirc
+                echo -e "username = levlaz" >> ~/.pypirc
+                echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
         - run: python setup.py sdist upload
     python3.4:
       docker:

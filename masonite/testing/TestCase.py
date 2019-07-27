@@ -107,7 +107,7 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
-        
+
         if self.container.has('Request'):
             self.container.make('Request').get_and_reset_headers()
 
@@ -176,7 +176,7 @@ class TestCase(unittest.TestCase):
 
             if matchurl.match(url) and method in route.method_type:
                 return MockRoute(route, self.container)
-        
+
         raise RouteNotFoundException("Could not find a route based on the url '{}'".format(url))
 
     def routes(self, routes=[], only=False):

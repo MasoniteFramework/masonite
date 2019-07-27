@@ -2,7 +2,10 @@
 version = 1
 
 test_patterns = [
-  'tests/**/*.py'
+  'tests/**/*.py',
+  'masonite/testing/*.py',
+  'masonite/testsuite/*.py',
+  'testpackage/*.py'
 ]
 
 exclude_patterns = [

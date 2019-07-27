@@ -74,4 +74,11 @@ workflows:
       - Code Coverage:
           requires:
               - build
-      
+      - deploy:
+          requires:
+              - Masonite Validation
+              - Masonite API
+              - Code Coverage
+          filters:
+            tags:
+              only: /^v*/

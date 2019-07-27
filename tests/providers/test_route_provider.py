@@ -2,9 +2,6 @@ import unittest
 
 from app.http.controllers.ControllerTest import ControllerTest
 from config import application, middleware
-from masonite.app import App
-from masonite.auth import Csrf
-from masonite.providers.RouteProvider import RouteProvider
 from masonite.request import Request
 from masonite.response import Response
 from masonite.routes import Get, Match, Route
@@ -21,26 +18,6 @@ class TestRouteProvider(TestCase):
 
     def setUp(self):
         super().setUp()
-        # self.app = App()
-        # self.app.bind('Container', self.app)
-        # self.app.bind('Environ', generate_wsgi())
-        # self.app.bind('Application', application)
-        # self.app.bind('WebRoutes', [])
-        # self.app.bind('Route', Route(self.app.make('Environ')))
-        # self.app.bind('Request', Request(
-        #     self.app.make('Environ')).load_app(self.app))
-        # self.app.simple(Response(self.app))
-        # self.app.bind('StatusCode', None)
-        # self.app.bind('HttpMiddleware', middleware.HTTP_MIDDLEWARE)
-        # view = View(self.app)
-        # self.app.bind('ViewClass', view)
-        # self.app.bind('View', view.render)
-        # self.app.bind('Auth', Auth)
-        # self.app.bind('Csrf', Csrf(self.app.make('Request')))
-        # self.app.bind('AuthCookieDriver', AuthCookieDriver)
-        # self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))
-        # self.provider = RouteProvider()
-        # self.provider.app = self.app
 
     def test_controller_that_returns_a_view(self):
         self.routes(only=[Get('/view', ControllerTest.test), Get('/view/', ControllerTest.test)])
@@ -65,6 +42,11 @@ class TestRouteProvider(TestCase):
     def test_controller_that_return_a_view_with_trailing_slash(self):
         self.routes(only=[Get('/view', ControllerTest.test)])
         self.assertTrue(self.get('/view/').contains('test'))
+
+        self.routes(only=[Get('/view/', ControllerTest.test)])
+        self.assertTrue(self.get('/view').contains('test'))
+
+
 
     def test_match_route_returns_controller(self):
         self.routes(only=[Match(['GET', 'POST']).route('/view', ControllerTest.returns_a_view)])
@@ -105,20 +87,7 @@ class TestRouteProvider(TestCase):
     def test_url_with_dashes_finds_route(self):
 
         self.routes(only=[Get('/test/@endpoint', ControllerTest.test)])
-        self.assertEqual(self.get('/test/user-endpoint').container.make('Request').param('endpoint'), 'user-endpoint')
-
-        # self.app.bind(
-        #     'WebRoutes', [Get('/test/@endpoint', ControllerTest.test)])
-
-        # self.provider.boot(
-        #     self.app.make('Route'),
-        #     self.app.make('Request'),
-        #     self.app.make(Response)
-        # )
-
-        
-
-        # self.assertEqual(self.app.make('Request').param('endpoint'), 'user-endpoint')
+        self.assertTrue(self.get('/test/user-endpoint').parameterIs('endpoint', 'user-endpoint'))
 
     def test_param_returns_param(self):
         self.routes(only=[Get('/test/@id', ControllerTest.param)])
@@ -156,11 +125,3 @@ class TestRouteProvider(TestCase):
         self.assertEqual(request.path, 'test/middleware/before/ran')
         self.assertTrue(request.attribute)
 
-
-class Middleware:
-
-    def before(self):
-        pass
-
-    def after(self):
-        pass

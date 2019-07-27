@@ -137,8 +137,13 @@ class BaseHttpRoute:
             self
         """
         self._find_controller(output)
+
         if not route.startswith('/'):
             route = '/' + route
+
+        if route.endswith('/') and route != '/':
+            route = route[:-1]
+
         self.route_url = route
         self._compiled_url = self.compile_route_to_regex()
         return self

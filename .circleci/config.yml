@@ -61,20 +61,20 @@ workflows:
   build_and_test:
     jobs: 
       - build
-        requires:
-          -DeepSource
+          requires:
+            - DeepSource
       - python3.4
           requires:
-            -DeepSource
+            - DeepSource
       - python3.5
-        requires:
-          -DeepSource
+          requires:
+              - DeepSource
       - python3.7
-        requires:
-          -DeepSource
+          requires:
+              - DeepSource
       - Masonite Validation:
           requires:
-              - build
+            - build
       - Masonite API:
           requires:
               - build

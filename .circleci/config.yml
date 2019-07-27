@@ -11,12 +11,9 @@ jobs:
       docker:
         - image: circleci/python:3.4
       steps:
-        - run:
-            name: init .pypirc
-            command: |
-                echo -e "[pypi]" >> ~/.pypirc
-                echo -e "username = levlaz" >> ~/.pypirc
-                echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+        - run: echo -e "[pypi]" >> ~/.pypirc
+        - run: echo -e "username = josephmancuso" >> ~/.pypirc
+        - run: echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
         - run: python setup.py sdist upload
     python3.4:
       docker:

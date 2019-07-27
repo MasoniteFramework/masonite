@@ -8,6 +8,8 @@ jobs:
         - run: make
         - run: make ci
     deploy:
+      docker:
+        - image: circleci/python:3.4
       steps:
         - run:
             name: init .pypirc

@@ -62,19 +62,19 @@ workflows:
     jobs: 
       - build
           requires:
-            - DeepSource
+              - DeepSource
       - python3.4
           requires:
-            - DeepSource
+              - DeepSource
       - python3.5
           requires:
-            - DeepSource
+              - DeepSource
       - python3.7
           requires:
-            - DeepSource
+              - DeepSource
       - Masonite Validation:
           requires:
-            - build
+              - build
       - Masonite API:
           requires:
               - build

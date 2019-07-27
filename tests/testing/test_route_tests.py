@@ -88,6 +88,9 @@ class TestUnitTest(TestCase):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 3))
         self.assertFalse(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 2))
 
+        self.json('GET', '/unit/test/json/response').assertHasAmount('iterable', 3) 
+        self.json('GET', '/unit/test/json/response').assertNotHasAmount('iterable', 2)
+
     def test_patch(self):
         self.assertTrue(self.patch('/unit/test/patch', {'test': 'testing'}).contains('testing'))
 
@@ -103,3 +106,9 @@ class TestUnitTest(TestCase):
     def test_acting_as_none(self):
         with self.assertRaises(TypeError):
             self.actingAs(User.find(10)).get('/helloworld')
+
+    def test_capture_output(self):
+        with self.captureOutput() as output:
+            print('hello', end='')
+        
+        self.assertEqual(output.getvalue(), 'hello')

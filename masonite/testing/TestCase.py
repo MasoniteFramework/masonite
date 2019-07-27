@@ -107,6 +107,9 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
+        
+        if self.container.has('Request'):
+            self.container.make('Request').get_and_reset_headers()
 
     def call(self, method, url, params, wsgi={}):
         custom_wsgi = {

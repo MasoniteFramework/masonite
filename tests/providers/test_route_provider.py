@@ -59,76 +59,32 @@ class TestRouteProvider(TestCase):
     def test_no_base_route_returns_404(self):
         self.routes(only=[Get('/', ControllerTest.test)])
 
-        self.assertIsNone(self.get('/test'))
+        with self.assertRaises(RouteNotFoundException):
+            self.assertIsNone(self.get('/test'))
 
     def test_controller_that_return_a_view_with_trailing_slash(self):
-
-        self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
-
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Response'), 'test')
-
-        self.app.make('Route').url = '/view'
-        self.app.bind('WebRoutes', [Get('/view', ControllerTest.test)])
-
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Response'), 'test')
+        self.routes(only=[Get('/view', ControllerTest.test)])
+        self.assertTrue(self.get('/view/').contains('test'))
 
     def test_match_route_returns_controller(self):
-        self.app.make('Route').url = '/view'
-        self.app.bind(
-            'WebRoutes', [Match(['GET', 'POST']).route('/view', ControllerTest.returns_a_view)])
+        self.routes(only=[Match(['GET', 'POST']).route('/view', ControllerTest.returns_a_view)])
 
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Response'), 'hey')
+        self.assertTrue(self.get('/view').contains('hey'))
 
     def test_provider_runs_through_routes(self):
-        self.app.make('Route').url = '/test'
-        self.app.bind('WebRoutes', [Get('/test', ControllerTest.test)])
+        self.routes(only=[Get('/test', ControllerTest.test)])
 
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Request').header(
-            'Content-Type'), 'text/html; charset=utf-8')
+        self.assertTrue(self.get('/test').headerIs('Content-Type', 'text/html; charset=utf-8'))
 
     def test_sets_request_params(self):
-        self.app.make('Route').url = '/test/1'
-        self.app.bind('WebRoutes', [Get('/test/@id', ControllerTest.test)])
+        self.routes(only=[Get('/test/@id', ControllerTest.test)])
 
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Request').param('id'), '1')
+        self.assertTrue(self.get('/test/1').parameterIs('id', '1'))
 
     def test_can_use_resolving_params(self):
         self.routes(only=[Get('/test/@id', ControllerTest.get_param)])
 
         self.assertEqual(self.get('/test/1').container.make('Request').first, '1')
-
-        # self.assertEqual(self.app.make('Request').first, '1')
 
     def test_can_use_resolving_params_and_object(self):
         self.routes(only=[Get('/test/@id', ControllerTest.get_param_and_object)])
@@ -136,31 +92,15 @@ class TestRouteProvider(TestCase):
         self.assertEqual(self.get('/test/1').container.make('Request').first, '1')
 
     def test_url_with_dots_finds_route(self):
-        self.app.make('Route').url = '/test/user.endpoint'
-        self.app.bind(
-            'WebRoutes', [Get('/test/@endpoint', ControllerTest.test)])
+        
+        self.routes(only=[Get('/test/@endpoint', ControllerTest.test)])
 
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Request').param('endpoint'), 'user.endpoint')
+        self.assertTrue(self.get('/test/user.endpoint').parameterIs('endpoint', 'user.endpoint'))
 
     def test_view_returns_with_route_view(self):
-        self.app.make('Route').url = '/test/route'
-        self.app.bind('WebRoutes', [
-            Get().view('/test/route', 'test', {'test': 'testing'})
-        ])
+        self.routes(only=[Get().view('/test/route', 'test', {'test': 'testing'})])
 
-        self.provider.boot(
-            self.app.make('Route'),
-            self.app.make('Request'),
-            self.app.make(Response)
-        )
-
-        self.assertEqual(self.app.make('Response'), 'testing')
+        self.assertTrue(self.get('/test/route').contains('testing'))
 
     def test_url_with_dashes_finds_route(self):
 
@@ -200,9 +140,8 @@ class TestRouteProvider(TestCase):
     def test_controller_returns_json_response_for_dict(self):
         self.routes(only=[Get('/view', ControllerTest.returns_a_dict)])
 
-        self.assertEqual(
-            self.get('/view').container.make('Request').header('Content-Type'),
-            'application/json; charset=utf-8'
+        self.assertTrue(
+            self.get('/view').headerIs('Content-Type', 'application/json; charset=utf-8')
         )
 
     def test_route_runs_str_middleware(self):

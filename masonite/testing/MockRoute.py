@@ -117,3 +117,15 @@ class MockRoute:
     def _bind_user_to_request(self, request, container):
         request.set_user(self._user)
         return self
+
+    def headerIs(self, key, value):
+        request = self.container.make('Request')
+        assertion = request.header(key) == value
+        assert assertion, 'header {} does not equal {}'.format(request.header(key), value)
+        return assertion
+
+    def parameterIs(self, key, value):
+        request = self.container.make('Request')
+        assertion = request.param(key) == value
+        assert assertion, 'parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value))
+        return assertion

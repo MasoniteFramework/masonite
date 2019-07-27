@@ -7,6 +7,13 @@ jobs:
         - checkout
         - run: make
         - run: make ci
+    DeepSource:
+      docker:
+        - image: circleci/python:3.6
+      steps:
+        - checkout
+        - run: pip install -r requirements.txt --user
+        - run: make deepsource
     python3.4:
       docker:
         - image: circleci/python:3.4
@@ -54,9 +61,17 @@ workflows:
   build_and_test:
     jobs: 
       - build
+        requires:
+          -DeepSource
       - python3.4
+          requires:
+            -DeepSource
       - python3.5
+        requires:
+          -DeepSource
       - python3.7
+        requires:
+          -DeepSource
       - Masonite Validation:
           requires:
               - build

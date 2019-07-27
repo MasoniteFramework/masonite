@@ -11,6 +11,7 @@ jobs:
       docker:
         - image: circleci/python:3.4
       steps:
+        - checkout
         - run: echo -e "[pypi]" >> ~/.pypirc
         - run: echo -e "username = josephmancuso" >> ~/.pypirc
         - run: echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc

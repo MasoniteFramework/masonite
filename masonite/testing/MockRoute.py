@@ -87,14 +87,18 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
 
-    def assertParameterEquals(self, param, value):
+    def assertParameterIs(self, key, value):
         request = self.container.make('Request')
-        if param not in request.url_params:
-            raise AssertionError("Request class does not have the '{}' url parameter".format(param))
+        if key not in request.url_params:
+            raise AssertionError("Request class does not have the '{}' url parameter".format(key))
+
+        if request.param(key) != value:
+            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
 
     def assertIsStatus(self, status):
         request = self.container.make('Request')
-        assert request.get_status_code() == status, "{} is not equal to {}".format(request.get_status_code(), status)
+        if not request.get_status_code() == status:
+            raise AssertionError("{} is not equal to {}".format(request.get_status_code(), status))
 
     def session(self, key):
         wsgi = generate_wsgi()
@@ -121,11 +125,13 @@ class MockRoute:
     def headerIs(self, key, value):
         request = self.container.make('Request')
         assertion = request.header(key) == value
-        assert assertion, 'header {} does not equal {}'.format(request.header(key), value)
+        if not assertion:
+            raise AssertionError('header {} does not equal {}'.format(request.header(key), value))
         return assertion
 
     def parameterIs(self, key, value):
         request = self.container.make('Request')
         assertion = request.param(key) == value
-        assert assertion, 'parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value))
+        if not assertion:
+            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
         return assertion

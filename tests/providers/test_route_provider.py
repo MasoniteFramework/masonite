@@ -1,15 +1,8 @@
-import unittest
 
 from app.http.controllers.ControllerTest import ControllerTest
-from config import application, middleware
 from masonite.request import Request
-from masonite.response import Response
-from masonite.routes import Get, Match, Route
+from masonite.routes import Get, Match
 from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.view import View
-from masonite.auth import Auth
-from masonite.managers import AuthManager
-from masonite.drivers import AuthCookieDriver
 from masonite.testing import TestCase
 from masonite.exceptions import RouteNotFoundException
 
@@ -31,7 +24,7 @@ class TestRouteProvider(TestCase):
 
     def test_base_route_can_set_request_params(self):
         self.routes(only=[Get('/@id', ControllerTest.test)])
-        self.get('/test').assertParameterEquals('id', 'test')
+        self.get('/test').assertParameterIs('id', 'test')
 
     def test_no_base_route_returns_404(self):
         self.routes(only=[Get('/', ControllerTest.test)])
@@ -45,8 +38,6 @@ class TestRouteProvider(TestCase):
 
         self.routes(only=[Get('/view/', ControllerTest.test)])
         self.assertTrue(self.get('/view').contains('test'))
-
-
 
     def test_match_route_returns_controller(self):
         self.routes(only=[Match(['GET', 'POST']).route('/view', ControllerTest.returns_a_view)])
@@ -74,7 +65,7 @@ class TestRouteProvider(TestCase):
         self.assertEqual(self.get('/test/1').container.make('Request').first, '1')
 
     def test_url_with_dots_finds_route(self):
-        
+
         self.routes(only=[Get('/test/@endpoint', ControllerTest.test)])
 
         self.assertTrue(self.get('/test/user.endpoint').parameterIs('endpoint', 'user.endpoint'))
@@ -99,12 +90,11 @@ class TestRouteProvider(TestCase):
 
     def test_route_subdomain_ignores_routes(self):
         self.routes(only=[Get('/view', ControllerTest.test)])
-        
+
         with self.assertRaises(RouteNotFoundException):
             self.withSubdomains().get('/view', wsgi={
                 'HTTP_HOST': 'subb.domain.com'
             }).assertIsStatus(404)
-
 
     def test_controller_returns_json_response_for_dict(self):
         self.routes(only=[Get('/view', ControllerTest.returns_a_dict)])
@@ -119,9 +109,8 @@ class TestRouteProvider(TestCase):
 
     def test_route_runs_middleware_with_list(self):
         self.routes(only=[Get('/view', ControllerTest.returns_a_dict).middleware('middleware.test')])
-        
+
         request = self.get('/view').container.make('Request')
 
         self.assertEqual(request.path, 'test/middleware/before/ran')
         self.assertTrue(request.attribute)
-

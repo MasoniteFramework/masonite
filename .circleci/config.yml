@@ -74,12 +74,4 @@ workflows:
       - Code Coverage:
           requires:
               - build
-      - deploy:
-          requires:
-              - Masonite Validation
-              - Masonite API
-              - Code Coverage
-          tags:
-              only: /[0-9]+(\.[0-9]+)*/
-          branches:
-              ignore: /.*/
+      

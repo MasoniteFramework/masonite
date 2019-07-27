@@ -8,6 +8,7 @@ from masonite import env
 from masonite.helpers.routes import flatten_routes, create_matchurl
 from masonite.helpers.migrations import Migrations
 from masonite.testsuite import generate_wsgi
+from masonite.exceptions import RouteNotFoundException
 from orator.orm import Factory
 
 from .MockRoute import MockRoute
@@ -19,6 +20,7 @@ class TestCase(unittest.TestCase):
     transactions = True
     refreshes_database = False
     _transaction = False
+    _with_subdomains = False
 
     def setUp(self):
         from wsgi import container
@@ -106,6 +108,9 @@ class TestCase(unittest.TestCase):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
 
+        if self.container.has('Request'):
+            self.container.make('Request').get_and_reset_headers()
+
     def call(self, method, url, params, wsgi={}):
         custom_wsgi = {
             'PATH_INFO': url,
@@ -129,8 +134,12 @@ class TestCase(unittest.TestCase):
         self.container.make('Request').request_variables = params
         return self.route(url, method)
 
-    def get(self, url, params={}):
-        return self.call('GET', url, params)
+    def get(self, url, params={}, wsgi={}):
+        return self.call('GET', url, params, wsgi=wsgi)
+
+    def withSubdomains(self):
+        self._with_subdomains = True
+        return self
 
     def json(self, method, url, params={}):
         return self.call(method, url, params, wsgi={
@@ -160,10 +169,21 @@ class TestCase(unittest.TestCase):
     def route(self, url, method=False):
         for route in self.container.make('WebRoutes'):
             matchurl = create_matchurl(url, route)
+            if self.container.make('Request').has_subdomain():
+                # Check if the subdomain matches the correct routes domain
+                if not route.has_required_domain():
+                    continue
+
             if matchurl.match(url) and method in route.method_type:
                 return MockRoute(route, self.container)
 
-    def routes(self, routes):
+        raise RouteNotFoundException("Could not find a route based on the url '{}'".format(url))
+
+    def routes(self, routes=[], only=False):
+        if only:
+            self.container.bind('WebRoutes', flatten_routes(only))
+            return
+
         self.container.bind('WebRoutes', flatten_routes(self.container.make('WebRoutes') + routes))
 
     @contextmanager
@@ -179,8 +199,11 @@ class TestCase(unittest.TestCase):
     def run_container(self, wsgi_values={}):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
+        # self.container.make('Request').activate_subdomains()
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
+        if self._with_subdomains:
+            self.container.make('Request').activate_subdomains()
         try:
             for provider in self.container.make('WSGIProviders'):
                 self.container.resolve(provider.boot)
@@ -217,3 +240,7 @@ class TestCase(unittest.TestCase):
         column = schema.split('.')[1]
 
         self.assertFalse(DB.table(table).where(column, value).first())
+
+    def on_bind(self, obj, method):
+        self.container.on_bind(obj, method)
+        return self

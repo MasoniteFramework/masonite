@@ -42,7 +42,6 @@ class MockRoute:
                     return False
             return True
         return Dot().dot(key, response, False)
-        return key in response and response[key] == value
 
     def count(self, amount):
         return len(json.loads(self.container.make('Response'))) == amount
@@ -88,6 +87,19 @@ class MockRoute:
         self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
 
+    def assertParameterIs(self, key, value):
+        request = self.container.make('Request')
+        if key not in request.url_params:
+            raise AssertionError("Request class does not have the '{}' url parameter".format(key))
+
+        if request.param(key) != value:
+            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
+
+    def assertIsStatus(self, status):
+        request = self.container.make('Request')
+        if not request.get_status_code() == status:
+            raise AssertionError("{} is not equal to {}".format(request.get_status_code(), status))
+
     def session(self, key):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
@@ -109,3 +121,17 @@ class MockRoute:
     def _bind_user_to_request(self, request, container):
         request.set_user(self._user)
         return self
+
+    def headerIs(self, key, value):
+        request = self.container.make('Request')
+        assertion = request.header(key) == value
+        if not assertion:
+            raise AssertionError('header {} does not equal {}'.format(request.header(key), value))
+        return assertion
+
+    def parameterIs(self, key, value):
+        request = self.container.make('Request')
+        assertion = request.param(key) == value
+        if not assertion:
+            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
+        return assertion

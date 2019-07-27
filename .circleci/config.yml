@@ -7,6 +7,15 @@ jobs:
         - checkout
         - run: make
         - run: make ci
+    deploy:
+      steps:
+        - run:
+            name: init .pypirc
+            command: |
+              echo -e "[pypi]" >> ~/.pypirc
+              echo -e "username = levlaz" >> ~/.pypirc
+              echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+        - run: python setup.py sdist upload
     python3.4:
       docker:
         - image: circleci/python:3.4
@@ -66,3 +75,12 @@ workflows:
       - Code Coverage:
           requires:
               - build
+      - deploy:
+          requires:
+              - Masonite Validation
+              - Masonite API
+              - Code Coverage
+          tags:
+              only: /[0-9]+(\.[0-9]+)*/
+          branches:
+              ignore: /.*/

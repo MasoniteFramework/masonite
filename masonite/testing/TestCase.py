@@ -1,4 +1,3 @@
-import copy
 import io
 import json
 import sys

@@ -280,7 +280,6 @@ class TestCase(unittest.TestCase):
         from config import application
         from config import providers
 
-
         container.bind('WSGI', generate_wsgi())
         container.bind('Application', application)
         container.bind('Container', container)

@@ -15,7 +15,6 @@ class Optional:
         self.obj = obj
 
     def __getattr__(self, attr):
-        # method = getattr(self.obj, attr)
         if hasattr(self.obj, attr):
             return getattr(self.obj, attr)
         return NoneType()

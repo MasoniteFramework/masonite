@@ -14,7 +14,6 @@ def flatten_routes(routes):
     """
     route_collection = []
     for route in routes:
-        # Check if a route is a list of routes
         if isinstance(route, list):
             for r in flatten_routes(route):
                 route_collection.append(r)

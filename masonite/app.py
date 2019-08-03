@@ -386,7 +386,7 @@ class App:
             object -- Returns the object in the container
         """
         for _, provider_class in self.providers.items():
-            if obj == provider_class or obj == provider_class.__class__:
+            if (provider_class, provider_class.__class__) in obj:
                 return_obj = provider_class
                 self.fire_hook('resolve', obj, return_obj)
                 return return_obj

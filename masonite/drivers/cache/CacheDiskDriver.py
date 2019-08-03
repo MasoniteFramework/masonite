@@ -169,7 +169,6 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
 
     def _create_directory(self, directory):
         """creates a new dir.
-        
         Arguments:
             directory {string} -- name of dir
 

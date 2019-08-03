@@ -169,12 +169,13 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
 
     def _create_directory(self, directory):
         """creates a new dir.
-            Arguments:
-                directory {string} -- name of dir
+        
+        Arguments:
+            directory {string} -- name of dir
 
-            Returns:
-                bool|string -- Returns a boolean on new dir creation
-               """
+        Returns:
+            bool|string -- Returns a boolean on new dir creation
+        """
         if not os.path.exists(os.path.dirname(directory)):
             # Create the path to the model if it does not exist
             os.makedirs(os.path.dirname(directory))

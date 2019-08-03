@@ -137,8 +137,13 @@ class BaseHttpRoute:
             self
         """
         self._find_controller(output)
+
         if not route.startswith('/'):
             route = '/' + route
+
+        if route.endswith('/') and route != '/':
+            route = route[:-1]
+
         self.route_url = route
         self._compiled_url = self.compile_route_to_regex()
         return self
@@ -193,11 +198,12 @@ class BaseHttpRoute:
 
             # Set the controller method on class. This is a string
             self.controller_method = mod[1]
-
+        except ImportError:
+            print('\033[93mCannot find controller {}. Did you create this one?'.format(get_controller), '\033[0m')
         except Exception:
             import sys
             import traceback
-            exc_type, exc_obj, exc_tb = sys.exc_info()
+            exc_type, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print('\033[93mWarning in routes/web.py!', exc_type, 'in', tb[0], 'on line', tb[1], '\033[0m')
 

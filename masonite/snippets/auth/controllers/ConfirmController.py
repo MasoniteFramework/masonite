@@ -47,7 +47,7 @@ class ConfirmController:
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
-                user = self.get_user.find(1)
+                user = auth.auth_model.find(tokenParts[0])
 
                 if user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))
@@ -61,17 +61,6 @@ class ConfirmController:
                         return view.render('auth/confirm', {'app': request.app().make('Application'), 'Auth': auth})
 
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': auth})
-
-    def get_user(self, user_id):
-        """Get the user from the database.
-
-        Arguments:
-            user_id {str} -- The users id
-
-        Returns:
-            [User] -- [User model]
-        """
-        return User.find(user_id)
 
     def send_verify_email(self, manager: MailManager, request: Request):
         user = request.user()

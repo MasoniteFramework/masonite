@@ -26,6 +26,7 @@ class AuthCommand(Command):
             f.write("Post().route('/register', 'RegisterController@store'),\n    ")
             f.write("Get().route('/home', 'HomeController@show').name('home'),\n    ")
             f.write("Get().route('/email/verify', 'ConfirmController@verify_show').name('verify'),\n    ")
+            f.write("Get().route('/email/verify/send', 'ConfirmController@send_verify_email'),\n    ")
             f.write("Get().route('/email/verify/@id:signed', 'ConfirmController@confirm_email'),\n    ")
             f.write("Get().route('/password', 'PasswordController@forget').name('forgot.password'),\n    ")
             f.write("Post().route('/password', 'PasswordController@send'),\n    ")

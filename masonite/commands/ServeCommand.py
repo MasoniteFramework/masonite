@@ -25,13 +25,13 @@ class ServeCommand(Command):
     def handle(self):
         if has_unmigrated_migrations():
             self.comment("\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n")
-        
+
         if self.option('live-reload'):
             try:
                 from livereload import Server
             except ImportError:
                 raise DriverLibraryNotFound("Could not find the livereload library. Install it by running 'pip install livereload==2.5.1'")
-            
+
             from wsgi import container
             from config import application
             from pathlib import Path
@@ -49,7 +49,6 @@ class ServeCommand(Command):
             application = server.serve(port=self.option('port'), restart_delay=self.option(
                 'reload-interval'), liveport=5500, root=application.BASE_DIRECTORY, debug=True)
             return
-
 
         if not self.option('dont-reload'):
             logger = DefaultLogger(LogLevel.INFO)

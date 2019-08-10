@@ -18,11 +18,27 @@ class ServeCommand(Command):
         {--r|reload : Make the server automatically reload on file changes}
         {--d|dont-reload : Make the server NOT automatically reload on file changes}
         {--i|reload-interval=1 : Number of seconds to wait to reload after changed are detected}
+        {--l|live-reload : Make the server automatically refresh your web browser}
     """
 
     def handle(self):
         if has_unmigrated_migrations():
             self.comment("\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n")
+        
+        if self.option('live-reload'):
+            from livereload import Server
+            from wsgi import container
+            import os
+
+            print('starting reload')
+            server = Server(container.make('WSGI'))
+
+            server.watch('resources/templates/*')
+            server.watch('storage/compiled/*.css')
+
+            application = server.serve(port=self.option('port'), liveport=5500, root=os.getcwd(), debug=True)
+            return
+
 
         if not self.option('dont-reload'):
             logger = DefaultLogger(LogLevel.INFO)

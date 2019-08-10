@@ -34,7 +34,6 @@ class ServeCommand(Command):
 
             from wsgi import container
             from config import application
-            from pathlib import Path
             import glob
 
             server = Server(container.make('WSGI'))

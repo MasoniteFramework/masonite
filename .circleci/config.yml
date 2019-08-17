@@ -23,7 +23,7 @@ jobs:
         - run: make ci
     python38:
       docker:
-        - image: python/3.8.0b3-alpine3.10
+        - image: python/3.8.0b3
       steps:
         - checkout
         - run: make

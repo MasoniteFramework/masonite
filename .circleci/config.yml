@@ -23,7 +23,7 @@ jobs:
         - run: make ci
     python38:
       docker:
-        - image: python/python:3.8.0b3
+        - image: circleci/python:3.8.0b2-buster
           auth:
             username: jmancuso9  # can specify string literal values
             password: $DOCKERHUB_PASSWORD

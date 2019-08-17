@@ -23,7 +23,10 @@ jobs:
         - run: make ci
     python38:
       docker:
-        - image: python/3.8.0b3
+        - image: python/3.8.0b3-alpine3.10
+            auth:
+              username: jmancuso9  # can specify string literal values
+              password: $DOCKERHUB_PASSWORD
       steps:
         - checkout
         - run: make

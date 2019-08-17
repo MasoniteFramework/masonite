@@ -60,31 +60,31 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.4:
+      - python34:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.5:
+      - python35:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.7:
+      - python37:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - Masonite Validation:
+      - MasoniteValidation:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - Masonite API:
+      - MasoniteAPI:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - Code Coverage:
+      - CodeCoverage:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`

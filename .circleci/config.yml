@@ -93,9 +93,9 @@ workflows:
       - masonite/deploy:
           username: josephmancuso
           requires:
-              - Masonite Validation
-              - Masonite API
-              - Code Coverage
+              - MasoniteValidation
+              - MasoniteAPI
+              - CodeCoverage
           filters:
               tags:
                   only: /^v*/

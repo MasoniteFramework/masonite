@@ -7,13 +7,6 @@ jobs:
         - checkout
         - run: make
         - run: make ci
-    python34:
-      docker:
-        - image: circleci/python:3.4
-      steps:
-        - checkout
-        - run: make
-        - run: make ci
     python35:
       docker:
         - image: circleci/python:3.5
@@ -24,6 +17,13 @@ jobs:
     python37:
       docker:
         - image: circleci/python:3.7
+      steps:
+        - checkout
+        - run: make
+        - run: make ci
+    python38:
+      docker:
+        - image: python/3.8.0b3-alpine3.10
       steps:
         - checkout
         - run: make
@@ -60,15 +60,15 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python34:
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^v*/
       - python35:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
       - python37:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
+      - python38:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/

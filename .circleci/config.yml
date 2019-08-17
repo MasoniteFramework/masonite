@@ -7,40 +7,40 @@ jobs:
         - checkout
         - run: make
         - run: make ci
-    python3.4:
+    python34:
       docker:
         - image: circleci/python:3.4
       steps:
         - checkout
         - run: make
         - run: make ci
-    python3.5:
+    python35:
       docker:
         - image: circleci/python:3.5
       steps:
         - checkout
         - run: make
         - run: make ci
-    python3.7:
+    python37:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
         - run: make
         - run: make ci
-    Masonite Validation:
+    MasoniteValidation:
       docker:
         - image: circleci/python:3.6
       steps:
         - checkout
         - run: python trigger_build.py --repo masoniteframework/validation --branch circle-ci --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
-    Masonite API:
+    MasoniteAPI:
       docker:
         - image: circleci/python:3.6
       steps:
         - checkout
         - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build BUILD_BRANCH=$CIRCLE_BRANCH
-    Code Coverage:
+    CodeCoverage:
       docker:
         - image: circleci/python:3.6
       steps:

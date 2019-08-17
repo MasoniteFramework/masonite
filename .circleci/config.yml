@@ -56,19 +56,19 @@ workflows:
   version: 2
   build_and_test:
     jobs: 
-      - build
+      - build:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.4
+      - python3.4:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.5
+      - python3.5:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/
-      - python3.7
+      - python3.7:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^v*/

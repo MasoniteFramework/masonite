@@ -747,6 +747,7 @@ class Request(Extendable):
             try:
                 route = self._get_named_route(name, params)
             except KeyError:
+                params = {}
                 params.update(self.url_params)
                 route = self._get_named_route(name, params)
 

@@ -31,4 +31,3 @@ class TestCsrf(TestCase):
         (self.withCsrf()
             .withoutHttpMiddleware()
             .post('/test-route'))
-        # self.assertTrue(self.container.make('Csrf').verify_csrf_token(token))

@@ -7,6 +7,15 @@ jobs:
         - checkout
         - run: make
         - run: make ci
+    deploy:
+      docker:
+        - image: circleci/python:3.4
+      steps:
+        - checkout
+        - run: echo -e "[pypi]" >> ~/.pypirc
+        - run: echo -e "username = josephmancuso" >> ~/.pypirc
+        - run: echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+        - run: python setup.py sdist upload
     python3.4:
       docker:
         - image: circleci/python:3.4
@@ -60,9 +69,28 @@ workflows:
       - Masonite Validation:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
       - Masonite API:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
       - Code Coverage:
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^v*/
+      - deploy:
+          requires:
+              - Masonite Validation
+              - Masonite API
+              - Code Coverage
+          filters:
+            tags:
+              only: /^v*/
+            branches:
+              ignore: /.*/

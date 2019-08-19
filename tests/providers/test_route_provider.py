@@ -9,6 +9,7 @@ class TestRouteProvider(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.buildOwnContainer()
 
     def test_controller_that_returns_a_view(self):
         self.routes(only=[Get('/view', ControllerTest.test), Get('/view/', ControllerTest.test)])

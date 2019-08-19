@@ -10,6 +10,7 @@ class TestUnitTest(TestCase):
         super().setUp()
 
         self.routes(web.ROUTES)
+        self.buildOwnContainer()
 
     def setUpFactories(self):
         User.create({

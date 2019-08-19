@@ -1,16 +1,17 @@
 import io
 import json
-import unittest
 import sys
+import unittest
 from contextlib import contextmanager
 from urllib.parse import urlencode
 
 from masonite import env
-from masonite.helpers.routes import flatten_routes, create_matchurl
-from masonite.helpers.migrations import Migrations
-from masonite.testsuite import generate_wsgi
 from masonite.exceptions import RouteNotFoundException
+from masonite.helpers.migrations import Migrations
+from masonite.helpers.routes import create_matchurl, flatten_routes
+from masonite.testsuite import generate_wsgi
 from orator.orm import Factory
+from masonite.app import App
 
 from .MockRoute import MockRoute
 
@@ -26,6 +27,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         from wsgi import container
         self.container = container
+
         self.acting_user = False
         self.factory = Factory()
         self.withoutExceptionHandling()
@@ -40,6 +42,13 @@ class TestCase(unittest.TestCase):
 
         if not self.transactions and self.refreshes_database:
             self.refreshDatabase()
+
+        self.route_middleware = False
+        self.http_middleware = False
+
+    def buildOwnContainer(self):
+        self.container = self.create_container()
+        return self
 
     @classmethod
     def setUpClass(cls):
@@ -200,11 +209,17 @@ class TestCase(unittest.TestCase):
     def run_container(self, wsgi_values={}):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
-        # self.container.make('Request').activate_subdomains()
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
         if self._with_subdomains:
             self.container.make('Request').activate_subdomains()
+
+        if self.route_middleware is not False:
+            self.container.bind('RouteMiddleware', self.route_middleware)
+
+        if self.http_middleware is not False:
+            self.container.bind('HttpMiddleware', self.http_middleware)
+
         try:
             for provider in self.container.make('WSGIProviders'):
                 self.container.resolve(provider.boot)
@@ -222,9 +237,11 @@ class TestCase(unittest.TestCase):
 
     def withCsrf(self):
         self._with_csrf = True
+        return self
 
     def withoutCsrf(self):
         self._with_csrf = False
+        return self
 
     def assertDatabaseHas(self, schema, value):
         from config.database import DB
@@ -245,3 +262,56 @@ class TestCase(unittest.TestCase):
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)
         return self
+
+    def withRouteMiddleware(self, middleware):
+        self.route_middleware = middleware
+        return self
+
+    def withHttpMiddleware(self, middleware):
+        self.http_middleware = middleware
+        return self
+
+    def withoutHttpMiddleware(self):
+        self.http_middleware = []
+        return self
+
+    def create_container(self):
+        container = App()
+        from config import application
+        from config import providers
+
+        container.bind('WSGI', generate_wsgi())
+        container.bind('Application', application)
+        container.bind('Container', container)
+
+        container.bind('ProvidersConfig', providers)
+        container.bind('Providers', [])
+        container.bind('WSGIProviders', [])
+
+        """Bind all service providers
+        Let's register everything into the Service Container. Once everything is
+        in the container we can run through all the boot methods. For reasons
+        some providers don't need to execute with every request and should
+        only run once when the server is started. Providers will be ran
+        once if the wsgi attribute on a provider is False.
+        """
+
+        for provider in container.make('ProvidersConfig').PROVIDERS:
+            located_provider = provider()
+            located_provider.load_app(container).register()
+            if located_provider.wsgi:
+                container.make('WSGIProviders').append(located_provider)
+            else:
+                container.make('Providers').append(located_provider)
+
+        for provider in container.make('Providers'):
+            container.resolve(provider.boot)
+
+        """Get the application from the container
+        Some providers may change the WSGI Server like wrapping the WSGI server
+        in a Whitenoise container for an example. Let's get a WSGI instance
+        from the container and pass it to the application variable. This
+        will allow WSGI servers to pick it up from the command line
+        """
+
+        return container

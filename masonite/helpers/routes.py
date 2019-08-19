@@ -180,7 +180,6 @@ def compile_route_to_regex(route):
 
     regex += '$'
 
-    print('regex is', regex)
     return regex
 
 

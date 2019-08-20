@@ -45,7 +45,7 @@ class RegisterController:
             user.verify_email(mail_manager, request)
 
         # Login the user
-        if auth.login(request.input(auth_config.AUTH['model'].__auth__), request.input('password')):
+        if auth.login(request.input('email'), request.input('password')):
             # Redirect to the homepage
             return request.redirect('/home')
 

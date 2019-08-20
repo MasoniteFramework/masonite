@@ -66,7 +66,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
-        if isinstance(self.data(), dict) or isinstance(self.data(), list):
+        if isinstance(self.data(), (dict, list)):
             return json.dumps(self.data())
         else:
             return self.data()
@@ -89,9 +89,9 @@ class Response(Extendable):
         if not self.request.get_status():
             self.request.status(status)
 
-        if isinstance(view, dict) or isinstance(view, list):
+        if isinstance(view, (dict, list)):
             return self.json(view, status=self.request.get_status())
-        elif isinstance(view, Collection) or isinstance(view, Model):
+        elif isinstance(view, (Collection, Model)):
             return self.json(view.serialize(), status=self.request.get_status())
         elif isinstance(view, int):
             view = str(view)

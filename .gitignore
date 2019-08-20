@@ -12,6 +12,7 @@ htmlcov
 .pytest_cache/
 __pycache__
 # storage/compiled/
+storage/uploads/
 uploads/test.jpg
 bootstrap/cache/*.html
 bootstrap/cache/*.txt

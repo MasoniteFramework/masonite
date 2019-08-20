@@ -92,9 +92,9 @@ workflows:
               only: /^.*/
       - deploy:
           requires:
-            - Masonite Validation
-            - Masonite API
-            - Code Coverage
+            - MasoniteValidation
+            - MasoniteAPI
+            - CodeCoverage
           filters:
             tags:
               only: /^.*/

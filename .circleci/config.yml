@@ -59,45 +59,46 @@ workflows:
       - build:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - python34:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - python35:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - python37:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - MasoniteValidation:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - MasoniteAPI:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - CodeCoverage:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - masonite/deploy:
           username: josephmancuso
+          password: $PYPI_PASSWORD
           requires:
-              - MasoniteValidation
-              - MasoniteAPI
-              - CodeCoverage
+            - MasoniteValidation
+            - MasoniteAPI
+            - CodeCoverage
           filters:
-              tags:
-                  only: /^v*/
-              branches:
-                  ignore: /.*/
+            tags:
+              only: /^.*/
+            branches:
+              ignore: /.*/

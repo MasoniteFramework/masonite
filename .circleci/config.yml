@@ -90,7 +90,9 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
-      - deploy:
+      - masonite/deploy:
+          username: josephmancuso
+          password: $PYPI_PASSWORD
           requires:
             - MasoniteValidation
             - MasoniteAPI

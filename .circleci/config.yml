@@ -63,46 +63,46 @@ workflows:
   build_and_test:
     jobs: 
       - build:
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - python3.4:
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - python3.5:
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - python3.7:
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - Masonite Validation:
-        requires:
-            - build
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - Masonite API:
-        requires:
-            - build
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - Code Coverage:
-        requires:
-            - build
-        filters:  # required since `deploy` has tag filters AND requires `build`
-          tags:
-            only: /^.*/
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - deploy:
-        requires:
-          - Masonite Validation
-          - Masonite API
-          - Code Coverage
-        filters:
-          tags:
-            only: /^.*/
-          branches:
-            ignore: /.*/
+          requires:
+            - Masonite Validation
+            - Masonite API
+            - Code Coverage
+          filters:
+            tags:
+              only: /^.*/
+            branches:
+              ignore: /.*/

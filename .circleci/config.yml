@@ -77,16 +77,10 @@ workflows:
             tags:
               only: /^.*/
       - masonite/trigger:
+          name: MasoniteAPI
           repo: masoniteframework/api
           branch: "2.2"
           environment: "MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH"
-          requires:
-              - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^.*/
-      - MasoniteAPI:
-          name: MasoniteAPI
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`

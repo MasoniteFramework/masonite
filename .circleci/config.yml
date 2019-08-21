@@ -78,7 +78,7 @@ workflows:
               only: /^.*/
       - masonite/trigger:
           repo: masoniteframework/api
-          branch: 2.2
+          branch: "2.2"
           environment: "MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH"
           requires:
               - build

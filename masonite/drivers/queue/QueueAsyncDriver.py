@@ -70,6 +70,6 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
             try:
                 processor.submit(
                     getattr(obj, callback), *args, **kwargs)
-            except AttributeError as e:
+            except AttributeError:
                 # Could be wanting to call only a method asyncronously
                 processor.submit(fn=obj, *args, **kwargs)

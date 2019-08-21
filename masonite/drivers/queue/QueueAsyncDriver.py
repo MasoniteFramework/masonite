@@ -62,14 +62,14 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
         workers = options.get('workers', None)
 
         # Set processor to either use threads or processes
-        processsor = self._get_processor(mode=mode, max_workers=workers)
+        processor = self._get_processor(mode=mode, max_workers=workers)
 
-        with processsor as executor:
-            for obj in objects:
-                obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
-                try:
-                    executor.submit(
-                        fn=getattr(obj, callback), args=args, kwargs=kwargs)
-                except AttributeError:
-                    # Could be wanting to call only a method asyncronously
-                    executor.submit(fn=obj, args=args, kwargs=kwargs)
+        # with processor as executor:
+        for obj in objects:
+            obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
+            try:
+                processor.submit(
+                    getattr(obj, callback), *args, **kwargs)
+            except AttributeError as e:
+                # Could be wanting to call only a method asyncronously
+                processor.submit(fn=obj, *args, **kwargs)

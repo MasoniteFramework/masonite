@@ -70,7 +70,7 @@ workflows:
           name: MasoniteValidation
           repo: masoniteframework/validation
           branch: circle-ci
-          environment: "MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH"
+          environment: MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
@@ -80,7 +80,7 @@ workflows:
           name: MasoniteAPI
           repo: masoniteframework/api
           branch: "2.2"
-          environment: "MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH"
+          environment: MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`

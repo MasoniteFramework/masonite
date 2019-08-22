@@ -64,7 +64,7 @@ class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         # Set processor to either use threads or processes
         processor = self._get_processor(mode=mode, max_workers=workers)
         is_blocking = config('queue.drivers.async.blocking', False)
-        
+
         ran = []
         for obj in objects:
             obj = self.container.resolve(obj) if inspect.isclass(obj) else obj

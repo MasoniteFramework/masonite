@@ -53,7 +53,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             # Publish to the channel for each object
             payload = {'obj': obj, 'args': args, 'callback': callback, 'created': pendulum.now(), 'ran': ran}
             try:
-                additional_exceptions = (self.pika.exceptions.ConnectionWrongStateError,)
+                additional_exceptions = (self.pika.exceptions.ConnectionWrongStateError, self.pika.exceptions.ChannelWrongStateError)
             except AttributeError:
                 additional_exceptions = ()
 

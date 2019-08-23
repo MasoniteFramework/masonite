@@ -56,7 +56,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
                 additional_exceptions = (self.pika.exceptions.ConnectionWrongStateError,)
             except AttributeError:
                 additional_exceptions = ()
-                
+
             try:
                 self._publish(payload)
             except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed) + additional_exceptions:

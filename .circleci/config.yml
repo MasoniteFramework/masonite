@@ -6,28 +6,35 @@ jobs:
       steps:
         - checkout
         - run: make
-        - run: make ci
+        - run: make test
+    lint:
+      docker:
+        - image: circleci/python:3.6  # primary container for the build job
+      steps:
+        - checkout
+        - run: make
+        - run: make lint
     python34:
       docker:
         - image: circleci/python:3.4
       steps:
         - checkout
         - run: make
-        - run: make ci
+        - run: make test
     python35:
       docker:
         - image: circleci/python:3.5
       steps:
         - checkout
         - run: make
-        - run: make ci
+        - run: make test
     python37:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
         - run: make
-        - run: make ci
+        - run: make test
     CodeCoverage:
       docker:
         - image: circleci/python:3.6
@@ -45,6 +52,12 @@ workflows:
   build_and_test:
     jobs: 
       - build:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - lint:
+          requires:
+              - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/

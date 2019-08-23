@@ -17,8 +17,9 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
     def __init__(self):
         """Queue AMQP Driver."""
         from config import queue
-        if 'amqp' in queue.DRIVERS:
-            listening_channel = queue.DRIVERS['amqp']['channel']
+        self.queue = queue
+        if 'amqp' in self.queue.DRIVERS:
+            listening_channel = self.queue.DRIVERS['amqp']['channel']
         else:
             listening_channel = 'default'
 
@@ -52,8 +53,13 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             # Publish to the channel for each object
             payload = {'obj': obj, 'args': args, 'callback': callback, 'created': pendulum.now(), 'ran': ran}
             try:
+                additional_exceptions = (self.pika.exceptions.ConnectionWrongStateError,)
+            except AttributeError:
+                additional_exceptions = ()
+                
+            try:
                 self._publish(payload)
-            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed):
+            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed) + additional_exceptions:
                 self.connect()
                 self._publish(payload)
 
@@ -66,11 +72,11 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
                 "Could not find the 'pika' library. Run pip install pika to fix this.")
 
         self.connection = pika.BlockingConnection(pika.URLParameters('amqp://{}:{}@{}{}/{}'.format(
-            queue.DRIVERS['amqp']['username'],
-            queue.DRIVERS['amqp']['password'],
-            queue.DRIVERS['amqp']['host'],
-            ':' + str(queue.DRIVERS['amqp']['port']) if 'port' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['port'] else '',
-            queue.DRIVERS['amqp']['vhost'] if 'vhost' in queue.DRIVERS['amqp'] and queue.DRIVERS['amqp']['vhost'] else '%2F'
+            self.queue.DRIVERS['amqp']['username'],
+            self.queue.DRIVERS['amqp']['password'],
+            self.queue.DRIVERS['amqp']['host'],
+            ':' + str(self.queue.DRIVERS['amqp']['port']) if 'port' in self.queue.DRIVERS['amqp'] and self.queue.DRIVERS['amqp']['port'] else '',
+            self.queue.DRIVERS['amqp']['vhost'] if 'vhost' in self.queue.DRIVERS['amqp'] and self.queue.DRIVERS['amqp']['vhost'] else '%2F'
         )))
 
         self.channel = self.connection.channel()
@@ -96,7 +102,10 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             self.connection.close()
 
     def basic_consume(self, callback, queue_name):
-        self.channel.basic_consume(callback, queue=queue_name)
+        try:
+            self.channel.basic_consume(callback, queue=queue_name)
+        except TypeError:
+            self.channel.basic_consume(queue_name, callback)
 
     def work(self, ch, method, properties, body):
         from wsgi import container

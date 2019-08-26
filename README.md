@@ -29,6 +29,8 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/v/v2.1/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
+If you are a visual learner you can find tutorials here: [MasoniteCasts](https://casts.masonite.dev)
+
 Also be sure to join the [Slack channel](http://slack.masoniteproject.com/)!
 
 

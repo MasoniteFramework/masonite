@@ -310,7 +310,6 @@ class BaseHttpRoute:
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
 
-
             try:
                 for middleware in middleware_to_run:
                     located_middleware = self.request.app().resolve(middleware)

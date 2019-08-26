@@ -114,6 +114,11 @@ class MockRoute:
         if not request.get_status_code() == status:
             raise AssertionError("{} is not equal to {}".format(request.get_status_code(), status))
 
+    def assertPathIs(self, url):
+        path = self.container.make('Request').path
+        assert path == url, "Asserting the path is '{}' but it is '{}'".format(url, path)
+        return True
+
     def session(self, key):
         wsgi = generate_wsgi()
         wsgi['PATH_INFO'] = self.route.route_url
@@ -149,3 +154,7 @@ class MockRoute:
         if not assertion:
             raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
         return assertion
+
+    @property
+    def request(self):
+        return self.container.make('Request')

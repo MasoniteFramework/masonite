@@ -38,12 +38,12 @@ class TestMiddleware(TestCase):
         }).withHttpMiddleware([MiddlewareHttpTest])
 
     def test_route_middleware_runs(self):
-        self.assertEqual(self.get('/').container.make('Request').path, '/test/middleware')
+        self.get('/').assertPathIs('/test/middleware')
 
     def test_http_middleware_runs(self):
-        self.assertEqual(self.get('/').container.make('Request').path, '/test/middleware')
-        self.assertEqual(self.get('/').container.make('Request').environ['HTTP_TEST'], 'test')
+        self.get('/').assertPathIs('/test/middleware')
+        self.assertEqual(self.get('/').request.environ['HTTP_TEST'], 'test')
 
     def test_route_middleware_can_pass_values(self):
-        self.assertTrue(self.get('/test').container.make('Request').value1, '1')
-        self.assertTrue(self.get('/test').container.make('Request').value2, '2')
+        self.assertEqual(self.get('/test').request.value1, '1')
+        self.assertEqual(self.get('/test').request.value2, '2')

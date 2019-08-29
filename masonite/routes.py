@@ -472,6 +472,9 @@ class Options(BaseHttpRoute):
         self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
+        
+        print('The Masonite development server is not capable of handling OPTIONS preflight requests.')
+        print('You should use a more powerful server if using the Option')
 
 
 class Trace(BaseHttpRoute):

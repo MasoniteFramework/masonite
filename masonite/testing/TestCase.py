@@ -211,10 +211,13 @@ class TestCase(unittest.TestCase):
         wsgi.update(wsgi_values)
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
+        print(id(self.container))
+        self.container.make('Request').load_app(self.container)
         if self._with_subdomains:
             self.container.make('Request').activate_subdomains()
 
         if self.route_middleware is not False:
+            print('bind new middleware', self.route_middleware)
             self.container.bind('RouteMiddleware', self.route_middleware)
 
         if self.http_middleware is not False:

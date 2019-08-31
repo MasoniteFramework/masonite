@@ -5,15 +5,13 @@ from masonite.drivers import MailMailgunDriver, MailSmtpDriver, \
 from masonite.managers import MailManager
 from masonite.provider import ServiceProvider
 from masonite import Mail
-
+from masonite.helpers import config
 
 class MailProvider(ServiceProvider):
 
     wsgi = False
 
     def register(self):
-        from config import mail
-        self.app.bind('MailConfig', mail)
         self.app.bind('MailSmtpDriver', MailSmtpDriver)
         self.app.bind('MailMailgunDriver', MailMailgunDriver)
         self.app.bind('MailLogDriver', MailLogDriver)
@@ -21,5 +19,5 @@ class MailProvider(ServiceProvider):
         self.app.bind('MailManager', MailManager(self.app))
 
     def boot(self, manager: MailManager):
-        self.app.bind('Mail', manager.driver(self.app.make('MailConfig').DRIVER))
-        self.app.swap(Mail, manager.driver(self.app.make('MailConfig').DRIVER))
+        self.app.bind('Mail', manager.driver(config('mail.driver')))
+        self.app.swap(Mail, manager.driver(config('mail.driver')))

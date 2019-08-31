@@ -3,7 +3,7 @@
 from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
-
+from masonite.helpers import config
 
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
@@ -15,7 +15,7 @@ class BaseMailDriver(BaseDriver):
             MailConfig {module} -- This is the config.mail module.
             View {object} -- This is the masonite.view.View class.
         """
-        self.config = app.make('MailConfig')
+        self.config = config('mail')
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'

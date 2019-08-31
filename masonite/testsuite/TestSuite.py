@@ -45,6 +45,7 @@ class TestSuite:
 
         container.bind('WSGI', wsgi)
         container.bind('Container', container)
+        container.bind('ProviderList', providers.PROVIDERS)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])
 
@@ -61,8 +62,12 @@ class TestSuite:
         |
         """
 
-        for provider in config('providers.providers'):
-            located_provider = provider()
+        for provider in container.make('ProviderList'):
+            try:
+                located_provider = provider()
+            except TypeError:
+                located_provider = provider
+                
             located_provider.load_app(container).register()
             if located_provider.wsgi:
                 container.make('WSGIProviders').append(located_provider)

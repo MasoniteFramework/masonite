@@ -4,6 +4,7 @@ from masonite.app import App
 from masonite.routes import Get
 from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 import unittest
+from masonite.helpers import config
 
 
 class TestProviders(unittest.TestCase):
@@ -12,11 +13,11 @@ class TestProviders(unittest.TestCase):
         self.app = App(remember=False)
         self.app.bind('WSGI', object)
 
-        self.app.bind('Providers', providers)
+        # self.app.bind('Providers', providers)
         self.app.bind('Environ', generate_wsgi())
 
     def test_providers_load_into_container(self):
-        for provider in self.app.make('Providers').PROVIDERS:
+        for provider in config('providers.providers'):
             provider().load_app(self.app).register()
 
         self.app.bind('Response', 'test')
@@ -28,7 +29,7 @@ class TestProviders(unittest.TestCase):
 
         self.app.bind('Response', 'Route not found. Error 404')
 
-        for provider in self.app.make('Providers').PROVIDERS:
+        for provider in config('providers.providers'):
             self.app.resolve(provider().load_app(self.app).boot)
 
         self.assertTrue(self.app.make('Request'))

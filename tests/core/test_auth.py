@@ -40,7 +40,6 @@ class TestAuth(TestCase):
         self.container.bind('View', view.render)
         self.container.bind('ViewClass', view)
         self.app.bind('Auth', Auth)
-        self.app.bind('AuthConfig', auth)
         self.app.bind('AuthManager', AuthManager)
         self.app.bind('AuthCookieDriver', AuthCookieDriver)
         self.app.bind('AuthJwtDriver', AuthJwtDriver)

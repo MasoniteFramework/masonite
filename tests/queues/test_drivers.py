@@ -6,7 +6,7 @@ from masonite.environment import LoadEnvironment, env
 from masonite.exceptions import QueueException
 from masonite.managers import QueueManager
 from masonite.queues.Queueable import Queueable
-
+from masonite.helpers import config
 from config import queue
 
 LoadEnvironment()
@@ -37,11 +37,10 @@ class TestQueueDrivers(unittest.TestCase):
 
         self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
         self.app.bind('QueueAmqpDriver', QueueAmqpDriver)
-        self.app.bind('QueueConfig', queue)
         self.app.bind('Queueable', Queueable)
         self.app.bind('Container', self.app)
         self.app.bind('QueueManager', QueueManager(self.app))
-        self.app.bind('Queue', QueueManager(self.app).driver(self.app.make('QueueConfig').DRIVER))
+        self.app.bind('Queue', QueueManager(self.app).driver(config('queue.driver')))
         self.drivers = ['async']
         self.modes = ['threading', 'multiprocess']
 

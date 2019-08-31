@@ -35,7 +35,7 @@ class TestUploadManager(unittest.TestCase):
         self.app = App()
         self.app.bind('Container', self.app)
         self.app.bind('Test', object)
-        self.app.bind('StorageConfig', storage)
+        # self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         self.app.bind('UploadS3Driver', UploadS3Driver)
         self.app.bind('Application', application)
@@ -64,7 +64,7 @@ class TestUploadManager(unittest.TestCase):
     def test_upload_manager_raises_driver_not_found_error(self):
         self.app = App()
         self.app.bind('Test', object)
-        self.app.bind('StorageConfig', storage)
+        # self.app.bind('StorageConfig', storage)
 
         with self.assertRaises(DriverNotFound):
             self.assertIsNone(self.app.bind(
@@ -169,7 +169,7 @@ if os.environ.get('S3_BUCKET'):
             self.app.bind('Container', self.app)
 
             self.app.bind('Application', application)
-            self.app.bind('StorageConfig', storage)
+            # self.app.bind('StorageConfig', storage)
             self.app.bind('UploadDiskDriver', UploadDiskDriver)
             self.app.bind('UploadManager', UploadManager(self.app))
             self.app.bind('Upload', UploadManager(self.app))

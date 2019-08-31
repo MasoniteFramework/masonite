@@ -43,7 +43,6 @@ class TestSuite:
             container = App(remember=False)
 
         container.bind('WSGI', wsgi)
-        container.bind('Application', application)
         container.bind('Container', container)
         container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])

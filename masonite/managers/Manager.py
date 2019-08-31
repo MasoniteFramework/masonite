@@ -7,7 +7,7 @@ from masonite.exceptions import (DriverNotFound,
                                  UnacceptableDriverType)
 
 from masonite.app import App
-
+from masonite.helpers import config
 
 class Manager:
     """Base Manager Class."""
@@ -64,7 +64,7 @@ class Manager:
         """
 
         if driver in (None, 'default'):
-            driver = self.container.make(self.config).DRIVER.capitalize()
+            driver = config('{}.driver'.format(self.config)).capitalize()
         else:
             if isinstance(driver, str):
                 driver = driver.capitalize()

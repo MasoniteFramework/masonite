@@ -11,7 +11,7 @@ class StorageManager(Manager, StorageManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'StorageConfig'
+    config = 'storage'
     driver_prefix = 'Storage'
 
 

@@ -38,7 +38,6 @@ class TestUploadManager(unittest.TestCase):
         # self.app.bind('StorageConfig', storage)
         self.app.bind('UploadDiskDriver', UploadDiskDriver)
         self.app.bind('UploadS3Driver', UploadS3Driver)
-        self.app.bind('Application', application)
         self.app.bind('UploadManager', UploadManager)
 
     def test_upload_manager_grabs_drivers(self):
@@ -168,7 +167,6 @@ if os.environ.get('S3_BUCKET'):
             self.app = App()
             self.app.bind('Container', self.app)
 
-            self.app.bind('Application', application)
             # self.app.bind('StorageConfig', storage)
             self.app.bind('UploadDiskDriver', UploadDiskDriver)
             self.app.bind('UploadManager', UploadManager(self.app))

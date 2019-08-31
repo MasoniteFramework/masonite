@@ -179,7 +179,6 @@ class TestRequest(unittest.TestCase):
 
     def test_request_gets_input_from_container(self):
         container = App()
-        container.bind('Application', application)
         container.bind('Providers', providers)
         container.bind('WSGI', object)
         container.bind('Environ', wsgi_request)

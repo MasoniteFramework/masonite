@@ -12,7 +12,6 @@ class TestProviders(unittest.TestCase):
         self.app = App(remember=False)
         self.app.bind('WSGI', object)
 
-        self.app.bind('Application', application)
         self.app.bind('Providers', providers)
         self.app.bind('Environ', generate_wsgi())
 

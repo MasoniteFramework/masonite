@@ -4,10 +4,9 @@ import uuid
 
 from masonite import env, Mail, Session
 from masonite.auth import Auth
-from masonite.helpers import password as bcrypt_password
+from masonite.helpers import config, password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
-
 from config.auth import AUTH
 
 
@@ -15,13 +14,13 @@ class PasswordController:
     """Password Controller."""
 
     def forget(self, view: View, request: Request, auth: Auth):
-        return view.render('auth/forget', {'app': request.app().make('Application'), 'Auth': auth})
+        return view.render('auth/forget', {'app': config('application'), 'Auth': auth})
 
     def reset(self, request: Request, auth: Auth):
         token = request.param('token')
         user = AUTH['model'].where('remember_token', token).first()
         if user:
-            return view('auth/reset', {'token': token, 'app': request.app().make('Application'), 'Auth': auth})
+            return view('auth/reset', {'token': token, 'app': config('application'), 'Auth': auth})
 
     def send(self, request: Request, session: Session, mail: Mail):
         email = request.input('email')

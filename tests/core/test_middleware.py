@@ -27,7 +27,6 @@ class TestMiddleware(unittest.TestCase):
     def setUp(self):
         self.app = App()
         self.app.bind('Environ', generate_wsgi())
-        self.app.bind('Application', application)
         self.app.make('Environ')
         self.app.bind('StatusCode', None)
         self.app.bind('Request', Request(self.app.make('Environ')).load_app(self.app))

@@ -11,7 +11,7 @@ class UploadManager(Manager, UploadManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'StorageConfig'
+    config = 'storage'
     driver_prefix = 'Upload'
 
 

@@ -13,7 +13,6 @@ and the application configuration file before they boot.
 container = App()
 
 container.bind('WSGI', app)
-container.bind('Application', application)
 container.bind('Container', container)
 
 container.bind('ProvidersConfig', providers)

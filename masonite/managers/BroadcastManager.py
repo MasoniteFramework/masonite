@@ -11,7 +11,7 @@ class BroadcastManager(Manager, BroadcastManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'BroadcastConfig'
+    config = 'broadcast'
     driver_prefix = 'Broadcast'
 
 

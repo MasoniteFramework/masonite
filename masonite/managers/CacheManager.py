@@ -11,7 +11,7 @@ class CacheManager(Manager, CacheManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'CacheConfig'
+    config = 'cache'
     driver_prefix = 'Cache'
 
 

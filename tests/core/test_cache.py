@@ -20,7 +20,6 @@ class TestCache(unittest.TestCase):
         self.app.bind('CacheDiskDriver', CacheDiskDriver)
         self.app.bind('CacheRedisDriver', CacheRedisDriver)
         self.app.bind('CacheManager', CacheManager(self.app))
-        self.app.bind('Application', self.app)
         self.app.bind('Cache', self.app.make('CacheManager').driver('disk'))
         self.drivers = ['disk']
         if os.environ.get('REDIS_CACHE_DRIVER'):

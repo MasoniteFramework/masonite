@@ -11,7 +11,7 @@ class QueueManager(Manager, QueueManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'QueueConfig'
+    config = 'queue'
     driver_prefix = 'Queue'
 
 

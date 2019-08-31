@@ -3,7 +3,7 @@
 from masonite.auth import Auth
 from masonite.request import Request
 from masonite.view import View
-
+from masonite.helpers import config
 
 class LoginController:
     """Login Form Controller."""
@@ -25,7 +25,7 @@ class LoginController:
         """
         if request.user():
             return request.redirect('/home')
-        return view.render('auth/login', {'app': request.app().make('Application'), 'Auth': auth})
+        return view.render('auth/login', {'app': config('application'), 'Auth': auth})
 
     def store(self, request: Request, auth: Auth):
         """Login the user.

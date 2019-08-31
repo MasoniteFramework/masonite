@@ -105,6 +105,7 @@ class ExceptionHandler:
                                                    'stacktrace': traceback.extract_tb(sys.exc_info()[2]) + last_stacktrace + second_to_last_stacktrace,
                                                    'second_to_last': second_to_last_stacktrace,
                                                    'app': self._app,
+                                                   'providers': config('providers.providers', []),
                                                    'enumerate': enumerate,
                                                    'open': open,
                                                    'platform': platform

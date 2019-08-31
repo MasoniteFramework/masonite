@@ -11,7 +11,7 @@ class SessionManager(Manager, SessionManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'SessionConfig'
+    config = 'session'
     driver_prefix = 'Session'
 
 

@@ -11,7 +11,7 @@ class MailManager(Manager, MailManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'MailConfig'
+    config = 'mail'
     driver_prefix = 'Mail'
 
     def helper(self):

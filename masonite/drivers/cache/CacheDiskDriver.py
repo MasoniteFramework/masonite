@@ -7,7 +7,7 @@ import time
 from masonite.app import App
 from masonite.contracts import CacheContract
 from masonite.drivers import BaseCacheDriver
-
+from masonite.helpers import config
 
 class CacheDiskDriver(CacheContract, BaseCacheDriver):
     """Class for the cache disk driver."""
@@ -19,7 +19,7 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
             CacheConfig {config.cache} -- Cache configuration module.
             Application {config.application} -- Application configuration module.
         """
-        self.config = app.make('CacheConfig')
+        self.config = config('cache')
         self.appconfig = app.make('Application')
         self.cache_forever = None
 

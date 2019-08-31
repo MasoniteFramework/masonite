@@ -167,7 +167,7 @@ class TestView(unittest.TestCase):
 
     def test_view_cache_caches_files(self):
 
-        self.container.bind('CacheConfig', cache)
+        # self.container.bind('CacheConfig', cache)
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)
@@ -197,7 +197,7 @@ class TestView(unittest.TestCase):
         self.assertEqual(view('test_cache', {'test': 'macho'}).cache_for('1', 'second').rendered_template, 'macho')
 
     def test_cache_throws_exception_with_incorrect_cache_type(self):
-        self.container.bind('CacheConfig', cache)
+        # self.container.bind('CacheConfig', cache)
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)

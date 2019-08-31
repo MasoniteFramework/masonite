@@ -40,6 +40,7 @@ class TestException(unittest.TestCase):
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('HookHandler', Hook(self.app))
         self.app.bind('Request', Request(generate_wsgi()).load_app(self.app))
+        self.app.bind('staticfiles', {})
         self.app.bind('ExceptionAttributeErrorHandler', MockExceptionHandler)
 
     def test_exception_renders_view(self):

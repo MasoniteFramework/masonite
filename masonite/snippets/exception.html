@@ -263,7 +263,7 @@
             </div>
             <div class="col-md-10">
                 <div>
-                    {% for directory in app.make('Storage').STATICFILES %}
+                    {% for directory in app.make('staticfiles') %}
                         <p>
                             {{ directory}}
                         </p>

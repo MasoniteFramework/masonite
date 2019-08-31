@@ -167,3 +167,17 @@ def config(path, default=''):
         mixed
     """
     return Dot().locate('config.' + path, default)
+
+def load(path, default=''):
+    """Used to fetch a value from a configuration file
+
+    Arguments:
+        path {string} -- The search path using dot notation of the value to get
+
+    Keyword Arguments:
+        default {str} -- The default value if not value and be found (default: {''})
+
+    Returns:
+        mixed
+    """
+    return Dot().locate(path, default)

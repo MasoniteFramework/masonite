@@ -18,5 +18,5 @@ class WhitenoiseProvider(ServiceProvider):
         self.app.bind('WSGI', WhiteNoise(
             self.app.make('WSGI'), root=self.app.make('Application').STATIC_ROOT, autorefresh=application.DEBUG))
 
-        for location, alias in self.app.make('Storage').STATICFILES.items():
+        for location, alias in self.app.make('staticfiles').items():
             self.app.make('WSGI').add_files(location, prefix=alias)

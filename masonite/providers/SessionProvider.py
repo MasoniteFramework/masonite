@@ -11,8 +11,8 @@ from masonite import Session
 class SessionProvider(ServiceProvider):
 
     def register(self):
-        from config import session
-        self.app.bind('SessionConfig', session)
+        # from config import session
+        # self.app.bind('SessionConfig', session)
         self.app.bind('SessionMemoryDriver', SessionMemoryDriver)
         self.app.bind('SessionCookieDriver', SessionCookieDriver)
         self.app.bind('SessionManager', SessionManager(self.app))

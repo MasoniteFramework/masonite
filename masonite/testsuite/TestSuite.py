@@ -1,6 +1,7 @@
 from masonite.app import App
 from masonite.testsuite.TestRoute import TestRoute
 from masonite.testsuite.TestRequest import TestRequest
+from masonite.helpers import config
 
 import io
 
@@ -44,7 +45,6 @@ class TestSuite:
 
         container.bind('WSGI', wsgi)
         container.bind('Container', container)
-        container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])
 
@@ -61,7 +61,7 @@ class TestSuite:
         |
         """
 
-        for provider in container.make('ProvidersConfig').PROVIDERS:
+        for provider in config('providers.providers'):
             located_provider = provider()
             located_provider.load_app(container).register()
             if located_provider.wsgi:

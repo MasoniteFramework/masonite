@@ -4,6 +4,7 @@ from masonite.app import App
 
 from bootstrap.start import app
 from config import application, providers
+from masonite.helpers import config
 
 """Instantiate Container And Perform Important Bindings
 Some Service providers need important bindings like the WSGI application
@@ -15,7 +16,7 @@ container = App()
 container.bind('WSGI', app)
 container.bind('Container', container)
 
-container.bind('ProvidersConfig', providers)
+# container.bind('ProvidersConfig', providers)
 container.bind('Providers', [])
 container.bind('WSGIProviders', [])
 
@@ -27,7 +28,7 @@ only run once when the server is started. Providers will be ran
 once if the wsgi attribute on a provider is False.
 """
 
-for provider in container.make('ProvidersConfig').PROVIDERS:
+for provider in config('providers.providers'):
     located_provider = provider()
     located_provider.load_app(container).register()
     if located_provider.wsgi:

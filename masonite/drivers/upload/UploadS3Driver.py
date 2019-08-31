@@ -9,6 +9,7 @@ from masonite.managers import UploadManager
 from masonite.app import App
 from masonite.helpers import config
 
+
 class UploadS3Driver(BaseUploadDriver, UploadContract):
     """Amazon S3 Upload driver."""
 

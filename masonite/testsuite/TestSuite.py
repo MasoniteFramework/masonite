@@ -67,7 +67,7 @@ class TestSuite:
                 located_provider = provider()
             except TypeError:
                 located_provider = provider
-                
+
             located_provider.load_app(container).register()
             if located_provider.wsgi:
                 container.make('WSGIProviders').append(located_provider)

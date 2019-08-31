@@ -8,6 +8,7 @@ from masonite.view import View
 from masonite import Upload
 from masonite.helpers import config
 
+
 class UploadProvider(ServiceProvider):
 
     wsgi = False

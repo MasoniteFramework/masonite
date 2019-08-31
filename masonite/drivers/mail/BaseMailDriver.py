@@ -5,6 +5,7 @@ from masonite.view import View
 from masonite.app import App
 from masonite.helpers import config
 
+
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
 

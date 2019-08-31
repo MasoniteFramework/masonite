@@ -6,6 +6,7 @@ from masonite.managers import CacheManager
 from masonite.provider import ServiceProvider
 from masonite.helpers import config
 
+
 class CacheProvider(ServiceProvider):
 
     wsgi = False

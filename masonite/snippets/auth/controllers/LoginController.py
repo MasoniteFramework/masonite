@@ -5,6 +5,7 @@ from masonite.request import Request
 from masonite.view import View
 from masonite.helpers import config
 
+
 class LoginController:
     """Login Form Controller."""
 

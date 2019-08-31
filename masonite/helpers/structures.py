@@ -168,6 +168,7 @@ def config(path, default=''):
     """
     return Dot().locate('config.' + path, default)
 
+
 def load(path, default=''):
     """Used to fetch a value from a configuration file
 

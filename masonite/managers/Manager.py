@@ -9,6 +9,7 @@ from masonite.exceptions import (DriverNotFound,
 from masonite.app import App
 from masonite.helpers import config
 
+
 class Manager:
     """Base Manager Class."""
 

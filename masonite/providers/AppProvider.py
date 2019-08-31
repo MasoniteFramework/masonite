@@ -27,6 +27,7 @@ from masonite.managers import AuthManager
 from masonite.drivers import AuthCookieDriver, AuthJwtDriver
 from masonite.helpers import load
 
+
 class AppProvider(ServiceProvider):
 
     def register(self):

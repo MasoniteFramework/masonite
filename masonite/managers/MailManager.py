@@ -4,6 +4,7 @@ from masonite.contracts import MailManagerContract
 from masonite.managers import Manager
 from masonite.helpers import config
 
+
 class MailManager(Manager, MailManagerContract):
     """Manages all mail drivers.
 

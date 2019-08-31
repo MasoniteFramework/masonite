@@ -7,6 +7,7 @@ from masonite.provider import ServiceProvider
 from masonite import Queue
 from masonite.helpers import config
 
+
 class QueueProvider(ServiceProvider):
 
     wsgi = False

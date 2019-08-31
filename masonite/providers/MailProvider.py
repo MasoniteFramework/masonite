@@ -7,6 +7,7 @@ from masonite.provider import ServiceProvider
 from masonite import Mail
 from masonite.helpers import config
 
+
 class MailProvider(ServiceProvider):
 
     wsgi = False

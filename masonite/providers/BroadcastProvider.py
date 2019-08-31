@@ -6,6 +6,7 @@ from masonite.provider import ServiceProvider
 from masonite import Broadcast
 from masonite.helpers import config
 
+
 class BroadcastProvider(ServiceProvider):
 
     wsgi = False

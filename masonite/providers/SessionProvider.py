@@ -8,6 +8,7 @@ from masonite.request import Request
 from masonite import Session
 from masonite.helpers import config
 
+
 class SessionProvider(ServiceProvider):
 
     def register(self):

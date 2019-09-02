@@ -17,16 +17,13 @@ class KeyCommand(Command):
 
         if store:
             with open('.env', 'r') as file:
-                # read a list of lines into data
                 data = file.readlines()
 
-            # change the line that starts with KEY=
             for line_number, line in enumerate(data):
                 if line.startswith('KEY='):
                     data[line_number] = 'KEY={}\n'.format(key)
                     break
 
-            # and write everything back
             with open('.env', 'w') as file:
                 file.writelines(data)
 

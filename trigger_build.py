@@ -2,6 +2,8 @@
 This is a script to easily execute circle CI jobs from other repository builds. 
 Useful if you have a dependent build that you need to run to ensure the latest code is up to date with the parent build.
 
+This does not work for PR forks because a Circle Access token is required which is insecure for forks.
+
 This script will:
 
   - Fire a build in another circle CI repository
@@ -48,16 +50,21 @@ args = parser.parse_args()
 repo = args.repo
 branch = args.branch or 'master'
 token = args.token or os.getenv('CIRCLE_TOKEN')
+current_repo = os.getenv('CIRCLE_PROJECT_REPONAME')
+current_user = os.getenv('CIRCLE_PROJECT_USERNAME')
 poll = args.poll or 5
 
 if os.getenv('CIRCLE_PR_NUMBER'):
-    repo = os.getenv('CIRCLE_PR_USERNAME') + '/' + os.getenv('CIRCLE_PR_REPONAME')
-    branch = os.getenv('CIRCLE_BRANCH')
-    print('Pull Request #{} Detected. Changing build repo to: {} and branch to {}'.format(os.getenv('CIRCLE_PR_NUMBER'), repo, branch))
+    print('Cannot Build On PR Forks.')
+    exit(0)
+ 
+if not token:
+    print('No token found.')
+    exit(1)
 
 parameters = {}
 for argument in args.build or []:
-    if not '=' in argument:
+    if '=' not in argument:
         print("ERROR: '--build' argument must contain a '=' sign. Got '{}'".format(argument))
         exit(1)
     key = argument.split('=')[0]
@@ -68,7 +75,6 @@ for argument in args.build or []:
 build_parameters = {'build_parameters': parameters}
 
 r = requests.post('https://circleci.com/api/v1/project/{}/tree/{}?circle-token={}'.format(repo, branch, token), json=build_parameters)
-
 if 'build_num' not in r.json():
     print('ERROR: Could not find repository {} or with the branch {}'.format(repo, branch))
     print(r.json())

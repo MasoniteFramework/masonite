@@ -2,17 +2,17 @@
 
 import inspect
 import os
+from concurrent.futures import (ProcessPoolExecutor, ThreadPoolExecutor,
+                                as_completed)
 
 from masonite.app import App
 from masonite.contracts import QueueContract
 from masonite.drivers import BaseQueueDriver
 from masonite.exceptions import QueueException
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import ProcessPoolExecutor
-from masonite.helpers import config
+from masonite.helpers import HasColoredCommands, config
 
 
-class QueueAsyncDriver(BaseQueueDriver, QueueContract):
+class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
     """Queue Aysnc Driver."""
 
     def __init__(self, app: App):
@@ -62,14 +62,21 @@ class QueueAsyncDriver(BaseQueueDriver, QueueContract):
         workers = options.get('workers', None)
 
         # Set processor to either use threads or processes
-        processsor = self._get_processor(mode=mode, max_workers=workers)
+        processor = self._get_processor(mode=mode, max_workers=workers)
+        is_blocking = config('queue.drivers.async.blocking', False)
 
-        with processsor as executor:
-            for obj in objects:
-                obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
-                try:
-                    executor.submit(
-                        fn=getattr(obj, callback), args=args, kwargs=kwargs)
-                except AttributeError:
-                    # Could be wanting to call only a method asyncronously
-                    executor.submit(fn=obj, args=args, kwargs=kwargs)
+        ran = []
+        for obj in objects:
+            obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
+            try:
+                future = processor.submit(
+                    getattr(obj, callback), *args, **kwargs)
+            except AttributeError:
+                # Could be wanting to call only a method asyncronously
+                future = processor.submit(fn=obj, *args, **kwargs)
+
+            ran.append(future)
+
+        if is_blocking:
+            for job in as_completed(ran):
+                self.info("Job Ran: {}".format(job))

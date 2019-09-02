@@ -16,5 +16,5 @@ class TestCorsMiddleware(unittest.TestCase):
 
     def test_secure_headers_middleware(self):
         self.middleware.CORS = {"Access-Control-Allow-Origin": "*"}
-        self.middleware.after()
+        self.middleware.before()
         self.assertEqual(self.request.header('Access-Control-Allow-Origin'), '*')

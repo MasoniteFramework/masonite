@@ -2,6 +2,7 @@ from .AppProvider import AppProvider
 from .BroadcastProvider import BroadcastProvider
 from .CacheProvider import CacheProvider
 from .CsrfProvider import CsrfProvider
+from .CorsProvider import CorsProvider
 from .HelpersProvider import HelpersProvider
 from .MailProvider import MailProvider
 from .QueueProvider import QueueProvider

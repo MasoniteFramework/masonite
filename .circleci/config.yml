@@ -5,22 +5,26 @@ jobs:
         - image: circleci/python:3.6  # primary container for the build job
       steps:
         - checkout
+        - run: make test
+    lint:
+      docker:
+        - image: circleci/python:3.6  # primary container for the build job
+      steps:
+        - checkout
         - run: make
-        - run: make ci
+        - run: make lint
     python35:
       docker:
         - image: circleci/python:3.5
       steps:
         - checkout
-        - run: make
-        - run: make ci
+        - run: make test
     python37:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
-        - run: make
-        - run: make ci
+        - run: make test
     python38:
       docker:
         - image: circleci/python:3.8.0b2-buster
@@ -29,20 +33,7 @@ jobs:
             password: $DOCKERHUB_PASSWORD
       steps:
         - checkout
-        - run: make
-        - run: make ci
-    MasoniteValidation:
-      docker:
-        - image: circleci/python:3.6
-      steps:
-        - checkout
-        - run: python trigger_build.py --repo masoniteframework/validation --branch circle-ci --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
-    MasoniteAPI:
-      docker:
-        - image: circleci/python:3.6
-      steps:
-        - checkout
-        - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build BUILD_BRANCH=$CIRCLE_BRANCH
+        - run: make test
     CodeCoverage:
       docker:
         - image: circleci/python:3.6
@@ -59,48 +50,63 @@ workflows:
   version: 2
   build_and_test:
     jobs: 
-      - build:
+      - build: # Python 3.6
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
+      - lint: # Python 3.6
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - python35:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - python37:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
       - python38:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
-      - MasoniteValidation:
-          requires:
-              - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^v*/
-      - MasoniteAPI:
-          requires:
-              - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^v*/
+              only: /^.*/
       - CodeCoverage:
           requires:
               - build
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
-              only: /^v*/
+              only: /^.*/
+      - masonite/trigger:
+          name: MasoniteValidation
+          repo: masoniteframework/validation
+          branch: circle-ci
+          environment: MASONITE_DEPENDENT_BRANCH=${CIRCLE_BRANCH:-2.2}
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - masonite/trigger:
+          name: MasoniteAPI
+          repo: masoniteframework/api
+          branch: "2.2"
+          environment: BUILD_BRANCH=${CIRCLE_BRANCH:-2.2}
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
       - masonite/deploy:
           username: josephmancuso
+          password: $PYPI_PASSWORD
           requires:
-              - MasoniteValidation
-              - MasoniteAPI
-              - CodeCoverage
+            - MasoniteValidation
+            - MasoniteAPI
+            - CodeCoverage
           filters:
-              tags:
-                  only: /^v*/
-              branches:
-                  ignore: /.*/
+            tags:
+              only: /^.*/
+            branches:
+              ignore: /.*/

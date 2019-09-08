@@ -1,29 +1,39 @@
 version: 2.1
+
+commands: 
+  install:
+    steps:
+      - run: pip install . --user
+      - run: pip install -r requirements.txt --user
+
 jobs:
     build:
       docker:
         - image: circleci/python:3.6  # primary container for the build job
       steps:
         - checkout
+        - install
         - run: make test
     lint:
       docker:
         - image: circleci/python:3.6  # primary container for the build job
       steps:
         - checkout
-        - run: make
+        - install
         - run: make lint
     python35:
       docker:
         - image: circleci/python:3.5
       steps:
         - checkout
+        - install
         - run: make test
     python37:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
+        - install
         - run: make test
     python38:
       docker:
@@ -33,12 +43,14 @@ jobs:
             password: $DOCKERHUB_PASSWORD
       steps:
         - checkout
+        - install
         - run: make test
     CodeCoverage:
       docker:
         - image: circleci/python:3.6
       steps:
         - checkout
+        - install
         - run: pip install -r requirements.txt --user
         - run: make coverage
         - run: make deepsource

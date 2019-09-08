@@ -4,7 +4,6 @@ import json
 
 from masonite.exceptions import ResponseError
 from masonite.helpers.Extendable import Extendable
-from masonite.view import View
 
 from orator.support.collection import Collection
 from orator import Model
@@ -95,12 +94,12 @@ class Response(Extendable):
             return self.json(view.serialize(), status=self.request.get_status())
         elif isinstance(view, int):
             view = str(view)
-        elif isinstance(view, View):
-            view = view.rendered_template
+        elif isinstance(view, Responsable):
+            view = view.get_response()
         elif isinstance(view, self.request.__class__):
             view = self.data()
         elif view is None:
-            raise ResponseError('Responses cannot be of type: None.')
+            raise ResponseError('Responses cannot be of type: None. Did you return anything in your responsable method?')
 
         if not isinstance(view, str):
             raise ResponseError('Invalid response type of {}'.format(type(view)))
@@ -138,3 +137,8 @@ class Response(Extendable):
             bytes -- The converted response to bytes.
         """
         return bytes(self.converted_data(), 'utf-8')
+
+class Responsable:
+
+    def get_response(self):
+        raise NotImplementedError("This class does not implement a 'get_response()' method")

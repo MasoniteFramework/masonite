@@ -1,5 +1,5 @@
 from app.jobs.TestJob import TestJob
-from masonite import Queue
+from masonite import Queue, Mail
 from masonite.request import Request
 
 class TestController:
@@ -45,3 +45,6 @@ class TestController:
         # queue.driver('amqp').push(self.bad)
         queue.driver('amqp').push(TestJob, channel='default')
         return 'queued'
+
+    def mail(self, mail: Mail):
+        return mail.to('idmann509@gmail.com').template('test', {'test': 'mail'})

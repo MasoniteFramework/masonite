@@ -158,3 +158,13 @@ class MockRoute:
     @property
     def request(self):
         return self.container.make('Request')
+
+    @property
+    def response(self):
+        return self.container.make('Response')
+
+    def asDictionary(self):
+        try:
+            return json.loads(self.response)
+        except json.decoder.JSONDecodeError:
+            raise ValueError("The response was not json serializable")

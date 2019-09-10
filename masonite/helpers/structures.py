@@ -47,8 +47,12 @@ class Dot:
                         return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
                     except KeyError:
                         return []
-                dic = dic.get(value)
+                
+                if not isinstance(dic, dict):
+                    return default
 
+                dic = dic.get(value)
+                
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
 

@@ -47,8 +47,12 @@ class Dot:
                         return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
                     except KeyError:
                         return []
-                dic = dic.get(value)
+                
+                if not isinstance(dic, dict):
+                    return default
 
+                dic = dic.get(value)
+                
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
 
@@ -124,7 +128,7 @@ class Dot:
 
         value = pydoc.locate('.'.join(paths[:-1]) + '.' + paths[-1].upper())
 
-        if value:
+        if value or value is False:
             return value
 
         search_path = -1

@@ -166,5 +166,5 @@ class MockRoute:
     def asDictionary(self):
         try:
             return json.loads(self.response)
-        except json.decoder.JSONDecodeError:
+        except ValueError:
             raise ValueError("The response was not json serializable")

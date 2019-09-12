@@ -37,8 +37,8 @@ class MockRoute:
     def hasJson(self, key, value=''):
         response = json.loads(self.container.make('Response'))
         if isinstance(key, dict):
-            for item_key, value in key.items():
-                if not Dot().dot(item_key, response, False) == value:
+            for item_key, key_value in key.items():
+                if not Dot().dot(item_key, response, False) == key_value:
                     return False
             return True
         return Dot().dot(key, response, False)

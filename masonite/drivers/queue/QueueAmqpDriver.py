@@ -59,7 +59,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
             try:
                 self._publish(payload)
-            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed) + additional_exceptions:
+            except ((self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed), additional_exceptions):
                 self.connect()
                 self._publish(payload)
 

@@ -300,13 +300,16 @@ class BaseHttpRoute:
             RouteMiddlewareNotFound -- Thrown when the middleware could not be found.
         """
         # Get the list of middleware to run for a route.
-
         for arg in self.list_middleware:
-            arguments = []
             if ':' in arg:
+                middleware_to_run, arguments = arg.split(':')
                 # Splits "name:value1,value2" into ['value1', 'value2']
-                arguments = arg.split(':')[1].split(',')
-            middleware_to_run = self.request.app().make('RouteMiddleware')[arg.split(':')[0]]
+                arguments = arguments.split(',')
+            else:
+                middleware_to_run = arg
+                arguments = []
+
+            middleware_to_run = self.request.app().make('RouteMiddleware')[middleware_to_run]
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
 

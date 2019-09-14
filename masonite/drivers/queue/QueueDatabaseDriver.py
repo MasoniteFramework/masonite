@@ -79,7 +79,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 args = unserialized['args']
                 callback = unserialized['callback']
                 ran = job.attempts
-                
+
                 wait_time = job['wait_until']
 
                 if isinstance(wait_time, str):

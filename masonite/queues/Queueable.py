@@ -18,3 +18,6 @@ class Queueable:
             self.handle
         """
         return self.handle
+
+    def should_run(self, job):
+        return True

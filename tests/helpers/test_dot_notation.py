@@ -23,6 +23,7 @@ class TestDot(unittest.TestCase):
         self.assertEqual(DictDot().dot('key.test.layer', {'key': {'test': {'layer': 'value'}}}), 'value')
         self.assertEqual(DictDot().dot('key.none', {'key': {'test': {'layer': 'value'}}}), None)
         self.assertEqual(DictDot().dot('key', {'key': {'test': {'layer': 'value'}}}), {'test': {'layer': 'value'}})
+        self.assertEqual(DictDot().dot('key.test.none', {'key': 'value'}), None)
 
     def test_dict_dot_asterisk(self):
         payload = {

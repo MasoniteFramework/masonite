@@ -40,7 +40,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.channel.close()
         self.connection.close()
 
-    def push(self, *objects, args=(), callback='handle', ran=1, channel=None):
+    def push(self, *objects, args=(), callback='handle', ran=1, channel=None, **options):
         """Push objects onto the amqp stack.
 
         Arguments:
@@ -59,7 +59,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
             try:
                 self._publish(payload)
-            except (self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed) + additional_exceptions:
+            except ((self.pika.exceptions.ConnectionClosed, self.pika.exceptions.ChannelClosed), additional_exceptions):
                 self.connect()
                 self._publish(payload)
 

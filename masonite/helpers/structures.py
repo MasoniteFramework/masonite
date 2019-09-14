@@ -1,7 +1,8 @@
 """A Module For Manipulating Code Structures."""
 
-import pydoc
 import inspect
+import pydoc
+
 from orator.support.collection import Collection as collect
 
 
@@ -47,6 +48,10 @@ class Dot:
                         return collect(dic).pluck(searching[searching.index('*') + 1]).serialize()
                     except KeyError:
                         return []
+
+                if not isinstance(dic, dict):
+                    return default
+
                 dic = dic.get(value)
 
                 if isinstance(dic, str) and dic.isnumeric():
@@ -124,7 +129,7 @@ class Dot:
 
         value = pydoc.locate('.'.join(paths[:-1]) + '.' + paths[-1].upper())
 
-        if value:
+        if value or value is False:
             return value
 
         search_path = -1

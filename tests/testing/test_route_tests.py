@@ -77,6 +77,14 @@ class TestUnitTest(TestCase):
         }))
 
         self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson('author.name', 'Joe'))
+        self.assertFalse(self.json('GET', '/unit/test/json/multi_count').hasJson('count.foo', 'foo'))
+
+    def test_as_dictionary(self):
+        dictionary = self.json('GET', '/unit/test/json/multi').asDictionary()
+        self.assertEqual(dictionary['author']['name'], 'Joe')
+
+        with self.assertRaises(ValueError):
+            dictionary = self.json('GET', '/login').asDictionary()
 
     def test_count(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').count(2))

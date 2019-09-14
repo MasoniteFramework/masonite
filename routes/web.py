@@ -32,6 +32,7 @@ ROUTES = [
         Get('/test/json/response', 'UnitTestController@response'),
         Post('/test/json/validate', 'UnitTestController@validate'),
         Get('/test/json/multi', 'UnitTestController@multi'),
+        Get('/test/json/multi_count', 'UnitTestController@multi_count'),
         Patch('/test/patch', 'UnitTestController@patch'),
     ], prefix="/unit")
 ]

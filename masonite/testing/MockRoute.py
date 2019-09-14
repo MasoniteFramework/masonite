@@ -37,8 +37,8 @@ class MockRoute:
     def hasJson(self, key, value=''):
         response = json.loads(self.container.make('Response'))
         if isinstance(key, dict):
-            for item_key, value in key.items():
-                if not Dot().dot(item_key, response, False) == value:
+            for item_key, key_value in key.items():
+                if not Dot().dot(item_key, response, False) == key_value:
                     return False
             return True
         return Dot().dot(key, response, False)
@@ -158,3 +158,13 @@ class MockRoute:
     @property
     def request(self):
         return self.container.make('Request')
+
+    @property
+    def response(self):
+        return self.container.make('Response')
+
+    def asDictionary(self):
+        try:
+            return json.loads(self.response)
+        except ValueError:
+            raise ValueError("The response was not json serializable")

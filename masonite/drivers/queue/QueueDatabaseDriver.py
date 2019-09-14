@@ -41,7 +41,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         connection = options.get('connection', None)
 
         if connection:
-            schema.connection(connection)
+            schema = schema.connection(connection)
 
         if wait:
             wait = parse_human_time(wait).to_datetime_string()
@@ -67,8 +67,9 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             channel = DATABASES['default']
 
         self.info('[*] Waiting to process jobs from the "queue_jobs" table on the "{}" connection. To exit press CTRL + C'.format(channel))
+        schema = schema.connection(channel)
         while True:
-            jobs = schema.connection(channel).table('queue_jobs').where('ran_at', None).get()
+            jobs = schema.table('queue_jobs').where('ran_at', None).get()
             if not jobs.count():
                 time.sleep(5)
 

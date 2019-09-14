@@ -1,28 +1,32 @@
 version: 2.1
+
+commands: 
+  install:
+    steps:
+      - run: pip install . --user
+      - run: pip install -r requirements.txt --user
+
 jobs:
     build:
       docker:
         - image: circleci/python:3.6  # primary container for the build job
       steps:
         - checkout
+        - install
         - run: make test
     lint:
       docker:
         - image: circleci/python:3.6  # primary container for the build job
       steps:
         - checkout
+        - install
         - run: make lint
-    python34:
-      docker:
-        - image: circleci/python:3.5
-      steps:
-        - checkout
-        - run: make test
     python35:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
+        - install
         - run: make test
     python37:
       docker:
@@ -32,12 +36,24 @@ jobs:
             password: $DOCKERHUB_PASSWORD
       steps:
         - checkout
+        - install
+        - run: make test
+    python38:
+      docker:
+        - image: circleci/python:3.8.0b2-buster
+          auth:
+            username: jmancuso9  # can specify string literal values
+            password: $DOCKERHUB_PASSWORD
+      steps:
+        - checkout
+        - install
         - run: make test
     CodeCoverage:
       docker:
         - image: circleci/python:3.6
       steps:
         - checkout
+        - install
         - run: pip install -r requirements.txt --user
         - run: make coverage
         - run: make deepsource
@@ -49,17 +65,13 @@ workflows:
   version: 2
   build_and_test:
     jobs: 
-      - build:
+      - build: # Python 3.6
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
-      - lint:
+      - lint: # Python 3.6
           requires:
               - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^.*/
-      - python34:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
@@ -68,6 +80,10 @@ workflows:
             tags:
               only: /^.*/
       - python37:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - python38:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/

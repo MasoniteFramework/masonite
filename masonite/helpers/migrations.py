@@ -7,12 +7,17 @@ from orator.migrations import DatabaseMigrationRepository, Migrator
 
 class Migrations(HasColoredCommands):
 
-    def __init__(self):
+    def __init__(self, connection=None):
         self._ran = []
         self._notes = []
         from config import database
+        database_dict = database.DB
+
         self.repository = DatabaseMigrationRepository(database.DB, 'migrations')
         self.migrator = Migrator(self.repository, database.DB)
+        if not connection or connection == 'default':
+            connection = database.DATABASES['default']
+        self.migrator.set_connection(connection)
         if not self.repository.repository_exists():
             self.repository.create_repository()
 

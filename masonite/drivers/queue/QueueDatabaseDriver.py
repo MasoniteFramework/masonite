@@ -38,6 +38,10 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
         callback = options.get('callback', 'handle')
         wait = options.get('wait', None)
+        connection = options.get('connection', None)
+
+        if connection:
+            schema.connection(connection)
 
         if wait:
             wait = parse_human_time(wait).to_datetime_string()
@@ -74,8 +78,16 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 args = unserialized['args']
                 callback = unserialized['callback']
                 ran = job.attempts
+                
+                wait_time = job['wait_until']
 
-                if job['wait_until'] and pendulum.instance(job['wait_until']).is_future():
+                if isinstance(wait_time, str):
+                    wait_time = pendulum.parse(job['wait_until'])
+                else:
+                    wait_time = pendulum.instance(job['wait_until'])
+
+                # print(job['wait_until'], wait_time.is_future())
+                if job['wait_until'] and wait_time.is_future():
                     continue
                 try:
                     try:

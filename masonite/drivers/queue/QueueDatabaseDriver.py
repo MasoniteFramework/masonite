@@ -55,11 +55,12 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 })
 
     def consume(self, channel, fair=False, **options):
-        from config.database import DB as schema
+        from config.database import DB as schema, DATABASES
         from config import queue
         from wsgi import container
 
-       
+        if not channel or channel == 'default':
+            channel = DATABASES['default']
 
         self.info('[*] Waiting to process jobs from the "queue_jobs" table on the "{}" connection. To exit press CTRL + C'.format(channel))
         while True:
@@ -88,7 +89,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     try:
                         # attempts = 1
-                        schema.connecton(connection).table('queue_jobs').where('id', job['id']).update({
+                        schema.table('queue_jobs').where('id', job['id']).update({
                             'ran_at': pendulum.now().to_datetime_string(),
                             'attempts': job['attempts'] + 1,
                         })
@@ -100,7 +101,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     if not obj.run_again_on_fail:
                         # ch.basic_ack(delivery_tag=method.delivery_tag)
-                        schema.connection(channel).table('queue_jobs').where('id', job['id']).update({
+                        schema.table('queue_jobs').where('id', job['id']).update({
                             'ran_at': pendulum.now().to_datetime_string(),
                             'failed': 1,
                             'attempts': job['attempts'] + 1,
@@ -108,12 +109,12 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     if ran < obj.run_times and isinstance(obj, Queueable):
                         time.sleep(1)
-                        schema.connection(channel).table('queue_jobs').where('id', job['id']).update({
+                        schema.table('queue_jobs').where('id', job['id']).update({
                             'attempts': job['attempts'] + 1,
                         })
                         continue
                     else:
-                        schema.connection(channel).table('queue_jobs').where('id', job['id']).update({
+                        schema.table('queue_jobs').where('id', job['id']).update({
                             'attempts': job['attempts'] + 1,
                             'ran_at': pendulum.now().to_datetime_string(),
                             'failed': 1,

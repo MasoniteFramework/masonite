@@ -1,11 +1,12 @@
 """Web Routes."""
 
-from masonite.routes import Get, Post, Redirect, RouteGroup, Patch
+from masonite.routes import Get, Post, Redirect, RouteGroup, Patch, Options
 
 
 ROUTES = [
     Get().route('/test', None).middleware('auth'),
     Get().route('/queue', 'TestController@queue'),
+    Options('options', 'TestController@show'),
     Redirect('/redirect', 'test'),
     Get().domain('test').route('/test', None).middleware('auth'),
     Get().domain('test').route('/unit/test', 'TestController@testing').middleware('auth'),
@@ -33,6 +34,7 @@ ROUTES = [
         Get('/test/json/response', 'UnitTestController@response'),
         Post('/test/json/validate', 'UnitTestController@validate'),
         Get('/test/json/multi', 'UnitTestController@multi'),
+        Get('/test/json/multi_count', 'UnitTestController@multi_count'),
         Patch('/test/patch', 'UnitTestController@patch'),
     ], prefix="/unit")
 ]

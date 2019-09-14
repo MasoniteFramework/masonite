@@ -12,8 +12,8 @@ class BaseMailDriver(BaseDriver):
         """Base mail driver constructor.
 
         Arguments:
-            MailConfig {module} -- This is the config.mail module.
-            View {object} -- This is the masonite.view.View class.
+            app {masonite.app.App} -- The Masonite container class.
+            view {object} -- This is the masonite.view.View class.
         """
         self.config = app.make('MailConfig')
         self.to_address = None
@@ -39,10 +39,7 @@ class BaseMailDriver(BaseDriver):
         return self
 
     def queue(self):
-        """Set the user email address who you want to send mail to.
-
-        Arguments:
-            user_email {string} -- The user email address.
+        """Whether the email should be queued or not when sending.
 
         Returns:
             self

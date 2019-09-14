@@ -1,12 +1,11 @@
 """The ConfirmController Module."""
 import datetime
 
-from masonite.auth import Auth
+from masonite.auth import Auth, MustVerifyEmail
 from masonite.auth.Sign import Sign
+from masonite.managers import MailManager
 from masonite.request import Request
 from masonite.view import View
-from masonite.auth import MustVerifyEmail
-from app.User import User
 
 
 class ConfirmController:
@@ -46,7 +45,7 @@ class ConfirmController:
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
-                user = self.get_user.find(1)
+                user = auth.auth_model.find(tokenParts[0])
 
                 if user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))
@@ -61,21 +60,10 @@ class ConfirmController:
 
         return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def get_user(self, user_id):
-        """Get the user from the database.
-
-        Arguments:
-            user_id {str} -- The users id
-
-        Returns:
-            [User] -- [User model]
-        """
-        return User.find(user_id)
-
-    def send_verify_email(self, request: Request):
+    def send_verify_email(self, manager: MailManager, request: Request):
         user = request.user()
 
         if isinstance(user, MustVerifyEmail):
-            request.app().resolve(user.verify_email)
+            user.verify_email(manager, request)
 
         return request.redirect('/home')

@@ -301,14 +301,17 @@ class BaseHttpRoute:
         """
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
-            arguments = []
-            middleware_to_run = self.request.app().make('RouteMiddleware')[arg]
+            if ':' in arg:
+                middleware_to_run, arguments = arg.split(':')
+                # Splits "name:value1,value2" into ['value1', 'value2']
+                arguments = arguments.split(',')
+            else:
+                middleware_to_run = arg
+                arguments = []
+
+            middleware_to_run = self.request.app().make('RouteMiddleware')[middleware_to_run]
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
-
-            if ':' in arg:
-                # Splits "name:value1,value2" into ['value1', 'value2']
-                arguments = arg.split(':')[1].split(',')
 
             try:
                 for middleware in middleware_to_run:
@@ -472,6 +475,9 @@ class Options(BaseHttpRoute):
         self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
+
+        print('The Masonite development server is not capable of handling OPTIONS preflight requests.')
+        print('You should use a more powerful server if using the Option')
 
 
 class Trace(BaseHttpRoute):

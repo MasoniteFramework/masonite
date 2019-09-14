@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
     build:
       docker:
@@ -6,41 +6,36 @@ jobs:
       steps:
         - checkout
         - run: make
-        - run: make ci
-    python3.4:
+        - run: make test
+    lint:
+      docker:
+        - image: circleci/python:3.6  # primary container for the build job
+      steps:
+        - checkout
+        - run: make
+        - run: make lint
+    python34:
       docker:
         - image: circleci/python:3.4
       steps:
         - checkout
         - run: make
-        - run: make ci
-    python3.5:
+        - run: make test
+    python35:
       docker:
         - image: circleci/python:3.5
       steps:
         - checkout
         - run: make
-        - run: make ci
-    python3.7:
+        - run: make test
+    python37:
       docker:
         - image: circleci/python:3.7
       steps:
         - checkout
         - run: make
-        - run: make ci
-    Masonite Validation:
-      docker:
-        - image: circleci/python:3.6
-      steps:
-        - checkout
-        - run: python trigger_build.py --repo masoniteframework/validation --branch circle-ci --build MASONITE_DEPENDENT_BRANCH=$CIRCLE_BRANCH
-    Masonite API:
-      docker:
-        - image: circleci/python:3.6
-      steps:
-        - checkout
-        - run: python trigger_build.py --repo masoniteframework/api --branch 2.2 --build BUILD_BRANCH=$CIRCLE_BRANCH
-    Code Coverage:
+        - run: make test
+    CodeCoverage:
       docker:
         - image: circleci/python:3.6
       steps:
@@ -49,20 +44,70 @@ jobs:
         - run: make coverage
         - run: make deepsource
 
+orbs:
+    masonite: masonite/trigger@dev:latest
+
 workflows: 
   version: 2
   build_and_test:
     jobs: 
-      - build
-      - python3.4
-      - python3.5
-      - python3.7
-      - Masonite Validation:
+      - build:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - lint:
           requires:
               - build
-      - Masonite API:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - python34:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - python35:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - python37:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - CodeCoverage:
           requires:
               - build
-      - Code Coverage:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - masonite/trigger:
+          name: MasoniteValidation
+          repo: masoniteframework/validation
+          branch: circle-ci
+          environment: MASONITE_DEPENDENT_BRANCH=${CIRCLE_BRANCH:-2.2}
           requires:
               - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - masonite/trigger:
+          name: MasoniteAPI
+          repo: masoniteframework/api
+          branch: "2.2"
+          environment: BUILD_BRANCH=${CIRCLE_BRANCH:-2.2}
+          requires:
+              - build
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - masonite/deploy:
+          username: josephmancuso
+          password: $PYPI_PASSWORD
+          requires:
+            - MasoniteValidation
+            - MasoniteAPI
+            - CodeCoverage
+          filters:
+            tags:
+              only: /^.*/
+            branches:
+              ignore: /.*/

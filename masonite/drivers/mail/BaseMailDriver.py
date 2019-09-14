@@ -3,9 +3,10 @@
 from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
+from masonite.response import Responsable
 
 
-class BaseMailDriver(BaseDriver):
+class BaseMailDriver(BaseDriver, Responsable):
     """Base mail driver class. This class is inherited by all mail drivers."""
 
     def __init__(self, app: App, view: View):
@@ -85,3 +86,6 @@ class BaseMailDriver(BaseDriver):
         """
         self.message_subject = subject
         return self
+
+    def get_response(self):
+        return self.message_body

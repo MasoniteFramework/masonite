@@ -1,6 +1,7 @@
 from app.jobs.TestJob import TestJob
 from masonite import Queue
 from masonite.request import Request
+from masonite.view import View
 
 class TestController:
 
@@ -9,6 +10,9 @@ class TestController:
 
     def show(self):
         return 'show'
+
+    def v(self, view: View):
+        return view.render('test')
 
     def change_header(self, request: Request):
         request.header('Content-Type', 'application/xml')
@@ -26,7 +30,7 @@ class TestController:
         return 'test'
 
     def json_response(self, request: Request):
-        return {'id': 1}
+        return {'id': 2}
 
     def post_test(self):
         return 'post_test'

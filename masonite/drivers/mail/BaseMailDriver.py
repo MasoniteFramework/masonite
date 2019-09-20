@@ -8,7 +8,7 @@ from masonite.app import App
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
 
-    def __init__(self, app: App):
+    def __init__(self, app: App, view: View):
         """Base mail driver constructor.
 
         Arguments:
@@ -16,6 +16,7 @@ class BaseMailDriver(BaseDriver):
             view {object} -- This is the masonite.view.View class.
         """
         self.config = app.make('MailConfig')
+        self.app = app
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'
@@ -59,8 +60,7 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-        from wsgi import container
-        view = container.make('View')
+        view = self.app.make('View')
         self.message_body = view.render(template_name, dictionary).rendered_template
         return self
 

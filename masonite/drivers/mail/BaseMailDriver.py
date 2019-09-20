@@ -60,7 +60,7 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-        view = self.app.make('View')
+        view = self.app.make('ViewClass')
         self.message_body = view.render(template_name, dictionary).rendered_template
         return self
 

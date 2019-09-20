@@ -27,7 +27,9 @@ if os.getenv('MAILGUN_SECRET'):
             self.app.bind('MailConfig', mail)
             self.app.bind('MailSmtpDriver', MailDriver)
             self.app.bind('MailMailgunDriver', Mailgun)
-            self.app.bind('View', View(self.app))
+            viewClass = View(self.app)
+            self.app.bind('ViewClass', viewClass)
+            self.app.bind('View', viewClass.render)
 
         def test_mailgun_driver(self):
             user = UserMock

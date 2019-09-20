@@ -52,6 +52,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
         self.logger.info('From: {0} <{1}>'.format(
             self.config.FROM['name'], self.config.FROM['address']))
         self.logger.info('Subject: {}'.format(self.message_subject))
+        self.logger.info('Reply-To: {}'.format(self.message_reply_to))
         self.logger.info('Message: ')
         self.logger.info(message)
 

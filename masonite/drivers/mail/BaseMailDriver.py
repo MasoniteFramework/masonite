@@ -3,7 +3,7 @@
 from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
-
+import copy
 
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
@@ -60,7 +60,7 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-        view = self.app.make('ViewClass')
+        view = copy.copy(self.app.make('ViewClass'))
         self.message_body = view.render(template_name, dictionary).rendered_template
         return self
 

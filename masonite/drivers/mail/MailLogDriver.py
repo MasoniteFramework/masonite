@@ -6,13 +6,12 @@ import os
 from masonite.app import App
 from masonite.contracts import MailContract
 from masonite.drivers import BaseMailDriver
-from masonite.view import View
 
 
 class MailLogDriver(BaseMailDriver, MailContract):
     """Mail log driver."""
-    def __init__(self, app: App, view: View):
-        super().__init__(app, view)
+    def __init__(self, app: App):
+        super().__init__(app)
 
         if 'log' in self.config.DRIVERS and 'location' in self.config.DRIVERS['log']:
             log_location = self.config.DRIVERS['log']['location']

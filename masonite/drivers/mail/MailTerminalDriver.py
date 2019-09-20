@@ -5,14 +5,13 @@ import logging
 from masonite.app import App
 from masonite.contracts.MailContract import MailContract
 from masonite.drivers import BaseMailDriver
-from masonite.view import View
 
 
 class MailTerminalDriver(BaseMailDriver, MailContract):
     """Mail terminal driver."""
 
-    def __init__(self, app: App, view: View):
-        super().__init__(app, view)
+    def __init__(self, app: App):
+        super().__init__(app)
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
         handler = logging.StreamHandler()

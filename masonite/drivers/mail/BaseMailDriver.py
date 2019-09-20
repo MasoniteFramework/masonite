@@ -3,7 +3,7 @@
 from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
-
+import copy
 
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
@@ -16,11 +16,12 @@ class BaseMailDriver(BaseDriver):
             view {object} -- This is the masonite.view.View class.
         """
         self.config = app.make('MailConfig')
+        self.app = app
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'
         self.message_body = None
-        self.view = view
+        # self.view = view
         self._queue = False
 
     def to(self, user_email):
@@ -59,7 +60,8 @@ class BaseMailDriver(BaseDriver):
         Returns:
             self
         """
-        self.message_body = self.view.render(template_name, dictionary).rendered_template
+        view = copy.copy(self.app.make('ViewClass'))
+        self.message_body = view.render(template_name, dictionary).rendered_template
         return self
 
     def send_from(self, address):

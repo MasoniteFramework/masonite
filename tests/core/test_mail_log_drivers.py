@@ -68,23 +68,25 @@ class TestMailLogDrivers(unittest.TestCase):
         user = UserMock
         user.email = 'test@email.com'
 
-        MailManager(self.app).driver('log').to(user).send('Masonite')
+        MailManager(self.app).driver('log').to(user).reply_to('reply-to@email.com').send('Masonite')
 
         filepath = '{0}/{1}'.format('bootstrap/mail', 'mail.log')
         self.logfile = open(filepath, 'r')
         file_string = self.logfile.read()
 
         self.assertIn('test@email.com', file_string)
+        self.assertIn('reply-to@email.com', file_string)
 
     def test_terminal_driver_output(self):
         user = UserMock
         user.email = 'test@email.com'
         with captured_output() as (_, err):
-            MailManager(self.app).driver('terminal').to(user).send('Masonite')
+            MailManager(self.app).driver('terminal').to(user).reply_to('reply-to@email.com').send('Masonite')
 
         # This can go inside or outside the `with` block
         error = err.getvalue().strip()
         self.assertIn('test@email.com', error)
+        self.assertIn('reply-to@email.com', error)
 
     def tearDown(self):
         if hasattr(self, 'logfile') and self.logfile:

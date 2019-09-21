@@ -11,7 +11,6 @@ class Migrations(HasColoredCommands):
         self._ran = []
         self._notes = []
         from config import database
-        database_dict = database.DB
 
         self.repository = DatabaseMigrationRepository(database.DB, 'migrations')
         self.migrator = Migrator(self.repository, database.DB)

@@ -47,4 +47,5 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
                 "from": "{0} <mailgun@{1}>".format(self.config.FROM['name'], domain),
                 "to": [self.to_address, "{0}".format(self.config.FROM['address'])],
                 "subject": self.message_subject,
+                "h:Reply-To": self.message_reply_to,
                 "html": message})

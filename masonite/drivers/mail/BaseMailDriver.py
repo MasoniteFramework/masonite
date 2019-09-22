@@ -1,7 +1,6 @@
 """Base mail driver module."""
 
 from masonite.drivers import BaseDriver
-from masonite.view import View
 from masonite.app import App
 import copy
 
@@ -9,7 +8,7 @@ import copy
 class BaseMailDriver(BaseDriver):
     """Base mail driver class. This class is inherited by all mail drivers."""
 
-    def __init__(self, app: App, view: View):
+    def __init__(self, app: App):
         """Base mail driver constructor.
 
         Arguments:
@@ -21,8 +20,8 @@ class BaseMailDriver(BaseDriver):
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'
+        self.message_reply_to = None
         self.message_body = None
-        # self.view = view
         self._queue = False
 
     def to(self, user_email):
@@ -87,4 +86,16 @@ class BaseMailDriver(BaseDriver):
             self
         """
         self.message_subject = subject
+        return self
+
+    def reply_to(self, reply_to):
+        """Set the Reply-To of an email.
+
+        Arguments:
+            reply_to {string} -- The reply-to of the email
+
+        Returns:
+            self
+        """
+        self.message_reply_to = reply_to
         return self

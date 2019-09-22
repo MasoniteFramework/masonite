@@ -75,7 +75,7 @@ class ExceptionHandler:
 
         exc_type, _, _ = sys.exc_info()
         # return a view
-        if request.header('Content-Type') == 'application/json':
+        if request.header('Content-Type') == 'application/json' or request.header('HTTP_ACCEPT') == 'application/json':
             stacktrace = []
             for stack in traceback.extract_tb(sys.exc_info()[2]):
                 stacktrace.append("{} line {} in {}".format(stack[0], stack[1], stack[2]))

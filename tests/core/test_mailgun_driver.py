@@ -36,6 +36,7 @@ if os.getenv('MAILGUN_SECRET'):
             user.email = 'test@email.com'
 
             self.assertEqual(MailManager(self.app).driver('mailgun').to(user).to_address, 'test@email.com')
+            self.assertEqual(MailManager(self.app).driver('mailgun').reply_to('reply_to@email.com').message_reply_to , 'reply_to@email.com')
 
         def test_mail_renders_template(self):
             self.assertIn('MasoniteTesting', MailManager(self.app).driver('mailgun').to(

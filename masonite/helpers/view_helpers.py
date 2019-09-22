@@ -47,4 +47,6 @@ def old(session_key=None):
     from wsgi import container
     session_container = container.make('Session')
 
-    return session_container.get(session_key)
+    if session_container.has(session_key):
+        return session_container.get(session_key)
+    return ''

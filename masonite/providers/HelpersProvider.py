@@ -4,7 +4,7 @@ import builtins
 import os
 
 from masonite.exception_handler import DD
-from masonite.helpers.view_helpers import back, set_request_method, hidden
+from masonite.helpers.view_helpers import back, set_request_method, hidden, old
 from masonite.helpers.sign import sign, unsign, decrypt, encrypt
 from masonite.helpers import config, optional
 from masonite.provider import ServiceProvider
@@ -51,5 +51,6 @@ class HelpersProvider(ServiceProvider):
                 'exists': view.exists,
                 'cookie': request.get_cookie,
                 'url': lambda name, params={}: request.route(name, params, full=True)
+                'old': old
             }
         )

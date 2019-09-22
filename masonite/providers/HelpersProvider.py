@@ -50,7 +50,7 @@ class HelpersProvider(ServiceProvider):
                 'hidden': hidden,
                 'exists': view.exists,
                 'cookie': request.get_cookie,
-                'url': lambda name, params={}: request.route(name, params, full=True)
+                'url': lambda name, params={}: request.route(name, params, full=True),
                 'old': old
             }
         )

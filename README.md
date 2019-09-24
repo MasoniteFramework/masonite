@@ -11,6 +11,9 @@
 
 </p>
 
+ **NOTE: This repository is the general shell of the framework. This repository is responsible for managing the installation of all new applications. All core framework related code has been abstracted out into it's own PYPI package which can be found [in this GitHub Repo](https://github.com/masoniteframework/core).**
+
+
 ## About Masonite
 
 The modern and developer centric Python web framework that strives for an actual batteries included developer tool with a lot of out of the box functionality with an extremely extendable architecture. Masonite is perfect for beginner developers getting into their first web applications as well as experienced devs that need to utilize the full potential of Masonite to get their applications done.

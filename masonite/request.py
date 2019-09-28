@@ -860,8 +860,7 @@ class Request(Extendable):
                     if isinstance(params, dict):
                         compiled_url += str(params[url]) + '/'
                     elif isinstance(params, list):
-                        compiled_url += str(params[0]) + '/'
-                        del params[0]
+                        compiled_url += str(params.pop(0)) + '/'
                 else:
                     compiled_url += url + '/'
 

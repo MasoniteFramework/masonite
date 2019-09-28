@@ -68,7 +68,7 @@ class Response(Extendable):
         try:
             page = (
                 int(page_input)
-                if page_input  and int(page_input) > 0
+                if page_input and int(page_input) > 0
                 else paginator.current_page
             )
         except Exception as _:

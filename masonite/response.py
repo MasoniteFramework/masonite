@@ -8,6 +8,8 @@ from masonite.view import View
 
 from orator.support.collection import Collection
 from orator import Model
+from orator.pagination.length_aware_paginator import LengthAwarePaginator
+from orator.pagination.paginator import Paginator
 from masonite.app import App
 
 
@@ -36,6 +38,86 @@ class Response(Extendable):
         self.request.status(status)
 
         return self.data()
+
+    def paginated_json(self, paginator, status=200):
+        """Determine type of paginated instance and return JSON response.
+
+        Arguments:
+            paginator {Paginator|LengthAwarePaginator} --
+                Either an Orator Paginator or LengthAwarePaginator object
+
+        Returns:
+            string -- Returns a string representation of the data
+        """
+        # configured param types
+        PAGE_SIZE_PARAM = 'page_size'
+        PAGE_PARAM = 'page'
+
+        # try to capture request input for page_size and/or page
+        page_size_input = self.request.input(PAGE_SIZE_PARAM)
+        page_input = self.request.input(PAGE_PARAM)
+        # use try/except here, as int(bool) will return 0 for False above
+        try:
+            page_size = (
+                int(page_size_input)
+                if page_size_input and int(page_size_input) > 0
+                else paginator.per_page
+            )
+        except Exception as _:
+            page_size = paginator.per_page
+        try:
+            page = (
+                int(page_input)
+                if page_input  and int(page_input) > 0
+                else paginator.current_page
+            )
+        except Exception as _:
+            page = paginator.current_page
+
+        # don't waste time instantiating new paginator if no change
+        if (
+            page_size != paginator.per_page
+            or page != paginator.current_page
+        ):
+            try:
+                # try to get class of model
+                model_class = next(type(x) for x in paginator.items)
+                if model_class:
+                    if isinstance(paginator, Paginator):
+                        paginator = model_class.simple_paginate(
+                            page_size,
+                            page
+                        )
+                    elif isinstance(paginator, LengthAwarePaginator):
+                        paginator = model_class.paginate(page_size, page)
+            except Exception as _:
+                paginator = paginator
+
+        payload = {
+            'total': (
+                paginator.total
+                if isinstance(paginator, LengthAwarePaginator)
+                else None
+            ),
+            'count': paginator.count(),
+            'per_page': page_size,
+            'current_page': page,
+            'last_page': (
+                paginator.last_page
+                if isinstance(paginator, LengthAwarePaginator)
+                else None
+            ),
+            'from': (page_size * (page- 1)) + 1,
+            'to': page_size * page,
+            'data': paginator.serialize()
+        }
+
+        # remove fields not relevant to Paginator instance
+        if isinstance(paginator, Paginator):
+            del payload['total']
+            del payload['last_page']
+
+        return self.json(payload, status)
 
     def make_headers(self, content_type="text/html; charset=utf-8"):
         """Make the appropriate headers based on changes made in controllers or middleware.
@@ -99,6 +181,8 @@ class Response(Extendable):
             view = view.rendered_template
         elif isinstance(view, self.request.__class__):
             view = self.data()
+        if isinstance(view, (Paginator, LengthAwarePaginator)):
+            return self.paginated_json(view, status=self.request.get_status())
         elif view is None:
             raise ResponseError('Responses cannot be of type: None.')
 

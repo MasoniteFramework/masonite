@@ -8,8 +8,7 @@ from masonite.view import View
 
 from orator.support.collection import Collection
 from orator import Model
-from orator.pagination.length_aware_paginator import LengthAwarePaginator
-from orator.pagination.paginator import Paginator
+from orator import Paginator, LengthAwarePaginator
 from masonite.app import App
 
 

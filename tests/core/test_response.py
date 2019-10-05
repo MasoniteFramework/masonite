@@ -1,7 +1,9 @@
 import unittest
+import json
 
 from orator import Model
 from orator.support.collection import Collection
+from orator import Paginator, LengthAwarePaginator
 
 from app.http.controllers.TestController import \
     TestController as ControllerTest
@@ -94,3 +96,81 @@ class TestResponse(unittest.TestCase):
 
         self.assertIn('"name": "TestUser"', self.app.make('Response'))
         self.assertIn('"email": "user@email.com"', self.app.make('Response'))
+
+    def test_view_should_return_a_json_response_when_returning_length_aware_paginator_instance(self):
+
+        self.assertIsInstance(MockUser(), Model)
+        users = MockUser().all()
+        num_users = len(users)
+        page_size = 15
+        self.response.view(LengthAwarePaginator(users, num_users, page_size))
+
+        self.assertIn('"total": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"per_page": {}'.format(page_size), self.app.make('Response'))
+        self.assertIn('"current_page": 1', self.app.make('Response'))
+        self.assertIn('"last_page": 1', self.app.make('Response'))
+        self.assertIn('"from": 1', self.app.make('Response'))
+        self.assertIn('"to": {}'.format(page_size), self.app.make('Response'))
+        self.assertIn('"data": ', self.app.make('Response'))
+        self.assertIn(
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            json.loads(self.app.make('Response'))['data']
+        )
+
+        users = [MockUser().find(1)]
+        num_users = len(users)
+        default_page_size = 15
+        page_size_param = 10
+        self.request._set_standardized_request_variables({'page_size': str(page_size_param)})
+        self.response.view(LengthAwarePaginator(users, num_users, default_page_size))
+
+        self.assertIn('"total": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"per_page": {}'.format(page_size_param), self.app.make('Response'))
+        self.assertIn('"current_page": 1', self.app.make('Response'))
+        self.assertIn('"last_page": 1', self.app.make('Response'))
+        self.assertIn('"from": 1', self.app.make('Response'))
+        self.assertIn('"to": {}'.format(page_size_param), self.app.make('Response'))
+        self.assertIn('"data": ', self.app.make('Response'))
+        self.assertIn(
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            json.loads(self.app.make('Response'))['data']
+        )
+
+    def test_view_should_return_a_json_response_when_returning_paginator_instance(self):
+
+        self.assertIsInstance(MockUser(), Model)
+        users = MockUser().all()
+        num_users = len(users)
+        page_size = 15
+        self.response.view(Paginator(users, page_size))
+
+        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"per_page": {}'.format(page_size), self.app.make('Response'))
+        self.assertIn('"current_page": 1', self.app.make('Response'))
+        self.assertIn('"from": 1', self.app.make('Response'))
+        self.assertIn('"to": {}'.format(page_size), self.app.make('Response'))
+        self.assertIn('"data": ', self.app.make('Response'))
+        self.assertIn(
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            json.loads(self.app.make('Response'))['data']
+        )
+
+        users = [MockUser().find(1)]
+        num_users = len(users)
+        default_page_size = 15
+        page_size_param = 10
+        self.request._set_standardized_request_variables({'page_size': str(page_size_param)})
+        self.response.view(Paginator(users, default_page_size))
+
+        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
+        self.assertIn('"per_page": {}'.format(page_size_param), self.app.make('Response'))
+        self.assertIn('"current_page": 1', self.app.make('Response'))
+        self.assertIn('"from": 1', self.app.make('Response'))
+        self.assertIn('"to": {}'.format(page_size_param), self.app.make('Response'))
+        self.assertIn('"data": ', self.app.make('Response'))
+        self.assertIn(
+            {'name': 'TestUser', 'email': 'user@email.com'},
+            json.loads(self.app.make('Response'))['data']
+        )

@@ -33,3 +33,21 @@ def back(location=None):
 
 def hidden(value, name='hidden-input'):
     return Markup("<input type='hidden' name='{}' value='{}'>".format(name, value))
+
+
+def old(session_key=None):
+    """Return the old value submitted by forms validated with Valitators.
+
+    Arguments:
+        session_key {string} -- The key flashed to session.
+
+    Returns:
+        string -- An input string.
+    """
+
+    from wsgi import container
+    session_container = container.make('Session')
+
+    if session_container.has(session_key):
+        return session_container.get(session_key)
+    return ''

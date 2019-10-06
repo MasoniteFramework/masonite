@@ -645,6 +645,10 @@ class Request(Extendable):
         self.status(status)
         return self
 
+    def with_input(self):
+        self.flash_inputs_to_session()
+        return self
+
     def redirect_to(self, route_name, params={}, status=302):
         """Redirect to a named route.
 
@@ -785,6 +789,8 @@ class Request(Extendable):
         Returns:
             self
         """
+        self.with_input()
+
         redirect_url = self.input('__back')
         if not redirect_url and default:
             return self.redirect(default)
@@ -792,6 +798,13 @@ class Request(Extendable):
             return self.redirect(self.path)  # Some global default?
 
         return self.redirect(redirect_url)
+
+    def flash_inputs_to_session(self):
+        if not hasattr(self, 'session'):
+            return
+
+        for key, value in self.all().items():
+            self.session.flash(key, value)
 
     def is_named_route(self, name, params={}):
         """Check if the current URI is a specific named route.

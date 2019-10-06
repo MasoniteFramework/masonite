@@ -4,7 +4,7 @@ import json
 from orator import Model
 from orator.support.collection import Collection
 from orator import Paginator, LengthAwarePaginator
-
+from app.User import User
 from app.http.controllers.TestController import \
     TestController as ControllerTest
 from masonite.app import App
@@ -12,9 +12,13 @@ from masonite.request import Request
 from masonite.response import Response
 from masonite.testsuite import generate_wsgi
 from masonite.view import View
+from masonite.testing import TestCase
+from masonite.routes import Get
+from config.factories import factory
 
 
 class MockUser(Model):
+    __table__ = 'users'
 
     def all(self):
         return Collection([
@@ -27,150 +31,195 @@ class MockUser(Model):
         self.email = 'user@email.com'
         return self
 
+class MockController:
 
-class TestResponse(unittest.TestCase):
+    def test_json(self, response: Response):
+        return response.json({'test': 'value'})
+
+    def redirect(self, response: Response):
+        return response.redirect('/some/test')
+
+    def view(self, view: View):
+        return view.render('test', {'test': 'test'})
+
+    def response_int(self, response: Response):
+        return response.view(1)
+
+    def all_users(self):
+        return MockUser().all()
+
+    def paginate(self):
+        return MockUser.paginate(10)
+
+    def single(self):
+        return User.find(1)
+
+    def length_aware(self):
+        return LengthAwarePaginator(User.find(1), 1, 10)
+
+    def paginator(self):
+        return Paginator(User.all(), 10)
+
+    def single_paginator(self):
+        return Paginator(User.find(1), 10)
+
+
+class TestResponse(TestCase):
 
     def setUp(self):
-        self.app = App()
-        self.request = Request(generate_wsgi()).load_app(self.app)
-        self.app.bind('Request', self.request)
-        self.app.bind('StatusCode', None)
-        self.response = Response(self.app)
-        self.app.bind('Response', self.response)
+        super().setUp()
+        self.routes(only=[
+            Get('/json', MockController.test_json),
+            Get('/redirect', MockController.redirect),
+            Get('/change/header', ControllerTest.change_header),
+            Get('/view', MockController.view),
+            Get('/int', MockController.response_int),
+            Get('/404', ControllerTest.change_404),
+            Get('/change/status', ControllerTest.change_status),
+            Get('/users', MockController.all_users),
+            Get('/paginate', MockController.paginate),
+            Get('/paginator', MockController.paginator),
+            Get('/single_paginator', MockController.single_paginator),
+            Get('/single', MockController.single),
+            Get('/length_aware', MockController.length_aware),
+        ])
+    
+    def setUpFactories(self):
+        factory(User, 50).create()
 
     def test_can_set_json(self):
-        self.response.json({'test': 'value'})
-
-        self.assertTrue(self.request.is_status(200))
-        self.assertEqual(self.request.header('Content-Length'), '17')
-        self.assertEqual(self.request.header('Content-Type'), 'application/json; charset=utf-8')
+        (
+            self.json('GET', '/json')
+                .assertIsStatus(200)
+                .assertHeaderIs('Content-Length', 17)
+                .assertHeaderIs('Content-Type', 'application/json; charset=utf-8')
+        )
 
     def test_redirect(self):
-        self.response.redirect('/some/test')
-
-        self.request.header('Location', '/some/test')
-        self.assertTrue(self.request.is_status(302))
-        self.assertEqual(self.request.header('Location'), '/some/test')
+        (
+            self.get('/redirect')
+                .assertHeaderIs('Location', '/some/test')
+                .assertIsStatus(302)
+        )
 
     def test_response_does_not_override_header_from_controller(self):
-        self.response.view(self.app.resolve(ControllerTest().change_header))
-
-        self.assertEqual(self.request.header('Content-Type'), 'application/xml')
+        (
+            self.get('/change/header')
+                .assertHeaderIs('Content-Type', 'application/xml')
+        )
 
     def test_view(self):
-        view = View(self.app).render('test', {'test': 'test'})
-
-        self.response.view(view)
-
-        self.assertEqual(self.app.make('Response'), 'test')
-        self.assertTrue(self.request.is_status(200))
-
-        self.response.view('foobar')
-
-        self.assertEqual(self.app.make('Response'), 'foobar')
+        (
+            self.get('/view')
+                .assertContains('test')
+                .assertIsStatus(200)
+        )
 
     def test_view_can_return_integer_as_string(self):
-        self.response.view(1)
-
-        self.assertEqual(self.app.make('Response'), '1')
-        self.assertTrue(self.request.is_status(200))
+        (
+            self.get('/int')
+                .assertContains('1')
+                .assertIsStatus(200)
+        )
 
     def test_view_can_set_own_status_code_to_404(self):
-        self.response.view(self.app.resolve(ControllerTest().change_404))
-        self.assertTrue(self.request.is_status(404))
+        (
+            self.get('/404')
+                .assertNotFound()
+        )
 
     def test_view_can_set_own_status_code(self):
-
-        self.response.view(self.app.resolve(ControllerTest().change_status))
-        self.assertTrue(self.request.is_status(203))
+        (
+            self.get('/change/status')
+                .assertIsStatus(203)
+        )
 
     def test_view_should_return_a_json_response_when_retrieve_a_user_from_model(self):
+        (
+            self.json('GET', '/users')
+                .assertCount(2)
+                .assertJsonContains('name', 'TestUser')
+                .assertJsonContains('email', 'user@email.com')
+        )
 
-        self.assertIsInstance(MockUser(), Model)
-        self.response.view(MockUser().all())
-
-        self.assertIn('"name": "TestUser"', self.app.make('Response'))
-        self.assertIn('"email": "user@email.com"', self.app.make('Response'))
-
-        self.response.view(MockUser().find(1))
-
-        self.assertIn('"name": "TestUser"', self.app.make('Response'))
-        self.assertIn('"email": "user@email.com"', self.app.make('Response'))
 
     def test_view_should_return_a_json_response_when_returning_length_aware_paginator_instance(self):
 
-        self.assertIsInstance(MockUser(), Model)
-        users = MockUser().all()
-        num_users = len(users)
-        page_size = 15
-        self.response.view(LengthAwarePaginator(users, num_users, page_size))
+        users = User.all()
 
-        self.assertIn('"total": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"per_page": {}'.format(page_size), self.app.make('Response'))
-        self.assertIn('"current_page": 1', self.app.make('Response'))
-        self.assertIn('"last_page": 1', self.app.make('Response'))
-        self.assertIn('"from": 1', self.app.make('Response'))
-        self.assertIn('"to": {}'.format(page_size), self.app.make('Response'))
-        self.assertIn('"data": ', self.app.make('Response'))
-        self.assertIn(
-            {'name': 'TestUser', 'email': 'user@email.com'},
-            json.loads(self.app.make('Response'))['data']
+        # Page 1
+        (
+            self.get('/paginate')
+                .assertHasJson('total', len(users))
+                .assertHasJson('count', 10)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10)
         )
 
-        users = [MockUser().find(1)]
-        num_users = len(users)
-        default_page_size = 15
-        page_size_param = 10
-        self.request._set_standardized_request_variables({'page_size': str(page_size_param)})
-        self.response.view(LengthAwarePaginator(users, num_users, default_page_size))
-
-        self.assertIn('"total": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"per_page": {}'.format(page_size_param), self.app.make('Response'))
-        self.assertIn('"current_page": 1', self.app.make('Response'))
-        self.assertIn('"last_page": 1', self.app.make('Response'))
-        self.assertIn('"from": 1', self.app.make('Response'))
-        self.assertIn('"to": {}'.format(page_size_param), self.app.make('Response'))
-        self.assertIn('"data": ', self.app.make('Response'))
-        self.assertIn(
-            {'name': 'TestUser', 'email': 'user@email.com'},
-            json.loads(self.app.make('Response'))['data']
+        # Page 2
+        (
+            self.get('/paginate', {'page': 2})
+                .assertHasJson('total', len(users))
+                .assertHasJson('count', 10)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 2)
+                .assertHasJson('from', 11)
+                .assertHasJson('to', 20)
         )
+
+        factory(User).create()
+        (
+            self.get('/length_aware')
+                .assertHasJson('total', 1)
+                .assertHasJson('count', 1)
+        )
+
 
     def test_view_should_return_a_json_response_when_returning_paginator_instance(self):
-
-        self.assertIsInstance(MockUser(), Model)
-        users = MockUser().all()
-        num_users = len(users)
-        page_size = 15
-        self.response.view(Paginator(users, page_size))
-
-        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"per_page": {}'.format(page_size), self.app.make('Response'))
-        self.assertIn('"current_page": 1', self.app.make('Response'))
-        self.assertIn('"from": 1', self.app.make('Response'))
-        self.assertIn('"to": {}'.format(page_size), self.app.make('Response'))
-        self.assertIn('"data": ', self.app.make('Response'))
-        self.assertIn(
-            {'name': 'TestUser', 'email': 'user@email.com'},
-            json.loads(self.app.make('Response'))['data']
+        
+        users = User.all()
+        (
+            self.get('/paginator')
+                .assertHasJson('count', 10)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10)
         )
 
-        users = [MockUser().find(1)]
-        num_users = len(users)
-        default_page_size = 15
-        page_size_param = 10
-        self.request._set_standardized_request_variables({'page_size': str(page_size_param)})
-        self.response.view(Paginator(users, default_page_size))
 
-        self.assertIn('"count": {}'.format(num_users), self.app.make('Response'))
-        self.assertIn('"per_page": {}'.format(page_size_param), self.app.make('Response'))
-        self.assertIn('"current_page": 1', self.app.make('Response'))
-        self.assertIn('"from": 1', self.app.make('Response'))
-        self.assertIn('"to": {}'.format(page_size_param), self.app.make('Response'))
-        self.assertIn('"data": ', self.app.make('Response'))
-        self.assertIn(
-            {'name': 'TestUser', 'email': 'user@email.com'},
-            json.loads(self.app.make('Response'))['data']
+    def test_can_correct_incorrect_pagination_page(self):
+        users = User.all()
+        (
+            self.get('/paginator')
+                .assertHasJson('count', 10)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10)
         )
+        
+        (self.get('/paginate', {'page': 'hey', 'page_size': 'hey'})
+                .assertHasJson('total', len(users))
+                .assertHasJson('count', 10)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10))
+
+        (self.get('/length_aware', {'page': 'hey', 'page_size': 'hey'})
+                # .assertHasJson('total', len(User.find(1)))
+                # .assertHasJson('count', len(User.find(1)))
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10))
+
+        (self.get('/single_paginator', {'page': 'hey', 'page_size': 'hey'})
+                .assertHasJson('count', 1)
+                .assertHasJson('per_page', 10)
+                .assertHasJson('current_page', 1)
+                .assertHasJson('from', 1)
+                .assertHasJson('to', 10))

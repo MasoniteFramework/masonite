@@ -49,12 +49,12 @@ class Response(Extendable):
             string -- Returns a string representation of the data
         """
         # configured param types
-        PAGE_SIZE_PARAM = 'page_size'
-        PAGE_PARAM = 'page'
+        page_size_parameter = 'page_size'
+        page_parameter = 'page'
 
         # try to capture request input for page_size and/or page
-        page_size_input = self.request.input(PAGE_SIZE_PARAM)
-        page_input = self.request.input(PAGE_PARAM)
+        page_size_input = self.request.input(page_size_parameter)
+        page_input = self.request.input(page_parameter)
         # use try/except here, as int(bool) will return 0 for False above
         try:
             page_size = (
@@ -62,7 +62,7 @@ class Response(Extendable):
                 if page_size_input and int(page_size_input) > 0
                 else paginator.per_page
             )
-        except Exception as _:
+        except Exception:
             page_size = paginator.per_page
         try:
             page = (
@@ -70,7 +70,7 @@ class Response(Extendable):
                 if page_input and int(page_input) > 0
                 else paginator.current_page
             )
-        except Exception as _:
+        except Exception:
             page = paginator.current_page
 
         # don't waste time instantiating new paginator if no change
@@ -80,16 +80,15 @@ class Response(Extendable):
         ):
             try:
                 # try to get class of model
-                model_class = next(type(x) for x in paginator.items)
-                if model_class:
-                    if isinstance(paginator, Paginator):
-                        paginator = model_class.simple_paginate(
-                            page_size,
-                            page
-                        )
-                    elif isinstance(paginator, LengthAwarePaginator):
-                        paginator = model_class.paginate(page_size, page)
-            except Exception as _:
+                next(type(x) for x in paginator.items)
+                if isinstance(paginator, Paginator):
+                    paginator = model_class.simple_paginate(
+                        page_size,
+                        page
+                    )
+                elif isinstance(paginator, LengthAwarePaginator):
+                    paginator = model_class.paginate(page_size, page)
+            except Exception:
                 paginator = paginator
 
         payload = {
@@ -106,7 +105,7 @@ class Response(Extendable):
                 if isinstance(paginator, LengthAwarePaginator)
                 else None
             ),
-            'from': (page_size * (page- 1)) + 1,
+            'from': (page_size * (page - 1)) + 1,
             'to': page_size * page,
             'data': paginator.serialize()
         }

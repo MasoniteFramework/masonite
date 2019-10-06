@@ -35,7 +35,7 @@ def hidden(value, name='hidden-input'):
     return Markup("<input type='hidden' name='{}' value='{}'>".format(name, value))
 
 
-def old(session_key=None):
+def old(session_key, default=''):
     """Return the old value submitted by forms validated with Valitators.
 
     Arguments:
@@ -50,4 +50,4 @@ def old(session_key=None):
 
     if session_container.has(session_key):
         return session_container.get(session_key)
-    return ''
+    return default

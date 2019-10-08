@@ -18,7 +18,6 @@ class Route:
         'string': r'([a-zA-Z]+)',
         'default': r'([\w.-]+)',
         'signed': r'([\w\-=]+)',
-        'optional': r'([\/\w\-=]{0,})',
     }
 
     def __init__(self, environ=None):
@@ -376,10 +375,13 @@ class BaseHttpRoute:
                     regex_route.replace('@', '').split(':')[0]
                 )
             elif '?' in regex_route:
+                # Make the preceding token match 0 or more
+                regex += "?"
+
                 if ':' in regex_route:
+                    
                     try:
-                        regex += Route.route_compilers[regex_route.split(':')[
-                            1]]
+                        regex += Route.route_compilers[regex_route.split(':')[1]] + '*'
                     except KeyError:
                         if hasattr(self, '_compiled_regex'):
                             raise InvalidRouteCompileException(
@@ -392,8 +394,7 @@ class BaseHttpRoute:
                         return
 
                 else:
-                    regex = regex[:-2] + r"[\/]*"
-                    regex += Route.route_compilers['optional']
+                    regex += Route.route_compilers['default'] + '*'
 
                 regex += r'\/'
 

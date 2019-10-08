@@ -1,4 +1,5 @@
 import unittest
+from masonite.exceptions import RouteNotFoundException
 
 from masonite.app import App
 from masonite.exceptions import InvalidRouteCompileException, RouteException
@@ -262,6 +263,9 @@ class TestOptionalRoutes(TestCase):
         self.routes(only=[
             Get('/user/?name', 'TestController@v'),
             Get('/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
+            Get('/back/user/name?', 'TestController@v'),
+            Get('/back/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
+            Get('/optional/?name:int', 'TestController@v'),
         ])
     
     def test_can_get_name(self):
@@ -269,6 +273,24 @@ class TestOptionalRoutes(TestCase):
         self.get('/user').assertParameterIs('name', None)
         self.get('/default/user/Bill').assertParameterIs('name', 'Bill')
         self.get('/default/user').assertParameterIs('name', 'Joseph')
+
+    def test_can_get_optional_when_optional_is_in_back(self):
+        self.get('/back/user/john').assertParameterIs('name', 'john')
+        self.get('/back/user').assertParameterIs('name', None)
+        self.get('/back/default/user/Bill').assertParameterIs('name', 'Bill')
+        self.get('/back/default/user').assertParameterIs('name', 'Joseph')
+
+    def test_can_get_optional_route_compilers(self):
+        self.get('/optional/1').assertParameterIs('name', '1')
+
+        with self.assertRaises(RouteNotFoundException):
+            self.get('/optional/Joe')
+        
+        self.get('/optional').assertParameterIs('name', None)
+
+    def test_cannot_get_longer_optional_parameter(self):
+        with self.assertRaises(RouteNotFoundException):
+            self.get('/user/john/settings').assertParameterIs('name', 'john')
 
 class WsgiInputTestClass:
 

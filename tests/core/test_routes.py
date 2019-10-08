@@ -1,13 +1,15 @@
-from masonite.routes import Route
-from masonite.request import Request
-from masonite.app import App
-from masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
-from masonite.helpers.routes import group, flatten_routes
-from masonite.helpers.routes import create_matchurl
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.exceptions import InvalidRouteCompileException, RouteException
-from app.http.controllers.subdirectory.SubController import SubController
 import unittest
+
+from masonite.app import App
+from masonite.exceptions import InvalidRouteCompileException, RouteException
+from masonite.helpers.routes import create_matchurl, flatten_routes, group
+from masonite.request import Request
+from masonite.routes import (Connect, Delete, Get, Head, Match, Options, Patch,
+                             Post, Put, Redirect, Route, RouteGroup, Trace)
+from masonite.testing import TestCase
+from masonite.testsuite.TestSuite import generate_wsgi
+
+from app.http.controllers.subdirectory.SubController import SubController
 
 
 class TestRoutes(unittest.TestCase):
@@ -252,6 +254,21 @@ class TestRoutes(unittest.TestCase):
         route = Redirect('/test1', '/test3', methods=['POST', 'PUT'])
         self.assertEqual(route.method_type, ['POST', 'PUT'])
 
+
+class TestOptionalRoutes(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.routes(only=[
+            Get('/user/?name', 'TestController@v'),
+            Get('/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
+        ])
+    
+    def test_can_get_name(self):
+        self.get('/user/john').assertParameterIs('name', 'john')
+        self.get('/user').assertParameterIs('name', None)
+        self.get('/default/user/Bill').assertParameterIs('name', 'Bill')
+        self.get('/default/user').assertParameterIs('name', 'Joseph')
 
 class WsgiInputTestClass:
 

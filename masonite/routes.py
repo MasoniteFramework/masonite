@@ -392,9 +392,9 @@ class BaseHttpRoute:
                         return
 
                 else:
-                    regex = regex[:-2] + '[\/]*'
+                    regex = regex[:-2] + r"[\/]*"
                     regex += Route.route_compilers['optional']
-                
+
                 regex += r'\/'
 
                 url_list.append(
@@ -440,8 +440,8 @@ class Post(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Post constructor."""
+        super().__init__()
         self.method_type = ['POST']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -451,12 +451,12 @@ class Match(BaseHttpRoute):
 
     def __init__(self, method_type=['GET'], route=None, output=None):
         """Match constructor."""
+        super().__init__()
         if not isinstance(method_type, list):
             raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
 
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -466,8 +466,8 @@ class Put(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Put constructor."""
+        super().__init__()
         self.method_type = ['PUT']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -477,8 +477,8 @@ class Patch(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Patch constructor."""
+        super().__init__()
         self.method_type = ['PATCH']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -488,8 +488,8 @@ class Delete(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Delete constructor."""
+        super().__init__()
         self.method_type = ['DELETE']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -499,8 +499,8 @@ class Connect(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Connect constructor."""
+        super().__init__()
         self.method_type = ['CONNECT']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -510,8 +510,8 @@ class Options(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Options constructor."""
+        super().__init__()
         self.method_type = ['OPTIONS']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -524,8 +524,8 @@ class Trace(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Trace constructor."""
+        super().__init__()
         self.method_type = ['TRACE']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -544,7 +544,8 @@ class ViewRoute(BaseHttpRoute):
             template {string} -- The template to use (dashboard/user)
             dictionary {dict} -- The dictionary to use to render the template.
         """
-        self.list_middleware = []
+
+        super().__init__()
         self.method_type = method_type
         self.route_url = route
         self.template = template
@@ -569,7 +570,7 @@ class Redirect(BaseHttpRoute):
             template {string} -- The template to use (dashboard/user)
             dictionary {dict} -- The dictionary to use to render the template.
         """
-        self.list_middleware = []
+        super().__init__()
         self.method_type = methods
         self.route_url = current_route
         self.status = status

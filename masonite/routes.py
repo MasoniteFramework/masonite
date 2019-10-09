@@ -402,7 +402,6 @@ class BaseHttpRoute:
                     regex_route.replace('?', '').split(':')[0]
                 )
             else:
-                pass
                 regex += regex_route + r'\/'
 
         self.url_list = url_list
@@ -430,8 +429,8 @@ class Head(BaseHttpRoute):
 
     def __init__(self, route=None, output=None):
         """Head constructor."""
+        super().__init__()
         self.method_type = ['HEAD']
-        self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
 

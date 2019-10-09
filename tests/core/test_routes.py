@@ -261,7 +261,8 @@ class TestOptionalRoutes(TestCase):
     def setUp(self):
         super().setUp()
         self.routes(only=[
-            Get('/user/?name', 'TestController@v'),
+            Get('/user/?name', 'TestController@v').name('user.name'),
+            Get('/multiple/user/?name/?last', 'TestController@v').name('user.multiple'),
             Get('/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
             Get('/back/user/name?', 'TestController@v'),
             Get('/back/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
@@ -291,6 +292,15 @@ class TestOptionalRoutes(TestCase):
     def test_cannot_get_longer_optional_parameter(self):
         with self.assertRaises(RouteNotFoundException):
             self.get('/user/john/settings').assertParameterIs('name', 'john')
+
+    def test_route_helper_works(self):
+        request = self.get('/user/john').request
+        self.assertEqual(request.route('user.name'), '/user')
+        self.assertEqual(request.route('user.name', {'name': 'john'}), '/user/john')
+        self.assertEqual(request.route('user.multiple'), '/multiple/user')
+        self.assertEqual(request.route('user.multiple', {'name': 'john'}), '/multiple/user/john')
+        self.assertEqual(request.route('user.multiple', {'name': 'john', 'last': 'smith'}), '/multiple/user/john/smith')
+        self.assertEqual(request.route('user.multiple', {'last': 'smith'}), '/multiple/user/smith')
 
 class WsgiInputTestClass:
 

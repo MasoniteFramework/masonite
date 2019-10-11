@@ -161,6 +161,8 @@ class App:
                     if inspect.isclass(param):
                         param = self.resolve(param)
                     objects.append(param)
+                elif 'self' in str(value):
+                    objects.append(obj)
                 elif '=' in str(value):
                     objects.append(value.default)
                 elif '*' in str(value):

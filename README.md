@@ -156,7 +156,7 @@ You can easily create new applications with `craft`. To create a new application
 
 ```
 $ pip install masonite-cli
-$ craft new .
+$ craft new project .
 ```
 
 The `.` will tell craft to create the project in the current directory instead of a new directory.

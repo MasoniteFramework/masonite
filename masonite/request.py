@@ -874,9 +874,16 @@ class Request(Extendable):
                         compiled_url += str(params[url]) + '/'
                     elif isinstance(params, list):
                         compiled_url += str(params.pop(0)) + '/'
+                elif '?' in url:
+                    url = url.replace('?', '').split(':')[0]
+                    if isinstance(params, dict):
+                        compiled_url += str(params.get(url, '/')) + '/'
+                    elif isinstance(params, list):
+                        compiled_url += str(params.pop(0)) + '/'
                 else:
                     compiled_url += url + '/'
 
+        compiled_url = compiled_url.replace('//', '')
         # The loop isn't perfect and may have an unwanted trailing slash
         if compiled_url.endswith('/') and not route.endswith('/'):
             compiled_url = compiled_url[:-1]

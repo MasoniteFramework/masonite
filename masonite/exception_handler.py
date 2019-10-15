@@ -65,7 +65,7 @@ class ExceptionHandler:
 
     def get_file_and_line(self, stacktraceback):
         for stack in stacktraceback[::-1]:
-            if not 'site-packages' in stack[0]:
+            if 'site-packages' not in stack[0]:
                 return (stack[0], stack[1])
 
     def handle(self, exception):

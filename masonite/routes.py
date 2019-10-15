@@ -379,7 +379,7 @@ class BaseHttpRoute:
                 regex += "?"
 
                 if ':' in regex_route:
-                    
+
                     try:
                         regex += Route.route_compilers[regex_route.split(':')[1]] + '*'
                     except KeyError:

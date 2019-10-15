@@ -57,10 +57,16 @@ class ExceptionHandler:
 
         self.handle(exception)
 
-    def run_listeners(self, exception):
+    def run_listeners(self, exception, stacktraceback):
         for key, exception_class in self._app.collect(BaseExceptionListener).items():
             if '*' in exception_class.listens or exception.__class__ in exception_class.listens:
-                self._app.resolve(exception_class).handle(exception)
+                file, line = self.get_file_and_line(stacktraceback)
+                self._app.resolve(exception_class).handle(exception, file, line)
+
+    def get_file_and_line(self, stacktraceback):
+        for stack in stacktraceback[::-1]:
+            if not 'site-packages' in stack[0]:
+                return (stack[0], stack[1])
 
     def handle(self, exception):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
@@ -68,8 +74,8 @@ class ExceptionHandler:
         Returns:
             None
         """
-
-        self.run_listeners(exception)
+        stacktraceback = traceback.extract_tb(sys.exc_info()[2])
+        self.run_listeners(exception, stacktraceback)
 
         request = self._app.make('Request')
 

@@ -1,7 +1,7 @@
 from masonite.testing import TestCase
 from masonite.request import Request
 from masonite.listeners import BaseExceptionListener
-
+from routes.web import ROUTES
 class ExceptionListener(BaseExceptionListener):
 
     listens = [
@@ -11,7 +11,7 @@ class ExceptionListener(BaseExceptionListener):
     def __init__(self, request: Request):
         self.request = request
 
-    def handle(self, exception):
+    def handle(self, exception, file, line):
         self.request.error_thrown = True
 
 class ExceptionAllListener(BaseExceptionListener):
@@ -21,7 +21,8 @@ class ExceptionAllListener(BaseExceptionListener):
     def __init__(self, request: Request):
         self.request = request
 
-    def handle(self, exception):
+    def handle(self, exception, file, line):
+        print(file, line)
         self.request.error_thrown = True
 
 
@@ -29,6 +30,7 @@ class TestExceptionListener(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.routes(ROUTES)
         self.container.simple(ExceptionListener)
 
     def test_listener_fires(self):

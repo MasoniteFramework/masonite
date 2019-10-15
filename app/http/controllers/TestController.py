@@ -41,6 +41,10 @@ class TestController:
     def bad(self):
         return 5 / 0
 
+    def keyerror(self):
+        x = {'hello': 'world'}
+        return x['test']
+
     def session(self, request: Request):
         request.session.set('test', 'value')
         return 'session set'

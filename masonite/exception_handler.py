@@ -15,6 +15,7 @@ from masonite.exceptions import DumpException
 from masonite.request import Request
 from masonite.response import Response
 from masonite.view import View
+from masonite.listeners import BaseExceptionListener
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -56,13 +57,22 @@ class ExceptionHandler:
 
         self.handle(exception)
 
-    def handle(self, _):
+    def run_listeners(self, exception):
+        for key, exception_class in self._app.collect(BaseExceptionListener).items():
+            if '*' in exception_class.listens or exception.__class__ in exception_class.listens:
+                self._app.resolve(exception_class).handle(exception)
+
+    def handle(self, exception):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
         Returns:
             None
         """
+
+        self.run_listeners(exception)
+
         request = self._app.make('Request')
+
         request.status(500)
 
         # Run Any Framework Exception Hooks

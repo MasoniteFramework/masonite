@@ -15,6 +15,7 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                ServeCommand, TestCommand, TinkerCommand, UpCommand,
                                ViewCommand)
 from masonite.exception_handler import DumpHandler, ExceptionHandler
+from masonite.listeners import ExceptionListener
 from masonite.helpers import config
 from masonite.helpers.routes import flatten_routes
 from masonite.hook import Hook
@@ -40,6 +41,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('Container', self.app)
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
+        self.app.simple(ExceptionListener)
         self.app.bind('AuthCookieDriver', AuthCookieDriver)
         self.app.bind('AuthJwtDriver', AuthJwtDriver)
         self.app.bind('AuthManager', AuthManager(self.app).driver('cookie'))

@@ -1,0 +1,2 @@
+class BaseExceptionListener:
+    pass

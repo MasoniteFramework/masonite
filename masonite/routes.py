@@ -198,14 +198,19 @@ class BaseHttpRoute:
 
             # Set the controller method on class. This is a string
             self.controller_method = mod[1]
-        except ImportError:
-            print('\033[93mCannot find controller {}. Did you create this one?'.format(get_controller), '\033[0m')
+        except ImportError as e:
+            import sys
+            import traceback
+            exc_type, _, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
+                get_controller, str(e), tb[0], tb[1]), '\033[0m')
         except Exception:
             import sys
             import traceback
             exc_type, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
-            print('\033[93mWarning in routes/web.py!', exc_type, 'in', tb[0], 'on line', tb[1], '\033[0m')
+            print('\033[93mTrouble importing controller!', str(e), '\033[0m')
 
     def get_response(self):
         # Resolve Controller Constructor

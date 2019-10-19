@@ -70,7 +70,7 @@ class TestMailManager(unittest.TestCase):
         MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):
-        with self.assertRaises(DriverNotFound, message="Should raise DriverNotFound error"):
+        with self.assertRaises(DriverNotFound):
             MailManager(self.app).driver('mailtrap')
 
     def test_drivers_are_resolvable_by_container(self):

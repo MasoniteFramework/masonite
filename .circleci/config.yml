@@ -35,6 +35,13 @@ jobs:
         - checkout
         - run: make
         - run: make test
+    python38:
+      docker:
+        - image: circleci/python:3.8
+      steps:
+        - checkout
+        - run: make
+        - run: make test
     CodeCoverage:
       docker:
         - image: circleci/python:3.6
@@ -70,6 +77,10 @@ workflows:
             tags:
               only: /^.*/
       - python37:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /^.*/
+      - python38:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/

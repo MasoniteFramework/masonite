@@ -10,7 +10,7 @@ class AuthManager(Manager):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'AuthConfig'
+    config = 'auth'
     driver_prefix = 'Auth'
 
 

@@ -6,7 +6,7 @@ from masonite.auth.Sign import Sign
 from masonite.managers import MailManager
 from masonite.request import Request
 from masonite.view import View
-
+from masonite.helpers import config
 from app.User import User
 
 
@@ -28,7 +28,7 @@ class ConfirmController:
         Returns:
             [type] -- [description]
         """
-        return view.render('auth/verify', {'app': request.app().make('Application'), 'Auth': auth})
+        return view.render('auth/verify', {'app': config('application'), 'Auth': auth})
 
     def confirm_email(self, request: Request, view: View, auth: Auth):
         """Confirm User email and show the correct response.
@@ -58,9 +58,9 @@ class ConfirmController:
                         user.verified_at = datetime.datetime.now()
                         user.save()
 
-                        return view.render('auth/confirm', {'app': request.app().make('Application'), 'Auth': auth})
+                        return view.render('auth/confirm', {'app': config('application'), 'Auth': auth})
 
-        return view.render('auth/error', {'app': request.app().make('Application'), 'Auth': auth})
+        return view.render('auth/error', {'app': config('application'), 'Auth': auth})
 
     def send_verify_email(self, manager: MailManager, request: Request):
         user = request.user()

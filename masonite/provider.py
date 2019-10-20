@@ -88,7 +88,8 @@ class ServiceProvider:
         Arguments:
             assets {dict} -- A dictionary of assets to add
         """
-        self.app.make('Storage').STATICFILES.update(assets)
+
+        self.app.make('staticfiles').update(assets)
 
     def publishes(self, dictionary, tag=None):
         self._publishes.update(dictionary)

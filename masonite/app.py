@@ -39,6 +39,8 @@ class App:
         Returns:
             self
         """
+        if inspect.ismodule(class_obj):
+            raise StrictContainerException("Cannot bind module '{}' with key '{}' into the container".format(class_obj, name))
         if self.strict and name in self.providers:
             raise StrictContainerException(
                 'You cannot override a key inside a strict container')

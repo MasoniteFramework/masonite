@@ -2,6 +2,7 @@
 
 from masonite.contracts import MailManagerContract
 from masonite.managers import Manager
+from masonite.helpers import config
 
 
 class MailManager(Manager, MailManagerContract):
@@ -11,7 +12,7 @@ class MailManager(Manager, MailManagerContract):
         Manager {masonite.managers.Manager} -- The base Manager class.
     """
 
-    config = 'MailConfig'
+    config = 'mail'
     driver_prefix = 'Mail'
 
     def helper(self):
@@ -20,7 +21,7 @@ class MailManager(Manager, MailManagerContract):
         Returns:
             Mail Driver
         """
-        return self.driver(self.container.make('MailConfig').DRIVER)
+        return self.driver(config('mail.driver'))
 
 
 class Mail:

@@ -14,7 +14,7 @@ class TestSession(unittest.TestCase):
         self.app = App()
         self.app.bind('Environ', wsgi_request)
         self.app.bind('Request', Request(wsgi_request))
-        self.app.bind('SessionConfig', session)
+        # self.app.bind('SessionConfig', session)
         self.app.bind('SessionCookieDriver', SessionCookieDriver)
         self.app.bind('SessionMemoryDriver', SessionMemoryDriver)
         self.app.bind('SessionManager', SessionManager(self.app))

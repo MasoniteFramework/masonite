@@ -6,20 +6,21 @@ from masonite.provider import ServiceProvider
 from masonite.view import View
 from masonite.request import Request
 from masonite import Session
+from masonite.helpers import config
 
 
 class SessionProvider(ServiceProvider):
 
     def register(self):
-        from config import session
-        self.app.bind('SessionConfig', session)
+        # from config import session
+        # self.app.bind('SessionConfig', session)
         self.app.bind('SessionMemoryDriver', SessionMemoryDriver)
         self.app.bind('SessionCookieDriver', SessionCookieDriver)
         self.app.bind('SessionManager', SessionManager(self.app))
 
     def boot(self, request: Request, view: View, session: SessionManager):
-        self.app.bind('Session', session.driver(self.app.make('SessionConfig').DRIVER))
-        self.app.swap(Session, session.driver(self.app.make('SessionConfig').DRIVER))
+        self.app.bind('Session', session.driver(config('session').DRIVER))
+        self.app.swap(Session, session.driver(config('session').DRIVER))
         request.session = self.app.make('Session')
 
         view.share({

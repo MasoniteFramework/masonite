@@ -36,7 +36,6 @@ class TestMailManager(unittest.TestCase):
 
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)
-        self.app.bind('MailConfig', mail)
         self.app.bind('View', View(self.app).render)
         self.app.bind('ViewClass', View(self.app))
 

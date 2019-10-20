@@ -25,15 +25,15 @@ from masonite.routes import Route
 
 from masonite.managers import AuthManager
 from masonite.drivers import AuthCookieDriver, AuthJwtDriver
+from masonite.helpers import load
 
 
 class AppProvider(ServiceProvider):
 
     def register(self):
-        from routes import web
         self.app.bind('HookHandler', Hook(self.app))
-        self.app.bind('WebRoutes', flatten_routes(web.ROUTES))
-        self.app.bind('Storage', config('storage'))
+        self.app.bind('WebRoutes', flatten_routes(load('routes.web.routes')))
+        # self.app.bind('Storage', config('storage'))
         self.app.bind('Route', Route())
         self.app.bind('Request', Request())
         self.app.simple(Response(self.app))
@@ -46,6 +46,7 @@ class AppProvider(ServiceProvider):
         self.app.bind('RouteMiddleware', config('middleware.route_middleware'))
         self.app.bind('HttpMiddleware', config('middleware.http_middleware'))
         self.app.bind('Auth', Auth)
+        self.app.bind('staticfiles', config('storage.staticfiles', {}))
 
         # Insert Commands
         self._load_commands()

@@ -29,7 +29,6 @@ class TestException(unittest.TestCase):
 
     def setUp(self):
         self.app = App()
-        self.app.bind('Application', ApplicationMock)
         self.app.bind('Environ', generate_wsgi())
         self.app.bind('WebRoutes', [])
         self.app.bind('View', View(self.app).render)
@@ -40,6 +39,7 @@ class TestException(unittest.TestCase):
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('HookHandler', Hook(self.app))
         self.app.bind('Request', Request(generate_wsgi()).load_app(self.app))
+        self.app.bind('staticfiles', {})
         self.app.bind('ExceptionAttributeErrorHandler', MockExceptionHandler)
 
     def test_exception_renders_view(self):
@@ -61,5 +61,5 @@ class TestException(unittest.TestCase):
             self.app.make('ExceptionHandler').load_exception(e)
 
     def test_exception_returns_none_when_debug_is_false(self):
-        self.app.make('Application').DEBUG = False
+        # config('application.debug') = False
         self.assertIsNone(self.app.make('ExceptionHandler').load_exception(KeyError))

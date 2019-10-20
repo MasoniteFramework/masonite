@@ -15,6 +15,7 @@ from masonite.exceptions import DumpException
 from masonite.request import Request
 from masonite.response import Response
 from masonite.view import View
+from masonite.helpers import config
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,12 +36,14 @@ class ExceptionHandler:
 
     def _register_static_files(self):
         """Register static files into the container."""
-        self._app.make('Storage').STATICFILES.update(
-            {
-                os.path.join(package_directory, 'snippets/exceptions'):
-                '_exceptions/'
-            }
-        )
+        storage = config('storage')
+        if storage:
+            storage.STATICFILES.update(
+                {
+                    os.path.join(package_directory, 'snippets/exceptions'):
+                    '_exceptions/'
+                }
+            )
 
     def load_exception(self, exception):
         """Load the exception thrown into this handler.
@@ -102,6 +105,7 @@ class ExceptionHandler:
                                                    'stacktrace': traceback.extract_tb(sys.exc_info()[2]) + last_stacktrace + second_to_last_stacktrace,
                                                    'second_to_last': second_to_last_stacktrace,
                                                    'app': self._app,
+                                                   'providers': config('providers.providers', []),
                                                    'enumerate': enumerate,
                                                    'open': open,
                                                    'platform': platform

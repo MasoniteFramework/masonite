@@ -3,6 +3,7 @@
 from whitenoise import WhiteNoise
 
 from masonite.provider import ServiceProvider
+from masonite.helpers import config
 
 
 class WhitenoiseProvider(ServiceProvider):
@@ -16,7 +17,7 @@ class WhitenoiseProvider(ServiceProvider):
         """Wrap the WSGI server in a whitenoise container."""
         from config import application
         self.app.bind('WSGI', WhiteNoise(
-            self.app.make('WSGI'), root=self.app.make('Application').STATIC_ROOT, autorefresh=application.DEBUG))
+            self.app.make('WSGI'), root=config('application.static_root'), autorefresh=application.DEBUG))
 
-        for location, alias in self.app.make('Storage').STATICFILES.items():
+        for location, alias in self.app.make('staticfiles').items():
             self.app.make('WSGI').add_files(location, prefix=alias)

@@ -249,7 +249,7 @@
             </div>
             <div class="col-md-10">
                 <div>
-                    {% for provider in app.make('Application').PROVIDERS %}
+                    {% for provider in providers %}
                         <p class="stack-row">{{ provider }}</p>
                     {% endfor %}
                 </div>
@@ -263,7 +263,7 @@
             </div>
             <div class="col-md-10">
                 <div>
-                    {% for directory in app.make('Storage').STATICFILES %}
+                    {% for directory in app.make('staticfiles') %}
                         <p>
                             {{ directory}}
                         </p>

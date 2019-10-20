@@ -1,5 +1,6 @@
 """Publish Service Providers"""
 from cleo import Command
+from masonite.helpers import config
 
 
 class PublishCommand(Command):
@@ -14,7 +15,7 @@ class PublishCommand(Command):
     def handle(self):
         from wsgi import container
 
-        for provider in container.make('Providers'):
+        for provider in config('providers.providers'):
             if provider.__class__.__name__ == self.argument('name'):
                 if self.option('tag') != 'None':
                     provider.publish(tag=self.option('tag'))

@@ -3,6 +3,7 @@
 from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
+from masonite.helpers import config
 from masonite.response import Responsable
 
 
@@ -16,7 +17,7 @@ class BaseMailDriver(BaseDriver, Responsable):
             app {masonite.app.App} -- The Masonite container class.
             view {object} -- This is the masonite.view.View class.
         """
-        self.config = app.make('MailConfig')
+        self.config = config('mail')
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'

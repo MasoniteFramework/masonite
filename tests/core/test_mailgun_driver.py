@@ -24,7 +24,6 @@ if os.getenv('MAILGUN_SECRET'):
             self.app.bind('Container', self.app)
 
             self.app.bind('Test', object)
-            self.app.bind('MailConfig', mail)
             self.app.bind('MailSmtpDriver', MailDriver)
             self.app.bind('MailMailgunDriver', Mailgun)
             self.app.bind('View', View(self.app))

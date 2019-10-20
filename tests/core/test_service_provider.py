@@ -103,7 +103,7 @@ class TestServiceProvider(unittest.TestCase):
         self.assertEqual(len(self.app.collect('*MigrationDirectory')), 2)
 
     def test_can_load_assets_into_container(self):
-        self.assertEqual(self.app.make('Storage').STATICFILES['storage/static'], '/some/location')
+        self.assertEqual(self.app.make('staticfiles')['storage/static'], '/some/location')
 
     def test_can_load_commands_into_container(self):
         self.assertTrue(self.app.make('Mock1Command'))

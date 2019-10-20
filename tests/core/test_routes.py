@@ -6,7 +6,7 @@ from masonite.exceptions import InvalidRouteCompileException, RouteException
 from masonite.helpers.routes import create_matchurl, flatten_routes, group
 from masonite.request import Request
 from masonite.routes import (Connect, Delete, Get, Head, Match, Options, Patch,
-                             Post, Put, Redirect, Route, RouteGroup, Trace)
+                             Post, Put, Redirect, Resource, Route, RouteGroup, Trace)
 from masonite.testing import TestCase
 from masonite.testsuite.TestSuite import generate_wsgi
 
@@ -301,6 +301,22 @@ class TestOptionalRoutes(TestCase):
         self.assertEqual(request.route('user.multiple', {'name': 'john'}), '/multiple/user/john')
         self.assertEqual(request.route('user.multiple', {'name': 'john', 'last': 'smith'}), '/multiple/user/john/smith')
         self.assertEqual(request.route('user.multiple', {'last': 'smith'}), '/multiple/user/smith')
+
+class TestRouteResources(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.routes(only=[Resource('/user', 'UserResourceController')])
+
+    def test_has_correct_controllers(self):
+        self.get('/user').assertHasController('UserResourceController@index')
+        self.get('/user/create').assertHasController('UserResourceController@create')
+        self.post('/user').assertHasController('UserResourceController@store')
+        self.get('/user/1').assertHasController('UserResourceController@show')
+        self.get('/user/1/edit').assertHasController('UserResourceController@edit')
+        self.put('/user/1').assertHasController('UserResourceController@update')
+        self.delete('/user/1').assertHasController('UserResourceController@destroy')
+
 
 class WsgiInputTestClass:
 

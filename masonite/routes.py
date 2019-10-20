@@ -675,3 +675,17 @@ class RouteGroup:
         for route in self.routes:
             if isinstance(route.named_route, str):
                 route.named_route = name + route.named_route
+
+
+class Resource:
+
+    def __new__(cls, base='', controller=''):
+        return [
+            Get("{}".format(base), "{}@index".format(controller)),
+            Get("{}/create".format(base), "{}@create".format(controller)),
+            Post("{}".format(base), "{}@store".format(controller)),
+            Get("{}/@id".format(base), "{}@show".format(controller)),
+            Get("{}/@id/edit".format(base), "{}@edit".format(controller)),
+            Match(['PUT', 'PATCH']).route("{}/@id".format(base), "{}@update".format(controller)),
+            Delete("{}/@id".format(base), "{}@destroy".format(controller)),
+        ]

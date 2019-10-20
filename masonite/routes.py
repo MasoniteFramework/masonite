@@ -679,13 +679,43 @@ class RouteGroup:
 
 class Resource:
 
-    def __new__(cls, base='', controller=''):
-        return [
-            Get("{}".format(base), "{}@index".format(controller)),
-            Get("{}/create".format(base), "{}@create".format(controller)),
-            Post("{}".format(base), "{}@store".format(controller)),
-            Get("{}/@id".format(base), "{}@show".format(controller)),
-            Get("{}/@id/edit".format(base), "{}@edit".format(controller)),
-            Match(['PUT', 'PATCH']).route("{}/@id".format(base), "{}@update".format(controller)),
-            Delete("{}/@id".format(base), "{}@destroy".format(controller)),
-        ]
+    def __new__(cls, base='', controller='', only=['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'], names={}):
+        routes = []
+        
+        if 'index' in only:
+            route = Get("{}".format(base), "{}@index".format(controller))
+            if 'index' in names:
+                route.name(names['index'])
+            routes.append(route)
+        if 'create' in only:
+            route = Get("{}/create".format(base), "{}@create".format(controller))
+            if 'create' in names:
+                route.name(names['create'])
+            routes.append(route)
+        if 'store' in only:
+            route = Post("{}".format(base), "{}@store".format(controller))
+            if 'store' in names:
+                route.name(names['store'])
+            routes.append(route)
+        if 'show' in only:
+            route = Get("{}/@id".format(base), "{}@show".format(controller))
+            if 'show' in names:
+                route.name(names['show'])
+            routes.append(route)
+        if 'edit' in only:
+            route = Get("{}/@id/edit".format(base), "{}@edit".format(controller))
+            if 'edit' in names:
+                route.name(names['edit'])
+            routes.append(route)
+        if 'update' in only:
+            route = Match(['PUT', 'PATCH']).route("{}/@id".format(base), "{}@update".format(controller))
+            if 'update' in names:
+                route.name(names['update'])
+            routes.append(route)
+        if 'destroy' in only:
+            route = Delete("{}/@id".format(base), "{}@destroy".format(controller))
+            if 'destroy' in names:
+                route.name(names['destroy'])
+            routes.append(route)
+        
+        return routes

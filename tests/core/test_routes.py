@@ -306,16 +306,18 @@ class TestRouteResources(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.routes(only=[Resource('/user', 'UserResourceController')])
+        self.routes(only=[Resource('/user', 'UserResourceController', names={
+            'create': 'users.build'
+        })])
 
     def test_has_correct_controllers(self):
-        self.get('/user').assertHasController('UserResourceController@index')
-        self.get('/user/create').assertHasController('UserResourceController@create')
-        self.post('/user').assertHasController('UserResourceController@store')
-        self.get('/user/1').assertHasController('UserResourceController@show')
-        self.get('/user/1/edit').assertHasController('UserResourceController@edit')
-        self.put('/user/1').assertHasController('UserResourceController@update')
-        self.delete('/user/1').assertHasController('UserResourceController@destroy')
+        self.get('/user').assertHasController('UserResourceController@index').assertIsNotNamed()
+        self.get('/user/create').assertHasController('UserResourceController@create').assertIsNamed('users.build')
+        self.post('/user').assertHasController('UserResourceController@store').assertIsNotNamed()
+        self.get('/user/1').assertHasController('UserResourceController@show').assertIsNotNamed()
+        self.get('/user/1/edit').assertHasController('UserResourceController@edit').assertIsNotNamed()
+        self.put('/user/1').assertHasController('UserResourceController@update').assertIsNotNamed()
+        self.delete('/user/1').assertHasController('UserResourceController@destroy').assertIsNotNamed()
 
 
 class WsgiInputTestClass:

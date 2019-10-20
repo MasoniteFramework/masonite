@@ -5,9 +5,9 @@ from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
+from masonite.response import Responsable
 
-
-class View:
+class View(Responsable):
     """View class. Responsible for handling everything involved with views and view environments."""
 
     _splice = '/'
@@ -304,3 +304,6 @@ class View:
     def set_splice(self, splice):
         self._splice = splice
         return self
+
+    def get_response(self):
+        return self.rendered_template

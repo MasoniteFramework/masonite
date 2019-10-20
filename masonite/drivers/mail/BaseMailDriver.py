@@ -4,17 +4,18 @@ from masonite.drivers import BaseDriver
 from masonite.view import View
 from masonite.app import App
 from masonite.helpers import config
+from masonite.response import Responsable
 
 
-class BaseMailDriver(BaseDriver):
+class BaseMailDriver(BaseDriver, Responsable):
     """Base mail driver class. This class is inherited by all mail drivers."""
 
     def __init__(self, app: App, view: View):
         """Base mail driver constructor.
 
         Arguments:
-            MailConfig {module} -- This is the config.mail module.
-            View {object} -- This is the masonite.view.View class.
+            app {masonite.app.App} -- The Masonite container class.
+            view {object} -- This is the masonite.view.View class.
         """
         self.config = config('mail')
         self.to_address = None
@@ -40,10 +41,7 @@ class BaseMailDriver(BaseDriver):
         return self
 
     def queue(self):
-        """Set the user email address who you want to send mail to.
-
-        Arguments:
-            user_email {string} -- The user email address.
+        """Whether the email should be queued or not when sending.
 
         Returns:
             self
@@ -89,3 +87,6 @@ class BaseMailDriver(BaseDriver):
         """
         self.message_subject = subject
         return self
+
+    def get_response(self):
+        return self.message_body

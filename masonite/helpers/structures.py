@@ -124,7 +124,7 @@ class Dot:
 
         value = pydoc.locate('.'.join(paths[:-1]) + '.' + paths[-1].upper())
 
-        if value:
+        if value or value is False:
             return value
 
         search_path = -1

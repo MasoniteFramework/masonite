@@ -1,10 +1,10 @@
 """Base mail driver module."""
 
-from masonite.drivers import BaseDriver
-from masonite.view import View
-from masonite.app import App
-from masonite.helpers import config
-from masonite.response import Responsable
+from .. import BaseDriver
+from ...view import View
+from ...app import App
+from ...helpers import config
+from ...response import Responsable
 
 
 class BaseMailDriver(BaseDriver, Responsable):

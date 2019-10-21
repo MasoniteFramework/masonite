@@ -1,12 +1,12 @@
 """AuthJWTDriver Module."""
 
 import pendulum
-from masonite.auth import Auth
-from masonite.contracts import AuthContract
-from masonite.drivers import BaseDriver
-from masonite.exceptions import DriverLibraryNotFound
-from masonite.helpers import config, cookie_expire_time
-from masonite.request import Request
+from ...auth import Auth
+from ...contracts import AuthContract
+from ...drivers import BaseDriver
+from ...exceptions import DriverLibraryNotFound
+from ...helpers import config, cookie_expire_time
+from ...request import Request
 
 
 class AuthJwtDriver(BaseDriver, AuthContract):

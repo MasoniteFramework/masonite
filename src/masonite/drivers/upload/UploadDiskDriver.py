@@ -3,9 +3,9 @@
 import os
 import _io
 
-from masonite.contracts import UploadContract
-from masonite.drivers import BaseUploadDriver
-from masonite.helpers.filesystem import make_directory
+from ...contracts import UploadContract
+from ...drivers import BaseUploadDriver
+from ...helpers.filesystem import make_directory
 
 
 class UploadDiskDriver(BaseUploadDriver, UploadContract):

@@ -1,5 +1,5 @@
-from masonite.testsuite import TestSuite, generate_wsgi
-from masonite.testing import BaseRequest
+from ..testsuite import TestSuite, generate_wsgi
+from ..testing import BaseRequest
 
 
 class MockJson(BaseRequest):

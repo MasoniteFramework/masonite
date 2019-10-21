@@ -3,7 +3,7 @@ import binascii
 
 from cryptography.fernet import Fernet
 
-from masonite.exceptions import InvalidSecretKey
+from ..exceptions import InvalidSecretKey
 
 
 class Sign:

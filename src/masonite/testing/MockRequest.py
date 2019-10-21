@@ -1,5 +1,5 @@
-from masonite.testsuite import TestSuite
-from masonite.testing import BaseRequest
+from ..testsuite import TestSuite
+from ..testing import BaseRequest
 
 
 class MockRequest(BaseRequest):

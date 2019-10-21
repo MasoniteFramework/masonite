@@ -15,14 +15,14 @@ from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken
-from masonite.auth.Sign import Sign
-from masonite.exceptions import InvalidHTTPStatusCode, RouteException
-from masonite.helpers import Dot as DictDot
-from masonite.helpers import clean_request_input, dot
-from masonite.helpers.Extendable import Extendable
-from masonite.helpers.routes import compile_route_to_regex
-from masonite.helpers.status import response_statuses
-from masonite.helpers.time import cookie_expire_time
+from .auth.Sign import Sign
+from .exceptions import InvalidHTTPStatusCode, RouteException
+from .helpers import Dot as DictDot
+from .helpers import clean_request_input, dot
+from .helpers.Extendable import Extendable
+from .helpers.routes import compile_route_to_regex
+from .helpers.status import response_statuses
+from .helpers.time import cookie_expire_time
 
 
 class Request(Extendable):

@@ -1,8 +1,8 @@
 """AuthCookieDriver Module."""
 
-from masonite.contracts import AuthContract
-from masonite.drivers import BaseDriver
-from masonite.request import Request
+from ...contracts import AuthContract
+from ...drivers import BaseDriver
+from ...request import Request
 
 
 class AuthCookieDriver(BaseDriver, AuthContract):

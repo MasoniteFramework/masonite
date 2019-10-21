@@ -4,8 +4,8 @@ import uuid
 
 import bcrypt
 
-from masonite.helpers import password as bcrypt_password, config
-from masonite.app import App
+from ..helpers import password as bcrypt_password, config
+from ..app import App
 
 
 class Auth:

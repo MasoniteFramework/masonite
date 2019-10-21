@@ -1,7 +1,7 @@
-from masonite.request import Request
-from masonite.testsuite import TestSuite, generate_wsgi
+from ..request import Request
+from ..testsuite import TestSuite, generate_wsgi
 import json
-from masonite.helpers import Dot
+from ..helpers import Dot
 
 
 class MockRoute:

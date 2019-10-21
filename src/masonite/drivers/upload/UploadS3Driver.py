@@ -2,12 +2,12 @@
 
 import os
 
-from masonite.contracts import UploadContract
-from masonite.drivers import BaseUploadDriver
-from masonite.exceptions import DriverLibraryNotFound
-from masonite.managers import UploadManager
-from masonite.app import App
-from masonite.helpers import config
+from ...contracts import UploadContract
+from ...drivers import BaseUploadDriver
+from ...exceptions import DriverLibraryNotFound
+from ...managers import UploadManager
+from ...app import App
+from ...helpers import config
 
 
 class UploadS3Driver(BaseUploadDriver, UploadContract):

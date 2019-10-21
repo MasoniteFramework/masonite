@@ -1,4 +1,4 @@
-from masonite.routes import Get
+from ..routes import Get
 
 
 class TestRoute:

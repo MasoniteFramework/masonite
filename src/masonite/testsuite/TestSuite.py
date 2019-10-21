@@ -1,7 +1,7 @@
-from masonite.app import App
-from masonite.testsuite.TestRoute import TestRoute
-from masonite.testsuite.TestRequest import TestRequest
-from masonite.helpers import config
+from ..app import App
+from .TestRoute import TestRoute
+from .TestRequest import TestRequest
+from ..helpers import config
 
 import io
 

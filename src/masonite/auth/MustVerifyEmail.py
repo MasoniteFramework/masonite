@@ -2,7 +2,7 @@
 
 import time
 
-from masonite.auth.Sign import Sign
+from ..auth.Sign import Sign
 
 
 class MustVerifyEmail:

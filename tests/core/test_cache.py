@@ -3,10 +3,10 @@ import os
 import time
 
 from config import cache
-from masonite.app import App
-from masonite.drivers import CacheDiskDriver, CacheRedisDriver
-from masonite.environment import LoadEnvironment
-from masonite.managers import CacheManager
+from src.masonite.app import App
+from src.masonite.drivers import CacheDiskDriver, CacheRedisDriver
+from src.masonite.environment import LoadEnvironment
+from src.masonite.managers import CacheManager
 import unittest
 
 LoadEnvironment()

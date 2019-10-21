@@ -2,11 +2,11 @@ from config import mail
 
 import os
 
-from masonite.app import App
-from masonite.view import View
-from masonite.managers.MailManager import MailManager
-from masonite.drivers import MailLogDriver
-from masonite.drivers import MailTerminalDriver
+from src.masonite.app import App
+from src.masonite.view import View
+from src.masonite.managers.MailManager import MailManager
+from src.masonite.drivers import MailLogDriver
+from src.masonite.drivers import MailTerminalDriver
 import unittest
 import sys
 from contextlib import contextmanager

@@ -4,11 +4,11 @@ import time
 from jinja2 import FileSystemLoader
 
 from config import cache
-from masonite.app import App
-from masonite.drivers import CacheDiskDriver
-from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
-from masonite.managers.CacheManager import CacheManager
-from masonite.view import View
+from src.masonite.app import App
+from src.masonite.drivers import CacheDiskDriver
+from src.masonite.exceptions import RequiredContainerBindingNotFound, ViewException
+from src.masonite.managers.CacheManager import CacheManager
+from src.masonite.view import View
 import unittest
 
 

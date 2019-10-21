@@ -1,5 +1,5 @@
-from masonite.app import App
-from masonite.hook import Hook
+from src.masonite.app import App
+from src.masonite.hook import Hook
 import unittest
 
 

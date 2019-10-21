@@ -1,6 +1,6 @@
 """Queue Settings."""
 
-from masonite import env
+from src.masonite import env
 
 """Queue Driver
 Queues are an excellent way to send intensive and time consuming tasks

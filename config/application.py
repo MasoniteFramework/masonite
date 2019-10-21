@@ -2,7 +2,7 @@
 
 import os
 
-from masonite import env
+from src.masonite import env
 
 """Application Name
 This value is the name of your application. This value is used when the
@@ -58,3 +58,8 @@ AUTOLOAD = [
 ]
 
 FALSY = False
+
+TEMPLATES={
+    'statuscode': '/src/masonite/snippets/statuscode',
+    'exceptions': '/src/masonite/snippets/exception'
+}

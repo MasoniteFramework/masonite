@@ -1,6 +1,6 @@
 """ A TestJob Queue Job """
 
-from masonite.queues import Queueable
+from src.masonite.queues import Queueable
 
 
 class TestJob(Queueable):

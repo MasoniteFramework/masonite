@@ -1,12 +1,12 @@
 import unittest
 
-from masonite.app import App
-from masonite.drivers import QueueAmqpDriver, QueueAsyncDriver
-from masonite.environment import LoadEnvironment, env
-from masonite.exceptions import QueueException
-from masonite.managers import QueueManager
-from masonite.queues.Queueable import Queueable
-from masonite.helpers import config
+from src.masonite.app import App
+from src.masonite.drivers import QueueAmqpDriver, QueueAsyncDriver
+from src.masonite.environment import LoadEnvironment, env
+from src.masonite.exceptions import QueueException
+from src.masonite.managers import QueueManager
+from src.masonite.queues.Queueable import Queueable
+from src.masonite.helpers import config
 from config import queue
 
 LoadEnvironment()

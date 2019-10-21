@@ -1,7 +1,7 @@
 """Load User Middleware."""
 
-from masonite.auth import Auth
-from masonite.request import Request
+from src.masonite.auth import Auth
+from src.masonite.request import Request
 
 
 class LoadUserMiddleware:

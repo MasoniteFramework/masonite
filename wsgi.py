@@ -1,10 +1,10 @@
 """First Entry For The WSGI Server."""
 
-from masonite.app import App
+from src.masonite.app import App
 
 from bootstrap.start import app
 from config import application, providers
-from masonite.helpers import config
+from src.masonite.helpers import config
 
 """Instantiate Container And Perform Important Bindings
 Some Service providers need important bindings like the WSGI application

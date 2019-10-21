@@ -5,11 +5,11 @@ from orator.support.collection import Collection
 
 from app.http.controllers.TestController import \
     TestController as ControllerTest
-from masonite.app import App
-from masonite.request import Request
-from masonite.response import Response
-from masonite.testsuite import generate_wsgi
-from masonite.view import View
+from src.masonite.app import App
+from src.masonite.request import Request
+from src.masonite.response import Response
+from src.masonite.testsuite import generate_wsgi
+from src.masonite.view import View
 
 
 class MockUser(Model):

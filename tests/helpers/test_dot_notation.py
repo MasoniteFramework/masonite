@@ -1,6 +1,6 @@
 import unittest
 
-from masonite.helpers import dot, Dot as DictDot
+from src.masonite.helpers import dot, Dot as DictDot
 
 
 class TestDot(unittest.TestCase):

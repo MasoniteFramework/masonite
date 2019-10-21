@@ -1,9 +1,9 @@
 """ Test Secure Headers Midddleware """
 import unittest
 
-from masonite.middleware import SecureHeadersMiddleware
-from masonite.request import Request
-from masonite.testsuite import TestSuite, generate_wsgi
+from src.masonite.middleware import SecureHeadersMiddleware
+from src.masonite.request import Request
+from src.masonite.testsuite import TestSuite, generate_wsgi
 
 
 class TestSecureHeadersMiddleware(unittest.TestCase):

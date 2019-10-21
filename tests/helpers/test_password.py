@@ -1,4 +1,4 @@
-from masonite.helpers import password
+from src.masonite.helpers import password
 import unittest
 
 

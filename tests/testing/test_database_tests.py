@@ -1,8 +1,8 @@
 
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 
 from config.database import Model
-from masonite import env
+from src.masonite import env
 
 
 class User(Model):

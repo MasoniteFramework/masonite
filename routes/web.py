@@ -1,6 +1,6 @@
 """Web Routes."""
 
-from masonite.routes import Get, Post, Redirect, RouteGroup, Patch, Options
+from src.masonite.routes import Get, Post, Redirect, RouteGroup, Patch, Options
 
 
 ROUTES = [

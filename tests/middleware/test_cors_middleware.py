@@ -1,6 +1,6 @@
-from masonite.middleware import CorsMiddleware
-from masonite.request import Request
-from masonite.testsuite import generate_wsgi, TestSuite
+from src.masonite.middleware import CorsMiddleware
+from src.masonite.request import Request
+from src.masonite.testsuite import generate_wsgi, TestSuite
 
 import unittest
 

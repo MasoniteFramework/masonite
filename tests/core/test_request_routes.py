@@ -1,6 +1,6 @@
-from masonite.routes import Get, Post
-from masonite.request import Request
-from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
+from src.masonite.routes import Get, Post
+from src.masonite.request import Request
+from src.masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 import unittest
 
 

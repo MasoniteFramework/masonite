@@ -2,15 +2,15 @@ import unittest
 from cgi import MiniFieldStorage
 
 import pytest
-from masonite.app import App
-from masonite.exceptions import InvalidHTTPStatusCode, RouteException
-from masonite.helpers.routes import flatten_routes
-from masonite.helpers.time import cookie_expire_time
-from masonite.request import Request
-from masonite.response import Response
-from masonite.routes import Get, RouteGroup
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.helpers import config
+from src.masonite.app import App
+from src.masonite.exceptions import InvalidHTTPStatusCode, RouteException
+from src.masonite.helpers.routes import flatten_routes
+from src.masonite.helpers.time import cookie_expire_time
+from src.masonite.request import Request
+from src.masonite.response import Response
+from src.masonite.routes import Get, RouteGroup
+from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.helpers import config
 from app.http.test_controllers.TestController import TestController
 from config import application, providers
 

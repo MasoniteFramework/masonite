@@ -4,7 +4,7 @@ from setuptools import setup
 here = os.path.abspath(os.path.dirname(__file__))
 
 meta = {}
-with open(os.path.join(here, 'masonite', '__version__.py'), 'r') as f:
+with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
 with open('README.md', 'r') as f:
@@ -61,6 +61,7 @@ setup(
     long_description_content_type='text/markdown',
     author=meta['__author__'],
     author_email=meta['__author_email__'],
+    package_dir={'': 'src'},
     url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
     licence=meta['__licence__'],

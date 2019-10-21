@@ -1,7 +1,7 @@
-from masonite.app import App
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.routes import Route
-from masonite.request import Request
+from src.masonite.app import App
+from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.routes import Route
+from src.masonite.request import Request
 
 wsgi_request = generate_wsgi()
 import unittest

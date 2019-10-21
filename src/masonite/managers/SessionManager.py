@@ -1,14 +1,14 @@
 """Session Manager Module."""
 
-from masonite.contracts import SessionManagerContract
-from masonite.managers import Manager
+from ..contracts import SessionManagerContract
+from .Manager import Manager
 
 
 class SessionManager(Manager, SessionManagerContract):
     """Manages all session drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'session'

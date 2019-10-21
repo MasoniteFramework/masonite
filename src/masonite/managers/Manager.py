@@ -2,12 +2,12 @@
 
 import inspect
 
-from masonite.exceptions import (DriverNotFound,
+from ..exceptions import (DriverNotFound,
                                  MissingContainerBindingNotFound,
                                  UnacceptableDriverType)
 
-from masonite.app import App
-from masonite.helpers import config
+from ..app import App
+from ..helpers import config
 
 
 class Manager:

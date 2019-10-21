@@ -1,13 +1,13 @@
 """Auth Manager Module."""
 
-from masonite.managers import Manager
+from .Manager import Manager
 
 
 class AuthManager(Manager):
     """Manages all auth drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'auth'

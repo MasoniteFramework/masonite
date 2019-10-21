@@ -1,14 +1,14 @@
 """Cache Manager."""
 
-from masonite.contracts import CacheManagerContract
-from masonite.managers import Manager
+from ..contracts import CacheManagerContract
+from .Manager import Manager
 
 
 class CacheManager(Manager, CacheManagerContract):
     """Manages all cache drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'cache'

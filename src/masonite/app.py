@@ -2,7 +2,7 @@
 
 import inspect
 
-from masonite.exceptions import (ContainerError,
+from .exceptions import (ContainerError,
                                  MissingContainerBindingNotFound,
                                  StrictContainerException)
 

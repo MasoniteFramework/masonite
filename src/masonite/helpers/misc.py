@@ -4,7 +4,7 @@ import random
 import string
 import warnings
 
-from masonite.exceptions import AmbiguousError
+from ..exceptions import AmbiguousError
 
 
 def random_string(length=4):

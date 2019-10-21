@@ -1,14 +1,14 @@
 """Upload Manager Module."""
 
-from masonite.contracts import UploadManagerContract
-from masonite.managers import Manager
+from ..contracts import UploadManagerContract
+from .Manager import Manager
 
 
 class UploadManager(Manager, UploadManagerContract):
     """Manages all upload drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'storage'

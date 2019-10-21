@@ -1,7 +1,7 @@
 import subprocess
 
-from masonite.helpers import config, HasColoredCommands
-from masonite.packages import add_venv_site_packages
+from ..helpers import config, HasColoredCommands
+from ..packages import add_venv_site_packages
 from orator.migrations import DatabaseMigrationRepository, Migrator
 
 

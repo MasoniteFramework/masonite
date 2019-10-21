@@ -1,6 +1,6 @@
 """Session Settings."""
 
-from masonite import env
+from src.masonite import env
 
 """Session Driver
 Sessions are able to be linked to an individual user and carry data from

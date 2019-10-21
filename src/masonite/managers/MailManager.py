@@ -1,15 +1,15 @@
 """Mail Manager Module."""
 
-from masonite.contracts import MailManagerContract
-from masonite.managers import Manager
-from masonite.helpers import config
+from ..contracts import MailManagerContract
+from .Manager import Manager
+from ..helpers import config
 
 
 class MailManager(Manager, MailManagerContract):
     """Manages all mail drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'mail'

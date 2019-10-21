@@ -1,14 +1,14 @@
 """Queue Manager Module."""
 
-from masonite.contracts import StorageManagerContract
-from masonite.managers import Manager
+from ..contracts import StorageManagerContract
+from .Manager import Manager
 
 
 class StorageManager(Manager, StorageManagerContract):
     """Manages all queue drivers.
 
     Arguments:
-        Manager {masonite.managers.Manager} -- The base Manager class.
+        Manager {from .managers.Manager} -- The base Manager class.
     """
 
     config = 'storage'

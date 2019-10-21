@@ -1,6 +1,6 @@
 """Broadcast Settings."""
 
-from masonite import env
+from src.masonite import env
 
 """Broadcast Driver
 Realtime support is critical for any modern web application. Broadcast

@@ -1,7 +1,9 @@
 """A View Service Provider."""
 
-from masonite.provider import ServiceProvider
-from masonite.view import View
+from jinja2 import FileSystemLoader
+
+from ..provider import ServiceProvider
+from ..view import View
 
 
 class ViewProvider(ServiceProvider):
@@ -13,7 +15,8 @@ class ViewProvider(ServiceProvider):
         self.app.bind('ViewClass', view)
         self.app.bind('View', view.render)
 
-    def boot(self):
+    def boot(self, view: View):
+        view.add_environment('src/masonite/snippets', loader=FileSystemLoader)
         self.publishes_migrations([
             'storage/append_from.txt'
         ])

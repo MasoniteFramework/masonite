@@ -4,7 +4,7 @@ import sys
 
 from subprocess import check_output
 from cleo import Command
-from masonite.packages import add_venv_site_packages
+from ..packages import add_venv_site_packages
 
 
 class MigrateStatusCommand(Command):

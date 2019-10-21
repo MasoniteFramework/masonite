@@ -3,7 +3,7 @@
 
 from cleo import Command
 
-from masonite.helpers.filesystem import copy_migration
+from ..helpers.filesystem import copy_migration
 
 
 class QueueTableCommand(Command):

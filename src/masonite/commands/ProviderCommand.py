@@ -1,5 +1,5 @@
 """New Providers Command."""
-from masonite.commands import BaseScaffoldCommand
+from ..commands import BaseScaffoldCommand
 
 
 class ProviderCommand(BaseScaffoldCommand):

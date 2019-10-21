@@ -1,7 +1,7 @@
 
-from masonite.app import App
-from masonite.request import Request
-from masonite.response import Response
+from ..app import App
+from ..request import Request
+from ..response import Response
 
 
 class ResponseMiddleware:

@@ -2,7 +2,7 @@
 
 from cleo import Command
 
-from masonite import Queue
+from .. import Queue
 
 
 class QueueWorkCommand(Command):

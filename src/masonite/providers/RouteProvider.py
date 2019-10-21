@@ -1,10 +1,10 @@
 """A RouteProvider Service Provider."""
 
-from masonite.helpers.routes import create_matchurl
-from masonite.provider import ServiceProvider
-from masonite.request import Request
-from masonite.response import Response
-from masonite.routes import Route
+from ..helpers.routes import create_matchurl
+from ..provider import ServiceProvider
+from ..request import Request
+from ..response import Response
+from ..routes import Route
 
 
 class RouteProvider(ServiceProvider):

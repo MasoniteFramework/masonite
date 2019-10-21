@@ -1,10 +1,10 @@
 """A Cache Service Provider."""
 
-from masonite import Cache
-from masonite.drivers import CacheDiskDriver, CacheRedisDriver
-from masonite.managers import CacheManager
-from masonite.provider import ServiceProvider
-from masonite.helpers import config
+from .. import Cache
+from ..drivers import CacheDiskDriver, CacheRedisDriver
+from ..managers import CacheManager
+from ..provider import ServiceProvider
+from ..helpers import config
 
 
 class CacheProvider(ServiceProvider):

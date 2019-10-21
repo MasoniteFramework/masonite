@@ -1,8 +1,8 @@
 """Mailgun Driver Module."""
 import requests
 
-from masonite.contracts.MailContract import MailContract
-from masonite.drivers import BaseMailDriver
+from ...contracts.MailContract import MailContract
+from ...drivers import BaseMailDriver
 
 
 class MailMailgunDriver(BaseMailDriver, MailContract):
@@ -20,7 +20,7 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
 
         if self._queue:
             from wsgi import container
-            from masonite import Queue
+            from .. import Queue
             return container.make(Queue).push(self._send_mail, args=(message,))
 
         return self._send_mail(message)

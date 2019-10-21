@@ -1,7 +1,7 @@
 """New Model Command."""
-from masonite.app import App
-from masonite.helpers.filesystem import make_directory
-from masonite.view import View
+from ..app import App
+from ..helpers.filesystem import make_directory
+from ..view import View
 
 from cleo import Command
 

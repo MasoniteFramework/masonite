@@ -4,10 +4,10 @@ import glob
 import os
 import time
 
-from masonite.app import App
-from masonite.contracts import CacheContract
-from masonite.drivers import BaseCacheDriver
-from masonite.helpers import config
+from ...app import App
+from ...contracts import CacheContract
+from ...drivers import BaseCacheDriver
+from ...helpers import config
 
 
 class CacheDiskDriver(CacheContract, BaseCacheDriver):

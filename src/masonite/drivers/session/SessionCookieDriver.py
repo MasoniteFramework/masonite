@@ -2,10 +2,10 @@
 
 import json
 
-from masonite.contracts import SessionContract
-from masonite.drivers import BaseDriver
-from masonite.request import Request
-from masonite.app import App
+from ...contracts import SessionContract
+from ...drivers import BaseDriver
+from ...request import Request
+from ...app import App
 
 
 class SessionCookieDriver(SessionContract, BaseDriver):

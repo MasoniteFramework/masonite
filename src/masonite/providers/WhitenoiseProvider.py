@@ -2,8 +2,8 @@
 
 from whitenoise import WhiteNoise
 
-from masonite.provider import ServiceProvider
-from masonite.helpers import config
+from ..provider import ServiceProvider
+from ..helpers import config
 
 
 class WhitenoiseProvider(ServiceProvider):

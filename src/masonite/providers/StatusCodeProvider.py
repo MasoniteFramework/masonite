@@ -1,8 +1,8 @@
 """A StatusProvider Service Provider."""
 
-from masonite.response import Response
-from masonite.provider import ServiceProvider
-
+from ..response import Response
+from ..provider import ServiceProvider
+from ..helpers import config
 
 class ServerErrorExceptionHook:
 
@@ -18,7 +18,7 @@ class ServerErrorExceptionHook:
             rendered_view = app.make('View')('errors/500')
         else:
             rendered_view = app.make('View')(
-                '/masonite/snippets/statuscode', {'code': '500 Internal Server Error'})
+                config('application.templates.statuscode', '/masonite/snippets/statuscode'), {'code': '500 Internal Server Error'})
 
         request.app().make(Response).view(rendered_view)
 
@@ -45,7 +45,7 @@ class StatusCodeProvider(ServiceProvider):
                     rendered_view = self.app.make('View')(
                         'errors/{}'.format(request.get_status()))
                 else:
-                    rendered_view = self.app.make('View')('/masonite/snippets/statuscode', {
+                    rendered_view = self.app.make('View')(config('application.templates.statuscode', '/masonite/snippets/statuscode'), {
                         'code': request.get_status_code()
                     })
 

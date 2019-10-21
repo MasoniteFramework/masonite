@@ -1,6 +1,6 @@
 """Middleware Test."""
 
-from masonite.request import Request
+from src.masonite.request import Request
 
 
 class MiddlewareTest:

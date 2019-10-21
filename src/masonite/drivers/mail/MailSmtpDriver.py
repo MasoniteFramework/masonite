@@ -4,8 +4,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from masonite.contracts.MailContract import MailContract
-from masonite.drivers import BaseMailDriver
+from ...contracts.MailContract import MailContract
+from ...drivers import BaseMailDriver
 
 
 class MailSmtpDriver(BaseMailDriver, MailContract):
@@ -46,7 +46,7 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
         if self._queue:
             from wsgi import container
-            from masonite import Queue
+            from .. import Queue
             container.make(Queue).push(
                 self._send_mail,
                 args=(self.config.FROM['name'], self.to_address, message.as_string())

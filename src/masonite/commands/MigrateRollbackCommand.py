@@ -3,7 +3,7 @@ import os
 import sys
 
 from cleo import Command
-from masonite.helpers.migrations import Migrations
+from ..helpers.migrations import Migrations
 
 
 class MigrateRollbackCommand(Command):

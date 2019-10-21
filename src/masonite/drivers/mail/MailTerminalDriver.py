@@ -2,10 +2,10 @@
 
 import logging
 
-from masonite.app import App
-from masonite.contracts.MailContract import MailContract
-from masonite.drivers import BaseMailDriver
-from masonite.view import View
+from ...app import App
+from ...contracts.MailContract import MailContract
+from ...drivers import BaseMailDriver
+from ...view import View
 
 
 class MailTerminalDriver(BaseMailDriver, MailContract):

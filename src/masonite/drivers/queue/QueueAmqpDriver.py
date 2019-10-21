@@ -5,11 +5,11 @@ import pickle
 import time
 
 import pendulum
-from masonite.contracts import QueueContract
-from masonite.drivers import BaseQueueDriver
-from masonite.exceptions import DriverLibraryNotFound
-from masonite.helpers import HasColoredCommands
-from masonite.queues import Queueable
+from ...contracts import QueueContract
+from ...drivers import BaseQueueDriver
+from ...exceptions import DriverLibraryNotFound
+from ...helpers import HasColoredCommands
+from ...queues import Queueable
 
 
 class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):

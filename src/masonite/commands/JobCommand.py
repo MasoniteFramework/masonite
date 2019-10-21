@@ -1,5 +1,5 @@
 """New Job Command."""
-from masonite.commands import BaseScaffoldCommand
+from ..commands import BaseScaffoldCommand
 
 
 class JobCommand(BaseScaffoldCommand):

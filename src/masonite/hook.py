@@ -1,6 +1,6 @@
 """Module for the Hook class."""
 
-from masonite.app import App
+from .app import App
 
 
 class Hook:

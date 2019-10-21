@@ -2,9 +2,9 @@
 
 import os
 
-from masonite.contracts import CacheContract
-from masonite.drivers import BaseCacheDriver
-from masonite.exceptions import DriverLibraryNotFound
+from ...contracts import CacheContract
+from ...drivers import BaseCacheDriver
+from ...exceptions import DriverLibraryNotFound
 
 
 class CacheRedisDriver(CacheContract, BaseCacheDriver):

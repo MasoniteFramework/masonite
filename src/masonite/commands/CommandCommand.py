@@ -1,5 +1,5 @@
 """Creates New Command Command."""
-from masonite.commands import BaseScaffoldCommand
+from ..commands import BaseScaffoldCommand
 
 
 class CommandCommand(BaseScaffoldCommand):

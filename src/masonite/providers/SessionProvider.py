@@ -1,12 +1,12 @@
 """A RedirectionProvider Service Provider."""
 
-from masonite.drivers import SessionCookieDriver, SessionMemoryDriver
-from masonite.managers import SessionManager
-from masonite.provider import ServiceProvider
-from masonite.view import View
-from masonite.request import Request
-from masonite import Session
-from masonite.helpers import config
+from ..drivers import SessionCookieDriver, SessionMemoryDriver
+from ..managers import SessionManager
+from ..provider import ServiceProvider
+from ..view import View
+from ..request import Request
+from .. import Session
+from ..helpers import config
 
 
 class SessionProvider(ServiceProvider):

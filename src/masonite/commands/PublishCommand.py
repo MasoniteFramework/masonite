@@ -1,6 +1,6 @@
 """Publish Service Providers"""
 from cleo import Command
-from masonite.helpers import config
+from ..helpers import config
 
 
 class PublishCommand(Command):

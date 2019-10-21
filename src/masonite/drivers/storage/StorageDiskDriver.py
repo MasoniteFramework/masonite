@@ -2,9 +2,9 @@ import os
 import pathlib
 import shutil
 
-from masonite import Upload
-from masonite.contracts import StorageContract
-from masonite.drivers import BaseDriver
+from ... import Upload
+from ...contracts import StorageContract
+from ...drivers import BaseDriver
 
 
 class StorageDiskDriver(BaseDriver, StorageContract):

@@ -8,7 +8,7 @@ import inspect
 import pkgutil
 from pydoc import importlib
 
-from masonite.exceptions import (AutoloadContainerOverwrite, ContainerError,
+from .exceptions import (AutoloadContainerOverwrite, ContainerError,
                                  InvalidAutoloadPath)
 
 

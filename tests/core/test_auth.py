@@ -10,7 +10,7 @@ from src.masonite.drivers import AuthCookieDriver, AuthJwtDriver
 from src.masonite.helpers import password as bcrypt_password
 from src.masonite.routes import Get
 from src.masonite.request import Request
-from src.masonite.snippets.auth.controllers.ConfirmController import \
+from app.http.controllers.ConfirmController import \
     ConfirmController
 from src.masonite.testing import TestCase
 from src.masonite.testsuite.TestSuite import generate_wsgi

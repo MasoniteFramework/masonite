@@ -5,11 +5,11 @@ import os
 from concurrent.futures import (ProcessPoolExecutor, ThreadPoolExecutor,
                                 as_completed)
 
-from masonite.app import App
-from masonite.contracts import QueueContract
-from masonite.drivers import BaseQueueDriver
-from masonite.exceptions import QueueException
-from masonite.helpers import HasColoredCommands, config
+from ...app import App
+from ...contracts import QueueContract
+from ...drivers import BaseQueueDriver
+from ...exceptions import QueueException
+from ...helpers import HasColoredCommands, config
 
 
 class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):

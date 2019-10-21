@@ -1,7 +1,7 @@
 """CORS Middleware."""
 
-from masonite.helpers import config
-from masonite.request import Request
+from ..helpers import config
+from ..request import Request
 
 
 class CorsMiddleware:

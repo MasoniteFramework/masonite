@@ -37,7 +37,7 @@ def get(url, controller):
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
-    from masonite.routes import Get
+    from ..routes import Get
 
     return Get().route(url, controller)
 
@@ -54,7 +54,7 @@ def match(method_type, url, controller):
     Returns:
         masonite.routes.Get -- The Masonite Get class.
     """
-    from masonite.routes import Match
+    from ..routes import Match
 
     return Match(method_type).route(url, controller)
 
@@ -70,7 +70,7 @@ def post(url, controller):
     Returns:
         masonite.routes.Post -- The Masonite Post class.
     """
-    from masonite.routes import Post
+    from ..routes import Post
 
     return Post().route(url, controller)
 
@@ -86,7 +86,7 @@ def delete(url, controller):
     Returns:
         masonite.routes.Delete -- The Masonite Delete class.
     """
-    from masonite.routes import Delete
+    from ..routes import Delete
 
     return Delete().route(url, controller)
 
@@ -102,7 +102,7 @@ def put(url, controller):
     Returns:
         masonite.routes.Put -- The Masonite Put class.
     """
-    from masonite.routes import Put
+    from ..routes import Put
 
     return Put().route(url, controller)
 
@@ -118,7 +118,7 @@ def patch(url, controller):
     Returns:
         masonite.routes.Patch -- The Masonite Patch class.
     """
-    from masonite.routes import Patch
+    from ..routes import Patch
 
     return Patch().route(url, controller)
 

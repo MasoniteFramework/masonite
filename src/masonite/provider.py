@@ -1,7 +1,7 @@
 """Module for the Service Provider."""
 
-from masonite.helpers import random_string
-from masonite.helpers.filesystem import copy_migration
+from .helpers import random_string
+from .helpers.filesystem import copy_migration
 from .packages import append_file
 
 

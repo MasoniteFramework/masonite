@@ -1,12 +1,12 @@
 """An Upload Service Provider."""
 
-from masonite.drivers import UploadDiskDriver, UploadS3Driver
-from masonite.helpers.static import static
-from masonite.managers import UploadManager
-from masonite.provider import ServiceProvider
-from masonite.view import View
-from masonite import Upload
-from masonite.helpers import config
+from ..drivers import UploadDiskDriver, UploadS3Driver
+from ..helpers.static import static
+from ..managers import UploadManager
+from ..provider import ServiceProvider
+from ..view import View
+from .. import Upload
+from ..helpers import config
 
 
 class UploadProvider(ServiceProvider):

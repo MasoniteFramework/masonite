@@ -1,7 +1,7 @@
 """A SassProvider Service Provider."""
 
-from masonite.provider import ServiceProvider
-from masonite.storage import Storage
+from ..provider import ServiceProvider
+from ..storage import Storage
 
 
 class SassProvider(ServiceProvider):

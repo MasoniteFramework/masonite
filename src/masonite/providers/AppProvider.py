@@ -1,8 +1,8 @@
 """An AppProvider Service Provider."""
 
-from masonite.auth import Auth
-from masonite.autoload import Autoload
-from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
+from ..auth import Auth
+from ..autoload import Autoload
+from ..commands import (AuthCommand, CommandCommand, ControllerCommand,
                                DownCommand, InfoCommand, InstallCommand,
                                JobCommand, KeyCommand, MakeMigrationCommand,
                                MiddlewareCommand, MigrateCommand,
@@ -14,18 +14,18 @@ from masonite.commands import (AuthCommand, CommandCommand, ControllerCommand,
                                RoutesCommand, SeedCommand, SeedRunCommand,
                                ServeCommand, TestCommand, TinkerCommand, UpCommand,
                                ViewCommand)
-from masonite.exception_handler import DumpHandler, ExceptionHandler
-from masonite.helpers import config
-from masonite.helpers.routes import flatten_routes
-from masonite.hook import Hook
-from masonite.provider import ServiceProvider
-from masonite.request import Request
-from masonite.response import Response
-from masonite.routes import Route
+from ..exception_handler import DumpHandler, ExceptionHandler
+from ..helpers import config
+from ..helpers.routes import flatten_routes
+from ..hook import Hook
+from ..provider import ServiceProvider
+from ..request import Request
+from ..response import Response
+from ..routes import Route
 
-from masonite.managers import AuthManager
-from masonite.drivers import AuthCookieDriver, AuthJwtDriver
-from masonite.helpers import load
+from ..managers import AuthManager
+from ..drivers import AuthCookieDriver, AuthJwtDriver
+from ..helpers import load
 
 
 class AppProvider(ServiceProvider):

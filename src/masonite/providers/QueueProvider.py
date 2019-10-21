@@ -1,11 +1,11 @@
 """A RedirectionProvider Service Provider."""
 
 
-from masonite.drivers import QueueAsyncDriver, QueueAmqpDriver
-from masonite.managers import QueueManager
-from masonite.provider import ServiceProvider
-from masonite import Queue
-from masonite.helpers import config
+from ..drivers import QueueAsyncDriver, QueueAmqpDriver
+from ..managers import QueueManager
+from ..provider import ServiceProvider
+from .. import Queue
+from ..helpers import config
 
 
 class QueueProvider(ServiceProvider):

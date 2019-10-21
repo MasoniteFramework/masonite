@@ -1,6 +1,6 @@
 """SecureHeaders Middleware."""
 
-from masonite.request import Request
+from ..request import Request
 
 
 class SecureHeadersMiddleware:

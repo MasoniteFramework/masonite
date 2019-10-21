@@ -1,6 +1,6 @@
 """Maintainance Mode Middleware."""
 import os
-from masonite.request import Request
+from ..request import Request
 from config import application
 
 

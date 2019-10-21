@@ -5,7 +5,7 @@ import os
 from hupper.logger import DefaultLogger, LogLevel
 from hupper.reloader import Reloader, find_default_monitor_factory
 from cleo import Command
-from masonite.helpers import has_unmigrated_migrations
+from ..helpers import has_unmigrated_migrations
 
 
 class ServeCommand(Command):

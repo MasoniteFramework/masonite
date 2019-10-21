@@ -58,3 +58,7 @@ AUTOLOAD = [
 ]
 
 FALSY = False
+
+TEMPLATES={
+    'statuscode': '/src/masonite/snippets/statuscode',
+}

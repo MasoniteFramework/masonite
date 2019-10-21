@@ -1,10 +1,10 @@
 """A RedirectionProvider Service Provider."""
 
-from masonite.drivers import BroadcastAblyDriver, BroadcastPusherDriver
-from masonite.managers import BroadcastManager
-from masonite.provider import ServiceProvider
-from masonite import Broadcast
-from masonite.helpers import config
+from ..drivers import BroadcastAblyDriver, BroadcastPusherDriver
+from ..managers import BroadcastManager
+from ..provider import ServiceProvider
+from .. import Broadcast
+from ..helpers import config
 
 
 class BroadcastProvider(ServiceProvider):

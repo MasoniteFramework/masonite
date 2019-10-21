@@ -1,4 +1,4 @@
-from masonite.auth import Sign
+from ..auth import Sign
 
 
 def sign(value):

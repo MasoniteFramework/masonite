@@ -10,12 +10,12 @@ import platform
 import sys
 import traceback
 
-from masonite.app import App
-from masonite.exceptions import DumpException
-from masonite.request import Request
-from masonite.response import Response
-from masonite.view import View
-from masonite.helpers import config
+from .app import App
+from .exceptions import DumpException
+from .request import Request
+from .response import Response
+from .view import View
+from .helpers import config
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 

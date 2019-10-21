@@ -1,8 +1,8 @@
 """Welcome The User To Masonite."""
 
-from masonite.view import View
-from masonite.request import Request
-from masonite.controllers import Controller
+from src.masonite.view import View
+from src.masonite.request import Request
+from src.masonite.controllers import Controller
 
 
 class WelcomeController(Controller):

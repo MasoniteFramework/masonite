@@ -1,7 +1,7 @@
-from masonite.provider import ServiceProvider
-from masonite.request import Request
-from masonite.response import Response
-from masonite.helpers import config
+from ..provider import ServiceProvider
+from ..request import Request
+from ..response import Response
+from ..helpers import config
 
 
 class CorsProvider(ServiceProvider):

@@ -3,14 +3,14 @@
 import builtins
 import os
 
-from masonite.exception_handler import DD
-from masonite.helpers.view_helpers import back, set_request_method, hidden
-from masonite.helpers.sign import sign, unsign, decrypt, encrypt
-from masonite.helpers import config, optional
-from masonite.provider import ServiceProvider
-from masonite.view import View
-from masonite.request import Request
-from masonite.managers import MailManager
+from ..exception_handler import DD
+from ..helpers.view_helpers import back, set_request_method, hidden
+from ..helpers.sign import sign, unsign, decrypt, encrypt
+from ..helpers import config, optional
+from ..provider import ServiceProvider
+from ..view import View
+from ..request import Request
+from ..managers import MailManager
 
 
 class HelpersProvider(ServiceProvider):

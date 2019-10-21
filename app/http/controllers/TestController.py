@@ -1,6 +1,6 @@
 from app.jobs.TestJob import TestJob
-from masonite import Queue, Mail
-from masonite.request import Request
+from src.masonite import Queue, Mail
+from src.masonite.request import Request
 
 class TestController:
 

@@ -1,7 +1,7 @@
 """A UnitTestController Module."""
 
-from masonite.request import Request
-from masonite.controllers import Controller
+from src.masonite.request import Request
+from src.masonite.controllers import Controller
 
 
 class UnitTestController(Controller):

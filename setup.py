@@ -4,7 +4,7 @@ from setuptools import setup
 here = os.path.abspath(os.path.dirname(__file__))
 
 meta = {}
-with open(os.path.join(here, 'masonite', '__version__.py'), 'r') as f:
+with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
 with open('README.md', 'r') as f:

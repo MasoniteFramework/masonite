@@ -61,6 +61,7 @@ setup(
     long_description_content_type='text/markdown',
     author=meta['__author__'],
     author_email=meta['__author_email__'],
+    package_dir={'': 'src'},
     url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
     licence=meta['__licence__'],

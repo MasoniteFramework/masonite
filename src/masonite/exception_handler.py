@@ -96,7 +96,7 @@ class ExceptionHandler:
             last_stacktrace = []
             second_to_last_stacktrace = []
 
-        self.response.view(self._app.make('View')('/masonite/snippets/exception',
+        self.response.view(self._app.make('View')(config('application.templates.exceptions', '/masonite/snippets/exception'),
                                                {
                                                    'exception': self._exception,
                                                    'split_exception': str(self._exception).split(' '),

@@ -61,4 +61,5 @@ FALSY = False
 
 TEMPLATES={
     'statuscode': '/src/masonite/snippets/statuscode',
+    'exceptions': '/src/masonite/snippets/exception'
 }

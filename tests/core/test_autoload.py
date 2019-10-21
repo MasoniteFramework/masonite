@@ -1,10 +1,10 @@
 import unittest
 
-from masonite.app import App
-from masonite.autoload import Autoload
-from masonite.exceptions import (AutoloadContainerOverwrite, ContainerError,
+from src.masonite.app import App
+from src.masonite.autoload import Autoload
+from src.masonite.exceptions import (AutoloadContainerOverwrite, ContainerError,
                                  InvalidAutoloadPath)
-from masonite.request import Request
+from src.masonite.request import Request
 
 
 class TestAutoload(unittest.TestCase):

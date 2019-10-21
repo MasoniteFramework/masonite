@@ -1,4 +1,4 @@
-from masonite.testsuite.TestSuite import TestSuite
+from src.masonite.testsuite.TestSuite import TestSuite
 import unittest
 
 

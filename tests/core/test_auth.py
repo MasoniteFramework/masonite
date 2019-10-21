@@ -3,18 +3,18 @@ import time
 
 from config import application, auth
 from config.database import Model
-from masonite.app import App
-from masonite.auth import Auth, MustVerifyEmail, Sign
-from masonite.managers import AuthManager
-from masonite.drivers import AuthCookieDriver, AuthJwtDriver
-from masonite.helpers import password as bcrypt_password
-from masonite.routes import Get
-from masonite.request import Request
-from masonite.snippets.auth.controllers.ConfirmController import \
+from src.masonite.app import App
+from src.masonite.auth import Auth, MustVerifyEmail, Sign
+from src.masonite.managers import AuthManager
+from src.masonite.drivers import AuthCookieDriver, AuthJwtDriver
+from src.masonite.helpers import password as bcrypt_password
+from src.masonite.routes import Get
+from src.masonite.request import Request
+from src.masonite.snippets.auth.controllers.ConfirmController import \
     ConfirmController
-from masonite.testing import TestCase
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.view import View
+from src.masonite.testing import TestCase
+from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.view import View
 
 
 class User(Model, MustVerifyEmail):

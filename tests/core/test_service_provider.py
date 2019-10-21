@@ -1,10 +1,10 @@
 import os
 import unittest
 
-from masonite.provider import ServiceProvider
-from masonite.request import Request
-from masonite.routes import Get
-from masonite.testsuite.TestSuite import TestSuite, generate_wsgi
+from src.masonite.provider import ServiceProvider
+from src.masonite.request import Request
+from src.masonite.routes import Get
+from src.masonite.testsuite.TestSuite import TestSuite, generate_wsgi
 
 
 class ContainerTest(ServiceProvider):

@@ -1,7 +1,7 @@
 
 import unittest
 
-from masonite.helpers import Dot, config
+from src.masonite.helpers import Dot, config
 
 from config import database
 

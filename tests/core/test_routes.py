@@ -1,11 +1,11 @@
-from masonite.routes import Route
-from masonite.request import Request
-from masonite.app import App
-from masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
-from masonite.helpers.routes import group, flatten_routes
-from masonite.helpers.routes import create_matchurl
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.exceptions import InvalidRouteCompileException, RouteException
+from src.masonite.routes import Route
+from src.masonite.request import Request
+from src.masonite.app import App
+from src.masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
+from src.masonite.helpers.routes import group, flatten_routes
+from src.masonite.helpers.routes import create_matchurl
+from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.exceptions import InvalidRouteCompileException, RouteException
 from app.http.controllers.subdirectory.SubController import SubController
 import unittest
 

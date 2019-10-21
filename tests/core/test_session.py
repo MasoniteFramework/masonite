@@ -1,9 +1,9 @@
 from config import session
-from masonite.app import App
-from masonite.drivers import SessionCookieDriver, SessionMemoryDriver
-from masonite.managers import SessionManager
-from masonite.request import Request
-from masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.app import App
+from src.masonite.drivers import SessionCookieDriver, SessionMemoryDriver
+from src.masonite.managers import SessionManager
+from src.masonite.request import Request
+from src.masonite.testsuite.TestSuite import generate_wsgi
 import unittest
 
 

@@ -5,8 +5,8 @@ import importlib
 import json
 import re
 
-from masonite.exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
-from masonite.view import View
+from .exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
+from .view import View
 
 
 class Route:
@@ -554,7 +554,7 @@ class RouteGroup:
         Returns:
             list -- Returns a list of routes.
         """
-        from masonite.helpers.routes import flatten_routes
+        from .helpers.routes import flatten_routes
         cls.routes = flatten_routes(routes)
 
         if middleware:

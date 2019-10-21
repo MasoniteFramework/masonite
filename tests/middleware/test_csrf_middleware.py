@@ -1,11 +1,11 @@
-from masonite.request import Request
-from masonite.view import View
-from masonite.auth.Csrf import Csrf
-from masonite.app import App
-from masonite.middleware import CsrfMiddleware
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.exceptions import InvalidCSRFToken
-from masonite.routes import Get, Route
+from src.masonite.request import Request
+from src.masonite.view import View
+from src.masonite.auth.Csrf import Csrf
+from src.masonite.app import App
+from src.masonite.middleware import CsrfMiddleware
+from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.exceptions import InvalidCSRFToken
+from src.masonite.routes import Get, Route
 import unittest
 
 

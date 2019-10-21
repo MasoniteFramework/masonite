@@ -1,11 +1,11 @@
 
 import unittest
 
-from masonite.app import App
-from masonite.providers import HelpersProvider
-from masonite.request import Request
-from masonite.testsuite import generate_wsgi
-from masonite.view import View
+from src.masonite.app import App
+from src.masonite.providers import HelpersProvider
+from src.masonite.request import Request
+from src.masonite.testsuite import generate_wsgi
+from src.masonite.view import View
 
 
 class TestViewHelpers(unittest.TestCase):

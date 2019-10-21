@@ -1,6 +1,6 @@
-from masonite.middleware import CsrfMiddleware
-from masonite.testing import TestCase
-from masonite.routes import Get, Post
+from src.masonite.middleware import CsrfMiddleware
+from src.masonite.testing import TestCase
+from src.masonite.routes import Get, Post
 
 
 class TestCsrf(TestCase):

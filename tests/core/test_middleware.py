@@ -1,8 +1,8 @@
-from masonite.request import Request
-from masonite.routes import Get
+from src.masonite.request import Request
+from src.masonite.routes import Get
 from app.http.middleware.TestMiddleware import TestMiddleware as MiddlewareTest
 from app.http.middleware.TestHttpMiddleware import TestHttpMiddleware as MiddlewareHttpTest
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 
 
 class MiddlewareValueTest:

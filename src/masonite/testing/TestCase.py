@@ -5,13 +5,13 @@ import unittest
 from contextlib import contextmanager
 from urllib.parse import urlencode
 
-from masonite import env
-from masonite.exceptions import RouteNotFoundException
-from masonite.helpers.migrations import Migrations
-from masonite.helpers.routes import create_matchurl, flatten_routes
-from masonite.testsuite import generate_wsgi
+from .. import env
+from ..exceptions import RouteNotFoundException
+from ..helpers.migrations import Migrations
+from ..helpers.routes import create_matchurl, flatten_routes
+from ..testsuite import generate_wsgi
 from orator.orm import Factory
-from masonite.app import App
+from ..app import App
 
 from .MockRoute import MockRoute
 

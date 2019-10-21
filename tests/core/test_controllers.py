@@ -1,7 +1,7 @@
-from masonite.app import App
-from masonite.helpers.routes import get
+from src.masonite.app import App
+from src.masonite.helpers.routes import get
 from app.http.controllers.ControllerTest import ControllerTest
-from masonite.request import Request
+from src.masonite.request import Request
 import unittest
 
 

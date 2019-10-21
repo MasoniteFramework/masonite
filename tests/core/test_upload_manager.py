@@ -3,13 +3,13 @@ import shutil
 import unittest
 
 from config import application, storage
-from masonite.app import App
-from masonite.drivers import UploadDiskDriver, UploadS3Driver
-from masonite.environment import LoadEnvironment
-from masonite.exceptions import (DriverNotFound, FileTypeException,
+from src.masonite.app import App
+from src.masonite.drivers import UploadDiskDriver, UploadS3Driver
+from src.masonite.environment import LoadEnvironment
+from src.masonite.exceptions import (DriverNotFound, FileTypeException,
                                  UnacceptableDriverType)
-from masonite.helpers import static
-from masonite.managers.UploadManager import UploadManager
+from src.masonite.helpers import static
+from src.masonite.managers.UploadManager import UploadManager
 
 LoadEnvironment()
 

@@ -2,12 +2,12 @@
 
 import json
 
-from masonite.exceptions import ResponseError
-from masonite.helpers.Extendable import Extendable
+from .exceptions import ResponseError
+from .helpers.Extendable import Extendable
 
 from orator.support.collection import Collection
 from orator import Model
-from masonite.app import App
+from .app import App
 
 
 class Response(Extendable):

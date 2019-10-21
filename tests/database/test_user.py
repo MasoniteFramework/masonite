@@ -1,6 +1,6 @@
 """Example Database Testcase."""
 
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 
 from app.User import User
 from config.factories import factory

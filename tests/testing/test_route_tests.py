@@ -1,7 +1,7 @@
 from routes import web
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 from app.User import User
-from masonite.exceptions import InvalidCSRFToken
+from src.masonite.exceptions import InvalidCSRFToken
 
 
 class TestUnitTest(TestCase):

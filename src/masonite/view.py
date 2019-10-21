@@ -4,8 +4,8 @@
 from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 from jinja2.exceptions import TemplateNotFound
 
-from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
-from masonite.response import Responsable
+from .exceptions import RequiredContainerBindingNotFound, ViewException
+from .response import Responsable
 
 class View(Responsable):
     """View class. Responsible for handling everything involved with views and view environments."""

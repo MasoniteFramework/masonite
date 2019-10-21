@@ -1,8 +1,8 @@
 import os
 
-from masonite.drivers import BroadcastPusherDriver
-from masonite.managers import BroadcastManager
-from masonite.testsuite.TestSuite import TestSuite
+from src.masonite.drivers import BroadcastPusherDriver
+from src.masonite.managers import BroadcastManager
+from src.masonite.testsuite.TestSuite import TestSuite
 import unittest
 
 if os.getenv('ABLY_SECRET'):

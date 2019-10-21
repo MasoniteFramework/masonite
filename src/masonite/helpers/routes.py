@@ -1,6 +1,6 @@
 """Helper Functions for RouteProvider."""
 
-from masonite.helpers import deprecated
+from .misc import deprecated
 
 
 def flatten_routes(routes):

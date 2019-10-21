@@ -1,7 +1,7 @@
 import cgi
 import unittest
 
-from masonite.helpers import clean_request_input
+from src.masonite.helpers import clean_request_input
 
 
 class TestCleanRequestInput(unittest.TestCase):

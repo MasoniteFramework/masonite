@@ -1,4 +1,4 @@
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 
 
 class TestResponsable(TestCase):

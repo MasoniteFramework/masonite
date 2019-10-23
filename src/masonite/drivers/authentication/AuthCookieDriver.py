@@ -1,11 +1,13 @@
 """AuthCookieDriver Module."""
 
+from ...contracts.AuthContract import AuthInterface
+
 from ...contracts import AuthContract
 from ...drivers import BaseDriver
 from ...request import Request
 
 
-class AuthCookieDriver(BaseDriver, AuthContract):
+class AuthCookieDriver(BaseDriver, AuthInterface):
 
     def __init__(self, request: Request):
         """AuthCookieDriver initializer.
@@ -14,6 +16,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
             request {masonite.request.Request} -- The Masonite request class.
         """
         self.request = request
+        print('created the authcookie')
 
     def user(self, auth_model):
         """Gets the user based on this driver implementation

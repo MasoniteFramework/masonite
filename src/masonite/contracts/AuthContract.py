@@ -1,16 +1,28 @@
 from abc import ABC as Contract, abstractmethod
 
+from masonite.interfaces import Interface
 
-class AuthContract(Contract):
+class AuthInterface(Interface):
 
-    @abstractmethod
-    def user(self):
+    def user(self, auth_model):
         pass
 
-    @abstractmethod
-    def save(self):
+    def save(self, remember_token, **options):
         pass
 
-    @abstractmethod
     def delete(self):
         pass
+
+class AuthContract(AuthInterface):
+    pass
+    # @abstractmethod
+    # def user(self):
+    #     pass
+
+    # @abstractmethod
+    # def save(self):
+    #     pass
+
+    # @abstractmethod
+    # def delete(self):
+    #     pass

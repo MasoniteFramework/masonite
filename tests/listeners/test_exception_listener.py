@@ -22,7 +22,6 @@ class ExceptionAllListener(BaseExceptionListener):
         self.request = request
 
     def handle(self, exception, file, line):
-        print(file, line)
         self.request.error_thrown = True
 
 

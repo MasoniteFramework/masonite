@@ -13,7 +13,6 @@ class QueueProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
-        from config import queue
         self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
         self.app.bind('QueueAmqpDriver', QueueAmqpDriver)
         self.app.bind('QueueManager', QueueManager)

@@ -11,11 +11,12 @@ class MigrateResetCommand(Command):
     Migrate reset.
 
     migrate:reset
+        {--c|connection=default : The connection you want to run migrations on}
     """
 
     def handle(self):
         sys.path.append(os.getcwd())
-        migrations = Migrations().reset()
+        migrations = Migrations(self.option('connection')).reset()
         self.line("")
         for notes in migrations._notes:
             self.line(notes)

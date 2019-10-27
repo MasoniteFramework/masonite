@@ -7,7 +7,6 @@ from src.masonite.managers import MailManager
 from src.masonite.request import Request
 from src.masonite.view import View
 from src.masonite.helpers import config
-from app.User import User
 
 
 class ConfirmController:

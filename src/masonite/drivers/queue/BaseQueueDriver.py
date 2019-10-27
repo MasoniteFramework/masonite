@@ -10,7 +10,7 @@ from ...helpers import HasColoredCommands
 
 class BaseQueueDriver(BaseDriver, HasColoredCommands):
 
-    def add_to_failed_queue_table(self, payload):
+    def add_to_failed_queue_table(self, payload, driver='amqp'):
         from config.database import DB as schema
         from config import queue
         if 'amqp' in queue.DRIVERS:
@@ -20,7 +20,7 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
 
         if schema.get_schema_builder().has_table('failed_jobs'):
             schema.table('failed_jobs').insert({
-                'driver': 'amqp',
+                'driver': driver,
                 'channel': listening_channel,
                 'payload': pickle.dumps(payload),
                 'failed_at': pendulum.now()

@@ -116,7 +116,5 @@ class ServiceProvider:
         else:
             publishing_items = self._publish_migrations
 
-        print('run pubslish migration', publishing_items)
         for from_location in publishing_items:
-            print(from_location)
             copy_migration(from_location)

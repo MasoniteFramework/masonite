@@ -33,6 +33,7 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         message['From'] = '{0} <{1}>'.format(
             self.config.FROM['name'], self.config.FROM['address'])
         message['To'] = self.to_address
+        message['Reply-To'] = self.message_reply_to
         message.attach(message_contents)
 
         # Send the message via our own SMTP server.

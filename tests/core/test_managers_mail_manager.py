@@ -2,7 +2,6 @@ from src.masonite.environment import LoadEnvironment
 
 LoadEnvironment()
 
-from config import mail
 from src.masonite.app import App
 from src.masonite.contracts import MailManagerContract
 from src.masonite.drivers import MailMailgunDriver as Mailgun

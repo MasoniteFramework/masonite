@@ -1,9 +1,8 @@
-from ..app import App
-from .TestRoute import TestRoute
-from .TestRequest import TestRequest
-from ..helpers import config
-
 import io
+
+from ..app import App
+from .TestRequest import TestRequest
+from .TestRoute import TestRoute
 
 
 def generate_wsgi():
@@ -39,7 +38,7 @@ def generate_wsgi():
 class TestSuite:
 
     def create_container(self, wsgi=generate_wsgi(), container=None, routes=[]):
-        from config import application, providers
+        from config import providers
         if not container:
             container = App(remember=False)
 

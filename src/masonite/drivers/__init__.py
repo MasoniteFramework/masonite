@@ -15,6 +15,7 @@ from .mail.MailLogDriver import MailLogDriver
 from .mail.MailTerminalDriver import MailTerminalDriver
 from .queue.QueueAsyncDriver import QueueAsyncDriver
 from .queue.QueueAmqpDriver import QueueAmqpDriver
+from .queue.QueueDatabaseDriver import QueueDatabaseDriver
 from .session.SessionCookieDriver import SessionCookieDriver
 from .session.SessionMemoryDriver import SessionMemoryDriver
 from .storage.StorageDiskDriver import StorageDiskDriver

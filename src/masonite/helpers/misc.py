@@ -42,6 +42,7 @@ def dot(data, compile_to=None):
 def clean_request_input(value, clean=True):
     if not clean:
         return value
+
     import html
 
     try:
@@ -53,7 +54,7 @@ def clean_request_input(value, clean=True):
             return value
         elif isinstance(value, dict):
             return {key: html.escape(val) for (key, val) in value.items()}
-    except AttributeError:
+    except (AttributeError, TypeError):
         pass
 
     return value

@@ -645,6 +645,10 @@ class Request(Extendable):
         self.status(status)
         return self
 
+    def with_input(self):
+        self.flash_inputs_to_session()
+        return self
+
     def redirect_to(self, route_name, params={}, status=302):
         """Redirect to a named route.
 
@@ -785,6 +789,8 @@ class Request(Extendable):
         Returns:
             self
         """
+        self.with_input()
+
         redirect_url = self.input('__back')
         if not redirect_url and default:
             return self.redirect(default)
@@ -792,6 +798,13 @@ class Request(Extendable):
             return self.redirect(self.path)  # Some global default?
 
         return self.redirect(redirect_url)
+
+    def flash_inputs_to_session(self):
+        if not hasattr(self, 'session'):
+            return
+
+        for key, value in self.all().items():
+            self.session.flash(key, value)
 
     def is_named_route(self, name, params={}):
         """Check if the current URI is a specific named route.
@@ -860,11 +873,17 @@ class Request(Extendable):
                     if isinstance(params, dict):
                         compiled_url += str(params[url]) + '/'
                     elif isinstance(params, list):
-                        compiled_url += str(params[0]) + '/'
-                        del params[0]
+                        compiled_url += str(params.pop(0)) + '/'
+                elif '?' in url:
+                    url = url.replace('?', '').split(':')[0]
+                    if isinstance(params, dict):
+                        compiled_url += str(params.get(url, '/')) + '/'
+                    elif isinstance(params, list):
+                        compiled_url += str(params.pop(0)) + '/'
                 else:
                     compiled_url += url + '/'
 
+        compiled_url = compiled_url.replace('//', '')
         # The loop isn't perfect and may have an unwanted trailing slash
         if compiled_url.endswith('/') and not route.endswith('/'):
             compiled_url = compiled_url[:-1]

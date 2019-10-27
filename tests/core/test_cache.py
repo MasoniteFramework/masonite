@@ -1,13 +1,12 @@
 import glob
 import os
 import time
+import unittest
 
-from config import cache
 from src.masonite.app import App
 from src.masonite.drivers import CacheDiskDriver, CacheRedisDriver
 from src.masonite.environment import LoadEnvironment
 from src.masonite.managers import CacheManager
-import unittest
 
 LoadEnvironment()
 

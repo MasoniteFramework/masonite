@@ -1,6 +1,6 @@
 import os
+import unittest
 
-from config import mail
 from src.masonite import env
 from src.masonite.app import App
 from src.masonite.drivers import MailMailgunDriver as Mailgun
@@ -8,7 +8,6 @@ from src.masonite.drivers import MailSmtpDriver as MailDriver
 from src.masonite.environment import LoadEnvironment
 from src.masonite.managers.MailManager import MailManager
 from src.masonite.view import View
-import unittest
 
 LoadEnvironment()
 
@@ -26,13 +25,16 @@ if os.getenv('MAILGUN_SECRET'):
             self.app.bind('Test', object)
             self.app.bind('MailSmtpDriver', MailDriver)
             self.app.bind('MailMailgunDriver', Mailgun)
-            self.app.bind('View', View(self.app))
+            viewClass = View(self.app)
+            self.app.bind('ViewClass', viewClass)
+            self.app.bind('View', viewClass.render)
 
         def test_mailgun_driver(self):
             user = UserMock
             user.email = 'test@email.com'
 
             self.assertEqual(MailManager(self.app).driver('mailgun').to(user).to_address, 'test@email.com')
+            self.assertEqual(MailManager(self.app).driver('mailgun').reply_to('reply_to@email.com').message_reply_to , 'reply_to@email.com')
 
         def test_mail_renders_template(self):
             self.assertIn('MasoniteTesting', MailManager(self.app).driver('mailgun').to(

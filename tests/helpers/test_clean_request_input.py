@@ -43,6 +43,18 @@ class TestCleanRequestInput(unittest.TestCase):
         fieldstorage = FieldStorageTest()
         self.assertEqual(clean_request_input(fieldstorage), fieldstorage)
 
+    def test_does_not_clean_bytes_objects(self):
+        obj = b'test'
+        self.assertEqual(clean_request_input(obj), obj)
+
+    def test_does_not_clean_bytes_objects(self):
+        obj = [b'test', b'test']
+        self.assertEqual(clean_request_input(obj), obj)
+
+    def test_does_not_clean_bytes_objects_with_dicts(self):
+        obj = {'x': b'test'}
+        self.assertEqual(clean_request_input(obj), obj)
+
 
 class FieldStorageTest(cgi.FieldStorage):
     pass

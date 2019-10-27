@@ -12,7 +12,8 @@ from src.masonite.request import Request
 from src.masonite.response import Response
 from src.masonite.testsuite import generate_wsgi
 from src.masonite.view import View
-from config.factories import factory
+from src.masonite.testing import TestCase
+from src.masonite.routes import Get
 from config.factories import factory
 
 

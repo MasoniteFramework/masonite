@@ -5,10 +5,10 @@ import pickle
 import time
 
 import pendulum
-from masonite.contracts import QueueContract
-from masonite.drivers import BaseQueueDriver
-from masonite.helpers import HasColoredCommands, parse_human_time
-from masonite.queues import Queueable
+from ...contracts import QueueContract
+from ...drivers import BaseQueueDriver
+from ...helpers import HasColoredCommands, parse_human_time
+from ...queues import Queueable
 
 
 class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):

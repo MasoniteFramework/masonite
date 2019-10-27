@@ -35,8 +35,6 @@ class TestMailLogDrivers(unittest.TestCase):
         self.app = self.app.bind('Container', self.app)
 
         self.app.bind('Test', object)
-        # self.app.bind('View', View(self.app))
-        self.app.bind('MailConfig', mail)
         viewClass = View(self.app)
         self.app.bind('ViewClass', viewClass)
         self.app.bind('View', viewClass.render)

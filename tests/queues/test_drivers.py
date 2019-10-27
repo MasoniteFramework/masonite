@@ -43,7 +43,6 @@ class TestQueueDrivers(unittest.TestCase):
         self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
         self.app.bind('QueueAmqpDriver', QueueAmqpDriver)
         self.app.bind('QueueDatabaseDriver', QueueDatabaseDriver)
-        self.app.bind('QueueConfig', queue)
         self.app.bind('Queueable', Queueable)
         self.app.bind('Container', self.app)
         self.app.bind('QueueManager', QueueManager(self.app))

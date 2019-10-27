@@ -1,8 +1,6 @@
 
 import unittest
 
-from masonite.testing import TestCase
-
 from app.http.controllers.subdirectory.SubController import SubController
 from src.masonite.app import App
 from src.masonite.exceptions import (InvalidRouteCompileException,
@@ -12,8 +10,9 @@ from src.masonite.request import Request
 from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
                                  Patch, Post, Put, Redirect, Route, RouteGroup,
                                  Trace)
+from src.masonite.testing import TestCase
 from src.masonite.testsuite.TestSuite import generate_wsgi
-
+from src.masonite.exceptions import RouteNotFoundException
 
 class TestRoutes(unittest.TestCase):
 

@@ -11,11 +11,12 @@ class MigrateRollbackCommand(Command):
     Migrate Rollback.
 
     migrate:rollback
+        {--c|connection=default : The connection you want to run migrations on}
     """
 
     def handle(self):
         sys.path.append(os.getcwd())
-        migrations = Migrations().rollback()
+        migrations = Migrations(self.option('connection')).rollback()
         self.line("")
         for notes in migrations._notes:
             self.line(notes)

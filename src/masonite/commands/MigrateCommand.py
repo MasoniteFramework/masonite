@@ -11,11 +11,12 @@ class MigrateCommand(Command):
     Run migrations.
 
     migrate
+        {--c|connection=default : The connection you want to run migrations on}
     """
 
     def handle(self):
         sys.path.append(os.getcwd())
-        migrations = Migrations().run()
+        migrations = Migrations(self.option('connection')).run()
         self.line("")
         for notes in migrations._notes:
             self.line(notes)

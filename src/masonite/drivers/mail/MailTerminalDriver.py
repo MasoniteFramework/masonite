@@ -5,14 +5,13 @@ import logging
 from ...app import App
 from ...contracts.MailContract import MailContract
 from ...drivers import BaseMailDriver
-from ...view import View
 
 
 class MailTerminalDriver(BaseMailDriver, MailContract):
     """Mail terminal driver."""
 
-    def __init__(self, app: App, view: View):
-        super().__init__(app, view)
+    def __init__(self, app: App):
+        super().__init__(app)
         self.logger = logging.getLogger(__name__)
         self.logger.handlers = []
         handler = logging.StreamHandler()
@@ -39,6 +38,7 @@ class MailTerminalDriver(BaseMailDriver, MailContract):
         self.logger.info('From: {0} <{1}>'.format(
             self.config.FROM['name'], self.config.FROM['address']))
         self.logger.info('Subject: {}'.format(self.message_subject))
+        self.logger.info('Reply-To: {}'.format(self.message_reply_to))
         self.logger.info('Message: ')
         self.logger.info(message)
 

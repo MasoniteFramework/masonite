@@ -26,7 +26,7 @@ DATABASES = {
     'default': env('DB_CONNECTION', 'sqlite'),
     'sqlite': {
         'driver': 'sqlite',
-        'database': env('DB_DATABASE', 'masonite.db'),
+        'database': env('SQLITE_DB_DATABASE', 'masonite.db'),
         'log_queries': env('DB_LOG'),
         'prefix': ''
     },

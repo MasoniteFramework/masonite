@@ -11,8 +11,8 @@ from ...view import View
 
 class MailLogDriver(BaseMailDriver, MailContract):
     """Mail log driver."""
-    def __init__(self, app: App, view: View):
-        super().__init__(app, view)
+    def __init__(self, app: App):
+        super().__init__(app)
 
         if 'log' in self.config.DRIVERS and 'location' in self.config.DRIVERS['log']:
             log_location = self.config.DRIVERS['log']['location']
@@ -52,6 +52,7 @@ class MailLogDriver(BaseMailDriver, MailContract):
         self.logger.info('From: {0} <{1}>'.format(
             self.config.FROM['name'], self.config.FROM['address']))
         self.logger.info('Subject: {}'.format(self.message_subject))
+        self.logger.info('Reply-To: {}'.format(self.message_reply_to))
         self.logger.info('Message: ')
         self.logger.info(message)
 

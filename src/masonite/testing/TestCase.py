@@ -211,7 +211,6 @@ class TestCase(unittest.TestCase):
         wsgi.update(wsgi_values)
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
-        print(id(self.container))
         self.container.make('Request').load_app(self.container)
         if self._with_subdomains:
             self.container.make('Request').activate_subdomains()

@@ -4,7 +4,7 @@ import builtins
 import os
 
 from ..exception_handler import DD
-from ..helpers.view_helpers import back, set_request_method, hidden
+from ..helpers.view_helpers import back, set_request_method, hidden, old
 from ..helpers.sign import sign, unsign, decrypt, encrypt
 from ..helpers import config, optional
 from ..provider import ServiceProvider
@@ -50,6 +50,7 @@ class HelpersProvider(ServiceProvider):
                 'hidden': hidden,
                 'exists': view.exists,
                 'cookie': request.get_cookie,
-                'url': lambda name, params={}: request.route(name, params, full=True)
+                'url': lambda name, params={}: request.route(name, params, full=True),
+                'old': old
             }
         )

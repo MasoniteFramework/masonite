@@ -109,3 +109,31 @@ def add_venv_site_packages():
         else:
             print('\033[93mWARNING: Could not add the virtual environment you are currently in. Attempting to add: {0}\033[93m'.format(
                 os.environ['VIRTUAL_ENV']))
+
+
+class PackageContainer:
+
+    def create(self):
+        from masonite.app import App
+        from config import providers
+
+        container = App()
+
+        container.bind('Container', container)
+
+        container.bind('ProvidersConfig', providers)
+        container.bind('Providers', [])
+        container.bind('WSGIProviders', [])
+
+        for provider in container.make('ProvidersConfig').PROVIDERS:
+            located_provider = provider()
+            located_provider.load_app(container).register()
+            if located_provider.wsgi:
+                container.make('WSGIProviders').append(located_provider)
+            else:
+                container.make('Providers').append(located_provider)
+
+        for provider in container.make('Providers'):
+            container.resolve(provider.boot)
+
+        return container

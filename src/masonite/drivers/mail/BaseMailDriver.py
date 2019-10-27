@@ -1,16 +1,18 @@
 """Base mail driver module."""
 
-from .. import BaseDriver
-from ...view import View
+import copy
+
 from ...app import App
 from ...helpers import config
 from ...response import Responsable
+from ...view import View
+from .. import BaseDriver
 
 
 class BaseMailDriver(BaseDriver, Responsable):
     """Base mail driver class. This class is inherited by all mail drivers."""
 
-    def __init__(self, app: App, view: View):
+    def __init__(self, app: App):
         """Base mail driver constructor.
 
         Arguments:
@@ -18,11 +20,12 @@ class BaseMailDriver(BaseDriver, Responsable):
             view {object} -- This is the masonite.view.View class.
         """
         self.config = config('mail')
+        self.app = app
         self.to_address = None
         self.from_address = self.config.FROM
         self.message_subject = 'Subject'
+        self.message_reply_to = None
         self.message_body = None
-        self.view = view
         self._queue = False
 
     def to(self, user_email):
@@ -61,7 +64,8 @@ class BaseMailDriver(BaseDriver, Responsable):
         Returns:
             self
         """
-        self.message_body = self.view.render(template_name, dictionary).rendered_template
+        view = copy.copy(self.app.make('ViewClass'))
+        self.message_body = view.render(template_name, dictionary).rendered_template
         return self
 
     def send_from(self, address):
@@ -90,3 +94,15 @@ class BaseMailDriver(BaseDriver, Responsable):
 
     def get_response(self):
         return self.message_body
+
+    def reply_to(self, reply_to):
+        """Set the Reply-To of an email.
+
+        Arguments:
+            reply_to {string} -- The reply-to of the email
+
+        Returns:
+            self
+        """
+        self.message_reply_to = reply_to
+        return self

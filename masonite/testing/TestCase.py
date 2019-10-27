@@ -130,6 +130,7 @@ class TestCase(unittest.TestCase):
 
         custom_wsgi.update(wsgi)
         if not self._with_csrf:
+            print('set the csrf tokens')
             params.update({'__token': 'tok'})
             custom_wsgi.update({
                 'HTTP_COOKIE': 'csrf_token=tok',

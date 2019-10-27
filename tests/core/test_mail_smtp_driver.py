@@ -1,4 +1,3 @@
-from config import mail
 from src.masonite import env
 from src.masonite.app import App
 from src.masonite.drivers import MailMailgunDriver as Mailgun

@@ -1,10 +1,10 @@
-from config import application, providers
+
+import unittest
 
 from src.masonite.app import App
+from src.masonite.helpers import config
 from src.masonite.routes import Get
 from src.masonite.testsuite.TestSuite import TestSuite, generate_wsgi
-import unittest
-from src.masonite.helpers import config
 
 
 class TestProviders(unittest.TestCase):

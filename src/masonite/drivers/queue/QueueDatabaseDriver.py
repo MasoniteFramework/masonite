@@ -34,7 +34,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         """
 
         from config.database import DB as schema
-        from config import queue
 
         callback = options.get('callback', 'handle')
         wait = options.get('wait', None)

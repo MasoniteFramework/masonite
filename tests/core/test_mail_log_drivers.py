@@ -1,16 +1,14 @@
-from config import mail
 
 import os
-
-from src.masonite.app import App
-from src.masonite.view import View
-from src.masonite.managers.MailManager import MailManager
-from src.masonite.drivers import MailLogDriver
-from src.masonite.drivers import MailTerminalDriver
-import unittest
 import sys
+import unittest
 from contextlib import contextmanager
+
 from _io import StringIO
+from src.masonite.app import App
+from src.masonite.drivers import MailLogDriver, MailTerminalDriver
+from src.masonite.managers.MailManager import MailManager
+from src.masonite.view import View
 
 
 @contextmanager

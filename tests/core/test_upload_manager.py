@@ -2,7 +2,6 @@ import os
 import shutil
 import unittest
 
-from config import application, storage
 from src.masonite.app import App
 from src.masonite.drivers import UploadDiskDriver, UploadS3Driver
 from src.masonite.environment import LoadEnvironment

@@ -3,7 +3,6 @@ import time
 
 from jinja2 import FileSystemLoader
 
-from config import cache
 from src.masonite.app import App
 from src.masonite.drivers import CacheDiskDriver
 from src.masonite.exceptions import RequiredContainerBindingNotFound, ViewException

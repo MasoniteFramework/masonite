@@ -279,7 +279,6 @@ class TestCase(unittest.TestCase):
 
     def create_container(self):
         container = App()
-        from config import application
         from config import providers
 
         container.bind('WSGI', generate_wsgi())

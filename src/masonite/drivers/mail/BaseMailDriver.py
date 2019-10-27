@@ -5,7 +5,6 @@ import copy
 from ...app import App
 from ...helpers import config
 from ...response import Responsable
-from ...view import View
 from .. import BaseDriver
 
 

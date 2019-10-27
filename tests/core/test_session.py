@@ -1,10 +1,10 @@
-from config import session
+import unittest
+
 from src.masonite.app import App
 from src.masonite.drivers import SessionCookieDriver, SessionMemoryDriver
 from src.masonite.managers import SessionManager
 from src.masonite.request import Request
 from src.masonite.testsuite.TestSuite import generate_wsgi
-import unittest
 
 
 class TestSession(unittest.TestCase):

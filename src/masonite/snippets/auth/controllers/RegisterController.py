@@ -1,6 +1,6 @@
 """The RegisterController Module."""
 
-from config import application, auth as auth_config
+from config import application
 from masonite.auth import Auth
 from masonite.request import Request
 from masonite.view import View

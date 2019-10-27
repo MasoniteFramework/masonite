@@ -1,21 +1,15 @@
-import unittest
-import json
 
-from orator import Model
+from orator import LengthAwarePaginator, Model, Paginator
 from orator.support.collection import Collection
-from orator import Paginator, LengthAwarePaginator
-from app.User import User
+
 from app.http.controllers.TestController import \
     TestController as ControllerTest
-from src.masonite.app import App
-from src.masonite.request import Request
-from src.masonite.response import Response
-from src.masonite.testsuite import generate_wsgi
-from src.masonite.view import View
-from src.masonite.testing import TestCase
-from src.masonite.routes import Get
+from app.User import User
 from config.factories import factory
-
+from src.masonite.response import Response
+from src.masonite.routes import Get
+from src.masonite.testing import TestCase
+from src.masonite.view import View
 
 
 class MockUser(Model):

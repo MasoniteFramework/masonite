@@ -3,7 +3,6 @@
 from src.masonite.app import App
 
 from bootstrap.start import app
-from config import application, providers
 from src.masonite.helpers import config
 
 """Instantiate Container And Perform Important Bindings
@@ -16,7 +15,6 @@ container = App()
 container.bind('WSGI', app)
 container.bind('Container', container)
 
-# container.bind('ProvidersConfig', providers)
 container.bind('Providers', [])
 container.bind('WSGIProviders', [])
 

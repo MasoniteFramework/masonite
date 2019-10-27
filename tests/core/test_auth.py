@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from config import application, auth
+from config import application
 from config.database import Model
 from src.masonite.app import App
 from src.masonite.auth import Auth, MustVerifyEmail, Sign

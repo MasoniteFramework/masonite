@@ -6,7 +6,6 @@ import os
 from ...app import App
 from ...contracts import MailContract
 from ...drivers import BaseMailDriver
-from ...view import View
 
 
 class MailLogDriver(BaseMailDriver, MailContract):

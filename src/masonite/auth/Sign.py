@@ -49,7 +49,7 @@ class Sign:
             raise InvalidSecretKey(
                 "You have passed an invalid secret key of: {}. Make sure you have correctly added your secret key.".format(self.key))
 
-        self.encryption = f.encrypt(bytes(value, 'utf-8'))
+        self.encryption = f.encrypt(bytes(str(value), 'utf-8'))
         return self.encryption.decode('utf-8')
 
     def unsign(self, value=None):
@@ -65,4 +65,4 @@ class Sign:
 
         if not value:
             return f.decrypt(self.encryption).decode('utf-8')
-        return f.decrypt(bytes(value, 'utf-8')).decode('utf-8')
+        return f.decrypt(bytes(str(value), 'utf-8')).decode('utf-8')

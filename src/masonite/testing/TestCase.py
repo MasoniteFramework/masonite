@@ -5,13 +5,13 @@ import unittest
 from contextlib import contextmanager
 from urllib.parse import urlencode
 
-from masonite import env
-from masonite.exceptions import RouteNotFoundException
-from masonite.helpers.migrations import Migrations
-from masonite.helpers.routes import create_matchurl, flatten_routes
-from masonite.testsuite import generate_wsgi
+from .. import env
+from ..exceptions import RouteNotFoundException
+from ..helpers.migrations import Migrations
+from ..helpers.routes import create_matchurl, flatten_routes
+from ..testsuite import generate_wsgi
 from orator.orm import Factory
-from masonite.app import App
+from ..app import App
 
 from .MockRoute import MockRoute
 
@@ -45,7 +45,6 @@ class TestCase(unittest.TestCase):
 
         self.route_middleware = False
         self.http_middleware = False
-        self.headers = {}
 
     def buildOwnContainer(self):
         self.container = self.create_container()
@@ -212,12 +211,9 @@ class TestCase(unittest.TestCase):
         wsgi.update(wsgi_values)
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
-        self.container.make('Request').load_app(self.container).load_environ(wsgi)
+        self.container.make('Request').load_app(self.container)
         if self._with_subdomains:
             self.container.make('Request').activate_subdomains()
-
-        if self.headers:
-            self.container.make('Request').header(self.headers)
 
         if self.route_middleware is not False:
             self.container.bind('RouteMiddleware', self.route_middleware)
@@ -276,24 +272,19 @@ class TestCase(unittest.TestCase):
         self.http_middleware = middleware
         return self
 
-    def withHeaders(self, headers={}):
-        self.headers = headers
-        return self
-
     def withoutHttpMiddleware(self):
         self.http_middleware = []
         return self
 
     def create_container(self):
         container = App()
-        from config import application
         from config import providers
 
         container.bind('WSGI', generate_wsgi())
-        container.bind('Application', application)
+        # container.bind('Application', application)
         container.bind('Container', container)
 
-        container.bind('ProvidersConfig', providers)
+        # container.bind('ProvidersConfig', providers)
         container.bind('Providers', [])
         container.bind('WSGIProviders', [])
 
@@ -305,7 +296,7 @@ class TestCase(unittest.TestCase):
         once if the wsgi attribute on a provider is False.
         """
 
-        for provider in container.make('ProvidersConfig').PROVIDERS:
+        for provider in providers.PROVIDERS:
             located_provider = provider()
             located_provider.load_app(container).register()
             if located_provider.wsgi:

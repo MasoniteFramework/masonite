@@ -31,3 +31,10 @@ class TestCsrf(TestCase):
         (self.withCsrf()
             .withoutHttpMiddleware()
             .post('/test-route'))
+
+    def test_csrf_can_use_header(self):
+        (self.withCsrf()
+            .withHeaders({
+                'X-CSRF-TOKEN': 'xx'
+            })
+            .post('/test-route'))

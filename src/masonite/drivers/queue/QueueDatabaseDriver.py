@@ -59,7 +59,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
     def consume(self, channel, fair=False, **options):
         from config.database import DB as schema, DATABASES
-        from config import queue
         from wsgi import container
 
         if not channel or channel == 'default':

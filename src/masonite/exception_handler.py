@@ -61,7 +61,7 @@ class ExceptionHandler:
         self.handle(exception)
 
     def run_listeners(self, exception, stacktraceback):
-        for key, exception_class in self._app.collect(BaseExceptionListener).items():
+        for exception_class in self._app.collect(BaseExceptionListener):
             if '*' in exception_class.listens or exception.__class__ in exception_class.listens:
                 file, line = self.get_file_and_line(stacktraceback)
                 self._app.resolve(exception_class).handle(exception, file, line)

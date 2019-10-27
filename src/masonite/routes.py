@@ -211,7 +211,7 @@ class BaseHttpRoute:
         except ImportError as e:
             import sys
             import traceback
-            exc_type, _, exc_tb = sys.exc_info()
+            _, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
                 get_controller, str(e), tb[0], tb[1]), '\033[0m')

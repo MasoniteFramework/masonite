@@ -1,6 +1,6 @@
 import os
+import unittest
 
-from config import mail
 from src.masonite import env
 from src.masonite.app import App
 from src.masonite.drivers import MailMailgunDriver as Mailgun
@@ -8,7 +8,6 @@ from src.masonite.drivers import MailSmtpDriver as MailDriver
 from src.masonite.environment import LoadEnvironment
 from src.masonite.managers.MailManager import MailManager
 from src.masonite.view import View
-import unittest
 
 LoadEnvironment()
 

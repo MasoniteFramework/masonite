@@ -174,7 +174,6 @@ class TestResponse(TestCase):
 
     def test_view_should_return_a_json_response_when_returning_paginator_instance(self):
         
-        users = User.all()
         (
             self.get('/paginator')
                 .assertHasJson('count', 10)

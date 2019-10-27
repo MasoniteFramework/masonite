@@ -84,10 +84,6 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
-      - python38:
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^.*/
       - CodeCoverage:
           requires:
               - build

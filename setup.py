@@ -7,9 +7,12 @@ meta = {}
 with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
-with open('README.md', 'r') as f:
-    readme = f.read()
-
+try:
+    with open('README.md', 'r') as f:
+        readme = f.read()
+except FileNotFoundError:
+    readme = ""
+    
 setup(
     name=meta['__title__'],
     packages=[

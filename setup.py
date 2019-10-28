@@ -46,7 +46,7 @@ setup(
         'Jinja2>=2,<3',
         'masonite-events>=1.0,<2',
         'masonite-scheduler>=1.0.0,<=1.0.99',
-        'masonite-validation>=2.2.0,<=2.2.99',
+        'masonite-validation>=3.0.0,<4.0.0',
         'orator>=0.9,<1',
         'passlib>=1.7,<1.8',
         'pendulum>=1.5,<1.6',

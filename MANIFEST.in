@@ -1,7 +1,7 @@
-include masonite/snippets/exceptions/css/*
-include masonite/snippets/exceptions/*
-include masonite/snippets/*
-include masonite/snippets/migrations/*
-include masonite/snippets/scaffold/*
-include masonite/snippets/auth/controllers/*
-include masonite/snippets/auth/templates/auth/*
+include src/masonite/snippets/exceptions/css/*
+include src/masonite/snippets/exceptions/*
+include src/masonite/snippets/*
+include src/masonite/snippets/migrations/*
+include src/masonite/snippets/scaffold/*
+include src/masonite/snippets/auth/controllers/*
+include src/masonite/snippets/auth/templates/auth/*

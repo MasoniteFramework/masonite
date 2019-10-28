@@ -7,9 +7,12 @@ meta = {}
 with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
-with open('README.md', 'r') as f:
-    readme = f.read()
-
+try:
+    with open('README.md', 'r') as f:
+        readme = f.read()
+except FileNotFoundError:
+    readme = ""
+    
 setup(
     name=meta['__title__'],
     packages=[
@@ -44,9 +47,9 @@ setup(
         'cryptography>=2.3,<2.8',
         'hupper>=1.0,<2.0',
         'Jinja2>=2,<3',
-        'masonite-events>=1.0,<2',
-        'masonite-scheduler>=1.0.0,<=1.0.99',
-        'masonite-validation>=2.2.0,<=2.2.99',
+        # 'masonite-events>=1.0,<2',
+        # 'masonite-scheduler>=1.0.0,<=1.0.99',
+        # 'masonite-validation>=3.0.0,<4.0.0',
         'orator>=0.9,<1',
         'passlib>=1.7,<1.8',
         'pendulum>=1.5,<1.6',
@@ -66,9 +69,9 @@ setup(
     url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
     licence=meta['__licence__'],
-    python_requires=">=3.4",
+    python_requires=">=3.5",
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Masonite',
         'Intended Audience :: Developers',

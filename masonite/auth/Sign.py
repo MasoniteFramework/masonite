@@ -3,7 +3,7 @@ import binascii
 
 from cryptography.fernet import Fernet
 
-from ..exceptions import InvalidSecretKey
+from masonite.exceptions import InvalidSecretKey
 
 
 class Sign:
@@ -65,4 +65,4 @@ class Sign:
 
         if not value:
             return f.decrypt(self.encryption).decode('utf-8')
-        return f.decrypt(bytes(str(value), 'utf-8')).decode('utf-8')
+        return f.decrypt(bytes(value, 'utf-8')).decode('utf-8')

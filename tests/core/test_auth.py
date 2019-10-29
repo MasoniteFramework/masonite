@@ -101,6 +101,7 @@ class TestAuth(TestCase):
         for driver in ('cookie', 'jwt'):
             self.auth.driver = driver
             self.assertTrue(self.auth.login_by_id(1))
+            self.assertTrue(self.request.user())
 
     def test_get_user_returns_false_if_not_loggedin(self):
         for driver in ('cookie', 'jwt'):
@@ -114,10 +115,12 @@ class TestAuth(TestCase):
             self.auth.login('user@email.com', 'secret')
             self.assertTrue(self.request.get_cookie('token'))
             self.assertTrue(self.auth.user())
+            self.assertTrue(self.request.user())
 
             self.auth.logout()
             self.assertFalse(self.request.get_cookie('token'))
             self.assertFalse(self.auth.user())
+            self.assertFalse(self.request.user())
 
     def test_login_user_fails(self):
         for driver in ('cookie', 'jwt'):

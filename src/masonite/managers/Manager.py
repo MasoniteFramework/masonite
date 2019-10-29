@@ -48,6 +48,7 @@ class Manager:
             masonite.drivers.Driver -- Returns a driver which is an instance of the base Driver class.
         """
         self.create_driver(driver)
+        print('manage?', self.manage_driver)
         return self.manage_driver.load_manager(self)
 
     def create_driver(self, driver=None):
@@ -72,14 +73,17 @@ class Manager:
 
         try:
             if isinstance(driver, str):
-                self.manage_driver = self.container.make(
+                driver = self.container.make(
                     '{0}{1}Driver'.format(self.driver_prefix, driver)
                 )
-                return
-            elif inspect.isclass(driver):
-                self.manage_driver = self.container.resolve(driver)
-                return
+                # return
+            print('is driver a class?', driver)
+            if inspect.isclass(driver):
+                driver = self.container.resolve(driver)
+                print('driver is now', driver)
 
+            self.manage_driver = driver
+            return
             raise UnacceptableDriverType(
                 'String or class based driver required. {} driver recieved.'.format(driver))
         except MissingContainerBindingNotFound:

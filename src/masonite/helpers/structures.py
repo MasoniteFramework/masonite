@@ -57,7 +57,7 @@ class Dot:
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
 
-                if dic and not isinstance(dic, int) and len(dic) == 1 and not isinstance(dic[list(dic)[0]], dict):
+                if dic and not isinstance(dic, int) and hasattr(dic, '__len__') and len(dic) == 1 and not isinstance(dic[list(dic)[0]], dict):
                     possible = dic
 
             if not isinstance(dic, dict):

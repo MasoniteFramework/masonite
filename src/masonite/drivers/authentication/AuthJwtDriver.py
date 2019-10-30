@@ -64,7 +64,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
     def save(self, _, **kwargs):
         """Saves the state of authentication.
 
-        In this case the state is saving to a cookie.
+        In this case the state is serializing the user model and saving to a token cookie.
 
         Arguments:
             remember_token {string} -- A token containing the state.
@@ -89,3 +89,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
             bool
         """
         self.request.delete_cookie('token')
+
+    def logout(self):
+        self.delete()
+        self.request.reset_user()

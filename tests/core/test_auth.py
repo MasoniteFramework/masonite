@@ -5,6 +5,7 @@ from config import application
 from config.database import Model
 from src.masonite.app import App
 from src.masonite.auth import Auth, MustVerifyEmail, Sign
+from src.masonite.auth.guards import Guard
 from src.masonite.managers import AuthManager
 from src.masonite.drivers import AuthCookieDriver, AuthJwtDriver
 from src.masonite.helpers import password as bcrypt_password
@@ -33,7 +34,7 @@ class TestAuth(TestCase):
         self.app = self.container
         self.app.bind('Container', self.app)
         view = View(self.container)
-        self.request = Request(generate_wsgi())
+        self.request = Request(generate_wsgi()).load_environ(generate_wsgi())
         self.request.key(application.KEY)
         self.app.bind('Request', self.request)
         # self.auth = Auth(self.request, MockUser())
@@ -44,7 +45,9 @@ class TestAuth(TestCase):
         self.app.bind('AuthCookieDriver', AuthCookieDriver)
         self.app.bind('AuthJwtDriver', AuthJwtDriver)
 
-        self.auth = self.app.make('Auth', User)
+        # print(Guard('web').driver('cookie'))
+
+        self.auth = Guard(self.app, 'web')
         self.request.load_app(self.app)
 
     def setUpFactories(self):
@@ -58,7 +61,7 @@ class TestAuth(TestCase):
     def test_auth(self):
         self.assertTrue(self.auth)
 
-    def test_login_user(self):
+    def test_login_user1(self):
         for driver in ('cookie', 'jwt'):
             self.auth.driver = driver
             self.assertTrue(self.auth.login('user@email.com', 'secret'))
@@ -68,7 +71,7 @@ class TestAuth(TestCase):
     def test_login_with_no_password(self):
         with self.assertRaises(TypeError):
             for driver in ('cookie', 'jwt'):
-                self.auth.driver = driver
+                # self.auth.driver = driver
                 self.assertTrue(self.auth.login('nopassword@email.com', None))
 
     # def test_can_login_with_second_password(self):

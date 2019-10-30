@@ -6,7 +6,6 @@ from config.database import Model
 from src.masonite.app import App
 from src.masonite.auth import Auth, MustVerifyEmail, Sign
 from src.masonite.auth.guards import Guard, WebGuard
-from src.masonite.managers import AuthManager
 from src.masonite.drivers import AuthCookieDriver, AuthJwtDriver
 from src.masonite.helpers import password as bcrypt_password
 from src.masonite.routes import Get
@@ -41,7 +40,8 @@ class TestAuth(TestCase):
         self.container.bind('ViewClass', view)
 
 
-        self.auth = Guard(self.app, 'web')
+        self.auth = Guard(self.app)
+        self.auth.register_guard('web', WebGuard)
         self.app.swap(Auth, self.auth)
         self.request.load_app(self.app)
 
@@ -134,6 +134,18 @@ class TestAuth(TestCase):
             self.assertTrue(self.auth.login_by_id(1))
             self.assertTrue(self.request.get_cookie('token'))
             self.assertFalse(self.auth.login_by_id(3))
+
+    def test_guard_can_register_new_drivers(self):
+        self.auth.guard('web').register_driver('api', AuthJwtDriver)
+
+        self.assertIsInstance(self.auth.driver('api'), AuthJwtDriver)
+        
+
+    def test_guard_can_register_new_guards(self):
+        self.auth.register_guard('api_guard', AuthJwtDriver)
+
+        self.assertIsInstance(self.auth.guard('api_guard'), AuthJwtDriver)
+        
 
     def test_login_once_does_not_set_cookie(self):
         for driver in ('cookie', 'jwt'):

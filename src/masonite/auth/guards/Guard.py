@@ -5,7 +5,7 @@ from ...app import App
 class Guard:
 
     guards = {
-        'web': WebGuard
+        # 'web': WebGuard
     }
 
     def __init__(self, app: App, guard=None):
@@ -25,6 +25,9 @@ class Guard:
 
     def driver(self, key):
         return self._guard.make(key)
+
+    def register_guard(self, guard, cls):
+        self.guards.update({guard: cls})
 
     def login(self, *args, **kwargs):
         return self._guard.login(*args, **kwargs)

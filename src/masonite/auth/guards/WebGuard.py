@@ -32,6 +32,14 @@ class WebGuard:
         from .Guard import Guard
         return Guard(self.app, guard).get()
 
+    def register_driver(self, key, cls):
+        self.drivers.update({key: cls})
+
+    def register_guard(self, key, cls):
+        from .Guard import Guard
+        return Guard.guards.update({key: cls})
+
+
     def make(self, key):
         if key in self.drivers:
             self.driver = self.app.resolve(self.drivers[key])

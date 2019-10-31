@@ -1,6 +1,7 @@
 """CSRF Middleware."""
 
 from ..auth import Auth
+from ..helpers import config
 
 class GuardMiddleware:
     """Middleware to switch the guard"""
@@ -12,4 +13,4 @@ class GuardMiddleware:
         self.auth.set(guard)
 
     def after(self, guard):
-        pass
+        self.auth.set(config('auth.auth.defaults.guard'))

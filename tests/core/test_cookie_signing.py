@@ -1,5 +1,5 @@
 from src.masonite.request import Request
-from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.testing import generate_wsgi
 import unittest
 
 

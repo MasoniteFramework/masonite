@@ -12,7 +12,7 @@ from src.masonite.helpers.time import cookie_expire_time
 from src.masonite.request import Request
 from src.masonite.response import Response
 from src.masonite.routes import Get, RouteGroup
-from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.testing import generate_wsgi
 
 WEB_ROUTES = flatten_routes([
     Get('/test', 'Controller@show').name('test'),

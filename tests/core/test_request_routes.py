@@ -1,13 +1,14 @@
 from src.masonite.routes import Get, Post
 from src.masonite.request import Request
-from src.masonite.testsuite.TestSuite import TestSuite, generate_wsgi
+from src.masonite.testing import TestCase, generate_wsgi
 import unittest
 
 
-class TestRequestRoutes(unittest.TestCase):
+class TestRequestRoutes(TestCase):
 
     def setUp(self):
-        self.request = Request(generate_wsgi()).key(
+        super().setUp()
+        self.request = self.container.make('Request').load_environ(generate_wsgi()).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
 
         self.request.activate_subdomains()
@@ -57,38 +58,36 @@ class TestRequestRoutes(unittest.TestCase):
         self.assertEqual(post.has_required_domain(), True)
 
     def test_method_type_has_required_subdomain_with_asterick(self):
-        container = TestSuite().create_container()
-        request = container.container.make('Request')
+        
 
-        request.environ['HTTP_HOST'] = 'test.localhost:8000'
+        self.request.environ['HTTP_HOST'] = 'test.localhost:8000'
 
-        request.activate_subdomains()
+        self.request.activate_subdomains()
 
         get = Get().domain('*')
         post = Get().domain('*')
 
-        get.request = request
-        post.request = request
+        get.request = self.request
+        post.request = self.request
 
         self.assertEqual(get.has_required_domain(), True)
         self.assertEqual(post.has_required_domain(), True)
 
     def test_request_sets_subdomain_on_get(self):
-        container = TestSuite().create_container()
-        request = container.container.make('Request')
+        
 
-        request.environ['HTTP_HOST'] = 'test.localhost:8000'
+        self.request.environ['HTTP_HOST'] = 'test.localhost:8000'
 
-        request.activate_subdomains()
+        self.request.activate_subdomains()
 
         get = Get().domain('*')
         post = Get().domain('*')
 
-        get.request = request
-        post.request = request
+        get.request = self.request
+        post.request = self.request
 
         get.has_required_domain()
-        self.assertEqual(request.param('subdomain'), 'test')
+        self.assertEqual(self.request.param('subdomain'), 'test')
 
     def test_route_changes_module_location(self):
         get = Get().module('app.test')

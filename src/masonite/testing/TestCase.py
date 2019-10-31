@@ -9,7 +9,7 @@ from .. import env
 from ..exceptions import RouteNotFoundException
 from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
-from ..testsuite import generate_wsgi
+from .generate_wsgi import generate_wsgi
 from orator.orm import Factory
 from ..app import App
 

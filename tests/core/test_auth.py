@@ -13,7 +13,7 @@ from src.masonite.request import Request
 from app.http.controllers.ConfirmController import \
     ConfirmController
 from src.masonite.testing import TestCase
-from src.masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.testing import generate_wsgi
 from src.masonite.view import View
 
 

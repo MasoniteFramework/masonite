@@ -85,6 +85,8 @@ class Auth:
                     model.remember_token = remember_token
                     model.save()
                     self.request.app().make('AuthManager').driver(self.driver).save(remember_token, model=model)
+                    
+                self.request.set_user(model)
                 return model
 
         except Exception as exception:
@@ -99,6 +101,7 @@ class Auth:
             self
         """
         self.request.app().make('AuthManager').driver(self.driver).delete()
+        self.request.reset_user()
         return self
 
     def login_by_id(self, user_id):
@@ -118,6 +121,7 @@ class Auth:
                 model.remember_token = remember_token
                 model.save()
                 self.request.app().make('AuthManager').driver(self.driver).save(remember_token, model=model)
+            self.request.set_user(model)
             return model
 
         return False

@@ -42,6 +42,7 @@ class TestAuth(TestCase):
 
         self.auth = Guard(self.app)
         self.auth.register_guard('web', WebGuard)
+        self.auth.set('web')
         self.app.swap(Auth, self.auth)
         self.request.load_app(self.app)
 

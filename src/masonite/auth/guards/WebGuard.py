@@ -30,7 +30,7 @@ class WebGuard:
             guard {[type]} -- [description]
         """
         from .Guard import Guard
-        return Guard(self.app, guard).get()
+        return Guard(self.app).make(guard)
 
     def register_driver(self, key, cls):
         self.drivers.update({key: cls})
@@ -38,7 +38,6 @@ class WebGuard:
     def register_guard(self, key, cls):
         from .Guard import Guard
         return Guard.guards.update({key: cls})
-
 
     def make(self, key):
         if key in self.drivers:

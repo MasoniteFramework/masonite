@@ -4,13 +4,10 @@ from ...app import App
 
 class Guard:
 
-    guards = {
-        # 'web': WebGuard
-    }
+    guards = {}
 
-    def __init__(self, app: App, guard=None):
+    def __init__(self, app: App):
         self.app = app
-        self._guard = self.make(guard or config('auth.auth.defaults.guard'))
 
     def register(self, key, cls):
         self.guards.update({key: cls})
@@ -19,6 +16,9 @@ class Guard:
         if key in self.guards:
             self._guard = self.app.resolve(self.guards[key])
             return self._guard
+
+    def set(self, key):
+        return self.make(key)
 
     def get(self):
         return self._guard

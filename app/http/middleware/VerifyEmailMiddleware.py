@@ -11,6 +11,7 @@ class VerifyEmailMiddleware:
 
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
+
         """
         self.request = request
 
@@ -19,7 +20,7 @@ class VerifyEmailMiddleware:
         user = self.request.user()
 
         if user and user.verified_at is None:
-            self.request.redirect('/email/verify')
+            self.request.redirect("/email/verify")
 
     def after(self):
         """Run This Middleware After The Route Executes."""

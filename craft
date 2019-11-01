@@ -11,11 +11,11 @@ from masonite import __version__
 
 from wsgi import container
 
-application = Application('Masonite Version:', __version__)
+application = Application("Masonite Version:", __version__)
 
 for key, value in container.providers.items():
-    if isinstance(key, str) and key.endswith('Command'):
-        application.add(container.make('{0}'.format(key)))
+    if isinstance(key, str) and key.endswith("Command"):
+        application.add(container.make("{0}".format(key)))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     application.run()

@@ -1,12 +1,12 @@
 
 <p align="center">
-<img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
+<img src="https://i.imgur.com/rEXcoMn.png" width="160px">
 </p>
 
 <p align="center">
 
 <img src="https://travis-ci.org/MasoniteFramework/masonite.svg?branch=master">
-<img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
+<img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License">
 <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
 
 </p>
@@ -30,7 +30,7 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/v/v2.1/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/v/v2.1/) and would be wise to go through the tutorials there. If you find any discrepancies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
 If you are a visual learner you can find tutorials here: [MasoniteCasts](https://casts.masonite.dev)
 
@@ -130,7 +130,7 @@ Thank you for those who have contributed to Masonite!
 
 ## License
 
-The Masonite framework is open-sourced software licensed under the MIT license. 
+The Masonite framework is open-sourced software licensed under the MIT license.
 
 ## Hello World
 
@@ -186,7 +186,7 @@ Now we can run the `craft` command:
 
     $ craft serve
 
-This will run the server at `localhost:8000` and be in an auto-reloading state. When you change files, your server will restart. Navigating to that URL should show the Masonite welcome message. 
+This will run the server at `localhost:8000` and be in an auto-reloading state. When you change files, your server will restart. Navigating to that URL should show the Masonite welcome message.
 
 If that port is blocked you can specify a port by running:
 

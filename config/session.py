@@ -10,4 +10,4 @@ inside memory which will delete when the server stops running.
 Supported: 'memory', 'cookie'
 """
 
-DRIVER = env('SESSION_DRIVER', 'cookie')
+DRIVER = env("SESSION_DRIVER", "cookie")

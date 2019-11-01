@@ -6,6 +6,6 @@ from config.database import Model
 class User(Model):
     """User Model."""
 
-    __fillable__ = ['name', 'email', 'password']
+    __fillable__ = ["name", "email", "password"]
 
-    __auth__ = 'email'
+    __auth__ = "email"

@@ -1,0 +1,20 @@
+[flake8]
+exclude = .git,.venv
+
+# allow up to 10% leeway
+max-line-length = 80
+select += B950
+
+ignore =
+# D202: No blank lines allowed after function docstring
+    D202,
+# D204: 1 blank line required after class docstring
+    D204,
+# D102: Missing docstring in __call__
+    /__call__/* : D102,
+# D107: Missing docstring in __init__
+    D107,
+# W503: line break before binary operator
+    W503,
+# E501: line too long (85 > 79 characters) - use B950 instead (10% leeway)
+    E501

@@ -16,18 +16,14 @@ be authenticated.
 @see masonite.auth.Auth
 """
 
-AUTH = {
-    'driver': env('AUTH_DRIVER', 'cookie'),
-    'model': User,
-}
+AUTH = {"driver": env("AUTH_DRIVER", "cookie"), "model": User}
 
 DRIVERS = {
-    'cookie': {},
-    'jwt': {
+    "cookie": {},
+    "jwt": {
         """Whether or not to reauthenticate with the database when the token expires."""
-        'reauthentication': True,
-
+        "reauthentication": True,
         """How long the token should live for before being refreshed."""
-        'lifetime': '5 minutes'
-    }
+        "lifetime": "5 minutes",
+    },
 }

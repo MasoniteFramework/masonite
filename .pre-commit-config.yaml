@@ -1,0 +1,59 @@
+-   repo: local
+    hooks:
+    -   id: isort
+        name: isort
+        entry: .venv/bin/isort -rc --atomic
+        language: system
+        types: [python]
+
+    -   id: flake8
+        name: Flake8
+        entry: .venv/bin/flake8
+        language: system
+        types: [python]
+
+    -   id: black
+        name: black
+        entry: .venv/bin/black
+        language: system
+        types: [python]
+
+    -   id: trailing-whitespace
+        name: Trim Trailing Space
+        entry: .venv/bin/trailing-whitespace-fixer
+        language: system
+        types: [non-executable, file, text]
+        exclude_types: [svg]
+
+    -   id: end-of-file-fixer
+        name: Fix End of Files
+        description: Ensures that a file is either empty, or ends with one newline.
+        entry: .venv/bin/end-of-file-fixer
+        language: system
+        types: [non-executable, file, text]
+        exclude_types: [svg]
+
+    -   id: check-merge-conflict
+        name: Check for merge conflicts
+        description: Check for files that contain merge conflict strings.
+        entry: .venv/bin/check-merge-conflict
+        language: system
+        stages: [push]
+
+    -   id: codespell
+        name: Check Spelling
+        description: Checks for common misspellings in text files.
+        entry: .venv/bin/codespell --ignore-words .aspell.en.pws
+        language: system
+        types: [non-executable, file, text]
+        exclude_types: [svg]
+        exclude: 'elm\.js'
+        stages: [push]
+
+    -   id: debug-statements
+        name: Check Debug Statements Absent (Python)
+        description: Checks that debug statements (pdb, ipdb, pudb) are not imported on commit.
+        entry: .venv/bin/debug-statement-hook
+        language: system
+        types: [python]
+        stages: [push]

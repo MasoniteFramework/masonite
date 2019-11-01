@@ -1,9 +1,8 @@
 """Middleware Configuration Settings."""
 
-from masonite.middleware import ResponseMiddleware, MaintenanceModeMiddleware
+from masonite.middleware import MaintenanceModeMiddleware, ResponseMiddleware
 
-from app.http.middleware.AuthenticationMiddleware import \
-    AuthenticationMiddleware
+from app.http.middleware.AuthenticationMiddleware import AuthenticationMiddleware
 from app.http.middleware.CsrfMiddleware import CsrfMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 from app.http.middleware.VerifyEmailMiddleware import VerifyEmailMiddleware
@@ -27,7 +26,4 @@ be the alias to use on routes and the value can be any middleware class or a lis
 of middleware (middleware stacks).
 """
 
-ROUTE_MIDDLEWARE = {
-    'auth': AuthenticationMiddleware,
-    'verified': VerifyEmailMiddleware,
-}
+ROUTE_MIDDLEWARE = {"auth": AuthenticationMiddleware, "verified": VerifyEmailMiddleware}

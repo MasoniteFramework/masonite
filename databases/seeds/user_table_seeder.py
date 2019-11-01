@@ -14,9 +14,8 @@ from config.factories import factory
 
 
 class UserTableSeeder(Seeder):
+    """Users Table Seeder class."""
 
     def run(self):
-        """
-        Run the database seeds.
-        """
+        """Run the database seeds."""
         factory(User, 50).create()

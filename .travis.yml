@@ -10,4 +10,7 @@ matrix:
 install:
   - pip install masonite-cli
   - craft install
-script: python -m pytest
+  - pip install -r requirements-dev.txt
+script:
+  - python -m pytest
+  - pre-commit run --all-files --hook-stage=push

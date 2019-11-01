@@ -10,7 +10,7 @@ best by caching your templates forever, monthly or every few seconds
 Supported: 'disk'
 """
 
-DRIVER = env('CACHE_DRIVER', 'disk')
+DRIVER = env("CACHE_DRIVER", "disk")
 
 """Cache Drivers
 Place all your caching coniguration as a dictionary here. The keys here
@@ -19,8 +19,4 @@ should correspond to the driver types supported above.
 Supported: 'disk'
 """
 
-DRIVERS = {
-    'disk': {
-        'location': 'bootstrap/cache'
-    }
-}
+DRIVERS = {"disk": {"location": "bootstrap/cache"}}

@@ -125,7 +125,7 @@ class ExceptionHandler:
                                                    'enumerate': enumerate,
                                                    'open': open,
                                                    'platform': platform
-                                               }
+        }
         ))
 
 

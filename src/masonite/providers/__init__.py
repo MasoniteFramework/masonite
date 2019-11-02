@@ -1,4 +1,5 @@
 from .AppProvider import AppProvider
+from .AuthenticationProvider import AuthenticationProvider
 from .BroadcastProvider import BroadcastProvider
 from .CacheProvider import CacheProvider
 from .CsrfProvider import CsrfProvider

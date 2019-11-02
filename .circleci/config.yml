@@ -56,7 +56,7 @@ jobs:
         - run: make deepsource
 
 orbs:
-    masonite: masonite/trigger@dev:latest
+    masonite: masonite/trigger@1.0.0
 
 workflows: 
   version: 2

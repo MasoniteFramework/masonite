@@ -1,6 +1,7 @@
 
 import io
 
+
 def generate_wsgi():
     return {
         'wsgi.version': (1, 0),

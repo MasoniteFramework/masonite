@@ -6,7 +6,7 @@ from config.database import Model
 from src.masonite.app import App
 from src.masonite.auth import Auth, MustVerifyEmail, Sign
 from src.masonite.auth.guards import Guard, WebGuard
-from src.masonite.drivers import AuthCookieDriver, AuthJwtDriver
+from src.masonite.drivers import AuthJwtDriver
 from src.masonite.helpers import password as bcrypt_password
 from src.masonite.routes import Get
 from src.masonite.request import Request
@@ -42,7 +42,9 @@ class TestAuth(TestCase):
 
         self.auth = Guard(self.app)
         self.auth.register_guard('web', WebGuard)
+        self.auth.guard('web').register_driver('jwt', AuthJwtDriver)
         self.auth.set('web')
+
         self.app.swap(Auth, self.auth)
         self.request.load_app(self.app)
 
@@ -156,6 +158,7 @@ class TestAuth(TestCase):
 
     def test_confirm_controller_success(self):
         for driver in ('jwt', 'cookie'):
+            self.auth.driver(driver)
             params = {'id': Sign().sign('{0}::{1}'.format(1, time.time()))}
             self.request.set_params(params)
             user = self.auth.once().login_by_id(1)

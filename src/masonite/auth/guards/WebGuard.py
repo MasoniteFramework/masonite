@@ -7,9 +7,10 @@ from ...request import Request
 from ...drivers import AuthCookieDriver, AuthJwtDriver
 from ...helpers import config
 from ...helpers import password as bcrypt_password
+from ...exceptions import DriverNotFound
+from .AuthenticationGuard import AuthenticationGuard
 
-
-class WebGuard:
+class WebGuard(AuthenticationGuard):
 
     drivers = {
         'cookie': AuthCookieDriver,
@@ -23,26 +24,6 @@ class WebGuard:
         self.auth_model = auth_model or config('auth.auth.guards.web.model')
         self.driver = self.make(driver or config('auth.auth.guards.web.driver'))
 
-    def guard(self, guard):
-        """Specify the guard you want to use
-        
-        Arguments:
-            guard {[type]} -- [description]
-        """
-        from .Guard import Guard
-        return Guard(self.app).make(guard)
-
-    def register_driver(self, key, cls):
-        self.drivers.update({key: cls})
-
-    def register_guard(self, key, cls):
-        from .Guard import Guard
-        return Guard.guards.update({key: cls})
-
-    def make(self, key):
-        if key in self.drivers:
-            self.driver = self.app.resolve(self.drivers[key])
-            return self.driver
 
     def user(self):
         """Get the currently logged in user.

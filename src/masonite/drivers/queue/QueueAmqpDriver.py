@@ -107,7 +107,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         except TypeError:
             self.channel.basic_consume(queue_name, callback)
 
-    def work(self, ch, method, properties, body):
+    def work(self, ch, method, _, body):
         from wsgi import container
         job = pickle.loads(body)
         obj = job['obj']

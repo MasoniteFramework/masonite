@@ -47,7 +47,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
         for job in objects:
             if schema.get_schema_builder().has_table('queue_jobs'):
-                payload = pickle.dumps({'obj': job, 'args': args, 'callback': callback})
+                payload = pickle.dumps({'obj': job, 'args': args, 'kwargs': kwargs, 'callback': callback})
                 schema.table('queue_jobs').insert({
                     'name': str(job),
                     'serialized': payload,
@@ -57,7 +57,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                     'wait_until': wait,
                 })
 
-    def consume(self, channel, fair=False, **options):
+    def consume(self, channel, **options):
         from config.database import DB as schema, DATABASES
         from wsgi import container
 

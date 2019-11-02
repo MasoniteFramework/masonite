@@ -13,7 +13,7 @@ from ...helpers import config
 class UploadS3Driver(BaseUploadDriver, UploadContract):
     """Amazon S3 Upload driver."""
 
-    def __init__(self, upload: UploadManager, app: App):
+    def __init__(self, upload: UploadManager):
         """Upload Disk Driver Constructor.
 
         Arguments:

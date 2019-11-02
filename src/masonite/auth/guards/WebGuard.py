@@ -7,7 +7,6 @@ from ...request import Request
 from ...drivers import AuthCookieDriver, AuthJwtDriver
 from ...helpers import config
 from ...helpers import password as bcrypt_password
-from ...exceptions import DriverNotFound
 from .AuthenticationGuard import AuthenticationGuard
 
 

@@ -218,7 +218,7 @@ class BaseHttpRoute:
         except Exception:
             import sys
             import traceback
-            exc_type, _, exc_tb = sys.exc_info()
+            _, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print('\033[93mTrouble importing controller!', str(e), '\033[0m')
 

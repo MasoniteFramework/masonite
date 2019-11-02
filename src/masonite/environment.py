@@ -8,7 +8,7 @@ from pathlib import Path
 class LoadEnvironment:
     """This class is used for loading the environment from .env and .env.* files."""
 
-    def __init__(self, env=None, override=True, only=None):
+    def __init__(self, environment=None, override=True, only=None):
         """LoadEnvironment constructor.
 
         Keyword Arguments:
@@ -29,22 +29,22 @@ class LoadEnvironment:
         if os.environ.get('APP_ENV'):
             self._load_environment(os.environ.get(
                 'APP_ENV'), override=override)
-        if env:
-            self._load_environment(env, override=override)
+        if environment:
+            self._load_environment(environment, override=override)
 
         if "pytest" in sys.modules:
             self._load_environment('testing', override=override)
 
-    def _load_environment(self, env, override=False):
+    def _load_environment(self, environment, override=False):
         """Load the environment depending on the env file.
 
         Arguments:
-            env {string} -- Name of the environment file to load from
+            environment {string} -- Name of the environment file to load from
 
         Keyword Arguments:
             override {bool} -- Whether the environment file should overwrite existing environment keys. (default: {False})
         """
-        env_path = str(Path('.') / '.env.{}'.format(env))
+        env_path = str(Path('.') / '.env.{}'.format(environment))
         self.env(dotenv_path=env_path, override=override)
 
 

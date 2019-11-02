@@ -3,6 +3,7 @@
 from ..auth import Auth
 from ..helpers import config
 
+
 class GuardMiddleware:
     """Middleware to switch the guard"""
 
@@ -11,7 +12,7 @@ class GuardMiddleware:
 
     def before(self, guard):
         """Sets specified guard for the request.
-        
+
         Arguments:
             guard {string} -- The key of the guard to set.
         """
@@ -19,7 +20,7 @@ class GuardMiddleware:
 
     def after(self, _):
         """Sets the default guard back after the request.
-        
+
         Arguments:
             _ {ignored} -- ignored
         """

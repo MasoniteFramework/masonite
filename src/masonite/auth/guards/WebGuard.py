@@ -10,6 +10,7 @@ from ...helpers import password as bcrypt_password
 from ...exceptions import DriverNotFound
 from .AuthenticationGuard import AuthenticationGuard
 
+
 class WebGuard(AuthenticationGuard):
 
     drivers = {
@@ -23,7 +24,6 @@ class WebGuard(AuthenticationGuard):
         self._once = False
         self.auth_model = auth_model or config('auth.auth.guards.web.model')
         self.driver = self.make(driver or config('auth.auth.guards.web.driver'))
-
 
     def user(self):
         """Get the currently logged in user.

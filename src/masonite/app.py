@@ -3,8 +3,8 @@
 import inspect
 
 from .exceptions import (ContainerError,
-                                 MissingContainerBindingNotFound,
-                                 StrictContainerException)
+                         MissingContainerBindingNotFound,
+                         StrictContainerException)
 
 
 class App:

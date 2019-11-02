@@ -33,7 +33,6 @@ class AppProvider(ServiceProvider):
         self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
         self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
 
-
         self.app.bind('RouteMiddleware', config('middleware.route_middleware'))
         self.app.bind('HttpMiddleware', config('middleware.http_middleware'))
         self.app.bind('staticfiles', config('storage.staticfiles', {}))
@@ -79,8 +78,7 @@ class AppProvider(ServiceProvider):
             ServeCommand(),
             SeedCommand(),
             SeedRunCommand(),
-            TestCommand(), 
-            TinkerCommand(), 
+            TestCommand(),
+            TinkerCommand(),
             UpCommand()
         )
-

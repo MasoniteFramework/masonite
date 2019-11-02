@@ -3,7 +3,7 @@ class AuthenticationGuard:
 
     def guard(self, guard):
         """Specify the guard you want to use
-        
+
         Arguments:
             guard {[type]} -- [description]
         """
@@ -30,7 +30,7 @@ class AuthenticationGuard:
 
     def register_driver(self, key, cls):
         """Registers a new driver with the current guard class.
-        
+
         Arguments:
             key {string} -- The key to register the driver to.
             cls {class} -- A guard class.
@@ -39,13 +39,13 @@ class AuthenticationGuard:
 
     def make(self, key):
         """Makes a new driver from the current guard class.
-        
+
         Arguments:
             key {string} -- The key to for the driver to make.
-        
+
         Raises:
             DriverNotFound: Thrown when the driver is not registered.
-        
+
         Returns:
             object -- Returns a guard driver object.
         """

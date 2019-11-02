@@ -4,7 +4,7 @@ from src.masonite.response import Response
 from src.masonite.view import View
 from src.masonite.app import App
 from src.masonite.providers.StatusCodeProvider import ServerErrorExceptionHook
-from src.masonite.testsuite import generate_wsgi
+from src.masonite.testing import generate_wsgi
 import unittest
 
 

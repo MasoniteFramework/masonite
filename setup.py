@@ -32,7 +32,6 @@ setup(
         'masonite.drivers.storage',
         'masonite.drivers.upload',
         'masonite.managers',
-        'masonite.testsuite',
         'masonite.queues',
         'masonite.contracts',
         'masonite.contracts.managers',

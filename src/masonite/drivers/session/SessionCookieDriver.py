@@ -5,20 +5,18 @@ import json
 from ...contracts import SessionContract
 from ...drivers import BaseDriver
 from ...request import Request
-from ...app import App
 
 
 class SessionCookieDriver(SessionContract, BaseDriver):
     """Cookie Session Driver."""
 
-    def __init__(self, request: Request, app: App):
+    def __init__(self, request: Request):
         """Cookie Session Constructor.
 
         Arguments:
             Environ {dict} -- The WSGI environment
             Request {masonite.request.Request} -- The Request class.
         """
-        self.environ = app.make('Environ')
         self.request = request
 
     def get(self, key):
@@ -97,8 +95,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            cookies_original = self.environ['HTTP_COOKIE'].split(';')
+        if 'HTTP_COOKIE' in self.request.environ and self.request.environ['HTTP_COOKIE']:
+            cookies_original = self.request.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
                 if cookie.strip().startswith('s_') or cookie.strip().startswith('f_'):
                     data = cookie.split("=", 1)

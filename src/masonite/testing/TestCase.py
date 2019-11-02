@@ -12,7 +12,6 @@ from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
 from orator.orm import Factory
-from ..app import App
 
 from .MockRoute import MockRoute
 

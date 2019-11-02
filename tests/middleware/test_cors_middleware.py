@@ -2,7 +2,6 @@ from src.masonite.middleware import CorsMiddleware
 from src.masonite.request import Request
 from src.masonite.testing import generate_wsgi, TestCase
 
-import unittest
 
 
 class TestCorsMiddleware(TestCase):

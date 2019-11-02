@@ -3,7 +3,6 @@ import os
 from src.masonite.drivers import BroadcastPusherDriver
 from src.masonite.managers import BroadcastManager
 from src.masonite.testing import TestCase
-import unittest
 
 if os.getenv('ABLY_SECRET'):
 

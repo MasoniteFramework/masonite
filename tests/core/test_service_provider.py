@@ -1,5 +1,4 @@
 import os
-import unittest
 
 from src.masonite.provider import ServiceProvider
 from src.masonite.request import Request

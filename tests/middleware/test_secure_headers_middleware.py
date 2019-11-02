@@ -1,5 +1,4 @@
 """ Test Secure Headers Midddleware """
-import unittest
 
 from src.masonite.middleware import SecureHeadersMiddleware
 from src.masonite.request import Request

@@ -1,7 +1,4 @@
 
-import unittest
-
-from src.masonite.app import App
 from src.masonite.helpers import config
 from src.masonite.routes import Get
 from src.masonite.testing import TestCase, generate_wsgi

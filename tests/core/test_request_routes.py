@@ -1,7 +1,5 @@
 from src.masonite.routes import Get, Post
-from src.masonite.request import Request
 from src.masonite.testing import TestCase, generate_wsgi
-import unittest
 
 
 class TestRequestRoutes(TestCase):

@@ -1,9 +1,6 @@
-import unittest
 
-from src.masonite.app import App
 from src.masonite.drivers import SessionCookieDriver, SessionMemoryDriver
 from src.masonite.managers import SessionManager
-from src.masonite.request import Request
 from src.masonite.testing import generate_wsgi, TestCase
 
 class TestSession(TestCase):

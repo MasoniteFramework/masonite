@@ -6,7 +6,6 @@ from ...contracts import UploadContract
 from ...drivers import BaseUploadDriver
 from ...exceptions import DriverLibraryNotFound
 from ...managers import UploadManager
-from ...app import App
 from ...helpers import config
 
 

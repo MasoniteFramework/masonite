@@ -57,7 +57,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                     'wait_until': wait,
                 })
 
-    def consume(self, channel, **options):
+    def consume(self, channel, **options):  # skipcq
         from config.database import DB as schema, DATABASES
         from wsgi import container
 
@@ -107,7 +107,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         self.success('[\u2713] Job Successfully Processed')
                     except UnicodeEncodeError:
                         self.success('[Y] Job Successfully Processed')
-                except Exception as e:
+                except Exception as e:  # skipcq
                     self.danger('Job Failed: {}'.format(str(e)))
 
                     if not obj.run_again_on_fail:

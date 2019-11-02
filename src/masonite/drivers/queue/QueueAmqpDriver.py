@@ -40,7 +40,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.channel.close()
         self.connection.close()
 
-    def push(self, *objects, args=(), callback='handle', ran=1, channel=None, **options):
+    def push(self, *objects, args=(), callback='handle', ran=1, channel=None, **options):  # skipcq PYL-W0613
         """Push objects onto the amqp stack.
 
         Arguments:

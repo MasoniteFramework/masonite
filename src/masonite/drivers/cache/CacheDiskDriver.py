@@ -4,7 +4,6 @@ import glob
 import os
 import time
 
-from ...app import App
 from ...contracts import CacheContract
 from ...drivers import BaseCacheDriver
 from ...helpers import config

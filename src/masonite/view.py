@@ -7,6 +7,7 @@ from jinja2.exceptions import TemplateNotFound
 from .exceptions import RequiredContainerBindingNotFound, ViewException
 from .response import Responsable
 
+
 class View(Responsable):
     """View class. Responsible for handling everything involved with views and view environments."""
 

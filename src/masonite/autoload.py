@@ -9,7 +9,7 @@ import pkgutil
 from pydoc import importlib
 
 from .exceptions import (AutoloadContainerOverwrite, ContainerError,
-                                 InvalidAutoloadPath)
+                         InvalidAutoloadPath)
 
 
 class Autoload:

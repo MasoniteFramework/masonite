@@ -4,6 +4,7 @@ from ..response import Response
 from ..provider import ServiceProvider
 from ..helpers import config
 
+
 class ServerErrorExceptionHook:
 
     def load(self, app):

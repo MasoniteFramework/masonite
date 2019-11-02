@@ -1,6 +1,6 @@
 """Providers Configuration File."""
 
-from src.masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
+from src.masonite.providers import (AppProvider, AuthenticationProvider, BroadcastProvider, CacheProvider,
                                 CsrfProvider, HelpersProvider, MailProvider,
                                 QueueProvider, RouteProvider, SassProvider,
                                 SessionProvider, StatusCodeProvider,
@@ -22,6 +22,7 @@ PROVIDERS = [
     StatusCodeProvider,
     WhitenoiseProvider,
     ViewProvider,
+    AuthenticationProvider,
 
     # Optional Framework Providers
     SassProvider,

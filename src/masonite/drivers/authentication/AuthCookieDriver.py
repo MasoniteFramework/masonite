@@ -51,3 +51,12 @@ class AuthCookieDriver(BaseDriver, AuthContract):
             bool
         """
         return self.request.delete_cookie('token')
+
+    def logout(self):
+        """Deletes the state depending on the implementation of this driver.
+
+        Returns:
+            bool
+        """
+        self.delete()
+        self.request.reset_user()

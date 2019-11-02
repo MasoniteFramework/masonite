@@ -54,42 +54,25 @@ class Response(Extendable):
         # try to capture request input for page_size and/or page
         page_size_input = self.request.input(page_size_parameter)
         page_input = self.request.input(page_parameter)
-        # use try/except here, as int(bool) will return 0 for False above
         try:
             page_size = (
                 int(page_size_input)
                 if page_size_input and int(page_size_input) > 0
                 else paginator.per_page
             )
-        except Exception:
+        except ValueError:
             page_size = paginator.per_page
+
         try:
             page = (
                 int(page_input)
                 if page_input and int(page_input) > 0
                 else paginator.current_page
             )
-        except Exception:
+        except ValueError:
             page = paginator.current_page
 
         # don't waste time instantiating new paginator if no change
-        if (
-            page_size != paginator.per_page
-            or page != paginator.current_page
-        ):
-            try:
-                # try to get class of model
-                next(type(x) for x in paginator.items)
-                if isinstance(paginator, Paginator):
-                    paginator = model_class.simple_paginate(
-                        page_size,
-                        page
-                    )
-                elif isinstance(paginator, LengthAwarePaginator):
-                    paginator = model_class.paginate(page_size, page)
-            except Exception:
-                paginator = paginator
-
         payload = {
             'total': (
                 paginator.total
@@ -219,6 +202,7 @@ class Response(Extendable):
             bytes -- The converted response to bytes.
         """
         return bytes(self.converted_data(), 'utf-8')
+
 
 class Responsable:
 

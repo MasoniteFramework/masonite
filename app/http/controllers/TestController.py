@@ -29,7 +29,7 @@ class TestController:
     def testing(self):
         return 'test'
 
-    def json_response(self, request: Request):
+    def json_response(self):
         return {'id': 2}
 
     def post_test(self):

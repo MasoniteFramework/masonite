@@ -93,7 +93,7 @@ workflows:
       - masonite/trigger:
           name: MasoniteValidation
           repo: masoniteframework/validation
-          branch: circle-ci
+          branch: 3.0
           environment: MASONITE_DEPENDENT_BRANCH=${CIRCLE_BRANCH:-2.2}
           requires:
               - build

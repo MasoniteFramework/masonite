@@ -18,6 +18,7 @@ setup(
     packages=[
         'masonite',
         'masonite.auth',
+        'masonite.auth.guards',
         'masonite.providers',
         'masonite.listeners',
         'masonite.commands',

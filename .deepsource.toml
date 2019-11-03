@@ -2,7 +2,7 @@
 version = 1
 
 test_patterns = [
-  'tests/**/*.py',
+  'tests/**/*.py', 
   'src/masonite/testing/*.py',
   'src/masonite/testsuite/*.py',
   'testpackage/*.py'

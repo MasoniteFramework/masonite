@@ -72,23 +72,26 @@ for argument in args.build or []:
 
     parameters.update({key: value})
 
-build_parameters = {'build_parameters': parameters}
 
-r = requests.post('https://circleci.com/api/v1/project/{}/tree/{}?circle-token={}'.format(repo, branch, token), json=build_parameters)
-if 'build_num' not in r.json():
+endpoint = 'https://circleci.com/api/v2/project/gh/{}/pipeline?circle-token={}'.format(repo, token)
+headers = {'Circle-Token': f'{token}', 'Accept': 'application/json'}
+r = requests.post(endpoint, json={'branch': branch, 'parameters': parameters}, headers=headers)
+if 'number' not in r.json():
     print('ERROR: Could not find repository {} or with the branch {}'.format(repo, branch))
     print(r.json())
     exit(1)
 
-print('Building: ', r.json()['build_num'])
+print('Building: ', r.json()['number'])
 
-status = requests.get('https://circleci.com/api/v1.1/project/github/{}/{}?circle-token={}'.format(repo, r.json()['build_num'], token))
-print('Build Status: ', status.json()['lifecycle'])
-while status.json()['lifecycle'] != 'finished':
+status = requests.get('https://circleci.com/api/v2/pipeline/{}?circle-token={}'.format(r.json()['id'], token))
+print('Build Status: ', status.json()['state'])
+workflow_id = status.json()['workflows'][0]['id']
+workflow = requests.get('https://circleci.com/api/v2/workflow/{}?circle-token={}'.format(workflow_id, token))
+while workflow.json()['status'] not in ('error', 'failed', 'success'):
     time.sleep(poll)
-    print('Build Status: ', status.json()['lifecycle'])
-    status = requests.get('https://circleci.com/api/v1.1/project/github/{}/{}?circle-token={}'.format(repo, r.json()['build_num'], token))
+    print('Build Status: ', workflow.json()['status'])
+    workflow = requests.get('https://circleci.com/api/v2/workflow/{}?circle-token={}'.format(workflow_id, token))
 
-print('Finished. Failed? ', status.json()['failed'])
-if status.json()['failed']:
+print('Finished with status: ', workflow.json()['status'])
+if workflow.json()['status'] in ('error', 'failed'):
     exit(1)

@@ -94,8 +94,6 @@ workflows:
           username: josephmancuso
           password: $PYPI_PASSWORD
           requires:
-            - MasoniteValidation
-            - MasoniteAPI
             - CodeCoverage
           filters:
             tags:

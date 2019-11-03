@@ -100,7 +100,7 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
-      - masonite/trigger:
+      - masonite/trigger: 
           name: MasoniteAPI
           repo: masoniteframework/api
           branch: "2.2"

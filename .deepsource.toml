@@ -5,7 +5,7 @@ test_patterns = [
   'tests/**/*.py', 
   'src/masonite/testing/*.py',
   'src/masonite/testsuite/*.py',
-  'testpackage/*.py'
+  'testpackage/*.py',
   'masonite/*'
 ]
 

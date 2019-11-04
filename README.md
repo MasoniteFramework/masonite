@@ -11,7 +11,7 @@
 
 </p>
 
- **NOTE: This repository is the general shell of the framework. This repository is responsible for managing the installation of all new applications. All core framework related code has been abstracted out into it's own PYPI package which can be found [in this GitHub Repo](https://github.com/masoniteframework/core).**
+**NOTE: We are currently in the process of moving all development into this repository from the [Masonite Core Repo](https://github.com/masoniteframework/core). Please excuse anything that looks a little funky while this happens.**
 
 
 ## About Masonite

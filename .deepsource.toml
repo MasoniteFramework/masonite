@@ -6,6 +6,7 @@ test_patterns = [
   'src/masonite/testing/*.py',
   'src/masonite/testsuite/*.py',
   'testpackage/*.py'
+  'masonite/*'
 ]
 
 exclude_patterns = [

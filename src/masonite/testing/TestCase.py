@@ -9,9 +9,9 @@ from .. import env
 from ..exceptions import RouteNotFoundException
 from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
-from ..testsuite import generate_wsgi
+from .generate_wsgi import generate_wsgi
+from .create_container import create_container
 from orator.orm import Factory
-from ..app import App
 
 from .MockRoute import MockRoute
 
@@ -22,11 +22,11 @@ class TestCase(unittest.TestCase):
     transactions = True
     refreshes_database = False
     _transaction = False
-    _with_subdomains = False
 
     def setUp(self):
         from wsgi import container
         self.container = container
+        self._with_subdomains = False
 
         self.acting_user = False
         self.factory = Factory()
@@ -45,6 +45,7 @@ class TestCase(unittest.TestCase):
 
         self.route_middleware = False
         self.http_middleware = False
+        self.headers = {}
 
     def buildOwnContainer(self):
         self.container = self.create_container()
@@ -211,12 +212,14 @@ class TestCase(unittest.TestCase):
         wsgi.update(wsgi_values)
         self.container.bind('Environ', wsgi)
         self.container.make('Request')._test_user = self.acting_user
-        self.container.make('Request').load_app(self.container)
+        self.container.make('Request').load_app(self.container).load_environ(wsgi)
         if self._with_subdomains:
             self.container.make('Request').activate_subdomains()
 
+        if self.headers:
+            self.container.make('Request').header(self.headers)
+
         if self.route_middleware is not False:
-            print('bind new middleware', self.route_middleware)
             self.container.bind('RouteMiddleware', self.route_middleware)
 
         if self.http_middleware is not False:
@@ -225,7 +228,7 @@ class TestCase(unittest.TestCase):
         try:
             for provider in self.container.make('WSGIProviders'):
                 self.container.resolve(provider.boot)
-        except Exception as e:
+        except Exception as e:  # skipcq
             if self._exception_handling:
                 self.container.make('ExceptionHandler').load_exception(e)
             else:
@@ -273,46 +276,13 @@ class TestCase(unittest.TestCase):
         self.http_middleware = middleware
         return self
 
+    def withHeaders(self, headers={}):
+        self.headers = headers
+        return self
+
     def withoutHttpMiddleware(self):
         self.http_middleware = []
         return self
 
     def create_container(self):
-        container = App()
-        from config import providers
-
-        container.bind('WSGI', generate_wsgi())
-        # container.bind('Application', application)
-        container.bind('Container', container)
-
-        # container.bind('ProvidersConfig', providers)
-        container.bind('Providers', [])
-        container.bind('WSGIProviders', [])
-
-        """Bind all service providers
-        Let's register everything into the Service Container. Once everything is
-        in the container we can run through all the boot methods. For reasons
-        some providers don't need to execute with every request and should
-        only run once when the server is started. Providers will be ran
-        once if the wsgi attribute on a provider is False.
-        """
-
-        for provider in providers.PROVIDERS:
-            located_provider = provider()
-            located_provider.load_app(container).register()
-            if located_provider.wsgi:
-                container.make('WSGIProviders').append(located_provider)
-            else:
-                container.make('Providers').append(located_provider)
-
-        for provider in container.make('Providers'):
-            container.resolve(provider.boot)
-
-        """Get the application from the container
-        Some providers may change the WSGI Server like wrapping the WSGI server
-        in a Whitenoise container for an example. Let's get a WSGI instance
-        from the container and pass it to the application variable. This
-        will allow WSGI servers to pick it up from the command line
-        """
-
-        return container
+        return create_container()

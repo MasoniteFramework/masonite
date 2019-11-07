@@ -1,4 +1,4 @@
-"""A SassProvider Service Provider."""
+"""A Helpers Service Provider."""
 
 import builtins
 import os

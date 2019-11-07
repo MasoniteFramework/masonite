@@ -56,7 +56,7 @@ jobs:
         - run: make deepsource
 
 orbs:
-    masonite: masonite/trigger@dev:latest
+    masonite: masonite/trigger@1.0.0
 
 workflows: 
   version: 2
@@ -90,32 +90,10 @@ workflows:
           filters:  # required since `deploy` has tag filters AND requires `build`
             tags:
               only: /^.*/
-      - masonite/trigger:
-          name: MasoniteValidation
-          repo: masoniteframework/validation
-          branch: circle-ci
-          environment: MASONITE_DEPENDENT_BRANCH=${CIRCLE_BRANCH:-2.2}
-          requires:
-              - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^.*/
-      - masonite/trigger:
-          name: MasoniteAPI
-          repo: masoniteframework/api
-          branch: "2.2"
-          environment: BUILD_BRANCH=${CIRCLE_BRANCH:-2.2}
-          requires:
-              - build
-          filters:  # required since `deploy` has tag filters AND requires `build`
-            tags:
-              only: /^.*/
       - masonite/deploy:
           username: josephmancuso
           password: $PYPI_PASSWORD
           requires:
-            - MasoniteValidation
-            - MasoniteAPI
             - CodeCoverage
           filters:
             tags:

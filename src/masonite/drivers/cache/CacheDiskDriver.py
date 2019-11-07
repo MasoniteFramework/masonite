@@ -4,7 +4,6 @@ import glob
 import os
 import time
 
-from ...app import App
 from ...contracts import CacheContract
 from ...drivers import BaseCacheDriver
 from ...helpers import config
@@ -13,7 +12,7 @@ from ...helpers import config
 class CacheDiskDriver(CacheContract, BaseCacheDriver):
     """Class for the cache disk driver."""
 
-    def __init__(self, app: App):
+    def __init__(self):
         """Cache disk driver constructor.
 
         Arguments:

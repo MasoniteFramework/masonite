@@ -16,7 +16,7 @@ class ConfirmController:
         """The ConfirmController Constructor."""
         pass
 
-    def verify_show(self, request: Request, view: View, auth: Auth):
+    def verify_show(self, view: View, auth: Auth):
         """Show the Verify Email page for unverified users.
 
         Arguments:

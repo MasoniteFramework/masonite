@@ -8,7 +8,7 @@ class AddAttributeMiddleware:
 
     def __init__(self, request: Request):
         """Inject Any Dependencies From The Service Container."""
-        self.request = Request
+        self.request = request
 
     def before(self):
         """Run This Middleware Before The Route Executes."""

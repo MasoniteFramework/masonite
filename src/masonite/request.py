@@ -613,6 +613,11 @@ class Request(Extendable):
 
         return self
 
+    def reset_user(self):
+        """Resets the user back to none
+        """
+        self.user_model = None
+
     def user(self):
         """Load the user into the class.
 

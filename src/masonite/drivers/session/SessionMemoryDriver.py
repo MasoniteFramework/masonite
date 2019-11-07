@@ -2,7 +2,7 @@
 
 from ...contracts import SessionContract
 from ...drivers import BaseDriver
-from ...app import App
+from ...request import Request
 
 
 class SessionMemoryDriver(SessionContract, BaseDriver):
@@ -11,13 +11,13 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
     _session = {}
     _flash = {}
 
-    def __init__(self, app: App):
+    def __init__(self, request: Request):
         """Cookie Session Constructor.
 
         Arguments:
             Environ {dict} -- The WSGI environment
         """
-        self.environ = app.make('Environ')
+        self.request = request
 
     def get(self, key):
         """Get a value from the session.
@@ -117,10 +117,10 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
 
     def __get_client_address(self):
         """Get ip from the client."""
-        if 'HTTP_X_FORWARDED_FOR' in self.environ:
-            return self.environ['HTTP_X_FORWARDED_FOR'].split(',')[-1].strip()
+        if 'HTTP_X_FORWARDED_FOR' in self.request.environ:
+            return self.request.environ['HTTP_X_FORWARDED_FOR'].split(',')[-1].strip()
 
-        return self.environ['REMOTE_ADDR']
+        return self.request.environ['REMOTE_ADDR']
 
     def __collect_data(self, key=False):
         """Collect data from session and flash data.

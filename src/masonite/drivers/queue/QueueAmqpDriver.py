@@ -40,7 +40,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         self.channel.close()
         self.connection.close()
 
-    def push(self, *objects, args=(), callback='handle', ran=1, channel=None, **options):
+    def push(self, *objects, args=(), callback='handle', ran=1, channel=None, **options):  # skipcq PYL-W0613
         """Push objects onto the amqp stack.
 
         Arguments:
@@ -107,7 +107,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
         except TypeError:
             self.channel.basic_consume(queue_name, callback)
 
-    def work(self, ch, method, properties, body):
+    def work(self, ch, method, _, body):
         from wsgi import container
         job = pickle.loads(body)
         obj = job['obj']

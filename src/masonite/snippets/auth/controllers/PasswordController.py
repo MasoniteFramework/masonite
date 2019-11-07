@@ -13,7 +13,7 @@ from config.auth import AUTH
 class PasswordController:
     """Password Controller."""
 
-    def forget(self, view: View, request: Request, auth: Auth):
+    def forget(self, view: View, auth: Auth):
         return view.render('auth/forget', {'app': config('application'), 'Auth': auth})
 
     def reset(self, request: Request, auth: Auth):

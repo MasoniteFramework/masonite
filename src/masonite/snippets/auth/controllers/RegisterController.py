@@ -15,7 +15,7 @@ class RegisterController:
         """The RegisterController Constructor."""
         pass
 
-    def show(self, request: Request, view: View, auth: Auth):
+    def show(self, view: View, auth: Auth):
         """Show the registration page.
 
         Arguments:

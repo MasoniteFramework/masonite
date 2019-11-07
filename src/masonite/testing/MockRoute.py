@@ -1,5 +1,5 @@
 from ..request import Request
-from ..testsuite import TestSuite, generate_wsgi
+from .generate_wsgi import generate_wsgi
 import json
 from ..helpers import Dot
 

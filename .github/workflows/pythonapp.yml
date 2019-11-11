@@ -8,7 +8,6 @@ jobs:
     strategy:
       matrix:
           python-version: [ '3.5', '3.6', '3.7', '3.8' ]
-
     name: Python ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v1
@@ -26,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
+    - uses: actions/checkout@v1
     - name: Install Flake8
       run: |
         make lint

@@ -18,10 +18,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install -r requirements.txt
+        make init
     - name: Test with pytest
       run: |
-        pip install pytest
-        python -m pytest
+        make test
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+    - name: Install Flake8
+      run: |
+        make lint

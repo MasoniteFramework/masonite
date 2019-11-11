@@ -26,6 +26,8 @@ jobs:
     name: Lint
     steps:
     - uses: actions/checkout@v1
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
       with:
         python-version: 3.6
     - name: Install Flake8

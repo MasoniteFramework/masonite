@@ -2,6 +2,7 @@
 
 import inspect
 import pydoc
+import collections
 
 from orator.support.collection import Collection as collect
 
@@ -35,6 +36,9 @@ class Dot:
 
         searching = search.split('.')
         possible = None
+        if '*' not in search:
+            return self.flatten(dictionary).get(search, default)
+
         while searching:
             dic = dictionary
             for value in searching:
@@ -65,6 +69,17 @@ class Dot:
 
             del searching[-1]
         return possible
+
+    def flatten(self, d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, collections.MutableMapping):
+                items.append((new_key, v))
+                items.extend(self.flatten(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
 
     def locate(self, search_path, default=''):
         """Locate the object from the given search path

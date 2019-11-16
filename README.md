@@ -30,7 +30,7 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/v/v2.1/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
 If you are a visual learner you can find tutorials here: [MasoniteCasts](https://casts.masonite.dev)
 

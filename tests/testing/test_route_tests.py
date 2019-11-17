@@ -21,6 +21,7 @@ class TestUnitTest(TestCase):
 
     def test_can_get_route(self):
         self.assertTrue(self.get('/unit/test/get').ok())
+        self.assertTrue(self.get('/unit/test/get').canView())
 
     def test_can_post_route(self):
         self.assertTrue(self.post('/unit/test/post').ok())

@@ -204,6 +204,14 @@ class MockRoute:
 
     @property
     def response(self):
+        """Gets the string response from the container. This isinstance check here
+        is to support Python 3.5. Once python3.5 goes away we can can remove this check.
+
+        @required for 3.5
+
+        Returns:
+            string
+        """        
         response = self.container.make('Response')
         if isinstance(response, str):
             return response

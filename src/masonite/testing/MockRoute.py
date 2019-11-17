@@ -1,7 +1,7 @@
-from ..request import Request
-from .generate_wsgi import generate_wsgi
 import json
+
 from ..helpers import Dot
+from ..request import Request
 
 
 class MockRoute:

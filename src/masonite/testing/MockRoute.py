@@ -211,7 +211,7 @@ class MockRoute:
 
         Returns:
             string
-        """        
+        """
         response = self.container.make('Response')
         if isinstance(response, str):
             return response

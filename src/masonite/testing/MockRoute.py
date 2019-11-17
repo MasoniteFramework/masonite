@@ -207,7 +207,7 @@ class MockRoute:
         response = self.container.make('Response')
         if isinstance(response, str):
             return response
-        
+
         return response.decode('utf-8')
 
     def asDictionary(self):

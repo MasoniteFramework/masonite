@@ -271,6 +271,6 @@ class Download(Responsable):
             string -- The mimetype for use in headers
         """
         return mimetypes.guess_type(path)[0]
-    
+
     def extension(self, path):
         return Path(path).suffix

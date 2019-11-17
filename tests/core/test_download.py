@@ -5,10 +5,10 @@ from src.masonite.routes import Get
 class DownloadTestController:
 
     def show(self):
-        return Download('uploads/profile.jpg')
+        return Download('storage/static/profile.jpg')
 
     def force(self):
-        return Download('uploads/profile.jpg', name="me.jpg").force()
+        return Download('storage/static/profile.jpg', name="me").force()
 
 class TestDownload(TestCase):
 
@@ -22,8 +22,8 @@ class TestDownload(TestCase):
     def test_can_show_download(self):
         (self.get('/download')
             .assertIsStatus(200)
-            .assertHeaderIs('Content-Type', 'image/jpeg')
             .assertHasHeader('Content-Type')
+            .assertHeaderIs('Content-Type', 'image/jpeg')
             .assertNotHasHeader('Content-Disposition')
         )
 

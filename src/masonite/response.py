@@ -2,6 +2,7 @@
 
 import json
 import mimetypes
+from pathlib import Path
 
 from orator import LengthAwarePaginator, Model, Paginator
 from orator.support.collection import Collection
@@ -222,7 +223,7 @@ class Download(Responsable):
         name {str} -- The name you want the file to be called when downloaded (default: {'profile.jpg'})
     """
 
-    def __init__(self, location, force=False, name='profile.jpg'):
+    def __init__(self, location, force=False, name='1'):
         self.location = location
         self._force = force
         self.name = name
@@ -254,7 +255,7 @@ class Download(Responsable):
 
         if self._force:
             request.header('Content-Type', 'application/octet-stream')
-            request.header('Content-Disposition', 'attachment; filename="{}"'.format(self.name))
+            request.header('Content-Disposition', 'attachment; filename="{}{}"'.format(self.name, self.extension(self.location)))
         else:
             request.header('Content-Type', self.mimetype(self.location))
 
@@ -270,3 +271,6 @@ class Download(Responsable):
             string -- The mimetype for use in headers
         """
         return mimetypes.guess_type(path)[0]
+    
+    def extension(self, path):
+        return Path(path).suffix

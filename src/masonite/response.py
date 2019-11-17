@@ -211,7 +211,7 @@ class Responsable:
 
 
 class Download(Responsable):
-    """Download class to help show files in the browser or force 
+    """Download class to help show files in the browser or force
         a download for the client browser.
 
     Arguments:

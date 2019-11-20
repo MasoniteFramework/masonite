@@ -1,24 +1,25 @@
 """The Masonite Response Object."""
 
 import json
+import mimetypes
+from pathlib import Path
 
+from orator import LengthAwarePaginator, Model, Paginator
+from orator.support.collection import Collection
+
+from .app import App
 from .exceptions import ResponseError
 from .helpers.Extendable import Extendable
 
-from orator.support.collection import Collection
-from orator import Model
-from .app import App
-from orator import Paginator, LengthAwarePaginator
-
 
 class Response(Extendable):
+    """A Response object to be used to abstract the logic of getting a response ready to be returned.
+
+    Arguments:
+        app {masonite.app.App} -- The Masonite container.
+    """
 
     def __init__(self, app: App):
-        """A Response object to be used to abstract the logic of getting a response ready to be returned.
-
-        Arguments:
-            app {masonite.app.App} -- The Masonite container.
-        """
         self.app = app
         self.request = self.app.make('Request')
 
@@ -166,10 +167,10 @@ class Response(Extendable):
         elif view is None:
             raise ResponseError('Responses cannot be of type: None. Did you return anything in your responsable method?')
 
-        if not isinstance(view, str):
-            raise ResponseError('Invalid response type of {}'.format(type(view)))
-
-        self.app.bind('Response', view)
+        if isinstance(view, str):
+            self.app.bind('Response', bytes(view, 'utf-8'))
+        else:
+            self.app.bind('Response', view)
 
         self.make_headers()
 
@@ -191,7 +192,7 @@ class Response(Extendable):
 
         self.request.reset_headers()
         self.request.header('Location', location)
-        self.app.bind('Response', 'redirecting ...')
+        self.view('Redirecting ...')
 
         return self.data()
 
@@ -201,10 +202,75 @@ class Response(Extendable):
         Returns:
             bytes -- The converted response to bytes.
         """
-        return bytes(self.converted_data(), 'utf-8')
+        return self.converted_data()
 
 
 class Responsable:
 
     def get_response(self):
         raise NotImplementedError("This class does not implement a 'get_response()' method")
+
+
+class Download(Responsable):
+    """Download class to help show files in the browser or force
+        a download for the client browser.
+
+    Arguments:
+        location {string} -- The path you want to download.
+
+    Keyword Arguments:
+        force {bool} -- Whether you want the client's browser to force the file download (default: {False})
+        name {str} -- The name you want the file to be called when downloaded (default: {'profile.jpg'})
+    """
+
+    def __init__(self, location, force=False, name='1'):
+        self.location = location
+        self._force = force
+        self.name = name
+        self.container = None
+
+    def force(self):
+        """Sets the force option.
+
+        Returns:
+            self
+        """
+        self._force = True
+        return self
+
+    def get_response(self):
+        """Handles the way the response should be handled by the server.
+
+        Returns:
+            bytes - Returns bytes required for the server to handle the download.
+        """
+        if not self.container:
+            from wsgi import container
+            self.container = container
+
+        request = self.container.make('Request')
+
+        with open(self.location, 'rb') as filelike:
+            data = filelike.read()
+
+        if self._force:
+            request.header('Content-Type', 'application/octet-stream')
+            request.header('Content-Disposition', 'attachment; filename="{}{}"'.format(self.name, self.extension(self.location)))
+        else:
+            request.header('Content-Type', self.mimetype(self.location))
+
+        return data
+
+    def mimetype(self, path):
+        """Gets the mimetime of a path
+
+        Arguments:
+            path {string} -- The path of the file to download.
+
+        Returns:
+            string -- The mimetype for use in headers
+        """
+        return mimetypes.guess_type(path)[0]
+
+    def extension(self, path):
+        return Path(path).suffix

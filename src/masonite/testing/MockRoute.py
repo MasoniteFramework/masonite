@@ -1,7 +1,7 @@
-from ..request import Request
-from .generate_wsgi import generate_wsgi
 import json
+
 from ..helpers import Dot
+from ..request import Request
 
 
 class MockRoute:
@@ -21,10 +21,10 @@ class MockRoute:
         return self.route.controller == controller
 
     def contains(self, value):
-        return value in self.container.make('Response')
+        return value in self.container.make('Response').decode('utf-8')
 
     def assertContains(self, value):
-        assert value in self.container.make('Response'), "Response does not contain {}".format(value)
+        assert self.contains(value), "Response does not contain {}".format(value)
         return self
 
     def assertNotFound(self):
@@ -34,12 +34,7 @@ class MockRoute:
         return '200 OK' in self.container.make('Request').get_status_code()
 
     def canView(self):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
-
-        return self.container.make('Request').get_status_code() == '200 OK'
+        return self.ok()
 
     def hasJson(self, key, value=''):
         response = json.loads(self.container.make('Response'))
@@ -135,10 +130,6 @@ class MockRoute:
         return self
 
     def hasSession(self, key):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
 
     def assertParameterIs(self, key, value):
@@ -158,7 +149,14 @@ class MockRoute:
         return self
 
     def assertHasHeader(self, key):
-        pass
+        request = self.container.make('Request')
+        assert request.header(key), "Header '{}' does not exist".format(key)
+        return self
+
+    def assertNotHasHeader(self, key):
+        request = self.container.make('Request')
+        assert not request.header(key), "Header '{}' exists but asserting it should not".format(key)
+        return self
 
     def assertHeaderIs(self, key, value):
         request = self.container.make('Request')
@@ -172,10 +170,6 @@ class MockRoute:
         return True
 
     def session(self, key):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
         return self.container.make('Session').get(key)
 
     def on_make(self, obj, method):
@@ -185,9 +179,6 @@ class MockRoute:
     def on_resolve(self, obj, method):
         self.container.on_resolve(obj, method)
         return self
-
-    def _run_container(self, wsgi):
-        return TestSuite().create_container(wsgi, container=self.container)
 
     def _bind_user_to_request(self, request, container):
         request.set_user(self._user)
@@ -213,7 +204,19 @@ class MockRoute:
 
     @property
     def response(self):
-        return self.container.make('Response')
+        """Gets the string response from the container. This isinstance check here
+        is to support Python 3.5. Once python3.5 goes away we can can remove this check.
+
+        @required for 3.5
+
+        Returns:
+            string
+        """
+        response = self.container.make('Response')
+        if isinstance(response, str):
+            return response
+
+        return response.decode('utf-8')
 
     def asDictionary(self):
         try:

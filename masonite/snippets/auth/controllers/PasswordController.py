@@ -17,7 +17,7 @@ class PasswordController:
     def forget(self, view: View, request: Request, auth: Auth):
         return view.render('auth/forget', {'app': request.app().make('Application'), 'Auth': auth})
 
-    def reset(self, request: Request, auth: Auth):
+    def reset(self, view: View, request: Request, auth: Auth):
         token = request.param('token')
         user = AUTH['model'].where('remember_token', token).first()
         if user:

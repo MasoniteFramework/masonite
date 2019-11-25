@@ -32,7 +32,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
-        self.app.bind('Response', json.dumps(payload))
+        self.app.bind('Response', bytes(json.dumps(payload), 'utf-8'))
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
 

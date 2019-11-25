@@ -85,7 +85,7 @@ class Auth:
                     model.remember_token = remember_token
                     model.save()
                     self.request.app().make('AuthManager').driver(self.driver).save(remember_token, model=model)
-                    
+
                 self.request.set_user(model)
                 return model
 

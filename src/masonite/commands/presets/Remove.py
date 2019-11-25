@@ -38,11 +38,14 @@ class Remove(Preset):
 
     def update_webpack_configuration(self):
         """Copy webpack.mix.js file into application"""
-        shutil.copyfile('src/masonite/commands/presets/remove-stubs/webpack.mix.js', 'webpack.mix.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/remove-stubs/webpack.mix.js', 'webpack.mix.js')
 
     def update_bootstrapping(self):
         """Copies template app.js file into application"""
+        for directory in ['resources/sass', 'resources/js']:
+            if not os.path.exists(os.path.realpath(directory)):
+                os.makedirs(os.path.realpath(directory))
         with open('resources/sass/app.scss', 'w') as f:
             f.write('')
-        shutil.copyfile('src/masonite/commands/presets/remove-stubs/app.js', 'resources/js/app.js')
-        shutil.copyfile('src/masonite/commands/presets/remove-stubs/bootstrap.js', 'resources/js/bootstrap.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/remove-stubs/app.js', 'resources/js/app.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/remove-stubs/bootstrap.js', 'resources/js/bootstrap.js')

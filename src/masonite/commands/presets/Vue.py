@@ -30,15 +30,15 @@ class Vue(Preset):
 
     def update_webpack_configuration(self):
         """Copy webpack.mix.js file into application"""
-        shutil.copyfile('src/masonite/commands/presets/vue-stubs/webpack.mix.js', 'webpack.mix.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/webpack.mix.js', 'webpack.mix.js')
 
     def update_component(self):
         """Copy example VueJS component into application (delete example React component if it exists)"""
         vue_component = 'resources/js/components/Example.js'
         if os.path.exists(os.path.realpath(vue_component)):
             os.remove(vue_component)
-        shutil.copyfile('src/masonite/commands/presets/vue-stubs/ExampleComponent.vue', 'resources/js/components/ExampleComponent.vue')
+        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/ExampleComponent.vue', 'resources/js/components/ExampleComponent.vue')
 
     def update_bootstrapping(self):
         """Copies template app.js file into application"""
-        shutil.copyfile('src/masonite/commands/presets/vue-stubs/app.js', 'resources/js/app.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/app.js', 'resources/js/app.js')

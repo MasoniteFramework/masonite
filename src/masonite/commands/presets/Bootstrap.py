@@ -25,5 +25,5 @@ class Bootstrap(Preset):
         directory = 'resources/sass'
         if not os.path.exists(os.path.realpath(directory)):
             os.makedirs(os.path.realpath(directory))
-        shutil.copyfile('src/masonite/commands/presets/bootstrap-stubs/_variables.scss', 'resources/sass/_variables.scss')
-        shutil.copyfile('src/masonite/commands/presets/bootstrap-stubs/app.scss', 'resources/sass/app.scss')
+        shutil.copyfile(os.path.dirname(__file__) + '/bootstrap-stubs/_variables.scss', 'resources/sass/_variables.scss')
+        shutil.copyfile(os.path.dirname(__file__) + '/bootstrap-stubs/app.scss', 'resources/sass/app.scss')

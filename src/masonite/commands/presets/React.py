@@ -21,7 +21,10 @@ class React(Preset):
         self.remove_node_modules()
 
     def update_package_array(self, packages={}):
-        """Updates the packages array to include React specific packages but also remove VueJS ones"""
+        """
+        Updates the packages array to include React specific packages
+        but also remove VueJS ones
+        """
         for package in ['vue', 'vue-template-compiler']:
             packages.pop(package, None)
 
@@ -35,7 +38,10 @@ class React(Preset):
         shutil.copyfile(os.path.dirname(__file__) + '/react-stubs/webpack.mix.js', 'webpack.mix.js')
 
     def update_component(self):
-        """Copy example React component into application (delete example Vue component if it exists)"""
+        """
+        Copy example React component into application
+        (delete example Vue component if it exists)
+        """
         vue_component = 'resources/js/components/ExampleComponent.vue'
         if os.path.exists(os.path.realpath(vue_component)):
             os.remove(vue_component)

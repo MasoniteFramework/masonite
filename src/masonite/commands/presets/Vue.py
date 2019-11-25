@@ -1,9 +1,15 @@
+"""Vue Preset"""
 import os
 import shutil
 from ..presets import Preset
 
 
 class Vue(Preset):
+    """
+    Configure the front-end scaffolding for the application to use VueJS
+
+    Will also remove React as React and Vue are a bit mutally exclusive
+    """
 
     def install(self):
         """Install the preset"""
@@ -14,7 +20,8 @@ class Vue(Preset):
         self.update_component()
         self.remove_node_modules()
 
-    def update_package_array(self, packages: {}):
+    def update_package_array(self, packages={}):
+        """Updates the packages array to include VueJS specific packages but also remove React ones"""
         for package in ['@babel/preset-react', 'react', 'react-dom']:
             packages.pop(package, None)
 
@@ -22,13 +29,16 @@ class Vue(Preset):
         return packages
 
     def update_webpack_configuration(self):
+        """Copy webpack.mix.js file into application"""
         shutil.copyfile('src/masonite/commands/presets/vue-stubs/webpack.mix.js', 'webpack.mix.js')
 
     def update_component(self):
+        """Copy example VueJS component into application (delete example React component if it exists)"""
         vue_component = 'resources/js/components/Example.js'
         if os.path.exists(os.path.realpath(vue_component)):
             os.remove(vue_component)
         shutil.copyfile('src/masonite/commands/presets/vue-stubs/ExampleComponent.vue', 'resources/js/components/ExampleComponent.vue')
 
     def update_bootstrapping(self):
+        """Copies template app.js file into application"""
         shutil.copyfile('src/masonite/commands/presets/vue-stubs/app.js', 'resources/js/app.js')

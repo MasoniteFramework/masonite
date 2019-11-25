@@ -130,10 +130,11 @@ class TestSession(unittest.TestCase):
                 'key1': 'val1',
                 'key2': 'val2',
             }
-            request.with_input()
             session = self.app.make('SessionManager').driver(driver)
-            self.assertFalse(session.has('key1'))
-            self.assertFalse(session.has('key2'))
+            request.session = session
+            request.with_input()
+            self.assertTrue(session.has('key1'))
+            self.assertTrue(session.has('key2'))
 
     def test_can_redirect_with_bytes_inputs(self):
         for driver in ('memory', 'cookie'):

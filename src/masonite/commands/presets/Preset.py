@@ -27,7 +27,7 @@ class Preset:
             f.seek(0)  # Rewind to beginning of file
             f.truncate()
             f.write(
-                json.dumps(packages, sort_keys=True, indent=2)
+                json.dumps(packages, sort_keys=True, indent=4)
             )
 
     def remove_node_modules(self):

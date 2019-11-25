@@ -809,7 +809,7 @@ class Request(Extendable):
             return
 
         for key, value in self.all().items():
-            if not isinstance(value, str):
+            if isinstance(value, bytes):
                 continue
 
             self.session.flash(key, value)

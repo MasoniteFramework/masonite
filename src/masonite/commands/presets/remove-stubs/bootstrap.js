@@ -23,12 +23,3 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://docs.masoniteproject.com/security/csrf-protection#ajax-vue-axios');
 }
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
-// });

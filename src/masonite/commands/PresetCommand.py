@@ -1,12 +1,10 @@
 """New Preset System Command."""
-import os
-import shutil
-
 from cleo import Command
 from ..commands.presets.React import React
 from ..commands.presets.Vue import Vue
 from ..commands.presets.Bootstrap import Bootstrap
 from ..commands.presets.Remove import Remove
+
 
 class PresetCommand(Command):
     """
@@ -19,7 +17,7 @@ class PresetCommand(Command):
     def handle(self):
         self.info('Scaffolding Application ...')
         preset_name = self.argument('name')
-        if not preset_name in ['react', 'vue', 'remove', 'bootstrap']:
+        if preset_name not in ['react', 'vue', 'remove', 'bootstrap']:
             raise ValueError('Invalid preset')
         return getattr(self, preset_name)()
 

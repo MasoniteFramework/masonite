@@ -2,23 +2,22 @@ import os
 import shutil
 from ..presets import Preset
 
+
 class Bootstrap(Preset):
 
     def install(self):
-        """
-        Install the preset
-        """
-        self.updatePackages()
-        self.updateSass()
-        self.removeNodeModules()
+        """Install the preset"""
+        self.update_packages()
+        self.update_sass()
+        self.remove_node_modules()
 
-    def updatePackageArray(self, packages: {}):
+    def update_package_array(self, packages: {}):
         packages['bootstrap'] = '^4.0.0'
         packages['jquery'] = '^3.2'
         packages['popper.js'] = '^1.12'
         return packages
 
-    def updateSass(self):
+    def update_sass(self):
         directory = 'resources/sass'
         if not os.path.exists(os.path.realpath(directory)):
             os.makedirs(os.path.realpath(directory))

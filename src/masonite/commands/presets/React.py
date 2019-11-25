@@ -2,20 +2,19 @@ import os
 import shutil
 from ..presets import Preset
 
+
 class React(Preset):
 
     def install(self):
-        """
-        Install the preset
-        """
-        self.ensureComponentDirectoryExists()
-        self.updatePackages()
-        self.updateWebpackConfiguration()
-        self.updateBootstrapping()
-        self.updateComponent()
-        self.removeNodeModules()
+        """Install the preset"""
+        self.ensure_component_directory_exists()
+        self.update_packages()
+        self.update_webpack_configuration()
+        self.update_bootstrapping()
+        self.update_component()
+        self.remove_node_modules()
 
-    def updatePackageArray(self, packages: {}):
+    def update_package_array(self, packages: {}):
         for package in ['vue', 'vue-template-compiler']:
             packages.pop(package, None)
 
@@ -24,14 +23,14 @@ class React(Preset):
         packages['react-dom'] = '^16.2.0'
         return packages
 
-    def updateWebpackConfiguration(self):
+    def update_webpack_configuration(self):
         shutil.copyfile('src/masonite/commands/presets/react-stubs/webpack.mix.js', 'webpack.mix.js')
 
-    def updateComponent(self):
-        vueComponent = 'resources/js/components/ExampleComponent.vue'
-        if (os.path.exists(os.path.realpath(vueComponent))):
-            os.remove(vueComponent)
+    def update_component(self):
+        vue_component = 'resources/js/components/ExampleComponent.vue'
+        if os.path.exists(os.path.realpath(vue_component)):
+            os.remove(vue_component)
         shutil.copyfile('src/masonite/commands/presets/react-stubs/Example.js', 'resources/js/components/Example.js')
 
-    def updateBootstrapping(self):
+    def update_bootstrapping(self):
         shutil.copyfile('src/masonite/commands/presets/react-stubs/app.js', 'resources/js/app.js')

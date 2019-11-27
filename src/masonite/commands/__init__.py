@@ -16,6 +16,7 @@ from .MigrateRollbackCommand import MigrateRollbackCommand
 from .MigrateStatusCommand import MigrateStatusCommand
 from .ModelCommand import ModelCommand
 from .ModelDocstringCommand import ModelDocstringCommand
+from .PresetCommand import PresetCommand
 from .ProviderCommand import ProviderCommand
 from .PublishCommand import PublishCommand
 from .QueueWorkCommand import QueueWorkCommand

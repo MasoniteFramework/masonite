@@ -22,6 +22,7 @@ setup(
         'masonite.providers',
         'masonite.listeners',
         'masonite.commands',
+        'masonite.commands.presets',
         'masonite.controllers',
         'masonite.drivers',
         'masonite.drivers.authentication',

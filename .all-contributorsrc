@@ -40,8 +40,8 @@
         "question",
         "ideas"
       ]
-     }, 
-     {
+    },
+    {
       "login": "aisola",
       "name": "Abram C. Isola",
       "avatar_url": "https://avatars0.githubusercontent.com/u/1970073?v=4",
@@ -82,6 +82,18 @@
       "name": "Marlysson Silva",
       "avatar_url": "https://avatars3.githubusercontent.com/u/4117999?v=4",
       "profile": "http://marlysson.github.io",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
+    },
+    {
+      "login": "ChrisByrd14",
+      "name": "Christopher Byrd",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/7581926?v=4",
+      "profile": "https://www.linkedin.com/in/christopher-byrd-49726691",
       "contributions": [
         "code",
         "bug",

@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "vaibhavmule",
+      "name": "Vaibhav Mule",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/6290791?v=4",
+      "profile": "http://vaibhavmule.com",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "masonite",
+  "projectOwner": "MasoniteFramework",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

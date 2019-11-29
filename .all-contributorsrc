@@ -28,6 +28,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "aisola",
+      "name": "Abram C. Isola",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1970073?v=4",
+      "profile": "https://inkit.io",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

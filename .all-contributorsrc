@@ -28,6 +28,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "hammacktony",
+      "name": "Tony Hammack",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/10157988?v=4",
+      "profile": "http://tonyhammack.com",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

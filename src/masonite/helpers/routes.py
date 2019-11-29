@@ -210,9 +210,9 @@ def create_matchurl(url, route):
 def query_parse(query_string):
     d = {}
     for key, value in parse_qs(query_string).items():
-        match = re.match(r'(?P<key>[^\[]+)\[(?P<value>[^\]]+)\]', key)
-        if match:
-            gd = match.groupdict()
+        regex_match = re.match(r'(?P<key>[^\[]+)\[(?P<value>[^\]]+)\]', key)
+        if regex_match:
+            gd = regex_match.groupdict()
             d.setdefault(gd['key'], {})[gd['value']] = value[0]
         else:
             d.update({key: value[0]})

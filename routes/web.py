@@ -41,3 +41,6 @@ ROUTES = [
         Patch('/test/patch', 'UnitTestController@patch'),
     ], prefix="/unit")
 ]
+
+from src.masonite.auth import Auth 
+ROUTES += Auth.routes()

@@ -3,7 +3,7 @@
 
 class Auth:
     """Facade class for the Guard class"""
-    
+
     @staticmethod
     def routes():
         from ..routes import Get, Post

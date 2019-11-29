@@ -1,6 +1,6 @@
 
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
 
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
@@ -150,6 +150,7 @@ Please read the [Contributing Documentation](https://masoniteframework.gitbook.i
   <tr>
     <td align="center"><a href="https://www.linkedin.com/in/christopher-byrd-49726691"><img src="https://avatars2.githubusercontent.com/u/7581926?v=4" width="100px;" alt="Christopher Byrd"/><br /><sub><b>Christopher Byrd</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=ChrisByrd14" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3AChrisByrd14" title="Bug reports">🐛</a> <a href="#question-ChrisByrd14" title="Answering Questions">💬</a> <a href="#ideas-ChrisByrd14" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/bjorntheart"><img src="https://avatars1.githubusercontent.com/u/53244?v=4" width="100px;" alt="Björn Theart"/><br /><sub><b>Björn Theart</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=bjorntheart" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Abjorntheart" title="Bug reports">🐛</a> <a href="#question-bjorntheart" title="Answering Questions">💬</a> <a href="#ideas-bjorntheart" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://nioperas06.github.io"><img src="https://avatars1.githubusercontent.com/u/11293401?v=4" width="100px;" alt="Junior Gantin"/><br /><sub><b>Junior Gantin</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=nioperas06" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Anioperas06" title="Bug reports">🐛</a> <a href="#question-nioperas06" title="Answering Questions">💬</a> <a href="#ideas-nioperas06" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 

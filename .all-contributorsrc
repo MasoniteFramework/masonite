@@ -16,6 +16,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "mapeveri",
+      "name": "Martín Peveri",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6276555?v=4",
+      "profile": "http://martinpeveri.wordpress.com",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

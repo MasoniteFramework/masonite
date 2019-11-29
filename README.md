@@ -1,5 +1,5 @@
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
 </p>
@@ -138,6 +138,7 @@ Please read the [Contributing Documentation](https://masoniteframework.gitbook.i
 <table>
   <tr>
     <td align="center"><a href="http://vaibhavmule.com"><img src="https://avatars0.githubusercontent.com/u/6290791?v=4" width="100px;" alt="Vaibhav Mule"/><br /><sub><b>Vaibhav Mule</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=vaibhavmule" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Avaibhavmule" title="Bug reports">🐛</a> <a href="#question-vaibhavmule" title="Answering Questions">💬</a> <a href="#ideas-vaibhavmule" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://martinpeveri.wordpress.com"><img src="https://avatars3.githubusercontent.com/u/6276555?v=4" width="100px;" alt="Martín Peveri"/><br /><sub><b>Martín Peveri</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=mapeveri" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Amapeveri" title="Bug reports">🐛</a> <a href="#question-mapeveri" title="Answering Questions">💬</a> <a href="#ideas-mapeveri" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 

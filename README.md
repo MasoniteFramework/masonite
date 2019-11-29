@@ -1,5 +1,5 @@
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
 </p>
@@ -142,6 +142,7 @@ Please read the [Contributing Documentation](https://masoniteframework.gitbook.i
     <td align="center"><a href="https://inkit.io"><img src="https://avatars0.githubusercontent.com/u/1970073?v=4" width="100px;" alt="Abram C. Isola"/><br /><sub><b>Abram C. Isola</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=aisola" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Aaisola" title="Bug reports">🐛</a> <a href="#question-aisola" title="Answering Questions">💬</a> <a href="#ideas-aisola" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://docs.masoniteproject.com"><img src="https://avatars1.githubusercontent.com/u/20172538?v=4" width="100px;" alt="Joseph Mancuso"/><br /><sub><b>Joseph Mancuso</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=josephmancuso" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Ajosephmancuso" title="Bug reports">🐛</a> <a href="#question-josephmancuso" title="Answering Questions">💬</a> <a href="#ideas-josephmancuso" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.mitchdennett.com"><img src="https://avatars0.githubusercontent.com/u/16268619?v=4" width="100px;" alt="Mitch Dennett"/><br /><sub><b>Mitch Dennett</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=mitchdennett" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Amitchdennett" title="Bug reports">🐛</a> <a href="#question-mitchdennett" title="Answering Questions">💬</a> <a href="#ideas-mitchdennett" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://marlysson.github.io"><img src="https://avatars3.githubusercontent.com/u/4117999?v=4" width="100px;" alt="Marlysson Silva"/><br /><sub><b>Marlysson Silva</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=Marlysson" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3AMarlysson" title="Bug reports">🐛</a> <a href="#question-Marlysson" title="Answering Questions">💬</a> <a href="#ideas-Marlysson" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 

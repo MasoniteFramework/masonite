@@ -11,7 +11,6 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qsl
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -20,7 +19,7 @@ from .exceptions import InvalidHTTPStatusCode, RouteException
 from .helpers import Dot as DictDot
 from .helpers import clean_request_input, dot
 from .helpers.Extendable import Extendable
-from .helpers.routes import compile_route_to_regex
+from .helpers.routes import compile_route_to_regex, query_parse
 from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
 
@@ -221,9 +220,10 @@ class Request(Extendable):
         Arguments:
             variables {string|dict}
         """
+        # vv = variables
         if isinstance(variables, str):
-            variables = dict(parse_qsl(variables))
-
+            variables = query_parse(variables)
+        
         try:
             self.request_variables = {}
             for name in variables.keys():

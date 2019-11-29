@@ -1,6 +1,8 @@
 """Helper Functions for RouteProvider."""
 
 from .misc import deprecated
+from urllib.parse import parse_qs
+import re
 
 
 def flatten_routes(routes):
@@ -202,3 +204,15 @@ def create_matchurl(url, route):
         return route._compiled_regex
 
     return route._compiled_regex_end
+
+def query_parse(query_string):
+    d = {}
+    for key, value in parse_qs(query_string).items():
+        match = re.match(r'(?P<key>[^\[]+)\[(?P<value>[^\]]+)\]', key)
+        if match:
+            gd = match.groupdict()
+            d.setdefault(gd['key'], {})[gd['value']] = value[0]
+        else:
+            d.update({key: value[0]})
+
+    return d

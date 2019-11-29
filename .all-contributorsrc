@@ -112,6 +112,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "nioperas06",
+      "name": "Junior Gantin",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11293401?v=4",
+      "profile": "https://nioperas06.github.io",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

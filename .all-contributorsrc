@@ -64,6 +64,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "Marlysson",
+      "name": "Marlysson Silva",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4117999?v=4",
+      "profile": "http://marlysson.github.io",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

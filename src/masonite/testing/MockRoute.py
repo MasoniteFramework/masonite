@@ -35,13 +35,13 @@ class MockRoute:
 
     def canView(self):
         return self.ok()
-    
+
     def get_string_response(self):
         response = self.container.make('Response')
 
         if isinstance(response, str):
             return response
-        
+
         return response.decode('utf-8')
 
     def hasJson(self, key, value=''):

@@ -223,7 +223,7 @@ class Request(Extendable):
         # vv = variables
         if isinstance(variables, str):
             variables = query_parse(variables)
-        
+
         try:
             self.request_variables = {}
             for name in variables.keys():

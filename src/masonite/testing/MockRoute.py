@@ -35,9 +35,18 @@ class MockRoute:
 
     def canView(self):
         return self.ok()
+    
+    def get_string_response(self):
+        response = self.container.make('Response')
+
+        if isinstance(response, str):
+            return response
+        
+        return response.decode('utf-8')
 
     def hasJson(self, key, value=''):
-        response = json.loads(self.container.make('Response'))
+
+        response = json.loads(self.get_string_response())
         if isinstance(key, dict):
             for item_key, key_value in key.items():
                 if not Dot().dot(item_key, response, False) == key_value:
@@ -46,7 +55,7 @@ class MockRoute:
         return Dot().dot(key, response, False)
 
     def assertHasJson(self, key, value):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         if isinstance(key, dict):
             for item_key, key_value in key.items():
                 assert Dot().dot(item_key, response, False) == key_value
@@ -55,7 +64,7 @@ class MockRoute:
         return self
 
     def assertJsonContains(self, key, value):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         if not isinstance(response, list):
             raise ValueError("This method can only be used if the response is a list of elements.")
 
@@ -70,10 +79,10 @@ class MockRoute:
         return self
 
     def count(self, amount):
-        return len(json.loads(self.container.make('Response'))) == amount
+        return len(json.loads(self.get_string_response())) == amount
 
     def assertCount(self, amount):
-        response_amount = len(json.loads(self.container.make('Response')))
+        response_amount = len(json.loads(self.get_string_response()))
         assert response_amount == amount, 'Response has an count of {}. Asserted {}'.format(response_amount, amount)
         return self
 
@@ -81,14 +90,14 @@ class MockRoute:
         return self.count(amount)
 
     def hasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             return len(response[key]) == amount
         except TypeError:
             raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
 
     def assertHasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             assert len(response[key]) == amount, '{} is not equal to {}'.format(len(response[key]), amount)
         except TypeError:
@@ -97,7 +106,7 @@ class MockRoute:
         return self
 
     def assertNotHasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             assert not len(response[key]) == amount, '{} is equal to {} but should not be'.format(len(response[key]), amount)
         except TypeError:
@@ -212,7 +221,7 @@ class MockRoute:
         Returns:
             string
         """
-        response = self.container.make('Response')
+        response = self.get_string_response()
         if isinstance(response, str):
             return response
 

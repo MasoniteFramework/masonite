@@ -52,6 +52,18 @@
         "question",
         "ideas"
       ]
+    },
+    {
+      "login": "mitchdennett",
+      "name": "Mitch Dennett",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/16268619?v=4",
+      "profile": "http://www.mitchdennett.com",
+      "contributions": [
+        "code",
+        "bug",
+        "question",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

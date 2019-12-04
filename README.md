@@ -1,4 +1,7 @@
 
+
+
+
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
 </p>
@@ -8,6 +11,7 @@
 <img src="https://travis-ci.org/MasoniteFramework/masonite.svg?branch=master">
 <img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
 <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
+<img src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square" alt="All Contributors">
 
 </p>
 
@@ -30,9 +34,9 @@ Masonite works hard to be fast and easy from install to deployment so developers
 
 ## Learning Masonite
 
-Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/v/v2.1/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
+Masonite strives to have extremely comprehensive documentation. All documentation can be [Found Here](https://docs.masoniteproject.com/) and would be wise to go through the tutorials there. If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
 
-If you are a visual learner you can find tutorials here: [MasoniteCasts](https://casts.masonite.dev)
+If you are a visual learner you can find tutorials here: [MasoniteCasts](https://masonitecasts.com)
 
 Also be sure to join the [Slack channel](http://slack.masoniteproject.com/)!
 
@@ -132,13 +136,28 @@ Please read the [Contributing Documentation](https://masoniteframework.gitbook.i
 
 ## Contributors
 
-Thank you for those who have contributed to Masonite!
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| | | | | | |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
-| [<img src="https://avatars1.githubusercontent.com/u/6290791?s=460&v=4" width="100px;"/><br /><sub><b>Vaibhav Mule</b></sub>](https://github.com/vaibhavmule) | [<img src="https://avatars.githubusercontent.com/u/6276555?v=3" width="100px;"/><br /><sub><b>Martín Peveri</b></sub>](https://github.com/mapeveri) | [<img src="https://avatars.githubusercontent.com/u/25895176?v=3" width="100px;"/><br /><sub><b>Adorifski</b></sub>](https://github.com/afdolriski) | [<img src="https://avatars.githubusercontent.com/u/1970073?v=3" width="100px;"/><br /><sub><b>Abram C. Isola</b></sub>](https://github.com/aisola) | [<img src="https://avatars.githubusercontent.com/u/41387624?v=3" width="100px;"/><br /><sub><b>Raphael Schubert</b></sub>](https://github.com/rfschubert) | [<img src="https://avatars.githubusercontent.com/u/16268619?v=3" width="100px;"/><br /><sub><b>Mitch Dennett</b></sub>](https://github.com/mitchdennett) |
+<table>
+  <tr>
+     <td align="center"><a href="http://docs.masoniteproject.com"><img src="https://avatars1.githubusercontent.com/u/20172538?v=4" width="100px;" alt="Joseph Mancuso"/><br /><sub><b>Joseph Mancuso</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=josephmancuso" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Ajosephmancuso" title="Bug reports">🐛</a> <a href="#question-josephmancuso" title="Answering Questions">💬</a> <a href="#ideas-josephmancuso" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://vaibhavmule.com"><img src="https://avatars0.githubusercontent.com/u/6290791?v=4" width="100px;" alt="Vaibhav Mule"/><br /><sub><b>Vaibhav Mule</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=vaibhavmule" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Avaibhavmule" title="Bug reports">🐛</a> <a href="#question-vaibhavmule" title="Answering Questions">💬</a> <a href="#ideas-vaibhavmule" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://martinpeveri.wordpress.com"><img src="https://avatars3.githubusercontent.com/u/6276555?v=4" width="100px;" alt="Martín Peveri"/><br /><sub><b>Martín Peveri</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=mapeveri" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Amapeveri" title="Bug reports">🐛</a> <a href="#question-mapeveri" title="Answering Questions">💬</a> <a href="#ideas-mapeveri" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://tonyhammack.com"><img src="https://avatars0.githubusercontent.com/u/10157988?v=4" width="100px;" alt="Tony Hammack"/><br /><sub><b>Tony Hammack</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=hammacktony" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Ahammacktony" title="Bug reports">🐛</a> <a href="#question-hammacktony" title="Answering Questions">💬</a> <a href="#ideas-hammacktony" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://inkit.io"><img src="https://avatars0.githubusercontent.com/u/1970073?v=4" width="100px;" alt="Abram C. Isola"/><br /><sub><b>Abram C. Isola</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=aisola" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Aaisola" title="Bug reports">🐛</a> <a href="#question-aisola" title="Answering Questions">💬</a> <a href="#ideas-aisola" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://www.mitchdennett.com"><img src="https://avatars0.githubusercontent.com/u/16268619?v=4" width="100px;" alt="Mitch Dennett"/><br /><sub><b>Mitch Dennett</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=mitchdennett" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Amitchdennett" title="Bug reports">🐛</a> <a href="#question-mitchdennett" title="Answering Questions">💬</a> <a href="#ideas-mitchdennett" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://marlysson.github.io"><img src="https://avatars3.githubusercontent.com/u/4117999?v=4" width="100px;" alt="Marlysson Silva"/><br /><sub><b>Marlysson Silva</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=Marlysson" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3AMarlysson" title="Bug reports">🐛</a> <a href="#question-Marlysson" title="Answering Questions">💬</a> <a href="#ideas-Marlysson" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/christopher-byrd-49726691"><img src="https://avatars2.githubusercontent.com/u/7581926?v=4" width="100px;" alt="Christopher Byrd"/><br /><sub><b>Christopher Byrd</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=ChrisByrd14" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3AChrisByrd14" title="Bug reports">🐛</a> <a href="#question-ChrisByrd14" title="Answering Questions">💬</a> <a href="#ideas-ChrisByrd14" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/bjorntheart"><img src="https://avatars1.githubusercontent.com/u/53244?v=4" width="100px;" alt="Björn Theart"/><br /><sub><b>Björn Theart</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=bjorntheart" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Abjorntheart" title="Bug reports">🐛</a> <a href="#question-bjorntheart" title="Answering Questions">💬</a> <a href="#ideas-bjorntheart" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://nioperas06.github.io"><img src="https://avatars1.githubusercontent.com/u/11293401?v=4" width="100px;" alt="Junior Gantin"/><br /><sub><b>Junior Gantin</b></sub></a><br /><a href="https://github.com/MasoniteFramework/masonite/commits?author=nioperas06" title="Code">💻</a> <a href="https://github.com/MasoniteFramework/masonite/issues?q=author%3Anioperas06" title="Bug reports">🐛</a> <a href="#question-nioperas06" title="Answering Questions">💬</a> <a href="#ideas-nioperas06" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+Thank you for those who have contributed to Masonite!
+
 
 ## License
 

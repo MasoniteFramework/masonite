@@ -148,4 +148,4 @@ class WebGuard(AuthenticationGuard):
             user {dict} -- A dictionary of user data information.
         """
         user['password'] = bcrypt_password(user['password'])
-        self.auth_model.create(**user)
+        return self.auth_model.create(**user)

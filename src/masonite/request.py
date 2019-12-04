@@ -809,6 +809,9 @@ class Request(Extendable):
             return
 
         for key, value in self.all().items():
+            if isinstance(value, bytes):
+                continue
+
             self.session.flash(key, value)
 
     def is_named_route(self, name, params={}):

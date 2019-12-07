@@ -64,7 +64,7 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name, default=False, clean=True):
+    def input(self, name, default=False, clean=False):
         """Get a specific input value.
 
         Arguments:

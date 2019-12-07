@@ -320,6 +320,10 @@ class BaseHttpRoute:
                 middleware_to_run, arguments = arg.split(':')
                 # Splits "name:value1,value2" into ['value1', 'value2']
                 arguments = arguments.split(',')
+                for index, argument in enumerate(arguments):
+                    if argument.startswith('@'):
+                        _, argument = argument.split('@')
+                        arguments[index] = self.request.param(argument)
             else:
                 middleware_to_run = arg
                 arguments = []

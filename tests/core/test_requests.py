@@ -686,7 +686,7 @@ class TestRequest(unittest.TestCase):
 
     def test_request_gets_only_clean_output(self):
         self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
-        self.assertEqual(self.request.input('key'), '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
+        self.assertEqual(self.request.input('key', clean=True), '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
         self.assertEqual(self.request.input('key', clean=False), '<img """><script>alert(\'hey\')</script>">')
 
     def test_request_cleans_all_optionally(self):

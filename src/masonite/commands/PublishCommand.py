@@ -15,7 +15,7 @@ class PublishCommand(Command):
     def handle(self):
         from wsgi import container
 
-        for provider in config('providers.providers'):
+        for provider in container.make('Providers'):
             if provider.__class__.__name__ == self.argument('name'):
                 if self.option('tag') != 'None':
                     provider.publish(tag=self.option('tag'))

@@ -4,6 +4,7 @@ from masonite.auth import Auth
 from masonite.request import Request
 from masonite.view import View
 from masonite.helpers import config
+from masonite.validation import Validator
 
 
 class LoginController:
@@ -28,7 +29,7 @@ class LoginController:
             return request.redirect('/home')
         return view.render('auth/login', {'app': config('application'), 'Auth': auth})
 
-    def store(self, request: Request, auth: Auth):
+    def store(self, request: Request, auth: Auth, validate: Validator):
         """Login the user.
 
         Arguments:
@@ -38,6 +39,20 @@ class LoginController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
+        errors = request.validate(
+            validate.required(['email', 'password']),
+            validate.email('email'),
+            # TODO: only available in masonite latest versions (which are not compatible with Masonite 2.2)
+            # validate.strong('password', length=8, special=1, uppercase=1)
+        )
+
+        if errors:
+            request.session.flash('errors', {
+                'email': errors.get('email', None),
+                'password': errors.get('password', None)
+            })
+            return request.back()
+
         if auth.login(request.input('email'), request.input('password')):
             return request.redirect('/home')
 

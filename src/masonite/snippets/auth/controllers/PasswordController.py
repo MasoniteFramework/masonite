@@ -7,6 +7,7 @@ from masonite.auth import Auth
 from masonite.helpers import config, password as bcrypt_password
 from masonite.request import Request
 from masonite.view import View
+from masonite.validation import Validator
 from config.auth import AUTH
 
 
@@ -22,7 +23,18 @@ class PasswordController:
         if user:
             return view('auth/reset', {'token': token, 'app': config('application'), 'Auth': auth})
 
-    def send(self, request: Request, session: Session, mail: Mail):
+    def send(self, request: Request, session: Session, mail: Mail, validate: Validator):
+        errors = request.validate(
+            validate.required(['email']),
+            validate.email('email')
+        )
+
+        if errors:
+            request.session.flash('errors', {
+                'email': errors.get('email', None),
+            })
+            return request.back()
+
         email = request.input('email')
         user = AUTH['model'].where('email', email).first()
 
@@ -38,7 +50,19 @@ class PasswordController:
             session.flash('error', 'Could not send reset email. Please enter correct email.')
             return request.redirect('/password')
 
-    def update(self, request: Request):
+    def update(self, request: Request, validate: Validator):
+        errors = request.validate(
+            validate.required(['password']),
+            # TODO: only available in masonite latest versions (which are not compatible with Masonite 2.2)
+            # validate.strong('password', length=8, special=1, uppercase=1)
+        )
+
+        if errors:
+            request.session.flash('errors', {
+                'password': errors.get('password', None)
+            })
+            return request.back()
+
         user = AUTH['model'].where('remember_token', request.param('token')).first()
         if user:
             user.password = bcrypt_password(request.input('password'))

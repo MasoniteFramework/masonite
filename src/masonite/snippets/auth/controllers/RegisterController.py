@@ -26,7 +26,7 @@ class RegisterController:
         """
         return view.render('auth/register', {'app': application, 'Auth': auth})
 
-    def store(self, request: Request, mail_manager: MailManager, auth: Auth):
+    def store(self, request: Request, mail_manager: MailManager, auth: Auth, validate: Validator):
         """Register the user with the database.
 
         Arguments:
@@ -35,6 +35,21 @@ class RegisterController:
         Returns:
             masonite.request.Request -- The Masonite request class.
         """
+        errors = request.validate(
+            validate.required(['name', 'email', 'password']),
+            validate.email('email'),
+            # TODO: only available in masonite latest versions (which are not compatible with Masonite 2.2)
+            # validate.strong('password', length=8, special=1, uppercase=1)
+        )
+
+        if errors:
+            request.session.flash('errors', {
+                'name': errors.get('name', None),
+                'email': errors.get('email', None),
+                'password': errors.get('password', None)
+            })
+            return request.back()
+
         user = auth.register({
             'name': request.input('name'),
             'password': request.input('password'),

@@ -1,13 +1,9 @@
 
-
-
-
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
 </p>
 
 <p align="center">
-
 <img src="https://travis-ci.org/MasoniteFramework/masonite.svg?branch=master">
 <img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
 <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">

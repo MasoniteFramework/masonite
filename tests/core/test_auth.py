@@ -10,8 +10,8 @@ from src.masonite.drivers import AuthJwtDriver
 from src.masonite.helpers import password as bcrypt_password
 from src.masonite.routes import Get
 from src.masonite.request import Request
-from app.http.controllers.ConfirmController import \
-    ConfirmController
+from app.http.controllers.EmailVerificationController import \
+    EmailVerificationController
 from src.masonite.testing import TestCase
 from src.masonite.testing import generate_wsgi
 from src.masonite.view import View
@@ -168,9 +168,9 @@ class TestAuth(TestCase):
             self.app.make('Request').load_app(self.app)
 
             # Create the route
-            route = Get('/email/verify/@id', ConfirmController.confirm_email)
+            route = Get('/email/verify/@id', EmailVerificationController.confirm_email)
 
-            ConfirmController.get_user = User
+            EmailVerificationController.get_user = User
 
             # Resolve the controller constructor
             controller = self.app.resolve(route.controller)
@@ -195,9 +195,9 @@ class TestAuth(TestCase):
             self.app.make('Request').load_app(self.app)
 
             # Create the route
-            route = Get('/email/verify/@id', ConfirmController.confirm_email)
+            route = Get('/email/verify/@id', EmailVerificationController.confirm_email)
 
-            ConfirmController.get_user = User
+            EmailVerificationController.get_user = User
 
             # Resolve the controller constructor
             controller = self.app.resolve(route.controller)

@@ -25,9 +25,9 @@ class AuthCommand(Command):
             f.write("Get().route('/register', 'auth.RegisterController@show').name('register'),\n    ")
             f.write("Post().route('/register', 'auth.RegisterController@store'),\n    ")
             f.write("Get().route('/home', 'auth.HomeController@show').name('home'),\n    ")
-            f.write("Get().route('/email/verify', 'auth.ConfirmController@verify_show').name('verify'),\n    ")
-            f.write("Get().route('/email/verify/@id:signed', 'auth.ConfirmController@confirm_email'),\n    ")
-            f.write("Get().route('/email/verify/@id:signed', 'auth.ConfirmController@confirm_email'),\n    ")
+            f.write("Get().route('/email/verify', 'auth.EmailVerificationController@verify_show').name('verify'),\n    ")
+            f.write("Get().route('/email/verify/@id:signed', 'auth.EmailVerificationController@confirm_email'),\n    ")
+            f.write("Get().route('/email/verify/@id:signed', 'auth.EmailVerificationController@confirm_email'),\n    ")
             f.write("Get().route('/password', 'auth.PasswordController@forget').name('forgot.password'),\n    ")
             f.write("Post().route('/password', 'auth.PasswordController@send'),\n    ")
             f.write("Get().route('/password/@token/reset', 'auth.PasswordController@reset').name('password.reset'),\n    ")
@@ -41,8 +41,8 @@ class AuthCommand(Command):
                         os.getcwd() + "/app/http/controllers/auth/RegisterController.py")
         shutil.copyfile(module_path + "/../snippets/auth/controllers/HomeController.py",
                         os.getcwd() + "/app/http/controllers/auth/HomeController.py")
-        shutil.copyfile(module_path + "/../snippets/auth/controllers/ConfirmController.py",
-                        os.getcwd() + "/app/http/controllers/auth/ConfirmController.py")
+        shutil.copyfile(module_path + "/../snippets/auth/controllers/EmailVerificationController.py",
+                        os.getcwd() + "/app/http/controllers/auth/EmailVerificationController.py")
         shutil.copyfile(module_path + "/../snippets/auth/controllers/PasswordController.py",
                         os.getcwd() + "/app/http/controllers/auth/PasswordController.py")
         # move templates

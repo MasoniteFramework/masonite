@@ -1,4 +1,4 @@
-"""The ConfirmController Module."""
+"""The EmailVerificationController Module."""
 import datetime
 
 from src.masonite.auth import Auth, MustVerifyEmail
@@ -9,25 +9,24 @@ from src.masonite.view import View
 from src.masonite.helpers import config
 
 
-class ConfirmController:
-    """The ConfirmController class."""
+class EmailVerificationController:
+    """The EmailVerificationController class."""
 
     def __init__(self):
-        """The ConfirmController Constructor."""
+        """The EmailVerificationController Constructor."""
         pass
 
     def verify_show(self, view: View, auth: Auth):
         """Show the Verify Email page for unverified users.
 
         Arguments:
-            request {masonite.request.request} -- The Masonite request class.
             request {masonite.view.view} -- The Masonite view class.
             request {masonite.auth.auth} -- The Masonite Auth class.
 
         Returns:
             [type] -- [description]
         """
-        return view.render('auth/verify', {'app': config('application'), 'Auth': auth})
+        return view.render('auth/email-verification-sent', {'app': config('application'), 'Auth': auth})
 
     def confirm_email(self, request: Request, view: View, auth: Auth):
         """Confirm User email and show the correct response.
@@ -57,9 +56,9 @@ class ConfirmController:
                         user.verified_at = datetime.datetime.now()
                         user.save()
 
-                        return view.render('auth/confirm', {'app': config('application'), 'Auth': auth})
+                        return view.render('auth/email-verification-success', {'app': config('application'), 'Auth': auth})
 
-        return view.render('auth/error', {'app': config('application'), 'Auth': auth})
+        return view.render('auth/email-verification-error', {'app': config('application'), 'Auth': auth})
 
     def send_verify_email(self, manager: MailManager, request: Request):
         user = request.user()

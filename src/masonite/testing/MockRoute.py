@@ -1,7 +1,7 @@
-from ..request import Request
-from .generate_wsgi import generate_wsgi
 import json
+
 from ..helpers import Dot
+from ..request import Request
 
 
 class MockRoute:
@@ -21,10 +21,10 @@ class MockRoute:
         return self.route.controller == controller
 
     def contains(self, value):
-        return value in self.container.make('Response')
+        return value in self.container.make('Response').decode('utf-8')
 
     def assertContains(self, value):
-        assert value in self.container.make('Response'), "Response does not contain {}".format(value)
+        assert self.contains(value), "Response does not contain {}".format(value)
         return self
 
     def assertNotFound(self):
@@ -34,15 +34,19 @@ class MockRoute:
         return '200 OK' in self.container.make('Request').get_status_code()
 
     def canView(self):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
+        return self.ok()
 
-        return self.container.make('Request').get_status_code() == '200 OK'
+    def get_string_response(self):
+        response = self.container.make('Response')
+
+        if isinstance(response, str):
+            return response
+
+        return response.decode('utf-8')
 
     def hasJson(self, key, value=''):
-        response = json.loads(self.container.make('Response'))
+
+        response = json.loads(self.get_string_response())
         if isinstance(key, dict):
             for item_key, key_value in key.items():
                 if not Dot().dot(item_key, response, False) == key_value:
@@ -51,7 +55,7 @@ class MockRoute:
         return Dot().dot(key, response, False)
 
     def assertHasJson(self, key, value):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         if isinstance(key, dict):
             for item_key, key_value in key.items():
                 assert Dot().dot(item_key, response, False) == key_value
@@ -60,7 +64,7 @@ class MockRoute:
         return self
 
     def assertJsonContains(self, key, value):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         if not isinstance(response, list):
             raise ValueError("This method can only be used if the response is a list of elements.")
 
@@ -75,10 +79,10 @@ class MockRoute:
         return self
 
     def count(self, amount):
-        return len(json.loads(self.container.make('Response'))) == amount
+        return len(json.loads(self.get_string_response())) == amount
 
     def assertCount(self, amount):
-        response_amount = len(json.loads(self.container.make('Response')))
+        response_amount = len(json.loads(self.get_string_response()))
         assert response_amount == amount, 'Response has an count of {}. Asserted {}'.format(response_amount, amount)
         return self
 
@@ -86,14 +90,14 @@ class MockRoute:
         return self.count(amount)
 
     def hasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             return len(response[key]) == amount
         except TypeError:
             raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
 
     def assertHasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             assert len(response[key]) == amount, '{} is not equal to {}'.format(len(response[key]), amount)
         except TypeError:
@@ -102,7 +106,7 @@ class MockRoute:
         return self
 
     def assertNotHasAmount(self, key, amount):
-        response = json.loads(self.container.make('Response'))
+        response = json.loads(self.get_string_response())
         try:
             assert not len(response[key]) == amount, '{} is equal to {} but should not be'.format(len(response[key]), amount)
         except TypeError:
@@ -135,10 +139,6 @@ class MockRoute:
         return self
 
     def hasSession(self, key):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
         return self.container.make('Session').has(key)
 
     def assertParameterIs(self, key, value):
@@ -158,7 +158,14 @@ class MockRoute:
         return self
 
     def assertHasHeader(self, key):
-        pass
+        request = self.container.make('Request')
+        assert request.header(key), "Header '{}' does not exist".format(key)
+        return self
+
+    def assertNotHasHeader(self, key):
+        request = self.container.make('Request')
+        assert not request.header(key), "Header '{}' exists but asserting it should not".format(key)
+        return self
 
     def assertHeaderIs(self, key, value):
         request = self.container.make('Request')
@@ -172,10 +179,6 @@ class MockRoute:
         return True
 
     def session(self, key):
-        wsgi = generate_wsgi()
-        wsgi['PATH_INFO'] = self.route.route_url
-        wsgi['RAW_URI'] = self.route.route_url
-        self.container = self._run_container(wsgi).container
         return self.container.make('Session').get(key)
 
     def on_make(self, obj, method):
@@ -185,9 +188,6 @@ class MockRoute:
     def on_resolve(self, obj, method):
         self.container.on_resolve(obj, method)
         return self
-
-    def _run_container(self, wsgi):
-        return TestSuite().create_container(wsgi, container=self.container)
 
     def _bind_user_to_request(self, request, container):
         request.set_user(self._user)
@@ -213,7 +213,19 @@ class MockRoute:
 
     @property
     def response(self):
-        return self.container.make('Response')
+        """Gets the string response from the container. This isinstance check here
+        is to support Python 3.5. Once python3.5 goes away we can can remove this check.
+
+        @required for 3.5
+
+        Returns:
+            string
+        """
+        response = self.get_string_response()
+        if isinstance(response, str):
+            return response
+
+        return response.decode('utf-8')
 
     def asDictionary(self):
         try:

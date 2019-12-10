@@ -73,7 +73,7 @@ class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                     getattr(obj, callback), *args, **kwargs)
             except AttributeError:
                 # Could be wanting to call only a method asyncronously
-                future = processor.submit(fn=obj, *args, **kwargs)
+                future = processor.submit(obj, *args, **kwargs)
 
             ran.append(future)
 

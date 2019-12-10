@@ -90,6 +90,24 @@ class TestRequest(unittest.TestCase):
         }
         self.assertEqual(self.request.input('user.address.*.id'), [1, 2])
         self.assertEqual(self.request.input('user.address.*.street'), ['A Street', 'B Street'])
+    
+    def test_request_input_parses_query_string(self):
+        query_string = "filter=name"
+        self.request._set_standardized_request_variables(query_string)
+        self.request._set_standardized_request_variables(query_string)
+        self.assertEqual(self.request.input('filter'), 'name')
+
+        query_string = "filter=name&user=Joe"
+        self.request._set_standardized_request_variables(query_string)
+        self.assertEqual(self.request.input('filter'), 'name')
+        self.assertEqual(self.request.input('user'), 'Joe')
+
+        query_string = "filter[name]=Joe&filter[email]=user@email.com"
+        self.request._set_standardized_request_variables(query_string)
+        self.assertEqual(self.request.input('filter')['name'], 'Joe')
+        self.assertEqual(self.request.input('filter.name'), 'Joe')
+        self.assertEqual(self.request.input('filter')['email'], 'user@email.com')
+        self.assertEqual(self.request.input('filter.email'), 'user@email.com')
 
     def test_request_sets_and_gets_cookies(self):
         self.request.cookie('setcookie', 'value')
@@ -668,7 +686,7 @@ class TestRequest(unittest.TestCase):
 
     def test_request_gets_only_clean_output(self):
         self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
-        self.assertEqual(self.request.input('key'), '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
+        self.assertEqual(self.request.input('key', clean=True), '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
         self.assertEqual(self.request.input('key', clean=False), '<img """><script>alert(\'hey\')</script>">')
 
     def test_request_cleans_all_optionally(self):

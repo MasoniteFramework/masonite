@@ -5,3 +5,8 @@ include src/masonite/snippets/migrations/*
 include src/masonite/snippets/scaffold/*
 include src/masonite/snippets/auth/controllers/*
 include src/masonite/snippets/auth/templates/auth/*
+
+include src/masonite/commands/presets/bootstrap-stubs/*
+include src/masonite/commands/presets/react-stubs/*
+include src/masonite/commands/presets/remove-stubs/*
+include src/masonite/commands/presets/vue-stubs/*

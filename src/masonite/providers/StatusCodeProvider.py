@@ -1,8 +1,10 @@
 """A StatusProvider Service Provider."""
 
-from ..response import Response
-from ..provider import ServiceProvider
+import json
+
 from ..helpers import config
+from ..provider import ServiceProvider
+from ..response import Response
 
 
 class ServerErrorExceptionHook:
@@ -36,9 +38,10 @@ class StatusCodeProvider(ServiceProvider):
             return
 
         if request.get_status() in (500, 405, 404):
-            if request.header('Content-Type') == 'application/json':
+            if 'application/json' in request.header('Content-Type'):
                 # Returns json response when we want the client to receive a json response
-                json_response = {'error': {'status': request.get_status()}}
+                body = json.loads(self.app.make('Response').decode('utf-8'))
+                json_response = {'error': {'status': request.get_status(), 'body': body}}
                 response.view(json_response, status=request.get_status())
             else:
                 # Returns html response when json is not explicitly specified

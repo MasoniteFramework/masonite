@@ -18,21 +18,10 @@ class AuthCommand(Command):
 
         with open('routes/web.py', 'a') as f:
             # add all the routes
-            f.write('\nROUTES = ROUTES + [\n    ')
-            f.write("Get().route('/login', 'auth.LoginController@show').name('login'),\n    ")
-            f.write("Get().route('/logout', 'auth.LoginController@logout').name('logout'),\n    ")
-            f.write("Post().route('/login', 'auth.LoginController@store'),\n    ")
-            f.write("Get().route('/register', 'auth.RegisterController@show').name('register'),\n    ")
-            f.write("Post().route('/register', 'auth.RegisterController@store'),\n    ")
-            f.write("Get().route('/home', 'auth.HomeController@show').name('home'),\n    ")
-            f.write("Get().route('/email/verify', 'auth.EmailVerificationController@verify_show').name('verify'),\n    ")
-            f.write("Get().route('/email/verify/@id:signed', 'auth.EmailVerificationController@confirm_email'),\n    ")
-            f.write("Get().route('/email/verify/@id:signed', 'auth.EmailVerificationController@confirm_email'),\n    ")
-            f.write("Get().route('/password', 'auth.PasswordController@forget').name('forgot.password'),\n    ")
-            f.write("Post().route('/password', 'auth.PasswordController@send'),\n    ")
-            f.write("Get().route('/password/@token/reset', 'auth.PasswordController@reset').name('password.reset'),\n    ")
-            f.write("Post().route('/password/@token/reset', 'auth.PasswordController@update'),\n")
-            f.write(']\n')
+            f.write("\nfrom masonite.auth import Auth \n")
+            f.write("ROUTES += Auth.routes()")
+            f.write('\n')
+
 
         # move controllers
         shutil.copyfile(module_path + "/../snippets/auth/controllers/LoginController.py",

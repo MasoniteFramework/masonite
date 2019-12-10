@@ -22,6 +22,7 @@ setup(
         'masonite.providers',
         'masonite.listeners',
         'masonite.commands',
+        'masonite.commands.presets',
         'masonite.controllers',
         'masonite.drivers',
         'masonite.drivers.authentication',
@@ -65,7 +66,7 @@ setup(
     package_dir={'': 'src'},
     url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
-    licence=meta['__licence__'],
+    license=meta['__licence__'],
     python_requires=">=3.5",
     classifiers=[
         'Development Status :: 4 - Beta',

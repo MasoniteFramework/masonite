@@ -215,7 +215,7 @@ class BaseHttpRoute:
             tb = traceback.extract_tb(exc_tb)[-1]
             print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
                 get_controller, str(e), tb[0], tb[1]), '\033[0m')
-        except Exception:  # skipcq
+        except Exception as e:  # skipcq
             import sys
             import traceback
             _, _, exc_tb = sys.exc_info()
@@ -320,6 +320,10 @@ class BaseHttpRoute:
                 middleware_to_run, arguments = arg.split(':')
                 # Splits "name:value1,value2" into ['value1', 'value2']
                 arguments = arguments.split(',')
+                for index, argument in enumerate(arguments):
+                    if argument.startswith('@'):
+                        _, argument = argument.split('@')
+                        arguments[index] = self.request.param(argument)
             else:
                 middleware_to_run = arg
                 arguments = []

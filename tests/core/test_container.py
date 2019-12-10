@@ -109,8 +109,15 @@ class TestContainer(unittest.TestCase):
         with self.assertRaises(AttributeError):
             self.app.collect('Sentry')
 
-    def test_container_collects_correct_subclasses_of_objects(self):
+    def test_container_collects_correct_subclasses_of_classes(self):
         self.app.bind('GetAnotherObject', GetAnotherObject)
+        objects = self.app.collect(MockObject)
+
+        self.assertIn('GetAnotherObject', objects)
+        self.assertIn('GetObject', objects)
+
+    def test_container_collects_correct_subclasses_of_objects(self):
+        self.app.bind('GetAnotherObject', GetAnotherObject())
         objects = self.app.collect(MockObject)
 
         self.assertIn('GetAnotherObject', objects)

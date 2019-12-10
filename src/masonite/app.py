@@ -233,7 +233,7 @@ class App:
                             "There is no '*' in your collection search")
         else:
             for provider_key, provider_class in self.providers.items():
-                if inspect.isclass(provider_class) and issubclass(provider_class, search):
+                if (inspect.isclass(provider_class) and issubclass(provider_class, search)) or isinstance(provider_class, search):
                     providers.update({provider_key: provider_class})
 
         return providers

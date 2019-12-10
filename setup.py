@@ -7,7 +7,7 @@ meta = {}
 with open(os.path.join(here, 'masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
-with open('README.md', 'r') as f:
+with open('README.md', 'r', encoding='utf-8') as f:
     readme = f.read()
 
 setup(

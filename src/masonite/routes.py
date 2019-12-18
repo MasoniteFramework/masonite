@@ -128,6 +128,7 @@ class BaseHttpRoute:
         self.module_location = 'app.http.controllers'
         self.list_middleware = []
         self.default_parameters = {}
+        self.e = False
 
     def default(self, dictionary):
         self.default_parameters.update(dictionary)
@@ -213,6 +214,7 @@ class BaseHttpRoute:
             import traceback
             _, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
+            self.e = e
             print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
                 get_controller, str(e), tb[0], tb[1]), '\033[0m')
         except Exception as e:  # skipcq
@@ -220,10 +222,14 @@ class BaseHttpRoute:
             import traceback
             _, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
+            self.e = e
             print('\033[93mTrouble importing controller!', str(e), '\033[0m')
 
     def get_response(self):
         # Resolve Controller Constructor
+        if self.e:
+            raise SyntaxError(str(self.e))
+
         controller = self.request.app().resolve(self.controller)
 
         # Resolve Controller Method

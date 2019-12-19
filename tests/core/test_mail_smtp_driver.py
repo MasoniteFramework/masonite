@@ -6,7 +6,7 @@ from src.masonite.environment import LoadEnvironment
 from src.masonite.managers.MailManager import MailManager
 from src.masonite.view import View
 import unittest
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 
 LoadEnvironment()
 

@@ -4,7 +4,6 @@ from ..commands.presets.React import React
 from ..commands.presets.Vue import Vue
 from ..commands.presets.Bootstrap import Bootstrap
 from ..commands.presets.Remove import Remove
-from ..commands.presets.Tailwindcss import Tailwindcss
 
 
 class PresetCommand(Command):
@@ -18,7 +17,7 @@ class PresetCommand(Command):
     def handle(self):
         self.info('Scaffolding Application ...')
         preset_name = self.argument('name')
-        if preset_name not in ['react', 'vue', 'remove', 'bootstrap', 'tailwindcss']:
+        if preset_name not in ['react', 'vue', 'remove', 'bootstrap']:
             raise ValueError('Invalid preset')
         return getattr(self, preset_name)()
 
@@ -43,10 +42,4 @@ class PresetCommand(Command):
         """Add Bootstrap Sass scafolding"""
         Bootstrap().install()
         self.info('Bootstrap scaffolding installed successfully.')
-        self.comment('Please run "npm install && npm run dev" to compile your fresh scaffolding.')
-
-    def tailwindcss(self):
-        """Add Tailwind CSS scafolding"""
-        Tailwindcss().install()
-        self.info('Tailwind CSS scaffolding installed successfully.')
         self.comment('Please run "npm install && npm run dev" to compile your fresh scaffolding.')

@@ -79,6 +79,24 @@ class BaseMailDriver(BaseDriver, Responsable):
         self.from_address = address
         return self
 
+    def mailable(self, mailable):
+        """Set the from address of who the sender should be.
+
+        Arguments:
+            address {string} -- A name used as the From field in an email.
+
+        Returns:
+            self
+        """
+        mailable = self.app.resolve(mailable.build)
+        (self
+            .to(mailable._to)
+            .send_from(mailable._from)
+            .subject(mailable._subject)
+            .template(mailable.template, mailable.variables)
+            .reply_to(mailable._reply_to))
+        return self
+
     def subject(self, subject):
         """Set the subject of an email.
 

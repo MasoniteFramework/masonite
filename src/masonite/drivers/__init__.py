@@ -1,5 +1,6 @@
 from .BaseDriver import BaseDriver
 from .mail.BaseMailDriver import BaseMailDriver
+from .mail.Mailable import Mailable
 from .authentication.AuthCookieDriver import AuthCookieDriver
 from .authentication.AuthJwtDriver import AuthJwtDriver
 from .upload.BaseUploadDriver import BaseUploadDriver

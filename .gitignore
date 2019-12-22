@@ -22,3 +22,4 @@ tests/bootstrap/cache/*.txt
 .coverage
 .idea/
 masonite.db
+tests/uploads

@@ -55,7 +55,7 @@ setup(
         'requests>=2.0,<2.99',
         'tabulate>=0.8,<0.9',
         'tldextract>=2.2,<2.3',
-        'whitenoise>=3.3',
+        'whitenoise>=3.3,<5',
     ],
     description=meta['__description__'],
     long_description_content_type='text/markdown',

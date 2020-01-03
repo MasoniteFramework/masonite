@@ -149,6 +149,11 @@ class Response(Extendable):
         Returns:
             string|dict|list -- Returns the data to be returned.
         """
+
+        if isinstance(view, tuple):
+            view, status = view
+            self.request.status(status)
+
         if not self.request.get_status():
             self.request.status(status)
 

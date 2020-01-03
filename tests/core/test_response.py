@@ -58,6 +58,9 @@ class MockController:
     def single_paginator(self):
         return Paginator(User.find(1), 10)
 
+    def change_response(self):
+        return 'created', 201
+
 
 class TestResponse(TestCase):
 
@@ -77,6 +80,7 @@ class TestResponse(TestCase):
             Get('/single_paginator', MockController.single_paginator),
             Get('/single', MockController.single),
             Get('/length_aware', MockController.length_aware),
+            Get('/change/response', MockController.change_response),
         ])
     
     def setUpFactories(self):
@@ -217,3 +221,6 @@ class TestResponse(TestCase):
                 .assertHasJson('current_page', 1)
                 .assertHasJson('from', 1)
                 .assertHasJson('to', 10))
+
+    def test_can_change_response_when_returning_tuple(self):
+        self.json('GET', '/change/response').assertContains('created').assertIsStatus(201)

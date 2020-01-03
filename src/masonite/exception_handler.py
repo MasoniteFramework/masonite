@@ -10,15 +10,16 @@ import platform
 import sys
 import traceback
 
+from exceptionite.errors import (Handler, SolutionsIntegration,
+                                 StackOverflowIntegration)
+
 from .app import App
 from .exceptions import DumpException
+from .helpers import config
+from .listeners import BaseExceptionListener
 from .request import Request
 from .response import Response
 from .view import View
-from .helpers import config
-from .listeners import BaseExceptionListener
-from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
-# print(Handler)
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -90,7 +91,6 @@ class ExceptionHandler:
             StackOverflowIntegration(),
         )
         response.view(handler.render(), status=500)
-
 
 
 class DD:

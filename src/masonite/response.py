@@ -153,7 +153,6 @@ class Response(Extendable):
         if isinstance(view, tuple):
             view, status = view
             self.request.status(status)
-        
 
         if not self.request.get_status():
             self.request.status(status)

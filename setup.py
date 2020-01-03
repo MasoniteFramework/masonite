@@ -57,7 +57,7 @@ setup(
         'tabulate>=0.8,<0.9',
         'tldextract>=2.2,<2.3',
         'whitenoise>=3.3',
-        'masonite-errors',
+        'exceptionite',
     ],
     description=meta['__description__'],
     long_description=readme,

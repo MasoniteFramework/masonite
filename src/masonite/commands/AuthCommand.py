@@ -3,6 +3,7 @@ import os
 import shutil
 
 from cleo import Command
+from ..helpers.filesystem import make_directory
 
 
 class AuthCommand(Command):
@@ -21,6 +22,8 @@ class AuthCommand(Command):
             f.write("\nfrom masonite.auth import Auth \n")
             f.write("ROUTES += Auth.routes()")
             f.write('\n')
+
+        make_directory(os.path.join(os.getcwd(), 'app/http/controllers/auth/LoginController.py'))
 
         # move controllers
         shutil.copyfile(module_path + "/../snippets/auth/controllers/LoginController.py",

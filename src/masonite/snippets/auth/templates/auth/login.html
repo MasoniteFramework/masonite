@@ -15,10 +15,24 @@
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="text" class="form-control form-control-md rounded-0" name="email">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('email').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="password" class="form-control form-control-md rounded-0" name="password">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('password').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <a href="{{ route('forgot.password') }}">
                                 <button type="button" class="btn btn-primary btn-md ml-2 float-right">Forgot

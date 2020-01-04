@@ -15,14 +15,35 @@
                             <div class="form-group">
                                 <label for="">Username</label>
                                 <input type="text" name="name" class="form-control form-control-md rounded-0">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('name').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="email" name="email" class="form-control form-control-md rounded-0">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('email').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="password" name="password" class="form-control form-control-md rounded-0">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('password').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <button type="submit" class="btn btn-success btn-md float-right">Register
                             </button>

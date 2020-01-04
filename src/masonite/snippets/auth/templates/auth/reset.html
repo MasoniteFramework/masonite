@@ -25,6 +25,13 @@
                             <div class="form-group">
                                 <label for="">New Password</label>
                                 <input type="password" class="form-control form-control-md rounded-0" name="password">
+                                {% if session().has('errors') %}
+                                    {% for error in session().get('errors').get('password').items() %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <button type="submit" class="btn btn-success btn-md float-right">Reset</button>
                         </form>

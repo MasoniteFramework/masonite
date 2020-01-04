@@ -1,6 +1,5 @@
 """Publish Service Providers"""
 from cleo import Command
-from ..helpers import config
 
 
 class PublishCommand(Command):

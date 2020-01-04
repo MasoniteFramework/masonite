@@ -6,7 +6,6 @@ code in a Masonite application. These errors could are thrown during runtime.
 
 import inspect
 import os
-import platform
 import sys
 import traceback
 

@@ -14,7 +14,7 @@ class LoginController:
         """LoginController Constructor."""
         pass
 
-    def show(self, request: Request, view: View, auth: Auth):
+    def show(self, request: Request, view: View, auth: Auth, validator: Validator):
         """Show the login page.
 
         Arguments:
@@ -27,7 +27,8 @@ class LoginController:
         """
         if request.user():
             return request.redirect('/home')
-        return view.render('auth/login', {'app': config('application'), 'Auth': auth})
+
+        return view.render('auth/login')
 
     def store(self, request: Request, auth: Auth, validate: Validator):
         """Login the user.
@@ -42,21 +43,17 @@ class LoginController:
         errors = request.validate(
             validate.required(['email', 'password']),
             validate.email('email'),
-            # TODO: only available in masonite latest versions (which are not compatible with Masonite 2.2)
-            # validate.strong('password', length=8, special=1, uppercase=1)
         )
 
         if errors:
-            request.session.flash('errors', {
-                'email': errors.get('email', None),
-                'password': errors.get('password', None)
-            })
-            return request.back()
+            return request.back().with_errors(errors).with_input()
 
         if auth.login(request.input('email'), request.input('password')):
             return request.redirect('/home')
 
-        return request.redirect('/login')
+        return request.back().with_errors({
+            'email': ["Email or password is incorrect"]
+        })
 
     def logout(self, request: Request, auth: Auth):
         """Log out the user.

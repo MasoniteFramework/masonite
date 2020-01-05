@@ -47,7 +47,7 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
 
         if self._queue:
             from wsgi import container
-            from .. import Queue
+            from ... import Queue
             container.make(Queue).push(
                 self._send_mail,
                 args=(self.config.FROM['name'], self.to_address, message.as_string())

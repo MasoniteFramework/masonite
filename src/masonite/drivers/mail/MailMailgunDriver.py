@@ -20,7 +20,7 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
 
         if self._queue:
             from wsgi import container
-            from .. import Queue
+            from ... import Queue
             return container.make(Queue).push(self._send_mail, args=(message,))
 
         return self._send_mail(message)
@@ -44,8 +44,8 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
             "https://api.mailgun.net/v3/{0}/messages".format(domain),
             auth=("api", secret),
             data={
-                "from": "{0} <mailgun@{1}>".format(self.config.FROM['name'], domain),
-                "to": [self.to_address, "{0}".format(self.config.FROM['address'])],
+                "from": "{0} <{1}>".format(self.config.FROM['name'], self.from_address),
+                "to": [self.to_address],
                 "subject": self.message_subject,
                 "h:Reply-To": self.message_reply_to,
                 "html": message})

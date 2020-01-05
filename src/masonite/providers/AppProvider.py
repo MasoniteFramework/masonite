@@ -3,7 +3,7 @@
 from ..autoload import Autoload
 from ..commands import (AuthCommand, CommandCommand, ControllerCommand,
                         DownCommand, InfoCommand, InstallCommand, JobCommand,
-                        KeyCommand, MakeMigrationCommand, MiddlewareCommand,
+                        KeyCommand, MailableCommand, MakeMigrationCommand, MiddlewareCommand,
                         MigrateCommand, MigrateRefreshCommand,
                         MigrateResetCommand, MigrateRollbackCommand,
                         MigrateStatusCommand, ModelCommand,
@@ -60,6 +60,7 @@ class AppProvider(ServiceProvider):
             InstallCommand(),
             JobCommand(),
             KeyCommand(),
+            MailableCommand(),
             MakeMigrationCommand(),
             MiddlewareCommand(),
             MigrateCommand(),

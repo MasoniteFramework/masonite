@@ -7,6 +7,7 @@ from .InfoCommand import InfoCommand
 from .InstallCommand import InstallCommand
 from .JobCommand import JobCommand
 from .KeyCommand import KeyCommand
+from .MailableCommand import MailableCommand
 from .MakeMigrationCommand import MakeMigrationCommand
 from .MiddlewareCommand import MiddlewareCommand
 from .MigrateCommand import MigrateCommand

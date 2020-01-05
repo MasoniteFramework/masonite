@@ -10,7 +10,7 @@ class {{ class }}(Mailable):
         """A {{ class }} Initializer."""
         self._to = to
 
-    def handle(self):
+    def build(self):
         """Logic to handle the job."""
         return (
             self.subject('Subject Line')

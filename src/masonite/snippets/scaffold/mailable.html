@@ -7,10 +7,11 @@ class {{ class }}(Mailable):
     """A {{ class }} Mailable."""
 
     def __init__(self, to):
+        """A {{ class }} Initializer."""
         self._to = to
 
     def handle(self):
-    """Logic to handle the job."""
+        """Logic to handle the job."""
         return (
             self.subject('Subject Line')
             .send_from('admin@example.com')

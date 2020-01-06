@@ -79,9 +79,18 @@ class ExceptionHandler:
         Returns:
             None
         """
+
         stacktraceback = traceback.extract_tb(sys.exc_info()[2])
         self.run_listeners(exception, stacktraceback)
+
+        # Check if DEBUG is False
+        from config import application
+        if not application.DEBUG:
+            return
+            
         response = self._app.make(Response)
+
+
         handler = Handler(exception)
         handler.integrate(
             SolutionsIntegration()

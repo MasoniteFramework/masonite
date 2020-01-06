@@ -82,6 +82,8 @@ class ExceptionHandler:
 
         stacktraceback = traceback.extract_tb(sys.exc_info()[2])
         self.run_listeners(exception, stacktraceback)
+        # Run Any Framework Exception Hooks
+        self._app.make('HookHandler').fire('*ExceptionHook')
 
         # Check if DEBUG is False
         from config import application

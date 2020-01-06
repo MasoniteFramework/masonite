@@ -86,8 +86,10 @@ class ExceptionHandler:
         # Check if DEBUG is False
         from config import application
         if not application.DEBUG:
+            request = self._app.make('Request')
+            request.status(500)
             return
-            
+
         response = self._app.make(Response)
 
 

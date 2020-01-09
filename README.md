@@ -1,7 +1,4 @@
 
-
-
-
 <p align="center">
 <img src="https://i.imgur.com/rEXcoMn.png" width="160px"> 
 </p>
@@ -14,9 +11,6 @@
 <img src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square" alt="All Contributors">
 
 </p>
-
-**NOTE: We are currently in the process of moving all development into this repository from the [Masonite Core Repo](https://github.com/masoniteframework/core). Please excuse anything that looks a little funky while this happens.**
-
 
 ## About Masonite
 
@@ -40,7 +34,6 @@ If you are a visual learner you can find tutorials here: [MasoniteCasts](https:/
 
 Also be sure to join the [Slack channel](http://slack.masoniteproject.com/)!
 
-
 ## Contributing
 
 Contributing to Masonite is simple:
@@ -52,30 +45,47 @@ Contributing to Masonite is simple:
 * If you have any questions just [open up an issue](https://github.com/MasoniteFramework/core/issues/new/choose) to discuss with the core maintainers.
 * [Follow Masonite Framework on Twitter](https://twitter.com/masoniteproject) to get updates about tips and tricks, announcement and releases.
 
-
 ## Requirements
 
-- Python 3.4 +
-- OpenSSL (latest version)
-- Pip
+In order to use Masonite, you’ll need:
+
+* Python 3.5+
+* Latest version of OpenSSL
+* Pip3
+
+> All commands of python and pip in this documentation is assuming they are pointing to the correct Python 3 versions. For example, anywhere you see the `python` command ran it is assuming that is a Python 3.5+ Python installation. If you are having issues with any installation steps just be sure the commands are for Python 3.5+ and not 2.7 or below.
 
 ## Linux
 
-If you are running on a Linux flavor, you’ll need a few extra packages before you start. You can download these packages by running:
+If you are running on a Linux flavor, you’ll need the Python dev package and the libssl package. You can download these packages by running:
 
-```
-$ sudo apt-get install python-dev libssl-dev
-```
+### Debian and Ubuntu based Linux distributions
 
-Instead of `python-dev` you may need to specify your Python version
+{% code title="terminal" %}
+```text
+$ sudo apt-get install python-dev libssl-dev python3-pip
+```
+{% endcode %}
 
+Or you may need to specify your `python3.x-dev` version:
+
+{% code title="terminal" %}
+```text
+$ sudo apt-get install python3.6-dev libssl-dev python3-pip
 ```
-$ sudo apt-get install python3.6-dev libssl-dev
+{% endcode %}
+
+### Enterprise Linux based distributions \(Fedora, CentOS, RHEL, ...\)
+
+{% code title="terminal" %}
+```text
+# dnf install python-devel openssl-devel
 ```
+{% endcode %}
 
 ## Windows
 
-With windows you will need to have the latest OpenSSL version. Install [OpenSSL 32-bit or 64-bit](https://slproweb.com/products/Win32OpenSSL.html).
+With windows you MAY need to have the latest OpenSSL version. Install [OpenSSL 32-bit or 64-bit](https://slproweb.com/products/Win32OpenSSL.html).
 
 ## Mac
 
@@ -95,7 +105,7 @@ Python 3.6 does not come preinstalled with certificates so you may need to insta
 
 You should now be good to install new Masonite application of Mac :)
 
-### Python 3.7
+### Python 3.7 and Windows
 
 If you are using [Python 3.7](https://www.python.org/downloads/windows/), add it to your PATH Environment variable.
 
@@ -167,65 +177,122 @@ The Masonite framework is open-sourced software licensed under the MIT license.
 
 Getting started is very easy. Below is how you can get a simple Hello World application up and running.
 
+
 ## Installation
 
-The best way to install Masonite is by starting in a virtual environment first. This will avoid any issues with filesystem permissions.
+> Be sure to join the [Slack Channel](http://slack.masoniteproject.com) for help or guidance.
+
+Masonite excels at being simple to install and get going. If you are coming from previous versions of Masonite, the order of some of the installation steps have changed a bit.
+
+Firstly, open a terminal and head to a directory you want to create your application in. You might want to create it in a programming directory for example:
 
 ```
-python3 -m venv venv
+$ cd ~/programming
+$ mkdir myapp
+$ cd myapp
 ```
 
-Then activate the virtual environment:
+If you are on windows you can just create a directory and open the directory in the Powershell.
 
-```
-WINDOWS: $ ./venv/Scripts/activate
-MAC: $ source venv/bin/activate
-```
+## Activating Our Virtual Environment \(optional\)
 
+Although this step is technically optional, it is highly recommended. You can create a virtual environment if you don't want to install all of masonite's dependencies on your systems Python. If you use virtual environments then create your virtual environment by running:
 
-You can easily create new applications with `craft`. To create a new application run:
-
-```
-$ pip install masonite-cli
-$ craft new project .
+```text
+$ python -m venv venv
+$ source venv/bin/activate
 ```
 
-The `.` will tell craft to create the project in the current directory instead of a new directory.
+or if you are on Windows:
+
+```text
+$ python -m venv venv
+$ ./venv/Scripts/activate
+```
+
+> The `python`command here is utilizing Python 3. Your machine may run Python 2 \(typically 2.7\) by default for UNIX machines. You may set an alias on your machine for Python 3 or simply run `python3`anytime you see the `python`command.
+
+> For example, you would run `python3 -m venv venv` instead of `python -m venv venv`
+
+## Installing Masonite
+
+Now we can install Masonite. This will give us access to a craft command we can use to finish the install steps for us:
 
 ```
+$ pip install masonite
+```
+
+Once Masonite installs you will now have access to the `craft` command line tool. Craft will become your best friend during your development. You will learn to love it very quickly :).
+
+You can ensure Masonite and craft installed correctly by running:
+
+```
+$ craft
+```
+
+You should see a list of a few commands like `install` and `new`
+
+## Creating Our Project
+
+Great! We are now ready to create our first project. We should have the new `craft` command. We can check this by running:
+
+
+```text
+$ craft
+```
+
+
+We are currently only interested in the `craft new` command. To create a new project just run:
+
+
+```text
+$ craft new
+```
+
+
+This will get the latest Masonite project template and unzip it for you. We just need to go into our new project directory and install the dependencies in our `requirements.txt` file.
+
+## Installing Our Dependencies
+
+Now lets install our dependencies. We can do this simply by using a `craft` command. Remember that other craft command called `craft install`? 
+
+
+```text
 $ craft install
 ```
 
-This will install all of Masonites dependencies as well as create a new `.env` file consisting of all of your environment variables.
 
-****
+This command is just a wrapper around the `pip` or `pipenv` command. This installs all the required dependencies of Masonite, creates a `.env` file for us, generates a new secret key, and puts that secret key in our `.env` file. After it’s done we can just run the server by using another `craft` command:
 
-<p align="center">
-* * * *
-</p>
+## Additional Commands
 
-NOTE: Python craft commands are essentially wrappers around common mundane tasks. Read the docs about the craft command tool to learn more
+Now that Masonite installed fully we can check all the new commands we have available. There are many :).
 
-<p align="center">
-* * * *
-</p>
+```
+$ craft
+```
 
-****
+We should see many more commands now.
+
+## Running The Server
+
+After it’s done we can just run the server by using another `craft` command:
 
 
-Now we can run the `craft` command:
+```text
+$ craft serve
+```
 
-    $ craft serve
 
-This will run the server at `localhost:8000` and be in an auto-reloading state. When you change files, your server will restart. Navigating to that URL should show the Masonite welcome message. 
+Congratulations! You’ve setup your first Masonite project! Keep going to learn more about how to use Masonite to build your applications.
 
-If that port is blocked you can specify a port by running:
+{% hint style="success" %}
+You can learn more about craft by reading [The Craft Command](https://github.com/MasoniteFramework/docs/tree/ba9d9f8ac3e41d58b9d92d951f92c898fb16a2a4/the-craft-command.md) documentation or continue on to learning about how to create web application by first reading the [Routing ](the-basics/routing.md)documentation
+{% endhint %}
 
-    $ craft serve --port 8080
-
-Or specify a host by running:
-
-    $ craft serve --host 192.168.1.283
+{% hint style="info" %}
+Masonite uses romantic versioning instead of semantic versioning. Because of this, all minor releases \(2.0.x\) will contain bug fixes and fully backwards compatible feature releases. Be sure to always keep your application up to date with the latest minor release to get the full benefit of Masonite's romantic versioning.
+{% endhint %}
 
 ## Hello World
 
@@ -260,7 +327,7 @@ NOTE: Notice this new interesting string syntax in our route. This will grant ou
 
 Since we used a string controller we don't have to import our controller into this file. All imports are done through Masonite on the backend.
 
-You'll notice that we have a reference to the HelloWorldController class which we do not have yet. This framework uses controllers in order to separate the application logic. Controllers can be looked at as the views.py in a Django application. The architectural standard here is 1 controller per file.
+You'll notice that we have a reference to the `HelloWorldController` class which we do not have yet. This framework uses controllers in order to separate the application logic. Controllers can be looked at as the views.py in a Django application. The architectural standard here is 1 controller per file.
 
 In order to make the `HelloWorldController` we can use a `craft` command:
 

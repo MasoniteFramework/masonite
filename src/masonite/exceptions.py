@@ -88,3 +88,7 @@ class QueueException(Exception):
 
 class AmbiguousError(Exception):
     pass
+
+
+class ProjectLimitReached(Exception):
+    pass

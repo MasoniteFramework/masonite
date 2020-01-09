@@ -6,11 +6,11 @@ successfully import commands for you.
 """
 
 from cleo import Application
-from masonite import info
+from masonite import __version__
 
 from wsgi import container
 
-application = Application('Masonite Version:', info.VERSION)
+application = Application('Masonite Version:', __version__)
 
 for key, value in container.providers.items():
     if isinstance(key, str) and key.endswith('Command'):

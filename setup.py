@@ -89,4 +89,9 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'craft = masonite.cli:application.run',
+        ],
+    },
 )

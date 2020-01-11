@@ -111,7 +111,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             key {string} -- The key to set as the session key.
             value {string} -- The value to set in the session.
         """
-        if isinstance(value, dict) or isinstance(value, list):
+        if isinstance(value, (dict, list)):
             value = json.dumps(value)
 
         self.request.cookie('f_{0}'.format(key), value, expires='2 seconds')

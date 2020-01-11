@@ -3,7 +3,6 @@ class Mailable:
     _to = ''
     _from = ''
     _subject = ''
-    _reply_to = ''
 
     def view(self, template, variables={}):
         self.template = template

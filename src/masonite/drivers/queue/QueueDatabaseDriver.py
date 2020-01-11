@@ -80,10 +80,14 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                 wait_time = job['wait_until']
 
-                if isinstance(wait_time, str):
-                    wait_time = pendulum.parse(job['wait_until'])
+
+                if not job['wait_until']:
+                    wait_time = pendulum.now()
                 else:
-                    wait_time = pendulum.instance(job['wait_until'])
+                    if isinstance(wait_time, str):
+                        wait_time = pendulum.parse(job['wait_until'])
+                    else:
+                        wait_time = pendulum.instance(job['wait_until'])
 
                 # print(job['wait_until'], wait_time.is_future())
                 if job['wait_until'] and wait_time.is_future():

@@ -103,7 +103,7 @@ class NewCommand(Command):
 
             if success:
                 for directory in os.listdir(os.getcwd()):
-                    if directory.startswith('MasoniteFramework-cookie-cutter') or directory.startswith('masonite-'):
+                    if directory.startswith('MasoniteFramework-cookie-cutter') or directory.startswith('cookie-cutter-'):
                         if target:
                             from_dir = os.path.join(os.getcwd(), '{0}'.format(directory))
                             to_dir = os.path.abspath(os.path.expanduser(target))
@@ -115,7 +115,12 @@ class NewCommand(Command):
                         else:
                             os.rename(
                                 os.path.join(os.getcwd(), '{0}'.format(directory)), os.getcwd() + '/' + name)
-                        self.info('\nApplication Created Successfully!\n\nNow just cd into your project and run\n\n    $ craft install\n\nto install the project dependencies.\n\nCreate Something Amazing!')
+                        self.info('Application Created Successfully!')
+                        self.info('Installing Dependencies ')
+
+                        self.call('install')
+
+                        self.info('Installed Successfully. Just Run `craft serve` To Start Your Application.')
 
             else:
                 self.comment('Could Not Create Application :(')

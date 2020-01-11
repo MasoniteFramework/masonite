@@ -3,10 +3,11 @@ import sys
 from pydoc import ErrorDuringImport
 from cleo import Application
 from .commands import NewCommand, InstallCommand
+from . import __version__
 
 sys.path.append(os.getcwd())
 
-application = Application('Craft Version:', '2.1.2')
+application = Application('Masonite Version:', __version__)
 application.add(NewCommand())
 application.add(InstallCommand())
 

@@ -123,7 +123,6 @@ Here is the quick and dirty of what you need to run. More step by step instructi
     $ source venv/bin/activate
     $ pip install masonite
     $ craft new
-    $ cd install
     $ craft serve
 ```
 
@@ -247,17 +246,10 @@ We are currently only interested in the `craft new` command. To create a new pro
 $ craft new
 ```
 
+This command will also run `craft install` which will install our dependencies.
+
 This will get the latest Masonite project template and unzip it for you. We just need to go into our new project directory and install the dependencies in our `requirements.txt` file.
 
-## Installing Our Dependencies
-
-Now lets install our dependencies. We can do this simply by using a `craft` command. Remember that other craft command called `craft install`? 
-
-```text
-$ craft install
-```
-
-This command is just a wrapper around the `pip` or `pipenv` command. This installs all the required dependencies of Masonite, creates a `.env` file for us, generates a new secret key, and puts that secret key in our `.env` file. After it’s done we can just run the server by using another `craft` command:
 
 ## Additional Commands
 
@@ -273,11 +265,9 @@ We should see many more commands now.
 
 After it’s done we can just run the server by using another `craft` command:
 
-
 ```text
 $ craft serve
 ```
-
 
 Congratulations! You’ve setup your first Masonite project! Keep going to learn more about how to use Masonite to build your applications.
 

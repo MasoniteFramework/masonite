@@ -1,20 +1,19 @@
 import os
-import unittest
 
-from masonite.testsuite import TestSuite
-from masonite.managers import StorageManager
-from masonite.drivers import StorageDiskDriver
+from src.masonite.testing import TestCase
+from src.masonite.managers import StorageManager
+from src.masonite.drivers import StorageDiskDriver
 from config import storage
 
 
-class TestStorage(unittest.TestCase):
+class TestStorage(TestCase):
 
     def setUp(self):
-        self.app = TestSuite().create_container().container
-        self.app.bind('StorageDiskDriver', StorageDiskDriver)
-        self.app.bind('StorageManager', StorageManager(self.app))
-        self.app.bind('Storage', StorageManager(self.app).driver(storage.DRIVER))
-        self.manager = self.app.make('Storage')
+        super().setUp()
+        self.container.bind('StorageDiskDriver', StorageDiskDriver)
+        self.container.bind('StorageManager', StorageManager(self.container))
+        self.container.bind('Storage', StorageManager(self.container).driver(storage.DRIVER))
+        self.manager = self.container.make('Storage')
 
     def test_storage_creates_disk_driver(self):
         self.assertIsInstance(self.manager.driver('disk'), StorageDiskDriver)

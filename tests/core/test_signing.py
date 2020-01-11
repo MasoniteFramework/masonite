@@ -2,8 +2,8 @@ import unittest
 
 from cryptography.fernet import Fernet
 
-from masonite.auth.Sign import Sign
-from masonite.exceptions import InvalidSecretKey
+from src.masonite.auth.Sign import Sign
+from src.masonite.exceptions import InvalidSecretKey
 
 
 class TestSigning(unittest.TestCase):

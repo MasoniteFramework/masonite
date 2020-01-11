@@ -1,6 +1,6 @@
 """CSRF Middleware."""
 
-from masonite.middleware import CsrfMiddleware as Middleware
+from src.masonite.middleware import CsrfMiddleware as Middleware
 
 
 class CsrfMiddleware(Middleware):

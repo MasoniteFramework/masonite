@@ -1,7 +1,5 @@
 """Authentication Settings."""
 
-from masonite import env
-
 from app.User import User
 
 """Authentication Model
@@ -17,16 +15,23 @@ be authenticated.
 """
 
 AUTH = {
-    'driver': env('AUTH_DRIVER', 'cookie'),
-    'model': User,
+    'defaults': {
+        'guard': 'web'
+    },
+    'guards': {
+        'web': {
+            'driver': 'cookie',
+            'model': User,
+            'drivers': { # 'cookie', 'jwt'
+                'jwt': {
+                    'reauthentication': True,
+                    'lifetime': '5 minutes'
+                }
+            }
+        },
+    }
 }
 
 DRIVERS = {
-    'jwt': {
-        """Whether or not to reauthenticate with the database when the token expires."""
-        'reauthentication': True,
-
-        """How long the token should live for before being refreshed."""
-        'lifetime': '5 minutes'
-    }
+    
 }

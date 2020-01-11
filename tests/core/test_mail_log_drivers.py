@@ -1,16 +1,14 @@
-from config import mail
 
 import os
-
-from masonite.app import App
-from masonite.view import View
-from masonite.managers.MailManager import MailManager
-from masonite.drivers import MailLogDriver
-from masonite.drivers import MailTerminalDriver
-import unittest
 import sys
+import unittest
 from contextlib import contextmanager
+
 from _io import StringIO
+from src.masonite.app import App
+from src.masonite.drivers import MailLogDriver, MailTerminalDriver
+from src.masonite.managers.MailManager import MailManager
+from src.masonite.view import View
 
 
 @contextmanager
@@ -35,8 +33,9 @@ class TestMailLogDrivers(unittest.TestCase):
         self.app = self.app.bind('Container', self.app)
 
         self.app.bind('Test', object)
-        self.app.bind('MailConfig', mail)
-        self.app.bind('View', View(self.app))
+        viewClass = View(self.app)
+        self.app.bind('ViewClass', viewClass)
+        self.app.bind('View', viewClass.render)
         self.app.bind('MailLogDriver', MailLogDriver)
         self.app.bind('MailTerminalDriver', MailTerminalDriver)
 
@@ -66,23 +65,25 @@ class TestMailLogDrivers(unittest.TestCase):
         user = UserMock
         user.email = 'test@email.com'
 
-        MailManager(self.app).driver('log').to(user).send('Masonite')
+        MailManager(self.app).driver('log').to(user).reply_to('reply-to@email.com').send('Masonite')
 
         filepath = '{0}/{1}'.format('bootstrap/mail', 'mail.log')
         self.logfile = open(filepath, 'r')
         file_string = self.logfile.read()
 
         self.assertIn('test@email.com', file_string)
+        self.assertIn('reply-to@email.com', file_string)
 
     def test_terminal_driver_output(self):
         user = UserMock
         user.email = 'test@email.com'
         with captured_output() as (_, err):
-            MailManager(self.app).driver('terminal').to(user).send('Masonite')
+            MailManager(self.app).driver('terminal').to(user).reply_to('reply-to@email.com').send('Masonite')
 
         # This can go inside or outside the `with` block
         error = err.getvalue().strip()
         self.assertIn('test@email.com', error)
+        self.assertIn('reply-to@email.com', error)
 
     def tearDown(self):
         if hasattr(self, 'logfile') and self.logfile:

@@ -3,12 +3,11 @@ import time
 
 from jinja2 import FileSystemLoader
 
-from config import cache
-from masonite.app import App
-from masonite.drivers import CacheDiskDriver
-from masonite.exceptions import RequiredContainerBindingNotFound, ViewException
-from masonite.managers.CacheManager import CacheManager
-from masonite.view import View
+from src.masonite.app import App
+from src.masonite.drivers import CacheDiskDriver
+from src.masonite.exceptions import RequiredContainerBindingNotFound, ViewException
+from src.masonite.managers.CacheManager import CacheManager
+from src.masonite.view import View
 import unittest
 
 
@@ -167,7 +166,7 @@ class TestView(unittest.TestCase):
 
     def test_view_cache_caches_files(self):
 
-        self.container.bind('CacheConfig', cache)
+        # self.container.bind('CacheConfig', cache)
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)
@@ -197,7 +196,7 @@ class TestView(unittest.TestCase):
         self.assertEqual(view('test_cache', {'test': 'macho'}).cache_for('1', 'second').rendered_template, 'macho')
 
     def test_cache_throws_exception_with_incorrect_cache_type(self):
-        self.container.bind('CacheConfig', cache)
+        # self.container.bind('CacheConfig', cache)
         self.container.bind('CacheDiskDriver', CacheDiskDriver)
         self.container.bind('CacheManager', CacheManager(self.container))
         self.container.bind('Application', self.container)

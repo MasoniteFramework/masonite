@@ -1,13 +1,12 @@
 import glob
 import os
 import time
-
-from config import cache
-from masonite.app import App
-from masonite.drivers import CacheDiskDriver, CacheRedisDriver
-from masonite.environment import LoadEnvironment
-from masonite.managers import CacheManager
 import unittest
+
+from src.masonite.app import App
+from src.masonite.drivers import CacheDiskDriver, CacheRedisDriver
+from src.masonite.environment import LoadEnvironment
+from src.masonite.managers import CacheManager
 
 LoadEnvironment()
 
@@ -16,11 +15,10 @@ class TestCache(unittest.TestCase):
 
     def setUp(self):
         self.app = App()
-        self.app.bind('CacheConfig', cache)
+        self.app.bind('Application', self.app)
         self.app.bind('CacheDiskDriver', CacheDiskDriver)
         self.app.bind('CacheRedisDriver', CacheRedisDriver)
         self.app.bind('CacheManager', CacheManager(self.app))
-        self.app.bind('Application', self.app)
         self.app.bind('Cache', self.app.make('CacheManager').driver('disk'))
         self.drivers = ['disk']
         if os.environ.get('REDIS_CACHE_DRIVER'):

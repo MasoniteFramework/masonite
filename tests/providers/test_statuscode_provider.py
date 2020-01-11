@@ -1,10 +1,10 @@
-from masonite.providers import StatusCodeProvider
-from masonite.request import Request
-from masonite.response import Response
-from masonite.view import View
-from masonite.app import App
-from masonite.providers.StatusCodeProvider import ServerErrorExceptionHook
-from masonite.testsuite import generate_wsgi
+from src.masonite.providers import StatusCodeProvider
+from src.masonite.request import Request
+from src.masonite.response import Response
+from src.masonite.view import View
+from src.masonite.app import App
+from src.masonite.providers.StatusCodeProvider import ServerErrorExceptionHook
+from src.masonite.testing import generate_wsgi
 import unittest
 
 

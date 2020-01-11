@@ -7,7 +7,6 @@ cryptography>=2.3,<2.4
 flake8
 hupper>=1.0,<2.0
 Jinja2>=2,<3
-libsass
 masonite-entry>=0.0.0,<=0.9.99
 masonite-events>=1.0,<2
 masonite-scheduler>=1.0.0,<=1.0.99
@@ -26,3 +25,4 @@ requests>=2.0,<2.99
 tabulate>=0.8,<0.9
 tldextract>=2.2,<2.3
 whitenoise>=3.3
+exceptionite

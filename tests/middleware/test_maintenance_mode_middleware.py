@@ -1,10 +1,10 @@
 """ Test Maintenance Mode Midddleware """
 import os
 
-from masonite.app import App
-from masonite.request import Request
-from masonite.middleware import MaintenanceModeMiddleware
-from masonite.testsuite import generate_wsgi
+from src.masonite.app import App
+from src.masonite.request import Request
+from src.masonite.middleware import MaintenanceModeMiddleware
+from src.masonite.testing import generate_wsgi
 
 from config import application
 import unittest

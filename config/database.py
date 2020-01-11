@@ -2,8 +2,8 @@
 
 import logging
 
-from masonite import env
-from masonite.environment import LoadEnvironment
+from src.masonite import env
+from src.masonite.environment import LoadEnvironment
 from orator import DatabaseManager, Model
 
 """Load Environment Variables
@@ -26,7 +26,7 @@ DATABASES = {
     'default': env('DB_CONNECTION', 'sqlite'),
     'sqlite': {
         'driver': 'sqlite',
-        'database': env('DB_DATABASE', 'masonite.db'),
+        'database': env('SQLITE_DB_DATABASE', 'masonite.db'),
         'log_queries': env('DB_LOG'),
         'prefix': ''
     },

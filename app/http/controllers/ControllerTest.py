@@ -1,5 +1,5 @@
-from masonite.request import Request
-from masonite.view import View
+from src.masonite.request import Request
+from src.masonite.view import View
 
 
 class ControllerTest:

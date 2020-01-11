@@ -1,6 +1,7 @@
 from app.jobs.TestJob import TestJob
-from masonite import Queue
-from masonite.request import Request
+from src.masonite import Queue, Mail
+from src.masonite.request import Request
+from src.masonite.view import View
 
 class TestController:
 
@@ -9,6 +10,9 @@ class TestController:
 
     def show(self):
         return 'show'
+
+    def v(self, view: View):
+        return view.render('test')
 
     def change_header(self, request: Request):
         request.header('Content-Type', 'application/xml')
@@ -25,8 +29,8 @@ class TestController:
     def testing(self):
         return 'test'
 
-    def json_response(self, request: Request):
-        return {'id': 1}
+    def json_response(self):
+        return {'id': 2}
 
     def post_test(self):
         return 'post_test'
@@ -37,6 +41,10 @@ class TestController:
     def bad(self):
         return 5 / 0
 
+    def keyerror(self):
+        x = {'hello': 'world'}
+        return x['test']
+
     def session(self, request: Request):
         request.session.set('test', 'value')
         return 'session set'
@@ -45,3 +53,6 @@ class TestController:
         # queue.driver('amqp').push(self.bad)
         queue.driver('amqp').push(TestJob, channel='default')
         return 'queued'
+
+    def mail(self, mail: Mail):
+        return mail.to('idmann509@gmail.com').template('test', {'test': 'mail'})

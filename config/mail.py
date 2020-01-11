@@ -1,6 +1,6 @@
 """Mail Settings."""
 
-from masonite import env
+from src.masonite import env
 
 """From Address
 This value will be used for the default address when sending emails from

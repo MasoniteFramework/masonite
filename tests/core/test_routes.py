@@ -1,14 +1,17 @@
-from masonite.routes import Route
-from masonite.request import Request
-from masonite.app import App
-from masonite.routes import Get, Head, Post, Match, Put, Patch, Delete, Connect, Options, Trace, RouteGroup, Redirect
-from masonite.helpers.routes import group, flatten_routes
-from masonite.helpers.routes import create_matchurl
-from masonite.testsuite.TestSuite import generate_wsgi
-from masonite.exceptions import InvalidRouteCompileException, RouteException
-from app.http.controllers.subdirectory.SubController import SubController
+
 import unittest
 
+from app.http.controllers.subdirectory.SubController import SubController
+from src.masonite.app import App
+from src.masonite.exceptions import (InvalidRouteCompileException,
+                                     RouteException)
+from src.masonite.helpers.routes import create_matchurl, flatten_routes, group
+from src.masonite.request import Request
+from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
+                                 Patch, Post, Put, Redirect, Route, RouteGroup,
+                                 Trace)
+from src.masonite.testing import TestCase, generate_wsgi
+from src.masonite.exceptions import RouteNotFoundException
 
 class TestRoutes(unittest.TestCase):
 
@@ -252,6 +255,52 @@ class TestRoutes(unittest.TestCase):
         route = Redirect('/test1', '/test3', methods=['POST', 'PUT'])
         self.assertEqual(route.method_type, ['POST', 'PUT'])
 
+
+class TestOptionalRoutes(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.routes(only=[
+            Get('/user/?name', 'TestController@v').name('user.name'),
+            Get('/multiple/user/?name/?last', 'TestController@v').name('user.multiple'),
+            Get('/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
+            Get('/back/user/name?', 'TestController@v'),
+            Get('/back/default/user/?name', 'TestController@v').default({'name': 'Joseph'}),
+            Get('/optional/?name:int', 'TestController@v'),
+        ])
+    
+    def test_can_get_name(self):
+        self.get('/user/john').assertParameterIs('name', 'john')
+        self.get('/user').assertParameterIs('name', None)
+        self.get('/default/user/Bill').assertParameterIs('name', 'Bill')
+        self.get('/default/user').assertParameterIs('name', 'Joseph')
+
+    def test_can_get_optional_when_optional_is_in_back(self):
+        self.get('/back/user/john').assertParameterIs('name', 'john')
+        self.get('/back/user').assertParameterIs('name', None)
+        self.get('/back/default/user/Bill').assertParameterIs('name', 'Bill')
+        self.get('/back/default/user').assertParameterIs('name', 'Joseph')
+
+    def test_can_get_optional_route_compilers(self):
+        self.get('/optional/1').assertParameterIs('name', '1')
+
+        with self.assertRaises(RouteNotFoundException):
+            self.get('/optional/Joe')
+        
+        self.get('/optional').assertParameterIs('name', None)
+
+    def test_cannot_get_longer_optional_parameter(self):
+        with self.assertRaises(RouteNotFoundException):
+            self.get('/user/john/settings').assertParameterIs('name', 'john')
+
+    def test_route_helper_works(self):
+        request = self.get('/user/john').request
+        self.assertEqual(request.route('user.name'), '/user')
+        self.assertEqual(request.route('user.name', {'name': 'john'}), '/user/john')
+        self.assertEqual(request.route('user.multiple'), '/multiple/user')
+        self.assertEqual(request.route('user.multiple', {'name': 'john'}), '/multiple/user/john')
+        self.assertEqual(request.route('user.multiple', {'name': 'john', 'last': 'smith'}), '/multiple/user/john/smith')
+        self.assertEqual(request.route('user.multiple', {'last': 'smith'}), '/multiple/user/smith')
 
 class WsgiInputTestClass:
 

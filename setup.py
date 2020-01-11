@@ -4,19 +4,25 @@ from setuptools import setup
 here = os.path.abspath(os.path.dirname(__file__))
 
 meta = {}
-with open(os.path.join(here, 'masonite', '__version__.py'), 'r') as f:
+with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
-with open('README.md', 'r') as f:
-    readme = f.read()
-
+try:
+    with open('README.md', 'r') as f:
+        readme = f.read()
+except FileNotFoundError:
+    readme = ""
+    
 setup(
     name=meta['__title__'],
     packages=[
         'masonite',
         'masonite.auth',
+        'masonite.auth.guards',
         'masonite.providers',
+        'masonite.listeners',
         'masonite.commands',
+        'masonite.commands.presets',
         'masonite.controllers',
         'masonite.drivers',
         'masonite.drivers.authentication',
@@ -28,7 +34,6 @@ setup(
         'masonite.drivers.storage',
         'masonite.drivers.upload',
         'masonite.managers',
-        'masonite.testsuite',
         'masonite.queues',
         'masonite.contracts',
         'masonite.contracts.managers',
@@ -40,33 +45,32 @@ setup(
     install_requires=[
         'bcrypt>=3.1,<3.2',
         'cleo>=0.6,<0.7',
-        'cryptography>=2.3,<2.4',
+        'cryptography>=2.3,<2.8',
         'hupper>=1.0,<2.0',
         'Jinja2>=2,<3',
-        'masonite-events>=1.0,<2',
-        'masonite-scheduler>=1.0.0,<=1.0.99',
-        'masonite-validation>=2.2.0,<=2.2.99',
         'orator>=0.9,<1',
         'passlib>=1.7,<1.8',
         'pendulum>=1.5,<1.6',
-        'psutil>=5.4,<5.5',
-        'python-dotenv>=0.8,<0.9',
+        'psutil>=5.4,<5.7',
+        'python-dotenv>=0.8,<0.11',
         'requests>=2.0,<2.99',
         'tabulate>=0.8,<0.9',
         'tldextract>=2.2,<2.3',
         'whitenoise>=3.3',
+        'exceptionite>=1.0,<2',
     ],
     description=meta['__description__'],
     long_description=readme,
     long_description_content_type='text/markdown',
     author=meta['__author__'],
     author_email=meta['__author_email__'],
+    package_dir={'': 'src'},
     url=meta['__url__'],
     keywords=['masonite', 'python web framework', 'python3'],
-    licence=meta['__licence__'],
-    python_requires=">=3.4",
+    license=meta['__licence__'],
+    python_requires=">=3.5",
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Masonite',
         'Intended Audience :: Developers',
@@ -85,4 +89,9 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'craft = masonite.cli:application.run',
+        ],
+    },
 )

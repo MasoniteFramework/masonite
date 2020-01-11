@@ -1,6 +1,6 @@
 """Middleware Configuration Settings."""
 
-from masonite.middleware import (CorsMiddleware, ResponseMiddleware,
+from src.masonite.middleware import (CorsMiddleware, ResponseMiddleware,
                                  SecureHeadersMiddleware,
                                  MaintenanceModeMiddleware)
 

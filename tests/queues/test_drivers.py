@@ -1,13 +1,12 @@
 import unittest
 
-from masonite.app import App
-from masonite.drivers import QueueAmqpDriver, QueueAsyncDriver
-from masonite.environment import LoadEnvironment, env
-from masonite.exceptions import QueueException
-from masonite.managers import QueueManager
-from masonite.queues.Queueable import Queueable
-
-from config import queue
+from src.masonite.app import App
+from src.masonite.drivers import QueueAmqpDriver, QueueAsyncDriver, QueueDatabaseDriver
+from src.masonite.environment import LoadEnvironment, env
+from src.masonite.exceptions import QueueException
+from src.masonite.managers import QueueManager
+from src.masonite.queues.Queueable import Queueable
+from src.masonite.helpers import config
 
 LoadEnvironment()
 
@@ -17,6 +16,11 @@ class Job(Queueable):
     def handle(self):
         print('sending from job handled')
         return 'test'
+
+class FailJob(Queueable):
+
+    def handle(self):
+        raise Exception('Failed Job')
 
 
 class Random(Queueable):
@@ -37,19 +41,21 @@ class TestQueueDrivers(unittest.TestCase):
 
         self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
         self.app.bind('QueueAmqpDriver', QueueAmqpDriver)
-        self.app.bind('QueueConfig', queue)
+        self.app.bind('QueueDatabaseDriver', QueueDatabaseDriver)
         self.app.bind('Queueable', Queueable)
         self.app.bind('Container', self.app)
         self.app.bind('QueueManager', QueueManager(self.app))
-        self.app.bind('Queue', QueueManager(self.app).driver(self.app.make('QueueConfig').DRIVER))
+        self.app.bind('Queue', QueueManager(self.app).driver(config('queue.driver')))
         self.drivers = ['async']
         self.modes = ['threading', 'multiprocess']
 
         if env('RUN_AMQP'):
             self.drivers.append('amqp')
+        if env('RUN_QUEUE_DATABASE'):
+            self.drivers.append('database')
 
     def test_async_driver_pushes_to_queue(self):
-        for driver in self.drivers:
+        for driver in self.drivers + ['database']:
             self.assertIsNone(self.app.make('QueueManager').driver(driver).push(Job), None)
 
     def test_async_driver_can_run_any_callback_method(self):
@@ -79,6 +85,14 @@ class TestQueueDrivers(unittest.TestCase):
     def test_async_driver_specify_workers(self):
         for mode in self.modes:
             self.assertIsNone(self.app.make('QueueManager').driver('async').push(Job, mode=mode, workers=2), None)
+
+    def test_driver_can_wait(self):
+        for driver in self.drivers:
+            self.assertIsNone(self.app.make('QueueManager').driver(driver).push(Job, wait='10 seconds'), None)
+
+    def test_driver_can_fail(self):
+        for driver in self.drivers:
+            self.assertIsNone(self.app.make('QueueManager').driver(driver).push(FailJob), None)
 
     def test_workers_are_nonnegative(self):
         with self.assertRaises(QueueException):

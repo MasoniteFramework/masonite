@@ -1,0 +1,21 @@
+"""A {{ class }} Mailable."""
+
+from masonite.drivers import Mailable
+
+
+class {{ class }}(Mailable):
+    """A {{ class }} Mailable."""
+
+    def __init__(self, to):
+        """A {{ class }} Initializer."""
+        self._to = to
+
+    def build(self):
+        """Logic to handle the job."""
+        return (
+            self.subject('Subject Line')
+            .send_from('admin@example.com')
+            .reply_to('service@example.com')
+            .to(self._to)
+            # .view('template')
+        )

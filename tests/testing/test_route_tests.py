@@ -1,7 +1,7 @@
 from routes import web
-from masonite.testing import TestCase
+from src.masonite.testing import TestCase
 from app.User import User
-from masonite.exceptions import InvalidCSRFToken
+from src.masonite.exceptions import InvalidCSRFToken
 
 
 class TestUnitTest(TestCase):
@@ -10,6 +10,7 @@ class TestUnitTest(TestCase):
         super().setUp()
 
         self.routes(web.ROUTES)
+        self.buildOwnContainer()
 
     def setUpFactories(self):
         User.create({
@@ -20,6 +21,8 @@ class TestUnitTest(TestCase):
 
     def test_can_get_route(self):
         self.assertTrue(self.get('/unit/test/get').ok())
+
+        self.assertTrue(self.get('/unit/test/get').canView())
 
     def test_can_post_route(self):
         self.assertTrue(self.post('/unit/test/post').ok())
@@ -76,6 +79,14 @@ class TestUnitTest(TestCase):
         }))
 
         self.assertTrue(self.json('GET', '/unit/test/json/multi').hasJson('author.name', 'Joe'))
+        self.assertFalse(self.json('GET', '/unit/test/json/multi_count').hasJson('count.foo', 'foo'))
+
+    def test_as_dictionary(self):
+        dictionary = self.json('GET', '/unit/test/json/multi').asDictionary()
+        self.assertEqual(dictionary['author']['name'], 'Joe')
+
+        with self.assertRaises(ValueError):
+            dictionary = self.json('GET', '/login').asDictionary()
 
     def test_count(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').count(2))

@@ -1,6 +1,6 @@
-from masonite.app import App
-from masonite.request import Request
-from masonite.testsuite.TestSuite import generate_wsgi
+from src.masonite.app import App
+from src.masonite.request import Request
+from src.masonite.testing import generate_wsgi
 import unittest
 
 REQUEST = Request({}).load_environ(generate_wsgi())

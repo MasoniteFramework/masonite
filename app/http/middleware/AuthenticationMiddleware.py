@@ -1,6 +1,6 @@
 """Authentication Middleware."""
 
-from masonite.request import Request
+from src.masonite.request import Request
 
 
 class AuthenticationMiddleware:

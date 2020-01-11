@@ -1,7 +1,7 @@
 
 import unittest
 
-from masonite.helpers import Dot, config
+from src.masonite.helpers import Dot, config
 
 from config import database
 
@@ -13,6 +13,9 @@ class TestConfig(unittest.TestCase):
 
     def test_config_can_get_value_from_file(self):
         self.assertEqual(self.config('application.DEBUG'), True)
+
+    def test_config_can_get_value_from_file_that_is_false(self):
+        self.assertEqual(self.config('application.FALSY'), False)
 
     def test_config_can_get_dict_value_lowercase(self):
         self.assertEqual(self.config('application.debug'), True)

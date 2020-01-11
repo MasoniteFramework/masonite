@@ -1,4 +1,4 @@
-from masonite.helpers import collect
+from src.masonite.helpers import collect
 
 
 class TestCollect:

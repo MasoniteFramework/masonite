@@ -1,17 +1,16 @@
-from masonite.environment import LoadEnvironment
+from src.masonite.environment import LoadEnvironment
 
 LoadEnvironment()
 
-from config import mail
-from masonite.app import App
-from masonite.contracts import MailManagerContract
-from masonite.drivers import MailMailgunDriver as Mailgun
-from masonite.drivers import MailSmtpDriver as MailDriver
-from masonite.exceptions import DriverNotFound
-from masonite.managers import MailManager
-from masonite.view import View
-from masonite.contracts import MailContract
-from masonite import env
+from src.masonite.app import App
+from src.masonite.contracts import MailManagerContract
+from src.masonite.drivers import MailMailgunDriver as Mailgun
+from src.masonite.drivers import MailSmtpDriver as MailDriver
+from src.masonite.exceptions import DriverNotFound
+from src.masonite.managers import MailManager
+from src.masonite.view import View
+from src.masonite.contracts import MailContract
+from src.masonite import env
 import unittest
 
 
@@ -36,7 +35,6 @@ class TestMailManager(unittest.TestCase):
 
         self.app.bind('Test', object)
         self.app.bind('MailSmtpDriver', object)
-        self.app.bind('MailConfig', mail)
         self.app.bind('View', View(self.app).render)
         self.app.bind('ViewClass', View(self.app))
 
@@ -70,7 +68,7 @@ class TestMailManager(unittest.TestCase):
         MailManager(self.app).driver('mailtrap')
 
     def test_manager_sets_driver_throws_driver_not_found_exception(self):
-        with self.assertRaises(DriverNotFound, message="Should raise DriverNotFound error"):
+        with self.assertRaises(DriverNotFound):
             MailManager(self.app).driver('mailtrap')
 
     def test_drivers_are_resolvable_by_container(self):

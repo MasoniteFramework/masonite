@@ -1,7 +1,7 @@
 """A UnitTestController Module."""
 
-from masonite.request import Request
-from masonite.controllers import Controller
+from src.masonite.request import Request
+from src.masonite.controllers import Controller
 
 
 class UnitTestController(Controller):
@@ -36,7 +36,7 @@ class UnitTestController(Controller):
     def response(self):
         return {
             'count': 5,
-            'iterable': [1,2,3]
+            'iterable': [1, 2, 3]
         }
 
     def multi(self):
@@ -45,6 +45,9 @@ class UnitTestController(Controller):
                 'name': 'Joe'
             }
         }
+
+    def multi_count(self):
+        return {"count": 5, "iterable": [1, 2, 3]}
 
     def patch(self):
         return self.request.input('test')

@@ -1,0 +1,37 @@
+name: Test Application
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+          python-version: [ '3.5', '3.6', '3.7', '3.8' ]
+    name: Python ${{ matrix.python-version }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+          python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        make init
+    - name: Test with pytest
+      run: |
+        make test
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install Flake8
+      run: |
+        pip install flake8
+    - name: Lint
+      run: make lint

@@ -1,14 +1,15 @@
 
 from app.http.controllers.ControllerTest import ControllerTest
-from masonite.routes import Get, Match
-from masonite.testing import TestCase
-from masonite.exceptions import RouteNotFoundException
+from src.masonite.routes import Get, Match
+from src.masonite.testing import TestCase
+from src.masonite.exceptions import RouteNotFoundException
 
 
 class TestRouteProvider(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.buildOwnContainer()
 
     def test_controller_that_returns_a_view(self):
         self.routes(only=[Get('/view', ControllerTest.test), Get('/view/', ControllerTest.test)])

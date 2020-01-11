@@ -1,6 +1,6 @@
 
-from masonite.environment import LoadEnvironment
-from masonite import env
+from src.masonite.environment import LoadEnvironment
+from src.masonite import env
 
 import os
 import unittest

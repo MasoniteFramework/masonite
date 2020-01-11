@@ -2,6 +2,7 @@ dist
 docs
 masonite.egg-info
 venv
+venv2
 .vscode
 htmlcov
 .coverage
@@ -22,3 +23,5 @@ tests/bootstrap/cache/*.txt
 .coverage
 .idea/
 masonite.db
+tests/uploads
+

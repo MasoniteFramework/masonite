@@ -158,8 +158,8 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
             except IndexError:
                 if self.cache_forever:
                     return True
-                else:
-                    return False
+                    
+                return False
 
             if cache_timestamp > time.time():
                 return True

@@ -94,7 +94,6 @@ class ExceptionHandler:
 
         response = self._app.make(Response)
 
-
         handler = Handler(exception)
         handler.integrate(
             SolutionsIntegration()

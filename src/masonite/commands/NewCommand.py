@@ -2,7 +2,7 @@ from cleo import Command
 import os
 import shutil
 import zipfile
-from ..exceptions import  ProjectLimitReached
+from ..exceptions import ProjectLimitReached
 
 
 class NewCommand(Command):
@@ -22,7 +22,7 @@ class NewCommand(Command):
             name = 'project'
 
         target = self.argument('target')
-        
+
         if not target:
             target = '.'
 
@@ -103,7 +103,7 @@ class NewCommand(Command):
 
             if success:
                 for directory in os.listdir(os.getcwd()):
-                    if directory.startswith('MasoniteFramework-masonite') or directory.startswith('masonite-'):
+                    if directory.startswith('MasoniteFramework-cookie-cutter') or directory.startswith('masonite-'):
                         if target:
                             from_dir = os.path.join(os.getcwd(), '{0}'.format(directory))
                             to_dir = os.path.abspath(os.path.expanduser(target))

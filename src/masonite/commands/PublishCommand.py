@@ -12,7 +12,7 @@ class PublishCommand(Command):
     """
 
     def handle(self):
-        from wsgi import container 
+        from wsgi import container
 
         for provider in container.make('Providers'):
             if provider.__class__.__name__ == self.argument('name'):

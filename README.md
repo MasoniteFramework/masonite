@@ -115,13 +115,16 @@ Add `C:\Users\%USERNAME%\.AppData\Programs\Python\Python37\Scripts\` to PATH Env
 
 Note: PATH variables depend on your installation folder
 
-## Installation:
+## Quick Install:
+
+Here is the quick and dirty of what you need to run. More step by step instructions are found below.
 
 ```
-    $ pip3 install masonite-cli :: (may need sudo if using UNIX) ::
-    $ craft new project
-    $ cd project
-    $ craft install
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install masonite
+    $ craft new
+    $ cd install
     $ craft serve
 ```
 
@@ -176,7 +179,6 @@ The Masonite framework is open-sourced software licensed under the MIT license.
 ## Hello World
 
 Getting started is very easy. Below is how you can get a simple Hello World application up and running.
-
 
 ## Installation
 
@@ -236,19 +238,15 @@ You should see a list of a few commands like `install` and `new`
 
 Great! We are now ready to create our first project. We should have the new `craft` command. We can check this by running:
 
-
 ```text
 $ craft
 ```
 
-
 We are currently only interested in the `craft new` command. To create a new project just run:
-
 
 ```text
 $ craft new
 ```
-
 
 This will get the latest Masonite project template and unzip it for you. We just need to go into our new project directory and install the dependencies in our `requirements.txt` file.
 
@@ -256,11 +254,9 @@ This will get the latest Masonite project template and unzip it for you. We just
 
 Now lets install our dependencies. We can do this simply by using a `craft` command. Remember that other craft command called `craft install`? 
 
-
 ```text
 $ craft install
 ```
-
 
 This command is just a wrapper around the `pip` or `pipenv` command. This installs all the required dependencies of Masonite, creates a `.env` file for us, generates a new secret key, and puts that secret key in our `.env` file. After it’s done we can just run the server by using another `craft` command:
 

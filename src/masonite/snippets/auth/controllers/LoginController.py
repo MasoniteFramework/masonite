@@ -2,9 +2,8 @@
 
 from masonite.auth import Auth
 from masonite.request import Request
-from masonite.view import View
-from masonite.helpers import config
 from masonite.validation import Validator
+from masonite.view import View
 
 
 class LoginController:
@@ -14,13 +13,12 @@ class LoginController:
         """LoginController Constructor."""
         pass
 
-    def show(self, request: Request, view: View, auth: Auth, validator: Validator):
+    def show(self, request: Request, view: View):
         """Show the login page.
 
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
             view {masonite.view.View} -- The Masonite view class.
-            auth {masonite.auth.auth} -- The Masonite auth class.
 
         Returns:
             masonite.view.View -- Returns the Masonite view class.
@@ -36,6 +34,7 @@ class LoginController:
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
             auth {masonite.auth.auth} -- The Masonite auth class.
+            validate {masonite.validator.Validator} -- The Masonite Validator class.
 
         Returns:
             masonite.request.Request -- The Masonite request class.

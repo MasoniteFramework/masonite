@@ -1,12 +1,10 @@
 """The RegisterController Module."""
 
-from config import application
-from masonite.auth import Auth
-from masonite.request import Request
-from masonite.view import View
-from masonite.auth import MustVerifyEmail
+from masonite.auth import Auth, MustVerifyEmail
 from masonite.managers import MailManager
+from masonite.request import Request
 from masonite.validation import Validator
+from masonite.view import View
 
 
 class RegisterController:

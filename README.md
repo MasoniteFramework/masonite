@@ -11,6 +11,8 @@
 
 </p>
 
+**NOTE: Masonite 2.3 is no longer compatible with the `masonite-cli` tool. Please uninstall that by running `pip uninstall masonite-cli`. If you do not uninstall `masonite-cli` you will have command clashes**
+
 ## About Masonite
 
 The modern and developer centric Python web framework that strives for an actual batteries included developer tool with a lot of out of the box functionality with an extremely extendable architecture. Masonite is perfect for beginner developers getting into their first web applications as well as experienced devs that need to utilize the full potential of Masonite to get their applications done.

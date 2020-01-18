@@ -8,7 +8,7 @@ with open(os.path.join(here, 'src/masonite', '__version__.py'), 'r') as f:
     exec(f.read(), meta)
 
 try:
-    with open('README.md', 'r') as f:
+    with open('README.md', 'r', encoding='utf-8') as f:
         readme = f.read()
 except FileNotFoundError:
     readme = ""

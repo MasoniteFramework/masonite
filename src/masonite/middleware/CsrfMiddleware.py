@@ -72,7 +72,8 @@ class CsrfMiddleware:
         """
 
         if self.request.is_post() and not self.in_exempt():
-            token = self.request.header('HTTP_X_CSRF_TOKEN') or self.request.input('__token')
+            token = self.request.header('HTTP_X_CSRF_TOKEN') or self.request.header(
+                'HTTP_X_XSRF_TOKEN') or self.request.input('__token')
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
             return token

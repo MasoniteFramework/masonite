@@ -1,5 +1,4 @@
 init:
-	pip install masonite_cli --user
 	pip install -r requirements.txt --user
 	pip install -e .
 	pip install pytest

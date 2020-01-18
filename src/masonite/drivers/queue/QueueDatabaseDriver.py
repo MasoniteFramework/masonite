@@ -80,7 +80,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                 wait_time = job['wait_until']
 
-
                 if not job['wait_until']:
                     wait_time = pendulum.now()
                 else:

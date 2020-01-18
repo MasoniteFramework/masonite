@@ -24,4 +24,5 @@ tests/bootstrap/cache/*.txt
 .idea/
 masonite.db
 tests/uploads
+build
 

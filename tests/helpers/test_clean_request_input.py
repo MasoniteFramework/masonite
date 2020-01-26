@@ -55,6 +55,10 @@ class TestCleanRequestInput(unittest.TestCase):
         obj = {'x': b'test'}
         self.assertEqual(clean_request_input(obj), obj)
 
+    def test_does_not_clean_quotes(self):
+        obj = {'content': "awesome! 'i love you'"}
+        self.assertEqual(clean_request_input(obj, quote=False)['content'], "awesome! 'i love you'")
+
 
 class FieldStorageTest(cgi.FieldStorage):
     pass

@@ -19,7 +19,7 @@ class InfoCommand(Command):
     """
 
     def handle(self):
-        from ._cli.application import application
+        from ..cli import application
         rows = []
 
         rows.append(['System Information', self._get_system_info()])

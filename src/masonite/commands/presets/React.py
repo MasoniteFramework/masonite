@@ -48,5 +48,6 @@ class React(Preset):
         shutil.copyfile(os.path.dirname(__file__) + '/react-stubs/Example.js', 'resources/js/components/Example.js')
 
     def update_bootstrapping(self):
-        """Copies template app.js file into application"""
+        """Copies template app.js and bootstrap.js into application"""
         shutil.copyfile(os.path.dirname(__file__) + '/react-stubs/app.js', 'resources/js/app.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/remove-stubs/bootstrap.js', 'resources/js/bootstrap.js')

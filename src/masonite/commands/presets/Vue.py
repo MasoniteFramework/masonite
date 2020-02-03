@@ -48,4 +48,4 @@ class Vue(Preset):
     def update_bootstrapping(self):
         """Copies template app.js and bootstrap.js into application"""
         shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/app.js', 'resources/js/app.js')
-        shutil.copyfile(os.path.dirname(__file__) + '/remove-stubs/bootstrap.js', 'resources/js/bootstrap.js')
+        shutil.copyfile(os.path.dirname(__file__) + '/shared-stubs/bootstrap.js', 'resources/js/bootstrap.js')

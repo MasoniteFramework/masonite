@@ -4,7 +4,7 @@ from ..commands import BaseScaffoldCommand
 
 class MailableCommand(BaseScaffoldCommand):
     """
-    Creates a new Job.
+    Creates a new Mailable.
 
     mailable
         {name : Name of the job you want to create}

@@ -47,7 +47,7 @@ class TestCleanRequestInput(unittest.TestCase):
         obj = b'test'
         self.assertEqual(clean_request_input(obj), obj)
 
-    def test_does_not_clean_bytes_objects(self):
+    def test_does_not_clean_bytes_object_list(self):
         obj = [b'test', b'test']
         self.assertEqual(clean_request_input(obj), obj)
 

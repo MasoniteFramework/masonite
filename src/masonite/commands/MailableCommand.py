@@ -13,3 +13,4 @@ class MailableCommand(BaseScaffoldCommand):
     scaffold_name = 'Mailable'
     template = '/masonite/snippets/scaffold/mailable'
     base_directory = 'app/mailable/'
+    postfix = "Mailable"

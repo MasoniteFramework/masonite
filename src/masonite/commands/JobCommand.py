@@ -13,3 +13,4 @@ class JobCommand(BaseScaffoldCommand):
     scaffold_name = 'Job'
     template = '/masonite/snippets/scaffold/job'
     base_directory = 'app/jobs/'
+    postfix = "Job"

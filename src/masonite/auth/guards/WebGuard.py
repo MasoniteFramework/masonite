@@ -71,7 +71,10 @@ class WebGuard(AuthenticationGuard):
             else:
                 model = self.auth_model.where(auth_column, name).first()
 
-            if model and bcrypt.checkpw(bytes(password, 'utf-8'), bytes(self._get_password_column(model), 'utf-8')):
+            password_as_bytes = self._get_password_column(model)
+            if (not isinstance(password_as_bytes, bytes)):
+                password_as_bytes = bytes(password_as_bytes, 'utf-8')
+            if model and bcrypt.checkpw(bytes(password, 'utf-8'), password_as_bytes):
                 if not self._once:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token

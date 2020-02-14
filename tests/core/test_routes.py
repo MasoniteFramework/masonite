@@ -8,7 +8,7 @@ from src.masonite.exceptions import (InvalidRouteCompileException,
 from src.masonite.helpers.routes import create_matchurl, flatten_routes, group
 from src.masonite.request import Request
 from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
-                                 Patch, Post, Put, Redirect, Route, RouteGroup,
+                                 Patch, Post, Put, Resource, Redirect, Route, RouteGroup,
                                  Trace)
 from src.masonite.testing import TestCase, generate_wsgi
 from src.masonite.exceptions import RouteNotFoundException
@@ -301,6 +301,24 @@ class TestOptionalRoutes(TestCase):
         self.assertEqual(request.route('user.multiple', {'name': 'john'}), '/multiple/user/john')
         self.assertEqual(request.route('user.multiple', {'name': 'john', 'last': 'smith'}), '/multiple/user/john/smith')
         self.assertEqual(request.route('user.multiple', {'last': 'smith'}), '/multiple/user/smith')
+
+class TestRouteResources(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.routes(only=[Resource('/user', 'UserResourceController', names={
+            'create': 'users.build'
+        })])
+
+    def test_has_correct_controllers(self):
+        self.get('/user').assertHasController('UserResourceController@index').assertIsNotNamed()
+        self.get('/user/create').assertHasController('UserResourceController@create').assertIsNamed('users.build')
+        self.post('/user').assertHasController('UserResourceController@store').assertIsNotNamed()
+        self.get('/user/1').assertHasController('UserResourceController@show').assertIsNotNamed()
+        self.get('/user/1/edit').assertHasController('UserResourceController@edit').assertIsNotNamed()
+        self.put('/user/1').assertHasController('UserResourceController@update').assertIsNotNamed()
+        self.delete('/user/1').assertHasController('UserResourceController@destroy').assertIsNotNamed()
+
 
 class WsgiInputTestClass:
 

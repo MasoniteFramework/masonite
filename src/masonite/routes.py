@@ -691,7 +691,7 @@ class Resource:
 
     def __new__(cls, base='', controller='', only=['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'], names={}):
         routes = []
-        
+
         if 'index' in only:
             route = Get("{}".format(base), "{}@index".format(controller))
             if 'index' in names:
@@ -727,5 +727,5 @@ class Resource:
             if 'destroy' in names:
                 route.name(names['destroy'])
             routes.append(route)
-        
+
         return routes

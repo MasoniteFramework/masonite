@@ -16,7 +16,7 @@ class MockRoute:
         return self
 
     def assertIsNotNamed(self):
-        assert self.route.named_route == None, "Route has a name: {}".format(self.route.named_route)
+        assert self.route.named_route is None, "Route has a name: {}".format(self.route.named_route)
         return self
 
     def isNamed(self, name):

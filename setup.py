@@ -46,7 +46,7 @@ setup(
         'bcrypt>=3.1,<3.2',
         'cleo>=0.6,<0.7',
         'cryptography>=2.3,<2.8',
-        'hupper>=1.0,<2.0',
+        'hupper<1.10',
         'Jinja2>=2,<3',
         'orator>=0.9,<1',
         'passlib>=1.7,<1.8',

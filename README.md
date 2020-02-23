@@ -62,27 +62,21 @@ If you are running on a Linux flavor, you’ll need the Python dev package and t
 
 ### Debian and Ubuntu based Linux distributions
 
-{% code title="terminal" %}
 ```text
 $ sudo apt-get install python-dev libssl-dev python3-pip
 ```
-{% endcode %}
 
 Or you may need to specify your `python3.x-dev` version:
 
-{% code title="terminal" %}
 ```text
 $ sudo apt-get install python3.6-dev libssl-dev python3-pip
 ```
-{% endcode %}
 
 ### Enterprise Linux based distributions \(Fedora, CentOS, RHEL, ...\)
 
-{% code title="terminal" %}
 ```text
 # dnf install python-devel openssl-devel
 ```
-{% endcode %}
 
 ## Windows
 

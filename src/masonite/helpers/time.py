@@ -10,7 +10,7 @@ def cookie_expire_time(str_time):
         str_time {string} -- Could be values like 1 second or 3 minutes
 
     Returns:
-        pendlum -- Returns Pendulum instance
+        pendulum -- Returns Pendulum instance
     """
     if str_time != 'expired':
         number = int(str_time.split(" ")[0])
@@ -43,7 +43,7 @@ def parse_human_time(str_time):
         str_time {string} -- Could be values like 1 second or 3 minutes
 
     Returns:
-        pendlum -- Returns Pendulum instance
+        pendulum -- Returns Pendulum instance
     """
     if str_time != 'expired':
         number = int(str_time.split(" ")[0])

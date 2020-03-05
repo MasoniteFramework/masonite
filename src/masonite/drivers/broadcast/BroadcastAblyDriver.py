@@ -3,7 +3,6 @@
 from ...contracts import BroadcastContract
 from ...drivers import BaseDriver
 from ...exceptions import DriverLibraryNotFound
-from ...app import App
 from ...helpers import config
 
 

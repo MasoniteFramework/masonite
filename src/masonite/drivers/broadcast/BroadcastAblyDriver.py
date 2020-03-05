@@ -10,7 +10,7 @@ from ...helpers import config
 class BroadcastAblyDriver(BroadcastContract, BaseDriver):
     """Class for the Ably Driver."""
 
-    def __init__(self, app: App):
+    def __init__(self):
         """Ably driver constructor.
 
         Arguments:
@@ -53,6 +53,9 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
                 'Could not find the "ably" library. Please pip install this library running "pip install ably"')
 
         configuration = config('broadcast.drivers.ably')
+        if not configuration:
+            raise Exception('Could not find ably broadcast configuration')
+
         client = AblyRest('{0}'.format(
             configuration['secret']
         ))

@@ -215,8 +215,6 @@ class BaseHttpRoute:
             _, _, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
-            print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
-                get_controller, str(e), tb[0], tb[1]), '\033[0m')
         except Exception as e:  # skipcq
             import sys
             import traceback
@@ -228,6 +226,7 @@ class BaseHttpRoute:
     def get_response(self):
         # Resolve Controller Constructor
         if self.e:
+            print('\033[93mCannot find controller {}. Did you create this one?'.format(self.output), '\033[0m')
             raise SyntaxError(str(self.e))
 
         controller = self.request.app().resolve(self.controller)
@@ -435,6 +434,7 @@ class Get(BaseHttpRoute):
         super().__init__()
         self.method_type = ['GET']
         # self.list_middleware = []
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -446,6 +446,7 @@ class Head(BaseHttpRoute):
         """Head constructor."""
         super().__init__()
         self.method_type = ['HEAD']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -457,6 +458,7 @@ class Post(BaseHttpRoute):
         """Post constructor."""
         super().__init__()
         self.method_type = ['POST']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -472,6 +474,7 @@ class Match(BaseHttpRoute):
 
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -483,6 +486,7 @@ class Put(BaseHttpRoute):
         """Put constructor."""
         super().__init__()
         self.method_type = ['PUT']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -494,6 +498,7 @@ class Patch(BaseHttpRoute):
         """Patch constructor."""
         super().__init__()
         self.method_type = ['PATCH']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -505,6 +510,7 @@ class Delete(BaseHttpRoute):
         """Delete constructor."""
         super().__init__()
         self.method_type = ['DELETE']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -516,6 +522,7 @@ class Connect(BaseHttpRoute):
         """Connect constructor."""
         super().__init__()
         self.method_type = ['CONNECT']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -527,6 +534,7 @@ class Options(BaseHttpRoute):
         """Options constructor."""
         super().__init__()
         self.method_type = ['OPTIONS']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -541,6 +549,7 @@ class Trace(BaseHttpRoute):
         """Trace constructor."""
         super().__init__()
         self.method_type = ['TRACE']
+        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -599,7 +608,7 @@ class Redirect(BaseHttpRoute):
 class RouteGroup:
     """Class for specifying Route Groups."""
 
-    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
+    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[], namespace=''):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -608,6 +617,7 @@ class RouteGroup:
             domain {list} -- String or list of domains to attach to all the routes. (default: {[]})
             prefix {str} -- Prefix to attach to all the route URI's. (default: {''})
             name {str} -- Base name to attach to all the routes. (default: {''})
+            namespace {str} -- Namespace path to attach to all the routes. (default: {''})
 
         Returns:
             list -- Returns a list of routes.
@@ -623,6 +633,9 @@ class RouteGroup:
 
         if domain:
             cls._domain(cls, domain)
+
+        if namespace:
+            cls._namespace(cls, namespace)
 
         if prefix:
             cls._prefix(cls, prefix)
@@ -685,3 +698,15 @@ class RouteGroup:
         for route in self.routes:
             if isinstance(route.named_route, str):
                 route.named_route = name + route.named_route
+
+    def _namespace(self, namespace):
+        """Namespace of the controller for all routes
+
+        Arguments:
+            namespace {str} -- String to add to find controllers for all Routes.
+        """
+        for route in self.routes:
+            if route.output is not None:
+                route.e = False
+                route.output = namespace + route.output
+                route._find_controller(route.output)

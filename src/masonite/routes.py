@@ -706,7 +706,7 @@ class RouteGroup:
             namespace {str} -- String to add to find controllers for all Routes.
         """
         for route in self.routes:
-            if route.output is not None:
-                route.e = False
+            if isinstance(route.output, str):
+                route.e = False # reset any previous find_controller attempt
                 route.output = namespace + route.output
                 route._find_controller(route.output)

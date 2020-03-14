@@ -699,6 +699,8 @@ class RouteGroup:
         Arguments:
             namespace {str} -- String to add to find controllers for all Routes.
         """
+        if not namespace.endswith('.'):
+            namespace += '.'
         for route in self.routes:
             if isinstance(route.output, str):
                 route.e = False # reset any previous find_controller attempt

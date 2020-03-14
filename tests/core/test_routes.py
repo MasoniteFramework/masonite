@@ -168,6 +168,16 @@ class TestRoutes(unittest.TestCase):
         self.assertIsInstance(routes, list)
         self.assertEqual(DeepController, routes[0].controller)
 
+    def test_group_route_namespace_deep_no_dots(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get().route('/test/1', 'DeepController@show'),
+            ], namespace='deep')
+        ], namespace='subdirectory')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
+
     def test_group_route_sets_domain(self):
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show'),

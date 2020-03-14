@@ -3,19 +3,18 @@
 from ...contracts import BroadcastContract
 from ...drivers import BaseDriver
 from ...exceptions import DriverLibraryNotFound
-from ...app import App
+from ...helpers import config
 
 
 class BroadcastAblyDriver(BroadcastContract, BaseDriver):
     """Class for the Ably Driver."""
 
-    def __init__(self, app: App):
+    def __init__(self):
         """Ably driver constructor.
 
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration setting.
         """
-        self.config = app.make('BroadcastConfig')
         self.ssl_message = True
 
     def ssl(self, boolean):
@@ -52,8 +51,12 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
             raise DriverLibraryNotFound(
                 'Could not find the "ably" library. Please pip install this library running "pip install ably"')
 
+        configuration = config('broadcast.drivers.ably')
+        if not configuration:
+            raise Exception('Could not find ably broadcast configuration')
+
         client = AblyRest('{0}'.format(
-            self.config.DRIVERS['ably']['secret']
+            configuration['secret']
         ))
 
         if isinstance(channels, list):

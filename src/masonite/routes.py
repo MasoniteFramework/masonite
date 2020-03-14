@@ -147,6 +147,7 @@ class BaseHttpRoute:
         Returns:
             self
         """
+        self.output = output
         self._find_controller(output)
 
         if not route.startswith('/'):
@@ -172,23 +173,24 @@ class BaseHttpRoute:
         Returns:
             None
         """
+        module_location = self.module_location
         # If the output specified is a string controller
         if isinstance(controller, str):
             mod = controller.split('@')
             # If trying to get an absolute path via a string
             if mod[0].startswith('/'):
-                self.module_location = '.'.join(
+                module_location = '.'.join(
                     mod[0].replace('/', '').split('.')[0:-1])
             elif '.' in mod[0]:
                 # This is a deeper module controller
-                self.module_location = self.module_location + '.' + '.'.join(mod[0].split('.')[:-1])
+                module_location += '.' + '.'.join(mod[0].split('.')[:-1])
         else:
             if controller is None:
                 return None
 
             fully_qualified_name = controller.__qualname__
             mod = fully_qualified_name.split('.')
-            self.module_location = controller.__module__
+            module_location = controller.__module__
 
         # Gets the controller name from the output parameter
         # This is used to add support for additional modules
@@ -199,10 +201,10 @@ class BaseHttpRoute:
             # Import the module
             if isinstance(controller, str):
                 module = importlib.import_module(
-                    '{0}.'.format(self.module_location) + get_controller)
+                    '{0}.'.format(module_location) + get_controller)
             else:
                 module = importlib.import_module(
-                    '{0}'.format(self.module_location))
+                    '{0}'.format(module_location))
 
             # Get the controller from the module
             self.controller = getattr(module, get_controller)
@@ -222,6 +224,8 @@ class BaseHttpRoute:
             tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
             print('\033[93mTrouble importing controller!', str(e), '\033[0m')
+        if not self.e:
+            self.module_location = module_location
 
     def get_response(self):
         # Resolve Controller Constructor
@@ -434,7 +438,6 @@ class Get(BaseHttpRoute):
         super().__init__()
         self.method_type = ['GET']
         # self.list_middleware = []
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -446,7 +449,6 @@ class Head(BaseHttpRoute):
         """Head constructor."""
         super().__init__()
         self.method_type = ['HEAD']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -458,7 +460,6 @@ class Post(BaseHttpRoute):
         """Post constructor."""
         super().__init__()
         self.method_type = ['POST']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -474,7 +475,6 @@ class Match(BaseHttpRoute):
 
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -486,7 +486,6 @@ class Put(BaseHttpRoute):
         """Put constructor."""
         super().__init__()
         self.method_type = ['PUT']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -498,7 +497,6 @@ class Patch(BaseHttpRoute):
         """Patch constructor."""
         super().__init__()
         self.method_type = ['PATCH']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -510,7 +508,6 @@ class Delete(BaseHttpRoute):
         """Delete constructor."""
         super().__init__()
         self.method_type = ['DELETE']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -522,7 +519,6 @@ class Connect(BaseHttpRoute):
         """Connect constructor."""
         super().__init__()
         self.method_type = ['CONNECT']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -534,7 +530,6 @@ class Options(BaseHttpRoute):
         """Options constructor."""
         super().__init__()
         self.method_type = ['OPTIONS']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -549,7 +544,6 @@ class Trace(BaseHttpRoute):
         """Trace constructor."""
         super().__init__()
         self.method_type = ['TRACE']
-        self.output = output
         if route is not None and output is not None:
             self.route(route, output)
 

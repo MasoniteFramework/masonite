@@ -703,6 +703,6 @@ class RouteGroup:
             namespace += '.'
         for route in self.routes:
             if isinstance(route.output, str):
-                route.e = False # reset any previous find_controller attempt
+                route.e = False  # reset any previous find_controller attempt
                 route.output = namespace + route.output
                 route._find_controller(route.output)

@@ -705,6 +705,7 @@ class RouteGroup:
                 route.output = namespace + route.output
                 route._find_controller(route.output)
 
+
 class Resource:
 
     def __new__(cls, base='', controller='', only=['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'], names={}):

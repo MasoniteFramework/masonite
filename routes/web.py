@@ -27,6 +27,9 @@ ROUTES = [
         Get('/test/2', 'TestController@show')
     ], prefix='/example'),
     RouteGroup([
+        Get('/deep/1', 'DeepController@show'),
+    ], prefix='/example', namespace='subdirectory.deep.'),
+    RouteGroup([
         Get('/test/get', 'UnitTestController@show'),
         Get('/test/param/@post_id', 'UnitTestController@param'),
         Post('/test/post', 'UnitTestController@store').middleware('test'),

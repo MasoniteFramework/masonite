@@ -215,7 +215,6 @@ class BaseHttpRoute:
             import sys
             import traceback
             _, _, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
         except Exception as e:  # skipcq
             import sys

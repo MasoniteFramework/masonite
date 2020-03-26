@@ -5,7 +5,7 @@
 
 <p align="center">
 <img src="https://travis-ci.org/MasoniteFramework/masonite.svg?branch=master">
-<img src="https://img.shields.io/badge/python-3.4+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
+<img src="https://img.shields.io/badge/python-3.5+-blue.svg" alt="Python Version"> <img src="http://pepy.tech/badge/masonite?1" alt="License">  <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License"> 
 <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
 <img src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square" alt="All Contributors">
 
@@ -62,27 +62,21 @@ If you are running on a Linux flavor, you’ll need the Python dev package and t
 
 ### Debian and Ubuntu based Linux distributions
 
-{% code title="terminal" %}
 ```text
 $ sudo apt-get install python-dev libssl-dev python3-pip
 ```
-{% endcode %}
 
 Or you may need to specify your `python3.x-dev` version:
 
-{% code title="terminal" %}
 ```text
 $ sudo apt-get install python3.6-dev libssl-dev python3-pip
 ```
-{% endcode %}
 
 ### Enterprise Linux based distributions \(Fedora, CentOS, RHEL, ...\)
 
-{% code title="terminal" %}
 ```text
 # dnf install python-devel openssl-devel
 ```
-{% endcode %}
 
 ## Windows
 

@@ -11,6 +11,14 @@ class MockRoute:
         self.container = container
         self.wsgi = wsgi
 
+    def assertIsNamed(self, name):
+        assert self.route.named_route == name, "Route name is {}. Asserted {}".format(self.route.named_route, name)
+        return self
+
+    def assertIsNotNamed(self):
+        assert self.route.named_route is None, "Route has a name: {}".format(self.route.named_route)
+        return self
+
     def isNamed(self, name):
         return self.route.named_route == name
 
@@ -19,6 +27,14 @@ class MockRoute:
 
     def hasController(self, controller):
         return self.route.controller == controller
+
+    def assertHasController(self, controller):
+        if isinstance(controller, str) and '@' in controller:
+            controller, method = controller.split('@')
+            assert self.route.controller.__name__ == controller, "Controller is {}. Asserted {}".format(self.route.controller.__name__, controller)
+            assert self.route.controller_method == method, "Controller method is {}. Asserted {}".format(self.route.controller_method, method)
+
+        return self
 
     def contains(self, value):
         return value in self.container.make('Response').decode('utf-8')

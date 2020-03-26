@@ -4,7 +4,7 @@ from ..commands import BaseScaffoldCommand
 
 class MailableCommand(BaseScaffoldCommand):
     """
-    Creates a new Job.
+    Creates a new Mailable.
 
     mailable
         {name : Name of the job you want to create}
@@ -13,3 +13,4 @@ class MailableCommand(BaseScaffoldCommand):
     scaffold_name = 'Mailable'
     template = '/masonite/snippets/scaffold/mailable'
     base_directory = 'app/mailable/'
+    postfix = "Mailable"

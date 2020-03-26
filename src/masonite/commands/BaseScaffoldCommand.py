@@ -24,7 +24,12 @@ class BaseScaffoldCommand(Command):
     template = '/masonite/snippets/scaffold/model'
 
     def handle(self):
-        class_name = self.argument('name') + self.postfix
+        # If postfix already exists as part of the name, don't add it again
+        if self.postfix and self.argument("name").lower().endswith(self.postfix.lower()):
+            class_name = self.argument("name")
+        else:
+            class_name = self.argument("name") + self.postfix
+
         view = View(App())
         class_directory = '{}{}{}{}'.format(
             self.base_directory, class_name, self.suffix, self.file_extension)

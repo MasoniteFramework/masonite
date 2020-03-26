@@ -221,7 +221,6 @@ class BaseHttpRoute:
             import sys
             import traceback
             _, _, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
             print('\033[93mTrouble importing controller!', str(e), '\033[0m')
         if not self.e:

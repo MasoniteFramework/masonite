@@ -2,6 +2,7 @@
 import unittest
 
 from app.http.controllers.subdirectory.SubController import SubController
+from app.http.controllers.subdirectory.deep.DeepController import DeepController
 from src.masonite.app import App
 from src.masonite.exceptions import (InvalidRouteCompileException,
                                      RouteException)
@@ -138,6 +139,44 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(['another', 'auth', 'user'], routes[0].list_middleware)
         self.assertEqual(['auth', 'user'], routes[1].list_middleware)
         self.assertEqual(['test', 'test2', 'auth', 'user'], routes[2].list_middleware)
+
+    def test_group_route_namespace(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'SubController@show'),
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(SubController, routes[0].controller)
+
+    def test_group_route_namespace_deep(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get().route('/test/1', 'DeepController@show'),
+            ], namespace='deep.')
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
+
+    def test_group_route_namespace_deep_using_route_values_in_constructor(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get('/test/1', 'DeepController@show'),
+            ], namespace='deep.')
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
+
+    def test_group_route_namespace_deep_no_dots(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get().route('/test/1', 'DeepController@show'),
+            ], namespace='deep')
+        ], namespace='subdirectory')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([

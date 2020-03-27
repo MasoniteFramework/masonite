@@ -31,6 +31,8 @@ DRIVERS = {
         'port': env('MAIL_PORT', '465'),
         'username': env('MAIL_USERNAME', 'username'),
         'password': env('MAIL_PASSWORD', 'password'),
+        'ssl': env('MAIL_SSL', False),
+        'login': env('MAIL_LOGIN_REQUIRED', True),
     },
     'mailgun': {
         'secret': env('MAILGUN_SECRET', 'key-XX'),

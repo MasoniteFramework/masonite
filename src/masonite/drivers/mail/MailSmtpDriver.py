@@ -43,7 +43,8 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             self.smtp = smtplib.SMTP('{0}:{1}'.format(
                 config['host'], config['port']))
 
-        self.smtp.login(config['username'], config['password'])
+        if config.get('login', True):
+            self.smtp.login(config['username'], config['password'])
 
         if self._queue:
             from wsgi import container

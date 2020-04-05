@@ -147,6 +147,7 @@ class BaseHttpRoute:
         Returns:
             self
         """
+        self.output = output
         self._find_controller(output)
 
         if not route.startswith('/'):
@@ -172,23 +173,24 @@ class BaseHttpRoute:
         Returns:
             None
         """
+        module_location = self.module_location
         # If the output specified is a string controller
         if isinstance(controller, str):
             mod = controller.split('@')
             # If trying to get an absolute path via a string
             if mod[0].startswith('/'):
-                self.module_location = '.'.join(
+                module_location = '.'.join(
                     mod[0].replace('/', '').split('.')[0:-1])
             elif '.' in mod[0]:
                 # This is a deeper module controller
-                self.module_location = self.module_location + '.' + '.'.join(mod[0].split('.')[:-1])
+                module_location += '.' + '.'.join(mod[0].split('.')[:-1])
         else:
             if controller is None:
                 return None
 
             fully_qualified_name = controller.__qualname__
             mod = fully_qualified_name.split('.')
-            self.module_location = controller.__module__
+            module_location = controller.__module__
 
         # Gets the controller name from the output parameter
         # This is used to add support for additional modules
@@ -199,10 +201,10 @@ class BaseHttpRoute:
             # Import the module
             if isinstance(controller, str):
                 module = importlib.import_module(
-                    '{0}.'.format(self.module_location) + get_controller)
+                    '{0}.'.format(module_location) + get_controller)
             else:
                 module = importlib.import_module(
-                    '{0}'.format(self.module_location))
+                    '{0}'.format(module_location))
 
             # Get the controller from the module
             self.controller = getattr(module, get_controller)
@@ -213,21 +215,20 @@ class BaseHttpRoute:
             import sys
             import traceback
             _, _, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
-            print('\033[93mCannot find controller {}. Did you create this one? Raised: {} in {} on line {}'.format(
-                get_controller, str(e), tb[0], tb[1]), '\033[0m')
         except Exception as e:  # skipcq
             import sys
             import traceback
             _, _, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
             self.e = e
             print('\033[93mTrouble importing controller!', str(e), '\033[0m')
+        if not self.e:
+            self.module_location = module_location
 
     def get_response(self):
         # Resolve Controller Constructor
         if self.e:
+            print('\033[93mCannot find controller {}. Did you create this one?'.format(self.output), '\033[0m')
             raise SyntaxError(str(self.e))
 
         controller = self.request.app().resolve(self.controller)
@@ -599,7 +600,7 @@ class Redirect(BaseHttpRoute):
 class RouteGroup:
     """Class for specifying Route Groups."""
 
-    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[]):
+    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[], namespace=''):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -608,6 +609,7 @@ class RouteGroup:
             domain {list} -- String or list of domains to attach to all the routes. (default: {[]})
             prefix {str} -- Prefix to attach to all the route URI's. (default: {''})
             name {str} -- Base name to attach to all the routes. (default: {''})
+            namespace {str} -- Namespace path to attach to all the routes. (default: {''})
 
         Returns:
             list -- Returns a list of routes.
@@ -623,6 +625,9 @@ class RouteGroup:
 
         if domain:
             cls._domain(cls, domain)
+
+        if namespace:
+            cls._namespace(cls, namespace)
 
         if prefix:
             cls._prefix(cls, prefix)
@@ -685,3 +690,61 @@ class RouteGroup:
         for route in self.routes:
             if isinstance(route.named_route, str):
                 route.named_route = name + route.named_route
+
+    def _namespace(self, namespace):
+        """Namespace of the controller for all routes
+
+        Arguments:
+            namespace {str} -- String to add to find controllers for all Routes.
+        """
+        if not namespace.endswith('.'):
+            namespace += '.'
+        for route in self.routes:
+            if isinstance(route.output, str):
+                route.e = False  # reset any previous find_controller attempt
+                route.output = namespace + route.output
+                route._find_controller(route.output)
+
+
+class Resource:
+
+    def __new__(cls, base='', controller='', only=['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'], names={}):
+        routes = []
+
+        if 'index' in only:
+            route = Get("{}".format(base), "{}@index".format(controller))
+            if 'index' in names:
+                route.name(names['index'])
+            routes.append(route)
+        if 'create' in only:
+            route = Get("{}/create".format(base), "{}@create".format(controller))
+            if 'create' in names:
+                route.name(names['create'])
+            routes.append(route)
+        if 'store' in only:
+            route = Post("{}".format(base), "{}@store".format(controller))
+            if 'store' in names:
+                route.name(names['store'])
+            routes.append(route)
+        if 'show' in only:
+            route = Get("{}/@id".format(base), "{}@show".format(controller))
+            if 'show' in names:
+                route.name(names['show'])
+            routes.append(route)
+        if 'edit' in only:
+            route = Get("{}/@id/edit".format(base), "{}@edit".format(controller))
+            if 'edit' in names:
+                route.name(names['edit'])
+            routes.append(route)
+        if 'update' in only:
+            route = Match(['PUT', 'PATCH']).route("{}/@id".format(base), "{}@update".format(controller))
+            if 'update' in names:
+                route.name(names['update'])
+            routes.append(route)
+        if 'destroy' in only:
+            route = Delete("{}/@id".format(base), "{}@destroy".format(controller))
+            if 'destroy' in names:
+                route.name(names['destroy'])
+            routes.append(route)
+
+        return routes

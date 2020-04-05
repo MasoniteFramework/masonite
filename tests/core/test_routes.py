@@ -2,13 +2,14 @@
 import unittest
 
 from app.http.controllers.subdirectory.SubController import SubController
+from app.http.controllers.subdirectory.deep.DeepController import DeepController
 from src.masonite.app import App
 from src.masonite.exceptions import (InvalidRouteCompileException,
                                      RouteException)
 from src.masonite.helpers.routes import create_matchurl, flatten_routes, group
 from src.masonite.request import Request
 from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
-                                 Patch, Post, Put, Redirect, Route, RouteGroup,
+                                 Patch, Post, Put, Resource, Redirect, Route, RouteGroup,
                                  Trace)
 from src.masonite.testing import TestCase, generate_wsgi
 from src.masonite.exceptions import RouteNotFoundException
@@ -138,6 +139,44 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(['another', 'auth', 'user'], routes[0].list_middleware)
         self.assertEqual(['auth', 'user'], routes[1].list_middleware)
         self.assertEqual(['test', 'test2', 'auth', 'user'], routes[2].list_middleware)
+
+    def test_group_route_namespace(self):
+        routes = RouteGroup([
+            Get().route('/test/1', 'SubController@show'),
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(SubController, routes[0].controller)
+
+    def test_group_route_namespace_deep(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get().route('/test/1', 'DeepController@show'),
+            ], namespace='deep.')
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
+
+    def test_group_route_namespace_deep_using_route_values_in_constructor(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get('/test/1', 'DeepController@show'),
+            ], namespace='deep.')
+        ], namespace='subdirectory.')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
+
+    def test_group_route_namespace_deep_no_dots(self):
+        routes = RouteGroup([
+            RouteGroup([
+                Get().route('/test/1', 'DeepController@show'),
+            ], namespace='deep')
+        ], namespace='subdirectory')
+
+        self.assertIsInstance(routes, list)
+        self.assertEqual(DeepController, routes[0].controller)
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([
@@ -301,6 +340,24 @@ class TestOptionalRoutes(TestCase):
         self.assertEqual(request.route('user.multiple', {'name': 'john'}), '/multiple/user/john')
         self.assertEqual(request.route('user.multiple', {'name': 'john', 'last': 'smith'}), '/multiple/user/john/smith')
         self.assertEqual(request.route('user.multiple', {'last': 'smith'}), '/multiple/user/smith')
+
+class TestRouteResources(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.routes(only=[Resource('/user', 'UserResourceController', names={
+            'create': 'users.build'
+        })])
+
+    def test_has_correct_controllers(self):
+        self.get('/user').assertHasController('UserResourceController@index').assertIsNotNamed()
+        self.get('/user/create').assertHasController('UserResourceController@create').assertIsNamed('users.build')
+        self.post('/user').assertHasController('UserResourceController@store').assertIsNotNamed()
+        self.get('/user/1').assertHasController('UserResourceController@show').assertIsNotNamed()
+        self.get('/user/1/edit').assertHasController('UserResourceController@edit').assertIsNotNamed()
+        self.put('/user/1').assertHasController('UserResourceController@update').assertIsNotNamed()
+        self.delete('/user/1').assertHasController('UserResourceController@destroy').assertIsNotNamed()
+
 
 class WsgiInputTestClass:
 

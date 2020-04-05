@@ -104,23 +104,26 @@ class NewCommand(Command):
             if success:
                 for directory in os.listdir(os.getcwd()):
                     if directory.startswith('MasoniteFramework-cookie-cutter') or directory.startswith('cookie-cutter-'):
-                        if target:
+                        if target == '.':
                             from_dir = os.path.join(os.getcwd(), '{0}'.format(directory))
                             to_dir = os.path.abspath(os.path.expanduser(target))
 
                             for file in os.listdir(from_dir):
                                 shutil.move(os.path.join(from_dir, file), to_dir)
-
                             os.rmdir(from_dir)
                         else:
-                            os.rename(
-                                os.path.join(os.getcwd(), '{0}'.format(directory)), os.getcwd() + '/' + name)
+                            os.rename(os.path.join(os.getcwd(), '{0}'.format(directory)), os.path.join(os.getcwd(), target))
+
                         self.info('Application Created Successfully!')
                         self.info('Installing Dependencies ')
+                        if target == '.':
+                            self.call('install')
 
-                        self.call('install')
+                            self.info('Installed Successfully. Just Run `craft serve` To Start Your Application.')
+                        else:
+                            self.info("Project Created Successfully. You now will have to CD into your new '{}' directory and run `craft install` to complete the installation".format(target))
 
-                        self.info('Installed Successfully. Just Run `craft serve` To Start Your Application.')
+                        return
 
             else:
                 self.comment('Could Not Create Application :(')

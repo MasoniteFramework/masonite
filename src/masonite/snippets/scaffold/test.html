@@ -8,11 +8,11 @@ class {{ class }}(TestCase):
     """All tests by default will run inside of a database transaction."""
     transactions = True
 
+    """Anytime you override the setUp method you must call the setUp method
+    on the parent class like below.
     def setUp(self):
-        """Anytime you override the setUp method you must call the setUp method
-        on the parent class like below.
-        """
         super().setUp()
+    """
 
     def setUpFactories(self):
         """This runs when the test class first starts up.

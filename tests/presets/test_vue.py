@@ -45,6 +45,7 @@ class TestVue(unittest.TestCase):
         Vue().ensure_component_directory_exists()
         Vue().update_bootstrapping()
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/vue-stubs/app.js', 'resources/js/app.js'))
+        self.assertTrue(filecmp.cmp('src/masonite/commands/presets/shared-stubs/bootstrap.js', 'resources/js/bootstrap.js'))
         shutil.rmtree('resources/js')
 
     def test_install(self):

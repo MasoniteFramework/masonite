@@ -36,3 +36,10 @@ class Preset:
             if os.path.exists(os.path.realpath(filename)):
                 os.remove(filename)
         shutil.rmtree('node_modules', ignore_errors=True)
+
+    def create_scss_file(self):
+        """Create an empty app.scss file"""
+        os.makedirs(os.path.realpath('resources/sass'))
+        with open(os.path.realpath('resources/sass/app.scss'), 'w') as f:
+            f.write('// Add your Sass here')
+

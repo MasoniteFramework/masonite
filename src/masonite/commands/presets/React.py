@@ -18,6 +18,7 @@ class React(Preset):
         self.update_webpack_configuration()
         self.update_bootstrapping()
         self.update_component()
+        self.create_scss_file()
         self.remove_node_modules()
 
     def update_package_array(self, packages={}):

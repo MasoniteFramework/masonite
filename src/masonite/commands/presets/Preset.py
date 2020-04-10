@@ -42,4 +42,3 @@ class Preset:
         os.makedirs(os.path.realpath('resources/sass'))
         with open(os.path.realpath('resources/sass/app.scss'), 'w') as f:
             f.write('// Add your Sass here')
-

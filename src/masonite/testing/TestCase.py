@@ -24,9 +24,9 @@ class TestCase(unittest.TestCase):
     _transaction = False
 
     def setUp(self):
-        self.initConfigs()
+        self.configure()
 
-    def initConfigs(self):
+    def configure(self):
         from wsgi import container
 
         self.container = container

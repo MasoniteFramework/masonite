@@ -23,3 +23,8 @@ class TestPreset(unittest.TestCase):
         # Preset().update_packages()
         # TODO: Not sure how to test this just yet
         pass
+
+    def test_create_scss_file(self):
+        Preset().create_scss_file()
+        self.assertTrue(os.path.exists('resources/sass/app.scss'))
+        shutil.rmtree('resources/sass')

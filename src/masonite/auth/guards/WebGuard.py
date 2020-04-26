@@ -75,8 +75,8 @@ class WebGuard(AuthenticationGuard):
             # while PostgreSQL can store it as bytes
             # This is to prevent to double encode the password as bytes
             password_as_bytes = self._get_password_column(model)
-            if (not isinstance(password_as_bytes, bytes)):
-                password_as_bytes = bytes(password_as_bytes, 'utf-8')
+            if not isinstance(password_as_bytes, bytes):
+                password_as_bytes = bytes(password_as_bytes or '', 'utf-8')
 
             if model and bcrypt.checkpw(bytes(password, 'utf-8'), password_as_bytes):
                 if not self._once:

@@ -39,7 +39,7 @@ def dot(data, compile_to=None):
     return compiling
 
 
-def clean_request_input(value, clean=True):
+def clean_request_input(value, clean=True, quote=True):
     if not clean:
         return value
 
@@ -47,13 +47,13 @@ def clean_request_input(value, clean=True):
 
     try:
         if isinstance(value, str):
-            return html.escape(value)
+            return html.escape(value, quote=quote)
         elif isinstance(value, list):
-            return [html.escape(x) for x in value]
+            return [html.escape(x, quote=quote) for x in value]
         elif isinstance(value, int):
             return value
         elif isinstance(value, dict):
-            return {key: html.escape(val) for (key, val) in value.items()}
+            return {key: html.escape(val, quote=quote) for (key, val) in value.items()}
     except (AttributeError, TypeError):
         pass
 

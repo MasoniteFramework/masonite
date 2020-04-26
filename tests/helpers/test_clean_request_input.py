@@ -47,13 +47,17 @@ class TestCleanRequestInput(unittest.TestCase):
         obj = b'test'
         self.assertEqual(clean_request_input(obj), obj)
 
-    def test_does_not_clean_bytes_objects(self):
+    def test_does_not_clean_bytes_object_list(self):
         obj = [b'test', b'test']
         self.assertEqual(clean_request_input(obj), obj)
 
     def test_does_not_clean_bytes_objects_with_dicts(self):
         obj = {'x': b'test'}
         self.assertEqual(clean_request_input(obj), obj)
+
+    def test_does_not_clean_quotes(self):
+        obj = {'content': "awesome! 'i love you'"}
+        self.assertEqual(clean_request_input(obj, quote=False)['content'], "awesome! 'i love you'")
 
 
 class FieldStorageTest(cgi.FieldStorage):

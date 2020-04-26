@@ -64,7 +64,7 @@ class Request(Extendable):
         self.encryption_key = False
         self.container = None
 
-    def input(self, name, default=False, clean=False):
+    def input(self, name, default=False, clean=False, quote=True):
         """Get a specific input value.
 
         Arguments:
@@ -86,7 +86,7 @@ class Request(Extendable):
         elif '.' in name:
             name = dot(name, "{1}[{.}]")
 
-        return clean_request_input(self.request_variables.get(name, default), clean=clean)
+        return clean_request_input(self.request_variables.get(name, default), clean=clean, quote=quote)
 
     def is_post(self):
         """Check if the current request is a POST request.
@@ -134,7 +134,7 @@ class Request(Extendable):
         self.encryption_key = key
         return self
 
-    def all(self, internal_variables=True, clean=True):
+    def all(self, internal_variables=True, clean=True, quote=True):
         """Get all the input data.
 
         Keyword Arguments:
@@ -151,9 +151,9 @@ class Request(Extendable):
             for key, value in self.request_variables.items():
                 if not key.startswith('__'):
                     without_internals.update({key: value})
-            return clean_request_input(without_internals, clean=clean)
+            return clean_request_input(without_internals, clean=clean, quote=quote)
 
-        return clean_request_input(self.request_variables, clean=clean)
+        return clean_request_input(self.request_variables, clean=clean, quote=quote)
 
     def only(self, *names):
         """Return the specified request variables in a dictionary.

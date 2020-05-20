@@ -33,6 +33,7 @@ DRIVERS = {
         'password': env('MAIL_PASSWORD', 'password'),
         'ssl': env('MAIL_SSL', False),
         'login': env('MAIL_LOGIN_REQUIRED', True),
+        'tls': env('MAIL_TLS', False)
     },
     'mailgun': {
         'secret': env('MAILGUN_SECRET', 'key-XX'),

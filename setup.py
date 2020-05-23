@@ -45,7 +45,7 @@ setup(
     install_requires=[
         'bcrypt>=3.1,<3.2',
         'cleo>=0.6,<0.7',
-        'cryptography>=2.3,<2.8',
+        'cryptography>=2.3,<=2.9',
         'hupper<1.10',
         'Jinja2>=2,<3',
         'orator>=0.9,<1',

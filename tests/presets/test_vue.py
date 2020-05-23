@@ -45,6 +45,7 @@ class TestVue(unittest.TestCase):
         Vue().ensure_component_directory_exists()
         Vue().update_bootstrapping()
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/vue-stubs/app.js', 'resources/js/app.js'))
+        self.assertTrue(filecmp.cmp('src/masonite/commands/presets/shared-stubs/bootstrap.js', 'resources/js/bootstrap.js'))
         shutil.rmtree('resources/js')
 
     def test_install(self):
@@ -53,6 +54,8 @@ class TestVue(unittest.TestCase):
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/vue-stubs/webpack.mix.js', 'webpack.mix.js'))
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/vue-stubs/ExampleComponent.vue', 'resources/js/components/ExampleComponent.vue'))
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/vue-stubs/app.js', 'resources/js/app.js'))
+        self.assertTrue(os.path.exists('resources/sass/app.scss'))
+        shutil.rmtree('resources/sass')
         shutil.rmtree('resources/js')
         os.remove('webpack.mix.js')
         shutil.copyfile('package.json.save', 'package.json')

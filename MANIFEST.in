@@ -10,3 +10,4 @@ include src/masonite/commands/presets/bootstrap-stubs/*
 include src/masonite/commands/presets/react-stubs/*
 include src/masonite/commands/presets/remove-stubs/*
 include src/masonite/commands/presets/vue-stubs/*
+include src/masonite/commands/presets/shared-stubs/*

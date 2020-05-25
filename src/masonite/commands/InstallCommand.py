@@ -34,9 +34,9 @@ class InstallCommand(Command):
             except Exception:
                 self.comment(
                     """Pipenv could not install from your Pipfile .. reverting to pip installing requirements.txt""")
-                call(["pip3", "install", "-r", "requirements.txt"])
+                call(["python", "-m", "pip", "install", "-r", "requirements.txt"])
         elif os.path.isfile('requirements.txt'):
-            call(["pip3", "install", "-r", "requirements.txt"])
+            call(["python", "-m", "pip", "install", "-r", "requirements.txt"])
         else:
             raise OSError(
                 'Could not find a Pipfile or a requirements.txt file')

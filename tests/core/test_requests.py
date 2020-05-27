@@ -467,6 +467,7 @@ class TestRequest(unittest.TestCase):
         request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2"}])
 
         self.assertIsInstance(request.all(), list)
+        self.assertEqual(request.all()[0]['key'], 'val')
 
     def test_can_get_list_as_root_payload_as_dot_notation(self):
         app = App()

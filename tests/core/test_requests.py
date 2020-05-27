@@ -462,6 +462,7 @@ class TestRequest(unittest.TestCase):
         })
 
         self.assertEqual(request.input('request.age'), None)
+        self.assertEqual(request.input('request.age', default=1), None)
 
     def test_can_get_list_as_root_payload(self):
         app = App()

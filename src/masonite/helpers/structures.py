@@ -80,7 +80,6 @@ class Dot:
             elif isinstance(v, list):
                 for index, val in enumerate(v):
                     items.extend(self.flatten({str(index): val}, new_key, sep=sep).items())
-                print('key', new_key)
             else:
                 items.append((new_key, v))
 

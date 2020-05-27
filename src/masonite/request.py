@@ -57,6 +57,7 @@ class Request(Extendable):
         self._status = None
         self.request_variables = {}
         self._test_user = False
+        self.raw_input = None
 
         if environ:
             self.load_environ(environ)
@@ -150,6 +151,10 @@ class Request(Extendable):
         Returns:
             dict
         """
+
+        if isinstance(self.raw_input, list):
+            return self.raw_input
+
         if not internal_variables:
             without_internals = {}
             for key, value in self.request_variables.items():
@@ -229,6 +234,7 @@ class Request(Extendable):
             variables = query_parse(variables)
 
         if isinstance(variables, list):
+            self.raw_input = variables
             variables = {str(i): v for i, v in enumerate(variables)}
 
         try:

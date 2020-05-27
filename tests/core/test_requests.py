@@ -446,7 +446,58 @@ class TestRequest(unittest.TestCase):
             "description": "test only"
         })
 
-        self.assertEqual(request.input('response'), None)
+    def test_can_get_nully_value_with_dictdot(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables({
+            "gateway": "RENDIMENTO",
+            "request": {
+                "user": "data",
+                "age": None,
+            },
+            "response": None,
+            "description": "test only"
+        })
+
+        self.assertEqual(request.input('request.age'), None)
+        self.assertEqual(request.input('request.age', default=1), None)
+        self.assertEqual(request.input('request.salary', default=1), 1)
+
+    def test_can_get_list_as_root_payload(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2"}])
+
+        self.assertEqual(request.input(0)['key'], 'val')
+        self.assertEqual(request.input('0')['key'], 'val')
+        self.assertEqual(request.input(2), None)
+
+    def test_can_get_list_as_root_payload_getting_all(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2"}])
+
+        self.assertIsInstance(request.all(), list)
+        self.assertEqual(request.all()[0]['key'], 'val')
+
+    def test_can_get_list_as_root_payload_as_dot_notation(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2", "inner": {"value": "innervalue"}}, {"item3": [1,2]}])
+
+        self.assertEqual(request.input('0.key'), 'val')
+        self.assertEqual(request.input('1.item2'), 'val2')
+        self.assertEqual(request.input('1.inner.value'), 'innervalue')
+        self.assertEqual(request.input('2.item3.0'), 1)
+        self.assertEqual(request.input('3.item3'), False)
 
     def test_request_gets_correct_header(self):
         app = App()

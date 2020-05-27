@@ -77,8 +77,12 @@ class Dot:
             if isinstance(v, collections.MutableMapping):
                 items.append((new_key, v))
                 items.extend(self.flatten(v, new_key, sep=sep).items())
+            elif isinstance(v, list):
+                for index, val in enumerate(v):
+                    items.extend(self.flatten({str(index): val}, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
+
         return dict(items)
 
     def locate(self, search_path, default=''):

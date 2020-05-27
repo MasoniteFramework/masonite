@@ -446,7 +446,22 @@ class TestRequest(unittest.TestCase):
             "description": "test only"
         })
 
-        self.assertEqual(request.input('response'), None)
+    def test_can_get_nully_value_with_dictdot(self):
+        app = App()
+        app.bind('Request', self.request)
+        request = app.make('Request').load_app(app)
+
+        request._set_standardized_request_variables({
+            "gateway": "RENDIMENTO",
+            "request": {
+                "user": "data",
+                "age": None,
+            },
+            "response": None,
+            "description": "test only"
+        })
+
+        self.assertEqual(request.input('request.age'), None)
 
     def test_can_get_list_as_root_payload(self):
         app = App()

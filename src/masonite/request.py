@@ -84,9 +84,7 @@ class Request(Extendable):
             return self.request_variables.get(name)
 
         if '.' in name and isinstance(self.request_variables.get(name.split('.')[0]), dict):
-            value = DictDot().dot(name, self.request_variables)
-            if value:
-                return value
+            return DictDot().dot(name, self.request_variables)
 
         elif '.' in name:
             name = dot(name, "{1}[{.}]")

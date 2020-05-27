@@ -17,7 +17,7 @@ class Mailable:
         self._reply_to = reply_to
         return self
 
-    def send_from(self, send_from, from_name):
+    def send_from(self, send_from):
         self._from = send_from
         return self
 

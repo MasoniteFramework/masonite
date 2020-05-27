@@ -34,9 +34,8 @@ class MailTerminalDriver(BaseMailDriver, MailContract):
 
         self.logger.info('***************************************')
 
-        self.logger.info('To: {}'.format(self.to_address))
-        self.logger.info('From: {0} <{1}>'.format(
-            self.config.FROM['name'], self.config.FROM['address']))
+        self.logger.info('To: {}'.format(self.mail_to_header))
+        self.logger.info('From: {}'.format(self.mail_from_header))
         self.logger.info('Subject: {}'.format(self.message_subject))
         self.logger.info('Reply-To: {}'.format(self.message_reply_to))
         self.logger.info('Message: ')

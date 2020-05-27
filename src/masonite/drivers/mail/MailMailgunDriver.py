@@ -44,8 +44,8 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
             "https://api.mailgun.net/v3/{0}/messages".format(domain),
             auth=("api", secret),
             data={
-                "from": "{0} <{1}>".format(self.config.FROM['name'], self.from_address),
-                "to": [self.to_address],
+                "from": self.mail_from_header,
+                "to": self.to_addresses,
                 "subject": self.message_subject,
                 "h:Reply-To": self.message_reply_to,
                 "html": message})

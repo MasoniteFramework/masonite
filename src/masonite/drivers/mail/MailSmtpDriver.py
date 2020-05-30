@@ -1,6 +1,7 @@
 """SMTP Driver Module."""
 
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -41,6 +42,16 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         else:
             self.smtp = smtplib.SMTP('{0}:{1}'.format(
                 config['host'], config['port']))
+
+        # Check if TLS enabled
+        if 'tls' in config and config['tls'] is True:
+            # Define secure TLS connection
+            context = ssl.create_default_context()
+            context.check_hostname = False
+
+            # Check if correct response code for starttls is received from the server
+            if self.smtp.starttls(context=context)[0] != 220:
+                raise smtplib.SMTPNotSupportedError("Server is using untrusted protocol.")
 
         if config.get('login', True):
             self.smtp.login(config['username'], config['password'])

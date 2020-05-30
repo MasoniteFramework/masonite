@@ -736,14 +736,16 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.only('__token'), {'__token': 'testing'})
 
     def test_request_gets_only_clean_output(self):
-        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
+        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">', 'test': "awesome! 'this is a test'"})
         self.assertEqual(self.request.input('key', clean=True), '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
         self.assertEqual(self.request.input('key', clean=False), '<img """><script>alert(\'hey\')</script>">')
+        self.assertEqual(self.request.input('test', clean=True, quote=False), "awesome! 'this is a test'")
 
     def test_request_cleans_all_optionally(self):
-        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">'})
+        self.request._set_standardized_request_variables({'key': '<img """><script>alert(\'hey\')</script>">', 'test': "awesome! 'this is a test'"})
         self.assertEqual(self.request.all()['key'], '&lt;img &quot;&quot;&quot;&gt;&lt;script&gt;alert(&#x27;hey&#x27;)&lt;/script&gt;&quot;&gt;')
         self.assertEqual(self.request.all(clean=False)['key'], '<img """><script>alert(\'hey\')</script>">')
+        self.assertEqual(self.request.all(quote=False)['test'], "awesome! 'this is a test'")
 
     def test_request_gets_input_with_dotdict(self):
         self.request.request_variables = {

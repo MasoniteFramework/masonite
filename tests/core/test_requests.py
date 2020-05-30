@@ -474,7 +474,7 @@ class TestRequest(unittest.TestCase):
 
         self.assertEqual(request.input(0)['key'], 'val')
         self.assertEqual(request.input('0')['key'], 'val')
-        self.assertEqual(request.input(2), None)
+        self.assertEqual(request.input(2), False)
 
     def test_can_get_list_as_root_payload_getting_all(self):
         app = App()

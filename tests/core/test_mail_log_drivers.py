@@ -43,7 +43,7 @@ class TestMailLogDrivers(unittest.TestCase):
         user = UserMock
         user.email = 'test@email.com'
 
-        self.assertEqual(MailManager(self.app).driver('log').to(user).to_address, 'test@email.com')
+        self.assertEqual(MailManager(self.app).driver('log').to(user).to_addresses, ['test@email.com'])
 
     def test_log_mail_renders_template(self):
 
@@ -52,9 +52,9 @@ class TestMailLogDrivers(unittest.TestCase):
 
     def test_terminal_driver(self):
         user = UserMock
-        user.email = 'test@email.com'
+        user.email = ['test@email.com']
 
-        self.assertEqual(MailManager(self.app).driver('terminal').to(user).to_address, 'test@email.com')
+        self.assertEqual(MailManager(self.app).driver('terminal').to(user).to_addresses, ['test@email.com'])
 
     def test_terminal_mail_renders_template(self):
 

@@ -30,9 +30,8 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
         message_contents = MIMEText(message_contents, 'html')
 
         message['Subject'] = self.message_subject
-        message['From'] = '{0} <{1}>'.format(
-            self.config.FROM['name'], self.config.FROM['address'])
-        message['To'] = self.to_address
+        message['From'] = self.mail_from_header
+        message['To'] = self.mail_to_header
         message['Reply-To'] = self.message_reply_to
         message.attach(message_contents)
 
@@ -51,12 +50,11 @@ class MailSmtpDriver(BaseMailDriver, MailContract):
             from ... import Queue
             container.make(Queue).push(
                 self._send_mail,
-                args=(self.config.FROM['name'], self.to_address, message.as_string())
+                args=(self.mail_from_header, self.to_addresses, message.as_string())
             )
             return
 
-        self._send_mail(self.config.FROM['name'],
-                self.to_address, message.as_string())
+        self._send_mail(self.mail_from_header, self.to_addresses, message.as_string())
 
     def _send_mail(self, *args):
         """Wrapper around sending mail so it can also be used for queues."""

@@ -32,7 +32,7 @@ class TestSMTPDriver(unittest.TestCase):
         user = UserMock
         user.email = 'test@email.com'
 
-        self.assertEqual(MailManager(self.app).driver('smtp').to(user).to_address, 'test@email.com')
+        self.assertEqual(MailManager(self.app).driver('smtp').to(user).to_addresses, ['test@email.com'])
         self.assertEqual(MailManager(self.app).driver('smtp').reply_to('reply_to@email.com').message_reply_to , 'reply_to@email.com')
 
     def test_mail_renders_template(self):
@@ -52,7 +52,7 @@ class TestMailable(TestCase):
 
     def test_works(self):
         mailable = MailManager(self.container).driver('smtp').mailable(ForgotPasswordMailable())
-        self.assertEqual(mailable.to_address, 'idmann509@gmail.com')
+        self.assertEqual(mailable.to_addresses, ['idmann509@gmail.com'])
         self.assertEqual(mailable.from_address, 'admin@test.com')
         self.assertEqual(mailable.message_subject, 'Forgot Password')
         self.assertEqual(mailable.message_body, 'testing email')

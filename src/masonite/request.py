@@ -81,7 +81,7 @@ class Request(Extendable):
         """
         name = str(name)
         if name.isnumeric():
-            return self.request_variables.get(name)
+            return self.request_variables.get(name, default)
 
         if '.' in name and isinstance(self.request_variables.get(name.split('.')[0]), dict):
             return clean_request_input(DictDot().dot(name, self.request_variables, default=default), clean=clean)

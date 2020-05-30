@@ -189,7 +189,10 @@ class App:
                     self._remembered[signature] = objects
             return obj(*objects)
         except (TypeError,) as e:
-            raise ContainerError(str(e) + ' while calling {}'.format(obj)) from e
+            exception = ContainerError
+            exception.from_obj = obj
+
+            raise exception(str(e) + ' while calling {}'.format(obj)) from e
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.

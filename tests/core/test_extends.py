@@ -30,9 +30,11 @@ class ExtendClass2:
 
 
 class MockWsgiInput():
+    def __init__(self, data):
+        self.data = data
 
     def read(self, _):
-        return '{"id": 1, "test": "testing"}'
+        return self.data
 
 
 def get_third_path(self):
@@ -68,31 +70,61 @@ class TestExtends(unittest.TestCase):
         request.extend(ExtendClass.get_another_path)
         self.assertEqual(request.get_another_path(), '/')
 
-    def test_gets_input_with_all_request_methods(self):
+    def test_gets_input_and_query_with_get_request(self):
         app = App()
-        wsgi_request['QUERY_STRING'] = 'hey=test'
-        request_class = Request(wsgi_request)
+        wsgi_environ = generate_wsgi()
+        wsgi_environ['QUERY_STRING'] = 'param=1&param=2&param=3&foo=bar&q=yes'
+        wsgi_environ['wsgi.input'] = {'param': 'hey', 'foo': [9, 8, 7, 6], 'bar': 'baz'}
+        wsgi_environ['REQUEST_METHOD'] = 'GET'
+
+        route_class = Route(wsgi_environ)
+        request_class = Request(wsgi_environ)
         app.bind('Request', request_class)
+        app.bind('Route', route_class)
         request = app.make('Request').load_app(app)
 
-        request.environ['REQUEST_METHOD'] = 'GET'
-        self.assertEqual(request.input('hey'), 'test')
+        self.assertEqual(request.query('param'), '1')
+        self.assertEqual(request.query('foo'), 'bar')
+        self.assertEqual(request.query('param', multi=True), ['1', '2', '3'])
+        self.assertEqual(request.query('not-exist', default=2), 2)
+        self.assertEqual(request.query('not-exist', default=2, multi=True), 2)
+        self.assertEqual(request.query('q', default='no'), 'yes')
 
-        request.environ['REQUEST_METHOD'] = 'POST'
-        self.assertEqual(request.input('hey'), 'test')
+        self.assertEqual(request.input('foo'), 'bar')
+        self.assertEqual(request.input('param'), '1')
+        self.assertEqual(request.input('q', default='no'), 'yes')
+        self.assertEqual(request.input('bar', default='default'), 'default')
 
-        request.environ['REQUEST_METHOD'] = 'PUT'
-        self.assertEqual(request.input('hey'), 'test')
+    def test_gets_input_and_query_with_non_get_request(self):
+        app = App()
 
-        request.environ['REQUEST_METHOD'] = 'PATCH'
-        self.assertEqual(request.input('hey'), 'test')
+        for method in ['POST', 'PUT', 'DELETE']:
+            wsgi_environ = generate_wsgi()
+            wsgi_environ['REQUEST_METHOD'] = method
+            wsgi_environ['QUERY_STRING'] = 'param=1&param=2&param=3&foo=bar&q=yes'
+            wsgi_environ['wsgi.input'] = MockWsgiInput('{"param": "hey", "foo": [9, 8, 7, 6], "bar": "baz"}')
+            wsgi_environ['CONTENT_TYPE'] = 'application/json'
+            route_class = Route(wsgi_environ)
+            request_class = Request(wsgi_environ)
+            app.bind('Request', request_class)
+            app.bind('Route', route_class)
+            request = app.make('Request').load_app(app)
 
-        request.environ['REQUEST_METHOD'] = 'DELETE'
-        self.assertEqual(request.input('hey'), 'test')
+            self.assertEqual(request.input('foo'), [9, 8, 7, 6])
+            self.assertEqual(request.input('param'), 'hey')
+            self.assertEqual(request.input('not-exist', default=2), 2)
+            self.assertEqual(request.input('q', default='default'), 'default')
+            self.assertEqual(request.input('bar', default='default'), 'baz')
+            self.assertEqual(request.query('foo'), 'bar')
+            self.assertEqual(request.query('param'), '1')
+            self.assertEqual(request.query('param', multi=True), ['1', '2', '3'])
+            self.assertEqual(request.query('not-exist', default=2), 2)
+            self.assertEqual(request.query('not-exist', default=2, multi=True), 2)
+            self.assertEqual(request.query('q', default='default'), 'yes')
 
     def test_hidden_form_request_method_changes_request_method(self):
         app = App()
-        wsgi_request['QUERY_STRING'] = '__method=PUT'
+        wsgi_request['POST_DATA'] = '__method=PUT'
         request_class = Request(wsgi_request)
 
         app.bind('Request', request_class)
@@ -104,8 +136,8 @@ class TestExtends(unittest.TestCase):
         json_wsgi = wsgi_request
         json_wsgi['REQUEST_METHOD'] = 'POST'
         json_wsgi['CONTENT_TYPE'] = 'application/json'
-        json_wsgi['QUERY_STRING'] = ''
-        json_wsgi['wsgi.input'] = MockWsgiInput()
+        json_wsgi['POST_DATA'] = ''
+        json_wsgi['wsgi.input'] = MockWsgiInput('{"id": 1, "test": "testing"}')
         Route(json_wsgi)
         request_obj = Request(json_wsgi)
 

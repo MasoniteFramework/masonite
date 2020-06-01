@@ -11,6 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
+from urllib.parse import parse_qs
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -58,6 +59,7 @@ class Request(Extendable):
         self.request_variables = {}
         self._test_user = False
         self.raw_input = None
+        self.query_params = {}
 
         if environ:
             self.load_environ(environ)
@@ -88,6 +90,29 @@ class Request(Extendable):
             name = dot(name, "{1}[{.}]")
 
         return clean_request_input(self.request_variables.get(name, default), clean=clean, quote=quote)
+
+    def query(self, name, default=None, multi=False):
+        """Get a specific query string value.
+
+        Arguments:
+            name {string} -- Key of the input data
+
+        Keyword Arguments:
+            default {any} -- Default value if input does not exist (default: {None})
+            multi {bool} -- Whether to return all values of a multi value query string param
+                            ie. quuery_param=one&query_param=two (default: {False})
+
+        Returns:
+            any
+        """
+        try:
+            value = self.query_params[name]
+        except KeyError:
+            return default
+
+        if not multi and value:
+            return value[0]
+        return value
 
     def is_post(self):
         """Check if the current request is a POST request.
@@ -211,7 +236,14 @@ class Request(Extendable):
         self.environ = environ
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
-        if 'QUERY_STRING' in environ:
+        self.request_variables = {}
+
+        if 'QUERY_STRING' in environ and environ['QUERY_STRING']:
+            self.query_params = parse_qs(environ['QUERY_STRING'])
+
+        if 'POST_DATA' in environ:
+            self._set_standardized_request_variables(environ['POST_DATA'])
+        elif 'QUERY_STRING' in environ and environ['QUERY_STRING']:
             self._set_standardized_request_variables(environ['QUERY_STRING'])
 
         if self.has('__method'):
@@ -234,7 +266,6 @@ class Request(Extendable):
             variables = {str(i): v for i, v in enumerate(variables)}
 
         try:
-            self.request_variables = {}
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
                 self.request_variables[name.replace('[]', '')] = value

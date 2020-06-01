@@ -30,11 +30,7 @@ class Route:
         self.method_type = ['GET']
 
         if environ:
-            self.environ = environ
-            self.url = environ['PATH_INFO']
-
-            if self.is_not_get_request():
-                self.environ['QUERY_STRING'] = self.set_post_params()
+            self.load_environ(environ)
 
     def load_environ(self, environ):
         """Load the WSGI environ into the class.
@@ -49,11 +45,11 @@ class Route:
         self.url = environ['PATH_INFO']
 
         if self.is_not_get_request():
-            self.environ['QUERY_STRING'] = self.set_post_params()
+            self.environ['POST_DATA'] = self.get_post_params()
 
         return self
 
-    def set_post_params(self):
+    def get_post_params(self):
         """Return the correct input.
 
         Returns:
@@ -61,7 +57,7 @@ class Route:
         """
         fields = None
         if self.is_not_get_request():
-            if 'CONTENT_TYPE' in self.environ and 'application/json' in self.environ['CONTENT_TYPE']:
+            if 'CONTENT_TYPE' in self.environ and 'application/json' in self.environ['CONTENT_TYPE'].lower():
                 try:
                     request_body_size = int(
                         self.environ.get('CONTENT_LENGTH', 0))

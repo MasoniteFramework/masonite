@@ -84,6 +84,7 @@ class TestExtends(unittest.TestCase):
         request = app.make('Request').load_app(app)
 
         self.assertEqual(request.query('param'), '1')
+        self.assertEqual(request.all_query()['param'], ['1', '2', '3'])
         self.assertEqual(request.query('foo'), 'bar')
         self.assertEqual(request.query('param', multi=True), ['1', '2', '3'])
         self.assertEqual(request.query('not-exist', default=2), 2)

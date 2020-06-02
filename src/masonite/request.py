@@ -114,6 +114,14 @@ class Request(Extendable):
             return value[0]
         return value
 
+    def all_query(self):
+        """Get all query string values
+
+        Returns:
+            any
+        """
+        return self.query_params
+
     def is_post(self):
         """Check if the current request is a POST request.
 

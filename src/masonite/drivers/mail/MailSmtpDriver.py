@@ -12,29 +12,38 @@ from ...drivers import BaseMailDriver
 class MailSmtpDriver(BaseMailDriver, MailContract):
     """Mail smtp driver."""
 
+    def _message(self, message_contents=None):
+        message = MIMEMultipart('alternative')
+        message['Subject'] = self.message_subject
+        message['From'] = self.mail_from_header
+        message['To'] = self.mail_to_header
+        message['Reply-To'] = self.message_reply_to
+
+        if message_contents:
+            message_contents = MIMEText(message_contents, 'html')
+            message.attach(message_contents)
+
+        else:
+            if self.html_content:
+                message.attach(MIMEText(self.html_content, 'html'))
+
+            if self.text_content:
+                message.attach(MIMEText(self.text_content, 'plain'))
+
+        return message
+
     def send(self, message_contents=None):
         """Send the message through SMTP.
 
         Keyword Arguments:
-            message {string} -- The message to be sent to SMTP. (default: {None})
+            message {string} -- The HTML message to be sent to SMTP. (default: {None})
 
         Returns:
             None
         """
         config = self.config.DRIVERS['smtp']
 
-        message = MIMEMultipart('alternative')
-
-        if not message_contents:
-            message_contents = self.message_body
-
-        message_contents = MIMEText(message_contents, 'html')
-
-        message['Subject'] = self.message_subject
-        message['From'] = self.mail_from_header
-        message['To'] = self.mail_to_header
-        message['Reply-To'] = self.message_reply_to
-        message.attach(message_contents)
+        message = self._message(message_contents=message_contents)
 
         # Send the message via our own SMTP server.
         if 'ssl' in config and config['ssl'] is True:

@@ -28,6 +28,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         Returns:
             string|None - Returns None if a value does not exist.
         """
+        
         cookie = self.request.get_cookie('s_{0}'.format(key))
         if cookie:
             return self._get_serialization_value(cookie)
@@ -95,7 +96,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        # print(self.request.environ['HTTP_COOKIE'])
         if 'HTTP_COOKIE' in self.request.environ and self.request.environ['HTTP_COOKIE']:
             cookies_original = self.request.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
@@ -136,7 +136,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         return self
 
     def _get_serialization_value(self, value):
-        print('deserializing value')
         try:
             return json.loads(value)
         except ValueError:

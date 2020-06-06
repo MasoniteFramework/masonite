@@ -117,7 +117,7 @@ class TestRequest(unittest.TestCase):
         self.request.cookies = []
         self.request.cookie('setcookie_expiration', 'value', expires='2 months')
 
-        time = cookie_expire_time('2 months')
+        time = cookie_expire_time('2 months') + ' GMT'
 
         self.assertEqual(self.request.get_cookie('setcookie_expiration'), 'value')
         self.assertEqual(self.request.get_raw_cookie('setcookie_expiration')['expires'], time)

@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 
 from .. import env
 from ..exceptions import RouteNotFoundException
+from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
@@ -52,7 +53,8 @@ class TestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.staticSetUpDatabase()
+        pass
+        # cls.staticSetUpDatabase()
 
     @classmethod
     def tearDownClass(cls):
@@ -99,23 +101,20 @@ class TestCase(unittest.TestCase):
 
     def setUpDatabase(self):
         self.tearDownDatabase()
-        # Migrations().run()
+        Migrations().run()
         if hasattr(self, 'setUpFactories'):
             self.setUpFactories()
 
     def tearDownDatabase(self):
-        pass
-        # Migrations().reset()
+        Migrations().reset()
 
     @staticmethod
     def staticSetUpDatabase():
-        pass
-        # Migrations().run()
+        Migrations().run()
 
     @staticmethod
     def staticTearDownDatabase():
-        pass
-        # Migrations().reset()
+        Migrations().reset()
 
     def tearDown(self):
         if not self.transactions and self.refreshes_database:

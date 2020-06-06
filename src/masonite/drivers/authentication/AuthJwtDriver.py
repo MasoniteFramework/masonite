@@ -35,7 +35,6 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         """
         from config.application import KEY
         if self.request.get_cookie('token'):
-
             try:
                 token = self.jwt.decode(self.request.get_cookie('token'), KEY, algorithms=['HS256'])
             except self.jwt.exceptions.DecodeError:
@@ -43,7 +42,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
                 return False
             expired = token['expired']
             token.pop('expired')
-            if not pendulum.from_format(expired, 'ddd, DD MMM YYYY H:mm:ss GMT').is_past():
+            if not pendulum.from_format(expired, 'ddd, DD MMM YYYY H:mm:ss').is_past():
                 auth_model = auth_model()
                 return auth_model.hydrate(token)
 

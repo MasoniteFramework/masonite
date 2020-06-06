@@ -41,18 +41,16 @@ class AuthJwtDriver(BaseDriver, AuthContract):
             except self.jwt.exceptions.DecodeError:
                 self.delete()
                 return False
-
             expired = token['expired']
             token.pop('expired')
-            if not pendulum.parse(expired).is_past():
+            if not pendulum.from_format(expired, 'ddd, DD MMM YYYY H:mm:ss GMT').is_past():
                 auth_model = auth_model()
-                auth_model.fill(**token)
-                return auth_model
+                return auth_model.hydrate(token)
 
             if config('auth.drivers.jwt.reauthentication', True):
                 auth_model = Auth(self.request).login_by_id(token[auth_model.__primary_key__])
             else:
-                auth_model.fill(**token)
+                auth_model.hydrate(token)
 
             token.update({
                 'expired': cookie_expire_time(config('auth.drivers.jwt.lifetime', '5 minutes'))

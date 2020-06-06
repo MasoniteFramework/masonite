@@ -14,13 +14,14 @@ class SeedCommand(Command):
     """
 
     def handle(self):
-        table = self.argument('table').lower()
-        subprocess.call([
-            "orator make:seed {}_table_seeder -p databases/seeds".format(
-                table),
-        ], shell=True)
+        pass
+        # table = self.argument('table').lower()
+        # subprocess.call([
+        #     "orator make:seed {}_table_seeder -p databases\\seeds".format(
+        #         table),
+        # ], shell=True)
 
-        self.check_init_file()
+        # self.check_init_file()
 
     def check_init_file(self):
         os.makedirs(os.path.dirname(

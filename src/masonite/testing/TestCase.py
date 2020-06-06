@@ -7,11 +7,10 @@ from urllib.parse import urlencode
 
 from .. import env
 from ..exceptions import RouteNotFoundException
-from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
-from orator.orm import Factory
+from masonite.orm.factories import Factory
 
 from .MockRoute import MockRoute
 
@@ -29,7 +28,7 @@ class TestCase(unittest.TestCase):
         self._with_subdomains = False
 
         self.acting_user = False
-        self.factory = Factory()
+        self.factory = Factory
         self.withoutExceptionHandling()
         self.withoutCsrf()
         if not self._transaction:
@@ -100,20 +99,23 @@ class TestCase(unittest.TestCase):
 
     def setUpDatabase(self):
         self.tearDownDatabase()
-        Migrations().run()
+        # Migrations().run()
         if hasattr(self, 'setUpFactories'):
             self.setUpFactories()
 
     def tearDownDatabase(self):
-        Migrations().reset()
+        pass
+        # Migrations().reset()
 
     @staticmethod
     def staticSetUpDatabase():
-        Migrations().run()
+        pass
+        # Migrations().run()
 
     @staticmethod
     def staticTearDownDatabase():
-        Migrations().reset()
+        pass
+        # Migrations().reset()
 
     def tearDown(self):
         if not self.transactions and self.refreshes_database:

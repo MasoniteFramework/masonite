@@ -84,7 +84,6 @@ class WebGuard(AuthenticationGuard):
                     model.remember_token = remember_token
                     model.save()
                     self.driver.save(remember_token, model=model)
-
                 self.request.set_user(model)
                 return model
 

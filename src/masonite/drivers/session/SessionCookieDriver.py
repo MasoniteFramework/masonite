@@ -95,6 +95,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
+        # print(self.request.environ['HTTP_COOKIE'])
         if 'HTTP_COOKIE' in self.request.environ and self.request.environ['HTTP_COOKIE']:
             cookies_original = self.request.environ['HTTP_COOKIE'].split(';')
             for cookie in cookies_original:
@@ -135,6 +136,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         return self
 
     def _get_serialization_value(self, value):
+        print('deserializing value')
         try:
             return json.loads(value)
         except ValueError:

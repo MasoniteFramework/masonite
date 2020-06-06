@@ -44,7 +44,7 @@ class TestSession(TestCase):
             self.assertEqual(session.all(), {'username': 'pep', 'password': 'secret'})
 
     def test_session_has_data(self):
-        for driver in ('memory', 'cookie'):
+        for driver in ('cookie',):
             session = self.container.make('SessionManager').driver(driver)
             session._session = {}
             session._flash = {}

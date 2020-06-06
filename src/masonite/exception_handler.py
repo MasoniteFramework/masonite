@@ -123,7 +123,7 @@ class DumpHandler:
         self.response = response
 
     def handle(self, _):
-        from config.database import Model
+        from masonite.orm.models import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 
         self.response.view(self.view.render(

@@ -1,6 +1,6 @@
 """User Model."""
 
-from config.database import Model
+from masonite.orm.models import Model
 
 
 class User(Model):

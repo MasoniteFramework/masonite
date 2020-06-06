@@ -25,4 +25,5 @@ tests/bootstrap/cache/*.txt
 masonite.db
 tests/uploads
 build
+noorator
 

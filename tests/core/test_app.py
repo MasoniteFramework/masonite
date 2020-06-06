@@ -17,7 +17,7 @@ class Publisher:
     Messages have to bo instances of app.rmq.Messages.Message concretes
     """
     __slots__ = ['username', 'password', 'host', 'exchange_name', 'exchange_type', 'routing_key']
-    def __init__(self, exchange_name, exchange_type: str = 'direct', routing_key: str = ''):
+    def __init__(self, exchange_name, exchange_type:str = 'direct', routing_key:str = ''):
         self.exchange_name = exchange_name
         self.exchange_type = exchange_type
         self.routing_key = routing_key

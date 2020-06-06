@@ -158,6 +158,16 @@ class App:
                 raise ContainerError(str(e))
         else:
             for _, value in self.get_parameters(obj):
+                if value.annotation in (str, int, dict, list, tuple):
+                    # Ignore any times a user is simply type hinting a parameter like (parameter:str).
+                    # In this case we don't want to resolve anything but we do want
+                    # to insert any passing arguments we passed in
+                    try:
+                        objects.append(passing_arguments.pop(0))
+                    except IndexError:
+                        pass
+
+                    continue
                 if ':' in str(value):
                     param = self._find_annotated_parameter(value)
                     if inspect.isclass(param):

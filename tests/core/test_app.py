@@ -11,6 +11,16 @@ class MockMail:
     def __init__(self, request: Request):
         self.request = request
 
+class Publisher:
+    """
+    AMQP exchange publisher using aio_pika wrapper library
+    Messages have to bo instances of app.rmq.Messages.Message concretes
+    """
+    __slots__ = ['username', 'password', 'host', 'exchange_name', 'exchange_type', 'routing_key']
+    def __init__(self, exchange_name, exchange_type: str = 'direct', routing_key: str = ''):
+        self.exchange_name = exchange_name
+        self.exchange_type = exchange_type
+        self.routing_key = routing_key
 
 class TestApp(unittest.TestCase):
 
@@ -94,6 +104,21 @@ class TestApp(unittest.TestCase):
         self.app.resolve_parameters = True
         self.assertEqual(self.app.resolve(self._resolve_parameter), REQUEST)
         self.assertEqual(self.app.resolve(self._resolve_parameter), REQUEST)
+
+    def test_can_resolve_parameter_with_typehint_arguments_with_minimal_passing(self):
+        self.app.bind('Publisher', Publisher)
+        publisher = self.app.make('Publisher', 'exchange')
+        self.assertEqual(publisher.exchange_name, 'exchange')
+        self.assertEqual(publisher.exchange_type, 'direct')
+        self.assertEqual(publisher.routing_key, '')
+
+    def test_can_resolve_parameter_with_typehint_arguments_with_overriding(self):
+        self.app.bind('Publisher', Publisher)
+        publisher = self.app.make('Publisher', 'exchange', 'indirect')
+        self.assertEqual(publisher.exchange_name, 'exchange')
+        self.assertEqual(publisher.exchange_type, 'indirect')
+        self.assertEqual(publisher.routing_key, '')
+
 
     def _func_on_resolve(self, request, container):
         request.path = '/on/resolve'

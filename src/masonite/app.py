@@ -158,7 +158,7 @@ class App:
                 raise ContainerError(str(e))
         else:
             for _, value in self.get_parameters(obj):
-                if ':' in str(value) and any(primitive in str(value) for primitive in (':str', ':list', ':dict', ':tuple', ' :int',' :str', ' :list', ' :dict', ' :tuple', ' :int')):
+                if value.annotation in (str, int, dict, list, tuple):
                     # Ignore any times a user is simply type hinting a parameter like (parameter:str).
                     # In this case we don't want to resolve anything but we do want
                     # to insert any passing arguments we passed in

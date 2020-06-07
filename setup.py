@@ -50,7 +50,7 @@ setup(
         'Jinja2>=2,<3',
         'masonite-orm>=0.4,<0.5',
         'passlib>=1.7,<1.8',
-        'pendulum>=1.5,<1.6',
+        'pendulum>=2.1,<2.2',
         'psutil>=5.4,<5.7',
         'python-dotenv>=0.8,<0.11',
         'requests>=2.0,<2.99',

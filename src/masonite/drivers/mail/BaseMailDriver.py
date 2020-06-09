@@ -34,6 +34,31 @@ class BaseMailDriver(BaseDriver, Responsable):
         self._queue = False
         self.html_content = None
         self.text_content = None
+        self._message = None
+
+    def _get_message_for_send_deprecated(self, message_contents):
+        """Helper method for backwards compatibility to generate a message from .send()
+
+        Args:
+            message_contents: String
+
+        Returns:
+            message
+        """
+        # we used to not override self.message_body, so save it and set it back...
+        old_text, old_html = self.text_content, self.html_content
+        self.text_content, self.html_content = None, message_contents
+        data = self.message()
+        self.text_content, self.html_content = old_text, old_html
+        return data
+
+    def message(self):
+        """Creates a message object for the underlying driver.
+
+        Returns:
+            message
+        """
+        raise NotImplementedError
 
     @property
     def mail_from_header(self):
@@ -68,14 +93,13 @@ class BaseMailDriver(BaseDriver, Responsable):
         return self
 
     @property
-    @deprecated('Please use `.text_content` and `.html_content` instead.')
     def message_body(self):
-        """Returns the body of the message
+        """Returns the body of the message.
         """
         return self.html_content or self.text_content
 
     @message_body.setter
-    @deprecated('Please use `.text_content` and `.html_content` instead.')
+    @deprecated('Please use `.text()` and `.html()` methods instead.')
     def message_body(self, value):
         self.html_content = value
 

@@ -252,7 +252,7 @@ class TestRoutes(unittest.TestCase):
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "conta_corrente": {\n        "ocultar": false,\n        "visao_geral": true,\n        "extrato": true\n    }\n}')
         route = Route(environ)
-        self.assertEqual(route.environ['QUERY_STRING'], {
+        self.assertEqual(route.environ['POST_DATA'], {
             "conta_corrente": {
                 "ocultar": False,
                 "visao_geral": True,
@@ -266,7 +266,7 @@ class TestRoutes(unittest.TestCase):
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "options": ["foo", "bar"]\n}')
         route = Route(environ)
-        self.assertEqual(route.environ['QUERY_STRING'], {
+        self.assertEqual(route.environ['POST_DATA'], {
             "options": ["foo", "bar"]
         })
 

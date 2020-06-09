@@ -3,6 +3,8 @@
 import copy
 import re
 
+from masonite.helpers import deprecated
+
 from ...app import App
 from ...helpers import config
 from ...response import Responsable
@@ -27,10 +29,36 @@ class BaseMailDriver(BaseDriver, Responsable):
         self.to_addresses = []
         self.message_subject = 'Subject'
         self.message_reply_to = None
-        self.message_body = None
         self.from_name = self.config.FROM['name']
         self.from_address = self.config.FROM['address']
         self._queue = False
+        self.html_content = None
+        self.text_content = None
+        self._message = None
+
+    def _get_message_for_send_deprecated(self, message_contents):
+        """Helper method for backwards compatibility to generate a message from .send()
+
+        Args:
+            message_contents: String
+
+        Returns:
+            message
+        """
+        # we used to not override self.message_body, so save it and set it back...
+        old_text, old_html = self.text_content, self.html_content
+        self.text_content, self.html_content = None, message_contents
+        data = self.message()
+        self.text_content, self.html_content = old_text, old_html
+        return data
+
+    def message(self):
+        """Creates a message object for the underlying driver.
+
+        Returns:
+            message
+        """
+        raise NotImplementedError
 
     @property
     def mail_from_header(self):
@@ -39,6 +67,41 @@ class BaseMailDriver(BaseDriver, Responsable):
     @property
     def mail_to_header(self):
         return ','.join(self.to_addresses)
+
+    def text(self, content):
+        """Set the text content of the email.
+
+        Arguments:
+            content {string} -- The email text content.
+
+        Returns:
+            self
+        """
+        self.text_content = content
+        return self
+
+    def html(self, content):
+        """Set the html content of the email.
+
+        Arguments:
+            content {string} -- The email html content.
+
+        Returns:
+            self
+        """
+        self.html_content = content
+        return self
+
+    @property
+    def message_body(self):
+        """Returns the body of the message.
+        """
+        return self.html_content or self.text_content
+
+    @message_body.setter
+    @deprecated('Please use `.text()` and `.html()` methods instead.')
+    def message_body(self, value):
+        self.html_content = value
 
     def to(self, user_email):
         """Set the user email address who you want to send mail to.
@@ -67,7 +130,7 @@ class BaseMailDriver(BaseDriver, Responsable):
         self._queue = True
         return self
 
-    def template(self, template_name, dictionary={}):
+    def template(self, template_name, dictionary={}, mimetype='html'):
         """Create an email from a normal Jinja template.
 
         Arguments:
@@ -75,12 +138,17 @@ class BaseMailDriver(BaseDriver, Responsable):
 
         Keyword Arguments:
             dictionary {dict} -- The data to be passed to the template. (default: {{}})
+            mimetype {string} -- whether it is html or text content. (default: {html})
 
         Returns:
             self
         """
         view = copy.copy(self.app.make('ViewClass'))
-        self.message_body = view.render(template_name, dictionary).rendered_template
+        content = view.render(template_name, dictionary).rendered_template
+        if mimetype == 'html':
+            self.html(content)
+        else:
+            self.text(content)
         return self
 
     def send_from(self, address, name=None):

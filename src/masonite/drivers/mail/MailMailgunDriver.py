@@ -37,7 +37,7 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
         """
         if message and isinstance(message, str):
             warnings.warn(
-                'Passing message to .send() is a deprecated. Please use .text() and .html().',
+                'Passing message to .send() is deprecated. Please use .text() and .html().',
                 category=DeprecationWarning,
                 stacklevel=2)
             data = self._get_message_for_send_deprecated(message)

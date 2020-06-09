@@ -1,0 +1,2 @@
+Hi {{to}}
+Welcome to MasoniteFramework!

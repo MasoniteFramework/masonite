@@ -245,6 +245,7 @@ class Request(Extendable):
         self.method = environ['REQUEST_METHOD']
         self.path = environ['PATH_INFO']
         self.request_variables = {}
+        self.raw_input = None
 
         if 'QUERY_STRING' in environ and environ['QUERY_STRING']:
             self.query_params = parse_qs(environ['QUERY_STRING'])
@@ -269,8 +270,8 @@ class Request(Extendable):
         if isinstance(variables, str):
             variables = query_parse(variables)
 
+        self.raw_input = variables
         if isinstance(variables, list):
-            self.raw_input = variables
             variables = {str(i): v for i, v in enumerate(variables)}
 
         try:

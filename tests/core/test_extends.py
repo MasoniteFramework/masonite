@@ -1,5 +1,5 @@
 from src.masonite.app import App
-from src.masonite.testing import generate_wsgi
+from src.masonite.testing import generate_wsgi, MockWsgiInput
 from src.masonite.routes import Route
 from src.masonite.request import Request
 
@@ -27,14 +27,6 @@ class ExtendClass2:
 
     def get_another_path2(self):
         return self.path
-
-
-class MockWsgiInput():
-    def __init__(self, data):
-        self.data = data
-
-    def read(self, _):
-        return self.data
 
 
 def get_third_path(self):

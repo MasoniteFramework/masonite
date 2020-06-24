@@ -2,6 +2,14 @@
 import io
 
 
+class MockWsgiInput():
+    def __init__(self, data):
+        self.data = data
+
+    def read(self, _):
+        return self.data
+
+
 def generate_wsgi():
     return {
         'wsgi.version': (1, 0),

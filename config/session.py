@@ -11,3 +11,9 @@ Supported: 'memory', 'cookie'
 """
 
 DRIVER = env('SESSION_DRIVER', 'cookie')
+
+DRIVERS = {
+    'cookie': {
+        'flash_expires': '2 seconds'
+    }
+}

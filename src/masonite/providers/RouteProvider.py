@@ -31,7 +31,7 @@ class RouteProvider(ServiceProvider):
                 is found, execute that route and break out of the loop. We only need
                 one match. Routes are executed on a first come, first serve basis
             """
-            if matchurl.match(router.url) and request.get_request_method() in route.method_type:
+            if matchurl and matchurl.match(router.url) and request.get_request_method() in route.method_type:
                 route.load_request(request)
 
                 """Check if subdomains are active and if the route matches on the subdomain

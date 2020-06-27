@@ -134,8 +134,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         only_messages = []
         messages = self.all(flash_only=True).get('errors', {}).items()
         for key, messages in messages:
-            for message in messages:
-                only_messages.append(message)
+            for error_message in messages:
+                only_messages.append(error_message)
         self.reset(flash_only=True)
         return only_messages
 

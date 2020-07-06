@@ -70,6 +70,15 @@ class TestSession(TestCase):
             self.assertEqual(session.get('flash_username'), 'pep')
             self.assertEqual(session.get('flash_password'), 'secret')
 
+    def test_session_flash_error_messages(self):
+        for driver in ('memory', 'cookie'):
+            session = self.container.make('SessionManager').driver(driver)
+            session._session = {}
+            session.flash('errors', {'password': ['password invalid']})
+            self.assertEqual(session.get_error_messages(), ['password invalid'])
+            # assert session key is now deleted
+            self.assertEqual(session.get('errors'), None)
+
     def test_reset_flash_session_memory(self):
         session = self.container.make('SessionManager').driver('memory')
         session.flash('flash_', 'test_pep')

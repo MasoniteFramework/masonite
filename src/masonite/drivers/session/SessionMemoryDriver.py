@@ -83,6 +83,33 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
 
         self._flash[ip][key] = value
 
+    def get_error_messages(self):
+        """Should get and delete the flashed messages
+
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
+        """
+        ip = self.__get_client_address()
+        only_messages = []
+        messages = self._flash.get(ip, {}).get('errors', {}).items()
+        for key, messages in messages:
+            for message in messages:
+                only_messages.append(message)
+        self.reset(flash_only=True)
+        return only_messages
+
+    def get_flashed_messages(self, key, value):
+        """Should get and delete the flashed messages
+
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
+        """
+        messages = self._flash.get(ip, {})
+        self.reset(flash_only=True)
+        return messages
+
     def reset(self, flash_only=False):
         """Delete all session data.
 

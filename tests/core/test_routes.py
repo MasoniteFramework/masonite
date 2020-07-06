@@ -67,6 +67,20 @@ class TestRoutes(unittest.TestCase):
 
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:none', None)
+            get_route.request = self.request
+            create_matchurl('/test/1', get_route)
+
+    def test_route_can_add_compilers_inside_route_group(self):
+        self.route.compile('year', r'[0-9]{4}')
+        group = RouteGroup([
+            Get().route('/@route:year', 'TestController@show')
+        ], prefix="/test")
+
+        self.assertEqual(group[0].compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
+
+        with self.assertRaises(InvalidRouteCompileException):
+            get_route = Get().route('test/@route:none', None)
+            get_route.request = self.request
             create_matchurl('/test/1', get_route)
 
     def test_route_gets_controllers(self):

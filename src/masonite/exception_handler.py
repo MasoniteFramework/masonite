@@ -109,8 +109,13 @@ class DD:
     def __init__(self, container):
         self.app = container
 
-    def dump(self, obj):
-        self.app.bind('ObjDump', obj)
+    def dump(self, *args):
+        dump_list = []
+        for i, obj in enumerate(args):
+            dump_name = 'ObjDump{}'.format(i)
+            self.app.bind(dump_name, obj)
+            dump_list.append(dump_name)
+        self.app.bind('ObjDumpList', dump_list)
         raise DumpException
 
 
@@ -126,14 +131,23 @@ class DumpHandler:
         from config.database import Model
         self.app.make('HookHandler').fire('*ExceptionHook')
 
+        dump_objs = []
+        for dump_name in self.app.make('ObjDumpList'):
+            obj = self.app.make(dump_name)
+            dump_objs.append(
+                {
+                    'obj': obj,
+                    'members': inspect.getmembers(obj, predicate=inspect.ismethod),
+                    'properties': inspect.getmembers(obj),
+                }
+            )
+
         self.response.view(self.view.render(
             '/masonite/snippets/exceptions/dump', {
-                'obj': self.app.make('ObjDump'),
+                'objs': dump_objs,
                 'type': type,
                 'list': list,
                 'inspect': inspect,
-                'members': inspect.getmembers(self.app.make('ObjDump'), predicate=inspect.ismethod),
-                'properties': inspect.getmembers(self.app.make('ObjDump')),
                 'hasattr': hasattr,
                 'getattr': getattr,
                 'Model': Model,

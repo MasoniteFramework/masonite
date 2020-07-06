@@ -65,7 +65,6 @@ class TestRoutes(unittest.TestCase):
 
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
 
-
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:none', None)
             get_route.request = self.request
@@ -79,9 +78,10 @@ class TestRoutes(unittest.TestCase):
 
         self.assertEqual(group[0].compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
 
-        # with self.assertRaises(InvalidRouteCompileException):
-        #     get_route = Get().route('test/@route:none', None)
-        #     create_matchurl('/test/1', get_route)
+        with self.assertRaises(InvalidRouteCompileException):
+            get_route = Get().route('test/@route:none', None)
+            get_route.request = self.request
+            create_matchurl('/test/1', get_route)
 
     def test_route_gets_controllers(self):
         self.assertTrue(Get().route('test/url', 'TestController@show'))

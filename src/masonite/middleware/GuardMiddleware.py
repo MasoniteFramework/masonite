@@ -1,4 +1,4 @@
-"""CSRF Middleware."""
+"""Guard Middleware."""
 
 from ..auth import Auth
 from ..helpers import config

@@ -35,11 +35,22 @@
 
 <body>
     <div class="container-fluid">
+        {% if objs|count > 1 %}
+        <div class="row">Showing {{ objs|count }} objects:</div>
+        {% endif %}
+        {% for o in objs %}
+            {% set obj = o.obj %}
+            {% set members = o.members %}
+            {% set properties = o.properties %}
         <div class="row">
             <span class="obj">{{ obj.__class__.__name__}}</span> {{ obj }}
         </div>
         {% for key, property in properties %}
             {% include 'obj_loop.html' %}
+        {% endfor %}
+            {% if not loop.last %}
+            <hr>
+            {% endif %}
         {% endfor %}
     </div>
 

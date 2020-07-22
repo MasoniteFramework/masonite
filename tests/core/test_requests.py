@@ -11,8 +11,8 @@ from src.masonite.helpers.routes import flatten_routes
 from src.masonite.helpers.time import cookie_expire_time
 from src.masonite.request import Request
 from src.masonite.response import Response
-from src.masonite.routes import Get, RouteGroup
-from src.masonite.testing import generate_wsgi
+from src.masonite.routes import Get, Route, RouteGroup
+from src.masonite.testing import generate_wsgi, MockWsgiInput
 
 WEB_ROUTES = flatten_routes([
     Get('/test', 'Controller@show').name('test'),
@@ -498,6 +498,29 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.input('1.inner.value'), 'innervalue')
         self.assertEqual(request.input('2.item3.0'), 1)
         self.assertEqual(request.input('3.item3'), False)
+
+    def test_list_as_root_payload_reset_between_requests(self):
+        app = App()
+        wsgi_environ = generate_wsgi()
+        wsgi_environ['REQUEST_METHOD'] = 'POST'
+        wsgi_environ['CONTENT_TYPE'] = 'application/json'
+
+        route_class = Route()
+        request_class = Request()
+        app.bind('Request', request_class)
+        app.bind('Route', route_class)
+        route = app.make('Route')
+        request = app.make('Request').load_app(app)
+
+        wsgi_environ['wsgi.input'] = MockWsgiInput('[1, 2]')
+        route.load_environ(wsgi_environ)
+        request.load_environ(wsgi_environ)
+        self.assertEqual(request.all(), [1, 2])
+
+        wsgi_environ['wsgi.input'] = MockWsgiInput('{"key": "val"}')
+        route.load_environ(wsgi_environ)
+        request.load_environ(wsgi_environ)
+        self.assertEqual(request.all(), {"key": "val"})
 
     def test_request_gets_correct_header(self):
         app = App()

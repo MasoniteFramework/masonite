@@ -26,27 +26,37 @@ class Vue(Preset):
         Updates the packages array to include VueJS specific packages
         but also remove React ones
         """
-        for package in ['@babel/preset-react', 'react', 'react-dom']:
+        for package in ["@babel/preset-react", "react", "react-dom"]:
             packages.pop(package, None)
 
-        packages['vue'] = '^2.5.17'
+        packages["vue"] = "^2.5.17"
         return packages
 
     def update_webpack_configuration(self):
         """Copy webpack.mix.js file into application"""
-        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/webpack.mix.js', 'webpack.mix.js')
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/vue-stubs/webpack.mix.js", "webpack.mix.js"
+        )
 
     def update_component(self):
         """
         Copy example VueJS component into application
         (delete example React component if it exists)
         """
-        vue_component = 'resources/js/components/Example.js'
+        vue_component = "resources/js/components/Example.js"
         if os.path.exists(os.path.realpath(vue_component)):
             os.remove(vue_component)
-        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/ExampleComponent.vue', 'resources/js/components/ExampleComponent.vue')
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/vue-stubs/ExampleComponent.vue",
+            "resources/js/components/ExampleComponent.vue",
+        )
 
     def update_bootstrapping(self):
         """Copies template app.js and bootstrap.js into application"""
-        shutil.copyfile(os.path.dirname(__file__) + '/vue-stubs/app.js', 'resources/js/app.js')
-        shutil.copyfile(os.path.dirname(__file__) + '/shared-stubs/bootstrap.js', 'resources/js/bootstrap.js')
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/vue-stubs/app.js", "resources/js/app.js"
+        )
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/shared-stubs/bootstrap.js",
+            "resources/js/bootstrap.js",
+        )

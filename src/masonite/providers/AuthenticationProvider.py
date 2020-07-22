@@ -12,9 +12,9 @@ class AuthenticationProvider(ServiceProvider):
 
     def register(self):
         guard = Guard(self.app)
-        guard.register_guard('web', WebGuard)
+        guard.register_guard("web", WebGuard)
         self.app.simple(guard)
         self.app.swap(Auth, guard)
 
     def boot(self, auth: Auth):
-        auth.set(config('auth.auth.defaults.guard'))
+        auth.set(config("auth.auth.defaults.guard"))

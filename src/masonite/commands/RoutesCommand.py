@@ -13,23 +13,19 @@ class RoutesCommand(Command):
     def handle(self):
         from wsgi import container
 
-        web_routes = container.make('WebRoutes')
+        web_routes = container.make("WebRoutes")
 
-        routes = [[
-            "Method",
-            "Path",
-            "Name",
-            "Domain",
-            "Middleware"
-        ]]
+        routes = [["Method", "Path", "Name", "Domain", "Middleware"]]
 
         for route in web_routes:
-            routes.append([
-                route.method_type,
-                route.route_url,
-                route.named_route,
-                route.required_domain,
-                ','.join(route.list_middleware),
-            ])
+            routes.append(
+                [
+                    route.method_type,
+                    route.route_url,
+                    route.named_route,
+                    route.required_domain,
+                    ",".join(route.list_middleware),
+                ]
+            )
 
         print(tabulate(routes, headers="firstrow", tablefmt="rst"))

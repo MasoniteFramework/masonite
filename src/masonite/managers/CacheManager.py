@@ -11,8 +11,8 @@ class CacheManager(Manager, CacheManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'cache'
-    driver_prefix = 'Cache'
+    config = "cache"
+    driver_prefix = "Cache"
 
 
 class Cache:

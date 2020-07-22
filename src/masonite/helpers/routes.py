@@ -26,7 +26,9 @@ def flatten_routes(routes):
     return route_collection
 
 
-DEPRECATION_STRING = " Please use the class based version of the route. Please visit {} for more information".format('https://docs.masoniteproject.com/prologue/deprecation#helper-functions')
+DEPRECATION_STRING = " Please use the class based version of the route. Please visit {} for more information".format(
+    "https://docs.masoniteproject.com/prologue/deprecation#helper-functions"
+)
 
 
 @deprecated("The 'get' route helper is deprecated. {}".format(DEPRECATION_STRING))
@@ -153,34 +155,33 @@ def compile_route_to_regex(route):
         string -- Returns the regex of the route.
     """
     # Split the route
-    split_given_route = route.split('/')
+    split_given_route = route.split("/")
 
     # compile the provided url into regex
     url_list = []
-    regex = '^'
+    regex = "^"
     for regex_route in split_given_route:
-        if '*' in regex_route or '@' in regex_route:
-            if ':int' in regex_route:
-                regex += r'(\d+)'
-            elif ':string' in regex_route:
-                regex += r'([a-zA-Z]+)'
+        if "*" in regex_route or "@" in regex_route:
+            if ":int" in regex_route:
+                regex += r"(\d+)"
+            elif ":string" in regex_route:
+                regex += r"([a-zA-Z]+)"
             else:
                 # default
-                regex += r'[\w.\-\/]+'
-            regex += r'\/'
+                regex += r"[\w.\-\/]+"
+            regex += r"\/"
 
             # append the variable name passed @(variable):int to a list
             url_list.append(
-                regex_route.replace('@', '').replace(
-                    ':int', '').replace(':string', '')
+                regex_route.replace("@", "").replace(":int", "").replace(":string", "")
             )
         else:
-            regex += regex_route + r'\/'
+            regex += regex_route + r"\/"
 
-    if regex.endswith('/') and not route.endswith('/'):
+    if regex.endswith("/") and not route.endswith("/"):
         regex = regex[:-2]
 
-    regex += '$'
+    regex += "$"
 
     return regex
 
@@ -199,9 +200,9 @@ def create_matchurl(url, route):
     if route._compiled_regex is None:
         route.compile_route_to_regex()
 
-    if not url.endswith('/'):
+    if not url.endswith("/"):
         return route._compiled_regex
-    elif url == '/':
+    elif url == "/":
         return route._compiled_regex
 
     return route._compiled_regex_end
@@ -210,10 +211,10 @@ def create_matchurl(url, route):
 def query_parse(query_string):
     d = {}
     for key, value in parse_qs(query_string).items():
-        regex_match = re.match(r'(?P<key>[^\[]+)\[(?P<value>[^\]]+)\]', key)
+        regex_match = re.match(r"(?P<key>[^\[]+)\[(?P<value>[^\]]+)\]", key)
         if regex_match:
             gd = regex_match.groupdict()
-            d.setdefault(gd['key'], {})[gd['value']] = value[0]
+            d.setdefault(gd["key"], {})[gd["value"]] = value[0]
         else:
             d.update({key: value[0]})
 

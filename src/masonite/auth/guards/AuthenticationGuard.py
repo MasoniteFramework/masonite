@@ -1,6 +1,4 @@
-
 class AuthenticationGuard:
-
     def guard(self, guard):
         """Specify the guard you want to use
 
@@ -8,6 +6,7 @@ class AuthenticationGuard:
             guard {[type]} -- [description]
         """
         from .Guard import Guard
+
         return Guard(self.app).make(guard)
 
     def register_guard(self, key, cls=None):
@@ -23,6 +22,7 @@ class AuthenticationGuard:
             None
         """
         from .Guard import Guard
+
         if isinstance(key, dict):
             return Guard.guards.update(key)
 

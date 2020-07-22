@@ -20,27 +20,38 @@ class MigrateStatusCommand(Command):
             add_venv_site_packages()
         except ImportError:
             self.comment(
-                'This command must be ran inside of the root of a Masonite project directory')
+                "This command must be ran inside of the root of a Masonite project directory"
+            )
 
         from wsgi import container
 
-        migration_directory = ['databases/migrations']
+        migration_directory = ["databases/migrations"]
         for key, value in container.providers.items():
-            if isinstance(key, str) and 'MigrationDirectory' in key:
+            if isinstance(key, str) and "MigrationDirectory" in key:
                 migration_directory.append(value)
 
         for directory in migration_directory:
-            self.line('')
+            self.line("")
             if len(migration_directory) > 1:
-                self.info('Migrate Status: {}'.format(directory))
+                self.info("Migrate Status: {}".format(directory))
             try:
-                output = bytes(check_output(
-                    ['orator', 'migrate:status', '-c',
-                        'config/database.py', '-p', directory]
-                )).decode('utf-8')
+                output = bytes(
+                    check_output(
+                        [
+                            "orator",
+                            "migrate:status",
+                            "-c",
+                            "config/database.py",
+                            "-p",
+                            directory,
+                        ]
+                    )
+                ).decode("utf-8")
 
                 self.line(
-                    output.replace('Yes', '<info>Yes</info>')
-                    .replace('No', '<comment>No</comment>'))
+                    output.replace("Yes", "<info>Yes</info>").replace(
+                        "No", "<comment>No</comment>"
+                    )
+                )
             except Exception:
                 pass

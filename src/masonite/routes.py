@@ -5,7 +5,11 @@ import importlib
 import json
 import re
 
-from .exceptions import RouteMiddlewareNotFound, InvalidRouteCompileException, RouteException
+from .exceptions import (
+    RouteMiddlewareNotFound,
+    InvalidRouteCompileException,
+    RouteException,
+)
 from .view import View
 
 
@@ -13,11 +17,11 @@ class Route:
     """Route class used to handle routing."""
 
     route_compilers = {
-        'int': r'(\d+)',
-        'integer': r'(\d+)',
-        'string': r'([a-zA-Z]+)',
-        'default': r'([\w.-]+)',
-        'signed': r'([\w\-=]+)',
+        "int": r"(\d+)",
+        "integer": r"(\d+)",
+        "string": r"([a-zA-Z]+)",
+        "default": r"([\w.-]+)",
+        "signed": r"([\w\-=]+)",
     }
 
     def __init__(self, environ=None):
@@ -27,7 +31,7 @@ class Route:
             environ {dict} -- WSGI environ (default: {None})
         """
         self.url_list = []
-        self.method_type = ['GET']
+        self.method_type = ["GET"]
 
         if environ:
             self.load_environ(environ)
@@ -42,10 +46,10 @@ class Route:
             self
         """
         self.environ = environ
-        self.url = environ['PATH_INFO']
+        self.url = environ["PATH_INFO"]
 
         if self.is_not_get_request():
-            self.environ['POST_DATA'] = self.get_post_params()
+            self.environ["POST_DATA"] = self.get_post_params()
 
         return self
 
@@ -57,23 +61,27 @@ class Route:
         """
         fields = None
         if self.is_not_get_request():
-            if 'CONTENT_TYPE' in self.environ and 'application/json' in self.environ['CONTENT_TYPE'].lower():
+            if (
+                "CONTENT_TYPE" in self.environ
+                and "application/json" in self.environ["CONTENT_TYPE"].lower()
+            ):
                 try:
-                    request_body_size = int(
-                        self.environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(self.environ.get("CONTENT_LENGTH", 0))
                 except ValueError:
                     request_body_size = 0
 
-                request_body = self.environ['wsgi.input'].read(
-                    request_body_size)
+                request_body = self.environ["wsgi.input"].read(request_body_size)
 
                 if isinstance(request_body, bytes):
-                    request_body = request_body.decode('utf-8')
+                    request_body = request_body.decode("utf-8")
 
-                return json.loads(request_body or '{}')
+                return json.loads(request_body or "{}")
             else:
                 fields = cgi.FieldStorage(
-                    fp=self.environ['wsgi.input'], environ=self.environ, keep_blank_values=1)
+                    fp=self.environ["wsgi.input"],
+                    environ=self.environ,
+                    keep_blank_values=1,
+                )
                 return fields
 
     def is_post(self):
@@ -82,7 +90,7 @@ class Route:
         Returns:
             bool
         """
-        if self.environ['REQUEST_METHOD'] == 'POST':
+        if self.environ["REQUEST_METHOD"] == "POST":
             return True
 
         return False
@@ -93,12 +101,12 @@ class Route:
         Returns:
             bool
         """
-        if not self.environ['REQUEST_METHOD'] == 'GET':
+        if not self.environ["REQUEST_METHOD"] == "GET":
             return True
 
         return False
 
-    def compile(self, key, to=''):
+    def compile(self, key, to=""):
         self.route_compilers.update({key: to})
         return self
 
@@ -115,13 +123,13 @@ class BaseHttpRoute:
     """Base route for HTTP routes."""
 
     def __init__(self):
-        self.method_type = ['GET']
+        self.method_type = ["GET"]
         self.output = False
         self.route_url = None
         self.request = None
         self.named_route = None
         self.required_domain = None
-        self.module_location = 'app.http.controllers'
+        self.module_location = "app.http.controllers"
         self.list_middleware = []
         self.default_parameters = {}
         self.e = False
@@ -146,10 +154,10 @@ class BaseHttpRoute:
         self.output = output
         self._find_controller(output)
 
-        if not route.startswith('/'):
-            route = '/' + route
+        if not route.startswith("/"):
+            route = "/" + route
 
-        if route.endswith('/') and route != '/':
+        if route.endswith("/") and route != "/":
             route = route[:-1]
 
         self.route_url = route
@@ -172,35 +180,34 @@ class BaseHttpRoute:
         module_location = self.module_location
         # If the output specified is a string controller
         if isinstance(controller, str):
-            mod = controller.split('@')
+            mod = controller.split("@")
             # If trying to get an absolute path via a string
-            if mod[0].startswith('/'):
-                module_location = '.'.join(
-                    mod[0].replace('/', '').split('.')[0:-1])
-            elif '.' in mod[0]:
+            if mod[0].startswith("/"):
+                module_location = ".".join(mod[0].replace("/", "").split(".")[0:-1])
+            elif "." in mod[0]:
                 # This is a deeper module controller
-                module_location += '.' + '.'.join(mod[0].split('.')[:-1])
+                module_location += "." + ".".join(mod[0].split(".")[:-1])
         else:
             if controller is None:
                 return None
 
             fully_qualified_name = controller.__qualname__
-            mod = fully_qualified_name.split('.')
+            mod = fully_qualified_name.split(".")
             module_location = controller.__module__
 
         # Gets the controller name from the output parameter
         # This is used to add support for additional modules
         # like 'LoginController' and 'Auth.LoginController'
-        get_controller = mod[0].split('.')[-1]
+        get_controller = mod[0].split(".")[-1]
 
         try:
             # Import the module
             if isinstance(controller, str):
                 module = importlib.import_module(
-                    '{0}.'.format(module_location) + get_controller)
+                    "{0}.".format(module_location) + get_controller
+                )
             else:
-                module = importlib.import_module(
-                    '{0}'.format(module_location))
+                module = importlib.import_module("{0}".format(module_location))
 
             # Get the controller from the module
             self.controller = getattr(module, get_controller)
@@ -210,28 +217,37 @@ class BaseHttpRoute:
         except ImportError as e:
             import sys
             import traceback
+
             _, _, exc_tb = sys.exc_info()
             self.e = e
         except Exception as e:  # skipcq
             import sys
             import traceback
+
             _, _, exc_tb = sys.exc_info()
             self.e = e
-            print('\033[93mTrouble importing controller!', str(e), '\033[0m')
+            print("\033[93mTrouble importing controller!", str(e), "\033[0m")
         if not self.e:
             self.module_location = module_location
 
     def get_response(self):
         # Resolve Controller Constructor
         if self.e:
-            print('\033[93mCannot find controller {}. Did you create this one?'.format(self.output), '\033[0m')
+            print(
+                "\033[93mCannot find controller {}. Did you create this one?".format(
+                    self.output
+                ),
+                "\033[0m",
+            )
             raise SyntaxError(str(self.e))
 
         controller = self.request.app().resolve(self.controller)
 
         # Resolve Controller Method
         response = self.request.app().resolve(
-            getattr(controller, self.controller_method), *self.request.url_params.values())
+            getattr(controller, self.controller_method),
+            *self.request.url_params.values()
+        )
 
         if isinstance(response, View):
             response = response.rendered_template
@@ -268,7 +284,10 @@ class BaseHttpRoute:
         Returns:
             bool
         """
-        if self.request.has_subdomain() and (self.required_domain == '*' or self.request.subdomain == self.required_domain):
+        if self.request.has_subdomain() and (
+            self.required_domain == "*"
+            or self.request.subdomain == self.required_domain
+        ):
             return True
         return False
 
@@ -319,19 +338,21 @@ class BaseHttpRoute:
         """
         # Get the list of middleware to run for a route.
         for arg in self.list_middleware:
-            if ':' in arg:
-                middleware_to_run, arguments = arg.split(':')
+            if ":" in arg:
+                middleware_to_run, arguments = arg.split(":")
                 # Splits "name:value1,value2" into ['value1', 'value2']
-                arguments = arguments.split(',')
+                arguments = arguments.split(",")
                 for index, argument in enumerate(arguments):
-                    if argument.startswith('@'):
-                        _, argument = argument.split('@')
+                    if argument.startswith("@"):
+                        _, argument = argument.split("@")
                         arguments[index] = self.request.param(argument)
             else:
                 middleware_to_run = arg
                 arguments = []
 
-            middleware_to_run = self.request.app().make('RouteMiddleware')[middleware_to_run]
+            middleware_to_run = self.request.app().make("RouteMiddleware")[
+                middleware_to_run
+            ]
             if not isinstance(middleware_to_run, list):
                 middleware_to_run = [middleware_to_run]
 
@@ -342,7 +363,8 @@ class BaseHttpRoute:
                         getattr(located_middleware, type_of_middleware)(*arguments)
             except KeyError:
                 raise RouteMiddlewareNotFound(
-                    "Could not find the '{0}' route middleware".format(arg))
+                    "Could not find the '{0}' route middleware".format(arg)
+                )
 
     def compile_route_to_regex(self):
         """Compile the given route to a regex string.
@@ -354,71 +376,68 @@ class BaseHttpRoute:
             string -- Compiled URI string.
         """
         # Split the route
-        split_given_route = self.route_url.split('/')
+        split_given_route = self.route_url.split("/")
         # compile the provided url into regex
         url_list = []
-        regex = '^'
+        regex = "^"
         for regex_route in split_given_route:
             # if not regex_route:
             #     continue
-            if '@' in regex_route:
-                if ':' in regex_route:
+            if "@" in regex_route:
+                if ":" in regex_route:
                     try:
-                        regex += Route.route_compilers[regex_route.split(':')[
-                            1]]
+                        regex += Route.route_compilers[regex_route.split(":")[1]]
                     except KeyError:
                         if self.request:
                             raise InvalidRouteCompileException(
                                 'Route compiler "{}" is not an available route compiler. '
-                                'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
-                                    regex_route.split(':')[1])
+                                "Verify you spelled it correctly or that you have added it using the compile() method.".format(
+                                    regex_route.split(":")[1]
+                                )
                             )
                         self._compiled_regex = None
                         self._compiled_regex_end = None
                         return
 
                 else:
-                    regex += Route.route_compilers['default']
+                    regex += Route.route_compilers["default"]
 
-                regex += r'\/'
+                regex += r"\/"
 
                 # append the variable name passed @(variable):int to a list
-                url_list.append(
-                    regex_route.replace('@', '').split(':')[0]
-                )
-            elif '?' in regex_route:
+                url_list.append(regex_route.replace("@", "").split(":")[0])
+            elif "?" in regex_route:
                 # Make the preceding token match 0 or more
                 regex += "?"
 
-                if ':' in regex_route:
+                if ":" in regex_route:
 
                     try:
-                        regex += Route.route_compilers[regex_route.split(':')[1]] + '*'
+                        regex += Route.route_compilers[regex_route.split(":")[1]] + "*"
                     except KeyError:
                         if self.request:
                             raise InvalidRouteCompileException(
                                 'Route compiler "{}" is not an available route compiler. '
-                                'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
-                                    regex_route.split(':')[1])
+                                "Verify you spelled it correctly or that you have added it using the compile() method.".format(
+                                    regex_route.split(":")[1]
+                                )
                             )
                         self._compiled_regex = None
                         self._compiled_regex_end = None
                         return
 
                 else:
-                    regex += Route.route_compilers['default'] + '*'
+                    regex += Route.route_compilers["default"] + "*"
 
-                regex += r'\/'
+                regex += r"\/"
 
-                url_list.append(
-                    regex_route.replace('?', '').split(':')[0]
-                )
+                url_list.append(regex_route.replace("?", "").split(":")[0])
             else:
-                regex += regex_route + r'\/'
+                regex += regex_route + r"\/"
 
         self.url_list = url_list
-        regex += '$'
-        self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
+        regex += "$"
+        self._compiled_regex = re.compile(regex.replace(r"\/$", r"$"))
         self._compiled_regex_end = re.compile(regex)
 
         return regex
@@ -430,7 +449,7 @@ class Get(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Get constructor."""
         super().__init__()
-        self.method_type = ['GET']
+        self.method_type = ["GET"]
         # self.list_middleware = []
         if route is not None and output is not None:
             self.route(route, output)
@@ -442,7 +461,7 @@ class Head(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Head constructor."""
         super().__init__()
-        self.method_type = ['HEAD']
+        self.method_type = ["HEAD"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -453,7 +472,7 @@ class Post(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Post constructor."""
         super().__init__()
-        self.method_type = ['POST']
+        self.method_type = ["POST"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -461,11 +480,13 @@ class Post(BaseHttpRoute):
 class Match(BaseHttpRoute):
     """Class for specifying Match requests."""
 
-    def __init__(self, method_type=['GET'], route=None, output=None):
+    def __init__(self, method_type=["GET"], route=None, output=None):
         """Match constructor."""
         super().__init__()
         if not isinstance(method_type, list):
-            raise RouteException("Method type needs to be a list. Got '{}'".format(method_type))
+            raise RouteException(
+                "Method type needs to be a list. Got '{}'".format(method_type)
+            )
 
         # Make all method types in list uppercase
         self.method_type = [x.upper() for x in method_type]
@@ -479,7 +500,7 @@ class Put(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Put constructor."""
         super().__init__()
-        self.method_type = ['PUT']
+        self.method_type = ["PUT"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -490,7 +511,7 @@ class Patch(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Patch constructor."""
         super().__init__()
-        self.method_type = ['PATCH']
+        self.method_type = ["PATCH"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -501,7 +522,7 @@ class Delete(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Delete constructor."""
         super().__init__()
-        self.method_type = ['DELETE']
+        self.method_type = ["DELETE"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -512,7 +533,7 @@ class Connect(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Connect constructor."""
         super().__init__()
-        self.method_type = ['CONNECT']
+        self.method_type = ["CONNECT"]
         if route is not None and output is not None:
             self.route(route, output)
 
@@ -523,12 +544,14 @@ class Options(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Options constructor."""
         super().__init__()
-        self.method_type = ['OPTIONS']
+        self.method_type = ["OPTIONS"]
         if route is not None and output is not None:
             self.route(route, output)
 
-        print('The Masonite development server is not capable of handling OPTIONS preflight requests.')
-        print('You should use a more powerful server if using the Option')
+        print(
+            "The Masonite development server is not capable of handling OPTIONS preflight requests."
+        )
+        print("You should use a more powerful server if using the Option")
 
 
 class Trace(BaseHttpRoute):
@@ -537,13 +560,12 @@ class Trace(BaseHttpRoute):
     def __init__(self, route=None, output=None):
         """Trace constructor."""
         super().__init__()
-        self.method_type = ['TRACE']
+        self.method_type = ["TRACE"]
         if route is not None and output is not None:
             self.route(route, output)
 
 
 class ViewRoute(BaseHttpRoute):
-
     def __init__(self, method_type, route, template, dictionary):
         """Class used for view routes.
 
@@ -565,12 +587,16 @@ class ViewRoute(BaseHttpRoute):
         self._compiled_url = self.compile_route_to_regex()
 
     def get_response(self):
-        return self.request.app().make('ViewClass').render(self.template, self.dictionary).rendered_template
+        return (
+            self.request.app()
+            .make("ViewClass")
+            .render(self.template, self.dictionary)
+            .rendered_template
+        )
 
 
 class Redirect(BaseHttpRoute):
-
-    def __init__(self, current_route, future_route, status=302, methods=['GET']):
+    def __init__(self, current_route, future_route, status=302, methods=["GET"]):
         """Class used for view routes.
 
         This class should be returned when a view is called on an HTTP route.
@@ -596,7 +622,16 @@ class Redirect(BaseHttpRoute):
 class RouteGroup:
     """Class for specifying Route Groups."""
 
-    def __new__(cls, routes=[], middleware=[], domain=[], prefix='', name='', add_methods=[], namespace=''):
+    def __new__(
+        cls,
+        routes=[],
+        middleware=[],
+        domain=[],
+        prefix="",
+        name="",
+        add_methods=[],
+        namespace="",
+    ):
         """Call when this class is first called. This is to give the ability to return a value in the constructor.
 
         Keyword Arguments:
@@ -611,6 +646,7 @@ class RouteGroup:
             list -- Returns a list of routes.
         """
         from .helpers.routes import flatten_routes
+
         cls.routes = flatten_routes(routes)
 
         if middleware:
@@ -671,8 +707,8 @@ class RouteGroup:
             prefix {str} -- String to prefix to all Routes.
         """
         for route in self.routes:
-            if route.route_url == '/':
-                route.route_url = ''
+            if route.route_url == "/":
+                route.route_url = ""
 
             route.route_url = prefix + route.route_url
             route.compile_route_to_regex()
@@ -693,8 +729,8 @@ class RouteGroup:
         Arguments:
             namespace {str} -- String to add to find controllers for all Routes.
         """
-        if not namespace.endswith('.'):
-            namespace += '.'
+        if not namespace.endswith("."):
+            namespace += "."
         for route in self.routes:
             if isinstance(route.output, str):
                 route.e = False  # reset any previous find_controller attempt
@@ -703,44 +739,51 @@ class RouteGroup:
 
 
 class Resource:
-
-    def __new__(cls, base='', controller='', only=['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'], names={}):
+    def __new__(
+        cls,
+        base="",
+        controller="",
+        only=["index", "create", "store", "show", "edit", "update", "destroy"],
+        names={},
+    ):
         routes = []
 
-        if 'index' in only:
+        if "index" in only:
             route = Get("{}".format(base), "{}@index".format(controller))
-            if 'index' in names:
-                route.name(names['index'])
+            if "index" in names:
+                route.name(names["index"])
             routes.append(route)
-        if 'create' in only:
+        if "create" in only:
             route = Get("{}/create".format(base), "{}@create".format(controller))
-            if 'create' in names:
-                route.name(names['create'])
+            if "create" in names:
+                route.name(names["create"])
             routes.append(route)
-        if 'store' in only:
+        if "store" in only:
             route = Post("{}".format(base), "{}@store".format(controller))
-            if 'store' in names:
-                route.name(names['store'])
+            if "store" in names:
+                route.name(names["store"])
             routes.append(route)
-        if 'show' in only:
+        if "show" in only:
             route = Get("{}/@id".format(base), "{}@show".format(controller))
-            if 'show' in names:
-                route.name(names['show'])
+            if "show" in names:
+                route.name(names["show"])
             routes.append(route)
-        if 'edit' in only:
+        if "edit" in only:
             route = Get("{}/@id/edit".format(base), "{}@edit".format(controller))
-            if 'edit' in names:
-                route.name(names['edit'])
+            if "edit" in names:
+                route.name(names["edit"])
             routes.append(route)
-        if 'update' in only:
-            route = Match(['PUT', 'PATCH']).route("{}/@id".format(base), "{}@update".format(controller))
-            if 'update' in names:
-                route.name(names['update'])
+        if "update" in only:
+            route = Match(["PUT", "PATCH"]).route(
+                "{}/@id".format(base), "{}@update".format(controller)
+            )
+            if "update" in names:
+                route.name(names["update"])
             routes.append(route)
-        if 'destroy' in only:
+        if "destroy" in only:
             route = Delete("{}/@id".format(base), "{}@destroy".format(controller))
-            if 'destroy' in names:
-                route.name(names['destroy'])
+            if "destroy" in names:
+                route.name(names["destroy"])
             routes.append(route)
 
         return routes

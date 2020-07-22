@@ -12,21 +12,21 @@ class KeyCommand(Command):
     """
 
     def handle(self):
-        store = self.option('store')
-        key = bytes(Fernet.generate_key()).decode('utf-8')
+        store = self.option("store")
+        key = bytes(Fernet.generate_key()).decode("utf-8")
 
         if store:
-            with open('.env', 'r') as file:
+            with open(".env", "r") as file:
                 data = file.readlines()
 
             for line_number, line in enumerate(data):
-                if line.startswith('KEY='):
-                    data[line_number] = 'KEY={}\n'.format(key)
+                if line.startswith("KEY="):
+                    data[line_number] = "KEY={}\n".format(key)
                     break
 
-            with open('.env', 'w') as file:
+            with open(".env", "w") as file:
                 file.writelines(data)
 
-            self.info('Key added to your .env file: {}'.format(key))
+            self.info("Key added to your .env file: {}".format(key))
         else:
             self.info("Key: {}".format(key))

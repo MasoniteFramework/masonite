@@ -16,7 +16,7 @@ class MigrateRollbackCommand(Command):
 
     def handle(self):
         sys.path.append(os.getcwd())
-        migrations = Migrations(self.option('connection')).rollback()
+        migrations = Migrations(self.option("connection")).rollback()
         self.line("")
         for notes in migrations._notes:
             self.line(notes)

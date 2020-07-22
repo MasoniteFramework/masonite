@@ -10,7 +10,7 @@ class CommandCommand(BaseScaffoldCommand):
         {name : Name of the command you would like to create}
     """
 
-    scaffold_name = 'Command'
+    scaffold_name = "Command"
     postfix = "Command"
-    template = '/masonite/snippets/scaffold/command'
-    base_directory = 'app/commands/'
+    template = "/masonite/snippets/scaffold/command"
+    base_directory = "app/commands/"

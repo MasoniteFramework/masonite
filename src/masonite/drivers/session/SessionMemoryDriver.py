@@ -92,7 +92,7 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         """
         ip = self.__get_client_address()
         only_messages = []
-        messages = self._flash.get(ip, {}).get('errors', {}).items()
+        messages = self._flash.get(ip, {}).get("errors", {}).items()
         for key, messages in messages:
             for message in messages:
                 only_messages.append(message)
@@ -144,10 +144,10 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
 
     def __get_client_address(self):
         """Get ip from the client."""
-        if 'HTTP_X_FORWARDED_FOR' in self.request.environ:
-            return self.request.environ['HTTP_X_FORWARDED_FOR'].split(',')[-1].strip()
+        if "HTTP_X_FORWARDED_FOR" in self.request.environ:
+            return self.request.environ["HTTP_X_FORWARDED_FOR"].split(",")[-1].strip()
 
-        return self.request.environ['REMOTE_ADDR']
+        return self.request.environ["REMOTE_ADDR"]
 
     def __collect_data(self, key=False):
         """Collect data from session and flash data.

@@ -13,10 +13,10 @@ class QueueProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
-        self.app.bind('QueueAsyncDriver', QueueAsyncDriver)
-        self.app.bind('QueueAmqpDriver', QueueAmqpDriver)
-        self.app.bind('QueueManager', QueueManager)
+        self.app.bind("QueueAsyncDriver", QueueAsyncDriver)
+        self.app.bind("QueueAmqpDriver", QueueAmqpDriver)
+        self.app.bind("QueueManager", QueueManager)
 
     def boot(self, queue: QueueManager):
-        self.app.bind('Queue', queue.driver(config('queue.driver')))
-        self.app.swap(Queue, queue.driver(config('queue.driver')))
+        self.app.bind("Queue", queue.driver(config("queue.driver")))
+        self.app.swap(Queue, queue.driver(config("queue.driver")))

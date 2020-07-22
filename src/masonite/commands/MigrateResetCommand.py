@@ -16,7 +16,7 @@ class MigrateResetCommand(Command):
 
     def handle(self):
         sys.path.append(os.getcwd())
-        migrations = Migrations(self.option('connection')).reset()
+        migrations = Migrations(self.option("connection")).reset()
         self.line("")
         for notes in migrations._notes:
             self.line(notes)

@@ -13,4 +13,4 @@ class UpCommand(Command):
     """
 
     def handle(self):
-        os.remove('bootstrap/down')
+        os.remove("bootstrap/down")

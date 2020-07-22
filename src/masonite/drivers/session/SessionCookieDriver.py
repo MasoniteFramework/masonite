@@ -30,11 +30,11 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         Returns:
             string|None - Returns None if a value does not exist.
         """
-        cookie = self.request.get_cookie('s_{0}'.format(key))
+        cookie = self.request.get_cookie("s_{0}".format(key))
         if cookie:
             return self._get_serialization_value(cookie)
 
-        cookie = self.request.get_cookie('f_{0}'.format(key))
+        cookie = self.request.get_cookie("f_{0}".format(key))
         if cookie:
             return self._get_serialization_value(cookie)
 
@@ -50,7 +50,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, dict):
             value = json.dumps(value)
 
-        self.request.cookie('s_{0}'.format(key), value)
+        self.request.cookie("s_{0}".format(key), value)
 
     def has(self, key):
         """Check if a key exists in the session.
@@ -84,8 +84,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         """
         self.__collect_data()
 
-        if self.request.get_cookie('s_{}'.format(key)):
-            self.request.delete_cookie('s_{}'.format(key))
+        if self.request.get_cookie("s_{}".format(key)):
+            self.request.delete_cookie("s_{}".format(key))
             return True
 
         return False
@@ -97,18 +97,27 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        if 'HTTP_COOKIE' in self.request.environ and self.request.environ['HTTP_COOKIE']:
-            cookies_original = self.request.environ['HTTP_COOKIE'].split(';')
+        if (
+            "HTTP_COOKIE" in self.request.environ
+            and self.request.environ["HTTP_COOKIE"]
+        ):
+            cookies_original = self.request.environ["HTTP_COOKIE"].split(";")
             for cookie in cookies_original:
                 if flash_only:
-                    if cookie.strip().startswith('f_'):
+                    if cookie.strip().startswith("f_"):
                         data = cookie.split("=", 1)
-                        cookie_name = data[0].replace('s_', '').replace('f_', '').strip()
+                        cookie_name = (
+                            data[0].replace("s_", "").replace("f_", "").strip()
+                        )
                         cookies.update({cookie_name: self.get(cookie_name)})
                 else:
-                    if cookie.strip().startswith('s_') or cookie.strip().startswith('f_'):
+                    if cookie.strip().startswith("s_") or cookie.strip().startswith(
+                        "f_"
+                    ):
                         data = cookie.split("=", 1)
-                        cookie_name = data[0].replace('s_', '').replace('f_', '').strip()
+                        cookie_name = (
+                            data[0].replace("s_", "").replace("f_", "").strip()
+                        )
                         cookies.update({cookie_name: self.get(cookie_name)})
         return cookies
 
@@ -122,7 +131,11 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, (dict, list)):
             value = json.dumps(value)
 
-        self.request.cookie('f_{0}'.format(key), value, expires=config('session.drivers.cookie.flash_expires', '2 seconds'))
+        self.request.cookie(
+            "f_{0}".format(key),
+            value,
+            expires=config("session.drivers.cookie.flash_expires", "2 seconds"),
+        )
 
     def get_error_messages(self):
         """Should get and delete the flashed messages
@@ -132,7 +145,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             value {string} -- The value to set in the session.
         """
         only_messages = []
-        messages = self.all(flash_only=True).get('errors', {}).items()
+        messages = self.all(flash_only=True).get("errors", {}).items()
         for key, messages in messages:
             for error_message in messages:
                 only_messages.append(error_message)
@@ -159,10 +172,10 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         cookies = self.__collect_data()
         for cookie in cookies:
             if flash_only:
-                self.request.delete_cookie('f_{0}'.format(cookie))
+                self.request.delete_cookie("f_{0}".format(cookie))
                 continue
 
-            self.request.delete_cookie('s_{0}'.format(cookie))
+            self.request.delete_cookie("s_{0}".format(cookie))
 
     def helper(self):
         """Use to create builtin helper function."""

@@ -1,8 +1,8 @@
 class Mailable:
 
-    _to = ''
-    _from = ''
-    _subject = ''
+    _to = ""
+    _from = ""
+    _subject = ""
 
     def view(self, template, variables={}):
         self.template = template

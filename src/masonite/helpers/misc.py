@@ -22,13 +22,13 @@ def random_string(length=4):
 
 
 def dot(data, compile_to=None):
-    notation_list = data.split('.')
+    notation_list = data.split(".")
 
     compiling = ""
     compiling += notation_list[0]
-    beginning_string = compile_to.split('{1}')[0]
+    beginning_string = compile_to.split("{1}")[0]
     compiling = beginning_string + compiling
-    dot_split = compile_to.replace(beginning_string + '{1}', '').split('{.}')
+    dot_split = compile_to.replace(beginning_string + "{1}", "").split("{.}")
     if any(len(x) > 1 for x in dot_split):
         raise ValueError("Cannot have multiple values between {1} and {.}")
 
@@ -61,24 +61,23 @@ def clean_request_input(value, clean=True, quote=True):
 
 
 class HasColoredCommands:
-
     def success(self, message):
-        print('\033[92m {0} \033[0m'.format(message))
+        print("\033[92m {0} \033[0m".format(message))
 
     def warning(self, message):
-        print('\033[93m {0} \033[0m'.format(message))
+        print("\033[93m {0} \033[0m".format(message))
 
     def danger(self, message):
-        print('\033[91m {0} \033[0m'.format(message))
+        print("\033[91m {0} \033[0m".format(message))
 
     def info(self, message):
         return self.success(message)
 
 
 class Compact:
-
     def __new__(cls, *args):
         import inspect
+
         frame = inspect.currentframe()
 
         cls.dictionary = {}
@@ -94,23 +93,28 @@ class Compact:
                     for f in found:
                         if value is f and f is not None:
                             raise AmbiguousError(
-                                'Cannot contain variables with multiple of the same object in scope. '
-                                'Getting {}'.format(value))
+                                "Cannot contain variables with multiple of the same object in scope. "
+                                "Getting {}".format(value)
+                            )
                     cls.dictionary.update({key: value})
                     found.append(value)
 
         if len(args) != len(cls.dictionary):
-            raise ValueError('Could not find all variables in this')
+            raise ValueError("Could not find all variables in this")
         return cls.dictionary
 
 
 def deprecated(message):
     def deprecated_decorator(func):
         def deprecated_func(*args, **kwargs):
-            warnings.warn("{} is a deprecated function. {}".format(func.__name__, message),
-                          category=DeprecationWarning,
-                          stacklevel=2)
-            warnings.simplefilter('default', DeprecationWarning)
+            warnings.warn(
+                "{} is a deprecated function. {}".format(func.__name__, message),
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+            warnings.simplefilter("default", DeprecationWarning)
             return func(*args, **kwargs)
+
         return deprecated_func
+
     return deprecated_decorator

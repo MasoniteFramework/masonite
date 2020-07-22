@@ -10,7 +10,7 @@ class ProviderCommand(BaseScaffoldCommand):
         {name : Name of the Service Provider you want to create}
     """
 
-    scaffold_name = 'Service Provider'
-    base_directory = 'app/providers/'
-    template = '/masonite/snippets/scaffold/provider'
+    scaffold_name = "Service Provider"
+    base_directory = "app/providers/"
+    template = "/masonite/snippets/scaffold/provider"
     postfix = "Provider"

@@ -2,9 +2,11 @@
 
 import inspect
 
-from ..exceptions import (DriverNotFound,
-                          MissingContainerBindingNotFound,
-                          UnacceptableDriverType)
+from ..exceptions import (
+    DriverNotFound,
+    MissingContainerBindingNotFound,
+    UnacceptableDriverType,
+)
 
 from ..app import App
 from ..helpers import config
@@ -64,8 +66,8 @@ class Manager:
             DriverNotFound -- Raised when the driver can not be found.
         """
 
-        if driver in (None, 'default'):
-            driver = config('{}.driver'.format(self.config)).capitalize()
+        if driver in (None, "default"):
+            driver = config("{}.driver".format(self.config)).capitalize()
         else:
             if isinstance(driver, str):
                 driver = driver.capitalize()
@@ -73,7 +75,7 @@ class Manager:
         try:
             if isinstance(driver, str):
                 self.manage_driver = self.container.make(
-                    '{0}{1}Driver'.format(self.driver_prefix, driver)
+                    "{0}{1}Driver".format(self.driver_prefix, driver)
                 )
                 return
             elif inspect.isclass(driver):
@@ -81,7 +83,13 @@ class Manager:
                 return
 
             raise UnacceptableDriverType(
-                'String or class based driver required. {} driver recieved.'.format(driver))
+                "String or class based driver required. {} driver recieved.".format(
+                    driver
+                )
+            )
         except MissingContainerBindingNotFound:
             raise DriverNotFound(
-                'Could not find the {0}{1}Driver from the service container. Are you missing a service provider?'.format(self.driver_prefix, driver))
+                "Could not find the {0}{1}Driver from the service container. Are you missing a service provider?".format(
+                    self.driver_prefix, driver
+                )
+            )

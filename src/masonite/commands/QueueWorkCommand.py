@@ -19,13 +19,13 @@ class QueueWorkCommand(Command):
     def handle(self):
         from wsgi import container
 
-        if self.option('driver') == 'default':
+        if self.option("driver") == "default":
             queue = container.make(Queue)
         else:
-            queue = container.make(Queue).driver(self.option('driver'))
+            queue = container.make(Queue).driver(self.option("driver"))
 
-        if self.option('failed'):
+        if self.option("failed"):
             queue.run_failed_jobs()
             return
 
-        queue.connect().consume(self.option('channel'), fair=self.option('fair'))
+        queue.connect().consume(self.option("channel"), fair=self.option("fair"))

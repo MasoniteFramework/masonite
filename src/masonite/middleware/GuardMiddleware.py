@@ -24,4 +24,4 @@ class GuardMiddleware:
         Arguments:
             _ {ignored} -- ignored
         """
-        self.auth.set(config('auth.auth.defaults.guard'))
+        self.auth.set(config("auth.auth.defaults.guard"))

@@ -24,13 +24,13 @@ class BaseMailDriver(BaseDriver, Responsable):
             app {masonite.app.App} -- The Masonite container class.
             view {object} -- This is the masonite.view.View class.
         """
-        self.config = config('mail')
+        self.config = config("mail")
         self.app = app
         self.to_addresses = []
-        self.message_subject = 'Subject'
+        self.message_subject = "Subject"
         self.message_reply_to = None
-        self.from_name = self.config.FROM['name']
-        self.from_address = self.config.FROM['address']
+        self.from_name = self.config.FROM["name"]
+        self.from_address = self.config.FROM["address"]
         self._queue = False
         self.html_content = None
         self.text_content = None
@@ -66,7 +66,7 @@ class BaseMailDriver(BaseDriver, Responsable):
 
     @property
     def mail_to_header(self):
-        return ','.join(self.to_addresses)
+        return ",".join(self.to_addresses)
 
     def text(self, content):
         """Set the text content of the email.
@@ -99,7 +99,7 @@ class BaseMailDriver(BaseDriver, Responsable):
         return self.html_content or self.text_content
 
     @message_body.setter
-    @deprecated('Please use `.text()` and `.html()` methods instead.')
+    @deprecated("Please use `.text()` and `.html()` methods instead.")
     def message_body(self, value):
         self.html_content = value
 
@@ -130,7 +130,7 @@ class BaseMailDriver(BaseDriver, Responsable):
         self._queue = True
         return self
 
-    def template(self, template_name, dictionary={}, mimetype='html'):
+    def template(self, template_name, dictionary={}, mimetype="html"):
         """Create an email from a normal Jinja template.
 
         Arguments:
@@ -143,9 +143,9 @@ class BaseMailDriver(BaseDriver, Responsable):
         Returns:
             self
         """
-        view = copy.copy(self.app.make('ViewClass'))
+        view = copy.copy(self.app.make("ViewClass"))
         content = view.render(template_name, dictionary).rendered_template
-        if mimetype == 'html':
+        if mimetype == "html":
             self.html(content)
         else:
             self.text(content)
@@ -166,7 +166,7 @@ class BaseMailDriver(BaseDriver, Responsable):
         """
         match = MAIL_FROM_RE.match(address)
         if not match:
-            raise ValueError('Invalid address specified')
+            raise ValueError("Invalid address specified")
 
         match_name, match_address = match.groups()
         self.from_address = match_address
@@ -185,12 +185,13 @@ class BaseMailDriver(BaseDriver, Responsable):
             self
         """
         mailable = self.app.resolve(mailable.build)
-        (self
-            .to(mailable._to)
+        (
+            self.to(mailable._to)
             .send_from(mailable._from)
             .subject(mailable._subject)
             .template(mailable.template, mailable.variables)
-            .reply_to(mailable._reply_to))
+            .reply_to(mailable._reply_to)
+        )
         return self
 
     def subject(self, subject):

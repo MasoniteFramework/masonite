@@ -2,7 +2,6 @@ from abc import ABC as Contract, abstractmethod
 
 
 class AuthContract(Contract):
-
     @abstractmethod
     def user(self):
         pass

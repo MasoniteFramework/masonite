@@ -21,22 +21,25 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
 
         self.appconfig = application
         self.cache_forever = None
-        self.app_name = os.getenv('APP_NAME', 'masonite')
+        self.app_name = os.getenv("APP_NAME", "masonite")
 
-        config = cache.DRIVERS['redis']
+        config = cache.DRIVERS["redis"]
 
         try:
             import redis
+
             self.redis = redis
         except ImportError:
             raise DriverLibraryNotFound(
-                "Could not find the 'redis' library. Run pip install redis to fix this.")
+                "Could not find the 'redis' library. Run pip install redis to fix this."
+            )
 
         self.connection = redis.StrictRedis(
-            host=config['host'],
-            port=config['port'],
-            password=config['password'],
-            decode_responses=True)
+            host=config["host"],
+            port=config["port"],
+            password=config["password"],
+            decode_responses=True,
+        )
 
     def store(self, key, value):
         """Stores content in cache file.
@@ -55,7 +58,7 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
 
         self.cache_forever = True
 
-        self.connection.set('{0}_cache_{1}'.format(self.app_name, key), value)
+        self.connection.set("{0}_cache_{1}".format(self.app_name, key), value)
 
         return key
 
@@ -82,32 +85,36 @@ class CacheRedisDriver(CacheContract, BaseCacheDriver):
         self.cache_forever = False
         cache_for_time = self.calculate_time(cache_type, cache_time)
 
-        self.connection.set('{0}_cache_{1}'.format(self.app_name, key), value, ex=cache_for_time)
+        self.connection.set(
+            "{0}_cache_{1}".format(self.app_name, key), value, ex=cache_for_time
+        )
 
         return key
 
     def get(self, key):
         """Get the data from a key in the cache."""
-        return self.connection.get('{0}_cache_{1}'.format(self.app_name, key))
+        return self.connection.get("{0}_cache_{1}".format(self.app_name, key))
 
     def delete(self, key):
         """Delete file cache."""
-        self.connection.delete('{0}_cache_{1}'.format(self.app_name, key))
+        self.connection.delete("{0}_cache_{1}".format(self.app_name, key))
 
     def update(self, key, value):
         """Updates a specific cache by key."""
-        time_to_expire = self.connection.ttl('{0}_cache_{1}'.format(self.app_name, key))
+        time_to_expire = self.connection.ttl("{0}_cache_{1}".format(self.app_name, key))
 
         if time_to_expire > 0:
-            self.connection.set('{0}_cache_{1}'.format(self.app_name, key), value, ex=time_to_expire)
+            self.connection.set(
+                "{0}_cache_{1}".format(self.app_name, key), value, ex=time_to_expire
+            )
         else:
-            self.connection.set('{0}_cache_{1}'.format(self.app_name, key), value)
+            self.connection.set("{0}_cache_{1}".format(self.app_name, key), value)
 
         return key
 
     def exists(self, key):
         """Check if the cache exists."""
-        return self.connection.exists('{0}_cache_{1}'.format(self.app_name, key))
+        return self.connection.exists("{0}_cache_{1}".format(self.app_name, key))
 
     def is_valid(self, key):
         """Check if a valid cache."""

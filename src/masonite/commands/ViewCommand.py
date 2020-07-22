@@ -11,6 +11,6 @@ class ViewCommand(BaseScaffoldCommand):
     """
 
     scaffold_name = "View"
-    template = '/masonite/snippets/scaffold/view'
-    file_extension = '.html'
-    base_directory = 'resources/templates/'
+    template = "/masonite/snippets/scaffold/view"
+    file_extension = ".html"
+    base_directory = "resources/templates/"

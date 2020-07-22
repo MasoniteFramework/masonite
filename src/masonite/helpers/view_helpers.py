@@ -12,7 +12,9 @@ def set_request_method(method_type):
     Returns:
         string -- An input string.
     """
-    return Markup("<input type='hidden' name='__method' value='{0}'>".format(method_type))
+    return Markup(
+        "<input type='hidden' name='__method' value='{0}'>".format(method_type)
+    )
 
 
 def back(location=None):
@@ -26,8 +28,9 @@ def back(location=None):
     """
     if location is None:
         from wsgi import container
-        request = container.make('Request')
-        intended_route = request.session.get('__intend')
+
+        request = container.make("Request")
+        intended_route = request.session.get("__intend")
         if intended_route:
             location = intended_route
         else:
@@ -36,11 +39,11 @@ def back(location=None):
     return Markup("<input type='hidden' name='__back' value='{0}'>".format(location))
 
 
-def hidden(value, name='hidden-input'):
+def hidden(value, name="hidden-input"):
     return Markup("<input type='hidden' name='{}' value='{}'>".format(name, value))
 
 
-def old(session_key, default=''):
+def old(session_key, default=""):
     """Return the old value submitted by forms validated with Valitators.
 
     Arguments:
@@ -51,7 +54,8 @@ def old(session_key, default=''):
     """
 
     from wsgi import container
-    session_container = container.make('Session')
+
+    session_container = container.make("Session")
 
     if session_container.has(session_key):
         return session_container.get(session_key)

@@ -10,7 +10,7 @@ class JobCommand(BaseScaffoldCommand):
         {name : Name of the job you want to create}
     """
 
-    scaffold_name = 'Job'
-    template = '/masonite/snippets/scaffold/job'
-    base_directory = 'app/jobs/'
+    scaffold_name = "Job"
+    template = "/masonite/snippets/scaffold/job"
+    base_directory = "app/jobs/"
     postfix = "Job"

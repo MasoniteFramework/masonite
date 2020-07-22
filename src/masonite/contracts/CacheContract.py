@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class CacheContract(ABC):
-
     @abstractmethod
     def store(self):
         pass

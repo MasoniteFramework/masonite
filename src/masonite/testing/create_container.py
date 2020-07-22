@@ -7,12 +7,12 @@ def create_container():
     from .generate_wsgi import generate_wsgi
     from config import providers
 
-    container.bind('WSGI', generate_wsgi())
-    container.bind('Container', container)
+    container.bind("WSGI", generate_wsgi())
+    container.bind("Container", container)
 
     # container.bind('ProvidersConfig', providers)
-    container.bind('Providers', [])
-    container.bind('WSGIProviders', [])
+    container.bind("Providers", [])
+    container.bind("WSGIProviders", [])
 
     """Bind all service providers
         Let's register everything into the Service Container. Once everything is
@@ -26,11 +26,11 @@ def create_container():
         located_provider = provider()
         located_provider.load_app(container).register()
         if located_provider.wsgi:
-            container.make('WSGIProviders').append(located_provider)
+            container.make("WSGIProviders").append(located_provider)
         else:
-            container.make('Providers').append(located_provider)
+            container.make("Providers").append(located_provider)
 
-    for provider in container.make('Providers'):
+    for provider in container.make("Providers"):
         container.resolve(provider.boot)
 
     """Get the application from the container

@@ -12,17 +12,17 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
 
     def message(self):
         data = {
-            'from': self.mail_from_header,
-            'to': self.to_addresses,
-            'subject': self.message_subject,
-            'h:Reply-To': self.message_reply_to,
+            "from": self.mail_from_header,
+            "to": self.to_addresses,
+            "subject": self.message_subject,
+            "h:Reply-To": self.message_reply_to,
         }
 
         # Attach both mimetypes if they exist.
         if self.text_content:
-            data['text'] = self.text_content
+            data["text"] = self.text_content
         if self.html_content:
-            data['html'] = self.html_content
+            data["html"] = self.html_content
 
         return data
 
@@ -37,9 +37,10 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
         """
         if message and isinstance(message, str):
             warnings.warn(
-                'Passing message to .send() is deprecated. Please use .text() and .html().',
+                "Passing message to .send() is deprecated. Please use .text() and .html().",
                 category=DeprecationWarning,
-                stacklevel=2)
+                stacklevel=2,
+            )
             data = self._get_message_for_send_deprecated(message)
 
         # The above should be removed once deprecation time period passed.
@@ -51,6 +52,7 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
         if self._queue:
             from wsgi import container
             from ... import Queue
+
             return container.make(Queue).push(self._send_mail, args=(data,))
 
         return self._send_mail(data)
@@ -65,10 +67,11 @@ class MailMailgunDriver(BaseMailDriver, MailContract):
             requests.post
         """
 
-        domain = self.config.DRIVERS['mailgun']['domain']
-        secret = self.config.DRIVERS['mailgun']['secret']
+        domain = self.config.DRIVERS["mailgun"]["domain"]
+        secret = self.config.DRIVERS["mailgun"]["secret"]
 
         return requests.post(
             "https://api.mailgun.net/v3/{0}/messages".format(domain),
             auth=("api", secret),
-            data=data)
+            data=data,
+        )

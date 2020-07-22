@@ -29,7 +29,7 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
         self.ssl_message = boolean
         return self
 
-    def channel(self, channels, message, event='base-event'):
+    def channel(self, channels, message, event="base-event"):
         """Specify which channel(s) you want to send information to.
 
         Arguments:
@@ -49,19 +49,20 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
             import pusher
         except ImportError:
             raise DriverLibraryNotFound(
-                'Could not find the "pusher" library. Please pip install this library running "pip install pusher"')
+                'Could not find the "pusher" library. Please pip install this library running "pip install pusher"'
+            )
 
-        configuration = config('broadcast.drivers.pusher')
+        configuration = config("broadcast.drivers.pusher")
 
         pusher_client = pusher.Pusher(
-            app_id=str(configuration['app_id']),
-            key=configuration['client'],
-            secret=configuration['secret'],
-            ssl=self.ssl_message
+            app_id=str(configuration["app_id"]),
+            key=configuration["client"],
+            secret=configuration["secret"],
+            ssl=self.ssl_message,
         )
 
         if isinstance(message, str):
-            message = {'message': message}
+            message = {"message": message}
 
         if isinstance(channels, list):
             for channel in channels:

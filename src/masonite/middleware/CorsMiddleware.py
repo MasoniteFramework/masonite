@@ -21,5 +21,5 @@ class CorsMiddleware:
 
     def before(self):
         """Run This Middleware After The Route Executes."""
-        headers = config('middleware.cors') or {}
+        headers = config("middleware.cors") or {}
         self.request.header(headers)

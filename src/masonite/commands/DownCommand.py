@@ -11,5 +11,5 @@ class DownCommand(Command):
     """
 
     def handle(self):
-        with open('bootstrap/down', 'w+'):
+        with open("bootstrap/down", "w+"):
             pass

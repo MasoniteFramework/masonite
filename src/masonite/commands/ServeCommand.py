@@ -1,4 +1,3 @@
-
 import time
 import os
 
@@ -24,37 +23,49 @@ class ServeCommand(Command):
 
     def handle(self):
         if has_unmigrated_migrations():
-            self.comment("\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n")
+            self.comment(
+                "\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n"
+            )
 
-        if self.option('live-reload'):
+        if self.option("live-reload"):
             try:
                 from livereload import Server
             except ImportError:
-                raise DriverLibraryNotFound("Could not find the livereload library. Install it by running 'pip install livereload==2.5.1'")
+                raise DriverLibraryNotFound(
+                    "Could not find the livereload library. Install it by running 'pip install livereload==2.5.1'"
+                )
 
             from wsgi import container
             from config import application
             import glob
 
-            server = Server(container.make('WSGI'))
-            for filepath in glob.glob('resources/templates/**/*/'):
+            server = Server(container.make("WSGI"))
+            for filepath in glob.glob("resources/templates/**/*/"):
                 server.watch(filepath)
 
-            self.line('')
-            self.info('Live reload server is starting...')
+            self.line("")
+            self.info("Live reload server is starting...")
             self.info(
-                'This will only work for templates. Changes to Python files may require a browser refresh.')
-            self.line('')
-            application = server.serve(port=self.option('port'), restart_delay=self.option(
-                'reload-interval'), liveport=5500, root=application.BASE_DIRECTORY, debug=True)
+                "This will only work for templates. Changes to Python files may require a browser refresh."
+            )
+            self.line("")
+            application = server.serve(
+                port=self.option("port"),
+                restart_delay=self.option("reload-interval"),
+                liveport=5500,
+                root=application.BASE_DIRECTORY,
+                debug=True,
+            )
             return
 
-        if not self.option('dont-reload'):
+        if not self.option("dont-reload"):
             logger = DefaultLogger(LogLevel.INFO)
 
             # worker args are pickled and then passed to the new process
             worker_args = [
-                self.option("host"), self.option("port"), "wsgi:application",
+                self.option("host"),
+                self.option("port"),
+                "wsgi:application",
             ]
 
             reloader = Reloader(
@@ -69,6 +80,7 @@ class ServeCommand(Command):
         else:
             from wsgi import application
             from ._devserver import run
+
             run(self.option("host"), self.option("port"), application)
 
     def _run_reloader(self, reloader, extra_files=[]):
@@ -80,7 +92,7 @@ class ServeCommand(Command):
             while True:
                 if not reloader._run_worker():
                     reloader._wait_for_changes()
-                time.sleep(float(self.option('reload-interval')))
+                time.sleep(float(self.option("reload-interval")))
         except KeyboardInterrupt:
             pass
         finally:

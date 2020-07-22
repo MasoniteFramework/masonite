@@ -13,12 +13,8 @@ class MigrateRefreshCommand(Command):
     """
 
     def handle(self):
-        self.call('migrate:reset', [
-            ('--connection', self.option('connection'))
-        ])
-        self.call('migrate', [
-            ('--connection', self.option('connection'))
-        ])
+        self.call("migrate:reset", [("--connection", self.option("connection"))])
+        self.call("migrate", [("--connection", self.option("connection"))])
 
-        if self.option('seed'):
-            self.call('seed:run')
+        if self.option("seed"):
+            self.call("seed:run")

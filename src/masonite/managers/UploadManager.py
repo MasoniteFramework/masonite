@@ -11,8 +11,8 @@ class UploadManager(Manager, UploadManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'storage'
-    driver_prefix = 'Upload'
+    config = "storage"
+    driver_prefix = "Upload"
 
 
 class Upload:

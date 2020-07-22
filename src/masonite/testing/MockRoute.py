@@ -5,18 +5,21 @@ from ..request import Request
 
 
 class MockRoute:
-
     def __init__(self, route, container, wsgi=None):
         self.route = route
         self.container = container
         self.wsgi = wsgi
 
     def assertIsNamed(self, name):
-        assert self.route.named_route == name, "Route name is {}. Asserted {}".format(self.route.named_route, name)
+        assert self.route.named_route == name, "Route name is {}. Asserted {}".format(
+            self.route.named_route, name
+        )
         return self
 
     def assertIsNotNamed(self):
-        assert self.route.named_route is None, "Route has a name: {}".format(self.route.named_route)
+        assert self.route.named_route is None, "Route has a name: {}".format(
+            self.route.named_route
+        )
         return self
 
     def isNamed(self, name):
@@ -29,15 +32,23 @@ class MockRoute:
         return self.route.controller == controller
 
     def assertHasController(self, controller):
-        if isinstance(controller, str) and '@' in controller:
-            controller, method = controller.split('@')
-            assert self.route.controller.__name__ == controller, "Controller is {}. Asserted {}".format(self.route.controller.__name__, controller)
-            assert self.route.controller_method == method, "Controller method is {}. Asserted {}".format(self.route.controller_method, method)
+        if isinstance(controller, str) and "@" in controller:
+            controller, method = controller.split("@")
+            assert (
+                self.route.controller.__name__ == controller
+            ), "Controller is {}. Asserted {}".format(
+                self.route.controller.__name__, controller
+            )
+            assert (
+                self.route.controller_method == method
+            ), "Controller method is {}. Asserted {}".format(
+                self.route.controller_method, method
+            )
 
         return self
 
     def contains(self, value):
-        return value in self.container.make('Response').decode('utf-8')
+        return value in self.container.make("Response").decode("utf-8")
 
     def assertContains(self, value):
         assert self.contains(value), "Response does not contain {}".format(value)
@@ -47,20 +58,20 @@ class MockRoute:
         return self.assertIsStatus(404)
 
     def ok(self):
-        return '200 OK' in self.container.make('Request').get_status_code()
+        return "200 OK" in self.container.make("Request").get_status_code()
 
     def canView(self):
         return self.ok()
 
     def get_string_response(self):
-        response = self.container.make('Response')
+        response = self.container.make("Response")
 
         if isinstance(response, str):
             return response
 
-        return response.decode('utf-8')
+        return response.decode("utf-8")
 
-    def hasJson(self, key, value=''):
+    def hasJson(self, key, value=""):
 
         response = json.loads(self.get_string_response())
         if isinstance(key, dict):
@@ -76,13 +87,19 @@ class MockRoute:
             for item_key, key_value in key.items():
                 assert Dot().dot(item_key, response, False) == key_value
         else:
-            assert Dot().dot(key, response, False) == value, "Key '{}' with the value of '{}' could not find a match in {}".format(key, value, response)
+            assert (
+                Dot().dot(key, response, False) == value
+            ), "Key '{}' with the value of '{}' could not find a match in {}".format(
+                key, value, response
+            )
         return self
 
     def assertJsonContains(self, key, value):
         response = json.loads(self.get_string_response())
         if not isinstance(response, list):
-            raise ValueError("This method can only be used if the response is a list of elements.")
+            raise ValueError(
+                "This method can only be used if the response is a list of elements."
+            )
 
         found = False
         for element in response:
@@ -91,7 +108,11 @@ class MockRoute:
                 found = True
 
         if not found:
-            raise AssertionError("Could not find a key of: {} that had the value of {}".format(key, value))
+            raise AssertionError(
+                "Could not find a key of: {} that had the value of {}".format(
+                    key, value
+                )
+            )
         return self
 
     def count(self, amount):
@@ -99,7 +120,9 @@ class MockRoute:
 
     def assertCount(self, amount):
         response_amount = len(json.loads(self.get_string_response()))
-        assert response_amount == amount, 'Response has an count of {}. Asserted {}'.format(response_amount, amount)
+        assert (
+            response_amount == amount
+        ), "Response has an count of {}. Asserted {}".format(response_amount, amount)
         return self
 
     def amount(self, amount):
@@ -110,23 +133,39 @@ class MockRoute:
         try:
             return len(response[key]) == amount
         except TypeError:
-            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
+            raise TypeError(
+                "The json response key of: {} is not iterable but has the value of {}".format(
+                    key, response[key]
+                )
+            )
 
     def assertHasAmount(self, key, amount):
         response = json.loads(self.get_string_response())
         try:
-            assert len(response[key]) == amount, '{} is not equal to {}'.format(len(response[key]), amount)
+            assert len(response[key]) == amount, "{} is not equal to {}".format(
+                len(response[key]), amount
+            )
         except TypeError:
-            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
+            raise TypeError(
+                "The json response key of: {} is not iterable but has the value of {}".format(
+                    key, response[key]
+                )
+            )
 
         return self
 
     def assertNotHasAmount(self, key, amount):
         response = json.loads(self.get_string_response())
         try:
-            assert not len(response[key]) == amount, '{} is equal to {} but should not be'.format(len(response[key]), amount)
+            assert (
+                not len(response[key]) == amount
+            ), "{} is equal to {} but should not be".format(len(response[key]), amount)
         except TypeError:
-            raise TypeError("The json response key of: {} is not iterable but has the value of {}".format(key, response[key]))
+            raise TypeError(
+                "The json response key of: {} is not iterable but has the value of {}".format(
+                    key, response[key]
+                )
+            )
 
         return self
 
@@ -136,66 +175,86 @@ class MockRoute:
         return self
 
     def isPost(self):
-        return 'POST' in self.route.method_type
+        return "POST" in self.route.method_type
 
     def isGet(self):
-        return 'GET' in self.route.method_type
+        return "GET" in self.route.method_type
 
     def isPut(self):
-        return 'PUT' in self.route.method_type
+        return "PUT" in self.route.method_type
 
     def isPatch(self):
-        return 'PATCH' in self.route.method_type
+        return "PATCH" in self.route.method_type
 
     def isDelete(self):
-        return 'DELETE' in self.route.method_type
+        return "DELETE" in self.route.method_type
 
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)
         return self
 
     def hasSession(self, key):
-        return self.container.make('Session').has(key)
+        return self.container.make("Session").has(key)
 
     def assertParameterIs(self, key, value):
-        request = self.container.make('Request')
+        request = self.container.make("Request")
         if key not in request.url_params:
-            raise AssertionError("Request class does not have the '{}' url parameter".format(key))
+            raise AssertionError(
+                "Request class does not have the '{}' url parameter".format(key)
+            )
 
         if request.param(key) != value:
-            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
+            raise AssertionError(
+                "parameter {} is equal to {} of type {}, not {} of type {}".format(
+                    key,
+                    request.param(key),
+                    type(request.param(key)),
+                    value,
+                    type(value),
+                )
+            )
 
     def assertIsStatus(self, status):
-        request = self.container.make('Request')
-        assert request.is_status(status), AssertionError("{} is not equal to {}".format(request.get_status_code(), status))
+        request = self.container.make("Request")
+        assert request.is_status(status), AssertionError(
+            "{} is not equal to {}".format(request.get_status_code(), status)
+        )
         if not request.is_status(status):
-            raise AssertionError("{} is not equal to {}".format(request.get_status_code(), status))
+            raise AssertionError(
+                "{} is not equal to {}".format(request.get_status_code(), status)
+            )
 
         return self
 
     def assertHasHeader(self, key):
-        request = self.container.make('Request')
+        request = self.container.make("Request")
         assert request.header(key), "Header '{}' does not exist".format(key)
         return self
 
     def assertNotHasHeader(self, key):
-        request = self.container.make('Request')
-        assert not request.header(key), "Header '{}' exists but asserting it should not".format(key)
+        request = self.container.make("Request")
+        assert not request.header(
+            key
+        ), "Header '{}' exists but asserting it should not".format(key)
         return self
 
     def assertHeaderIs(self, key, value):
-        request = self.container.make('Request')
-        assert str(request.header(key)) == str(value), AssertionError("{} is not equal to {}".format(request.header(key), value))
+        request = self.container.make("Request")
+        assert str(request.header(key)) == str(value), AssertionError(
+            "{} is not equal to {}".format(request.header(key), value)
+        )
 
         return self
 
     def assertPathIs(self, url):
-        path = self.container.make('Request').path
-        assert path == url, "Asserting the path is '{}' but it is '{}'".format(url, path)
+        path = self.container.make("Request").path
+        assert path == url, "Asserting the path is '{}' but it is '{}'".format(
+            url, path
+        )
         return True
 
     def session(self, key):
-        return self.container.make('Session').get(key)
+        return self.container.make("Session").get(key)
 
     def on_make(self, obj, method):
         self.container.on_make(obj, method)
@@ -210,22 +269,32 @@ class MockRoute:
         return self
 
     def headerIs(self, key, value):
-        request = self.container.make('Request')
+        request = self.container.make("Request")
         assertion = request.header(key) == value
         if not assertion:
-            raise AssertionError('header {} does not equal {}'.format(request.header(key), value))
+            raise AssertionError(
+                "header {} does not equal {}".format(request.header(key), value)
+            )
         return assertion
 
     def parameterIs(self, key, value):
-        request = self.container.make('Request')
+        request = self.container.make("Request")
         assertion = request.param(key) == value
         if not assertion:
-            raise AssertionError('parameter {} is equal to {} of type {}, not {} of type {}'.format(key, request.param(key), type(request.param(key)), value, type(value)))
+            raise AssertionError(
+                "parameter {} is equal to {} of type {}, not {} of type {}".format(
+                    key,
+                    request.param(key),
+                    type(request.param(key)),
+                    value,
+                    type(value),
+                )
+            )
         return assertion
 
     @property
     def request(self):
-        return self.container.make('Request')
+        return self.container.make("Request")
 
     @property
     def response(self):
@@ -241,7 +310,7 @@ class MockRoute:
         if isinstance(response, str):
             return response
 
-        return response.decode('utf-8')
+        return response.decode("utf-8")
 
     def asDictionary(self):
         try:

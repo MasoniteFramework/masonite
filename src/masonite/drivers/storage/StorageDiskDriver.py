@@ -8,13 +8,12 @@ from ...drivers import BaseDriver
 
 
 class StorageDiskDriver(BaseDriver, StorageContract):
-
     def put(self, location, contents):
-        with open(location, 'w+') as file:
+        with open(location, "w+") as file:
             file.write(contents)
 
     def append(self, location, contents):
-        with open(location, 'a+') as file:
+        with open(location, "a+") as file:
             file.write(contents)
 
     def get(self, location):
@@ -38,7 +37,7 @@ class StorageDiskDriver(BaseDriver, StorageContract):
             return 0
 
     def extension(self, location):
-        return pathlib.Path(location).suffix.replace('.', '')
+        return pathlib.Path(location).suffix.replace(".", "")
 
     def url(self, location):
         pass
@@ -48,7 +47,8 @@ class StorageDiskDriver(BaseDriver, StorageContract):
 
     def upload(self, *args, **kwargs):
         from wsgi import container
-        return container.make(Upload).driver('disk').store(*args, **kwargs)
+
+        return container.make(Upload).driver("disk").store(*args, **kwargs)
 
     def all(self):
         pass

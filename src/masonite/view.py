@@ -11,7 +11,7 @@ from .response import Responsable
 class View(Responsable):
     """View class. Responsible for handling everything involved with views and view environments."""
 
-    _splice = '/'
+    _splice = "/"
 
     def __init__(self, container):
         """View constructor.
@@ -32,8 +32,8 @@ class View(Responsable):
 
         self.template = None
         self.environments = []
-        self.extension = '.html'
-        self._jinja_extensions = ['jinja2.ext.loopcontrols']
+        self.extension = ".html"
+        self._jinja_extensions = ["jinja2.ext.loopcontrols"]
         self._filters = {}
         self._tests = {}
         self._shared = {}
@@ -51,7 +51,11 @@ class View(Responsable):
             self
         """
         if not isinstance(dictionary, dict):
-            raise ViewException('Second parameter to render method needs to be a dictionary, {} passed.'.format(type(dictionary).__name__))
+            raise ViewException(
+                "Second parameter to render method needs to be a dictionary, {} passed.".format(
+                    type(dictionary).__name__
+                )
+            )
 
         self.__load_environment(template)
         self.dictionary = {}
@@ -60,7 +64,11 @@ class View(Responsable):
         self.dictionary.update(self._shared)
 
         # Check if use cache and return template from cache if exists
-        if self.container.has('Cache') and self.__cached_template_exists() and not self.__is_expired_cache():
+        if (
+            self.container.has("Cache")
+            and self.__cached_template_exists()
+            and not self.__is_expired_cache()
+        ):
             return self.__get_cached_template()
 
         # Check if composers are even set for a speed improvement
@@ -77,12 +85,10 @@ class View(Responsable):
     def _render(self):
         try:
             # Try rendering the template with '.html' appended
-            return self.env.get_template(self.filename).render(
-                self.dictionary)
+            return self.env.get_template(self.filename).render(self.dictionary)
         except TemplateNotFound:
             # Try rendering the direct template the user has supplied
-            return self.env.get_template(self.template).render(
-                self.dictionary)
+            return self.env.get_template(self.template).render(self.dictionary)
 
     def _update_from_composers(self):
         """Add data into the view from specified composers."""
@@ -91,22 +97,21 @@ class View(Responsable):
             self.dictionary.update(self.composers.get(self.template))
 
         # Check if there is just an astericks in the composer
-        if '*' in self.composers:
-            self.dictionary.update(self.composers.get('*'))
+        if "*" in self.composers:
+            self.dictionary.update(self.composers.get("*"))
 
         # We will append onto this string for an easier way to search through wildcard routes
-        compiled_string = ''
+        compiled_string = ""
 
         # Check for wildcard view composers
         for template in self.template.split(self._splice):
             # Append the template onto the compiled_string
             compiled_string += template
-            if self.composers.get('{}*'.format(compiled_string)):
-                self.dictionary.update(
-                    self.composers['{}*'.format(compiled_string)])
+            if self.composers.get("{}*".format(compiled_string)):
+                self.dictionary.update(self.composers["{}*".format(compiled_string)])
             else:
                 # Add a slash to symbolize going into a deeper directory structure
-                compiled_string += '/'
+                compiled_string += "/"
 
     def composer(self, composer_name, dictionary):
         """Update composer dictionary.
@@ -152,7 +157,7 @@ class View(Responsable):
         Returns:
             self
         """
-        if not self.container.has('Cache'):
+        if not self.container.has("Cache"):
             raise RequiredContainerBindingNotFound(
                 "The 'Cache' container binding is required to use this method and wasn't found in the container. You may be missing a Service Provider"
             )
@@ -195,10 +200,10 @@ class View(Responsable):
             template_location = template_location.split(self._splice)
 
             self.environments.append(
-                loader(template_location[0], '/'.join(template_location[1:])))
+                loader(template_location[0], "/".join(template_location[1:]))
+            )
         else:
-            self.environments.append(
-                loader(template_location))
+            self.environments.append(loader(template_location))
 
     def filter(self, name, function):
         """Use to add filters to views.
@@ -224,37 +229,40 @@ class View(Responsable):
             template {string} -- Template to load environment from.
         """
         self.template = template
-        self.filename = template.replace(self._splice, '/').replace('.', '/') + self.extension
+        self.filename = (
+            template.replace(self._splice, "/").replace(".", "/") + self.extension
+        )
 
-        if template.startswith('/'):
+        if template.startswith("/"):
             # Filter blanks strings from the split
-            location = list(filter(None, template.split('/')))
+            location = list(filter(None, template.split("/")))
             self.filename = location[-1] + self.extension
 
             loader = ChoiceLoader(
-                [PackageLoader(location[0], '/'.join(location[1:-1]))] + self.environments
+                [PackageLoader(location[0], "/".join(location[1:-1]))]
+                + self.environments
             )
             self.env = Environment(
                 loader=loader,
-                autoescape=select_autoescape(['html', 'xml']),
+                autoescape=select_autoescape(["html", "xml"]),
                 extensions=self._jinja_extensions,
-                line_statement_prefix='@'
+                line_statement_prefix="@",
             )
 
         else:
             loader = ChoiceLoader(
-                [PackageLoader('resources', 'templates')] + self.environments
+                [PackageLoader("resources", "templates")] + self.environments
             )
 
             # Set the searchpath since some packages look for this object
             # This is sort of a hack for now
-            loader.searchpath = ''
+            loader.searchpath = ""
 
             self.env = Environment(
                 loader=loader,
-                autoescape=select_autoescape(['html', 'xml']),
+                autoescape=select_autoescape(["html", "xml"]),
                 extensions=self._jinja_extensions,
-                line_statement_prefix='@'
+                line_statement_prefix="@",
             )
 
         self.env.filters.update(self._filters)
@@ -265,9 +273,8 @@ class View(Responsable):
         Arguments:
             template {string} -- Creates the cached templates.
         """
-        self.container.make('Cache').store_for(
-            template, self.rendered_template,
-            self.cache_time, self.cache_type, '.html',
+        self.container.make("Cache").store_for(
+            template, self.rendered_template, self.cache_time, self.cache_type, ".html",
         )
 
     def __cached_template_exists(self):
@@ -276,7 +283,7 @@ class View(Responsable):
         Returns:
             bool
         """
-        return self.container.make('Cache').exists(self.template)
+        return self.container.make("Cache").exists(self.template)
 
     def __is_expired_cache(self):
         """Check if cache is expired.
@@ -288,7 +295,7 @@ class View(Responsable):
         if self.cache_time is None or self.cache_type is None and self.cache:
             return True
 
-        driver_cache = self.container.make('Cache')
+        driver_cache = self.container.make("Cache")
 
         # True is expired
         return not driver_cache.is_valid(self.template)
@@ -299,7 +306,7 @@ class View(Responsable):
         Returns:
             self
         """
-        driver_cache = self.container.make('Cache')
+        driver_cache = self.container.make("Cache")
         self.rendered_template = driver_cache.get(self.template)
         return self
 

@@ -8,14 +8,14 @@ from ..routes import Route
 
 
 class RouteProvider(ServiceProvider):
-
     def register(self):
         pass
 
     def boot(self, router: Route, request: Request, response: Response):
         # All routes joined
         from config import application
-        for route in self.app.make('WebRoutes'):
+
+        for route in self.app.make("WebRoutes"):
 
             """Make a better match for trailing slashes
             Sometimes a user will end with a trailing slash. Because the user might
@@ -31,7 +31,11 @@ class RouteProvider(ServiceProvider):
                 is found, execute that route and break out of the loop. We only need
                 one match. Routes are executed on a first come, first serve basis
             """
-            if matchurl and matchurl.match(router.url) and request.get_request_method() in route.method_type:
+            if (
+                matchurl
+                and matchurl.match(router.url)
+                and request.get_request_method() in route.method_type
+            ):
                 route.load_request(request)
 
                 """Check if subdomains are active and if the route matches on the subdomain
@@ -41,7 +45,7 @@ class RouteProvider(ServiceProvider):
                 if request.has_subdomain():
                     # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
-                        response.view('Route not found. Error 404')
+                        response.view("Route not found. Error 404")
                         continue
 
                 """Get URL Parameters
@@ -54,7 +58,9 @@ class RouteProvider(ServiceProvider):
                 try:
                     parameter_dict = {}
                     for index, value in enumerate(matchurl.match(router.url).groups()):
-                        parameter_dict[route.url_list[index]] = value or route.get_default_parameter(route.url_list[index])
+                        parameter_dict[
+                            route.url_list[index]
+                        ] = value or route.get_default_parameter(route.url_list[index])
                     request.set_params(parameter_dict)
                 except AttributeError:
                     pass
@@ -63,22 +69,20 @@ class RouteProvider(ServiceProvider):
                     Only those middleware that have a "before" method are ran.
                 """
 
-                for http_middleware in self.app.make('HttpMiddleware'):
-                    located_middleware = self.app.resolve(
-                        http_middleware
-                    )
-                    if hasattr(located_middleware, 'before'):
+                for http_middleware in self.app.make("HttpMiddleware"):
+                    located_middleware = self.app.resolve(http_middleware)
+                    if hasattr(located_middleware, "before"):
                         located_middleware.before()
 
                 """Execute Route Before Middleware
                     This is middleware that contains a before method.
                 """
 
-                route.run_middleware('before')
+                route.run_middleware("before")
 
                 # Show a helper in the terminal of which route has been visited
                 if application.DEBUG:
-                    print(request.get_request_method() + ' Route: ' + router.url)
+                    print(request.get_request_method() + " Route: " + router.url)
 
                 # If no routes have been found and no middleware has changed the status code
                 if not request.get_status():
@@ -94,17 +98,17 @@ class RouteProvider(ServiceProvider):
                     This is middleware that contains an after method.
                 """
 
-                route.run_middleware('after')
+                route.run_middleware("after")
 
                 """Excute HTTP after middleware
                     Only those middleware that have an "after" method are ran.
                     Check here if the middleware even has the required method.
                 """
 
-                for http_middleware in self.app.make('HttpMiddleware'):
+                for http_middleware in self.app.make("HttpMiddleware"):
                     located_middleware = self.app.resolve(http_middleware)
 
-                    if hasattr(located_middleware, 'after'):
+                    if hasattr(located_middleware, "after"):
                         located_middleware.after()
 
                 """Return breaks the loop because the incoming route is found and executed.
@@ -115,7 +119,7 @@ class RouteProvider(ServiceProvider):
 
         """No Response was found in the for loop so let's set an arbitrary response now.
         """
-        response.view('Route not found. Error 404', status=404)
+        response.view("Route not found. Error 404", status=404)
         # If the route exists but not the method is incorrect
         if request.is_status(404) and request.route_exists(request.path):
-            response.view('Method not allowed', status=405)
+            response.view("Method not allowed", status=405)

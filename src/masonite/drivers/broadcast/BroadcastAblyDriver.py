@@ -29,7 +29,7 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
         self.ssl_message = boolean
         return self
 
-    def channel(self, channels, message, event='base-event'):
+    def channel(self, channels, message, event="base-event"):
         """Specify which channel(s) you want to send information to.
 
         Arguments:
@@ -49,15 +49,14 @@ class BroadcastAblyDriver(BroadcastContract, BaseDriver):
             from ably import AblyRest
         except ImportError:
             raise DriverLibraryNotFound(
-                'Could not find the "ably" library. Please pip install this library running "pip install ably"')
+                'Could not find the "ably" library. Please pip install this library running "pip install ably"'
+            )
 
-        configuration = config('broadcast.drivers.ably')
+        configuration = config("broadcast.drivers.ably")
         if not configuration:
-            raise Exception('Could not find ably broadcast configuration')
+            raise Exception("Could not find ably broadcast configuration")
 
-        client = AblyRest('{0}'.format(
-            configuration['secret']
-        ))
+        client = AblyRest("{0}".format(configuration["secret"]))
 
         if isinstance(channels, list):
             for channel in channels:

@@ -31,7 +31,6 @@ def back(location=None):
         if intended_route:
             location = intended_route
         else:
-            print('should be path')
             location = request.path
 
     return Markup("<input type='hidden' name='__back' value='{0}'>".format(location))

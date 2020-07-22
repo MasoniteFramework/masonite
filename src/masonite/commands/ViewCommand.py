@@ -14,4 +14,3 @@ class ViewCommand(BaseScaffoldCommand):
     template = '/masonite/snippets/scaffold/view'
     file_extension = '.html'
     base_directory = 'resources/templates/'
-    postfix = "View"

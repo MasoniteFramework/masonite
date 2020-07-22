@@ -353,7 +353,7 @@ class Request(Extendable):
         """Gets the URL of the request that the current URL came from. 
 
         Returns:
-            [type]: [description]
+            string -- Returns the previous referring URL.
         """
 
         return self.environ.get('HTTP_REFERER')

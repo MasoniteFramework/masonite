@@ -349,6 +349,15 @@ class Request(Extendable):
         """
         return self.environ['wsgi.url_scheme']
 
+    def referrer(self):
+        """Gets the URL of the request that the current URL came from. 
+
+        Returns:
+            [type]: [description]
+        """
+
+        return self.environ.get('HTTP_REFERER')
+
     def host(self):
         """Get the server's hostname for the current request.
 

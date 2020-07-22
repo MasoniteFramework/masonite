@@ -11,7 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, quote
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -340,6 +340,94 @@ class Request(Extendable):
             bool
         """
         return all((arg in self.request_variables) for arg in args)
+
+    def scheme(self):
+        """Get the current request url scheme
+
+        Returns:
+            string -- the scheme used for the request (http|https)
+        """
+        return self.environ['wsgi.url_scheme']
+
+    def host(self):
+        """Get the server's hostname for the current request.
+
+        Returns:
+            string -- the hostname
+        """
+        host = self.environ.get('HTTP_HOST')
+        if not host:
+            host = self.environ['SERVER_NAME']
+        return host.split(':', 1)[0]
+
+    def port(self):
+        """Get the server's port number for the current request.
+
+        Returns:
+            string -- the server's port number.
+        """
+        return self.environ['SERVER_PORT']
+
+    def full_path(self, quoted=True):
+        """Get the path part of the current request url. (including the application path).
+
+        Args:
+            quoted {bool} -- whether to escape special chars (default: {True}).
+
+        Returns:
+            string -- the path of the url
+        """
+        url = self.environ.get('SCRIPT_NAME', '') + self.environ.get('PATH_INFO', '')
+        if quoted:
+            url = quote(url)
+        return url
+
+    def url(self, include_standard_port=False):
+        """Get the url of the current request including the scheme://host:port/path.
+
+        Args:
+            include_standard_port {bool} -- whether to include the port
+                when the request uses the standard http(s) port (default: {False}).
+
+        Returns:
+            string -- the requested url.
+        """
+        scheme = self.scheme()
+        host = self.host()
+        port = self.port()
+        path = self.full_path()
+        if include_standard_port or (scheme == 'https' and port != '443') or (scheme == 'http' and port != '80'):
+            port_part = ':{}'.format(port)
+        else:
+            port_part = ''
+        return '{}://{}{}{}'.format(scheme, host, port_part, path)
+
+    def full_url(self, include_standard_port=False):
+        """Get the full url including query string of the current request.
+            example:
+             scheme://host:port/path?query-string
+
+        Args:
+            include_standard_port {bool} -- whether to include the port
+                when the request uses the standard http(s) port (default: {False}).
+
+        Returns:
+            string -- The full request url
+        """
+        url = self.url(include_standard_port=include_standard_port)
+        query_string = self.query_string()
+        if query_string:
+            return '{}?{}'.format(url, query_string)
+        else:
+            return url
+
+    def query_string(self):
+        """Get the raw query string of the current request url.
+
+        Returns:
+            string -- The query-string of the request
+        """
+        return self.environ.get('QUERY_STRING', '')
 
     def status(self, status):
         """Set the HTTP status code.

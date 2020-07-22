@@ -350,7 +350,7 @@ class Request(Extendable):
         return self.environ['wsgi.url_scheme']
 
     def referrer(self):
-        """Gets the URL of the request that the current URL came from. 
+        """Gets the URL of the request that the current URL came from.
 
         Returns:
             string -- Returns the previous referring URL.

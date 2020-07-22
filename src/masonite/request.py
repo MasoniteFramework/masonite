@@ -931,23 +931,18 @@ class Request(Extendable):
         self.redirect_url = False
         self.redirect_route = False
 
-    def back(self, default=None, intended=False):
+    def back(self, default=None):
         """Return a URI for redirection depending on several use cases.
 
         Keyword Arguments:
             default {string} -- Default value if nothing can be found. (default: {None})
-            intended {boolean} -- Whether or not to redirect to a previously 
-                                  accessed route that required auth. (default: {False})
 
         Returns:
             self
         """
         self.with_input()
 
-        if intended:
-            redirect_url = self.session.get('__intended')
-        else:
-            redirect_url = self.input('__back')
+        redirect_url = self.input('__back')
 
         if not redirect_url and default:
             return self.redirect(default)
@@ -956,20 +951,18 @@ class Request(Extendable):
 
         return self.redirect(redirect_url)
 
-    def with_intended(self, path):
-        """Set the intended session value to be used after successful login
-
-        Arguments:
-            path (string) -- The 'intended' path to store in session
-
-        Returns:
-            self
-        """
-        self.session.set('__intended', path)
+    def intend(self):
+        self.session.set('__intend', self.path)
         return self
 
-    def intended(self, default=None):
-        return self.back(default=default, intended=True)
+    def redirect_intended(self, default=None):
+        if self.session.get('__intend'):
+            self.redirect(self.session.get('__intend'))
+            self.session.delete('__intend')
+        else:
+            self.redirect(default)
+
+        return self
 
     def flash_inputs_to_session(self):
         if not hasattr(self, 'session'):

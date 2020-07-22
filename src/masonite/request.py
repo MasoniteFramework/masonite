@@ -349,6 +349,15 @@ class Request(Extendable):
         """
         return self.environ['wsgi.url_scheme']
 
+    def referrer(self):
+        """Gets the URL of the request that the current URL came from.
+
+        Returns:
+            string -- Returns the previous referring URL.
+        """
+
+        return self.environ.get('HTTP_REFERER')
+
     def host(self):
         """Get the server's hostname for the current request.
 
@@ -934,12 +943,26 @@ class Request(Extendable):
         self.with_input()
 
         redirect_url = self.input('__back')
+
         if not redirect_url and default:
             return self.redirect(default)
         elif not redirect_url and not default:
             return self.redirect(self.path)  # Some global default?
 
         return self.redirect(redirect_url)
+
+    def then_back(self):
+        self.session.set('__intend', self.path)
+        return self
+
+    def redirect_intended(self, default=None):
+        if self.session.get('__intend'):
+            self.redirect(self.session.get('__intend'))
+            self.session.delete('__intend')
+        else:
+            self.redirect(default)
+
+        return self
 
     def flash_inputs_to_session(self):
         if not hasattr(self, 'session'):

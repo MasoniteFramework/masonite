@@ -951,7 +951,7 @@ class Request(Extendable):
 
         return self.redirect(redirect_url)
 
-    def intend(self):
+    def then_back(self):
         self.session.set('__intend', self.path)
         return self
 

@@ -1,7 +1,7 @@
 """A RedirectionProvider Service Provider."""
 
 
-from ..drivers import QueueAsyncDriver, QueueAmqpDriver
+from ..drivers import QueueAsyncDriver, QueueAmqpDriver, QueueDatabaseDriver
 from ..managers import QueueManager
 from ..provider import ServiceProvider
 from .. import Queue
@@ -15,6 +15,7 @@ class QueueProvider(ServiceProvider):
     def register(self):
         self.app.bind("QueueAsyncDriver", QueueAsyncDriver)
         self.app.bind("QueueAmqpDriver", QueueAmqpDriver)
+        self.app.bind("QueueDatabaseDriver", QueueDatabaseDriver)
         self.app.bind("QueueManager", QueueManager)
 
     def boot(self, queue: QueueManager):

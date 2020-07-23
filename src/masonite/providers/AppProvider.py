@@ -1,13 +1,34 @@
 """An AppProvider Service Provider."""
 
 from ..autoload import Autoload
-from ..commands import (AuthCommand, CommandCommand, ControllerCommand,
-                        DownCommand, InfoCommand, InstallCommand, JobCommand,
-                        KeyCommand, MailableCommand, MakeMigrationCommand, MiddlewareCommand, ModelCommand,
-                        ModelDocstringCommand, ProviderCommand, PublishCommand, PresetCommand,
-                        QueueTableCommand, QueueWorkCommand, RoutesCommand,
-                        SeedCommand, SeedRunCommand, ServeCommand, TestCommand,
-                        TinkerCommand, UpCommand, ViewCommand)
+from ..commands import (
+    AuthCommand,
+    CommandCommand,
+    ControllerCommand,
+    DownCommand,
+    InfoCommand,
+    InstallCommand,
+    JobCommand,
+    KeyCommand,
+    MailableCommand,
+    MakeMigrationCommand,
+    MiddlewareCommand,
+    ModelCommand,
+    ModelDocstringCommand,
+    ProviderCommand,
+    PublishCommand,
+    PresetCommand,
+    QueueTableCommand,
+    QueueWorkCommand,
+    RoutesCommand,
+    SeedCommand,
+    SeedRunCommand,
+    ServeCommand,
+    TestCommand,
+    TinkerCommand,
+    UpCommand,
+    ViewCommand,
+)
 from ..exception_handler import DumpHandler, ExceptionHandler
 from ..helpers import config, load
 from ..helpers.routes import flatten_routes

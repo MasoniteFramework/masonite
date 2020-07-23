@@ -11,9 +11,9 @@ class Migrations(HasColoredCommands):
         self._notes = []
         from config import database
 
-        if not connection or connection == 'default':
-            connection = database.DATABASES['default']
-        self.migrator = Migration('sqlite')
+        if not connection or connection == "default":
+            connection = database.DATABASES["default"]
+        self.migrator = Migration("sqlite")
         self.migrator.create_table_if_not_exists()
 
     def run(self):

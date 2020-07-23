@@ -49,7 +49,7 @@ class Dot:
 
                 if isinstance(dic, list):
                     try:
-                        return collect(dic).pluck(searching[searching.index('*') + 1])
+                        return collect(dic).pluck(searching[searching.index("*") + 1])
                     except KeyError:
                         return []
 

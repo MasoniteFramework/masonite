@@ -40,7 +40,7 @@ class ConfirmController:
             [type] -- [description]
         """
         sign = Sign()
-        token = sign.unsign(request.param('id'))
+        token = sign.unsign(request.param("id"))
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:

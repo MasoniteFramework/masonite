@@ -94,7 +94,7 @@ class Response(Extendable):
 
         if isinstance(view, (dict, list)):
             return self.json(view, status=self.request.get_status())
-        elif hasattr(view, 'serialize'):
+        elif hasattr(view, "serialize"):
             return self.json(view.serialize(), status=self.request.get_status())
         elif isinstance(view, int):
             view = str(view)

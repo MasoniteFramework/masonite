@@ -654,7 +654,7 @@ class Request(Extendable):
             value = value
 
         if expires:
-            expires = "Expires={0};".format(cookie_expire_time(expires) + ' GMT')
+            expires = "Expires={0};".format(cookie_expire_time(expires) + " GMT")
 
         if not http_only:
             http_only = ""

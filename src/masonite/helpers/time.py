@@ -12,7 +12,7 @@ def cookie_expire_time(str_time):
     Returns:
         pendulum -- Returns Pendulum instance
     """
-    if str_time != 'expired':
+    if str_time != "expired":
         number = int(str_time.split(" ")[0])
         length = str_time.split(" ")[1]
 
@@ -46,25 +46,25 @@ def parse_human_time(str_time):
     Returns:
         pendulum -- Returns Pendulum instance
     """
-    if str_time != 'expired':
+    if str_time != "expired":
         number = int(str_time.split(" ")[0])
         length = str_time.split(" ")[1]
 
-        if length in ('second', 'seconds'):
-            return pendulum.now('GMT').add(seconds=number)
-        elif length in ('minute', 'minutes'):
-            return pendulum.now('GMT').add(minutes=number)
-        elif length in ('hour', 'hours'):
-            return pendulum.now('GMT').add(hours=number)
-        elif length in ('days', 'days'):
-            return pendulum.now('GMT').add(days=number)
-        elif length in ('week', 'weeks'):
-            return pendulum.now('GMT').add(weeks=1)
-        elif length in ('month', 'months'):
-            return pendulum.now('GMT').add(months=number)
-        elif length in ('year', 'years'):
-            return pendulum.now('GMT').add(years=number)
+        if length in ("second", "seconds"):
+            return pendulum.now("GMT").add(seconds=number)
+        elif length in ("minute", "minutes"):
+            return pendulum.now("GMT").add(minutes=number)
+        elif length in ("hour", "hours"):
+            return pendulum.now("GMT").add(hours=number)
+        elif length in ("days", "days"):
+            return pendulum.now("GMT").add(days=number)
+        elif length in ("week", "weeks"):
+            return pendulum.now("GMT").add(weeks=1)
+        elif length in ("month", "months"):
+            return pendulum.now("GMT").add(months=number)
+        elif length in ("year", "years"):
+            return pendulum.now("GMT").add(years=number)
 
         return None
     else:
-        return pendulum.now('GMT').subtract(years=20)
+        return pendulum.now("GMT").subtract(years=20)

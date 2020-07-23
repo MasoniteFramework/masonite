@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class UploadContract(ABC):
-
     @abstractmethod
     def accept(self):
         pass

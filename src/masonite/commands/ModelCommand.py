@@ -17,36 +17,35 @@ class ModelCommand(Command):
     """
 
     scaffold_name = "Model"
-    template = '/masonite/snippets/scaffold/model'
-    base_directory = 'app/'
+    template = "/masonite/snippets/scaffold/model"
+    base_directory = "app/"
 
     def handle(self):
-        class_name = self.argument('name')
+        class_name = self.argument("name")
         view = View(App())
-        class_directory = '{}{}.py'.format(self.base_directory, class_name)
+        class_directory = "{}{}.py".format(self.base_directory, class_name)
 
         if not make_directory(class_directory):
-            return self.error('{0} Already Exists!'.format(self.scaffold_name))
+            return self.error("{0} Already Exists!".format(self.scaffold_name))
 
-        with open(class_directory, 'w+') as f:
+        with open(class_directory, "w+") as f:
             if view.exists(self.template):
                 f.write(
-                    view.render(self.template, {
-                                'class': class_name.split('/')[-1]}).rendered_template
+                    view.render(
+                        self.template, {"class": class_name.split("/")[-1]}
+                    ).rendered_template
                 )
-                self.info('{} Created Successfully!'.format(self.scaffold_name))
+                self.info("{} Created Successfully!".format(self.scaffold_name))
 
-        if self.option('migration'):
-            model_name = class_name.lower() + 's'
-            self.call('migration', [
-                ('name', 'create_{}_table'.format(model_name)),
-                ('-c', model_name)
-            ])
+        if self.option("migration"):
+            model_name = class_name.lower() + "s"
+            self.call(
+                "migration",
+                [("name", "create_{}_table".format(model_name)), ("-c", model_name)],
+            )
 
-        if self.option('seed'):
+        if self.option("seed"):
             seed_file = model_name
-            seed_file = self.option('seed')
+            seed_file = self.option("seed")
 
-            self.call('seed', [
-                ('table', seed_file)
-            ])
+            self.call("seed", [("table", seed_file)])

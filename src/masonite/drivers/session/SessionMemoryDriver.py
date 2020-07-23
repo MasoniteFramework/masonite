@@ -83,6 +83,33 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
 
         self._flash[ip][key] = value
 
+    def get_error_messages(self):
+        """Should get and delete the flashed messages
+
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
+        """
+        ip = self.__get_client_address()
+        only_messages = []
+        messages = self._flash.get(ip, {}).get("errors", {}).items()
+        for key, messages in messages:
+            for message in messages:
+                only_messages.append(message)
+        self.reset(flash_only=True)
+        return only_messages
+
+    def get_flashed_messages(self, key, value):
+        """Should get and delete the flashed messages
+
+        Arguments:
+            key {string} -- The key to set as the session key.
+            value {string} -- The value to set in the session.
+        """
+        messages = self._flash.get(ip, {})
+        self.reset(flash_only=True)
+        return messages
+
     def reset(self, flash_only=False):
         """Delete all session data.
 
@@ -117,10 +144,10 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
 
     def __get_client_address(self):
         """Get ip from the client."""
-        if 'HTTP_X_FORWARDED_FOR' in self.request.environ:
-            return self.request.environ['HTTP_X_FORWARDED_FOR'].split(',')[-1].strip()
+        if "HTTP_X_FORWARDED_FOR" in self.request.environ:
+            return self.request.environ["HTTP_X_FORWARDED_FOR"].split(",")[-1].strip()
 
-        return self.request.environ['REMOTE_ADDR']
+        return self.request.environ["REMOTE_ADDR"]
 
     def __collect_data(self, key=False):
         """Collect data from session and flash data.

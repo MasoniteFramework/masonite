@@ -17,23 +17,23 @@ class LoadEnvironment:
             only {string} -- If this is set then it will only load that environment. (default: {None})
         """
         from dotenv import load_dotenv
+
         self.env = load_dotenv
 
         if only:
             self._load_environment(only, override=override)
             return
 
-        env_path = str(Path('.') / '.env')
+        env_path = str(Path(".") / ".env")
         self.env(env_path, override=override)
 
-        if os.environ.get('APP_ENV'):
-            self._load_environment(os.environ.get(
-                'APP_ENV'), override=override)
+        if os.environ.get("APP_ENV"):
+            self._load_environment(os.environ.get("APP_ENV"), override=override)
         if environment:
             self._load_environment(environment, override=override)
 
         if "pytest" in sys.modules:
-            self._load_environment('testing', override=override)
+            self._load_environment("testing", override=override)
 
     def _load_environment(self, environment, override=False):
         """Load the environment depending on the env file.
@@ -44,11 +44,11 @@ class LoadEnvironment:
         Keyword Arguments:
             override {bool} -- Whether the environment file should overwrite existing environment keys. (default: {False})
         """
-        env_path = str(Path('.') / '.env.{}'.format(environment))
+        env_path = str(Path(".") / ".env.{}".format(environment))
         self.env(dotenv_path=env_path, override=override)
 
 
-def env(value, default='', cast=True):
+def env(value, default="", cast=True):
     env_var = os.getenv(value, default)
 
     if not cast:
@@ -63,9 +63,9 @@ def env(value, default='', cast=True):
         return None
     elif env_var.isnumeric():
         return int(env_var)
-    elif env_var in ('false', 'False'):
+    elif env_var in ("false", "False"):
         return False
-    elif env_var in ('true', 'True'):
+    elif env_var in ("true", "True"):
         return True
     else:
         return env_var

@@ -19,8 +19,8 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
             CacheConfig {config.cache} -- Cache configuration module.
             Application {config.application} -- Application configuration module.
         """
-        self.config = config('cache')
-        self.appconfig = config('application')
+        self.config = config("cache")
+        self.appconfig = config("application")
         self.cache_forever = None
 
     def store(self, key, value, extension=".txt", location=None):
@@ -39,19 +39,21 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
         """
         self.cache_forever = True
         if not location:
-            location = self.config.DRIVERS['disk']['location']
+            location = self.config.DRIVERS["disk"]["location"]
 
-        location += '/'
+        location += "/"
         path = os.path.join(location, key + extension)
         if not os.path.exists(path):
             self._create_directory(path)
 
-        with open(path, 'w') as file:
+        with open(path, "w") as file:
             file.write(value)
 
         return key
 
-    def store_for(self, key, value, cache_time, cache_type, extension=".txt", location=None):
+    def store_for(
+        self, key, value, cache_time, cache_type, extension=".txt", location=None
+    ):
         """Store the cache for a specific amount of time.
 
         Arguments:
@@ -76,10 +78,7 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
 
         cache_for_time = cache_for_time + time.time()
 
-        key = self.store(
-            key + ":" + str(cache_for_time),
-            value, extension, location
-        )
+        key = self.store(key + ":" + str(cache_for_time), value, extension, location)
 
         return key
 
@@ -88,16 +87,16 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
         if not self.is_valid(key):
             return None
 
-        cache_path = self.config.DRIVERS['disk']['location'] + "/"
+        cache_path = self.config.DRIVERS["disk"]["location"] + "/"
         content = ""
 
         if self.cache_forever:
-            glob_path = cache_path + key + '*'
+            glob_path = cache_path + key + "*"
         else:
-            glob_path = cache_path + key + ':*'
+            glob_path = cache_path + key + ":*"
 
         try:
-            with open(glob.glob(glob_path)[0], 'r') as file:
+            with open(glob.glob(glob_path)[0], "r") as file:
                 content = file.read()
         except IndexError:
             pass
@@ -106,11 +105,11 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
 
     def delete(self, key):
         """Delete file cache."""
-        cache_path = self.config.DRIVERS['disk']['location'] + "/"
+        cache_path = self.config.DRIVERS["disk"]["location"] + "/"
         if self.cache_forever:
-            glob_path = cache_path + key + '*'
+            glob_path = cache_path + key + "*"
         else:
-            glob_path = cache_path + key + ':*'
+            glob_path = cache_path + key + ":*"
 
         for template in glob.glob(glob_path):
             os.remove(template)
@@ -118,23 +117,23 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
     def update(self, key, value, location=None):
         """Update a specific cache by key."""
         if not location:
-            location = self.config.DRIVERS['disk']['location'] + "/"
+            location = self.config.DRIVERS["disk"]["location"] + "/"
 
         location = os.path.join(location, key)
-        cache = glob.glob(location + ':*')[0]
+        cache = glob.glob(location + ":*")[0]
 
-        with open(cache, 'w') as file:
+        with open(cache, "w") as file:
             file.write(str(value))
 
         return key
 
     def exists(self, key):
         """Check if the cache exists."""
-        cache_path = self.config.DRIVERS['disk']['location'] + "/"
+        cache_path = self.config.DRIVERS["disk"]["location"] + "/"
         if self.cache_forever:
-            glob_path = cache_path + key + '*'
+            glob_path = cache_path + key + "*"
         else:
-            glob_path = cache_path + key + ':*'
+            glob_path = cache_path + key + ":*"
 
         find_template = glob.glob(glob_path)
         if find_template:
@@ -143,17 +142,17 @@ class CacheDiskDriver(CacheContract, BaseCacheDriver):
 
     def is_valid(self, key):
         """Check if a valid cache."""
-        cache_path = self.config.DRIVERS['disk']['location'] + "/"
+        cache_path = self.config.DRIVERS["disk"]["location"] + "/"
         if self.cache_forever:
-            glob_path = cache_path + key + '*'
+            glob_path = cache_path + key + "*"
         else:
-            glob_path = cache_path + key + ':*'
+            glob_path = cache_path + key + ":*"
 
         cache_file = glob.glob(glob_path)
         if cache_file:
             try:
                 cache_timestamp = float(
-                    os.path.splitext(cache_file[0])[0].split(':')[1]
+                    os.path.splitext(cache_file[0])[0].split(":")[1]
                 )
             except IndexError:
                 if self.cache_forever:

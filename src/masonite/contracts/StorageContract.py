@@ -3,7 +3,6 @@ from abc import abstractmethod
 
 
 class StorageContract(Contract):
-
     @abstractmethod
     def put(self, location, contents):
         """Puts a file into the correct directory

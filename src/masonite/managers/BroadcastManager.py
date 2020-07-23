@@ -11,8 +11,8 @@ class BroadcastManager(Manager, BroadcastManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'broadcast'
-    driver_prefix = 'Broadcast'
+    config = "broadcast"
+    driver_prefix = "Broadcast"
 
 
 class Broadcast:

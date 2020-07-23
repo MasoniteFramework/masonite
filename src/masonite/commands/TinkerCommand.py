@@ -22,9 +22,7 @@ class TinkerCommand(Command):
         from wsgi import container
 
         version = "{}.{}.{}".format(
-            sys.version_info.major,
-            sys.version_info.minor,
-            sys.version_info.micro
+            sys.version_info.major, sys.version_info.minor, sys.version_info.micro
         )
         banner = BANNER.format(version)
 

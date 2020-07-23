@@ -15,14 +15,34 @@ class MakeMigrationCommand(Command):
     """
 
     def handle(self):
-        name = self.argument('name')
+        name = self.argument("name")
 
-        if self.option('create') != 'False':
-            subprocess.call(['orator', 'make:migration', name,
-                             '-p', 'databases/migrations', '--table', self.option('create'), '--create'])
-        elif self.option('table') != 'False':
-            subprocess.call(['orator', 'make:migration', name,
-                             '-p', 'databases/migrations', '--table', self.option('table')])
+        if self.option("create") != "False":
+            subprocess.call(
+                [
+                    "orator",
+                    "make:migration",
+                    name,
+                    "-p",
+                    "databases/migrations",
+                    "--table",
+                    self.option("create"),
+                    "--create",
+                ]
+            )
+        elif self.option("table") != "False":
+            subprocess.call(
+                [
+                    "orator",
+                    "make:migration",
+                    name,
+                    "-p",
+                    "databases/migrations",
+                    "--table",
+                    self.option("table"),
+                ]
+            )
         else:
-            subprocess.call(['orator', 'make:migration', name,
-                             '-p', 'databases/migrations'])
+            subprocess.call(
+                ["orator", "make:migration", name, "-p", "databases/migrations"]
+            )

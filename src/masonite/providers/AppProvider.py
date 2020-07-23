@@ -19,30 +19,29 @@ from ..routes import Route
 
 
 class AppProvider(ServiceProvider):
-
     def register(self):
-        self.app.bind('HookHandler', Hook(self.app))
-        self.app.bind('WebRoutes', flatten_routes(load('routes.web.routes')))
-        self.app.bind('Route', Route())
-        self.app.bind('Request', Request())
+        self.app.bind("HookHandler", Hook(self.app))
+        self.app.bind("WebRoutes", flatten_routes(load("routes.web.routes")))
+        self.app.bind("Route", Route())
+        self.app.bind("Request", Request())
         self.app.simple(Response(self.app))
-        self.app.bind('Container', self.app)
-        self.app.bind('ExceptionHandler', ExceptionHandler(self.app))
-        self.app.bind('ExceptionDumpExceptionHandler', DumpHandler)
+        self.app.bind("Container", self.app)
+        self.app.bind("ExceptionHandler", ExceptionHandler(self.app))
+        self.app.bind("ExceptionDumpExceptionHandler", DumpHandler)
 
-        self.app.bind('RouteMiddleware', config('middleware.route_middleware'))
-        self.app.bind('HttpMiddleware', config('middleware.http_middleware'))
-        self.app.bind('staticfiles', config('storage.staticfiles', {}))
+        self.app.bind("RouteMiddleware", config("middleware.route_middleware"))
+        self.app.bind("HttpMiddleware", config("middleware.http_middleware"))
+        self.app.bind("staticfiles", config("storage.staticfiles", {}))
 
         # Insert Commands
         self._load_commands()
 
-        self._autoload(config('application.autoload'))
+        self._autoload(config("application.autoload"))
 
     def boot(self, request: Request, route: Route):
-        self.app.bind('StatusCode', None)
-        route.load_environ(self.app.make('Environ'))
-        request.load_environ(self.app.make('Environ')).load_app(self.app)
+        self.app.bind("StatusCode", None)
+        route.load_environ(self.app.make("Environ"))
+        request.load_environ(self.app.make("Environ")).load_app(self.app)
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
@@ -74,5 +73,5 @@ class AppProvider(ServiceProvider):
             SeedRunCommand(),
             TestCommand(),
             TinkerCommand(),
-            UpCommand()
+            UpCommand(),
         )

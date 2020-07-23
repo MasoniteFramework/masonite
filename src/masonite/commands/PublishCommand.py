@@ -14,15 +14,15 @@ class PublishCommand(Command):
     def handle(self):
         from wsgi import container
 
-        for provider in container.make('Providers'):
-            if provider.__class__.__name__ == self.argument('name'):
-                if self.option('tag') != 'None':
-                    provider.publish(tag=self.option('tag'))
-                    provider.publish_migrations(tag=self.option('tag'))
+        for provider in container.make("Providers"):
+            if provider.__class__.__name__ == self.argument("name"):
+                if self.option("tag") != "None":
+                    provider.publish(tag=self.option("tag"))
+                    provider.publish_migrations(tag=self.option("tag"))
 
                 provider.publish()
                 provider.publish_migrations()
 
                 return
 
-        raise ValueError('Could not find the {} provider'.format(self.argument('name')))
+        raise ValueError("Could not find the {} provider".format(self.argument("name")))

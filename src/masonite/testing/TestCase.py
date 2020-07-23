@@ -25,6 +25,7 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
         from wsgi import container
+
         self.container = container
         self._with_subdomains = False
 
@@ -34,10 +35,10 @@ class TestCase(unittest.TestCase):
         self.withoutCsrf()
         if not self._transaction:
             self.startTransaction()
-            if hasattr(self, 'setUpFactories'):
+            if hasattr(self, "setUpFactories"):
                 self.setUpFactories()
 
-        if self.sqlite and env('DB_CONNECTION') != 'sqlite':
+        if self.sqlite and env("DB_CONNECTION") != "sqlite":
             raise Exception("Cannot run tests without using the 'sqlite' database.")
 
         if not self.transactions and self.refreshes_database:
@@ -67,7 +68,7 @@ class TestCase(unittest.TestCase):
         if not self.refreshes_database and self.transactions:
             self.stopTransaction()
             self.startTransaction()
-            if hasattr(self, 'setUpFactories'):
+            if hasattr(self, "setUpFactories"):
                 self.setUpFactories()
         else:
             self.tearDownDatabase()
@@ -75,17 +76,20 @@ class TestCase(unittest.TestCase):
 
     def startTransaction(self):
         from config.database import DB
+
         DB.begin_transaction()
         self.__class__._transaction = True
 
     def stopTransaction(self):
         from config.database import DB
+
         DB.rollback()
         self.__class__._transaction = False
 
     @classmethod
     def staticStopTransaction(cls):
         from config.database import DB
+
         DB.rollback()
         cls._transaction = False
 
@@ -102,7 +106,7 @@ class TestCase(unittest.TestCase):
     def setUpDatabase(self):
         self.tearDownDatabase()
         Migrations().run()
-        if hasattr(self, 'setUpFactories'):
+        if hasattr(self, "setUpFactories"):
             self.setUpFactories()
 
     def tearDownDatabase(self):
@@ -120,57 +124,61 @@ class TestCase(unittest.TestCase):
         if not self.transactions and self.refreshes_database:
             self.tearDownDatabase()
 
-        if self.container.has('Request'):
-            self.container.make('Request').get_and_reset_headers()
+        if self.container.has("Request"):
+            self.container.make("Request").get_and_reset_headers()
 
     def call(self, method, url, params, wsgi={}):
-        custom_wsgi = {
-            'PATH_INFO': url,
-            'REQUEST_METHOD': method
-        }
+        custom_wsgi = {"PATH_INFO": url, "REQUEST_METHOD": method}
 
         custom_wsgi.update(wsgi)
         if not self._with_csrf:
-            params.update({'__token': 'tok'})
-            custom_wsgi.update({
-                'HTTP_COOKIE': 'csrf_token=tok',
-                'CONTENT_LENGTH': len(str(json.dumps(params))),
-                'wsgi.input': io.BytesIO(bytes(json.dumps(params), 'utf-8')),
-            })
+            params.update({"__token": "tok"})
+            custom_wsgi.update(
+                {
+                    "HTTP_COOKIE": "csrf_token=tok",
+                    "CONTENT_LENGTH": len(str(json.dumps(params))),
+                    "wsgi.input": io.BytesIO(bytes(json.dumps(params), "utf-8")),
+                }
+            )
 
-        custom_wsgi.update({
-            'QUERY_STRING': urlencode(params),
-        })
+        custom_wsgi.update(
+            {"QUERY_STRING": urlencode(params),}
+        )
 
         self.run_container(custom_wsgi)
-        self.container.make('Request').request_variables = params
+        self.container.make("Request").request_variables = params
         return self.route(url, method)
 
     def get(self, url, params={}, wsgi={}):
-        return self.call('GET', url, params, wsgi=wsgi)
+        return self.call("GET", url, params, wsgi=wsgi)
 
     def withSubdomains(self):
         self._with_subdomains = True
         return self
 
     def json(self, method, url, params={}):
-        return self.call(method, url, params, wsgi={
-            'CONTENT_TYPE': 'application/json',
-            'CONTENT_LENGTH': len(str(json.dumps(params))),
-            'wsgi.input': io.BytesIO(bytes(json.dumps(params), 'utf-8')),
-        })
+        return self.call(
+            method,
+            url,
+            params,
+            wsgi={
+                "CONTENT_TYPE": "application/json",
+                "CONTENT_LENGTH": len(str(json.dumps(params))),
+                "wsgi.input": io.BytesIO(bytes(json.dumps(params), "utf-8")),
+            },
+        )
 
     def post(self, url, params={}):
-        return self.call('POST', url, params)
+        return self.call("POST", url, params)
 
     def put(self, url, params={}):
-        return self.json('PUT', url, params)
+        return self.json("PUT", url, params)
 
     def patch(self, url, params={}):
-        return self.json('PATCH', url, params)
+        return self.json("PATCH", url, params)
 
     def delete(self, url, params={}):
-        return self.json('DELETE', url, params)
+        return self.json("DELETE", url, params)
 
     def actingAs(self, user):
         if not user:
@@ -179,9 +187,9 @@ class TestCase(unittest.TestCase):
         return self
 
     def route(self, url, method=False):
-        for route in self.container.make('WebRoutes'):
+        for route in self.container.make("WebRoutes"):
             matchurl = create_matchurl(url, route)
-            if self.container.make('Request').has_subdomain():
+            if self.container.make("Request").has_subdomain():
                 # Check if the subdomain matches the correct routes domain
                 if not route.has_required_domain():
                     continue
@@ -189,14 +197,18 @@ class TestCase(unittest.TestCase):
             if matchurl.match(url) and method in route.method_type:
                 return MockRoute(route, self.container)
 
-        raise RouteNotFoundException("Could not find a route based on the url '{}'".format(url))
+        raise RouteNotFoundException(
+            "Could not find a route based on the url '{}'".format(url)
+        )
 
     def routes(self, routes=[], only=False):
         if only:
-            self.container.bind('WebRoutes', flatten_routes(only))
+            self.container.bind("WebRoutes", flatten_routes(only))
             return
 
-        self.container.bind('WebRoutes', flatten_routes(self.container.make('WebRoutes') + routes))
+        self.container.bind(
+            "WebRoutes", flatten_routes(self.container.make("WebRoutes") + routes)
+        )
 
     @contextmanager
     def captureOutput(self):
@@ -211,27 +223,27 @@ class TestCase(unittest.TestCase):
     def run_container(self, wsgi_values={}):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
-        self.container.bind('Environ', wsgi)
-        self.container.make('Request')._test_user = self.acting_user
-        self.container.make('Request').load_app(self.container).load_environ(wsgi)
+        self.container.bind("Environ", wsgi)
+        self.container.make("Request")._test_user = self.acting_user
+        self.container.make("Request").load_app(self.container).load_environ(wsgi)
         if self._with_subdomains:
-            self.container.make('Request').activate_subdomains()
+            self.container.make("Request").activate_subdomains()
 
         if self.headers:
-            self.container.make('Request').header(self.headers)
+            self.container.make("Request").header(self.headers)
 
         if self.route_middleware is not False:
-            self.container.bind('RouteMiddleware', self.route_middleware)
+            self.container.bind("RouteMiddleware", self.route_middleware)
 
         if self.http_middleware is not False:
-            self.container.bind('HttpMiddleware', self.http_middleware)
+            self.container.bind("HttpMiddleware", self.http_middleware)
 
         try:
-            for provider in self.container.make('WSGIProviders'):
+            for provider in self.container.make("WSGIProviders"):
                 self.container.resolve(provider.boot)
         except Exception as e:  # skipcq
             if self._exception_handling:
-                self.container.make('ExceptionHandler').load_exception(e)
+                self.container.make("ExceptionHandler").load_exception(e)
             else:
                 raise e
 
@@ -252,16 +264,16 @@ class TestCase(unittest.TestCase):
     def assertDatabaseHas(self, schema, value):
         from config.database import DB
 
-        table = schema.split('.')[0]
-        column = schema.split('.')[1]
+        table = schema.split(".")[0]
+        column = schema.split(".")[1]
 
         self.assertTrue(DB.table(table).where(column, value).first())
 
     def assertDatabaseNotHas(self, schema, value):
         from config.database import DB
 
-        table = schema.split('.')[0]
-        column = schema.split('.')[1]
+        table = schema.split(".")[0]
+        column = schema.split(".")[1]
 
         self.assertFalse(DB.table(table).where(column, value).first())
 

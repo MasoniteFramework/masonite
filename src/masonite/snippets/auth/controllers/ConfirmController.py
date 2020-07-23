@@ -26,7 +26,7 @@ class ConfirmController:
         Returns:
             [type] -- [description]
         """
-        return view.render('auth/verify', {'app': config('application'), 'Auth': auth})
+        return view.render("auth/verify", {"app": config("application"), "Auth": auth})
 
     def confirm_email(self, request: Request, view: View, auth: Auth):
         """Confirm User email and show the correct response.
@@ -54,9 +54,11 @@ class ConfirmController:
                         user.verified_at = datetime.datetime.now()
                         user.save()
 
-                        return view.render('auth/confirm', {'app': config('application'), 'Auth': auth})
+                        return view.render(
+                            "auth/confirm", {"app": config("application"), "Auth": auth}
+                        )
 
-        return view.render('auth/error', {'app': config('application'), 'Auth': auth})
+        return view.render("auth/error", {"app": config("application"), "Auth": auth})
 
     def send_verify_email(self, manager: MailManager, request: Request):
         user = request.user()
@@ -64,4 +66,4 @@ class ConfirmController:
         if isinstance(user, MustVerifyEmail):
             user.verify_email(manager, request)
 
-        return request.redirect('/home')
+        return request.redirect("/home")

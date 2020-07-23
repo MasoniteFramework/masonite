@@ -7,7 +7,7 @@ from . import __version__
 
 sys.path.append(os.getcwd())
 
-application = Application('Masonite Version:', __version__)
+application = Application("Masonite Version:", __version__)
 application.add(NewCommand())
 application.add(InstallCommand())
 
@@ -15,6 +15,7 @@ application.add(InstallCommand())
 try:
     from wsgi import container
     from cleo import Command
+
     for key, value in container.collect(Command).items():
         application.add(value)
 except ErrorDuringImport as e:
@@ -22,5 +23,5 @@ except ErrorDuringImport as e:
 except ImportError:
     pass
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     application.run()

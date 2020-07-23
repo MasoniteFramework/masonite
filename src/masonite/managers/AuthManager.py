@@ -10,8 +10,8 @@ class AuthManager(Manager):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'auth'
-    driver_prefix = 'Auth'
+    config = "auth"
+    driver_prefix = "Auth"
 
 
 class Auth:

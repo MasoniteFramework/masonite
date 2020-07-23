@@ -8,8 +8,7 @@ import inspect
 import pkgutil
 from pydoc import importlib
 
-from .exceptions import (AutoloadContainerOverwrite, ContainerError,
-                         InvalidAutoloadPath)
+from .exceptions import AutoloadContainerOverwrite, ContainerError, InvalidAutoloadPath
 
 
 class Autoload:
@@ -41,17 +40,27 @@ class Autoload:
         self.instantiate = instantiate
         if not self.app:
             raise ContainerError(
-                'Container not specified. Pass the container into the constructor')
+                "Container not specified. Pass the container into the constructor"
+            )
 
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
-            for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
+            for obj in inspect.getmembers(
+                self._get_module_members(module_loader, name)
+            ):
 
                 # If the object is a class and the objects module starts with the search path
-                if inspect.isclass(obj[1]) and obj[1].__module__.split('.')[:-1] == search_path.split('/'):
-                    if self.app.has(obj[1].__name__) and not self.app.make(obj[1].__name__).__module__.startswith(search_path):
+                if inspect.isclass(obj[1]) and obj[1].__module__.split(".")[
+                    :-1
+                ] == search_path.split("/"):
+                    if self.app.has(obj[1].__name__) and not self.app.make(
+                        obj[1].__name__
+                    ).__module__.startswith(search_path):
                         raise AutoloadContainerOverwrite(
-                            'Container already has the key: {}. Cannot overwrite a container key that exists outside of your application.'.format(obj[1].__name__))
+                            "Container already has the key: {}. Cannot overwrite a container key that exists outside of your application.".format(
+                                obj[1].__name__
+                            )
+                        )
                     self.app.bind(obj[1].__name__, self._can_instantiate(obj))
 
     def instances(self, directories, instance, only_app=True, instantiate=False):
@@ -73,14 +82,20 @@ class Autoload:
 
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
-            for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
+            for obj in inspect.getmembers(
+                self._get_module_members(module_loader, name)
+            ):
                 if inspect.isclass(obj[1]) and issubclass(obj[1], instance):
-                    if only_app and obj[1].__module__.startswith(search_path.replace('/', '.')):
+                    if only_app and obj[1].__module__.startswith(
+                        search_path.replace("/", ".")
+                    ):
                         self.classes.update(
-                            {obj[1].__name__: self._can_instantiate(obj)})
+                            {obj[1].__name__: self._can_instantiate(obj)}
+                        )
                     elif not only_app:
                         self.classes.update(
-                            {obj[1].__name__: self._can_instantiate(obj)})
+                            {obj[1].__name__: self._can_instantiate(obj)}
+                        )
 
         return self.classes
 
@@ -103,14 +118,20 @@ class Autoload:
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
             search_path = module_loader.path
 
-            for obj in inspect.getmembers(self._get_module_members(module_loader, name)):
+            for obj in inspect.getmembers(
+                self._get_module_members(module_loader, name)
+            ):
                 if inspect.isclass(obj[1]):
-                    if only_app and obj[1].__module__.startswith(search_path.replace('/', '.')):
+                    if only_app and obj[1].__module__.startswith(
+                        search_path.replace("/", ".")
+                    ):
                         self.classes.update(
-                            {obj[1].__name__: self._can_instantiate(obj)})
+                            {obj[1].__name__: self._can_instantiate(obj)}
+                        )
                     elif not only_app:
                         self.classes.update(
-                            {obj[1].__name__: self._can_instantiate(obj)})
+                            {obj[1].__name__: self._can_instantiate(obj)}
+                        )
 
         return self.classes
 
@@ -142,9 +163,9 @@ class Autoload:
             module -- returns the imported module.
         """
         search_path = module_loader.path
-        if search_path.endswith('/'):
-            raise InvalidAutoloadPath(
-                'Autoload path cannot have a trailing slash')
+        if search_path.endswith("/"):
+            raise InvalidAutoloadPath("Autoload path cannot have a trailing slash")
 
         return importlib.import_module(
-            module_loader.path.replace('/', '.') + '.' + name)
+            module_loader.path.replace("/", ".") + "." + name
+        )

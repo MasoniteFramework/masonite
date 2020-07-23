@@ -12,18 +12,19 @@ def static(alias, file_name):
         string -- Returns the file location.
     """
     from config.storage import DRIVERS
-    if '.' in alias:
-        alias = alias.split('.')
-        location = DRIVERS[alias[0]]['location'][alias[1]]
-        if location.endswith('/'):
+
+    if "." in alias:
+        alias = alias.split(".")
+        location = DRIVERS[alias[0]]["location"][alias[1]]
+        if location.endswith("/"):
             location = location[:-1]
 
-        return '{}/{}'.format(location, file_name)
+        return "{}/{}".format(location, file_name)
 
-    location = DRIVERS[alias]['location']
+    location = DRIVERS[alias]["location"]
     if isinstance(location, dict):
         location = list(location.values())[0]
-        if location.endswith('/'):
+        if location.endswith("/"):
             location = location[:-1]
 
-    return '{}/{}'.format(location, file_name)
+    return "{}/{}".format(location, file_name)

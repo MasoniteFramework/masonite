@@ -20,40 +20,41 @@ class InfoCommand(Command):
 
     def handle(self):
         from ..cli import application
+
         rows = []
 
-        rows.append(['System Information', self._get_system_info()])
+        rows.append(["System Information", self._get_system_info()])
         mem = math.ceil(psutil.virtual_memory().total / 1024 / 1024 / 1024.0)
-        rows.append(['System Memory', str(mem) + ' GB'])
-        rows.append(['Python Version', self._get_python_info()])
-        rows.append(['Virtual Environment', self._check_virtual_environment()])
-        rows.append(['Masonite Version', __version__])
-        rows.append(['Craft Version', application._version])
+        rows.append(["System Memory", str(mem) + " GB"])
+        rows.append(["Python Version", self._get_python_info()])
+        rows.append(["Virtual Environment", self._check_virtual_environment()])
+        rows.append(["Masonite Version", __version__])
+        rows.append(["Craft Version", application._version])
 
-        if 'APP_ENV' in os.environ:
-            rows.append(['APP_ENV', os.environ.get('APP_ENV')])
+        if "APP_ENV" in os.environ:
+            rows.append(["APP_ENV", os.environ.get("APP_ENV")])
 
-        if 'APP_DEBUG' in os.environ:
-            rows.append(['APP_DEBUG', os.environ.get('APP_DEBUG')])
+        if "APP_DEBUG" in os.environ:
+            rows.append(["APP_DEBUG", os.environ.get("APP_DEBUG")])
 
-        self.info('')
-        self.info(tabulate(rows, headers=['Environment Information', '']))
-        self.info('')
+        self.info("")
+        self.info(tabulate(rows, headers=["Environment Information", ""]))
+        self.info("")
 
     def _get_python_info(self):
         py_version = platform.python_version()
         py_implementation = platform.python_implementation()
-        return py_implementation + ' ' + py_version
+        return py_implementation + " " + py_version
 
     def _check_virtual_environment(self):
-        if hasattr(sys, 'real_prefix') or 'VIRTUAL_ENV' in os.environ:
-            return u'\u2713'  # currently running in virtual env
-        return 'X'
+        if hasattr(sys, "real_prefix") or "VIRTUAL_ENV" in os.environ:
+            return u"\u2713"  # currently running in virtual env
+        return "X"
 
     def _get_system_info(self):
         bits, _ = platform.architecture()
         operating_system, _, _, _, arch, _ = platform.uname()
 
-        if operating_system.lower() == 'darwin':
-            operating_system = 'MacOS'
-        return '{} {} {}'.format(operating_system, arch, bits)
+        if operating_system.lower() == "darwin":
+            operating_system = "MacOS"
+        return "{} {} {}".format(operating_system, arch, bits)

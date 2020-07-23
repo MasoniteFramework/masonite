@@ -14,13 +14,13 @@ class SecureHeadersMiddleware:
         """
         self.request = request
         self.headers = {
-            'Strict-Transport-Security': 'max-age=63072000; includeSubdomains',
-            'X-Frame-Options': 'SAMEORIGIN',
-            'X-XSS-Protection': '1; mode=block',
-            'X-Content-Type-Options': 'nosniff',
-            'Referrer-Policy': 'no-referrer, strict-origin-when-cross-origin',
-            'Cache-control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
+            "Strict-Transport-Security": "max-age=63072000; includeSubdomains",
+            "X-Frame-Options": "SAMEORIGIN",
+            "X-XSS-Protection": "1; mode=block",
+            "X-Content-Type-Options": "nosniff",
+            "Referrer-Policy": "no-referrer, strict-origin-when-cross-origin",
+            "Cache-control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
         }
 
     def before(self):

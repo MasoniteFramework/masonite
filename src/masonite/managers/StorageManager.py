@@ -11,8 +11,8 @@ class StorageManager(Manager, StorageManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'storage'
-    driver_prefix = 'Storage'
+    config = "storage"
+    driver_prefix = "Storage"
 
 
 class Storage:

@@ -14,10 +14,10 @@ class CacheProvider(ServiceProvider):
     def register(self):
         # from config import cache
         # self.app.bind('CacheConfig', cache)
-        self.app.bind('CacheDiskDriver', CacheDiskDriver)
-        self.app.bind('CacheRedisDriver', CacheRedisDriver)
-        self.app.bind('CacheManager', CacheManager(self.app))
+        self.app.bind("CacheDiskDriver", CacheDiskDriver)
+        self.app.bind("CacheRedisDriver", CacheRedisDriver)
+        self.app.bind("CacheManager", CacheManager(self.app))
 
     def boot(self, cache: CacheManager):
-        self.app.bind('Cache', cache.driver(config('cache').DRIVER))
-        self.app.swap(Cache, cache.driver(config('cache').DRIVER))
+        self.app.bind("Cache", cache.driver(config("cache").DRIVER))
+        self.app.swap(Cache, cache.driver(config("cache").DRIVER))

@@ -67,6 +67,20 @@ class TestRoutes(unittest.TestCase):
 
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:none', None)
+            get_route.request = self.request
+            create_matchurl('/test/1', get_route)
+
+    def test_route_can_add_compilers_inside_route_group(self):
+        self.route.compile('year', r'[0-9]{4}')
+        group = RouteGroup([
+            Get().route('/@route:year', 'TestController@show')
+        ], prefix="/test")
+
+        self.assertEqual(group[0].compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
+
+        with self.assertRaises(InvalidRouteCompileException):
+            get_route = Get().route('test/@route:none', None)
+            get_route.request = self.request
             create_matchurl('/test/1', get_route)
 
     def test_route_gets_controllers(self):
@@ -252,7 +266,7 @@ class TestRoutes(unittest.TestCase):
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "conta_corrente": {\n        "ocultar": false,\n        "visao_geral": true,\n        "extrato": true\n    }\n}')
         route = Route(environ)
-        self.assertEqual(route.environ['QUERY_STRING'], {
+        self.assertEqual(route.environ['POST_DATA'], {
             "conta_corrente": {
                 "ocultar": False,
                 "visao_geral": True,
@@ -266,7 +280,7 @@ class TestRoutes(unittest.TestCase):
         environ['REQUEST_METHOD'] = 'POST'
         environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "options": ["foo", "bar"]\n}')
         route = Route(environ)
-        self.assertEqual(route.environ['QUERY_STRING'], {
+        self.assertEqual(route.environ['POST_DATA'], {
             "options": ["foo", "bar"]
         })
 

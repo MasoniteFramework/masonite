@@ -9,7 +9,6 @@ from masonite.orm.collection import Collection as collect
 
 
 class Dot:
-
     def dot(self, search, dictionary, default=None):
         """The search string in dot notation to look into the dictionary for.
 
@@ -27,24 +26,24 @@ class Dot:
             string -- Returns the value found the dictionary or the default
                         value specified above if nothing is found.
         """
-        if '.' not in search:
-            if search == '':
+        if "." not in search:
+            if search == "":
                 return dictionary
             try:
                 return dictionary[search]
             except KeyError:
                 return default
 
-        searching = search.split('.')
+        searching = search.split(".")
         possible = None
-        if '*' not in search:
+        if "*" not in search:
             return self.flatten(dictionary).get(search, default)
 
         while searching:
             dic = dictionary
             for value in searching:
                 if not dic:
-                    if '*' in searching:
+                    if "*" in searching:
                         return []
                     return default
 
@@ -62,7 +61,13 @@ class Dot:
                 if isinstance(dic, str) and dic.isnumeric():
                     continue
 
-                if dic and not isinstance(dic, int) and hasattr(dic, '__len__') and len(dic) == 1 and not isinstance(dic[list(dic)[0]], dict):
+                if (
+                    dic
+                    and not isinstance(dic, int)
+                    and hasattr(dic, "__len__")
+                    and len(dic) == 1
+                    and not isinstance(dic[list(dic)[0]], dict)
+                ):
                     possible = dic
 
             if not isinstance(dic, dict):
@@ -71,7 +76,7 @@ class Dot:
             del searching[-1]
         return possible
 
-    def flatten(self, d, parent_key='', sep='.'):
+    def flatten(self, d, parent_key="", sep="."):
         items = []
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
@@ -80,13 +85,15 @@ class Dot:
                 items.extend(self.flatten(v, new_key, sep=sep).items())
             elif isinstance(v, list):
                 for index, val in enumerate(v):
-                    items.extend(self.flatten({str(index): val}, new_key, sep=sep).items())
+                    items.extend(
+                        self.flatten({str(index): val}, new_key, sep=sep).items()
+                    )
             else:
                 items.append((new_key, v))
 
         return dict(items)
 
-    def locate(self, search_path, default=''):
+    def locate(self, search_path, default=""):
         """Locate the object from the given search path
 
         Arguments:
@@ -103,14 +110,14 @@ class Dot:
         value = self.find(search_path, default)
 
         if isinstance(value, dict):
-            return self.dict_dot('.'.join(search_path.split('.')[3:]), value, default)
+            return self.dict_dot(".".join(search_path.split(".")[3:]), value, default)
 
         if value is not None:
             return value
 
         return default
 
-    def dict_dot(self, search, dictionary, default=''):
+    def dict_dot(self, search, dictionary, default=""):
         """Takes a dot notation representation of a dictionary and fetches it from the dictionary.
 
         This will take something like s3.locations and look into the s3 dictionary and fetch the locations
@@ -125,7 +132,7 @@ class Dot:
         """
         return self.dot(search, dictionary, default)
 
-    def find(self, search_path, default=''):
+    def find(self, search_path, default=""):
         """Used for finding both the uppercase and specified version.
 
         Arguments:
@@ -145,9 +152,9 @@ class Dot:
         if value:
             return value
 
-        paths = search_path.split('.')
+        paths = search_path.split(".")
 
-        value = pydoc.locate('.'.join(paths[:-1]) + '.' + paths[-1].upper())
+        value = pydoc.locate(".".join(paths[:-1]) + "." + paths[-1].upper())
 
         if value or value is False:
             return value
@@ -158,14 +165,18 @@ class Dot:
         ran = 0
         while ran < len(paths):
             try:
-                value = pydoc.locate('.'.join(paths[:search_path]) + '.' + paths[search_path].upper())
+                value = pydoc.locate(
+                    ".".join(paths[:search_path]) + "." + paths[search_path].upper()
+                )
             except IndexError:
                 return default
 
             if value:
                 break
 
-            value = pydoc.locate('.'.join(paths[:search_path]) + '.' + paths[search_path])
+            value = pydoc.locate(
+                ".".join(paths[:search_path]) + "." + paths[search_path]
+            )
 
             if value:
                 break
@@ -179,7 +190,7 @@ class Dot:
         return value
 
 
-def config(path, default=''):
+def config(path, default=""):
     """Used to fetch a value from a configuration file
 
     Arguments:
@@ -191,10 +202,10 @@ def config(path, default=''):
     Returns:
         mixed
     """
-    return Dot().locate('config.' + path, default)
+    return Dot().locate("config." + path, default)
 
 
-def load(path, default=''):
+def load(path, default=""):
     """Used to fetch a value from a configuration file
 
     Arguments:

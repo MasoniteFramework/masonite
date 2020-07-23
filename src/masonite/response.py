@@ -18,7 +18,7 @@ class Response(Extendable):
 
     def __init__(self, app: App):
         self.app = app
-        self.request = self.app.make('Request')
+        self.request = self.app.make("Request")
 
     def json(self, payload, status=200):
         """Gets the response ready for a JSON response.
@@ -29,7 +29,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
-        self.app.bind('Response', bytes(json.dumps(payload), 'utf-8'))
+        self.app.bind("Response", bytes(json.dumps(payload), "utf-8"))
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
 
@@ -41,11 +41,11 @@ class Response(Extendable):
         Keyword Arguments:
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
-        self.request.header('Content-Length', str(len(self.to_bytes())))
+        self.request.header("Content-Length", str(len(self.to_bytes())))
 
         # If the user did not change it directly
-        if not self.request.has_raw_header('Content-Type'):
-            self.request.header('Content-Type', content_type)
+        if not self.request.has_raw_header("Content-Type"):
+            self.request.header("Content-Type", content_type)
 
     def data(self):
         """Get the data that will be returned to the WSGI server.
@@ -53,10 +53,10 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the response
         """
-        if self.app.has('Response'):
-            return self.app.make('Response')
+        if self.app.has("Response"):
+            return self.app.make("Response")
 
-        return ''
+        return ""
 
     def converted_data(self):
         """Converts the data appropriately so the WSGI server can handle it.
@@ -103,12 +103,14 @@ class Response(Extendable):
         elif isinstance(view, self.request.__class__):
             view = self.data()
         elif view is None:
-            raise ResponseError('Responses cannot be of type: None. Did you return anything in your responsable method?')
+            raise ResponseError(
+                "Responses cannot be of type: None. Did you return anything in your responsable method?"
+            )
 
         if isinstance(view, str):
-            self.app.bind('Response', bytes(view, 'utf-8'))
+            self.app.bind("Response", bytes(view, "utf-8"))
         else:
-            self.app.bind('Response', view)
+            self.app.bind("Response", view)
 
         self.make_headers()
 
@@ -129,8 +131,8 @@ class Response(Extendable):
             location = self.request.redirect_url
 
         self.request.reset_headers()
-        self.request.header('Location', location)
-        self.view('Redirecting ...')
+        self.request.header("Location", location)
+        self.view("Redirecting ...")
 
         return self.data()
 
@@ -144,9 +146,10 @@ class Response(Extendable):
 
 
 class Responsable:
-
     def get_response(self):
-        raise NotImplementedError("This class does not implement a 'get_response()' method")
+        raise NotImplementedError(
+            "This class does not implement a 'get_response()' method"
+        )
 
 
 class Download(Responsable):
@@ -161,7 +164,7 @@ class Download(Responsable):
         name {str} -- The name you want the file to be called when downloaded (default: {'profile.jpg'})
     """
 
-    def __init__(self, location, force=False, name='1'):
+    def __init__(self, location, force=False, name="1"):
         self.location = location
         self._force = force
         self.name = name
@@ -184,18 +187,24 @@ class Download(Responsable):
         """
         if not self.container:
             from wsgi import container
+
             self.container = container
 
-        request = self.container.make('Request')
+        request = self.container.make("Request")
 
-        with open(self.location, 'rb') as filelike:
+        with open(self.location, "rb") as filelike:
             data = filelike.read()
 
         if self._force:
-            request.header('Content-Type', 'application/octet-stream')
-            request.header('Content-Disposition', 'attachment; filename="{}{}"'.format(self.name, self.extension(self.location)))
+            request.header("Content-Type", "application/octet-stream")
+            request.header(
+                "Content-Disposition",
+                'attachment; filename="{}{}"'.format(
+                    self.name, self.extension(self.location)
+                ),
+            )
         else:
-            request.header('Content-Type', self.mimetype(self.location))
+            request.header("Content-Type", self.mimetype(self.location))
 
         return data
 

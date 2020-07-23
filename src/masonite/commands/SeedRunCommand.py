@@ -14,13 +14,17 @@ class SeedRunCommand(Command):
 
     def handle(self):
 
-        table = self.argument('table').lower()
-        if not table == 'none':
-            seeder = '--seeder {}_table_seeder'.format(table.lower())
+        table = self.argument("table").lower()
+        if not table == "none":
+            seeder = "--seeder {}_table_seeder".format(table.lower())
         else:
-            seeder = ''
+            seeder = ""
 
-        subprocess.call([
-            "orator db:seed -p databases/seeds -c config/database.py -f {}".format(
-                seeder),
-        ], shell=True)
+        subprocess.call(
+            [
+                "orator db:seed -p databases/seeds -c config/database.py -f {}".format(
+                    seeder
+                ),
+            ],
+            shell=True,
+        )

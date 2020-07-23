@@ -16,8 +16,8 @@ class QueueTableCommand(Command):
     """
 
     def handle(self):
-        if self.option('failed'):
-            copy_migration('masonite/snippets/migrations/create_failed_jobs_table.py')
-        if self.option('jobs'):
-            copy_migration('masonite/snippets/migrations/create_queue_jobs_table.py')
-        self.info('Migration created successfully')
+        if self.option("failed"):
+            copy_migration("masonite/snippets/migrations/create_failed_jobs_table.py")
+        if self.option("jobs"):
+            copy_migration("masonite/snippets/migrations/create_queue_jobs_table.py")
+        self.info("Migration created successfully")

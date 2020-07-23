@@ -12,11 +12,9 @@ class ViewProvider(ServiceProvider):
 
     def register(self):
         view = View(self.app)
-        self.app.bind('ViewClass', view)
-        self.app.bind('View', view.render)
+        self.app.bind("ViewClass", view)
+        self.app.bind("View", view.render)
 
     def boot(self, view: View):
-        view.add_environment('src/masonite/snippets', loader=FileSystemLoader)
-        self.publishes_migrations([
-            'storage/append_from.txt'
-        ])
+        view.add_environment("src/masonite/snippets", loader=FileSystemLoader)
+        self.publishes_migrations(["storage/append_from.txt"])

@@ -16,15 +16,13 @@ class UploadProvider(ServiceProvider):
     def register(self):
         # from config import storage
         # self.app.bind('StorageConfig', storage)
-        self.app.bind('UploadDiskDriver', UploadDiskDriver)
-        self.app.bind('UploadS3Driver', UploadS3Driver)
-        self.app.bind('UploadManager', UploadManager(self.app))
+        self.app.bind("UploadDiskDriver", UploadDiskDriver)
+        self.app.bind("UploadS3Driver", UploadS3Driver)
+        self.app.bind("UploadManager", UploadManager(self.app))
 
     def boot(self, manager: UploadManager, view: View):
-        self.app.bind('Upload', manager.driver(config('storage').DRIVER))
-        self.app.swap(Upload, manager.driver(config('storage').DRIVER))
+        self.app.bind("Upload", manager.driver(config("storage").DRIVER))
+        self.app.swap(Upload, manager.driver(config("storage").DRIVER))
         view.share(
-            {
-                'static': static,
-            }
+            {"static": static,}
         )

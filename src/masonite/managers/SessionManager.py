@@ -11,8 +11,8 @@ class SessionManager(Manager, SessionManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'session'
-    driver_prefix = 'Session'
+    config = "session"
+    driver_prefix = "Session"
 
 
 class Session:

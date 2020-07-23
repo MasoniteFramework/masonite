@@ -24,8 +24,8 @@ class Csrf:
         Returns:
             string -- Returns token generated.
         """
-        token = bytes(binascii.b2a_hex(os.urandom(length // 2))).decode('utf-8')
-        self.request.cookie('csrf_token', token, encrypt=False)
+        token = bytes(binascii.b2a_hex(os.urandom(length // 2))).decode("utf-8")
+        self.request.cookie("csrf_token", token, encrypt=False)
         return token
 
     def verify_csrf_token(self, token):
@@ -37,7 +37,7 @@ class Csrf:
         Returns:
             bool
         """
-        if self.request.get_cookie('csrf_token', decrypt=False) == token:
+        if self.request.get_cookie("csrf_token", decrypt=False) == token:
             return True
         else:
             return False

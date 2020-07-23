@@ -10,9 +10,9 @@ class TestCommand(BaseScaffoldCommand):
         {name : Name of the test you would like to create}
     """
 
-    scaffold_name = 'Test'
+    scaffold_name = "Test"
     postfix = ""
     prefix = "Test"
-    template = '/masonite/snippets/scaffold/test'
-    base_directory = 'tests/test_'
+    template = "/masonite/snippets/scaffold/test"
+    base_directory = "tests/test_"
     file_to_lower = True

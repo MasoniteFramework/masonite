@@ -11,6 +11,7 @@ of this class.
 import re
 from cgi import MiniFieldStorage
 from http import cookies
+from urllib.parse import parse_qs, quote
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -58,6 +59,7 @@ class Request(Extendable):
         self.request_variables = {}
         self._test_user = False
         self.raw_input = None
+        self.query_params = {}
 
         if environ:
             self.load_environ(environ)
@@ -81,13 +83,51 @@ class Request(Extendable):
         """
         name = str(name)
 
-        if '.' in name and isinstance(self.request_variables.get(name.split('.')[0]), dict):
-            return clean_request_input(DictDot().dot(name, self.request_variables, default=default), clean=clean)
+        if "." in name and isinstance(
+            self.request_variables.get(name.split(".")[0]), dict
+        ):
+            return clean_request_input(
+                DictDot().dot(name, self.request_variables, default=default),
+                clean=clean,
+            )
 
-        elif '.' in name:
+        elif "." in name:
             name = dot(name, "{1}[{.}]")
 
-        return clean_request_input(self.request_variables.get(name, default), clean=clean, quote=quote)
+        return clean_request_input(
+            self.request_variables.get(name, default), clean=clean, quote=quote
+        )
+
+    def query(self, name, default=None, multi=False):
+        """Get a specific query string value.
+
+        Arguments:
+            name {string} -- Key of the input data
+
+        Keyword Arguments:
+            default {any} -- Default value if input does not exist (default: {None})
+            multi {bool} -- Whether to return all values of a multi value query string param
+                            ie. quuery_param=one&query_param=two (default: {False})
+
+        Returns:
+            any
+        """
+        try:
+            value = self.query_params[name]
+        except KeyError:
+            return default
+
+        if not multi and value:
+            return value[0]
+        return value
+
+    def all_query(self):
+        """Get all query string values
+
+        Returns:
+            any
+        """
+        return self.query_params
 
     def is_post(self):
         """Check if the current request is a POST request.
@@ -95,7 +135,7 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if self.environ['REQUEST_METHOD'] == 'POST':
+        if self.environ["REQUEST_METHOD"] == "POST":
             return True
 
         return False
@@ -106,7 +146,7 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if not self.environ['REQUEST_METHOD'] == 'GET':
+        if not self.environ["REQUEST_METHOD"] == "GET":
             return True
 
         return False
@@ -117,8 +157,8 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if self.has('__method'):
-            self.environ['REQUEST_METHOD'] = self.input('__method')
+        if self.has("__method"):
+            self.environ["REQUEST_METHOD"] = self.input("__method")
             return True
 
         return False
@@ -154,7 +194,7 @@ class Request(Extendable):
         if not internal_variables:
             without_internals = {}
             for key, value in self.request_variables.items():
-                if not key.startswith('__'):
+                if not key.startswith("__"):
                     without_internals.update({key: value})
             return clean_request_input(without_internals, clean=clean, quote=quote)
 
@@ -209,12 +249,20 @@ class Request(Extendable):
             self
         """
         self.environ = environ
-        self.method = environ['REQUEST_METHOD']
-        self.path = environ['PATH_INFO']
-        if 'QUERY_STRING' in environ:
-            self._set_standardized_request_variables(environ['QUERY_STRING'])
+        self.method = environ["REQUEST_METHOD"]
+        self.path = environ["PATH_INFO"]
+        self.request_variables = {}
+        self.raw_input = None
 
-        if self.has('__method'):
+        if "QUERY_STRING" in environ and environ["QUERY_STRING"]:
+            self.query_params = parse_qs(environ["QUERY_STRING"])
+
+        if "POST_DATA" in environ:
+            self._set_standardized_request_variables(environ["POST_DATA"])
+        elif "QUERY_STRING" in environ and environ["QUERY_STRING"]:
+            self._set_standardized_request_variables(environ["QUERY_STRING"])
+
+        if self.has("__method"):
             self.__set_request_method()
 
         return self
@@ -229,15 +277,14 @@ class Request(Extendable):
         if isinstance(variables, str):
             variables = query_parse(variables)
 
+        self.raw_input = variables
         if isinstance(variables, list):
-            self.raw_input = variables
             variables = {str(i): v for i, v in enumerate(variables)}
 
         try:
-            self.request_variables = {}
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
-                self.request_variables[name.replace('[]', '')] = value
+                self.request_variables[name.replace("[]", "")] = value
             return
         except TypeError:
             pass
@@ -301,6 +348,107 @@ class Request(Extendable):
         """
         return all((arg in self.request_variables) for arg in args)
 
+    def scheme(self):
+        """Get the current request url scheme
+
+        Returns:
+            string -- the scheme used for the request (http|https)
+        """
+        return self.environ["wsgi.url_scheme"]
+
+    def referrer(self):
+        """Gets the URL of the request that the current URL came from.
+
+        Returns:
+            string -- Returns the previous referring URL.
+        """
+
+        return self.environ.get("HTTP_REFERER")
+
+    def host(self):
+        """Get the server's hostname for the current request.
+
+        Returns:
+            string -- the hostname
+        """
+        host = self.environ.get("HTTP_HOST")
+        if not host:
+            host = self.environ["SERVER_NAME"]
+        return host.split(":", 1)[0]
+
+    def port(self):
+        """Get the server's port number for the current request.
+
+        Returns:
+            string -- the server's port number.
+        """
+        return self.environ["SERVER_PORT"]
+
+    def full_path(self, quoted=True):
+        """Get the path part of the current request url. (including the application path).
+
+        Args:
+            quoted {bool} -- whether to escape special chars (default: {True}).
+
+        Returns:
+            string -- the path of the url
+        """
+        url = self.environ.get("SCRIPT_NAME", "") + self.environ.get("PATH_INFO", "")
+        if quoted:
+            url = quote(url)
+        return url
+
+    def url(self, include_standard_port=False):
+        """Get the url of the current request including the scheme://host:port/path.
+
+        Args:
+            include_standard_port {bool} -- whether to include the port
+                when the request uses the standard http(s) port (default: {False}).
+
+        Returns:
+            string -- the requested url.
+        """
+        scheme = self.scheme()
+        host = self.host()
+        port = self.port()
+        path = self.full_path()
+        if (
+            include_standard_port
+            or (scheme == "https" and port != "443")
+            or (scheme == "http" and port != "80")
+        ):
+            port_part = ":{}".format(port)
+        else:
+            port_part = ""
+        return "{}://{}{}{}".format(scheme, host, port_part, path)
+
+    def full_url(self, include_standard_port=False):
+        """Get the full url including query string of the current request.
+            example:
+             scheme://host:port/path?query-string
+
+        Args:
+            include_standard_port {bool} -- whether to include the port
+                when the request uses the standard http(s) port (default: {False}).
+
+        Returns:
+            string -- The full request url
+        """
+        url = self.url(include_standard_port=include_standard_port)
+        query_string = self.query_string()
+        if query_string:
+            return "{}?{}".format(url, query_string)
+        else:
+            return url
+
+    def query_string(self):
+        """Get the raw query string of the current request url.
+
+        Returns:
+            string -- The query-string of the request
+        """
+        return self.environ.get("QUERY_STRING", "")
+
     def status(self, status):
         """Set the HTTP status code.
 
@@ -311,13 +459,13 @@ class Request(Extendable):
             self
         """
         if isinstance(status, str):
-            self.app().bind('StatusCode', status)
+            self.app().bind("StatusCode", status)
         elif isinstance(status, int):
             try:
                 text_status = self.statuses[status]
             except KeyError:
                 raise InvalidHTTPStatusCode
-            self.app().bind('StatusCode', text_status)
+            self.app().bind("StatusCode", text_status)
         return self
 
     def get_status_code(self):
@@ -326,13 +474,13 @@ class Request(Extendable):
         Returns:
             string -- Returns the status code (404 Not Found, 200 OK, etc)
         """
-        return self.app().make('StatusCode')
+        return self.app().make("StatusCode")
 
     def is_status(self, code):
         return self._get_status_code_by_value(self.get_status_code()) == code
 
     def route_exists(self, url):
-        web_routes = self.container.make('WebRoutes')
+        web_routes = self.container.make("WebRoutes")
 
         for route in web_routes:
             if route.route_url == url:
@@ -356,7 +504,7 @@ class Request(Extendable):
         Returns:
             string -- returns GET, POST, PUT, etc
         """
-        return self.environ['REQUEST_METHOD']
+        return self.environ["REQUEST_METHOD"]
 
     def header(self, key, value=None, http_prefix=None):
         """Set or gets a header depending on if "value" is passed in or not.
@@ -382,18 +530,18 @@ class Request(Extendable):
         if value is None:
             if key in self.environ:
                 return self.environ[key]
-            elif key.upper().replace('-', '_') in self.environ:
-                return self.environ[key.upper().replace('-', '_')]
+            elif key.upper().replace("-", "_") in self.environ:
+                return self.environ[key.upper().replace("-", "_")]
             else:
-                return ''
+                return ""
 
         self._set_header(key, value, http_prefix)
 
     def _set_header(self, key, value, http_prefix):
         # Set Headers
         if http_prefix:
-            self.environ['HTTP_{0}'.format(key)] = str(value)
-            self._headers.update({'HTTP_{0}'.format(key): str(value)})
+            self.environ["HTTP_{0}".format(key)] = str(value)
+            self._headers.update({"HTTP_{0}".format(key): str(value)})
         else:
             self.environ[key] = str(value)
             self._headers.update({key: str(value)})
@@ -480,8 +628,9 @@ class Request(Extendable):
             return self.url_params.get(parameter)
         return False
 
-    def cookie(self, key, value, encrypt=True,
-               http_only="HttpOnly;", path='/', expires=''):
+    def cookie(
+        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=""
+    ):
         """Set a cookie in the browser.
 
         Arguments:
@@ -510,10 +659,15 @@ class Request(Extendable):
         if not http_only:
             http_only = ""
 
-        self.append_cookie('{0}={1};{2} {3}Path={4}'.format(key, value, expires, http_only, path))
+        self.append_cookie(
+            "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path)
+        )
         self.cookies.append(
-            ('Set-Cookie', '{0}={1};{2} {3}Path={4}'.format(
-                key, value, expires, http_only, path)))
+            (
+                "Set-Cookie",
+                "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path),
+            )
+        )
         return self
 
     def get_cookies(self):
@@ -525,8 +679,8 @@ class Request(Extendable):
         return self.cookies
 
     def get_raw_cookie(self, provided_cookie):
-        if 'HTTP_COOKIE' in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+        if "HTTP_COOKIE" in self.environ:
+            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
             if provided_cookie in grab_cookie:
                 return grab_cookie[provided_cookie]
 
@@ -546,14 +700,15 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
-        if 'HTTP_COOKIE' in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ['HTTP_COOKIE'])
+        if "HTTP_COOKIE" in self.environ:
+            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
 
             if provided_cookie in grab_cookie:
                 if decrypt:
                     try:
                         return Sign(self.encryption_key).unsign(
-                            grab_cookie[provided_cookie].value)
+                            grab_cookie[provided_cookie].value
+                        )
                     except InvalidToken:
                         self.delete_cookie(provided_cookie)
                         return None
@@ -572,10 +727,10 @@ class Request(Extendable):
             key {string} -- Name of cookie to be stored
             value {string} -- Value of cookie to be stored
         """
-        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
-            self.environ['HTTP_COOKIE'] += ';{}'.format(value)
+        if "HTTP_COOKIE" in self.environ and self.environ["HTTP_COOKIE"]:
+            self.environ["HTTP_COOKIE"] += ";{}".format(value)
         else:
-            self.environ['HTTP_COOKIE'] = '{}'.format(value)
+            self.environ["HTTP_COOKIE"] = "{}".format(value)
 
     def delete_cookie(self, key):
         """Delete cookie.
@@ -587,21 +742,21 @@ class Request(Extendable):
             bool -- Whether or not the cookie was successfully deleted.
         """
         for index, cookie in enumerate(self.cookies):
-            if cookie[1].startswith(key + '='):
+            if cookie[1].startswith(key + "="):
                 del self.cookies[index]
 
-        self.cookie(key, '', expires='expired')
+        self.cookie(key, "", expires="expired")
 
-        if 'HTTP_COOKIE' in self.environ and self.environ['HTTP_COOKIE']:
+        if "HTTP_COOKIE" in self.environ and self.environ["HTTP_COOKIE"]:
 
-            request_cookies = self.environ['HTTP_COOKIE'].split(';')
+            request_cookies = self.environ["HTTP_COOKIE"].split(";")
             for index, cookie in enumerate(request_cookies):
                 if cookie.startswith(key):
                     # remove that cookie
                     del request_cookies[index]
 
             # put string back together
-            self.environ['HTTP_COOKIE'] = ';'.join(request_cookies)
+            self.environ["HTTP_COOKIE"] = ";".join(request_cookies)
             return True
         return False
 
@@ -693,13 +848,15 @@ class Request(Extendable):
             string|None -- Returns None if the route was not found or returns the
                            compiled URI.
         """
-        web_routes = self.container.make('WebRoutes')
+        web_routes = self.container.make("WebRoutes")
 
         for route in web_routes:
             if route.named_route == name:
                 return self.compile_route_to_url(route.route_url, params)
 
-        raise RouteException("Could not find the route with the name of '{}'".format(name))
+        raise RouteException(
+            "Could not find the route with the name of '{}'".format(name)
+        )
 
     def _get_route_from_controller(self, controller):
         """Get the route using the controller.
@@ -714,17 +871,21 @@ class Request(Extendable):
         Returns:
             masonite.routes.Route|None -- Returns None if the route could not be found.
         """
-        web_routes = self.container.make('WebRoutes')
+        web_routes = self.container.make("WebRoutes")
 
         if not isinstance(controller, str):
             module_location = controller.__module__
-            controller = controller.__qualname__.split('.')
+            controller = controller.__qualname__.split(".")
         else:
-            module_location = 'app.http.controllers'
-            controller = controller.split('@')
+            module_location = "app.http.controllers"
+            controller = controller.split("@")
 
         for route in web_routes:
-            if route.controller.__name__ == controller[0] and route.controller_method == controller[1] and route.module_location == module_location:
+            if (
+                route.controller.__name__ == controller[0]
+                and route.controller_method == controller[1]
+                and route.module_location == module_location
+            ):
                 return route
 
     def url_from_controller(self, controller, params={}):
@@ -741,7 +902,9 @@ class Request(Extendable):
         Returns:
             masonite.routes.Route|None -- Returns None if the route could not be found.
         """
-        return self.compile_route_to_url(self._get_route_from_controller(controller).route_url, params)
+        return self.compile_route_to_url(
+            self._get_route_from_controller(controller).route_url, params
+        )
 
     def route(self, name, params={}, full=False):
         """Get a route URI by its name.
@@ -759,6 +922,7 @@ class Request(Extendable):
             masonite.routes.Route|None -- Returns None if the route cannot be found.
         """
         from config import application
+
         if full:
             route = application.URL + self._get_named_route(name, params)
         else:
@@ -770,7 +934,9 @@ class Request(Extendable):
                 route = self._get_named_route(name, params)
 
         if not route:
-            raise RouteException("Route with the name of '{}' was not found.".format(name))
+            raise RouteException(
+                "Route with the name of '{}' was not found.".format(name)
+            )
 
         return route
 
@@ -786,7 +952,7 @@ class Request(Extendable):
         raise AttributeError("class 'Request' has no attribute {}".format(key))
 
     def with_errors(self, errors):
-        self.session.flash('errors', errors)
+        self.session.flash("errors", errors)
         return self
 
     def reset_redirections(self):
@@ -805,7 +971,8 @@ class Request(Extendable):
         """
         self.with_input()
 
-        redirect_url = self.input('__back')
+        redirect_url = self.input("__back")
+
         if not redirect_url and default:
             return self.redirect(default)
         elif not redirect_url and not default:
@@ -813,8 +980,21 @@ class Request(Extendable):
 
         return self.redirect(redirect_url)
 
+    def then_back(self):
+        self.session.set("__intend", self.path)
+        return self
+
+    def redirect_intended(self, default=None):
+        if self.session.get("__intend"):
+            self.redirect(self.session.get("__intend"))
+            self.session.delete("__intend")
+        else:
+            self.redirect(default)
+
+        return self
+
     def flash_inputs_to_session(self):
-        if not hasattr(self, 'session'):
+        if not hasattr(self, "session"):
             return
 
         for key, value in self.all().items():
@@ -853,7 +1033,7 @@ class Request(Extendable):
             if re.match(compile_route_to_regex(route), self.path):
                 return show
 
-            return ''
+            return ""
 
         return re.match(compile_route_to_regex(route), self.path)
 
@@ -876,38 +1056,38 @@ class Request(Extendable):
             return route
 
         # Split the url into a list
-        split_url = route.split('/')
+        split_url = route.split("/")
 
         # Start beginning of the new compiled url
-        compiled_url = '/'
+        compiled_url = "/"
 
         # Iterate over the list
         for url in split_url:
             if url:
                 # if the url contains a parameter variable like @id:int
-                if '@' in url:
-                    url = url.replace('@', '').split(':')[0]
+                if "@" in url:
+                    url = url.replace("@", "").split(":")[0]
                     if isinstance(params, dict):
-                        compiled_url += str(params[url]) + '/'
+                        compiled_url += str(params[url]) + "/"
                     elif isinstance(params, list):
-                        compiled_url += str(params.pop(0)) + '/'
-                elif '?' in url:
-                    url = url.replace('?', '').split(':')[0]
+                        compiled_url += str(params.pop(0)) + "/"
+                elif "?" in url:
+                    url = url.replace("?", "").split(":")[0]
                     if isinstance(params, dict):
-                        compiled_url += str(params.get(url, '/')) + '/'
+                        compiled_url += str(params.get(url, "/")) + "/"
                     elif isinstance(params, list):
-                        compiled_url += str(params.pop(0)) + '/'
+                        compiled_url += str(params.pop(0)) + "/"
                 else:
-                    compiled_url += url + '/'
+                    compiled_url += url + "/"
 
-        compiled_url = compiled_url.replace('//', '')
+        compiled_url = compiled_url.replace("//", "")
         # The loop isn't perfect and may have an unwanted trailing slash
-        if compiled_url.endswith('/') and not route.endswith('/'):
+        if compiled_url.endswith("/") and not route.endswith("/"):
             compiled_url = compiled_url[:-1]
 
         # The loop isn't perfect and may have 2 slashes next to eachother
-        if '//' in compiled_url:
-            compiled_url = compiled_url.replace('//', '/')
+        if "//" in compiled_url:
+            compiled_url = compiled_url.replace("//", "/")
 
         return compiled_url
 
@@ -922,11 +1102,11 @@ class Request(Extendable):
             bool
         """
         if self._activate_subdomains:
-            url = tldextract.extract(self.environ['HTTP_HOST'])
+            url = tldextract.extract(self.environ["HTTP_HOST"])
 
             if url.subdomain:
                 self.subdomain = url.subdomain
-                self.url_params.update({'subdomain': self.subdomain})
+                self.url_params.update({"subdomain": self.subdomain})
                 return True
 
         return False
@@ -958,5 +1138,5 @@ class Request(Extendable):
                 del self.request_variables[key]
 
     def validate(self, *rules):
-        validator = self.app().make('Validator')
+        validator = self.app().make("Validator")
         return validator.validate(self.request_variables, *rules)

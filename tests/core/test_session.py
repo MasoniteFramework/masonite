@@ -7,10 +7,12 @@ class TestSession(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.container.make('Request').load_environ(generate_wsgi())
+        self.container.make('Request').load_environ(generate_wsgi()).load_app(self.container)
         self.container.bind('SessionMemoryDriver', SessionMemoryDriver)
         self.container.bind('SessionCookieDriver', SessionCookieDriver)
         self.container.bind('SessionManager', SessionManager(self.container))
+        self.container.make('Request').session = self.container.make('SessionManager').driver('cookie')
+        self.container.bind('StatusCode', 200)
 
     def test_session_request(self):
         for driver in ('memory', 'cookie'):
@@ -69,6 +71,15 @@ class TestSession(TestCase):
             session.flash('flash_password', 'secret')
             self.assertEqual(session.get('flash_username'), 'pep')
             self.assertEqual(session.get('flash_password'), 'secret')
+
+    def test_session_flash_error_messages(self):
+        for driver in ('memory', 'cookie'):
+            session = self.container.make('SessionManager').driver(driver)
+            session._session = {}
+            session.flash('errors', {'password': ['password invalid']})
+            self.assertEqual(session.get_error_messages(), ['password invalid'])
+            # assert session key is now deleted
+            self.assertEqual(session.get('errors'), None)
 
     def test_reset_flash_session_memory(self):
         session = self.container.make('SessionManager').driver('memory')
@@ -142,3 +153,17 @@ class TestSession(TestCase):
             request.with_input()
             self.assertFalse(session.has('byte'))
             self.assertTrue(session.has('key2'))
+
+    def test_intended_returns_correct_url(self):
+        request = self.container.make('Request')
+        request.redirect('/dashboard')
+        self.assertEqual(request.redirect_url, '/dashboard')
+
+        request.path = '/test'
+
+        request.redirect('/dashboard').then_back()
+        self.assertEqual(request.session.get('__intend'), '/test')
+
+        # Assert redirect intended method resets the redirection
+        request.redirect_intended()
+        self.assertEqual(request.session.get('__intend'), None)

@@ -11,17 +11,24 @@ class ModelDocstringCommand(Command):
         {table : Name of the table to generate the docstring for}
         {--c|connection=default : The connection to use}
     """
+
     def handle(self):
         from config.database import DB
-        if self.option('connection') == 'default':
-            conn = DB.get_schema_manager().list_table_columns(self.argument('table'))
+
+        if self.option("connection") == "default":
+            conn = DB.get_schema_manager().list_table_columns(self.argument("table"))
         else:
-            conn = DB.connection(self.option('connection')).get_schema_manager().list_table_columns(self.argument('table'))
+            conn = (
+                DB.connection(self.option("connection"))
+                .get_schema_manager()
+                .list_table_columns(self.argument("table"))
+            )
 
         docstring = '"""Model Definition (generated with love by Masonite) \n\n'
         for name, column in conn.items():
-            length = '({})'.format(column._length) if column._length else ''
-            docstring += '{}: {}{} default: {}\n'.format(
-                name, column.get_type(), length, column.get_default())
+            length = "({})".format(column._length) if column._length else ""
+            docstring += "{}: {}{} default: {}\n".format(
+                name, column.get_type(), length, column.get_default()
+            )
 
         print(docstring + '"""')

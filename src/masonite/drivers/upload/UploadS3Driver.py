@@ -20,7 +20,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             StorageConfig {config.storage} -- Storage configuration.
         """
         self.upload = upload
-        self.config = config('storage')
+        self.config = config("storage")
 
     def store(self, fileitem, filename=None, location=None):
         """Store the file into Amazon S3 server.
@@ -42,11 +42,12 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             import boto3
         except ImportError:
             raise DriverLibraryNotFound(
-                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"')
+                'Could not find the "boto3" library. Please pip install this library by running "pip install boto3"'
+            )
 
-        driver = self.upload.driver('disk')
+        driver = self.upload.driver("disk")
         driver.accept_file_types = self.accept_file_types
-        driver.store(fileitem, filename=filename, location='storage/temp')
+        driver.store(fileitem, filename=filename, location="storage/temp")
         file_location = driver.file_location
 
         # use the new filename or get it from the fileitem
@@ -57,11 +58,11 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
         self.validate_extension(self.get_name(fileitem))
 
         session = boto3.Session(
-            aws_access_key_id=self.config.DRIVERS['s3']['client'],
-            aws_secret_access_key=self.config.DRIVERS['s3']['secret'],
+            aws_access_key_id=self.config.DRIVERS["s3"]["client"],
+            aws_secret_access_key=self.config.DRIVERS["s3"]["secret"],
         )
 
-        s3 = session.resource('s3')
+        s3 = session.resource("s3")
 
         if location:
             location = os.path.join(location, filename)
@@ -69,9 +70,7 @@ class UploadS3Driver(BaseUploadDriver, UploadContract):
             location = os.path.join(filename)
 
         s3.meta.client.upload_file(
-            file_location,
-            self.config.DRIVERS['s3']['bucket'],
-            location
+            file_location, self.config.DRIVERS["s3"]["bucket"], location
         )
 
         return filename

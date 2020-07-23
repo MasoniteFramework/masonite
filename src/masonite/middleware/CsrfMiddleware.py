@@ -11,7 +11,7 @@ from ..view import View
 class CsrfMiddleware:
     """Verify CSRF Token Middleware."""
 
-    exempt = ['/']
+    exempt = ["/"]
     every_request = True
     token_length = 30
 
@@ -32,10 +32,14 @@ class CsrfMiddleware:
         """Execute this method before the controller."""
         token = self.verify_token()
 
-        self.view.share({
-            'csrf_field': Markup("<input type='hidden' name='__token' value='{0}' />".format(token)),
-            'csrf_token': token
-        })
+        self.view.share(
+            {
+                "csrf_field": Markup(
+                    "<input type='hidden' name='__token' value='{0}' />".format(token)
+                ),
+                "csrf_token": token,
+            }
+        )
 
     def after(self):
         pass
@@ -72,13 +76,18 @@ class CsrfMiddleware:
         """
 
         if self.request.is_post() and not self.in_exempt():
-            token = self.request.header('HTTP_X_CSRF_TOKEN') or self.request.header(
-                'HTTP_X_XSRF_TOKEN') or self.request.input('__token')
+            token = (
+                self.request.header("HTTP_X_CSRF_TOKEN")
+                or self.request.header("HTTP_X_XSRF_TOKEN")
+                or self.request.input("__token")
+            )
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
             return token
         else:
-            if not self.every_request and self.request.get_cookie('csrf_token', decrypt=False):
-                return self.request.get_cookie('csrf_token', decrypt=False)
+            if not self.every_request and self.request.get_cookie(
+                "csrf_token", decrypt=False
+            ):
+                return self.request.get_cookie("csrf_token", decrypt=False)
             else:
                 return self.generate_token()

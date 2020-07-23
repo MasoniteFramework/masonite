@@ -29,7 +29,6 @@ class BaseCacheDriver(BaseDriver):
         elif cache_type in ("year", "years"):
             calc = 60 ** 5
         else:
-            raise ValueError(
-                '{0} is not a valid caching type.'.format(cache_type))
+            raise ValueError("{0} is not a valid caching type.".format(cache_type))
 
         return cache_time * calc

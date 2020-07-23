@@ -2,8 +2,7 @@
 
 import inspect
 import os
-from concurrent.futures import (ProcessPoolExecutor, ThreadPoolExecutor,
-                                as_completed)
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 
 from ...app import App
 from ...contracts import QueueContract
@@ -40,12 +39,12 @@ class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             raise QueueException("max_workers must be greater than 0")
 
         # Determine Mode for Processing
-        if mode == 'threading':
+        if mode == "threading":
             processor = ThreadPoolExecutor(max_workers)
-        elif mode == 'multiprocess':
+        elif mode == "multiprocess":
             processor = ProcessPoolExecutor(max_workers)
         else:
-            raise QueueException('Queue mode {} not recognized'.format(mode))
+            raise QueueException("Queue mode {} not recognized".format(mode))
         return processor
 
     def push(self, *objects, args=(), kwargs={}, **options):
@@ -57,20 +56,19 @@ class QueueAsyncDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         """
 
         # Initialize Extra Options
-        callback = options.get('callback', 'handle')
-        mode = options.get('mode', config('queue.drivers.async.mode', 'threading'))
-        workers = options.get('workers', None)
+        callback = options.get("callback", "handle")
+        mode = options.get("mode", config("queue.drivers.async.mode", "threading"))
+        workers = options.get("workers", None)
 
         # Set processor to either use threads or processes
         processor = self._get_processor(mode=mode, max_workers=workers)
-        is_blocking = config('queue.drivers.async.blocking', False)
+        is_blocking = config("queue.drivers.async.blocking", False)
 
         ran = []
         for obj in objects:
             obj = self.container.resolve(obj) if inspect.isclass(obj) else obj
             try:
-                future = processor.submit(
-                    getattr(obj, callback), *args, **kwargs)
+                future = processor.submit(getattr(obj, callback), *args, **kwargs)
             except AttributeError:
                 # Could be wanting to call only a method asyncronously
                 future = processor.submit(obj, *args, **kwargs)

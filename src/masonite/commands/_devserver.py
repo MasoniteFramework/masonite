@@ -34,7 +34,7 @@ class WSGIServer(simple_server.WSGIServer):
 
 
 class ServerHandler(simple_server.ServerHandler):
-    http_version = '1.1'
+    http_version = "1.1"
 
     def handle_error(self):
         # Ignore broken pipe errors, otherwise pass on
@@ -43,7 +43,7 @@ class ServerHandler(simple_server.ServerHandler):
 
 
 class WSGIRequestHandler(simple_server.WSGIRequestHandler):
-    protocol_version = 'HTTP/1.1'
+    protocol_version = "HTTP/1.1"
 
     def address_string(self):
         # Short-circuit parent method to not call socket.getfqdn
@@ -51,22 +51,23 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
 
     def log_message(self, message_format, *args):
         extra = {
-            'request': self.request,
-            'server_time': self.log_date_time_string(),
+            "request": self.request,
+            "server_time": self.log_date_time_string(),
         }
-        if args[1][0] == '4':
+        if args[1][0] == "4":
             # 0x16 = Handshake, 0x03 = SSL 3.0 or TLS 1.x
-            if args[0].startswith('\x16\x03'):
-                extra['status_code'] = 500
+            if args[0].startswith("\x16\x03"):
+                extra["status_code"] = 500
                 logging.error(
                     "You're accessing the development server over HTTPS, but "
-                    "it only supports HTTP.\n", extra=extra,
+                    "it only supports HTTP.\n",
+                    extra=extra,
                 )
                 return
 
         if args[1].isdigit() and len(args[1]) == 3:
             status_code = int(args[1])
-            extra['status_code'] = status_code
+            extra["status_code"] = status_code
 
             if status_code >= 500:
                 level = logging.error
@@ -85,7 +86,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         # between underscores and dashes both normalized to underscores in WSGI
         # env vars. Nginx and Apache 2.4+ both do this as well.
         for k in self.headers:
-            if '_' in k:
+            if "_" in k:
                 del self.headers[k]
 
         return super().get_environ()
@@ -94,9 +95,9 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         """Copy of WSGIRequestHandler.handle() but with different ServerHandler"""
         self.raw_requestline = self.rfile.readline(65537)
         if len(self.raw_requestline) > 65536:
-            self.requestline = ''
-            self.request_version = ''
-            self.command = ''
+            self.requestline = ""
+            self.request_version = ""
+            self.command = ""
             self.send_error(414)
             return
 
@@ -106,7 +107,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         handler = ServerHandler(
             self.rfile, self.wfile, self.get_stderr(), self.get_environ()
         )
-        handler.request_handler = self      # backpointer for logging
+        handler.request_handler = self  # backpointer for logging
         handler.run(self.server.get_app())
 
 
@@ -119,6 +120,7 @@ def _split_module_and_app(moduleapp):
 
 def _import_application(module_name, app_name):
     from importlib import import_module
+
     module = import_module(module_name)
     return getattr(module, app_name)
 
@@ -132,7 +134,7 @@ def run(host, port, wsgi_handler, ipv6=False, httpd_cls=WSGIServer):
     httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)
     httpd.set_app(wsgi_handler)
     try:
-        print('Serving at: http://{}:{}'.format(host, port))
+        print("Serving at: http://{}:{}".format(host, port))
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass

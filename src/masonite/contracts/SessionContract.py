@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class SessionContract(ABC):
-
     @abstractmethod
     def get(self):
         pass

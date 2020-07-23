@@ -6,7 +6,6 @@ from masonite.orm.migrations import Migration
 
 
 class Migrations(HasColoredCommands):
-
     def __init__(self, connection=None):
         self._ran = []
         self._notes = []

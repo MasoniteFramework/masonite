@@ -12,17 +12,14 @@ from .AuthenticationGuard import AuthenticationGuard
 
 class WebGuard(AuthenticationGuard):
 
-    drivers = {
-        'cookie': AuthCookieDriver,
-        'jwt': AuthJwtDriver
-    }
+    drivers = {"cookie": AuthCookieDriver, "jwt": AuthJwtDriver}
 
     def __init__(self, app: App, request: Request, driver=None, auth_model=None):
         self.app = app
         self.request = request
         self._once = False
-        self.auth_model = auth_model or config('auth.auth.guards.web.model')
-        self.driver = self.make(driver or config('auth.auth.guards.web.driver'))
+        self.auth_model = auth_model or config("auth.auth.guards.web.model")
+        self.driver = self.make(driver or config("auth.auth.guards.web.driver"))
 
     def user(self):
         """Get the currently logged in user.
@@ -55,7 +52,11 @@ class WebGuard(AuthenticationGuard):
         """
 
         if not isinstance(password, str):
-            raise TypeError("Cannot login with password '{}' of type: {}".format(password, type(password)))
+            raise TypeError(
+                "Cannot login with password '{}' of type: {}".format(
+                    password, type(password)
+                )
+            )
 
         auth_column = self.auth_model.__auth__
 
@@ -76,9 +77,9 @@ class WebGuard(AuthenticationGuard):
             # This is to prevent to double encode the password as bytes
             password_as_bytes = self._get_password_column(model)
             if not isinstance(password_as_bytes, bytes):
-                password_as_bytes = bytes(password_as_bytes or '', 'utf-8')
+                password_as_bytes = bytes(password_as_bytes or "", "utf-8")
 
-            if model and bcrypt.checkpw(bytes(password, 'utf-8'), password_as_bytes):
+            if model and bcrypt.checkpw(bytes(password, "utf-8"), password_as_bytes):
                 if not self._once:
                     remember_token = str(uuid.uuid4())
                     model.remember_token = remember_token
@@ -141,11 +142,11 @@ class WebGuard(AuthenticationGuard):
         Returns:
             string
         """
-        if hasattr(model, '__password__'):
+        if hasattr(model, "__password__"):
             return getattr(model, model.__password__)
 
-        if hasattr(model, 'password'):
-            return getattr(model, 'password')
+        if hasattr(model, "password"):
+            return getattr(model, "password")
 
     def register(self, user):
         """Register the user.
@@ -153,5 +154,5 @@ class WebGuard(AuthenticationGuard):
         Arguments:
             user {dict} -- A dictionary of user data information.
         """
-        user['password'] = bcrypt_password(user['password'])
+        user["password"] = bcrypt_password(user["password"])
         return self.auth_model.create(**user)

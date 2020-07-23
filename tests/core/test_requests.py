@@ -11,8 +11,8 @@ from src.masonite.helpers.routes import flatten_routes
 from src.masonite.helpers.time import cookie_expire_time
 from src.masonite.request import Request
 from src.masonite.response import Response
-from src.masonite.routes import Get, RouteGroup
-from src.masonite.testing import generate_wsgi
+from src.masonite.routes import Get, Route, RouteGroup
+from src.masonite.testing import generate_wsgi, MockWsgiInput
 
 WEB_ROUTES = flatten_routes([
     Get('/test', 'Controller@show').name('test'),
@@ -28,7 +28,7 @@ class TestRequest(unittest.TestCase):
 
     def setUp(self):
         self.app = App()
-        self.request = Request(wsgi_request).key(
+        self.request = Request(wsgi_request.copy()).key(
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=').load_app(self.app)
         self.app.bind('Request', self.request)
         self.response = Response(self.app)
@@ -499,6 +499,29 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.input('2.item3.0'), 1)
         self.assertEqual(request.input('3.item3'), False)
 
+    def test_list_as_root_payload_reset_between_requests(self):
+        app = App()
+        wsgi_environ = generate_wsgi()
+        wsgi_environ['REQUEST_METHOD'] = 'POST'
+        wsgi_environ['CONTENT_TYPE'] = 'application/json'
+
+        route_class = Route()
+        request_class = Request()
+        app.bind('Request', request_class)
+        app.bind('Route', route_class)
+        route = app.make('Route')
+        request = app.make('Request').load_app(app)
+
+        wsgi_environ['wsgi.input'] = MockWsgiInput('[1, 2]')
+        route.load_environ(wsgi_environ)
+        request.load_environ(wsgi_environ)
+        self.assertEqual(request.all(), [1, 2])
+
+        wsgi_environ['wsgi.input'] = MockWsgiInput('{"key": "val"}')
+        route.load_environ(wsgi_environ)
+        request.load_environ(wsgi_environ)
+        self.assertEqual(request.all(), {"key": "val"})
+
     def test_request_gets_correct_header(self):
         app = App()
         app.bind('Request', self.request)
@@ -764,3 +787,95 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('key.user'), '1')
         self.assertEqual(self.request.input('key.nothing'), False)
         self.assertEqual(self.request.input('key.nothing', default='test'), 'test')
+
+    def test_request_scheme(self):
+        self.request.environ['wsgi.url_scheme'] = 'http'
+        self.assertEqual(self.request.scheme(), 'http')
+        self.request.environ['wsgi.url_scheme'] = 'https'
+        self.assertEqual(self.request.scheme(), 'https')
+
+    def test_request_host(self):
+        self.request.environ.update({'HTTP_HOST': 'www.masonite.com:80', 'SERVER_NAME': '127.0.0.1'})
+        self.assertEqual(self.request.host(), 'www.masonite.com')
+
+        self.request.environ.update({'HTTP_HOST': 'www.masonite.com:8000'})
+        self.assertEqual(self.request.host(), 'www.masonite.com')
+
+        self.request.environ.update({'HTTP_HOST': ''})
+        self.assertEqual(self.request.host(), '127.0.0.1')
+
+    def test_request_port(self):
+        self.request.environ.update({'SERVER_PORT': '443'})
+        self.assertEqual(self.request.port(), '443')
+
+        self.request.environ.update({'SERVER_PORT': '8000'})
+        self.assertEqual(self.request.port(), '8000')
+
+    def test_request_path(self):
+        def update_environ(**kwargs):
+            environ = self.request.environ
+            environ.update(kwargs)
+            self.request.load_environ(environ)
+
+        update_environ(**{'SCRIPT_NAME': '', 'PATH_INFO': '/root/masonite'})
+        self.assertEqual(self.request.full_path(), '/root/masonite')
+        self.assertEqual(self.request.path, '/root/masonite')
+
+        update_environ(**{'SCRIPT_NAME': '/application', 'PATH_INFO': '/root/masonite'})
+        self.assertEqual(self.request.full_path(), '/application/root/masonite')
+        self.assertEqual(self.request.path, '/root/masonite')
+
+        update_environ(**{'SCRIPT_NAME': '/application', 'PATH_INFO': '/'})
+        self.assertEqual(self.request.full_path(), '/application/')
+        self.assertEqual(self.request.path, '/')
+
+        update_environ(**{'SCRIPT_NAME': '/application', 'PATH_INFO': '/masonite/hello world/'})
+        self.assertEqual(self.request.full_path(), '/application/masonite/hello%20world/')
+        self.assertEqual(self.request.full_path(quoted=False), '/application/masonite/hello world/')
+
+    def test_request_query_string(self):
+        self.assertEqual(self.request.query_string(), 'application=Masonite')
+
+    def test_url(self):
+        self.request.environ.update({
+            'wsgi.url_scheme': 'https',
+            'HTTP_HOST': 'www.masonite.com:443',
+            'SERVER_PORT': '443',
+            'SERVER_NAME': '127.0.0.1',
+            'SCRIPT_NAME': '/application',
+            'PATH_INFO': '/root/masonite is the best',
+            'QUERY_STRING': 'Hello World',
+        })
+        self.assertEqual(self.request.url(), 'https://www.masonite.com/application/root/masonite%20is%20the%20best')
+        self.assertEqual(self.request.url(include_standard_port=True),
+                         'https://www.masonite.com:443/application/root/masonite%20is%20the%20best')
+
+        self.request.environ.update({
+            'HTTP_HOST': 'www.masonite.com:80',
+            'SERVER_PORT': '80',
+        })
+        self.assertEqual(self.request.url(), 'https://www.masonite.com:80/application/root/masonite%20is%20the%20best')
+
+        self.request.environ['wsgi.url_scheme'] = 'http'
+        self.assertEqual(self.request.url(), 'http://www.masonite.com/application/root/masonite%20is%20the%20best')
+
+        del self.request.environ['HTTP_HOST']
+        self.assertEqual(self.request.url(), 'http://127.0.0.1/application/root/masonite%20is%20the%20best')
+
+        self.request.environ['wsgi.url_scheme'] = 'https'
+        self.assertEqual(self.request.url(), 'https://127.0.0.1:80/application/root/masonite%20is%20the%20best')
+
+    def test_full_url(self):
+        self.request.environ.update({
+            'wsgi.url_scheme': 'https',
+            'HTTP_HOST': 'www.masonite.com:443',
+            'SERVER_PORT': '443',
+            'SERVER_NAME': '127.0.0.1',
+            'SCRIPT_NAME': '/application',
+            'PATH_INFO': '/root/masonite is the best',
+            'QUERY_STRING': 'q=Hello&var=val',
+        })
+        self.assertEqual(
+            self.request.full_url(),
+            'https://www.masonite.com/application/root/masonite%20is%20the%20best?q=Hello&var=val'
+        )

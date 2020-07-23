@@ -2,9 +2,11 @@
 
 import inspect
 
-from .exceptions import (ContainerError,
-                         MissingContainerBindingNotFound,
-                         StrictContainerException)
+from .exceptions import (
+    ContainerError,
+    MissingContainerBindingNotFound,
+    StrictContainerException,
+)
 
 
 class App:
@@ -13,7 +15,9 @@ class App:
     Performs bindings and resolving of objects to and from the container.
     """
 
-    def __init__(self, strict=False, override=True, resolve_parameters=False, remember=False):
+    def __init__(
+        self, strict=False, override=True, resolve_parameters=False, remember=False
+    ):
         """App class constructor."""
         self.providers = {}
         self.strict = strict
@@ -21,9 +25,9 @@ class App:
         self.resolve_parameters = resolve_parameters
         self.remember = remember
         self._hooks = {
-            'make': {},
-            'bind': {},
-            'resolve': {},
+            "make": {},
+            "bind": {},
+            "resolve": {},
         }
 
         self.swaps = {}
@@ -40,13 +44,18 @@ class App:
             self
         """
         if inspect.ismodule(class_obj):
-            raise StrictContainerException("Cannot bind module '{}' with key '{}' into the container".format(class_obj, name))
+            raise StrictContainerException(
+                "Cannot bind module '{}' with key '{}' into the container".format(
+                    class_obj, name
+                )
+            )
         if self.strict and name in self.providers:
             raise StrictContainerException(
-                'You cannot override a key inside a strict container')
+                "You cannot override a key inside a strict container"
+            )
 
         if self.override or name not in self.providers:
-            self.fire_hook('bind', name, class_obj)
+            self.fire_hook("bind", name, class_obj)
             self.providers.update({name: class_obj})
 
         return self
@@ -84,7 +93,7 @@ class App:
 
         if name in self.providers:
             obj = self.providers[name]
-            self.fire_hook('make', name, obj)
+            self.fire_hook("make", name, obj)
             if inspect.isclass(obj):
                 obj = self.resolve(obj, *arguments)
             return obj
@@ -92,13 +101,14 @@ class App:
             return self.swaps.get(name)
         elif inspect.isclass(name):
             obj = self._find_obj(name)
-            self.fire_hook('make', name, obj)
+            self.fire_hook("make", name, obj)
             if inspect.isclass(obj):
                 obj = self.resolve(obj, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(
-            "{0} key was not found in the container".format(name))
+            "{0} key was not found in the container".format(name)
+        )
 
     def has(self, name):
         """Check if a key exists in the container.
@@ -149,8 +159,18 @@ class App:
                 return obj(*objects)
             except TypeError as e:
                 raise ContainerError(str(e))
-        elif self.remember and not passing_arguments and inspect.ismethod(obj) and "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__) in self._remembered:
-            location = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
+        elif (
+            self.remember
+            and not passing_arguments
+            and inspect.ismethod(obj)
+            and "{}.{}.{}".format(
+                obj.__module__, obj.__self__.__class__.__name__, obj.__name__
+            )
+            in self._remembered
+        ):
+            location = "{}.{}.{}".format(
+                obj.__module__, obj.__self__.__class__.__name__, obj.__name__
+            )
             objects = self._remembered[location]
             try:
                 return obj(*objects)
@@ -158,16 +178,26 @@ class App:
                 raise ContainerError(str(e))
         else:
             for _, value in self.get_parameters(obj):
-                if ':' in str(value):
+                if value.annotation in (str, int, dict, list, tuple):
+                    # Ignore any times a user is simply type hinting a parameter like (parameter:str).
+                    # In this case we don't want to resolve anything but we do want
+                    # to insert any passing arguments we passed in
+                    try:
+                        objects.append(passing_arguments.pop(0))
+                    except IndexError:
+                        pass
+
+                    continue
+                if ":" in str(value):
                     param = self._find_annotated_parameter(value)
                     if inspect.isclass(param):
                         param = self.resolve(param)
                     objects.append(param)
-                elif 'self' in str(value):
+                elif "self" in str(value):
                     objects.append(obj)
-                elif '=' in str(value):
+                elif "=" in str(value):
                     objects.append(value.default)
-                elif '*' in str(value):
+                elif "*" in str(value):
                     continue
                 elif self.resolve_parameters:
                     objects.append(self._find_parameter(value))
@@ -175,24 +205,31 @@ class App:
                     try:
                         objects.append(passing_arguments.pop(0))
                     except IndexError:
-                        raise ContainerError('Not enough dependencies passed. Resolving object needs {} dependencies.'.format(len(inspect.signature(obj).parameters)))
+                        raise ContainerError(
+                            "Not enough dependencies passed. Resolving object needs {} dependencies.".format(
+                                len(inspect.signature(obj).parameters)
+                            )
+                        )
                 else:
                     raise ContainerError(
                         "This container is not set to resolve parameters. You can set this in the container"
-                        " constructor using the 'resolve_parameters=True' keyword argument.")
+                        " constructor using the 'resolve_parameters=True' keyword argument."
+                    )
         try:
             if self.remember:
                 if not inspect.ismethod(obj):
                     self._remembered[obj] = objects
                 else:
-                    signature = "{}.{}.{}".format(obj.__module__, obj.__self__.__class__.__name__, obj.__name__)
+                    signature = "{}.{}.{}".format(
+                        obj.__module__, obj.__self__.__class__.__name__, obj.__name__
+                    )
                     self._remembered[signature] = objects
             return obj(*objects)
         except (TypeError,) as e:
             exception = ContainerError
             exception.from_obj = obj
 
-            raise exception(str(e) + ' while calling {}'.format(obj)) from e
+            raise exception(str(e) + " while calling {}".format(obj)) from e
 
     def collect(self, search):
         """Fetch a dictionary of objects using a search query.
@@ -214,22 +251,28 @@ class App:
             #    'Sentry*Hook'
             for key, value in self.providers.items():
                 if isinstance(key, str):
-                    if search.startswith('*'):
-                        if key.endswith(search.split('*')[1]):
+                    if search.startswith("*"):
+                        if key.endswith(search.split("*")[1]):
                             providers.update({key: value})
-                    elif search.endswith('*'):
-                        if key.startswith(search.split('*')[0]):
+                    elif search.endswith("*"):
+                        if key.startswith(search.split("*")[0]):
                             providers.update({key: value})
-                    elif '*' in search:
-                        split_search = search.split('*')
-                        if key.startswith(split_search[0]) and key.endswith(split_search[1]):
+                    elif "*" in search:
+                        split_search = search.split("*")
+                        if key.startswith(split_search[0]) and key.endswith(
+                            split_search[1]
+                        ):
                             providers.update({key: value})
                     else:
                         raise AttributeError(
-                            "There is no '*' in your collection search")
+                            "There is no '*' in your collection search"
+                        )
         else:
             for provider_key, provider_class in self.providers.items():
-                if (inspect.isclass(provider_class) and issubclass(provider_class, search)) or isinstance(provider_class, search):
+                if (
+                    inspect.isclass(provider_class)
+                    and issubclass(provider_class, search)
+                ) or isinstance(provider_class, search):
                     providers.update({provider_key: provider_class})
 
         return providers
@@ -254,18 +297,28 @@ class App:
 
         for _, provider_class in self.providers.items():
 
-            if parameter.annotation == provider_class or parameter.annotation == provider_class.__class__:
+            if (
+                parameter.annotation == provider_class
+                or parameter.annotation == provider_class.__class__
+            ):
                 obj = provider_class
-                self.fire_hook('resolve', parameter, obj)
+                self.fire_hook("resolve", parameter, obj)
 
                 return obj
-            elif inspect.isclass(provider_class) and issubclass(provider_class, parameter.annotation) or issubclass(provider_class.__class__, parameter.annotation):
+            elif (
+                inspect.isclass(provider_class)
+                and issubclass(provider_class, parameter.annotation)
+                or issubclass(provider_class.__class__, parameter.annotation)
+            ):
                 obj = provider_class
-                self.fire_hook('resolve', parameter, obj)
+                self.fire_hook("resolve", parameter, obj)
                 return obj
 
         raise ContainerError(
-            'The dependency with the {0} annotation could not be resolved by the container'.format(parameter))
+            "The dependency with the {0} annotation could not be resolved by the container".format(
+                parameter
+            )
+        )
 
     def get_parameters(self, obj):
         return inspect.signature(obj).parameters.items()
@@ -284,16 +337,17 @@ class App:
         """
         parameter = str(keyword)
 
-        if parameter != 'self' and parameter in self.providers:
+        if parameter != "self" and parameter in self.providers:
             obj = self.providers[parameter]
-            self.fire_hook('resolve', parameter, obj)
+            self.fire_hook("resolve", parameter, obj)
             return obj
-        elif '=' in parameter:
+        elif "=" in parameter:
             return keyword.default
 
         raise ContainerError(
-            'The parameter dependency with the key of {0} could not be found in the container'.format(
-                parameter)
+            "The parameter dependency with the key of {0} could not be found in the container".format(
+                parameter
+            )
         )
 
     def on_bind(self, key, obj):
@@ -306,7 +360,7 @@ class App:
         Returns:
             self
         """
-        return self._bind_hook('bind', key, obj)
+        return self._bind_hook("bind", key, obj)
 
     def on_make(self, key, obj):
         """Set some listeners for when a specific key or class is made from the container.
@@ -318,7 +372,7 @@ class App:
         Returns:
             self
         """
-        return self._bind_hook('make', key, obj)
+        return self._bind_hook("make", key, obj)
 
     def on_resolve(self, key, obj):
         """Set some listeners for when a specific key or class is resolved from the container.
@@ -330,7 +384,7 @@ class App:
         Returns:
             self
         """
-        return self._bind_hook('resolve', key, obj)
+        return self._bind_hook("resolve", key, obj)
 
     def swap(self, obj, callback):
         self.swaps.update({obj: callback})
@@ -347,9 +401,12 @@ class App:
         Returns:
             None
         """
-        if str(key) in self._hooks[action] or \
-                inspect.isclass(obj) and \
-                obj in self._hooks[action] or obj.__class__ in self._hooks[action]:
+        if (
+            str(key) in self._hooks[action]
+            or inspect.isclass(obj)
+            and obj in self._hooks[action]
+            or obj.__class__ in self._hooks[action]
+        ):
 
             for _, hook_list in self._hooks[action].items():
                 for hook_obj in hook_list:
@@ -388,15 +445,22 @@ class App:
         for _, provider_class in self.providers.items():
             if obj in (provider_class, provider_class.__class__):
                 return_obj = provider_class
-                self.fire_hook('resolve', obj, return_obj)
+                self.fire_hook("resolve", obj, return_obj)
                 return return_obj
-            elif inspect.isclass(provider_class) and issubclass(provider_class, obj) or issubclass(provider_class.__class__, obj):
+            elif (
+                inspect.isclass(provider_class)
+                and issubclass(provider_class, obj)
+                or issubclass(provider_class.__class__, obj)
+            ):
                 return_obj = provider_class
-                self.fire_hook('resolve', obj, return_obj)
+                self.fire_hook("resolve", obj, return_obj)
                 return return_obj
 
         raise MissingContainerBindingNotFound(
-            'The dependency with the {0} annotation could not be resolved by the container'.format(obj))
+            "The dependency with the {0} annotation could not be resolved by the container".format(
+                obj
+            )
+        )
 
     def __contains__(self, obj):
         return self.has(obj)

@@ -13,5 +13,5 @@ class HomeController:
 
     def show(self, request: Request, view: View, auth: Auth):
         if not auth.user():
-            request.redirect('/login')
-        return view.render('auth/home')
+            request.redirect("/login")
+        return view.render("auth/home")

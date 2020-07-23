@@ -6,7 +6,6 @@ from ...request import Request
 
 
 class AuthCookieDriver(BaseDriver, AuthContract):
-
     def __init__(self, request: Request):
         """AuthCookieDriver initializer.
 
@@ -24,9 +23,9 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             Model|bool
         """
-        if self.request.get_cookie('token') and auth_model:
+        if self.request.get_cookie("token") and auth_model:
             return auth_model.where(
-                'remember_token', self.request.get_cookie('token')
+                "remember_token", self.request.get_cookie("token")
             ).first()
 
         return False
@@ -42,7 +41,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.request.cookie('token', remember_token)
+        return self.request.cookie("token", remember_token)
 
     def delete(self):
         """Deletes the state depending on the implementation of this driver.
@@ -50,7 +49,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.request.delete_cookie('token')
+        return self.request.delete_cookie("token")
 
     def logout(self):
         """Deletes the state depending on the implementation of this driver.

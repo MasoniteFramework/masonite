@@ -32,13 +32,13 @@ class MailTerminalDriver(BaseMailDriver, MailContract):
         if not message:
             message = self.message_body
 
-        self.logger.info('***************************************')
+        self.logger.info("***************************************")
 
-        self.logger.info('To: {}'.format(self.mail_to_header))
-        self.logger.info('From: {}'.format(self.mail_from_header))
-        self.logger.info('Subject: {}'.format(self.message_subject))
-        self.logger.info('Reply-To: {}'.format(self.message_reply_to))
-        self.logger.info('Message: ')
+        self.logger.info("To: {}".format(self.mail_to_header))
+        self.logger.info("From: {}".format(self.mail_from_header))
+        self.logger.info("Subject: {}".format(self.message_subject))
+        self.logger.info("Reply-To: {}".format(self.message_reply_to))
+        self.logger.info("Message: ")
         self.logger.info(message)
 
-        self.logger.info('***************************************')
+        self.logger.info("***************************************")

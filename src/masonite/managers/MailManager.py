@@ -12,8 +12,8 @@ class MailManager(Manager, MailManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'mail'
-    driver_prefix = 'Mail'
+    config = "mail"
+    driver_prefix = "Mail"
 
     def helper(self):
         """Helper Method to work with returning the driver from the MailManager.
@@ -21,7 +21,7 @@ class MailManager(Manager, MailManagerContract):
         Returns:
             Mail Driver
         """
-        return self.driver(config('mail.driver'))
+        return self.driver(config("mail.driver"))
 
 
 class Mail:

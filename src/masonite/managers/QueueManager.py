@@ -11,8 +11,8 @@ class QueueManager(Manager, QueueManagerContract):
         Manager {from .managers.Manager} -- The base Manager class.
     """
 
-    config = 'queue'
-    driver_prefix = 'Queue'
+    config = "queue"
+    driver_prefix = "Queue"
 
 
 class Queue:

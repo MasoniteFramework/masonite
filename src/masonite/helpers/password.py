@@ -14,6 +14,6 @@ def password(password_string):
     Returns:
         string -- The encrypted string.
     """
-    return bytes(bcrypt.hashpw(
-        bytes(password_string, 'utf-8'), bcrypt.gensalt()
-    )).decode('utf-8')
+    return bytes(
+        bcrypt.hashpw(bytes(password_string, "utf-8"), bcrypt.gensalt())
+    ).decode("utf-8")

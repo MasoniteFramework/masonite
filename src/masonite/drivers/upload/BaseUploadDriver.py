@@ -10,7 +10,7 @@ from ...helpers import config
 class BaseUploadDriver(BaseDriver):
     """Base class that all upload drivers inherit from."""
 
-    accept_file_types = ('jpg', 'jpeg', 'png', 'gif', 'bmp')
+    accept_file_types = ("jpg", "jpeg", "png", "gif", "bmp")
 
     def accept(self, *args, **kwargs):
         """Set file types to accept before uploading.
@@ -21,10 +21,10 @@ class BaseUploadDriver(BaseDriver):
 
         extensions = list(args)
 
-        if '*' in extensions and len(extensions) > 1:
+        if "*" in extensions and len(extensions) > 1:
             raise ValueError("When uses '*' isn't allowed accept other file type.")
 
-        if extensions == ['*']:
+        if extensions == ["*"]:
             self.accept_file_types = None
         else:
             self.accept_file_types = args
@@ -56,11 +56,11 @@ class BaseUploadDriver(BaseDriver):
             string -- Returns the location it uploaded to.
         """
         if not location:
-            location = config('storage.drivers.disk.location')
+            location = config("storage.drivers.disk.location")
 
-        if '.' in location:
-            location = location.split('.')
-            return config('storage.drivers')[location[0]]['location'][location[1]]
+        if "." in location:
+            location = location.split(".")
+            return config("storage.drivers")[location[0]]["location"][location[1]]
         elif isinstance(location, str):
             return location
         elif isinstance(location, dict):
@@ -73,6 +73,6 @@ class BaseUploadDriver(BaseDriver):
 
     def get_extension(self, fileitem):
         if isinstance(fileitem, _io.TextIOWrapper):
-            return fileitem.name.split('.')[-1]
+            return fileitem.name.split(".")[-1]
         else:
-            return fileitem.filename.split('.')[-1]
+            return fileitem.filename.split(".")[-1]

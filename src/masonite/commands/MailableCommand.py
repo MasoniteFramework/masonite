@@ -10,7 +10,7 @@ class MailableCommand(BaseScaffoldCommand):
         {name : Name of the job you want to create}
     """
 
-    scaffold_name = 'Mailable'
-    template = '/masonite/snippets/scaffold/mailable'
-    base_directory = 'app/mailable/'
+    scaffold_name = "Mailable"
+    template = "/masonite/snippets/scaffold/mailable"
+    base_directory = "app/mailable/"
     postfix = "Mailable"

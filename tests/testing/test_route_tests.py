@@ -121,5 +121,6 @@ class TestUnitTest(TestCase):
 
     def test_capture_output(self):
         with self.captureOutput() as output:
-        
+            print('hello', end='')
+
         self.assertEqual(output.getvalue(), 'hello')

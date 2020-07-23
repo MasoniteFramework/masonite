@@ -3,10 +3,9 @@
 import copy
 import re
 
-from masonite.helpers import deprecated
 
 from ...app import App
-from ...helpers import config
+from ...helpers import config, deprecated
 from ...response import Responsable
 from .. import BaseDriver
 

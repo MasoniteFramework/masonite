@@ -4,10 +4,6 @@ import inspect
 import pydoc
 import collections
 
-# from orator.support.collection import Collection as collect
-from masonite.orm.collection import Collection as collect
-
-
 class Dot:
     def dot(self, search, dictionary, default=None):
         """The search string in dot notation to look into the dictionary for.
@@ -49,6 +45,7 @@ class Dot:
 
                 if isinstance(dic, list):
                     try:
+                        from masonite.orm.collection import Collection as collect
                         return collect(dic).pluck(searching[searching.index("*") + 1])
                     except KeyError:
                         return []

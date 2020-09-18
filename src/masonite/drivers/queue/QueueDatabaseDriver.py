@@ -75,11 +75,16 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         )
         schema = schema.connection(channel)
         while True:
-            jobs = schema.table("queue_jobs").where("ran_at", None).get()
+            jobs = schema.table("queue_jobs").where_null("ran_at").get()
             if not jobs.count():
                 time.sleep(5)
 
             for job in jobs:
+                schema.table("queue_jobs").where("id", job["id"]).update(
+                    {
+                        "ran_at": pendulum.now().to_datetime_string(),
+                    }
+                )
                 unserialized = pickle.loads(job.serialized)
                 obj = unserialized["obj"]
                 args = unserialized["args"]
@@ -96,7 +101,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                     else:
                         wait_time = pendulum.instance(job["wait_until"])
 
-                # print(job['wait_until'], wait_time.is_future())
                 if job["wait_until"] and wait_time.is_future():
                     continue
                 try:

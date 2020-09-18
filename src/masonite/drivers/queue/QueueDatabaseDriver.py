@@ -75,12 +75,14 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         )
         schema = schema.connection(channel)
         while True:
-            jobs = schema.table("queue_jobs").where_null("ran_at").get()
+            builder = schema.table("queue_jobs")
+            jobs = builder.where_null("ran_at").where(schema.table("queue_jobs").where_null('wait_until').or_where('wait_until', '<=', pendulum.now().to_datetime_string())).limit(1).get()
+
             if not jobs.count():
                 time.sleep(5)
 
             for job in jobs:
-                schema.table("queue_jobs").where("id", job["id"]).update(
+                builder.where("id", job["id"]).update(
                     {
                         "ran_at": pendulum.now().to_datetime_string(),
                     }
@@ -91,18 +93,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 callback = unserialized["callback"]
                 ran = job.attempts
 
-                wait_time = job["wait_until"]
-
-                if not job["wait_until"]:
-                    wait_time = pendulum.now()
-                else:
-                    if isinstance(wait_time, str):
-                        wait_time = pendulum.parse(job["wait_until"])
-                    else:
-                        wait_time = pendulum.instance(job["wait_until"])
-
-                if job["wait_until"] and wait_time.is_future():
-                    continue
                 try:
                     try:
                         if inspect.isclass(obj):
@@ -115,7 +105,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     try:
                         # attempts = 1
-                        schema.table("queue_jobs").where("id", job["id"]).update(
+                        builder.where("id", job["id"]).update(
                             {
                                 "ran_at": pendulum.now().to_datetime_string(),
                                 "attempts": job["attempts"] + 1,
@@ -129,7 +119,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     if not obj.run_again_on_fail:
                         # ch.basic_ack(delivery_tag=method.delivery_tag)
-                        schema.table("queue_jobs").where("id", job["id"]).update(
+                        builder.where("id", job["id"]).update(
                             {
                                 "ran_at": pendulum.now().to_datetime_string(),
                                 "failed": 1,
@@ -139,12 +129,12 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
                     if ran < obj.run_times and isinstance(obj, Queueable):
                         time.sleep(1)
-                        schema.table("queue_jobs").where("id", job["id"]).update(
+                        builder.where("id", job["id"]).update(
                             {"attempts": job["attempts"] + 1,}
                         )
                         continue
                     else:
-                        schema.table("queue_jobs").where("id", job["id"]).update(
+                        builder.where("id", job["id"]).update(
                             {
                                 "attempts": job["attempts"] + 1,
                                 "ran_at": pendulum.now().to_datetime_string(),

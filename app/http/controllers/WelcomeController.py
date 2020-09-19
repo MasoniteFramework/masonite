@@ -2,12 +2,14 @@
 
 from src.masonite.view import View
 from src.masonite.controllers import Controller
+from app.jobs.TestJob import TestJob
+from src.masonite import Queue
 
 
 class WelcomeController(Controller):
     """Controller For Welcoming The User."""
 
-    def show(self, view: View):
+    def show(self, view: View, queue: Queue):
         """Show the welcome page.
 
         Arguments:
@@ -17,4 +19,5 @@ class WelcomeController(Controller):
         Returns:
             masonite.view.View -- The Masonite view class.
         """
+        queue.push(TestJob)
         return view.render('welcome')

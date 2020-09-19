@@ -130,7 +130,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                     if ran < obj.run_times and isinstance(obj, Queueable):
                         time.sleep(1)
                         builder.where("id", job["id"]).update(
-                            {"attempts": job["attempts"] + 1,}
+                            {"attempts": job["attempts"] + 1}
                         )
                         continue
                     else:

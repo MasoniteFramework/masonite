@@ -1,5 +1,8 @@
 const mix = require("laravel-mix");
+require("laravel-mix-vue3");
 
+// For Tailwind CSS
+// const tailwindcss = require("tailwindcss")
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,5 +15,11 @@ const mix = require("laravel-mix");
  */
 
 mix
-  .js("resources/js/app.js", "public/js")
-  .sass("resources/sass/app.scss", "public/css");
+  .vue3("resources/js/app.js", "storage/compiled/js")
+  .sass("resources/sass/app.scss", "storage/compiled/css");
+
+// For Tailwind CSS, append
+// .options({
+//     processCssUrls: false,
+//     postCss: [ tailwindcss('tailwind.config.js') ],
+//   })

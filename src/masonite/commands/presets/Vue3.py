@@ -56,11 +56,11 @@ class Vue3(Preset):
 
         shutil.copyfile(
             os.path.dirname(__file__) + "/vue3-stubs/HelloWorld.vue",
-            os.path.join("resources/js/components/", "HelloWorld.vue")
+            os.path.join("resources/js/components/", "HelloWorld.vue"),
         )
         shutil.copyfile(
             os.path.dirname(__file__) + "/vue3-stubs/App.vue",
-            os.path.join("resources/js/", "App.vue")
+            os.path.join("resources/js/", "App.vue"),
         )
 
     def update_bootstrapping(self):
@@ -77,5 +77,5 @@ class Vue3(Preset):
         """Copy an example app view with assets included"""
         shutil.copyfile(
             os.path.dirname(__file__) + "/vue3-stubs/app.html",
-            "resources/templates/app_vue3.html"
+            "resources/templates/app_vue3.html",
         )

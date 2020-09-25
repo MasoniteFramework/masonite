@@ -53,7 +53,7 @@ class Vue3(Preset):
         vue_component = "resources/js/components/Example.js"
         if os.path.exists(os.path.realpath(vue_component)):
             os.remove(vue_component)
-   
+
         shutil.copyfile(
             os.path.dirname(__file__) + "/vue3-stubs/HelloWorld.vue",
             os.path.join("resources/js/components/", "HelloWorld.vue")

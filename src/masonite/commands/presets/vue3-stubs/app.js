@@ -25,10 +25,14 @@ const app = createApp({});
  * components and automatically register them with their "basename".
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+
+const files = require.context("./", true, /\.vue$/i);
+files
+  .keys()
+  .map((key) =>
+    app.component(key.split("/").pop().split(".")[0], files(key).default)
+  );
  */
-// TODO: update for Vue 3.0
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 /**
 Or you can register components manually

@@ -1,10 +1,10 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <hello-world msg="Hello Vue 3.0" />
+  <img alt="Vue logo" src="https://v3.vuejs.org/logo.png" />
+  <hello-world msg="Hello Masonite and Vue 3.0" />
 </template>
 
 <script>
-import HelloWorld from "./HelloWorld.vue";
+import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
   name: "App",

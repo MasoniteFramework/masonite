@@ -2,6 +2,7 @@
 from cleo import Command
 from ..commands.presets.React import React
 from ..commands.presets.Vue import Vue
+from ..commands.presets.Vue3 import Vue3
 from ..commands.presets.Bootstrap import Bootstrap
 from ..commands.presets.Remove import Remove
 
@@ -17,7 +18,7 @@ class PresetCommand(Command):
     def handle(self):
         self.info("Scaffolding Application ...")
         preset_name = self.argument("name")
-        if preset_name not in ["react", "vue", "remove", "bootstrap"]:
+        if preset_name not in ["react", "vue", "vue3", "remove", "bootstrap"]:
             raise ValueError("Invalid preset")
         return getattr(self, preset_name)()
 
@@ -40,6 +41,17 @@ class PresetCommand(Command):
         self.info("Vue scaffolding installed successfully.")
         self.comment(
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
+        )
+
+    def vue3(self):
+        """Add Vue 3.0 frontend while also removing React (if it was previously selected)"""
+        Vue3().install()
+        self.info("Vue 3.0 scaffolding installed successfully.")
+        self.comment(
+            'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
+        )
+        self.comment(
+            'Then you can use the view app_vue3 as demo.'
         )
 
     def bootstrap(self):

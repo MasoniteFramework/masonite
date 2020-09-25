@@ -31,7 +31,6 @@ class Vue3(Preset):
             packages.pop(package, None)
 
         packages["vue"] = "^3.0.0-rc.1"
-        # TODO: put in dev deps
         packages["@vue/compiler-sfc"] = "^3.0.0"
         packages["laravel-mix"] = "^5.0.5"
         packages["laravel-mix-vue3"] = "^0.7.0"

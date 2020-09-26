@@ -82,6 +82,7 @@ class Dot:
     def flatten(self, d, parent_key="", sep="."):
         items = []
         for k, v in d.items():
+            print(k,v)
             new_key = parent_key + sep + k if parent_key else k
             if isinstance(v, collections.MutableMapping):
                 items.append((new_key, v))
@@ -192,6 +193,80 @@ class Dot:
 
         return value
 
+    def dict_dot_no_serialize(self, search, dictionary, default=""):
+        """The search string in dot notation to look into the dictionary for.
+
+        Arguments:
+            search {string} -- This should be a string in dot notation
+                                like 'key.key.value'.
+            dictionary {dict} -- A normal dictionary which will be searched using
+                                the search string in dot notation.
+
+        Keyword Arguments:
+            default {string} -- The default value if nothing is found
+                                in the dictionary. (default: {None})
+
+        Returns:
+            string -- Returns the value found the dictionary or the default
+                        value specified above if nothing is found.
+        """
+        if "." not in search:
+            if search == "":
+                return dictionary
+            try:
+                return dictionary[search]
+            except KeyError:
+                return default
+
+        searching = search.split(".")
+        possible = None
+        if "*" not in search:
+            print("flatten")
+            return self.flatten(dictionary).get(search, default)
+
+        while searching:
+            dic = dictionary
+            for value in searching:
+                if not dic:
+                    if "*" in searching:
+                        return []
+                    return default
+
+                if isinstance(dic, list):
+                    try:
+                        print("dont know !")
+                        return dic
+                        # return (
+                        #     collect(dic)
+                        #     .pluck(searching[searching.index("*") + 1])
+                        #     .serialize()
+                        # )
+                    except KeyError:
+                        return []
+
+                if not isinstance(dic, dict):
+                    return default
+
+                dic = dic.get(value)
+
+                if isinstance(dic, str) and dic.isnumeric():
+                    continue
+
+                if (
+                    dic
+                    and not isinstance(dic, int)
+                    and hasattr(dic, "__len__")
+                    and len(dic) == 1
+                    and not isinstance(dic[list(dic)[0]], dict)
+                ):
+                    possible = dic
+
+            if not isinstance(dic, dict):
+                return dic
+
+            del searching[-1]
+        return possible
+
 
 def config(path, default=""):
     """Used to fetch a value from a configuration file
@@ -205,7 +280,23 @@ def config(path, default=""):
     Returns:
         mixed
     """
-    return Dot().locate("config." + path, default)
+    # return Dot().locate("config." + path, default)
+    from wsgi import container
+    config_repo = container.make("Config")
+    # root module should return the module 
+    if "." not in path:
+        return Dot().locate("config." + path, default)
+    else:
+        return Dot().dict_dot_no_serialize("config." + path, config_repo.all(), default)
+    # return config_repo.get("config." + path, default)
+
+
+def set_config(path, value=""):
+    from wsgi import container
+    config_repo = container.make("Config")
+    # TODO: we should be able to set the dict with dot notation
+    # "config.mail.drivers.smtp.host" should set the nested value host
+    return config_repo._set(path, value)
 
 
 def load(path, default=""):

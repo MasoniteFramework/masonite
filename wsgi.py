@@ -26,7 +26,11 @@ only run once when the server is started. Providers will be ran
 once if the wsgi attribute on a provider is False.
 """
 
-for provider in config('providers.providers'):
+# At this step config repository is not build because AppProvider is not booted
+# so the helper can't work
+# for provider in config('providers.providers'):
+from src.masonite.helpers import Dot
+for provider in Dot().locate('config.providers.providers'):
     located_provider = provider()
     located_provider.load_app(container).register()
     if located_provider.wsgi:

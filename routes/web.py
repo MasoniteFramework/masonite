@@ -6,6 +6,7 @@ from src.masonite.routes import Get, Post, Redirect, RouteGroup, Patch, Options
 ROUTES = [
     Get().route('/test', None).middleware('auth'),
     Get('/bad', 'TestController@bad'),
+    Get('/welcome', 'WelcomeController@show'),
     Get('/keyerror', 'TestController@keyerror'),
     Get().route('/queue', 'TestController@queue'),
     Options('options', 'TestController@show'),

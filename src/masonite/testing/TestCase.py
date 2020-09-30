@@ -142,7 +142,7 @@ class TestCase(unittest.TestCase):
             )
 
         custom_wsgi.update(
-            {"QUERY_STRING": urlencode(params),}
+            {"QUERY_STRING": urlencode(params)}
         )
 
         self.run_container(custom_wsgi)

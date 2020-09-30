@@ -44,7 +44,7 @@ setup(
     version=meta['__version__'],
     install_requires=[
         'bcrypt>=3.1,<3.2',
-        'cleo>=0.6,<0.7',
+        'cleo>=0.8,<0.8',
         'cryptography>=2.3,<=2.9',
         'hupper<1.10',
         'Jinja2>=2,<3',

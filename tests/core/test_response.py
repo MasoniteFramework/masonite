@@ -1,6 +1,6 @@
 
-from masonite.orm.collection import Collection
-from masonite.orm.models import Model
+from masoniteorm.collection import Collection
+from masoniteorm.models import Model
 
 from app.http.controllers.TestController import \
     TestController as ControllerTest

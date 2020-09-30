@@ -1,7 +1,7 @@
 
 from src.masonite.testing import TestCase
 
-from masonite.orm.models import Model
+from masoniteorm.models import Model
 from src.masonite import env
 
 

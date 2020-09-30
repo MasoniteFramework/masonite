@@ -1,4 +1,4 @@
-from masonite.orm.factories import Factory
+from masoniteorm.factories import Factory
 from app.User import User
 
 factory = Factory

@@ -2,7 +2,7 @@ import datetime
 import time
 
 from config import application
-from masonite.orm.models import Model
+from masoniteorm.models import Model
 from src.masonite.app import App
 from src.masonite.auth import Auth, MustVerifyEmail, Sign
 from src.masonite.auth.guards import Guard, WebGuard

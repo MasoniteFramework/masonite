@@ -2,7 +2,7 @@ import subprocess
 
 from ..helpers import config, HasColoredCommands
 from ..packages import add_venv_site_packages
-from masonite.orm.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class Migrations(HasColoredCommands):

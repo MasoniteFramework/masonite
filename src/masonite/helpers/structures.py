@@ -5,7 +5,7 @@ import pydoc
 import collections
 
 # from orator.support.collection import Collection as collect
-from masonite.orm.collection import Collection as collect
+from masoniteorm.collection import Collection as collect
 
 
 class Dot:

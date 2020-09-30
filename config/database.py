@@ -1,6 +1,6 @@
 import os
 
-from masonite.orm.builder.QueryBuilder import QueryBuilder
+from masoniteorm.query import QueryBuilder
 
 from config.database import QueryBuilder
 from src.masonite.environment import LoadEnvironment, env

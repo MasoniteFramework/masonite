@@ -11,7 +11,7 @@ from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
-from masonite.orm.factories import Factory
+from masoniteorm.factories import Factory
 
 from .MockRoute import MockRoute
 

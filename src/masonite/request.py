@@ -952,12 +952,15 @@ class Request(Extendable):
         raise AttributeError("class 'Request' has no attribute {}".format(key))
 
     def with_errors(self, errors):
+        """Easily attach errors message to session request."""
         return self.with_flash("error", errors)
 
     def with_success(self, success):
+        """Easily attach success message to session request."""
         return self.with_flash("success", success)
 
     def with_flash(self, key, value):
+        """Easily attach data to session request."""
         self.session.flash(key, value)
         return self
 

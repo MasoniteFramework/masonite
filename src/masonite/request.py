@@ -952,7 +952,13 @@ class Request(Extendable):
         raise AttributeError("class 'Request' has no attribute {}".format(key))
 
     def with_errors(self, errors):
-        self.session.flash("errors", errors)
+        return self.with_flash("error", errors)
+
+    def with_success(self, success):
+        return self.with_flash("success", success)
+
+    def with_flash(self, key, value):
+        self.session.flash(key, value)
         return self
 
     def reset_redirections(self):

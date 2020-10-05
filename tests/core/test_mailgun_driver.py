@@ -83,7 +83,7 @@ if os.getenv('MAILGUN_SECRET'):
             self.assertEqual(data['html'], '<div>Foo</div>')
             self.assertNotIn('text', data)
             self.assertEqual(warning.warnings[0].message.args[0],
-                             'Passing message to .send() is a deprecated. Please use .text() and .html().')
+                             'Passing message to .send() is deprecated. Please use .text() and .html().')
 
         def test_deprecated_send_method_using_positional_arg(self):
             with self.assertWarns(DeprecationWarning) as dw:

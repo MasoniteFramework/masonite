@@ -71,5 +71,6 @@ class BroadcastPubNubDriver(BroadcastContract, BaseDriver):
 
         for channel in channels:
             envelope = pubnub.publish().channel(channel).message(message).sync()
-
+            if envelope.status.is_error():
+                print("PubNub Broadcast: error sending message to channel {0}.".format(channel))
         return message

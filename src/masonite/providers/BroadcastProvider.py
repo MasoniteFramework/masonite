@@ -1,6 +1,6 @@
 """A RedirectionProvider Service Provider."""
 
-from ..drivers import BroadcastAblyDriver, BroadcastPusherDriver
+from ..drivers import BroadcastAblyDriver, BroadcastPusherDriver, BroadcastPubNubDriver
 from ..managers import BroadcastManager
 from ..provider import ServiceProvider
 from .. import Broadcast
@@ -14,6 +14,7 @@ class BroadcastProvider(ServiceProvider):
     def register(self):
         self.app.bind("BroadcastPusherDriver", BroadcastPusherDriver)
         self.app.bind("BroadcastAblyDriver", BroadcastAblyDriver)
+        self.app.bind("BroadcastPubnubDriver", BroadcastPubNubDriver)
         self.app.bind("BroadcastManager", BroadcastManager(self.app))
 
     def boot(self):

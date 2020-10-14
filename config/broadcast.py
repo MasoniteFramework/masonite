@@ -8,7 +8,7 @@ drivers allow you to push data from your server to all your clients
 to show data updates to your clients in real time without having
 to constantly refresh the page or send constant ajax requests
 
-Supported: 'pusher', 'ably'
+Supported: 'pusher', 'ably', 'pubnub'
 """
 
 DRIVER = env('BROADCAST_DRIVER', 'pusher')
@@ -26,5 +26,10 @@ DRIVERS = {
     },
     'ably': {
         'secret': env('ABLY_SECRET', 'api:key')
+    },
+    'pubnub': {
+        'secret': env('PUBNUB_SECRET', ''),
+        'publish_key': env('PUBNUB_PUBLISH_KEY', ''),
+        'subscribe_key': env('PUBNUB_SUBSCRIBE_KEY', '')
     }
 }

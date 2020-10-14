@@ -8,6 +8,7 @@ from .queue.BaseQueueDriver import BaseQueueDriver
 from .cache.BaseCacheDriver import BaseCacheDriver
 from .broadcast.BroadcastAblyDriver import BroadcastAblyDriver
 from .broadcast.BroadcastPusherDriver import BroadcastPusherDriver
+from .broadcast.BroadcastPubNubDriver import BroadcastPubNubDriver
 from .cache.CacheDiskDriver import CacheDiskDriver
 from .cache.CacheRedisDriver import CacheRedisDriver
 from .mail.MailMailgunDriver import MailMailgunDriver

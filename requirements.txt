@@ -26,3 +26,4 @@ tabulate>=0.8,<0.9
 tldextract>=2.2,<2.3
 whitenoise>=3.3
 exceptionite
+pubnub>=4.5.1

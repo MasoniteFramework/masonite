@@ -58,6 +58,7 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
             app_id=str(configuration["app_id"]),
             key=configuration["client"],
             secret=configuration["secret"],
+            cluster=configuration["cluster"],
             ssl=self.ssl_message,
         )
 

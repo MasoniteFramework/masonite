@@ -23,6 +23,7 @@ DRIVERS = {
         'app_id': env('PUSHER_APP_ID', '29382xx..'),
         'client': env('PUSHER_CLIENT', 'shS8dxx..'),
         'secret': env('PUSHER_SECRET', 'HDGdjss..'),
+        'cluster': env('PUSHER_CLUSTER', 'eu'),
     },
     'ably': {
         'secret': env('ABLY_SECRET', 'api:key')

@@ -10,10 +10,9 @@ class TestVue(unittest.TestCase):
 
     def test_update_package_array(self):
         expected_packages = {
-            'vue': '^3.0.0-rc.1',
+            'vue': '^3.0.0',
             '@vue/compiler-sfc': '^3.0.0',
-            'laravel-mix': '^5.0.5',
-            'laravel-mix-vue3': '^0.7.0',
+            'laravel-mix': '^6.0.0-beta.7',
             'vue-loader': '^16.0.0-beta.8'
         }
         # Verify it works with no existing packages

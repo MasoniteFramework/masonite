@@ -1,5 +1,5 @@
 const mix = require("laravel-mix");
-require("laravel-mix-vue3");
+const path = require("path");
 
 // For Tailwind CSS
 // const tailwindcss = require("tailwindcss")
@@ -15,7 +15,8 @@ require("laravel-mix-vue3");
  */
 
 mix
-  .vue3("resources/js/app.js", "storage/compiled/js")
+  .js("resources/js/app.js", "storage/compiled/js")
+  .vue({ version: 3 })
   .sass("resources/sass/app.scss", "storage/compiled/css");
 
 // For Tailwind CSS, append
@@ -23,3 +24,8 @@ mix
 //     processCssUrls: false,
 //     postCss: [ tailwindcss('tailwind.config.js') ],
 //   })
+
+// New Alias plugin
+mix.alias({
+  "@": path.resolve("resources/js"),
+});

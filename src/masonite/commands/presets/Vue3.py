@@ -1,4 +1,4 @@
-"""Vue Preset"""
+"""Vue 3 Preset"""
 import os
 import shutil
 from ..presets import Preset
@@ -30,10 +30,9 @@ class Vue3(Preset):
         for package in ["@babel/preset-react", "react", "react-dom"]:
             packages.pop(package, None)
 
-        packages["vue"] = "^3.0.0-rc.1"
+        packages["vue"] = "^3.0.0"
         packages["@vue/compiler-sfc"] = "^3.0.0"
-        packages["laravel-mix"] = "^5.0.5"
-        packages["laravel-mix-vue3"] = "^0.7.0"
+        packages["laravel-mix"] = "^6.0.0-beta.7"
         packages["vue-loader"] = "^16.0.0-beta.8"
 
         return packages

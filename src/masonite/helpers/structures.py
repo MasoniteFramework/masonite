@@ -4,7 +4,7 @@ import inspect
 import pydoc
 import collections
 
-from masonite.orm.collection import Collection as collect
+from masoniteorm.collection import Collection as collect
 
 
 class Dot:

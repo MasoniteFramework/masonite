@@ -48,7 +48,7 @@ setup(
         'cryptography>=2.3,<=2.9',
         'hupper<1.10',
         'Jinja2>=2,<3',
-        'masonite-orm>=0.4,<0.9',
+        'masonite-orm==0.7.0b',
         'passlib>=1.7,<1.8',
         'pendulum>=2.1,<2.2',
         'psutil>=5.4,<5.7',

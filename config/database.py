@@ -54,6 +54,6 @@ DATABASES = {
     },
 }
 
-ConnectionResolver.set_connection_details(DATABASES)
+ConnectionResolver().set_connection_details(DATABASES)
 
 DB = QueryBuilder(connection_details=DATABASES)

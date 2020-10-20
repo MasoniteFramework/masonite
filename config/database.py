@@ -43,6 +43,15 @@ DATABASES = {
         "prefix": "",
         "grammar": "postgres",
     },
+    'mssql': {
+        'driver': 'mssql',
+        'host': env('MSSQL_DATABASE_HOST'),
+        'user': env('MSSQL_DATABASE_USER'),
+        'password': env('MSSQL_DATABASE_PASSWORD'),
+        'database': env('MSSQL_DATABASE_DATABASE'),
+        'port': env('MSSQL_DATABASE_PORT'),
+        'prefix': ''
+    },
 }
 
 ConnectionResolver.set_connection_details(DATABASES)

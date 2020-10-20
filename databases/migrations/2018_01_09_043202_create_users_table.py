@@ -1,4 +1,4 @@
-from masonite.orm.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateUsersTable(Migration):

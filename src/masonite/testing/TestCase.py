@@ -11,7 +11,7 @@ from ..helpers.migrations import Migrations
 from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
-from masonite.orm.factories import Factory
+from masoniteorm.factories import Factory
 
 from .MockRoute import MockRoute
 
@@ -142,7 +142,7 @@ class TestCase(unittest.TestCase):
             )
 
         custom_wsgi.update(
-            {"QUERY_STRING": urlencode(params),}
+            {"QUERY_STRING": urlencode(params)}
         )
 
         self.run_container(custom_wsgi)

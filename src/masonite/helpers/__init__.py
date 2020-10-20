@@ -13,4 +13,4 @@ from .time import cookie_expire_time, parse_human_time
 from .optional import Optional as optional
 from .structures import config, Dot, load
 from .migrations import has_unmigrated_migrations
-from masonite.orm.collection import Collection as collect
+from masoniteorm.collection import Collection as collect

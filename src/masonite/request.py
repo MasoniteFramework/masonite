@@ -700,12 +700,16 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
+        print('getting cookie', provided_cookie)
         if "HTTP_COOKIE" in self.environ:
-            print('ecists', self.environ["HTTP_COOKIE"])
-            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
+            grab_cookie = cookies.SimpleCookie()
+            grab_cookie.load(self.environ["HTTP_COOKIE"])
             print('gg', grab_cookie)
 
+            print('cj', grab_cookie.items())
+
             if provided_cookie in grab_cookie:
+                print('loop', provided_cookie)
                 if decrypt:
                     try:
                         return Sign(self.encryption_key).unsign(

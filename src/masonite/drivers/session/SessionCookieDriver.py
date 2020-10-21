@@ -30,7 +30,9 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         Returns:
             string|None - Returns None if a value does not exist.
         """
+        print('fetching cookie', key)
         cookie = self.request.get_cookie("s_{0}".format(key))
+        print('got the cookie', cookie)
         if cookie:
             return self._get_serialization_value(cookie)
 
@@ -103,7 +105,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             "HTTP_COOKIE" in self.request.environ
             and self.request.environ["HTTP_COOKIE"]
         ):
-            cookies_original = self.request.environ["HTTP_COOKIE"]
+            cookies_original = self.request.environ["HTTP_COOKIE"].split(';')
             print(cookies_original)
             for cookie in cookies_original:
                 if flash_only:

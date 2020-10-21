@@ -50,6 +50,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, dict):
             value = json.dumps(value)
 
+        print('set cookie')
+
         self.request.cookie("s_{0}".format(key), value)
 
     def has(self, key):
@@ -101,7 +103,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             "HTTP_COOKIE" in self.request.environ
             and self.request.environ["HTTP_COOKIE"]
         ):
-            cookies_original = self.request.environ["HTTP_COOKIE"].split(";")
+            cookies_original = self.request.environ["HTTP_COOKIE"]
+            print(cookies_original)
             for cookie in cookies_original:
                 if flash_only:
                     if cookie.strip().startswith("f_"):
@@ -119,6 +122,8 @@ class SessionCookieDriver(SessionContract, BaseDriver):
                             data[0].replace("s_", "").replace("f_", "").strip()
                         )
                         cookies.update({cookie_name: self.get(cookie_name)})
+
+        print('returning cookies', cookies)
         return cookies
 
     def flash(self, key, value):

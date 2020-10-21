@@ -13,7 +13,7 @@ class ModelDocstringCommand(Command):
     """
 
     def handle(self):
-        from config.database import DB
+        from config.database import db as DB
 
         if self.option("connection") == "default":
             conn = DB.get_schema_manager().list_table_columns(self.argument("table"))

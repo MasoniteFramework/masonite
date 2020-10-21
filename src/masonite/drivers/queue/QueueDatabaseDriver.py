@@ -33,7 +33,8 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             options {**kwargs of options} - Additional options for async driver
         """
 
-        from config.database import DB as schema
+        from config.database import db as schema
+        from masoniteorm.query import QueryBuilder
 
         callback = options.get("callback", "handle")
         wait = options.get("wait", None)
@@ -50,7 +51,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 payload = pickle.dumps(
                     {"obj": job, "args": args, "kwargs": kwargs, "callback": callback}
                 )
-                schema.table("queue_jobs").insert(
+                schema.get_query_builder().table("queue_jobs").create(
                     {
                         "name": str(job),
                         "serialized": payload,
@@ -62,7 +63,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 )
 
     def consume(self, channel, **options):  # skipcq
-        from config.database import DB as schema, DATABASES
+        from config.database import db as schema, DATABASES
         from wsgi import container
 
         if not channel or channel == "default":

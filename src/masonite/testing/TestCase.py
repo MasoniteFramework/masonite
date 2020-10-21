@@ -75,20 +75,20 @@ class TestCase(unittest.TestCase):
             self.setUpDatabase()
 
     def startTransaction(self):
-        from config.database import DB
+        from config.database import db as DB
 
         DB.begin_transaction()
         self.__class__._transaction = True
 
     def stopTransaction(self):
-        from config.database import DB
+        from config.database import db as DB
 
         DB.rollback()
         self.__class__._transaction = False
 
     @classmethod
     def staticStopTransaction(cls):
-        from config.database import DB
+        from config.database import db as DB
 
         DB.rollback()
         cls._transaction = False
@@ -262,20 +262,20 @@ class TestCase(unittest.TestCase):
         return self
 
     def assertDatabaseHas(self, schema, value):
-        from config.database import DB
+        from masoniteorm.query import QueryBuilder
 
         table = schema.split(".")[0]
         column = schema.split(".")[1]
 
-        self.assertTrue(DB.table(table).where(column, value).first())
+        self.assertTrue(QueryBuilder().table(table).where(column, value).first())
 
     def assertDatabaseNotHas(self, schema, value):
-        from config.database import DB
+        from masoniteorm.query import QueryBuilder
 
         table = schema.split(".")[0]
         column = schema.split(".")[1]
 
-        self.assertFalse(DB.table(table).where(column, value).first())
+        self.assertFalse(QueryBuilder().table(table).where(column, value).first())
 
     def on_bind(self, obj, method):
         self.container.on_bind(obj, method)

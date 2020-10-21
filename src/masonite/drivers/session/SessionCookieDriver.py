@@ -141,7 +141,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         self.request.cookie(
             "f_{0}".format(key),
             value,
-            expires=config("session.drivers.cookie.flash_expires", "2 seconds"),
         )
 
     def get_error_messages(self):

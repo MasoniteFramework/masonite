@@ -18,7 +18,7 @@ class CookieJar:
         return aggregate.get(name)
 
     def exists(self, name):
-        return name in self.cookies
+        return name in self.cookies or name in self.loaded_cookies
 
     def delete(self, name):
         return self.cookies.pop(name)

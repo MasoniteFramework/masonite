@@ -691,17 +691,20 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
+        print('getting cookie', provided_cookie, decrypt)
         if decrypt:
+            print('decryt')
             try:
                 return Sign(self.encryption_key).unsign(
                     self.cookie_jar.get(provided_cookie).value
                 )
             except InvalidToken:
                 self.delete_cookie(provided_cookie)
+                print("couldnt get cookie")
                 return None
             except AttributeError:
                 pass
-
+        print('here', self.cookie_jar.loaded_cookies)
         if self.cookie_jar.exists(provided_cookie):
             return self.cookie_jar.get(provided_cookie).value
 

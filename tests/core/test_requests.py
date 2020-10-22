@@ -75,9 +75,6 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.param('value'), 'new')
         self.assertEqual(self.request.param('nullvalue'), False)
 
-    def test_request_appends_cookie(self):
-        self.assertEqual(self.request.cookie('appendcookie', 'value'), self.request)
-        assert 'appendcookie' in self.request.environ['HTTP_COOKIE']
 
     def test_request_input_can_get_dictionary_elements(self):
         self.request.request_variables = {
@@ -110,20 +107,18 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('filter.email'), 'user@email.com')
 
     def test_request_sets_and_gets_cookies(self):
-        self.request.cookie('setcookie', 'value')
-        self.assertEqual(self.request.get_cookie('setcookie'), 'value')
+        self.request.cookie('setcookie', 'value', encrypt=False)
+        self.assertEqual(self.request.get_cookie('setcookie', decrypt=False), 'value')
 
     def test_request_sets_expiration_cookie_2_months(self):
-        self.request.cookies = []
         self.request.cookie('setcookie_expiration', 'value', expires='2 months')
 
-        time = cookie_expire_time('2 months') + ' GMT'
+        time = cookie_expire_time('2 months')
 
         self.assertEqual(self.request.get_cookie('setcookie_expiration'), 'value')
-        self.assertEqual(self.request.get_raw_cookie('setcookie_expiration')['expires'], time)
+        self.assertEqual(self.request.get_raw_cookie('setcookie_expiration').expires, time)
 
     def test_delete_cookie(self):
-        self.request.cookies = []
         self.request.cookie('delete_cookie', 'value')
 
         self.assertEqual(self.request.get_cookie('delete_cookie'), 'value')
@@ -131,7 +126,6 @@ class TestRequest(unittest.TestCase):
         self.assertFalse(self.request.get_cookie('delete_cookie'))
 
     def test_delete_cookie_with_wrong_key(self):
-        self.request.cookies = []
         self.request.cookie('cookie', 'value')
         self.request.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
         self.assertIsNone(self.request.get_cookie('cookie'))
@@ -180,7 +174,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('test'), ['1', '2'])
 
     def test_request_get_cookies_returns_cookies(self):
-        self.assertEqual(self.request.get_cookies(), self.request.cookies)
+        self.assertEqual(self.request.get_cookies(), self.request.cookie_jar)
 
     def test_request_set_user_sets_object(self):
         self.assertEqual(self.request.set_user(object), self.request)

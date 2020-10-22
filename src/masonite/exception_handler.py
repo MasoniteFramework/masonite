@@ -98,7 +98,9 @@ class ExceptionHandler:
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())
-        handler.integrate(StackOverflowIntegration(),)
+        handler.integrate(
+            StackOverflowIntegration(),
+        )
         response.view(handler.render(), status=500)
 
 

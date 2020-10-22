@@ -40,7 +40,8 @@ class LoginController:
             masonite.request.Request -- The Masonite request class.
         """
         errors = request.validate(
-            validate.required(["email", "password"]), validate.email("email"),
+            validate.required(["email", "password"]),
+            validate.email("email"),
         )
 
         if errors:

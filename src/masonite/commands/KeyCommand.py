@@ -13,7 +13,6 @@ class KeyCommand(Command):
     """
 
     def handle(self):
-        store = self.option("store")
         key = bytes(Fernet.generate_key()).decode("utf-8")
 
         if self.option("dont-store"):

@@ -37,7 +37,7 @@ class TestSession(TestCase):
             self.assertEqual(session.get('username'), 'pep')
 
     def test_session_get_all_data(self):
-        for driver in ('cookie',):
+        for driver in ('cookie', 'memory'):
             session = self.container.make('SessionManager').driver(driver)
             session.request.environ['REMOTE_ADDR'] = 'get.all.data'
             session.set('username', 'pep')

@@ -30,9 +30,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         Returns:
             string|None - Returns None if a value does not exist.
         """
-        print('fetching cookie', key)
         cookie = self.request.get_cookie("s_{0}".format(key))
-        print('got the cookie', cookie)
         if cookie:
             return self._get_serialization_value(cookie)
 
@@ -52,7 +50,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, dict):
             value = json.dumps(value)
 
-        print('set cookie')
 
         self.request.cookie("s_{0}".format(key), value)
 
@@ -101,31 +98,19 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        if (
-            "HTTP_COOKIE" in self.request.environ
-            and self.request.environ["HTTP_COOKIE"]
-        ):
-            cookies_original = self.request.environ["HTTP_COOKIE"].split(';')
-            print(cookies_original)
-            for cookie in cookies_original:
-                if flash_only:
-                    if cookie.strip().startswith("f_"):
-                        data = cookie.split("=", 1)
-                        cookie_name = (
-                            data[0].replace("s_", "").replace("f_", "").strip()
-                        )
-                        cookies.update({cookie_name: self.get(cookie_name)})
-                else:
-                    if cookie.strip().startswith("s_") or cookie.strip().startswith(
-                        "f_"
-                    ):
-                        data = cookie.split("=", 1)
-                        cookie_name = (
-                            data[0].replace("s_", "").replace("f_", "").strip()
-                        )
-                        cookies.update({cookie_name: self.get(cookie_name)})
+        all_cookies = self.request.get_cookies().to_dict()
+        for key, value in all_cookies.items():
+            if not (key.startswith('f_') or key.startswith('s_')):
+                continue
+            
+            if flash_only and not key.startswith('f_'):
+                continue
 
-        print('returning cookies', cookies)
+            key = key.replace('f_', '').replace('s_', '')
+            
+            cookies.update({key: self.get(key)})
+        return cookies
+
         return cookies
 
     def flash(self, key, value):

@@ -23,6 +23,7 @@ from .helpers.Extendable import Extendable
 from .helpers.routes import compile_route_to_regex, query_parse
 from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
+from .cookies import CookieJar
 
 
 class Request(Extendable):
@@ -47,7 +48,7 @@ class Request(Extendable):
         Keyword Arguments:
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
-        self.cookies = []
+        self.cookie_jar = CookieJar()
         self._headers = {}
         self.url_params = {}
         self.redirect_url = False
@@ -261,6 +262,9 @@ class Request(Extendable):
             self._set_standardized_request_variables(environ["POST_DATA"])
         elif "QUERY_STRING" in environ and environ["QUERY_STRING"]:
             self._set_standardized_request_variables(environ["QUERY_STRING"])
+        
+        if "HTTP_COOKIE" in environ:
+            self.cookie_jar.load(environ['HTTP_COOKIE'])
 
         if self.has("__method"):
             self.__set_request_method()
@@ -556,7 +560,7 @@ class Request(Extendable):
             list -- List containing a tuple of headers.
         """
 
-        return self._compile_headers_to_tuple() + self.get_cookies()
+        return self._compile_headers_to_tuple() + self.cookie_jar.render_response()
 
     def _compile_headers_to_tuple(self):
         """Compiles the current headers to a list of tuples.
@@ -594,7 +598,7 @@ class Request(Extendable):
         headers = self.get_headers()
         self.reset_headers()
         self.url_params = {}
-        self.cookies = []
+        self.cookie_jar = CookieJar()
         return headers
 
     def set_params(self, params):
@@ -629,7 +633,7 @@ class Request(Extendable):
         return False
 
     def cookie(
-        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=""
+        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=None
     ):
         """Set a cookie in the browser.
 
@@ -654,20 +658,11 @@ class Request(Extendable):
             value = value
 
         if expires:
-            expires = "Expires={0};".format(cookie_expire_time(expires))
+            expires = cookie_expire_time(expires)
 
-        if not http_only:
-            http_only = ""
 
-        self.append_cookie(
-            "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path)
-        )
-        self.cookies.append(
-            (
-                "Set-Cookie",
-                "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path),
-            )
-        )
+        self.cookie_jar.add(key, value, expires=expires, http_only=http_only, path=path, timezone="GMT")
+
         return self
 
     def get_cookies(self):
@@ -676,15 +671,10 @@ class Request(Extendable):
         Returns:
             dict -- Returns all the cookies.
         """
-        return self.cookies
+        return self.cookie_jar
 
     def get_raw_cookie(self, provided_cookie):
-        if "HTTP_COOKIE" in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
-            if provided_cookie in grab_cookie:
-                return grab_cookie[provided_cookie]
-
-        return None
+        return self.cookie_jar.get(provided_cookie)
 
     def get_cookie(self, provided_cookie, decrypt=True):
         """Retrieve a specific cookie from the browser.
@@ -700,21 +690,20 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
-        if "HTTP_COOKIE" in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
-
-            if provided_cookie in grab_cookie:
-                if decrypt:
-                    try:
-                        return Sign(self.encryption_key).unsign(
-                            grab_cookie[provided_cookie].value
-                        )
-                    except InvalidToken:
-                        self.delete_cookie(provided_cookie)
-                        return None
-
-                return grab_cookie[provided_cookie].value
-        return None
+        if decrypt:
+            try:
+                return Sign(self.encryption_key).unsign(
+                    self.cookie_jar.get(provided_cookie).value
+                )
+            except InvalidToken:
+                self.delete_cookie(provided_cookie)
+                return None
+            except AttributeError:
+                pass
+        
+        if self.cookie_jar.exists(provided_cookie):
+            return self.cookie_jar.get(provided_cookie).value
+        
 
     def append_cookie(self, value):
         """Append cookie to the string or create a new string.
@@ -741,24 +730,10 @@ class Request(Extendable):
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
-        for index, cookie in enumerate(self.cookies):
-            if cookie[1].startswith(key + "="):
-                del self.cookies[index]
+        self.cookie_jar.delete(key)
 
         self.cookie(key, "", expires="expired")
 
-        if "HTTP_COOKIE" in self.environ and self.environ["HTTP_COOKIE"]:
-
-            request_cookies = self.environ["HTTP_COOKIE"].split(";")
-            for index, cookie in enumerate(request_cookies):
-                if cookie.startswith(key):
-                    # remove that cookie
-                    del request_cookies[index]
-
-            # put string back together
-            self.environ["HTTP_COOKIE"] = ";".join(request_cookies)
-            return True
-        return False
 
     def set_user(self, user_model):
         """Load the user into the class.

@@ -88,8 +88,8 @@ class RouteProvider(ServiceProvider):
                 if not request.get_status():
 
                     """Get the response from the route and set it on the 'Response' key.
-                        This data is typically the output of the controller method depending
-                        on the type of route.
+                    This data is typically the output of the controller method depending
+                    on the type of route.
                     """
 
                     response.view(route.get_response(), status=200)

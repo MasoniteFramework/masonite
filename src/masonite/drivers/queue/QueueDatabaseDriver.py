@@ -77,7 +77,16 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         schema = schema.connection(channel)
         while True:
             builder = schema.table("queue_jobs")
-            jobs = builder.where_null("ran_at").where(schema.table("queue_jobs").where_null('wait_until').or_where('wait_until', '<=', pendulum.now().to_datetime_string())).limit(1).get()
+            jobs = (
+                builder.where_null("ran_at")
+                .where(
+                    schema.table("queue_jobs")
+                    .where_null("wait_until")
+                    .or_where("wait_until", "<=", pendulum.now().to_datetime_string())
+                )
+                .limit(1)
+                .get()
+            )
 
             if not jobs.count():
                 time.sleep(5)

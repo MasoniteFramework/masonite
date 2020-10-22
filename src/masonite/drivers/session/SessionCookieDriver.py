@@ -50,7 +50,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if isinstance(value, dict):
             value = json.dumps(value)
 
-
         self.request.cookie("s_{0}".format(key), value)
 
     def has(self, key):
@@ -100,14 +99,14 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         cookies = {}
         all_cookies = self.request.get_cookies().to_dict()
         for key, value in all_cookies.items():
-            if not (key.startswith('f_') or key.startswith('s_')):
-                continue
-            
-            if flash_only and not key.startswith('f_'):
+            if not (key.startswith("f_") or key.startswith("s_")):
                 continue
 
-            key = key.replace('f_', '').replace('s_', '')
-            
+            if flash_only and not key.startswith("f_"):
+                continue
+
+            key = key.replace("f_", "").replace("s_", "")
+
             cookies.update({key: self.get(key)})
         return cookies
 

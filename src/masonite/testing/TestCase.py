@@ -141,9 +141,7 @@ class TestCase(unittest.TestCase):
                 }
             )
 
-        custom_wsgi.update(
-            {"QUERY_STRING": urlencode(params)}
-        )
+        custom_wsgi.update({"QUERY_STRING": urlencode(params)})
 
         self.run_container(custom_wsgi)
         self.container.make("Request").request_variables = params

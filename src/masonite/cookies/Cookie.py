@@ -1,6 +1,7 @@
 class Cookie:
-    
-    def __init__(self, name, value, expires=None, http_only=True, path=None, timezone=None):
+    def __init__(
+        self, name, value, expires=None, http_only=True, path=None, timezone=None
+    ):
         self.name = name
         self.value = value
         self.http_only = http_only
@@ -19,5 +20,5 @@ class Cookie:
                 response += f"{self.expires};"
         if self.path:
             response += f"Path={self.path};"
-        
+
         return response

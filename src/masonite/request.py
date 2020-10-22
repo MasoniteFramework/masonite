@@ -262,9 +262,9 @@ class Request(Extendable):
             self._set_standardized_request_variables(environ["POST_DATA"])
         elif "QUERY_STRING" in environ and environ["QUERY_STRING"]:
             self._set_standardized_request_variables(environ["QUERY_STRING"])
-        
+
         if "HTTP_COOKIE" in environ:
-            self.cookie_jar.load(environ['HTTP_COOKIE'])
+            self.cookie_jar.load(environ["HTTP_COOKIE"])
 
         if self.has("__method"):
             self.__set_request_method()
@@ -660,8 +660,9 @@ class Request(Extendable):
         if expires:
             expires = cookie_expire_time(expires)
 
-
-        self.cookie_jar.add(key, value, expires=expires, http_only=http_only, path=path, timezone="GMT")
+        self.cookie_jar.add(
+            key, value, expires=expires, http_only=http_only, path=path, timezone="GMT"
+        )
 
         return self
 
@@ -700,10 +701,9 @@ class Request(Extendable):
                 return None
             except AttributeError:
                 pass
-        
+
         if self.cookie_jar.exists(provided_cookie):
             return self.cookie_jar.get(provided_cookie).value
-        
 
     def append_cookie(self, value):
         """Append cookie to the string or create a new string.
@@ -734,7 +734,6 @@ class Request(Extendable):
 
         self.cookie(key, "", expires="expired")
 
-
     def set_user(self, user_model):
         """Load the user into the class.
 
@@ -753,8 +752,7 @@ class Request(Extendable):
         return self
 
     def reset_user(self):
-        """Resets the user back to none
-        """
+        """Resets the user back to none"""
         self.user_model = None
 
     def user(self):

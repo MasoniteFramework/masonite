@@ -274,7 +274,11 @@ class View(Responsable):
             template {string} -- Creates the cached templates.
         """
         self.container.make("Cache").store_for(
-            template, self.rendered_template, self.cache_time, self.cache_type, ".html",
+            template,
+            self.rendered_template,
+            self.cache_time,
+            self.cache_type,
+            ".html",
         )
 
     def __cached_template_exists(self):

@@ -54,61 +54,61 @@ class NewCommand(Command):
                 return self.comment(
                     'There is a folder that starts with "masonite-" and therefore craft cannot create a new project'
                 )
-        # try:
-        if repo and provider not in self.providers:
-            return self.comment("provider must be in {}".format(",".join(self.providers)))
+        try:
+            if repo and provider not in self.providers:
+                return self.error("'provider' option must be in {}".format(",".join(self.providers)))
 
-        self.set_api_provider_url_for_repo(provider, repo)
+            self.set_api_provider_url_for_repo(provider, repo)
 
-        if branch != "False":
-            branch_data = self.get_branch_provider_data(provider, branch)
-            if "name" not in branch_data.json():
-                return self.comment("Branch {0} does not exist.".format(branch))
+            if branch != "False":
+                branch_data = self.get_branch_provider_data(provider, branch)
+                if "name" not in branch_data:
+                    return self.comment("Branch {0} does not exist.".format(branch))
 
-            zipball = self.get_branch_archive_url(provider, repo, branch)
-        elif version != "False":
-            releases_data = self.get_releases_provider_data(provider)
-            zipball = False
+                zipball = self.get_branch_archive_url(provider, repo, branch)
+            elif version != "False":
+                releases_data = self.get_releases_provider_data(provider)
+                zipball = False
 
-            for release in releases_data:
-                if "tag_name" in release and release["tag_name"].startswith(
-                    "v{0}".format(version)
-                ):
-                    self.info(
-                        "Installing version {0}".format(release["tag_name"])
+                for release in releases_data:
+                    if "tag_name" in release and release["tag_name"].startswith(
+                        "v{0}".format(version)
+                    ):
+                        self.info(
+                            "Installing version {0}".format(release["tag_name"])
+                        )
+                        self.line("")
+                        zipball = self.get_release_archive_url_from_release_data(provider, release)
+                        break
+
+                if zipball is False:
+                    return self.info(
+                        "Version {0} could not be found".format(version)
                     )
-                    self.line("")
-                    zipball = self.get_release_archive_url_from_release_data(provider, release)
-                    break
-
-            if zipball is False:
-                return self.info(
-                    "Version {0} could not be found".format(version)
-                )
-        else:
-            tags_data = self.get_releases_provider_data(provider)
-
-            # try to find all releases which are not prereleases
-            tags = []
-            for release in tags_data:
-                if release["prerelease"] is False:
-                    tag_key = "tag_name" if provider == "github" else "name"
-                    tags.append(release[tag_key].replace("v", ""))
-
-            tags = sorted(
-                tags, key=lambda v: [int(i) for i in v.split(".")], reverse=True
-            )
-            # get url from latest tagged version
-            if not tags:
-                self.info("No tags has been found, using latest commit on master.")
-                zipball = self.get_branch_archive_url(provider, repo, "master")
             else:
-                zipball = self.get_tag_archive_url(provider, repo, tags[0])
-        # except Exception as e:
-        #     import pdb; pdb.set_trace()
-        #     raise ProjectLimitReached(
-        #         "You have reached your hourly limit of creating new projects. Try again in 1 hour."
-        #     )
+                tags_data = self.get_releases_provider_data(provider)
+
+                # try to find all releases which are not prereleases
+                tags = []
+                for release in tags_data:
+                    if release["prerelease"] is False:
+                        tag_key = "tag_name" if provider == "github" else "name"
+                        tags.append(release[tag_key].replace("v", ""))
+
+                tags = sorted(
+                    tags, key=lambda v: [int(i) for i in v.split(".")], reverse=True
+                )
+                # get url from latest tagged version
+                if not tags:
+                    self.info("No tags has been found, using latest commit on master.")
+                    zipball = self.get_branch_archive_url(provider, repo, "master")
+                else:
+                    zipball = self.get_tag_archive_url(provider, repo, tags[0])
+        except Exception as e:
+            import pdb; pdb.set_trace()
+            raise ProjectLimitReached(
+                "You have reached your hourly limit of creating new projects. Try again in 1 hour."
+            )
         success = False
 
         zipurl = zipball
@@ -189,13 +189,13 @@ class NewCommand(Command):
         if provider == "github":
             branch_data = requests.get(
                 "{0}/branches/{1}".format(
-                    self.self.api_base_url, branch
+                    self.api_base_url, branch
                 )
             )
         elif provider == "gitlab":
             branch_data = requests.get(
                 "{0}/repository/branches/{1}".format(
-                    self.self.api_base_url, branch
+                    self.api_base_url, branch
                 )
             )
         return branch_data.json()

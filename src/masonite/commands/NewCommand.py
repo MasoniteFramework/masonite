@@ -67,7 +67,7 @@ class NewCommand(Command):
             if branch != "False":
                 branch_data = self.get_branch_provider_data(provider, branch)
                 if "name" not in branch_data:
-                    return self.comment("Branch {0} does not exist.".format(branch))
+                    return self.error("Branch {0} does not exist.".format(branch))
 
                 zipball = self.get_branch_archive_url(provider, repo, branch)
             elif version != "False":
@@ -86,7 +86,7 @@ class NewCommand(Command):
                         break
 
                 if zipball is False:
-                    return self.info(
+                    return self.error(
                         "Version {0} could not be found".format(version)
                     )
             else:
@@ -104,7 +104,7 @@ class NewCommand(Command):
                 )
                 # get url from latest tagged version
                 if not tags:
-                    self.info("No tags has been found, using latest commit on master.")
+                    self.warning("No tags has been found, using latest commit on master.")
                     zipball = self.get_branch_archive_url(provider, repo, "master")
                 else:
                     zipball = self.get_tag_archive_url(provider, repo, tags[0])
@@ -117,7 +117,7 @@ class NewCommand(Command):
                 "{0} provider seems not reachable, request timed out after {1} seconds".format(provider, self.TIMEOUT)
             )
         except Exception as e:
-            self.error("The following error happened when crafting your project. Please open an issue at https://github.com/MasoniteFramework/masonite.")
+            self.error("The following error happened when crafting your project. Verify options are correct else open an issue at https://github.com/MasoniteFramework/masonite.")
             raise e
         success = False
 
@@ -266,7 +266,7 @@ class NewCommand(Command):
             if data.reason == "rate limit exceeded":
                 raise ProjectLimitReached()
             else:
-                raise ProjectProviderHttpError("[{0}]: {1} at {2}".format(
-                    data.status_code, data.reason, data.url
+                raise ProjectProviderHttpError("{0}({1}) at {2}".format(
+                    data.reason, data.status_code, data.url
                 ))
         return data

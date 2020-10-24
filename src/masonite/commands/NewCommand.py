@@ -118,7 +118,7 @@ class NewCommand(Command):
             )
         except requests.Timeout:
             raise ProjectProviderTimeout(
-                "{0} provider is unreachable, request timed out after {1} seconds".format(
+                "{0} provider is not reachable, request timed out after {1} seconds".format(
                     provider, self.TIMEOUT
                 )
             )

@@ -143,7 +143,7 @@ class TestNewCommand(unittest.TestCase):
         with self.assertRaises(ProjectProviderTimeout) as e:
             self.command_tester.execute([('target', 'new_project')])
 
-        self.assertTrue(str(e.exception).startswith("github provider seems not reachable"))
+        self.assertTrue(str(e.exception).startswith("github provider is not reachable"))
 
     def test_download_errors_are_displayed(self):
         pass

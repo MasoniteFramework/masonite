@@ -27,4 +27,4 @@ tldextract>=2.2,<2.3
 whitenoise>=3.3
 exceptionite
 responses==0.12.0
-mock==4.0.2
+mock>=3.0.5

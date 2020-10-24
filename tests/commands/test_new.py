@@ -1,4 +1,6 @@
 import unittest
+
+import requests
 import responses
 import shutil
 import os
@@ -13,6 +15,8 @@ from src.masonite.exceptions import ProjectLimitReached, ProjectProviderTimeout,
 
 class TestNewCommand(unittest.TestCase):
 
+    test_project_dir = os.path.join(os.getcwd(), "new_project")
+
     def setUp(self):
         self.application = Application()
         self.application.add(NewCommand())
@@ -24,7 +28,12 @@ class TestNewCommand(unittest.TestCase):
 
     def tearDown(self):
         # ensure cleaning after each
-        shutil.rmtree(os.path.join(os.getcwd(), "new_project"), ignore_errors=True)
+        shutil.rmtree(self.test_project_dir, ignore_errors=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        # ensure cleaning event if test suite fails
+        shutil.rmtree(cls.test_project_dir, ignore_errors=True)
 
     def test_cannot_craft_to_not_empty_directory(self):
         # run command without arguments, target is the current directory which is not empty
@@ -123,3 +132,59 @@ class TestNewCommand(unittest.TestCase):
             self.command_tester.execute([('target', 'new_project'), ('--repo', 'MasoniteFramework/secret')])
 
         self.assertTrue(str(e.exception).startswith("Forbidden(403)"))
+
+    @responses.activate
+    def test_timeouts_are_handled(self):
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/releases'.format(self.default_repo),
+            body=requests.Timeout(),
+        )
+
+        with self.assertRaises(ProjectProviderTimeout) as e:
+            self.command_tester.execute([('target', 'new_project')])
+
+        self.assertTrue(str(e.exception).startswith("github provider seems not reachable"))
+
+    def test_download_errors_are_displayed(self):
+        pass
+
+    @responses.activate
+    def test_can_craft_default_repo_successfully(self):
+        # still mocking requests to avoid failures from api rate limits
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/releases'.format(self.default_repo),
+            body='[{"name": "v2.3.6", "tag_name": "v2.3.6", "zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6", "prerelease": false}]'
+        )
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/releases/tags/v2.3.6'.format(self.default_repo),
+            body='{"zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6"}'
+        )
+
+        self.command_tester.execute([('target', 'new_project')])
+        self.assertTrue(
+            "Project Created Successfully" in self.command_tester.get_display()
+        )
+        # verify that project has really been created by checking files
+        self.assertTrue("craft" in os.listdir(self.test_project_dir))
+        self.assertTrue("app" in os.listdir(self.test_project_dir))
+
+    @responses.activate
+    def test_can_craft_other_repo_successfully(self):
+        # using a real repo but not a masonite project template, just for testing
+        other_repo = "MasoniteFramework/docs"
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/releases'.format(other_repo),
+            body='[{"name": "v2.3.6", "tag_name": "v2.3.6", "zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6", "prerelease": false}]'
+        )
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/releases/tags/v2.3.6'.format(other_repo),
+            body='{"zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6"}'
+        )
+
+        self.command_tester.execute([('target', 'new_project'), ("--repo", other_repo)])
+        self.assertTrue(
+            "Project Created Successfully" in self.command_tester.get_display()
+        )
+        # verify that project has really been created by checking files
+        self.assertTrue("craft" in os.listdir(self.test_project_dir))
+        self.assertTrue("app" in os.listdir(self.test_project_dir))

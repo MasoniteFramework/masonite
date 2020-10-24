@@ -225,7 +225,7 @@ class NewCommand(Command):
             return "https://github.com/{0}/archive/{1}.zip".format(repo, branch)
         elif provider == "gitlab":
             # here we can provide commit, branch name or tag
-            return "{0}/repository/archive.zip?sha={1}.zip".format(
+            return "{0}/repository/archive.zip?sha={1}".format(
                 self.api_base_url, branch
             )
 

@@ -40,9 +40,6 @@ class TestNewCommand(unittest.TestCase):
         with self.assertRaises(ProjectTargetNotEmpty):
             self.command_tester.execute([])
 
-        with self.assertRaises(ProjectTargetNotEmpty):
-            self.command_tester.execute([('target', '../../tests')])
-
     def test_handle_not_implemented_provider(self):
         self.command_tester.execute([('target', 'new_project'), ('--provider', 'bitbucket')])
         self.assertEqual("'provider' option must be in github,gitlab\n", self.command_tester.get_display())
@@ -188,3 +185,12 @@ class TestNewCommand(unittest.TestCase):
         # verify that project has really been created by checking files
         self.assertTrue("craft" in os.listdir(self.test_project_dir))
         self.assertTrue("app" in os.listdir(self.test_project_dir))
+
+    # def test_can_craft_project_with_gitlab_provider(self):
+    #     repo = "samuelgirardin/masonite-tests"
+    #     self.command_tester.execute([('target', 'new_project'), ("--provider", "gitlab"), ("--repo", repo)])
+    #     self.assertTrue(
+    #         "Project Created Successfully" in self.command_tester.get_display()
+    #     )
+    #     # verify that project has really been created by checking files
+    #     self.assertTrue("README.md" in os.listdir(self.test_project_dir))

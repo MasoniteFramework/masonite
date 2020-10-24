@@ -53,7 +53,7 @@ class NewCommand(Command):
             to_dir = os.path.abspath(os.path.expanduser(target))
         else:
             to_dir = os.path.join(os.getcwd(), target)
-        self.check_target_is_empty(to_dir)
+        self.check_target_does_not_exist(to_dir)
 
         for directory in os.listdir(os.getcwd()):
             if directory.startswith("masonite-"):
@@ -118,7 +118,7 @@ class NewCommand(Command):
             )
         except requests.Timeout:
             raise ProjectProviderTimeout(
-                "{0} provider seems not reachable, request timed out after {1} seconds".format(
+                "{0} provider is unreachable, request timed out after {1} seconds".format(
                     provider, self.TIMEOUT
                 )
             )
@@ -188,7 +188,7 @@ class NewCommand(Command):
         else:
             self.comment("Could Not Create Application :(")
 
-    def check_target_is_empty(self, target):
+    def check_target_does_not_exist(self, target):
         """To avoid overwriting target directory and to avoid raw errors
         check that target directory does not exist."""
         if os.path.isdir(target):

@@ -71,7 +71,6 @@ class NewCommand(Command):
             elif version != "False":
                 releases_data = self.get_releases_provider_data(provider)
                 zipball = False
-
                 for release in releases_data:
                     if "tag_name" in release and release["tag_name"].startswith(
                         "v{0}".format(version)
@@ -82,7 +81,6 @@ class NewCommand(Command):
                         self.line("")
                         zipball = self.get_release_archive_url_from_release_data(provider, release)
                         break
-
                 if zipball is False:
                     return self.error(
                         "Version {0} could not be found".format(version)
@@ -260,9 +258,7 @@ class NewCommand(Command):
         return releases_data.json()
 
     def _get(self, request):
-        print(f"debug: {request}")
         data = requests.get(request, timeout=self.TIMEOUT)
-        print(f"done: {data.status_code}")
         if data.status_code != 200:
             if data.reason == "rate limit exceeded":
                 raise ProjectLimitReached()

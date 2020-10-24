@@ -135,12 +135,10 @@ class NewCommand(Command):
 
         try:
             # Python 3
-            from urllib.request import urlopen
-
-            with urlopen(zipurl) as zipresp:
-                with zipfile.ZipFile(BytesIO(zipresp.read())) as zfile:
-                    zfile.extractall(os.getcwd())
-
+            request = requests.get(zipurl)
+            with zipfile.ZipFile(BytesIO(request.content)) as zfile:
+                extracted_name = zfile.infolist()[0].filename
+                zfile.extractall(os.getcwd())
             success = True
         except ImportError:
             # Python 2
@@ -148,6 +146,7 @@ class NewCommand(Command):
 
             r = urllib.urlopen(zipurl)
             with zipfile.ZipFile(BytesIO(r.read())) as z:
+                extracted_name = z.infolist()[0].filename
                 z.extractall(os.getcwd())
 
             success = True
@@ -156,34 +155,30 @@ class NewCommand(Command):
             raise e
 
         if success:
-            for directory in os.listdir(os.getcwd()):
-                if directory.startswith(
-                    "MasoniteFramework-cookie-cutter"
-                ) or directory.startswith("cookie-cutter-"):
-                    from_dir = os.path.join(os.getcwd(), "{0}".format(directory))
-                    if target == ".":
-                        for file in os.listdir(from_dir):
-                            shutil.move(os.path.join(from_dir, file), to_dir)
-                        os.rmdir(from_dir)
-                    else:
-                        os.rename(from_dir, to_dir)
+            from_dir = os.path.join(os.getcwd(), extracted_name)
+            if target == ".":
+                for file in os.listdir(from_dir):
+                    shutil.move(os.path.join(from_dir, file), to_dir)
+                os.rmdir(from_dir)
+            else:
+                os.rename(from_dir, to_dir)
 
-                    self.info("Application Created Successfully!")
-                    self.info("Installing Dependencies ")
-                    if target == ".":
-                        self.call("install")
+            self.info("Application Created Successfully!")
+            self.info("Installing Dependencies ")
+            if target == ".":
+                self.call("install")
 
-                        self.info(
-                            "Installed Successfully. Just Run `craft serve` To Start Your Application."
-                        )
-                    else:
-                        self.info(
-                            "Project Created Successfully. You now will have to CD into your new '{}' directory and run `craft install` to complete the installation".format(
-                                target
-                            )
-                        )
+                self.info(
+                    "Installed Successfully. Just Run `craft serve` To Start Your Application."
+                )
+            else:
+                self.info(
+                    "Project Created Successfully. You now will have to CD into your new '{}' directory and run `craft install` to complete the installation".format(
+                        target
+                    )
+                )
 
-                    return
+            return
 
         else:
             self.comment("Could Not Create Application :(")

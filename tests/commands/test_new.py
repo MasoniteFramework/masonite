@@ -1,3 +1,4 @@
+import pdb
 import unittest
 
 import requests
@@ -80,6 +81,9 @@ class TestNewCommand(unittest.TestCase):
             'https://api.github.com/repos/{0}/releases'.format(self.default_repo),
             body='[{"name": "v2.3.6", "tag_name": "v2.3.6", "zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6"}]'
         )
+        # authorize requests not using the API
+        responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
+        responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
         self.command_tester.execute([('target', 'new_project'), ('--release', '2.3.6')])
         self.assertTrue(self.command_tester.get_display().startswith("Installing version v2.3.6"))
@@ -90,6 +94,9 @@ class TestNewCommand(unittest.TestCase):
             'https://api.github.com/repos/{0}/releases'.format(self.default_repo),
             body='{}'
         )
+        # authorize requests not using the API
+        responses.add_passthru('https://github.com/MasoniteFramework/cookie-cutter/archive/master.zip')
+        responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/zip/master')
 
         self.command_tester.execute([('target', 'new_project')])
         self.assertTrue("[WARNING] No tags has been found, using latest commit on master." in self.command_tester.get_display())
@@ -145,6 +152,9 @@ class TestNewCommand(unittest.TestCase):
     def test_download_errors_are_displayed(self):
         pass
 
+    # Following tests are close to integration tests but still quick and without rate limiting issue so
+    # they can be ran as unit tests
+    # ----------------------------------------------------------------------------------------------
     @responses.activate
     def test_can_craft_default_repo_successfully(self):
         # still mocking requests to avoid failures from api rate limits
@@ -156,6 +166,9 @@ class TestNewCommand(unittest.TestCase):
             'https://api.github.com/repos/{0}/releases/tags/v2.3.6'.format(self.default_repo),
             body='{"zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6"}'
         )
+        # authorize requests not using the API
+        responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
+        responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
         self.command_tester.execute([('target', 'new_project')])
         self.assertTrue(
@@ -166,19 +179,21 @@ class TestNewCommand(unittest.TestCase):
         self.assertTrue("app" in os.listdir(self.test_project_dir))
 
     @responses.activate
-    def test_can_craft_other_repo_successfully(self):
-        # using a real repo but not a masonite project template, just for testing
-        other_repo = "MasoniteFramework/docs"
+    def test_can_craft_default_repo_successfully_with_release(self):
+        # still mocking requests to avoid failures from api rate limits
         responses.add(responses.GET,
-            'https://api.github.com/repos/{0}/releases'.format(other_repo),
+            'https://api.github.com/repos/{0}/releases'.format(self.default_repo),
             body='[{"name": "v2.3.6", "tag_name": "v2.3.6", "zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6", "prerelease": false}]'
         )
         responses.add(responses.GET,
-            'https://api.github.com/repos/{0}/releases/tags/v2.3.6'.format(other_repo),
+            'https://api.github.com/repos/{0}/releases/tags/v2.3.6'.format(self.default_repo),
             body='{"zipball_url": "https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6"}'
         )
+        # authorize requests not using the API
+        responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
+        responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
-        self.command_tester.execute([('target', 'new_project'), ("--repo", other_repo)])
+        self.command_tester.execute([('target', 'new_project'), ('--release', '2.3.6')])
         self.assertTrue(
             "Project Created Successfully" in self.command_tester.get_display()
         )
@@ -186,11 +201,39 @@ class TestNewCommand(unittest.TestCase):
         self.assertTrue("craft" in os.listdir(self.test_project_dir))
         self.assertTrue("app" in os.listdir(self.test_project_dir))
 
-    # def test_can_craft_project_with_gitlab_provider(self):
-    #     repo = "samuelgirardin/masonite-tests"
-    #     self.command_tester.execute([('target', 'new_project'), ("--provider", "gitlab"), ("--repo", repo)])
-    #     self.assertTrue(
-    #         "Project Created Successfully" in self.command_tester.get_display()
-    #     )
-    #     # verify that project has really been created by checking files
-    #     self.assertTrue("README.md" in os.listdir(self.test_project_dir))
+    @responses.activate
+    def test_can_craft_default_repo_successfully_with_branch(self):
+        # still mocking requests to avoid failures from api rate limits
+        responses.add(responses.GET,
+            'https://api.github.com/repos/{0}/branches/3.0'.format(self.default_repo),
+            body='{"name": "3.0"}'
+        )
+        # authorize requests not using the API
+        responses.add_passthru('https://github.com/MasoniteFramework/cookie-cutter/archive/3.0.zip')
+        responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/zip/3.0')
+
+        self.command_tester.execute([('target', 'new_project'), ('--branch', '3.0')])
+        self.assertTrue(
+            "Project Created Successfully" in self.command_tester.get_display()
+        )
+        # verify that project has really been created by checking files
+        self.assertTrue("craft" in os.listdir(self.test_project_dir))
+        self.assertTrue("app" in os.listdir(self.test_project_dir))
+
+    @responses.activate
+    def test_can_craft_project_with_gitlab_provider(self):
+        # mock this one as it can be rate limited
+        responses.add(responses.GET,
+            'https://gitlab.com/api/v4/projects/samuelgirardin%2Fmasonite-tests/releases',
+            body='[]'
+        )
+        # authorize requests not using the API
+        responses.add_passthru('https://gitlab.com/api/v4/projects/samuelgirardin%2Fmasonite-tests/repository/archive.zip?sha=master')
+
+        repo = "samuelgirardin/masonite-tests"
+        self.command_tester.execute([('target', 'new_project'), ("--provider", "gitlab"), ("--repo", repo)])
+        self.assertTrue(
+            "Project Created Successfully" in self.command_tester.get_display()
+        )
+        # verify that project has really been created by checking files
+        self.assertTrue("README.md" in os.listdir(self.test_project_dir))

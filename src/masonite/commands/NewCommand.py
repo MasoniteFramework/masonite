@@ -1,11 +1,12 @@
-import pdb
 from cleo import Command
 import os
 import shutil
 import zipfile
 import requests
+from io import BytesIO
 
-from ..exceptions import ProjectLimitReached, ProjectProviderTimeout, ProjectProviderHttpError
+from ..exceptions import ProjectLimitReached, ProjectProviderTimeout, \
+    ProjectProviderHttpError, ProjectTargetNotEmpty
 
 
 class NewCommand(Command):
@@ -43,15 +44,12 @@ class NewCommand(Command):
         version = self.option("release")
         repo = self.option("repo")
         provider = self.option("provider")
-        if os.path.isdir(os.path.join(os.getcwd(), name)):
-            self.comment(
-                "Directory {0} already exists. Please choose another project name".format(
-                    name
-                )
-            )
-            exit(-1)
 
-        from io import BytesIO
+        if target == ".":
+            to_dir = os.path.abspath(os.path.expanduser(target))
+        else:
+            to_dir = os.path.join(os.getcwd(), target)
+        self.check_target_is_empty(to_dir)
 
         for directory in os.listdir(os.getcwd()):
             if directory.startswith("masonite-"):
@@ -152,20 +150,15 @@ class NewCommand(Command):
                 if directory.startswith(
                     "MasoniteFramework-cookie-cutter"
                 ) or directory.startswith("cookie-cutter-"):
+                    from_dir = os.path.join(
+                        os.getcwd(), "{0}".format(directory)
+                    )
                     if target == ".":
-                        from_dir = os.path.join(
-                            os.getcwd(), "{0}".format(directory)
-                        )
-                        to_dir = os.path.abspath(os.path.expanduser(target))
-
                         for file in os.listdir(from_dir):
                             shutil.move(os.path.join(from_dir, file), to_dir)
                         os.rmdir(from_dir)
                     else:
-                        os.rename(
-                            os.path.join(os.getcwd(), "{0}".format(directory)),
-                            os.path.join(os.getcwd(), target),
-                        )
+                        os.rename(from_dir, to_dir)
 
                     self.info("Application Created Successfully!")
                     self.info("Installing Dependencies ")
@@ -186,6 +179,14 @@ class NewCommand(Command):
 
         else:
             self.comment("Could Not Create Application :(")
+
+    def check_target_is_empty(self, target):
+        """To avoid overwriting target directory and to avoid raw errors
+        check that target directory does not exist."""
+        if os.path.isdir(target):
+            raise ProjectTargetNotEmpty(
+                "{} already exists. You must craft a project in a not existing directory.".format(target)
+            )
 
     def set_api_provider_url_for_repo(self, provider, repo):
         if provider == "github":

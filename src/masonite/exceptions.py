@@ -100,3 +100,7 @@ class ProjectProviderTimeout(Exception):
 
 class ProjectProviderHttpError(Exception):
     pass
+
+
+class ProjectTargetNotEmpty(Exception):
+    pass

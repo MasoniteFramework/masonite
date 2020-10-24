@@ -1,6 +1,4 @@
-import pdb
 import unittest
-
 import requests
 import responses
 import shutil
@@ -25,15 +23,14 @@ class TestNewCommand(unittest.TestCase):
         self.command_tester = CommandTester(self.command)
 
         self.default_repo = "MasoniteFramework/cookie-cutter"
-        # ensure cleaning after each test
 
     def tearDown(self):
-        # ensure cleaning after each
+        # ensure cleaning after each test
         shutil.rmtree(self.test_project_dir, ignore_errors=True)
 
     @classmethod
     def tearDownClass(cls):
-        # ensure cleaning event if test suite fails
+        # ensure cleaning even if test suite fails
         shutil.rmtree(cls.test_project_dir, ignore_errors=True)
 
     def test_cannot_craft_to_not_empty_directory(self):

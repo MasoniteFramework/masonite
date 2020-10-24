@@ -92,3 +92,11 @@ class AmbiguousError(Exception):
 
 class ProjectLimitReached(Exception):
     pass
+
+
+class ProjectProviderTimeout(Exception):
+    pass
+
+
+class ProjectProviderHttpError(Exception):
+    pass

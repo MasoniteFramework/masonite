@@ -1,8 +1,11 @@
+import pdb
 from cleo import Command
 import os
 import shutil
 import zipfile
-from ..exceptions import ProjectLimitReached
+import requests
+
+from ..exceptions import ProjectLimitReached, ProjectProviderTimeout, ProjectProviderHttpError
 
 
 class NewCommand(Command):
@@ -19,6 +22,8 @@ class NewCommand(Command):
     """
 
     providers = ["github", "gitlab"]
+    # timeout in seconds for requests made to providers
+    TIMEOUT = 20
 
     def __init__(self, *args, **kwargs):
         super().__init__()
@@ -47,7 +52,6 @@ class NewCommand(Command):
             exit(-1)
 
         from io import BytesIO
-        import requests
 
         for directory in os.listdir(os.getcwd()):
             if directory.startswith("masonite-"):
@@ -104,11 +108,17 @@ class NewCommand(Command):
                     zipball = self.get_branch_archive_url(provider, repo, "master")
                 else:
                     zipball = self.get_tag_archive_url(provider, repo, tags[0])
-        except Exception as e:
-            import pdb; pdb.set_trace()
+        except ProjectLimitReached:
             raise ProjectLimitReached(
-                "You have reached your hourly limit of creating new projects. Try again in 1 hour."
+                "You have reached your hourly limit of creating new projects with {0}. Try again in 1 hour.".format(provider)
             )
+        except requests.Timeout:
+            raise ProjectProviderTimeout(
+                "{0} provider seems not reachable, request timed out after {1} seconds".format(provider, self.TIMEOUT)
+            )
+        except Exception as e:
+            self.error("The following error happened when crafting your project. Please open an issue at https://github.com/MasoniteFramework/masonite.")
+            raise e
         success = False
 
         zipurl = zipball
@@ -134,6 +144,7 @@ class NewCommand(Command):
 
             success = True
         except Exception as e:
+            self.error("An error occured when downloading {0}".format(zipurl))
             raise e
 
         if success:
@@ -185,15 +196,14 @@ class NewCommand(Command):
             self.api_base_url = "https://gitlab.com/api/v4/projects/{0}".format(repo_encoded_url)
 
     def get_branch_provider_data(self, provider, branch):
-        import requests
         if provider == "github":
-            branch_data = requests.get(
+            branch_data = self._get(
                 "{0}/branches/{1}".format(
                     self.api_base_url, branch
                 )
             )
         elif provider == "gitlab":
-            branch_data = requests.get(
+            branch_data = self._get(
                 "{0}/repository/branches/{1}".format(
                     self.api_base_url, branch
                 )
@@ -209,8 +219,7 @@ class NewCommand(Command):
 
     def get_tag_archive_url(self, provider, repo, version):
         if provider == "github":
-            import requests
-            tag_data = requests.get(
+            tag_data = self._get(
                 "{0}/releases/tags/v{1}".format(
                     self.api_base_url, version
                 )
@@ -220,13 +229,12 @@ class NewCommand(Command):
             return self.get_branch_archive_url("gitlab", repo, "v" + version)
 
     def get_releases_provider_data(self, provider):
-        import requests
         if provider == "github":
-            releases_data = requests.get(
+            releases_data = self._get(
                 "{0}/releases".format(self.api_base_url)
             )
         elif provider == "gitlab":
-            releases_data = requests.get(
+            releases_data = self._get(
                 "{0}/releases".format(self.api_base_url)
             )
         return releases_data.json()
@@ -240,13 +248,25 @@ class NewCommand(Command):
             # return "{0}/repository/archive.zip?sha={1}.zip".format(self.api_base_url, branch)
 
     def get_tags_provider_data(self, provider):
-        import requests
         if provider == "github":
-            releases_data = requests.get(
+            releases_data = self._get(
                 "{0}/releases".format(self.api_base_url)
             )
         elif provider == "gitlab":
-            releases_data = requests.get(
+            releases_data = self._get(
                 "{0}/repository/tags".format(self.api_base_url)
             )
         return releases_data.json()
+
+    def _get(self, request):
+        print(f"debug: {request}")
+        data = requests.get(request, timeout=self.TIMEOUT)
+        print(f"done: {data.status_code}")
+        if data.status_code != 200:
+            if data.reason == "rate limit exceeded":
+                raise ProjectLimitReached()
+            else:
+                raise ProjectProviderHttpError("[{0}]: {1} at {2}".format(
+                    data.status_code, data.reason, data.url
+                ))
+        return data

@@ -18,7 +18,6 @@ class NewCommand(Command):
     Creates a new Masonite project
 
     new
-        {name? : Name of your Masonite project}
         {target? : Path of you Masonite project}
         {--b|--branch=False : Specify which branch from the Masonite repo you would like to install}
         {--r|--release=False : Specify which version of Masonite you would like to install}
@@ -35,10 +34,6 @@ class NewCommand(Command):
         self.api_base_url = None
 
     def handle(self):
-        name = self.argument("name")
-        if not name:
-            name = "project"
-
         target = self.argument("target")
 
         if not target:

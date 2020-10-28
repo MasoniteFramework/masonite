@@ -343,6 +343,8 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.redirect(controller=TestController.show).redirect_url, '/test/url/object')
         request.redirect_url = None
         self.assertEqual(request.redirect('some/url').redirect_url, '/some/url')
+        request.redirect_url = None
+        self.assertEqual(request.redirect(url='/some/url?with=querystring').redirect_url, '/some/url?with=querystring')
 
     def test_request_route_returns_full_url(self):
         app = App()

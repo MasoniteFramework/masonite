@@ -85,6 +85,7 @@ class ExceptionHandler:
         self.run_listeners(exception, stacktraceback)
         # Run Any Framework Exception Hooks
         self._app.make("HookHandler").fire("*ExceptionHook")
+        request = self._app.make("Request")
 
         # Check if DEBUG is False
         from config import application
@@ -98,9 +99,17 @@ class ExceptionHandler:
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())
-        handler.integrate(
-            StackOverflowIntegration(),
-        )
+        handler.integrate(StackOverflowIntegration(),)
+
+
+        if "application/json" in request.header("Content-Type"):
+            stacktrace = []
+            for trace in handler.stacktrace():
+                stacktrace.append(trace.file + " line " + str(trace.lineno))
+
+            return response.json({"Exeption": handler.exception(), "Message": str(exception), "traceback": stacktrace}, status=500)
+
+
         response.view(handler.render(), status=500)
 
 

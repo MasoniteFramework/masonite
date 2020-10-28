@@ -766,7 +766,7 @@ class Request(Extendable):
         """
         return self.user_model
 
-    def redirect(self, route=None, params={}, name=None, controller=None, status=302):
+    def redirect(self, route=None, params={}, name=None, controller=None, url=None, status=302):
         """Redirect the user based on the route specified.
 
         Arguments:
@@ -786,6 +786,8 @@ class Request(Extendable):
             self.redirect_url = self.compile_route_to_url(route, params)
         elif controller:
             self.redirect_url = self.url_from_controller(controller, params)
+        elif url:
+            self.redirect_url = url
 
         self.status(status)
         return self

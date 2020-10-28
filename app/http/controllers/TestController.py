@@ -1,6 +1,7 @@
 from app.jobs.TestJob import TestJob
 from src.masonite import Queue, Mail
 from src.masonite.request import Request
+from src.masonite.response import Response
 from src.masonite.view import View
 
 class TestController:
@@ -14,8 +15,8 @@ class TestController:
     def v(self, view: View):
         return view.render('test')
 
-    def change_header(self, request: Request):
-        request.header('Content-Type', 'application/xml')
+    def change_header(self, response: Response):
+        response.header('Content-Type', 'application/xml')
         return 'test'
 
     def change_status(self, request: Request):

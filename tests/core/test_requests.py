@@ -578,7 +578,7 @@ class TestRequest(unittest.TestCase):
         print('hh', request.get_headers())
 
         request.header('TEST1', 'set_this_item')
-        self.assertEqual(request.get_headers(), [('HOST', '127.0.0.1:8000'), ('ACCEPT', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'), ('UPGRADE_INSECURE_REQUESTS', '1'), ('COOKIE', 'setcookie=value'), ('USER_AGENT', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7'), ('ACCEPT_LANGUAGE', 'en-us'), ('ACCEPT_ENCODING', 'gzip, deflate'), ('CONNECTION', 'keep-alive'), ('TEST1', 'set_this_item')])
+        self.assertEqual(request.get_headers(), [('Host', '127.0.0.1:8000'), ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'), ('Upgrade-Insecure-Requests', '1'), ('Cookie', 'setcookie=value'), ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7'), ('Accept-Language', 'en-us'), ('Accept-Encoding', 'gzip, deflate'), ('Connection', 'keep-alive'), ('Test1', 'set_this_item')])
 
     def test_request_sets_str_status_code(self):
         app = App()

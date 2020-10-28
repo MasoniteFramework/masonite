@@ -1,4 +1,5 @@
 from .Header import Header
+from inflection import humanize, dasherize, camelize, titleize
 
 
 class HeaderBag:
@@ -6,6 +7,12 @@ class HeaderBag:
         self.bag = {}
 
     def add(self, header):
+        self.bag.update({self.convert_name(header.name): header})
+
+    def add_if_not_exists(self, header):
+        if self.convert_name(header.name) in self.bag:
+            return None
+
         self.bag.update({self.convert_name(header.name): header})
 
     def get(self, name):
@@ -22,9 +29,12 @@ class HeaderBag:
         return self.convert_name(name) in self.bag.keys()
 
     def convert_name(self, name):
-        return name.upper().replace("-", "_").replace("HTTP_", "")
+        return titleize(name.replace("HTTP_", "")).replace(" ", "-")
 
     def load(self, environ):
         for key, value in environ.items():
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
+
+    def __getitem__(self, key):
+        return self.bag[self.convert_name(key)]

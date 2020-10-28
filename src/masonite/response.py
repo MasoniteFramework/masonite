@@ -7,6 +7,7 @@ from pathlib import Path
 from .app import App
 from .exceptions import ResponseError
 from .helpers.Extendable import Extendable
+from .headers import HeaderBag, Header
 
 
 class Response(Extendable):
@@ -19,6 +20,7 @@ class Response(Extendable):
     def __init__(self, app: App):
         self.app = app
         self.request = self.app.make("Request")
+        self.header_bag = HeaderBag()
 
     def json(self, payload, status=200):
         """Gets the response ready for a JSON response.
@@ -41,11 +43,24 @@ class Response(Extendable):
         Keyword Arguments:
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
-        self.request.header("Content-Length", str(len(self.to_bytes())))
+        self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
+        # self.request.header("Content-Length", str(len(self.to_bytes())))
 
         # If the user did not change it directly
-        if not self.request.has_raw_header("Content-Type"):
-            self.request.header("Content-Type", content_type)
+        self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
+        # if not self.request.has_raw_header("Content-Type"):
+        #     self.request.header("Content-Type", content_type)
+
+    def header(self, name, value=None):
+        if value is None:
+            return self.header_bag.get(name)
+
+        return self.header_bag.add(Header(name, value))
+
+    def get_and_reset_headers(self):
+        header = self.header_bag
+        self.header_bag = HeaderBag()
+        return header.render()
 
     def data(self):
         """Get the data that will be returned to the WSGI server.
@@ -131,7 +146,7 @@ class Response(Extendable):
             location = self.request.redirect_url
 
         self.request.reset_headers()
-        self.request.header("Location", location)
+        self.header_bag.add(Header("Location", location))
         self.view("Redirecting ...")
 
         return self.data()
@@ -190,21 +205,21 @@ class Download(Responsable):
 
             self.container = container
 
-        request = self.container.make("Request")
+        response = self.container.make(Response)
 
         with open(self.location, "rb") as filelike:
             data = filelike.read()
 
         if self._force:
-            request.header("Content-Type", "application/octet-stream")
-            request.header(
+            response.header("Content-Type", "application/octet-stream")
+            response.header(
                 "Content-Disposition",
                 'attachment; filename="{}{}"'.format(
                     self.name, self.extension(self.location)
                 ),
             )
         else:
-            request.header("Content-Type", self.mimetype(self.location))
+            response.header("Content-Type", self.mimetype(self.location))
 
         return data
 

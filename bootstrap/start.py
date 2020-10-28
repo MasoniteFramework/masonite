@@ -46,8 +46,11 @@ def app(environ, start_response):
     to next.
     """
 
+    from src.masonite.response import Response
+
+
     start_response(container.make('Request').get_status_code(),
-                   container.make('Request').get_and_reset_headers())
+                   container.make(Response).get_and_reset_headers())
 
     """Final Step
     This will take the data variable from the Service Container and return

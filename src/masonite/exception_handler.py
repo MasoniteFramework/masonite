@@ -99,16 +99,23 @@ class ExceptionHandler:
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())
-        handler.integrate(StackOverflowIntegration(),)
-
+        handler.integrate(
+            StackOverflowIntegration(),
+        )
 
         if "application/json" in request.header("Content-Type"):
             stacktrace = []
             for trace in handler.stacktrace():
                 stacktrace.append(trace.file + " line " + str(trace.lineno))
 
-            return response.json({"Exeption": handler.exception(), "Message": str(exception), "traceback": stacktrace}, status=500)
-
+            return response.json(
+                {
+                    "Exeption": handler.exception(),
+                    "Message": str(exception),
+                    "traceback": stacktrace,
+                },
+                status=500,
+            )
 
         response.view(handler.render(), status=500)
 

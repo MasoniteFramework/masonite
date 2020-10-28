@@ -24,6 +24,7 @@ from .helpers.routes import compile_route_to_regex, query_parse
 from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
 from .cookies import CookieJar
+from .headers import HeaderBag, Header
 
 
 class Request(Extendable):
@@ -49,7 +50,7 @@ class Request(Extendable):
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
         self.cookie_jar = CookieJar()
-        self._headers = {}
+        self.header_bag = HeaderBag()
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
@@ -250,6 +251,7 @@ class Request(Extendable):
             self
         """
         self.environ = environ
+        self.header_bag.load(environ)
         self.method = environ["REQUEST_METHOD"]
         self.path = environ["PATH_INFO"]
         self.request_variables = {}
@@ -510,7 +512,7 @@ class Request(Extendable):
         """
         return self.environ["REQUEST_METHOD"]
 
-    def header(self, key, value=None, http_prefix=None):
+    def header(self, key, value=None):
         """Set or gets a header depending on if "value" is passed in or not.
 
         Arguments:
@@ -519,7 +521,6 @@ class Request(Extendable):
 
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
-            http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
             string|None|True -- Either return the value if getting a header,
@@ -527,31 +528,25 @@ class Request(Extendable):
         """
         if isinstance(key, dict):
             for dic_key, dic_value in key.items():
-                self._set_header(dic_key, dic_value, http_prefix)
+                self._set_header(dic_key, dic_value)
             return
 
         # Get Headers
         if value is None:
-            if key in self.environ:
-                return self.environ[key]
-            elif key.upper().replace("-", "_") in self.environ:
-                return self.environ[key.upper().replace("-", "_")]
-            else:
-                return ""
+            header = self.header_bag.get(key)
+            if header:
+                return header.value
+            return ""
 
-        self._set_header(key, value, http_prefix)
+        self._set_header(key, value)
 
-    def _set_header(self, key, value, http_prefix):
+    def _set_header(self, key, value):
         # Set Headers
-        if http_prefix:
-            self.environ["HTTP_{0}".format(key)] = str(value)
-            self._headers.update({"HTTP_{0}".format(key): str(value)})
-        else:
-            self.environ[key] = str(value)
-            self._headers.update({key: str(value)})
+
+        self.header_bag.add(Header(key, value))
 
     def has_raw_header(self, key):
-        return key in self._headers
+        return key in self.header_bag
 
     def get_headers(self):
         """Return all current headers to be set.
@@ -569,11 +564,7 @@ class Request(Extendable):
             list -- A list of tuples.
         """
 
-        headers = []
-        for key, value in self._headers.items():
-            headers.append((key, value))
-
-        return headers
+        return self.header_bag.render()
 
     def reset_headers(self):
         """Reset all headers being set.
@@ -584,7 +575,7 @@ class Request(Extendable):
         Returns:
             None
         """
-        self._headers = {}
+        self.header_bag = HeaderBag()
 
     def get_and_reset_headers(self):
         """Gets the headers but resets at the same time.
@@ -766,7 +757,9 @@ class Request(Extendable):
         """
         return self.user_model
 
-    def redirect(self, route=None, params={}, name=None, controller=None, url=None, status=302):
+    def redirect(
+        self, route=None, params={}, name=None, controller=None, url=None, status=302
+    ):
         """Redirect the user based on the route specified.
 
         Arguments:

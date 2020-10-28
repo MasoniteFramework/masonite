@@ -26,4 +26,4 @@ masonite.db
 tests/uploads
 build
 noorator
-
+venv3

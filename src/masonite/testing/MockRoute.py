@@ -240,7 +240,6 @@ class MockRoute:
         return self
 
     def assertHeaderIs(self, key, value):
-        request = self.container.make("Request")
         response = self.container.make(Response)
 
         header = response.header(key)

@@ -25,7 +25,7 @@ from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
 from .cookies import CookieJar
 from .headers import HeaderBag, Header
-
+from .response import Response
 
 class Request(Extendable):
     """Handles many different aspects of a single request.
@@ -38,7 +38,6 @@ class Request(Extendable):
         have the ability to extend another class at runtime.
     """
 
-    statuses = response_statuses()
 
     def __init__(self, environ=None):
         """Request class constructor.
@@ -57,7 +56,6 @@ class Request(Extendable):
         self.user_model = None
         self.subdomain = None
         self._activate_subdomains = False
-        self._status = None
         self.request_variables = {}
         self._test_user = False
         self.raw_input = None
@@ -464,33 +462,7 @@ class Request(Extendable):
         Returns:
             self
         """
-        if isinstance(status, str):
-            self.app().bind("StatusCode", status)
-        elif isinstance(status, int):
-            try:
-                text_status = self.statuses[status]
-            except KeyError:
-                raise InvalidHTTPStatusCode
-            self.app().bind("StatusCode", text_status)
-        return self
-
-    def get_status_code(self):
-        """Return the current request status code.
-
-        Returns:
-            string -- Returns the status code (404 Not Found, 200 OK, etc)
-        """
-        return self.app().make("StatusCode")
-
-    def is_status(self, code):
-        return self._get_status_code_by_value(self.get_status_code()) == code
-
-    def _get_status_code_by_value(self, value):
-        for key, status in self.statuses.items():
-            if status == value:
-                return key
-
-        return None
+        return self.app().make(Response).status(status)
 
     def route_exists(self, url):
         web_routes = self.container.make("WebRoutes")
@@ -500,9 +472,6 @@ class Request(Extendable):
                 return True
 
         return False
-
-    def get_status(self):
-        return self._get_status_code_by_value(self.get_status_code())
 
     def get_request_method(self):
         """Get the current request method.

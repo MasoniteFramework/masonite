@@ -49,6 +49,7 @@ class MockRoute:
         return self
 
     def contains(self, value):
+        print('vv', self.container.make("Response"))
         return value in self.container.make("Response").decode("utf-8")
 
     def assertContains(self, value):

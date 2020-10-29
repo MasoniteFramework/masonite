@@ -9,6 +9,7 @@ from .exceptions import ResponseError
 from .helpers.Extendable import Extendable
 from .headers import HeaderBag, Header
 from .helpers.status import response_statuses
+from .exceptions import InvalidHTTPStatusCode
 
 
 class Response(Extendable):
@@ -92,15 +93,15 @@ class Response(Extendable):
         return None
 
     def get_status_code(self):
-        """Set the HTTP status code.
-
-        Arguments:
-            status {string|integer} -- A string or integer with the standardized status code
+        """Gets the HTTP status string like "200 OK"
 
         Returns:
             self
         """
         return self._status
+
+    def get_status(self):
+        return self._get_status_code_by_value(self.get_status_code())
 
     def data(self):
         """Get the data that will be returned to the WSGI server.

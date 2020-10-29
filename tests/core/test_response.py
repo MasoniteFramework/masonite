@@ -38,7 +38,7 @@ class MockController:
         return view.render('test', {'test': 'test'})
 
     def response_int(self, response: Response):
-        return response.view(1)
+        return response.view(1) 
 
     def all_users(self):
         return MockUser().all()

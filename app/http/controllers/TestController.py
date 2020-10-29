@@ -19,12 +19,12 @@ class TestController:
         response.header('Content-Type', 'application/xml')
         return 'test'
 
-    def change_status(self, request: Request):
-        request.status(203)
+    def change_status(self, response: Response):
+        response.status(203)
         return 'test'
 
-    def change_404(self, request: Request):
-        request.status(404)
+    def change_404(self, response: Response):
+        response.status(404)
         return 'test'
 
     def testing(self):

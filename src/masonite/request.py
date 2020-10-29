@@ -485,6 +485,13 @@ class Request(Extendable):
     def is_status(self, code):
         return self._get_status_code_by_value(self.get_status_code()) == code
 
+    def _get_status_code_by_value(self, value):
+        for key, status in self.statuses.items():
+            if status == value:
+                return key
+
+        return None
+
     def route_exists(self, url):
         web_routes = self.container.make("WebRoutes")
 
@@ -493,13 +500,6 @@ class Request(Extendable):
                 return True
 
         return False
-
-    def _get_status_code_by_value(self, value):
-        for key, status in self.statuses.items():
-            if status == value:
-                return key
-
-        return None
 
     def get_status(self):
         return self._get_status_code_by_value(self.get_status_code())
@@ -682,20 +682,16 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
-        print("getting cookie", provided_cookie, decrypt)
         if decrypt:
-            print("decryt")
             try:
                 return Sign(self.encryption_key).unsign(
                     self.cookie_jar.get(provided_cookie).value
                 )
             except InvalidToken:
                 self.delete_cookie(provided_cookie)
-                print("couldnt get cookie")
                 return None
             except AttributeError:
                 pass
-        print("here", self.cookie_jar.loaded_cookies)
         if self.cookie_jar.exists(provided_cookie):
             return self.cookie_jar.get(provided_cookie).value
 

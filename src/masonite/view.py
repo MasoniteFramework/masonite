@@ -195,7 +195,6 @@ class View(Responsable):
         Keyword Arguments:
             loader {jinja2.Loader} -- Type of Jinja2 loader to use. (default: {jinja2.PackageLoader})
         """
-        # print('loading', template_location)
         if loader == PackageLoader:
             template_location = template_location.split(self._splice)
 

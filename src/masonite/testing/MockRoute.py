@@ -59,7 +59,7 @@ class MockRoute:
         return self.assertIsStatus(404)
 
     def ok(self):
-        return "200 OK" in self.container.make("Request").get_status_code()
+        return "200 OK" in self.container.make(Response).get_status_code()
 
     def canView(self):
         return self.ok()
@@ -216,13 +216,13 @@ class MockRoute:
             )
 
     def assertIsStatus(self, status):
-        request = self.container.make("Request")
-        assert request.is_status(status), AssertionError(
-            "{} is not equal to {}".format(request.get_status_code(), status)
+        response = self.container.make(Response)
+        assert response.is_status(status), AssertionError(
+            "{} is not equal to {}".format(response.get_status_code(), status)
         )
-        if not request.is_status(status):
+        if not response.is_status(status):
             raise AssertionError(
-                "{} is not equal to {}".format(request.get_status_code(), status)
+                "{} is not equal to {}".format(response.get_status_code(), status)
             )
 
         return self

@@ -8,6 +8,7 @@ from .app import App
 from .exceptions import ResponseError
 from .helpers.Extendable import Extendable
 from .headers import HeaderBag, Header
+from .helpers.status import response_statuses
 
 
 class Response(Extendable):
@@ -20,6 +21,8 @@ class Response(Extendable):
     def __init__(self, app: App):
         self.app = app
         self.request = self.app.make("Request")
+        self._status = None
+        self.statuses = response_statuses()
         self.header_bag = HeaderBag()
 
     def json(self, payload, status=200):
@@ -44,12 +47,9 @@ class Response(Extendable):
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
         self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
-        # self.request.header("Content-Length", str(len(self.to_bytes())))
 
         # If the user did not change it directly
         self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
-        # if not self.request.has_raw_header("Content-Type"):
-        #     self.request.header("Content-Type", content_type)
 
     def header(self, name, value=None):
         if value is None:
@@ -60,7 +60,47 @@ class Response(Extendable):
     def get_and_reset_headers(self):
         header = self.header_bag
         self.header_bag = HeaderBag()
+        self._status = None
         return header.render()
+
+    def status(self, status):
+        """Set the HTTP status code.
+
+        Arguments:
+            status {string|integer} -- A string or integer with the standardized status code
+
+        Returns:
+            self
+        """
+        if isinstance(status, str):
+            self._status = status
+        elif isinstance(status, int):
+            try:
+                self._status = self.statuses[status]
+            except KeyError:
+                raise InvalidHTTPStatusCode
+        return self
+
+    def is_status(self, code):
+        return self._get_status_code_by_value(self.get_status_code()) == code
+
+    def _get_status_code_by_value(self, value):
+        for key, status in self.statuses.items():
+            if status == value:
+                return key
+
+        return None
+
+    def get_status_code(self):
+        """Set the HTTP status code.
+
+        Arguments:
+            status {string|integer} -- A string or integer with the standardized status code
+
+        Returns:
+            self
+        """
+        return self._status
 
     def data(self):
         """Get the data that will be returned to the WSGI server.
@@ -102,15 +142,17 @@ class Response(Extendable):
 
         if isinstance(view, tuple):
             view, status = view
-            self.request.status(status)
+            self.status(status)
 
-        if not self.request.get_status():
-            self.request.status(status)
+        if not self.get_status_code():
+            self.status(status)
+
+        # self.status(status)
 
         if isinstance(view, (dict, list)):
-            return self.json(view, status=self.request.get_status())
+            return self.json(view, status=self.get_status_code())
         elif hasattr(view, "serialize"):
-            return self.json(view.serialize(), status=self.request.get_status())
+            return self.json(view.serialize(), status=self.get_status_code())
         elif isinstance(view, int):
             view = str(view)
         elif isinstance(view, Responsable):
@@ -141,7 +183,7 @@ class Response(Extendable):
         Returns:
             string -- Returns the data to be returned.
         """
-        self.request.status(status)
+        self.status(status)
         if not location:
             location = self.request.redirect_url
 

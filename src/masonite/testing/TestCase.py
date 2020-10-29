@@ -12,6 +12,7 @@ from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
 from masoniteorm.factories import Factory
+from ..response import Response
 
 from .MockRoute import MockRoute
 
@@ -125,6 +126,9 @@ class TestCase(unittest.TestCase):
 
         if self.container.has("Request"):
             self.container.make("Request").get_and_reset_headers()
+
+        if self.container.has(Response):
+            self.container.make(Response).get_and_reset_headers()
 
     def call(self, method, url, params, wsgi={}):
         custom_wsgi = {"PATH_INFO": url, "REQUEST_METHOD": method}

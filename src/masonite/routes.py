@@ -213,7 +213,7 @@ class BaseHttpRoute:
             self.controller = getattr(module, get_controller)
 
             # Set the controller method on class. This is a string
-            self.controller_method = mod[1]
+            self.controller_method = mod[1] if len(mod) == 2 else '__call__'
         except ImportError as e:
             import sys
             import traceback

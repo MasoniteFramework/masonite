@@ -112,15 +112,10 @@ class ExceptionHandler:
                 {
                     "Exeption": handler.exception(),
                     "Message": str(exception),
-                    "traceback": stacktrace,
                 },
                 status=500,
             )
 
-        response.view(handler.render(), status=500)
-
-
-class DD:
     def __init__(self, container):
         self.app = container
 

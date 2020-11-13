@@ -22,6 +22,7 @@ class Response(Extendable):
     def __init__(self, app: App):
         self.app = app
         self.request = self.app.make("Request")
+        self.content = ""
         self._status = None
         self.statuses = response_statuses()
         self.header_bag = HeaderBag()
@@ -35,6 +36,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
+        self.content = bytes(json.dumps(payload), "utf-8")
         self.app.bind("Response", bytes(json.dumps(payload), "utf-8"))
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
@@ -62,6 +64,7 @@ class Response(Extendable):
         header = self.header_bag
         self.header_bag = HeaderBag()
         self._status = None
+        self.content = ""
         return header.render()
 
     def status(self, status):
@@ -109,6 +112,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the response
         """
+        return self.content
         if self.app.has("Response"):
             return self.app.make("Response")
 
@@ -166,8 +170,10 @@ class Response(Extendable):
             )
 
         if isinstance(view, str):
+            self.content = bytes(view, "utf-8")
             self.app.bind("Response", bytes(view, "utf-8"))
         else:
+            self.content = view
             self.app.bind("Response", view)
 
         self.make_headers()

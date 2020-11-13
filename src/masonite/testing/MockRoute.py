@@ -49,8 +49,7 @@ class MockRoute:
         return self
 
     def contains(self, value):
-        print('vv', self.container.make("Response"))
-        return value in self.container.make("Response").decode("utf-8")
+        return value in self.container.make(Response).content.decode("utf-8")
 
     def assertContains(self, value):
         assert self.contains(value), "Response does not contain {}".format(value)
@@ -66,7 +65,7 @@ class MockRoute:
         return self.ok()
 
     def get_string_response(self):
-        response = self.container.make("Response")
+        response = self.container.make(Response).content
 
         if isinstance(response, str):
             return response

@@ -108,14 +108,20 @@ class ExceptionHandler:
             for trace in handler.stacktrace():
                 stacktrace.append(trace.file + " line " + str(trace.lineno))
 
+
             return response.json(
                 {
                     "Exeption": handler.exception(),
                     "Message": str(exception),
+                    "traceback": stacktrace,
                 },
                 status=500,
             )
 
+        response.view(handler.render(), status=500)
+
+
+class DD:
     def __init__(self, container):
         self.app = container
 

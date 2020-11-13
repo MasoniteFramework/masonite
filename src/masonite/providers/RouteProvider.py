@@ -91,7 +91,6 @@ class RouteProvider(ServiceProvider):
                     This data is typically the output of the controller method depending
                     on the type of route.
                     """
-
                     response.view(route.get_response(), status=200)
 
                 """Execute Route After Route Middleware

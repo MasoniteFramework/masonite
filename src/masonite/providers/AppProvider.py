@@ -56,10 +56,10 @@ class AppProvider(ServiceProvider):
 
         self._autoload(config("application.autoload"))
 
-    def boot(self, request: Request, route: Route):
-        self.app.bind("StatusCode", None)
+    def boot(self, request: Request, route: Route, response: Response):
         route.load_environ(self.app.make("Environ"))
         request.load_environ(self.app.make("Environ")).load_app(self.app)
+        response.get_and_reset_headers()
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)

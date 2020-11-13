@@ -37,7 +37,6 @@ class Response(Extendable):
             string -- Returns a string representation of the data
         """
         self.content = bytes(json.dumps(payload), "utf-8")
-        self.app.bind("Response", bytes(json.dumps(payload), "utf-8"))
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
 
@@ -152,8 +151,8 @@ class Response(Extendable):
         if not self.get_status_code():
             self.status(status)
 
-        # self.status(status)
 
+        print('view here')
         if isinstance(view, (dict, list)):
             return self.json(view, status=self.get_status_code())
         elif hasattr(view, "serialize"):

@@ -21,8 +21,8 @@ class NewCommand(Command):
         {target? : Path of you Masonite project}
         {--b|--branch=False : Specify which branch from the Masonite repo you would like to install}
         {--r|--release=False : Specify which version of Masonite you would like to install}
-        {--rp|--repo=MasoniteFramework/cookie-cutter : Specify from which repository you want to craft your project}
-        {--p|--provider=github : Specify from which repository you want to craft your project [github, gitlab] }
+        {--repo=MasoniteFramework/cookie-cutter : Specify from which repository you want to craft your project}
+        {--p|--provider=github : Specify from which repository you want to craft your project github, gitlab }
     """
 
     providers = ["github", "gitlab"]

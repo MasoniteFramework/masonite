@@ -68,7 +68,7 @@ class RouteProvider(ServiceProvider):
                 """Excute HTTP before middleware
                     Only those middleware that have a "before" method are ran.
                 """
-                
+
                 for http_middleware in self.app.make("HttpMiddleware"):
                     located_middleware = self.app.resolve(http_middleware)
                     if hasattr(located_middleware, "before"):

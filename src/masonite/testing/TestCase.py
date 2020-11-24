@@ -230,7 +230,7 @@ class TestCase(unittest.TestCase):
 
         if self._with_subdomains:
             self.container.bind('Subdomains', True)
-        
+
         # if self.headers:
         #     self.container.make("Request").header(self.headers)
 
@@ -244,7 +244,7 @@ class TestCase(unittest.TestCase):
         else:
             self.container.bind("HttpMiddleware", self.http_middleware)
         # self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
-        
+
         # if self.http_middleware is not False:
         #     self.container.bind("HttpMiddleware", self.http_middleware)
 

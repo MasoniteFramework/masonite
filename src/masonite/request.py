@@ -27,6 +27,7 @@ from .cookies import CookieJar
 from .headers import HeaderBag, Header
 from .response import Response
 
+
 class Request(Extendable):
     """Handles many different aspects of a single request.
 
@@ -37,7 +38,6 @@ class Request(Extendable):
         Extendable {masonite.helpers.Extendable.Extendable} -- Makes this class
         have the ability to extend another class at runtime.
     """
-
 
     def __init__(self, environ=None):
         """Request class constructor.

@@ -108,7 +108,6 @@ class ExceptionHandler:
             for trace in handler.stacktrace():
                 stacktrace.append(trace.file + " line " + str(trace.lineno))
 
-
             return response.json(
                 {
                     "Exeption": handler.exception(),

@@ -46,7 +46,7 @@ class AppProvider(ServiceProvider):
         self.app.bind("Route", Route())
 
         self.app.bind("Container", self.app)
-        
+
         self.app.bind("ExceptionDumpExceptionHandler", DumpHandler)
 
         self.app.bind("RouteMiddleware", config("middleware.route_middleware"))

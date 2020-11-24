@@ -14,9 +14,8 @@ class WebGuard(AuthenticationGuard):
 
     drivers = {"cookie": AuthCookieDriver, "jwt": AuthJwtDriver}
 
-    def __init__(self, app: App, request: Request, driver=None, auth_model=None):
+    def __init__(self, app: App, driver=None, auth_model=None):
         self.app = app
-        self.request = request
         self._once = False
         self.auth_model = auth_model or config("auth.auth.guards.web.model")
         self.driver = self.make(driver or config("auth.auth.guards.web.driver"))
@@ -85,7 +84,7 @@ class WebGuard(AuthenticationGuard):
                     model.remember_token = remember_token
                     model.save()
                     self.driver.save(remember_token, model=model)
-                self.request.set_user(model)
+                self.app.make('Request').set_user(model)
                 return model
 
         except Exception as exception:
@@ -119,7 +118,7 @@ class WebGuard(AuthenticationGuard):
                 model.remember_token = remember_token
                 model.save()
                 self.driver.save(remember_token, model=model)
-            self.request.set_user(model)
+            self.app.make('Request').set_user(model)
             return model
 
         return False

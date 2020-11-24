@@ -74,7 +74,6 @@ class CsrfMiddleware:
         Returns:
             string -- Returns a new token or the current token.
         """
-
         if self.request.is_post() and not self.in_exempt():
             token = (
                 self.request.header("HTTP_X_CSRF_TOKEN")

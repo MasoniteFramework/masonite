@@ -12,8 +12,10 @@ from ..helpers.routes import create_matchurl, flatten_routes
 from .generate_wsgi import generate_wsgi
 from .create_container import create_container
 from masoniteorm.factories import Factory
+from ..response import Response
 
 from .MockRoute import MockRoute
+from ..helpers import config
 
 
 class TestCase(unittest.TestCase):
@@ -44,8 +46,9 @@ class TestCase(unittest.TestCase):
         if not self.transactions and self.refreshes_database:
             self.refreshDatabase()
 
-        self.route_middleware = False
-        self.http_middleware = False
+        self.route_middleware = {}
+        self.http_middleware = []
+        self.use_http_middleware = True
         self.headers = {}
 
     def buildOwnContainer(self):
@@ -126,6 +129,9 @@ class TestCase(unittest.TestCase):
         if self.container.has("Request"):
             self.container.make("Request").get_and_reset_headers()
 
+        if self.container.has(Response):
+            self.container.make(Response).get_and_reset_headers()
+
     def call(self, method, url, params, wsgi={}):
         custom_wsgi = {"PATH_INFO": url, "REQUEST_METHOD": method}
 
@@ -141,7 +147,6 @@ class TestCase(unittest.TestCase):
             )
 
         custom_wsgi.update({"QUERY_STRING": urlencode(params)})
-
         self.run_container(custom_wsgi)
         self.container.make("Request").request_variables = params
         return self.route(url, method)
@@ -221,19 +226,27 @@ class TestCase(unittest.TestCase):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
         self.container.bind("Environ", wsgi)
-        self.container.make("Request")._test_user = self.acting_user
-        self.container.make("Request").load_app(self.container).load_environ(wsgi)
+        self.container.bind('User', self.acting_user)
+
         if self._with_subdomains:
-            self.container.make("Request").activate_subdomains()
+            self.container.bind('Subdomains', True)
 
-        if self.headers:
-            self.container.make("Request").header(self.headers)
+        # if self.headers:
+        #     self.container.make("Request").header(self.headers)
 
-        if self.route_middleware is not False:
+        if self.route_middleware:
             self.container.bind("RouteMiddleware", self.route_middleware)
+        else:
+            self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
 
-        if self.http_middleware is not False:
+        if self.use_http_middleware:
+            self.container.bind("HttpMiddleware", config("middleware.http_middleware"))
+        else:
             self.container.bind("HttpMiddleware", self.http_middleware)
+        # self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
+
+        # if self.http_middleware is not False:
+        #     self.container.bind("HttpMiddleware", self.http_middleware)
 
         try:
             for provider in self.container.make("WSGIProviders"):
@@ -283,6 +296,7 @@ class TestCase(unittest.TestCase):
         return self
 
     def withHttpMiddleware(self, middleware):
+        self.use_http_middleware = False
         self.http_middleware = middleware
         return self
 
@@ -291,6 +305,7 @@ class TestCase(unittest.TestCase):
         return self
 
     def withoutHttpMiddleware(self):
+        self.use_http_middleware = False
         self.http_middleware = []
         return self
 

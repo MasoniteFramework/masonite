@@ -24,6 +24,8 @@ from .helpers.routes import compile_route_to_regex, query_parse
 from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
 from .cookies import CookieJar
+from .headers import HeaderBag, Header
+from .response import Response
 
 
 class Request(Extendable):
@@ -37,8 +39,6 @@ class Request(Extendable):
         have the ability to extend another class at runtime.
     """
 
-    statuses = response_statuses()
-
     def __init__(self, environ=None):
         """Request class constructor.
 
@@ -49,14 +49,13 @@ class Request(Extendable):
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
         self.cookie_jar = CookieJar()
-        self._headers = {}
+        self.header_bag = HeaderBag()
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
         self.subdomain = None
         self._activate_subdomains = False
-        self._status = None
         self.request_variables = {}
         self._test_user = False
         self.raw_input = None
@@ -250,6 +249,7 @@ class Request(Extendable):
             self
         """
         self.environ = environ
+        self.header_bag.load(environ)
         self.method = environ["REQUEST_METHOD"]
         self.path = environ["PATH_INFO"]
         self.request_variables = {}
@@ -462,26 +462,7 @@ class Request(Extendable):
         Returns:
             self
         """
-        if isinstance(status, str):
-            self.app().bind("StatusCode", status)
-        elif isinstance(status, int):
-            try:
-                text_status = self.statuses[status]
-            except KeyError:
-                raise InvalidHTTPStatusCode
-            self.app().bind("StatusCode", text_status)
-        return self
-
-    def get_status_code(self):
-        """Return the current request status code.
-
-        Returns:
-            string -- Returns the status code (404 Not Found, 200 OK, etc)
-        """
-        return self.app().make("StatusCode")
-
-    def is_status(self, code):
-        return self._get_status_code_by_value(self.get_status_code()) == code
+        return self.app().make(Response).status(status)
 
     def route_exists(self, url):
         web_routes = self.container.make("WebRoutes")
@@ -492,16 +473,6 @@ class Request(Extendable):
 
         return False
 
-    def _get_status_code_by_value(self, value):
-        for key, status in self.statuses.items():
-            if status == value:
-                return key
-
-        return None
-
-    def get_status(self):
-        return self._get_status_code_by_value(self.get_status_code())
-
     def get_request_method(self):
         """Get the current request method.
 
@@ -510,7 +481,7 @@ class Request(Extendable):
         """
         return self.environ["REQUEST_METHOD"]
 
-    def header(self, key, value=None, http_prefix=None):
+    def header(self, key, value=None):
         """Set or gets a header depending on if "value" is passed in or not.
 
         Arguments:
@@ -519,7 +490,6 @@ class Request(Extendable):
 
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
-            http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
             string|None|True -- Either return the value if getting a header,
@@ -527,31 +497,25 @@ class Request(Extendable):
         """
         if isinstance(key, dict):
             for dic_key, dic_value in key.items():
-                self._set_header(dic_key, dic_value, http_prefix)
+                self._set_header(dic_key, dic_value)
             return
 
         # Get Headers
         if value is None:
-            if key in self.environ:
-                return self.environ[key]
-            elif key.upper().replace("-", "_") in self.environ:
-                return self.environ[key.upper().replace("-", "_")]
-            else:
-                return ""
+            header = self.header_bag.get(key)
+            if header:
+                return header.value
+            return ""
 
-        self._set_header(key, value, http_prefix)
+        self._set_header(key, value)
 
-    def _set_header(self, key, value, http_prefix):
+    def _set_header(self, key, value):
         # Set Headers
-        if http_prefix:
-            self.environ["HTTP_{0}".format(key)] = str(value)
-            self._headers.update({"HTTP_{0}".format(key): str(value)})
-        else:
-            self.environ[key] = str(value)
-            self._headers.update({key: str(value)})
+
+        self.header_bag.add(Header(key, value))
 
     def has_raw_header(self, key):
-        return key in self._headers
+        return key in self.header_bag
 
     def get_headers(self):
         """Return all current headers to be set.
@@ -569,11 +533,7 @@ class Request(Extendable):
             list -- A list of tuples.
         """
 
-        headers = []
-        for key, value in self._headers.items():
-            headers.append((key, value))
-
-        return headers
+        return self.header_bag.render()
 
     def reset_headers(self):
         """Reset all headers being set.
@@ -584,7 +544,7 @@ class Request(Extendable):
         Returns:
             None
         """
-        self._headers = {}
+        self.header_bag = HeaderBag()
 
     def get_and_reset_headers(self):
         """Gets the headers but resets at the same time.
@@ -691,20 +651,16 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
-        print("getting cookie", provided_cookie, decrypt)
         if decrypt:
-            print("decryt")
             try:
                 return Sign(self.encryption_key).unsign(
                     self.cookie_jar.get(provided_cookie).value
                 )
             except InvalidToken:
                 self.delete_cookie(provided_cookie)
-                print("couldnt get cookie")
                 return None
             except AttributeError:
                 pass
-        print("here", self.cookie_jar.loaded_cookies)
         if self.cookie_jar.exists(provided_cookie):
             return self.cookie_jar.get(provided_cookie).value
 
@@ -764,9 +720,13 @@ class Request(Extendable):
         Returns:
             app.User.User|None -- Returns None if the user is not loaded or logged in.
         """
+        if self.app().has('User'):
+            return self.app().make('User')
         return self.user_model
 
-    def redirect(self, route=None, params={}, name=None, controller=None, status=302):
+    def redirect(
+        self, route=None, params={}, name=None, controller=None, url=None, status=302
+    ):
         """Redirect the user based on the route specified.
 
         Arguments:
@@ -786,6 +746,8 @@ class Request(Extendable):
             self.redirect_url = self.compile_route_to_url(route, params)
         elif controller:
             self.redirect_url = self.url_from_controller(controller, params)
+        elif url:
+            self.redirect_url = url
 
         self.status(status)
         return self
@@ -1069,7 +1031,7 @@ class Request(Extendable):
 
     def activate_subdomains(self):
         """Activate subdomains abilities."""
-        self._activate_subdomains = True
+        self.app().bind('Subdomains', True)
 
     def has_subdomain(self):
         """Check if the current URI has a subdomain.
@@ -1077,7 +1039,7 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if self._activate_subdomains:
+        if self.app().has('Subdomains') and self.app().make('Subdomains'):
             url = tldextract.extract(self.environ["HTTP_HOST"])
 
             if url.subdomain:

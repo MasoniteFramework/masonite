@@ -2,6 +2,7 @@ import json
 
 from ..helpers import Dot
 from ..request import Request
+from ..response import Response
 
 
 class MockRoute:
@@ -48,7 +49,7 @@ class MockRoute:
         return self
 
     def contains(self, value):
-        return value in self.container.make("Response").decode("utf-8")
+        return value in self.container.make(Response).content.decode("utf-8")
 
     def assertContains(self, value):
         assert self.contains(value), "Response does not contain {}".format(value)
@@ -58,13 +59,13 @@ class MockRoute:
         return self.assertIsStatus(404)
 
     def ok(self):
-        return "200 OK" in self.container.make("Request").get_status_code()
+        return "200 OK" in self.container.make(Response).get_status_code()
 
     def canView(self):
         return self.ok()
 
     def get_string_response(self):
-        response = self.container.make("Response")
+        response = self.container.make(Response).content
 
         if isinstance(response, str):
             return response
@@ -215,20 +216,20 @@ class MockRoute:
             )
 
     def assertIsStatus(self, status):
-        request = self.container.make("Request")
-        assert request.is_status(status), AssertionError(
-            "{} is not equal to {}".format(request.get_status_code(), status)
+        response = self.container.make(Response)
+        assert response.is_status(status), AssertionError(
+            "{} is not equal to {}".format(response.get_status_code(), status)
         )
-        if not request.is_status(status):
+        if not response.is_status(status):
             raise AssertionError(
-                "{} is not equal to {}".format(request.get_status_code(), status)
+                "{} is not equal to {}".format(response.get_status_code(), status)
             )
 
         return self
 
     def assertHasHeader(self, key):
-        request = self.container.make("Request")
-        assert request.header(key), "Header '{}' does not exist".format(key)
+        response = self.container.make(Response)
+        assert response.header(key), "Header '{}' does not exist".format(key)
         return self
 
     def assertNotHasHeader(self, key):
@@ -239,9 +240,16 @@ class MockRoute:
         return self
 
     def assertHeaderIs(self, key, value):
-        request = self.container.make("Request")
-        assert str(request.header(key)) == str(value), AssertionError(
-            "{} is not equal to {}".format(request.header(key), value)
+        response = self.container.make(Response)
+
+        header = response.header(key)
+        if not header:
+            raise ValueError(f"Header {key} is not set")
+        if header:
+            header = header.value
+
+        assert header == str(value), AssertionError(
+            "{} is not equal to {}".format(header, value)
         )
 
         return self
@@ -269,11 +277,14 @@ class MockRoute:
         return self
 
     def headerIs(self, key, value):
-        request = self.container.make("Request")
-        assertion = request.header(key) == value
+        response = self.container.make(Response)
+        header = response.header(key)
+        if not header:
+            raise AssertionError(f"Could not found the {header} header")
+        assertion = header.value == value
         if not assertion:
             raise AssertionError(
-                "header {} does not equal {}".format(request.header(key), value)
+                "header {} does not equal {}".format(response.header(key), value)
             )
         return assertion
 

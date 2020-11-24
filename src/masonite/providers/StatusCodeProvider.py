@@ -37,24 +37,24 @@ class StatusCodeProvider(ServiceProvider):
     def boot(self):
         request = self.app.make("Request")
         response = self.app.make(Response)
-        if request.is_status(200):
+        if response.is_status(200):
             return
 
-        if request.get_status() in (500, 405, 404):
+        if response.get_status() in (500, 405, 404):
             if "application/json" in request.header("Content-Type"):
                 # Returns json response when we want the client to receive a json response
                 body = json.loads(self.app.make("Response").decode("utf-8"))
                 json_response = {
-                    "error": {"status": request.get_status(), "body": body}
+                    "error": {"status": response.get_status(), "body": body}
                 }
-                response.view(json_response, status=request.get_status())
+                response.view(json_response, status=response.get_status())
             else:
                 # Returns html response when json is not explicitly specified
                 if self.app.make("ViewClass").exists(
-                    "errors/{}".format(request.get_status())
+                    "errors/{}".format(response.get_status())
                 ):
                     rendered_view = self.app.make("View")(
-                        "errors/{}".format(request.get_status())
+                        "errors/{}".format(response.get_status())
                     )
                 else:
                     rendered_view = self.app.make("View")(
@@ -62,7 +62,7 @@ class StatusCodeProvider(ServiceProvider):
                             "application.templates.statuscode",
                             "/masonite/snippets/statuscode",
                         ),
-                        {"code": request.get_status_code()},
+                        {"code": response.get_status_code()},
                     )
 
-                response.view(rendered_view, status=request.get_status())
+                response.view(rendered_view, status=response.get_status())

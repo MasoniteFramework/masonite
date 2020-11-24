@@ -42,7 +42,6 @@ class TestSession(TestCase):
             session.request.environ['REMOTE_ADDR'] = 'get.all.data'
             session.set('username', 'pep')
             session.flash('password', 'secret')
-            print('all', session.all())
             self.assertEqual(session.all(), {'username': 'pep', 'password': 'secret'})
 
     def test_session_has_data(self):

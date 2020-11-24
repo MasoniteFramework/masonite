@@ -151,8 +151,6 @@ class Response(Extendable):
         if not self.get_status_code():
             self.status(status)
 
-
-        print('view here')
         if isinstance(view, (dict, list)):
             return self.json(view, status=self.get_status_code())
         elif hasattr(view, "serialize"):

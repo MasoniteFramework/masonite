@@ -35,7 +35,6 @@ for provider in config('providers.providers'):
         container.make('Providers').append(located_provider)
 
 for provider in container.make('Providers'):
-    print('cc', provider)
     container.resolve(provider.boot)
 
 """Get the application from the container

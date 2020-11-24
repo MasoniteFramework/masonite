@@ -50,7 +50,6 @@ class AuthenticationGuard:
             object -- Returns a guard driver object.
         """
         if key in self.drivers:
-            print(key)
             self.driver = self.app.resolve(self.drivers[key])
             return self.driver
 

@@ -50,7 +50,6 @@ class TestUploadManager(unittest.TestCase):
             self.app.make('UploadManager').driver(static)
 
     def test_disk_driver_creates_directory_if_not_exists(self):
-        print(self.app.make('UploadManager'))
         self.app.make('UploadManager').driver('disk').store(ImageMock(), location="storage/temp")
         self.assertTrue(os.path.exists('storage/temp'))
         shutil.rmtree('storage/temp')
@@ -120,8 +119,6 @@ class TestUploadManager(unittest.TestCase):
 
         image = ImageMock()
         image.filename = 'file.pdf'
-
-        print(image.filename)
 
         self.assertTrue(UploadManager(self.app).driver('disk').accept('*').store(image))
 

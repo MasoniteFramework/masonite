@@ -59,7 +59,6 @@ class AppProvider(ServiceProvider):
         self._autoload(config("application.autoload"))
 
     def boot(self, route: Route):
-        print('app booting')
         self.app.bind("Request", Request(self.app.make("Environ")).load_app(self.app))
         self.app.simple(Response(self.app))
         route.load_environ(self.app.make("Environ"))

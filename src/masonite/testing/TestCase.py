@@ -15,6 +15,7 @@ from masoniteorm.factories import Factory
 from ..response import Response
 
 from .MockRoute import MockRoute
+from ..helpers import config
 
 
 class TestCase(unittest.TestCase):
@@ -45,8 +46,9 @@ class TestCase(unittest.TestCase):
         if not self.transactions and self.refreshes_database:
             self.refreshDatabase()
 
-        self.route_middleware = False
-        self.http_middleware = False
+        self.route_middleware = {}
+        self.http_middleware = []
+        self.use_http_middleware = True
         self.headers = {}
 
     def buildOwnContainer(self):
@@ -145,7 +147,6 @@ class TestCase(unittest.TestCase):
             )
 
         custom_wsgi.update({"QUERY_STRING": urlencode(params)})
-        print('custom', custom_wsgi)
         self.run_container(custom_wsgi)
         self.container.make("Request").request_variables = params
         return self.route(url, method)
@@ -226,29 +227,32 @@ class TestCase(unittest.TestCase):
         wsgi.update(wsgi_values)
         self.container.bind("Environ", wsgi)
         self.container.bind('User', self.acting_user)
-        # self.container.make("Request")._test_user = self.acting_user
-        # self.container.make("Request").load_app(self.container).load_environ(wsgi)
+
         if self._with_subdomains:
             self.container.bind('Subdomains', True)
         
-        print('hh', self.headers)
-
         # if self.headers:
         #     self.container.make("Request").header(self.headers)
 
-        if self.route_middleware is not False:
+        if self.route_middleware:
             self.container.bind("RouteMiddleware", self.route_middleware)
+        else:
+            self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
 
-        if self.http_middleware is not False:
+        if self.use_http_middleware:
+            self.container.bind("HttpMiddleware", config("middleware.http_middleware"))
+        else:
             self.container.bind("HttpMiddleware", self.http_middleware)
+        # self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
+        
+        # if self.http_middleware is not False:
+        #     self.container.bind("HttpMiddleware", self.http_middleware)
 
         try:
             for provider in self.container.make("WSGIProviders"):
-                print(provider)
                 self.container.resolve(provider.boot)
         except Exception as e:  # skipcq
             if self._exception_handling:
-                print('eee???', e)
                 self.container.make("ExceptionHandler").load_exception(e)
             else:
                 raise e
@@ -292,6 +296,7 @@ class TestCase(unittest.TestCase):
         return self
 
     def withHttpMiddleware(self, middleware):
+        self.use_http_middleware = False
         self.http_middleware = middleware
         return self
 
@@ -300,6 +305,7 @@ class TestCase(unittest.TestCase):
         return self
 
     def withoutHttpMiddleware(self):
+        self.use_http_middleware = False
         self.http_middleware = []
         return self
 

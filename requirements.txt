@@ -10,7 +10,7 @@ Jinja2>=2,<3
 masonite-entry>=0.0.0,<=0.9.99
 masonite-events>=1.0,<2
 masonite-scheduler>=1.0.0,<=1.0.99
-masonite-orm
+masonite-orm==0.8.0b1
 passlib>=1.7,<1.8
 pendulum>=2.1
 pika

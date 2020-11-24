@@ -720,6 +720,8 @@ class Request(Extendable):
         Returns:
             app.User.User|None -- Returns None if the user is not loaded or logged in.
         """
+        if self.app().has('User'):
+            return self.app().make('User')
         return self.user_model
 
     def redirect(
@@ -1029,7 +1031,7 @@ class Request(Extendable):
 
     def activate_subdomains(self):
         """Activate subdomains abilities."""
-        self._activate_subdomains = True
+        self.app().bind('Subdomains', True)
 
     def has_subdomain(self):
         """Check if the current URI has a subdomain.
@@ -1037,7 +1039,7 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if self._activate_subdomains:
+        if self.app().has('Subdomains') and self.app().make('Subdomains'):
             url = tldextract.extract(self.environ["HTTP_HOST"])
 
             if url.subdomain:

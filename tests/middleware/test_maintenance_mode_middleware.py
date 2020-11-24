@@ -20,16 +20,16 @@ class TestMaintenanceModeMiddleware(TestCase):
         self.down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
 
     def test_maintenance_mode_middleware(self):
-        request = self.container.make('Request')
-        response = self.container.make(Response)
         down = open(self.down_path, 'w+')
         down.close()
         self.get('/')
+        request = self.container.make('Request')
+        response = self.container.make(Response)
         self.assertEqual(response.get_status_code(), '503 Service Unavailable')
 
     def test_maintenance_mode_middleware_is_not_down(self):
-        request = self.container.make('Request')
-        response = self.container.make(Response)
         os.remove(self.down_path)
         self.get('/')
+        request = self.container.make('Request')
+        response = self.container.make(Response)
         self.assertEqual(response.get_status_code(), '200 OK')

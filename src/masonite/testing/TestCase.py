@@ -145,7 +145,7 @@ class TestCase(unittest.TestCase):
             )
 
         custom_wsgi.update({"QUERY_STRING": urlencode(params)})
-
+        print('custom', custom_wsgi)
         self.run_container(custom_wsgi)
         self.container.make("Request").request_variables = params
         return self.route(url, method)
@@ -225,13 +225,16 @@ class TestCase(unittest.TestCase):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
         self.container.bind("Environ", wsgi)
-        self.container.make("Request")._test_user = self.acting_user
-        self.container.make("Request").load_app(self.container).load_environ(wsgi)
+        self.container.bind('User', self.acting_user)
+        # self.container.make("Request")._test_user = self.acting_user
+        # self.container.make("Request").load_app(self.container).load_environ(wsgi)
         if self._with_subdomains:
-            self.container.make("Request").activate_subdomains()
+            self.container.bind('Subdomains', True)
+        
+        print('hh', self.headers)
 
-        if self.headers:
-            self.container.make("Request").header(self.headers)
+        # if self.headers:
+        #     self.container.make("Request").header(self.headers)
 
         if self.route_middleware is not False:
             self.container.bind("RouteMiddleware", self.route_middleware)
@@ -241,9 +244,11 @@ class TestCase(unittest.TestCase):
 
         try:
             for provider in self.container.make("WSGIProviders"):
+                print(provider)
                 self.container.resolve(provider.boot)
         except Exception as e:  # skipcq
             if self._exception_handling:
+                print('eee???', e)
                 self.container.make("ExceptionHandler").load_exception(e)
             else:
                 raise e

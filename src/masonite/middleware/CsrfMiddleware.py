@@ -27,6 +27,7 @@ class CsrfMiddleware:
         self.request = request
         self.csrf = csrf
         self.view = view
+        print('CSRF Middleware')
 
     def before(self):
         """Execute this method before the controller."""
@@ -74,13 +75,14 @@ class CsrfMiddleware:
         Returns:
             string -- Returns a new token or the current token.
         """
-
+        print('verify token')
         if self.request.is_post() and not self.in_exempt():
             token = (
                 self.request.header("HTTP_X_CSRF_TOKEN")
                 or self.request.header("HTTP_X_XSRF_TOKEN")
                 or self.request.input("__token")
             )
+            print('token', token)
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
             return token

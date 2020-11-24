@@ -19,6 +19,7 @@ learn more more about Service Providers in our documentation
 PROVIDERS = [
     # Framework Providers
     AppProvider,
+    CsrfProvider,
     SessionProvider,
     RouteProvider,
     StatusCodeProvider,
@@ -34,7 +35,6 @@ PROVIDERS = [
     CacheProvider,
     BroadcastProvider,
     CacheProvider,
-    CsrfProvider,
     HelpersProvider,
 
     # Third Party Providers

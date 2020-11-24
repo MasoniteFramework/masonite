@@ -27,6 +27,3 @@ class TestProviders(TestCase):
             self.container.resolve(provider().load_app(self.container).boot)
 
         self.assertTrue(self.container.make('Request'))
-
-    def test_normal_app_containers(self):
-        self.assertTrue(self.container.make('Request'))

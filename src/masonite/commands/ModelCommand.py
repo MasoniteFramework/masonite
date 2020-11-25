@@ -26,7 +26,7 @@ class ModelCommand(Command):
         class_directory = "{}{}.py".format(self.base_directory, class_name)
 
         if not make_directory(class_directory):
-            return self.error("{0} Already Exists!".format(self.scaffold_name))
+            return self.line_error("{0} Already Exists!".format(self.scaffold_name))
 
         with open(class_directory, "w+") as f:
             if view.exists(self.template):

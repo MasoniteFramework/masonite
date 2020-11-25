@@ -36,11 +36,11 @@ class TestNewCommand(unittest.TestCase):
     def test_cannot_craft_to_not_empty_directory(self):
         # run command without arguments, target is the current directory which is not empty
         with self.assertRaises(ProjectTargetNotEmpty):
-            self.command_tester.execute([])
+            self.command_tester.execute()
 
     def test_handle_not_implemented_provider(self):
-        self.command_tester.execute([('target', 'new_project'), ('--provider', 'bitbucket')])
-        self.assertEqual("'provider' option must be in github,gitlab\n", self.command_tester.get_display())
+        self.command_tester.execute("new_project --provider bitbucket")
+        self.assertEqual("'provider' option must be in github,gitlab\n", self.command_tester.io.fetch_error())
 
     @responses.activate
     def test_handle_incorrect_branch(self):
@@ -49,8 +49,8 @@ class TestNewCommand(unittest.TestCase):
             body='[]'
         )
 
-        self.command_tester.execute([('target', 'new_project'), ('--branch', 'unknown')])
-        self.assertEqual("Branch unknown does not exist.\n", self.command_tester.get_display())
+        self.command_tester.execute("new_project --branch unknown")
+        self.assertEqual("Branch unknown does not exist.\n", self.command_tester.io.fetch_error())
 
     @responses.activate
     def test_handle_incorrect_version(self):
@@ -59,8 +59,8 @@ class TestNewCommand(unittest.TestCase):
             body='{}'
         )
 
-        self.command_tester.execute([('target', 'new_project'), ('--release', '0.0.0')])
-        self.assertEqual("Version 0.0.0 could not be found.\n", self.command_tester.get_display())
+        self.command_tester.execute("new_project --release 0.0.0")
+        self.assertEqual("Version 0.0.0 could not be found.\n", self.command_tester.io.fetch_error())
 
     @responses.activate
     def test_handle_incorrect_version(self):
@@ -69,8 +69,8 @@ class TestNewCommand(unittest.TestCase):
             body='{}'
         )
 
-        self.command_tester.execute([('target', 'new_project'), ('--release', '0.0.0')])
-        self.assertEqual("Version 0.0.0 could not be found\n", self.command_tester.get_display())
+        self.command_tester.execute("new_project --release 0.0.0")
+        self.assertEqual("Version 0.0.0 could not be found\n", self.command_tester.io.fetch_error())
 
     @responses.activate
     def test_correct_version_is_displayed(self):
@@ -82,8 +82,8 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
         responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
-        self.command_tester.execute([('target', 'new_project'), ('--release', '2.3.6')])
-        self.assertTrue(self.command_tester.get_display().startswith("Installing version v2.3.6"))
+        self.command_tester.execute("new_project --release 2.3.6")
+        self.assertTrue(self.command_tester.io.fetch_output().startswith("Installing version v2.3.6"))
 
     @responses.activate
     def test_warning_is_displayed_when_no_tags_in_repo(self):
@@ -95,8 +95,8 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://github.com/MasoniteFramework/cookie-cutter/archive/master.zip')
         responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/zip/master')
 
-        self.command_tester.execute([('target', 'new_project')])
-        self.assertTrue("[WARNING] No tags has been found, using latest commit on master." in self.command_tester.get_display())
+        self.command_tester.execute("new_project")
+        self.assertTrue("No tags has been found, using latest commit on master." in self.command_tester.io.fetch_output())
 
     @responses.activate
     def test_api_rate_limit_are_handled(self):
@@ -108,7 +108,7 @@ class TestNewCommand(unittest.TestCase):
         with patch('six.moves.http_client.responses',
                    get=lambda status: "rate limit exceeded"):
             with self.assertRaises(ProjectLimitReached):
-                self.command_tester.execute([('target', 'new_project')])
+                self.command_tester.execute("new_project")
 
     @responses.activate
     def test_unknown_repos_are_handled(self):
@@ -118,7 +118,7 @@ class TestNewCommand(unittest.TestCase):
         )
 
         with self.assertRaises(ProjectProviderHttpError) as e:
-            self.command_tester.execute([('target', 'new_project'), ('--repo', 'MasoniteFramework/unknown_repo')])
+            self.command_tester.execute("new_project --repo MasoniteFramework/unknown_repo")
 
         self.assertTrue(str(e.exception).startswith("Not Found(404)"))
 
@@ -130,7 +130,7 @@ class TestNewCommand(unittest.TestCase):
         )
 
         with self.assertRaises(ProjectProviderHttpError) as e:
-            self.command_tester.execute([('target', 'new_project'), ('--repo', 'MasoniteFramework/secret')])
+            self.command_tester.execute("new_project --repo MasoniteFramework/secret")
 
         self.assertTrue(str(e.exception).startswith("Forbidden(403)"))
 
@@ -142,12 +142,9 @@ class TestNewCommand(unittest.TestCase):
         )
 
         with self.assertRaises(ProjectProviderTimeout) as e:
-            self.command_tester.execute([('target', 'new_project')])
+            self.command_tester.execute("new_project")
 
         self.assertTrue(str(e.exception).startswith("github provider is not reachable"))
-
-    def test_download_errors_are_displayed(self):
-        pass
 
     # Following tests are close to integration tests but still quick and without rate limiting issue so
     # they can be ran as unit tests
@@ -167,9 +164,9 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
         responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
-        self.command_tester.execute([('target', 'new_project')])
+        self.command_tester.execute("new_project")
         self.assertTrue(
-            "Project Created Successfully" in self.command_tester.get_display()
+            "Project Created Successfully" in self.command_tester.io.fetch_output()
         )
         # verify that project has really been created by checking files
         self.assertTrue("craft" in os.listdir(self.test_project_dir))
@@ -190,9 +187,9 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://api.github.com/repos/MasoniteFramework/cookie-cutter/zipball/v2.3.6')
         responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/legacy.zip/v2.3.6')
 
-        self.command_tester.execute([('target', 'new_project'), ('--release', '2.3.6')])
+        self.command_tester.execute("new_project --release 2.3.6")
         self.assertTrue(
-            "Project Created Successfully" in self.command_tester.get_display()
+            "Project Created Successfully" in self.command_tester.io.fetch_output()
         )
         # verify that project has really been created by checking files
         self.assertTrue("craft" in os.listdir(self.test_project_dir))
@@ -209,9 +206,9 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://github.com/MasoniteFramework/cookie-cutter/archive/3.0.zip')
         responses.add_passthru('https://codeload.github.com/MasoniteFramework/cookie-cutter/zip/3.0')
 
-        self.command_tester.execute([('target', 'new_project'), ('--branch', '3.0')])
+        self.command_tester.execute("new_project --branch 3.0")
         self.assertTrue(
-            "Project Created Successfully" in self.command_tester.get_display()
+            "Project Created Successfully" in self.command_tester.io.fetch_output()
         )
         # verify that project has really been created by checking files
         self.assertTrue("craft" in os.listdir(self.test_project_dir))
@@ -228,9 +225,9 @@ class TestNewCommand(unittest.TestCase):
         responses.add_passthru('https://gitlab.com/api/v4/projects/samuelgirardin%2Fmasonite-tests/repository/archive.zip?sha=master')
 
         repo = "samuelgirardin/masonite-tests"
-        self.command_tester.execute([('target', 'new_project'), ("--provider", "gitlab"), ("--repo", repo)])
+        self.command_tester.execute("new_project --provider gitlab --repo {0}".format(repo))
         self.assertTrue(
-            "Project Created Successfully" in self.command_tester.get_display()
+            "Project Created Successfully" in self.command_tester.io.fetch_output()
         )
         # verify that project has really been created by checking files
         self.assertTrue("README.md" in os.listdir(self.test_project_dir))

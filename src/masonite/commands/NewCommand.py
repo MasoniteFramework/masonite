@@ -57,7 +57,7 @@ class NewCommand(Command):
                 )
         try:
             if repo and provider not in self.providers:
-                return self.error(
+                return self.line_error(
                     "'provider' option must be in {}".format(",".join(self.providers))
                 )
 
@@ -66,7 +66,7 @@ class NewCommand(Command):
             if branch != "False":
                 branch_data = self.get_branch_provider_data(provider, branch)
                 if "name" not in branch_data:
-                    return self.error("Branch {0} does not exist.".format(branch))
+                    return self.line_error("Branch {0} does not exist.".format(branch))
 
                 zipball = self.get_branch_archive_url(provider, repo, branch)
             elif version != "False":
@@ -83,7 +83,7 @@ class NewCommand(Command):
                         )
                         break
                 if zipball is False:
-                    return self.error("Version {0} could not be found".format(version))
+                    return self.line_error("Version {0} could not be found".format(version))
             else:
                 tags_data = self.get_releases_provider_data(provider)
 
@@ -99,7 +99,7 @@ class NewCommand(Command):
                 )
                 # get url from latest tagged version
                 if not tags:
-                    self.warning(
+                    self.comment(
                         "No tags has been found, using latest commit on master."
                     )
                     zipball = self.get_branch_archive_url(provider, repo, "master")
@@ -118,7 +118,7 @@ class NewCommand(Command):
                 )
             )
         except Exception as e:
-            self.error(
+            self.line_error(
                 "The following error happened when crafting your project. Verify options are correct else open an issue at https://github.com/MasoniteFramework/masonite."
             )
             raise e
@@ -146,7 +146,7 @@ class NewCommand(Command):
 
             success = True
         except Exception as e:
-            self.error("An error occured when downloading {0}".format(zipurl))
+            self.line_error("An error occured when downloading {0}".format(zipurl))
             raise e
 
         if success:

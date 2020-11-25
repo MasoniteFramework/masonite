@@ -24,7 +24,7 @@ class ControllerCommand(Command):
             controller = controller + "Controller"
 
         if not make_directory("app/http/controllers/{0}.py".format(controller)):
-            return self.error("{0} Controller Exists!".format(controller))
+            return self.line_error("{0} Controller Exists!".format(controller))
 
         with open("app/http/controllers/{0}.py".format(controller), "w+") as f:
             if view.exists("/masonite/snippets/scaffold/controller"):

@@ -86,7 +86,7 @@ class TestCase(unittest.TestCase):
         DB.rollback()
         self.__class__._transaction = False
 
-    def withWSGIOverride(self, wsgi_values = {}):
+    def withWSGIOverride(self, wsgi_values={}):
         self.wsgi_overrides = wsgi_values
         return self
 

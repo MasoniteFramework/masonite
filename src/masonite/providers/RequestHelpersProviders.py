@@ -3,18 +3,12 @@
 import builtins
 import os
 
-from ..helpers.view_helpers import back, set_request_method, hidden, old
-from ..helpers.sign import sign, unsign, decrypt, encrypt
-from ..helpers import config, optional
 from ..provider import ServiceProvider
 from ..view import View
 from ..request import Request
-from ..managers import MailManager
 
 
 class RequestHelpersProvider(ServiceProvider):
-
-    wsgi = True
 
     def register(self):
         pass

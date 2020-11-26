@@ -86,16 +86,14 @@ class ExceptionHandler:
         # Run Any Framework Exception Hooks
         self._app.make("HookHandler").fire("*ExceptionHook")
         request = self._app.make("Request")
+        response = self._app.make(Response)
 
         # Check if DEBUG is False
         from config import application
 
         if not application.DEBUG:
-            request = self._app.make("Request")
-            request.status(500)
+            response.status(500)
             return
-
-        response = self._app.make(Response)
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())

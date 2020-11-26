@@ -38,7 +38,7 @@ class Response(Extendable):
         """
         self.content = bytes(json.dumps(payload), "utf-8")
         self.make_headers(content_type="application/json; charset=utf-8")
-        self.request.status(status)
+        self.status(status)
 
         return self.data()
 

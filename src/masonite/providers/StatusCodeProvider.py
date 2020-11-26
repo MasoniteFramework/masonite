@@ -14,9 +14,9 @@ class ServerErrorExceptionHook:
         if application.DEBUG:
             return
 
-        request = app.make("Request")
+        request = app.make(Response)
 
-        request.status(500)
+        response.status(500)
         if app.make("ViewClass").exists("errors/500"):
             rendered_view = app.make("View")("errors/500")
         else:

@@ -183,6 +183,9 @@ class NewCommand(Command):
     def check_target_does_not_exist(self, target):
         """To avoid overwriting target directory and to avoid raw errors
         check that target directory does not exist."""
+        if target == os.getcwd():
+            return False
+
         if os.path.isdir(target):
             raise ProjectTargetNotEmpty(
                 "{} already exists. You must craft a project in a not existing directory.".format(

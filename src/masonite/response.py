@@ -54,7 +54,10 @@ class Response(Extendable):
         self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
 
     def header(self, name, value=None):
-        if value is None:
+        if value is None and isinstance(name, dict):
+            for name, value in name.items():
+                self.header_bag.add(Header(name, value))
+        elif value is None:
             return self.header_bag.get(name)
 
         return self.header_bag.add(Header(name, value))

@@ -1,15 +1,4 @@
-"""Start of Application. This function is the gunicorn server."""
-
-from src.masonite.environment import LoadEnvironment
-
-"""Load Environment Variables
-Take environment variables from the .env file and load them in.
-"""
-
-LoadEnvironment()
-
-
-def app(environ, start_response):
+def response_handler(environ, start_response):
     """The WSGI Application Server.
 
     Arguments:

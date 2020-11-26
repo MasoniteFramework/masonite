@@ -77,20 +77,20 @@ class TestCase(unittest.TestCase):
             self.setUpDatabase()
 
     def startTransaction(self):
-        from config.database import db as DB
+        from config.database import DB
 
         DB.begin_transaction()
         self.__class__._transaction = True
 
     def stopTransaction(self):
-        from config.database import db as DB
+        from config.database import DB
 
         DB.rollback()
         self.__class__._transaction = False
 
     @classmethod
     def staticStopTransaction(cls):
-        from config.database import db as DB
+        from config.database import DB
 
         DB.rollback()
         cls._transaction = False

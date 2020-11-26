@@ -10,7 +10,7 @@ from ...helpers import HasColoredCommands
 
 class BaseQueueDriver(BaseDriver, HasColoredCommands):
     def add_to_failed_queue_table(self, payload, driver="amqp"):
-        from config.database import db as schema
+        from config.database import DB as schema
         from config import queue
 
         if "amqp" in queue.DRIVERS:
@@ -29,7 +29,7 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
             )
 
     def run_failed_jobs(self):
-        from config.database import db as schema
+        from config.database import DB as schema
 
         try:
             self.success("Attempting to send failed jobs back to the queue ...")

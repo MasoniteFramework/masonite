@@ -54,4 +54,4 @@ DATABASES = {
     },
 }
 
-db = ConnectionResolver().set_connection_details(DATABASES)
+DB = ConnectionResolver().set_connection_details(DATABASES)

@@ -124,6 +124,7 @@ class NewCommand(Command):
                 "The following error happened when crafting your project. Verify options are correct else open an issue at https://github.com/MasoniteFramework/masonite."
             )
             raise e
+
         success = False
 
         zipurl = zipball

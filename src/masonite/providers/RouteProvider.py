@@ -45,7 +45,6 @@ class RouteProvider(ServiceProvider):
                 if request.has_subdomain():
                     # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
-                        response.view("Route not found. Error 404")
                         continue
 
                 """Get URL Parameters

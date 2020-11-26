@@ -35,7 +35,7 @@ def response_handler(environ, start_response):
     to next.
     """
 
-    from src.masonite.response import Response
+    from masonite.response import Response
 
     response = container.make(Response)
 

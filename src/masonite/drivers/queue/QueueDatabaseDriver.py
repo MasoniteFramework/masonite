@@ -33,7 +33,8 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             options {**kwargs of options} - Additional options for async driver
         """
 
-        from config.database import DB as schema
+        from config.database import db as schema
+        from masoniteorm.query import QueryBuilder
 
         callback = options.get("callback", "handle")
         wait = options.get("wait", None)
@@ -50,7 +51,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 payload = pickle.dumps(
                     {"obj": job, "args": args, "kwargs": kwargs, "callback": callback}
                 )
-                schema.table("queue_jobs").insert(
+                schema.get_query_builder().table("queue_jobs").create(
                     {
                         "name": str(job),
                         "serialized": payload,
@@ -62,7 +63,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 )
 
     def consume(self, channel, **options):  # skipcq
-        from config.database import DB as schema, DATABASES
+        from config.database import db as schema, DATABASES
         from wsgi import container
 
         if not channel or channel == "default":
@@ -76,7 +77,16 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         schema = schema.connection(channel)
         while True:
             builder = schema.table("queue_jobs")
-            jobs = builder.where_null("ran_at").where(schema.table("queue_jobs").where_null('wait_until').or_where('wait_until', '<=', pendulum.now().to_datetime_string())).limit(1).get()
+            jobs = (
+                builder.where_null("ran_at")
+                .where(
+                    schema.table("queue_jobs")
+                    .where_null("wait_until")
+                    .or_where("wait_until", "<=", pendulum.now().to_datetime_string())
+                )
+                .limit(1)
+                .get()
+            )
 
             if not jobs.count():
                 time.sleep(5)

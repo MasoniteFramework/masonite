@@ -41,13 +41,11 @@ class ConfirmController:
         """
         sign = Sign()
         token = sign.unsign(request.param("id"))
-
         if token is not None:
             tokenParts = token.split("::")
             if len(tokenParts) > 1:
                 user = auth.auth_model.find(tokenParts[0])
-
-                if user.verified_at is None:
+                if user.verified_at or user.verified_at is None:
                     timestamp = datetime.datetime.fromtimestamp(float(tokenParts[1]))
                     now = datetime.datetime.now()
                     timestamp_plus_10 = timestamp + datetime.timedelta(minutes=10)

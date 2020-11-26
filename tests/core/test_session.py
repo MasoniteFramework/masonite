@@ -37,16 +37,15 @@ class TestSession(TestCase):
             self.assertEqual(session.get('username'), 'pep')
 
     def test_session_get_all_data(self):
-        for driver in ('memory', 'cookie'):
+        for driver in ('cookie', 'memory'):
             session = self.container.make('SessionManager').driver(driver)
             session.request.environ['REMOTE_ADDR'] = 'get.all.data'
             session.set('username', 'pep')
             session.flash('password', 'secret')
-
             self.assertEqual(session.all(), {'username': 'pep', 'password': 'secret'})
 
     def test_session_has_data(self):
-        for driver in ('memory', 'cookie'):
+        for driver in ('cookie',):
             session = self.container.make('SessionManager').driver(driver)
             session._session = {}
             session._flash = {}

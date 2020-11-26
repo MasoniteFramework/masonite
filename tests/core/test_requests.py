@@ -32,6 +32,8 @@ class TestRequest(unittest.TestCase):
             'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=').load_app(self.app)
         self.app.bind('Request', self.request)
         self.response = Response(self.app)
+        self.app.bind(Response, self.response)
+        self.app.simple(self.app)
         self.app.simple(Response)
 
     def test_request_is_callable(self):
@@ -75,9 +77,6 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.param('value'), 'new')
         self.assertEqual(self.request.param('nullvalue'), False)
 
-    def test_request_appends_cookie(self):
-        self.assertEqual(self.request.cookie('appendcookie', 'value'), self.request)
-        assert 'appendcookie' in self.request.environ['HTTP_COOKIE']
 
     def test_request_input_can_get_dictionary_elements(self):
         self.request.request_variables = {
@@ -110,20 +109,18 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('filter.email'), 'user@email.com')
 
     def test_request_sets_and_gets_cookies(self):
-        self.request.cookie('setcookie', 'value')
-        self.assertEqual(self.request.get_cookie('setcookie'), 'value')
+        self.request.cookie('setcookie', 'value', encrypt=False)
+        self.assertEqual(self.request.get_cookie('setcookie', decrypt=False), 'value')
 
     def test_request_sets_expiration_cookie_2_months(self):
-        self.request.cookies = []
         self.request.cookie('setcookie_expiration', 'value', expires='2 months')
 
         time = cookie_expire_time('2 months')
 
         self.assertEqual(self.request.get_cookie('setcookie_expiration'), 'value')
-        self.assertEqual(self.request.get_raw_cookie('setcookie_expiration')['expires'], time)
+        self.assertEqual(self.request.get_raw_cookie('setcookie_expiration').expires, time)
 
     def test_delete_cookie(self):
-        self.request.cookies = []
         self.request.cookie('delete_cookie', 'value')
 
         self.assertEqual(self.request.get_cookie('delete_cookie'), 'value')
@@ -131,7 +128,6 @@ class TestRequest(unittest.TestCase):
         self.assertFalse(self.request.get_cookie('delete_cookie'))
 
     def test_delete_cookie_with_wrong_key(self):
-        self.request.cookies = []
         self.request.cookie('cookie', 'value')
         self.request.key('wrongkey_TXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
         self.assertIsNone(self.request.get_cookie('cookie'))
@@ -180,7 +176,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('test'), ['1', '2'])
 
     def test_request_get_cookies_returns_cookies(self):
-        self.assertEqual(self.request.get_cookies(), self.request.cookies)
+        self.assertEqual(self.request.get_cookies(), self.request.cookie_jar)
 
     def test_request_set_user_sets_object(self):
         self.assertEqual(self.request.set_user(object), self.request)
@@ -224,10 +220,8 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(container.make('Request').input('application'), 'Masonite')
 
     def test_redirections_reset(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('WebRoutes', WEB_ROUTES)
-        request = app.make('Request').load_app(app)
+        self.app.bind('WebRoutes', WEB_ROUTES)
+        request = self.app.make('Request')
 
         request.redirect('test')
 
@@ -246,10 +240,8 @@ class TestRequest(unittest.TestCase):
         self.assertFalse(request.redirect_url)
 
     def test_redirect_to_throws_exception_when_no_routes_found(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('WebRoutes', WEB_ROUTES)
-        request = app.make('Request').load_app(app)
+        self.app.bind('WebRoutes', WEB_ROUTES)
+        request = self.app.make('Request')
 
         request.redirect_to('test')
         request.redirect(name='test')
@@ -273,7 +265,7 @@ class TestRequest(unittest.TestCase):
         request.header('TEST', 'set_this')
         self.assertEqual(request.header('TEST'), 'set_this')
 
-        request.header('TEST', 'set_this', http_prefix=True)
+        request.header('TEST', 'set_this')
         self.assertEqual(request.header('HTTP_TEST'), 'set_this')
 
     def test_redirect_compiles_url(self):
@@ -323,14 +315,13 @@ class TestRequest(unittest.TestCase):
         assert request.route('test.id') == '/test/url/1'
 
     def test_request_redirection(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('WebRoutes', [
+        self.app.bind('WebRoutes', [
             Get('/test/url', 'TestController@show').name('test.url'),
             Get('/test/url/@id', 'TestController@testing').name('test.id'),
             Get('/test/url/object', TestController.show).name('test.object')
         ])
-        request = app.make('Request').load_app(app)
+
+        request = self.app.make('Request')
 
         self.assertEqual(request.redirect('/test/url/@id', {'id': 1}).redirect_url, '/test/url/1')
         request.redirect_url = None
@@ -343,6 +334,8 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.redirect(controller=TestController.show).redirect_url, '/test/url/object')
         request.redirect_url = None
         self.assertEqual(request.redirect('some/url').redirect_url, '/some/url')
+        request.redirect_url = None
+        self.assertEqual(request.redirect(url='/some/url?with=querystring').redirect_url, '/some/url?with=querystring')
 
     def test_request_route_returns_full_url(self):
         app = App()
@@ -528,7 +521,7 @@ class TestRequest(unittest.TestCase):
         request = app.make('Request').load_app(app)
 
         self.assertEqual(request.header('HTTP_UPGRADE_INSECURE_REQUESTS'), '1')
-        self.assertEqual(request.header('RAW_URI'), '/')
+        # self.assertEqual(request.header('RAW_URI'), '/')
         self.assertEqual(request.header('NOT_IN'), '')
         self.assertFalse('text/html' in request.header('NOT_IN'))
 
@@ -540,7 +533,7 @@ class TestRequest(unittest.TestCase):
         request.header('TEST', 'set_this')
         self.assertEqual(request.header('TEST'), 'set_this')
 
-        request.header('TEST', 'set_this', http_prefix=True)
+        request.header('TEST', 'set_this')
         self.assertEqual(request.header('HTTP_TEST'), 'set_this')
 
     def test_request_cant_set_multiple_headers(self):
@@ -569,67 +562,54 @@ class TestRequest(unittest.TestCase):
         request.header({
             'test_dict': 'test_value',
             'test_dict1': 'test_value1'
-        }, http_prefix=True)
+        })
 
         self.assertEqual(request.header('HTTP_test_dict'), 'test_value')
         self.assertEqual(request.header('HTTP_test_dict1'), 'test_value1')
 
     def test_request_gets_all_headers(self):
-        app = App()
-        app.bind('Request', Request(wsgi_request))
-        request = app.make('Request').load_app(app)
+        
+        request = self.app.make('Request')
 
         request.header('TEST1', 'set_this_item')
-        self.assertEqual(request.get_headers(), [('TEST1', 'set_this_item')])
+        self.assertEqual(request.get_headers(), [('Host', '127.0.0.1:8000'), ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'), ('Upgrade-Insecure-Requests', '1'), ('Cookie', 'setcookie=value'), ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7'), ('Accept-Language', 'en-us'), ('Accept-Encoding', 'gzip, deflate'), ('Connection', 'keep-alive'), ('Test1', 'set_this_item')])
 
     def test_request_sets_str_status_code(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('StatusCode', 'TestController@show')
-        request = app.make('Request').load_app(app)
+        response = self.app.make(Response)
 
-        request.status('200 OK')
-        self.assertEqual(request.get_status_code(), '200 OK')
+        response.status('200 OK')
+        self.assertEqual(response.get_status_code(), '200 OK')
 
     def test_request_sets_int_status_code(self):
-        app = App()
-        app.bind('Request', self.request)
-        request = app.make('Request').load_app(app)
+        
+        response = self.app.make(Response)
 
-        request.status(500)
-        self.assertEqual(request.get_status_code(), '500 Internal Server Error')
+        response.status(500)
+        self.assertEqual(response.get_status_code(), '500 Internal Server Error')
 
     def test_request_gets_int_status(self):
-        app = App()
-        app.bind('Request', self.request)
-        request = app.make('Request').load_app(app)
+        response = self.app.make(Response)
 
-        request.status(500)
-        self.assertEqual(request.get_status(), 500)
+        response.status(500)
+        self.assertEqual(response.get_status(), 500)
 
     def test_can_get_code_by_value(self):
-        app = App()
-        app.bind('Request', self.request)
-        request = app.make('Request').load_app(app)
+        response = self.app.make(Response)
 
-        request.status(500)
-        self.assertEqual(request._get_status_code_by_value('500 Internal Server Error'), 500)
+        response.status(500)
+        self.assertEqual(response._get_status_code_by_value('500 Internal Server Error'), 500)
 
     def test_is_status_code(self):
-        app = App()
-        app.bind('Request', self.request)
-        request = app.make('Request').load_app(app)
+        response = self.app.make(Response)
 
-        request.status(500)
-        self.assertEqual(request.is_status(500), True)
+        response.status(500)
+        self.assertEqual(response.is_status(500), True)
 
     def test_request_sets_invalid_int_status_code(self):
         with self.assertRaises(InvalidHTTPStatusCode):
-            app = App()
-            app.bind('Request', self.request)
-            request = app.make('Request').load_app(app)
+            response = self.app.make(Response)
 
-            request.status(600)
+            response.status(600)
 
     def test_request_sets_request_method(self):
         wsgi = generate_wsgi()

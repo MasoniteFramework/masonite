@@ -4,7 +4,7 @@ import inspect
 import pydoc
 import collections
 
-from orator.support.collection import Collection as collect
+from masoniteorm.collection import Collection as collect
 
 
 class Dot:
@@ -48,11 +48,7 @@ class Dot:
 
                 if isinstance(dic, list):
                     try:
-                        return (
-                            collect(dic)
-                            .pluck(searching[searching.index("*") + 1])
-                            .serialize()
-                        )
+                        return collect(dic).pluck(searching[searching.index("*") + 1])
                     except KeyError:
                         return []
 

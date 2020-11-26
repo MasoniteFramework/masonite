@@ -53,7 +53,9 @@ class Autoload:
                 if inspect.isclass(obj[1]) and obj[1].__module__.split(".")[
                     :-1
                 ] == search_path.split("/"):
-                    if self.app.has(obj[1].__name__) and not self.app.make(
+                    if self.app.has(obj[1].__name__) and self.app.make(
+                        obj[1].__name__
+                    ) and not self.app.make(
                         obj[1].__name__
                     ).__module__.startswith(search_path):
                         raise AutoloadContainerOverwrite(

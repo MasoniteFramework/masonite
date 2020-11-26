@@ -3,10 +3,9 @@
 import copy
 import re
 
-from masonite.helpers import deprecated
 
 from ...app import App
-from ...helpers import config
+from ...helpers import config, deprecated
 from ...response import Responsable
 from .. import BaseDriver
 
@@ -94,8 +93,7 @@ class BaseMailDriver(BaseDriver, Responsable):
 
     @property
     def message_body(self):
-        """Returns the body of the message.
-        """
+        """Returns the body of the message."""
         return self.html_content or self.text_content
 
     @message_body.setter

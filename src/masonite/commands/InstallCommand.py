@@ -44,7 +44,7 @@ class InstallCommand(Command):
             try:
                 call(["craft", "key", "--store"])
             except Exception:
-                self.error(
+                self.line_error(
                     "Could not successfully install Masonite. This could happen for several reasons but likely because of how craft is installed on your system and you could be hitting permission issues when craft is fetching required modules."
                     " If you have correctly followed the installation instructions then you should try everything again but start inside an virtual environment first to avoid any permission issues. If that does not work then seek help in"
                     " the Masonite Slack channel. Links can be found on GitHub in the main Masonite repo."

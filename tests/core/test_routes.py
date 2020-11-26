@@ -8,17 +8,18 @@ from src.masonite.exceptions import (InvalidRouteCompileException,
                                      RouteException)
 from src.masonite.helpers.routes import create_matchurl, flatten_routes, group
 from src.masonite.request import Request
+from src.masonite.response import Response
 from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
                                  Patch, Post, Put, Resource, Redirect, Route, RouteGroup,
                                  Trace)
 from src.masonite.testing import TestCase, generate_wsgi
 from src.masonite.exceptions import RouteNotFoundException
 
-class TestRoutes(unittest.TestCase):
+class TestRoutes(TestCase):
 
     def setUp(self):
+        super().setUp()
         self.route = Route(generate_wsgi())
-        self.request = Request(generate_wsgi())
 
     def test_route_is_callable(self):
         self.assertTrue(callable(Get))
@@ -33,7 +34,7 @@ class TestRoutes(unittest.TestCase):
         self.assertTrue(callable(Trace))
 
     def test_route_prefixes_forward_slash(self):
-        self.assertEqual(Get().route('some/url', 'TestController@show').route_url, '/some/url')
+        self.assertEqual(Get('some/url', 'TestController@show').route_url, '/some/url')
 
     def test_route_is_not_post(self):
         self.assertEqual(self.route.is_post(), False)
@@ -43,31 +44,31 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(self.route.is_post(), True)
 
     def test_compile_route_to_regex(self):
-        get_route = Get().route('test/route', None)
+        get_route = Get('test/route', '')
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/route\/$')
 
-        get_route = Get().route('test/@route', None)
+        get_route = Get('test/@route', '')
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/([\w.-]+)\/$')
 
-        get_route = Get().route('test/@route:int', None)
+        get_route = Get('test/@route:int', '')
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/(\d+)\/$')
 
-        get_route = Get().route('test/@route:string', None)
+        get_route = Get('test/@route:string', '')
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/([a-zA-Z]+)\/$')
 
     def test_route_can_add_compilers(self):
-        get_route = Get().route('test/@route:int', None)
+        get_route = Get('test/@route:int', 'None')
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/(\d+)\/$')
 
         self.route.compile('year', r'[0-9]{4}')
 
-        get_route = Get().route('test/@route:year', None)
+        get_route = Get('test/@route:year', '')
 
         self.assertEqual(get_route.compile_route_to_regex(), r'^\/test\/[0-9]{4}\/$')
 
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:none', None)
-            get_route.request = self.request
+            get_route.request = self.container.make('Request')
             create_matchurl('/test/1', get_route)
 
     def test_route_can_add_compilers_inside_route_group(self):
@@ -80,35 +81,16 @@ class TestRoutes(unittest.TestCase):
 
         with self.assertRaises(InvalidRouteCompileException):
             get_route = Get().route('test/@route:none', None)
-            get_route.request = self.request
+            get_route.request = self.container.make('Request')
             create_matchurl('/test/1', get_route)
 
     def test_route_gets_controllers(self):
-        self.assertTrue(Get().route('test/url', 'TestController@show'))
-        self.assertTrue(Get().route('test/url', '/app.http.test_controllers.TestController@show'))
+        self.assertTrue(Get('test/url', 'TestController@show'))
+        self.assertTrue(Get('test/url', '/app.http.test_controllers.TestController@show'))
 
     def test_route_doesnt_break_on_incorrect_controller(self):
-        self.assertTrue(Get().route('test/url', 'BreakController@show'))
+        self.assertTrue(Get('test/url', 'BreakController@show'))
 
-    def test_route_can_pass_route_values_in_constructor(self):
-        route = Get('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Head('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Post('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Put('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Patch('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Delete('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Connect('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Options('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
-        route = Trace('test/url', 'BreakController@show')
-        self.assertEqual(route.route_url, '/test/url')
 
     def test_route_can_pass_route_values_in_constructor_and_use_middleware(self):
         route = Get('test/url', 'BreakController@show').middleware('auth')
@@ -132,8 +114,8 @@ class TestRoutes(unittest.TestCase):
 
     def test_group_route(self):
         routes = group('/example', [
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
+            Get('/test/1', 'TestController@show'),
+            Get('/test/2', 'TestController@show')
         ])
 
         self.assertEqual(routes[0].route_url, '/example/test/1')
@@ -141,11 +123,11 @@ class TestRoutes(unittest.TestCase):
 
     def test_group_route_sets_middleware(self):
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show').middleware('another'),
-            Get().route('/test/2', 'TestController@show'),
+            Get('/test/1', 'TestController@show').middleware('another'),
+            Get('/test/2', 'TestController@show'),
             RouteGroup([
-                Get().route('/test/3', 'TestController@show'),
-                Get().route('/test/4', 'TestController@show')
+                Get('/test/3', 'TestController@show'),
+                Get('/test/4', 'TestController@show')
             ], middleware=('test', 'test2'))
         ], middleware=('auth', 'user'))
 
@@ -156,7 +138,7 @@ class TestRoutes(unittest.TestCase):
 
     def test_group_route_namespace(self):
         routes = RouteGroup([
-            Get().route('/test/1', 'SubController@show'),
+            Get('/test/1', 'SubController@show'),
         ], namespace='subdirectory.')
 
         self.assertIsInstance(routes, list)
@@ -165,7 +147,7 @@ class TestRoutes(unittest.TestCase):
     def test_group_route_namespace_deep(self):
         routes = RouteGroup([
             RouteGroup([
-                Get().route('/test/1', 'DeepController@show'),
+                Get('/test/1', 'DeepController@show'),
             ], namespace='deep.')
         ], namespace='subdirectory.')
 
@@ -194,16 +176,16 @@ class TestRoutes(unittest.TestCase):
 
     def test_group_route_sets_domain(self):
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
+            Get('/test/1', 'TestController@show'),
+            Get('/test/2', 'TestController@show')
         ], domain=['www'])
 
         self.assertEqual(routes[0].required_domain, ['www'])
 
     def test_group_adds_methods(self):
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
+            Get('/test/1', 'TestController@show'),
+            Get('/test/2', 'TestController@show')
         ], add_methods=['OPTIONS'])
 
         self.assertEqual(routes[0].method_type, ['GET', 'OPTIONS'])
@@ -211,7 +193,7 @@ class TestRoutes(unittest.TestCase):
     def test_group_route_sets_prefix(self):
         routes = RouteGroup([
             Get().route('/test/1', 'TestController@show'),
-            Get().route('/test/2', 'TestController@show')
+            Get('/test/2', 'TestController@show')
         ], prefix='/dashboard')
 
         self.assertEqual(routes[0].route_url, '/dashboard/test/1')
@@ -225,14 +207,14 @@ class TestRoutes(unittest.TestCase):
 
     def test_group_route_sets_name(self):
         RouteGroup([
-            Get().route('/test/1', 'TestController@show').name('create'),
-            Get().route('/test/2', 'TestController@show').name('edit')
+            Get('/test/1', 'TestController@show').name('create'),
+            Get('/test/2', 'TestController@show').name('edit')
         ], name='post.')
 
     def test_group_route_sets_name_for_none_route(self):
         routes = RouteGroup([
-            Get().route('/test/1', 'TestController@show').name('create'),
-            Get().route('/test/2', 'TestController@show')
+            Get('/test/1', 'TestController@show').name('create'),
+            Get('/test/2', 'TestController@show')
         ], name='post.')
 
         self.assertEqual(routes[0].named_route, 'post.create')
@@ -240,16 +222,16 @@ class TestRoutes(unittest.TestCase):
 
     def test_flatten_flattens_multiple_lists(self):
         routes = [
-            Get().route('/test/1', 'TestController@show').name('create'),
+            Get('/test/1', 'TestController@show').name('create'),
             RouteGroup([
-                Get().route('/test/1', 'TestController@show').name('create'),
-                Get().route('/test/2', 'TestController@show').name('edit'),
+                Get('/test/1', 'TestController@show').name('create'),
+                Get('/test/2', 'TestController@show').name('edit'),
                 RouteGroup([
-                    Get().route('/test/1', 'TestController@show').name('update'),
-                    Get().route('/test/2', 'TestController@show').name('delete'),
+                    Get('/test/1', 'TestController@show').name('update'),
+                    Get('/test/2', 'TestController@show').name('delete'),
                     RouteGroup([
-                        Get().route('/test/3', 'TestController@show').name('update'),
-                        Get().route('/test/4', 'TestController@show').name('delete'),
+                        Get('/test/3', 'TestController@show').name('update'),
+                        Get('/test/4', 'TestController@show').name('delete'),
                     ], middleware=('auth')),
                 ], name='post.')
             ], prefix='/dashboard')
@@ -286,22 +268,25 @@ class TestRoutes(unittest.TestCase):
 
     def test_redirect_route(self):
         route = Redirect('/test1', '/test2')
-        request = Request(generate_wsgi())
+        # request = Request(generate_wsgi())
+        request = self.container.make('Request')
+        response = self.container.make(Response)
         route.load_request(request)
-        request.load_app(App())
+        request.load_app(self.container)
 
         route.get_response()
-        self.assertTrue(request.is_status(302))
+        self.assertTrue(response.is_status(302))
         self.assertEqual(request.redirect_url, '/test2')
 
     def test_redirect_can_use_301(self):
-        request = Request(generate_wsgi())
+        request = self.container.make('Request')
+        response = self.container.make(Response)
         route = Redirect('/test1', '/test3', status=301)
 
         route.load_request(request)
-        request.load_app(App())
+        request.load_app(self.container)
         route.get_response()
-        self.assertTrue(request.is_status(301))
+        self.assertTrue(response.is_status(301))
         self.assertEqual(request.redirect_url, '/test3')
 
     def test_redirect_can_change_method_type(self):

@@ -10,9 +10,9 @@ Jinja2>=2,<3
 masonite-entry>=0.0.0,<=0.9.99
 masonite-events>=1.0,<2
 masonite-scheduler>=1.0.0,<=1.0.99
-orator>=0.9,<1
+masonite-orm==0.8.0b1
 passlib>=1.7,<1.8
-pendulum>=1.5,<1.6
+pendulum>=2.1
 pika
 psutil>=5.4,<5.5
 pusher==1.7.4
@@ -27,3 +27,5 @@ tldextract>=2.2,<2.3
 whitenoise>=3.3
 exceptionite
 pubnub>=4.5.1
+responses==0.12.0
+mock>=3.0.5

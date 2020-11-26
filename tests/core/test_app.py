@@ -34,7 +34,7 @@ class TestApp(unittest.TestCase):
 
     def test_app_makes(self):
         self.app.bind('Request', REQUEST)
-        self.assertEqual(self.app.make('Request').cookies, [])
+        self.assertEqual(self.app.make('Request'), REQUEST)
 
     def test_app_makes_and_resolves(self):
         self.app.bind('Request', REQUEST)

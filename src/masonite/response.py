@@ -4,12 +4,12 @@ import json
 import mimetypes
 from pathlib import Path
 
-from orator import LengthAwarePaginator, Model, Paginator
-from orator.support.collection import Collection
-
 from .app import App
 from .exceptions import ResponseError
 from .helpers.Extendable import Extendable
+from .headers import HeaderBag, Header
+from .helpers.status import response_statuses
+from .exceptions import InvalidHTTPStatusCode
 
 
 class Response(Extendable):
@@ -22,6 +22,10 @@ class Response(Extendable):
     def __init__(self, app: App):
         self.app = app
         self.request = self.app.make("Request")
+        self.content = ""
+        self._status = None
+        self.statuses = response_statuses()
+        self.header_bag = HeaderBag()
 
     def json(self, payload, status=200):
         """Gets the response ready for a JSON response.
@@ -32,71 +36,11 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
-        self.app.bind("Response", bytes(json.dumps(payload), "utf-8"))
+        self.content = bytes(json.dumps(payload), "utf-8")
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
 
         return self.data()
-
-    def paginated_json(self, paginator, status=200):
-        """Determine type of paginated instance and return JSON response.
-
-        Arguments:
-            paginator {Paginator|LengthAwarePaginator} --
-                Either an Orator Paginator or LengthAwarePaginator object
-
-        Returns:
-            string -- Returns a string representation of the data
-        """
-        # configured param types
-        page_size_parameter = "page_size"
-        page_parameter = "page"
-
-        # try to capture request input for page_size and/or page
-        page_size_input = self.request.input(page_size_parameter)
-        page_input = self.request.input(page_parameter)
-        try:
-            page_size = (
-                int(page_size_input)
-                if page_size_input and int(page_size_input) > 0
-                else paginator.per_page
-            )
-        except ValueError:
-            page_size = paginator.per_page
-
-        try:
-            page = (
-                int(page_input)
-                if page_input and int(page_input) > 0
-                else paginator.current_page
-            )
-        except ValueError:
-            page = paginator.current_page
-
-        # don't waste time instantiating new paginator if no change
-        payload = {
-            "total": (
-                paginator.total if isinstance(paginator, LengthAwarePaginator) else None
-            ),
-            "count": paginator.count(),
-            "per_page": page_size,
-            "current_page": page,
-            "last_page": (
-                paginator.last_page
-                if isinstance(paginator, LengthAwarePaginator)
-                else None
-            ),
-            "from": (page_size * (page - 1)) + 1,
-            "to": page_size * page,
-            "data": paginator.serialize(),
-        }
-
-        # remove fields not relevant to Paginator instance
-        if isinstance(paginator, Paginator):
-            del payload["total"]
-            del payload["last_page"]
-
-        return self.json(payload, status)
 
     def make_headers(self, content_type="text/html; charset=utf-8"):
         """Make the appropriate headers based on changes made in controllers or middleware.
@@ -104,11 +48,62 @@ class Response(Extendable):
         Keyword Arguments:
             content_type {str} -- The content type to set. (default: {"text/html; charset=utf-8"})
         """
-        self.request.header("Content-Length", str(len(self.to_bytes())))
+        self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
 
         # If the user did not change it directly
-        if not self.request.has_raw_header("Content-Type"):
-            self.request.header("Content-Type", content_type)
+        self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
+
+    def header(self, name, value=None):
+        if value is None:
+            return self.header_bag.get(name)
+
+        return self.header_bag.add(Header(name, value))
+
+    def get_and_reset_headers(self):
+        header = self.header_bag
+        self.header_bag = HeaderBag()
+        self._status = None
+        self.content = ""
+        return header.render()
+
+    def status(self, status):
+        """Set the HTTP status code.
+
+        Arguments:
+            status {string|integer} -- A string or integer with the standardized status code
+
+        Returns:
+            self
+        """
+        if isinstance(status, str):
+            self._status = status
+        elif isinstance(status, int):
+            try:
+                self._status = self.statuses[status]
+            except KeyError:
+                raise InvalidHTTPStatusCode
+        return self
+
+    def is_status(self, code):
+        return self._get_status_code_by_value(self.get_status_code()) == code
+
+    def _get_status_code_by_value(self, value):
+        for key, status in self.statuses.items():
+            if status == value:
+                return key
+
+        return None
+
+    def get_status_code(self):
+        """Gets the HTTP status string like "200 OK"
+
+        Returns:
+            self
+        """
+        return self._status
+
+    def get_status(self):
+        return self._get_status_code_by_value(self.get_status_code())
 
     def data(self):
         """Get the data that will be returned to the WSGI server.
@@ -116,6 +111,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the response
         """
+        return self.content
         if self.app.has("Response"):
             return self.app.make("Response")
 
@@ -150,31 +146,31 @@ class Response(Extendable):
 
         if isinstance(view, tuple):
             view, status = view
-            self.request.status(status)
+            self.status(status)
 
-        if not self.request.get_status():
-            self.request.status(status)
+        if not self.get_status_code():
+            self.status(status)
 
         if isinstance(view, (dict, list)):
-            return self.json(view, status=self.request.get_status())
-        elif isinstance(view, (Collection, Model)):
-            return self.json(view.serialize(), status=self.request.get_status())
+            return self.json(view, status=self.get_status_code())
+        elif hasattr(view, "serialize"):
+            return self.json(view.serialize(), status=self.get_status_code())
         elif isinstance(view, int):
             view = str(view)
         elif isinstance(view, Responsable):
             view = view.get_response()
         elif isinstance(view, self.request.__class__):
             view = self.data()
-        if isinstance(view, (Paginator, LengthAwarePaginator)):
-            return self.paginated_json(view, status=self.request.get_status())
         elif view is None:
             raise ResponseError(
                 "Responses cannot be of type: None. Did you return anything in your responsable method?"
             )
 
         if isinstance(view, str):
+            self.content = bytes(view, "utf-8")
             self.app.bind("Response", bytes(view, "utf-8"))
         else:
+            self.content = view
             self.app.bind("Response", view)
 
         self.make_headers()
@@ -191,12 +187,12 @@ class Response(Extendable):
         Returns:
             string -- Returns the data to be returned.
         """
-        self.request.status(status)
+        self.status(status)
         if not location:
             location = self.request.redirect_url
 
         self.request.reset_headers()
-        self.request.header("Location", location)
+        self.header_bag.add(Header("Location", location))
         self.view("Redirecting ...")
 
         return self.data()
@@ -255,21 +251,21 @@ class Download(Responsable):
 
             self.container = container
 
-        request = self.container.make("Request")
+        response = self.container.make(Response)
 
         with open(self.location, "rb") as filelike:
             data = filelike.read()
 
         if self._force:
-            request.header("Content-Type", "application/octet-stream")
-            request.header(
+            response.header("Content-Type", "application/octet-stream")
+            response.header(
                 "Content-Disposition",
                 'attachment; filename="{}{}"'.format(
                     self.name, self.extension(self.location)
                 ),
             )
         else:
-            request.header("Content-Type", self.mimetype(self.location))
+            response.header("Content-Type", self.mimetype(self.location))
 
         return data
 

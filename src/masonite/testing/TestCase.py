@@ -226,10 +226,10 @@ class TestCase(unittest.TestCase):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
         self.container.bind("Environ", wsgi)
-        self.container.bind('User', self.acting_user)
+        self.container.bind("User", self.acting_user)
 
         if self._with_subdomains:
-            self.container.bind('Subdomains', True)
+            self.container.bind("Subdomains", True)
 
         # if self.headers:
         #     self.container.make("Request").header(self.headers)
@@ -237,7 +237,9 @@ class TestCase(unittest.TestCase):
         if self.route_middleware:
             self.container.bind("RouteMiddleware", self.route_middleware)
         else:
-            self.container.bind("RouteMiddleware", config("middleware.route_middleware"))
+            self.container.bind(
+                "RouteMiddleware", config("middleware.route_middleware")
+            )
 
         if self.use_http_middleware:
             self.container.bind("HttpMiddleware", config("middleware.http_middleware"))

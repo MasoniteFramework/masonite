@@ -213,7 +213,7 @@ class BaseHttpRoute:
             self.controller = getattr(module, get_controller)
 
             # Set the controller method on class. This is a string
-            self.controller_method = mod[1] if len(mod) == 2 else '__call__'
+            self.controller_method = mod[1] if len(mod) == 2 else "__call__"
         except ImportError as e:
             import sys
             import traceback
@@ -350,7 +350,7 @@ class BaseHttpRoute:
                 middleware_to_run = arg
                 arguments = []
 
-            print('rrr', self.request.app().make("RouteMiddleware"))
+            print("rrr", self.request.app().make("RouteMiddleware"))
             middleware_to_run = self.request.app().make("RouteMiddleware")[
                 middleware_to_run
             ]

@@ -84,7 +84,7 @@ class WebGuard(AuthenticationGuard):
                     model.remember_token = remember_token
                     model.save()
                     self.driver.save(remember_token, model=model)
-                self.app.make('Request').set_user(model)
+                self.app.make("Request").set_user(model)
                 return model
 
         except Exception as exception:
@@ -118,7 +118,7 @@ class WebGuard(AuthenticationGuard):
                 model.remember_token = remember_token
                 model.save()
                 self.driver.save(remember_token, model=model)
-            self.app.make('Request').set_user(model)
+            self.app.make("Request").set_user(model)
             return model
 
         return False

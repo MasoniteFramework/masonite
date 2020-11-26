@@ -23,9 +23,9 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             Model|bool
         """
-        if self.app.make('Request').get_cookie("token") and auth_model:
+        if self.app.make("Request").get_cookie("token") and auth_model:
             return auth_model.where(
-                "remember_token", self.app.make('Request').get_cookie("token")
+                "remember_token", self.app.make("Request").get_cookie("token")
             ).first()
 
         return False
@@ -41,7 +41,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.app.make('Request').cookie("token", remember_token)
+        return self.app.make("Request").cookie("token", remember_token)
 
     def delete(self):
         """Deletes the state depending on the implementation of this driver.
@@ -49,7 +49,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.app.make('Request').delete_cookie("token")
+        return self.app.make("Request").delete_cookie("token")
 
     def logout(self):
         """Deletes the state depending on the implementation of this driver.
@@ -58,4 +58,4 @@ class AuthCookieDriver(BaseDriver, AuthContract):
             bool
         """
         self.delete()
-        self.app.make('Request').reset_user()
+        self.app.make("Request").reset_user()

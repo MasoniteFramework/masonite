@@ -58,4 +58,4 @@ def app(environ, start_response):
     This will take the data variable from the Service Container and return
     it to the WSGI server.
     """
-    return iter([container.make('Response')])
+    return iter([response.get_response_content()])

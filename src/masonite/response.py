@@ -63,8 +63,10 @@ class Response(Extendable):
         header = self.header_bag
         self.header_bag = HeaderBag()
         self._status = None
-        self.content = ""
         return header.render()
+
+    def get_response_content(self):
+        return self.data()
 
     def status(self, status):
         """Set the HTTP status code.
@@ -112,10 +114,6 @@ class Response(Extendable):
             string -- Returns a string representation of the response
         """
         return self.content
-        if self.app.has("Response"):
-            return self.app.make("Response")
-
-        return ""
 
     def converted_data(self):
         """Converts the data appropriately so the WSGI server can handle it.

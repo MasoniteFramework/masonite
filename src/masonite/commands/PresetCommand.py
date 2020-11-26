@@ -51,9 +51,7 @@ class PresetCommand(Command):
         self.comment(
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
         )
-        self.comment(
-            'Then you can use the view app_vue3 as demo.'
-        )
+        self.comment("Then you can use the view app_vue3 as demo.")
 
     def bootstrap(self):
         """Add Bootstrap Sass scafolding"""

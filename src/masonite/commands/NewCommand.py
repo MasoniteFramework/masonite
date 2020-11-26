@@ -83,7 +83,9 @@ class NewCommand(Command):
                         )
                         break
                 if zipball is False:
-                    return self.line_error("Version {0} could not be found".format(version))
+                    return self.line_error(
+                        "Version {0} could not be found".format(version)
+                    )
             else:
                 tags_data = self.get_releases_provider_data(provider)
 

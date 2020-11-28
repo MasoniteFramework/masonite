@@ -18,9 +18,9 @@ class SessionProvider(ServiceProvider):
         self.app.bind("SessionManager", SessionManager(self.app))
 
     def boot(self, request: Request, view: View, session: SessionManager):
-        pass
-        # self.app.bind("Session", session.driver(config("session").DRIVER))
-        # self.app.swap(Session, session.driver(config("session").DRIVER))
-        # request.session = self.app.make("Session")
+        # pass
+        self.app.bind("Session", session.driver(config("session").DRIVER))
+        self.app.swap(Session, session.driver(config("session").DRIVER))
+        request.session = self.app.make("Session")
 
-        # view.share({"session": self.app.make("Session").helper})
+        view.share({"session": self.app.make("Session").helper})

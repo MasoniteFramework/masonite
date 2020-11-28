@@ -1,10 +1,12 @@
 from .Cookie import Cookie
+from ..helpers import cookie_expire_time
 
 
 class CookieJar:
     def __init__(self):
         self.cookies = {}
         self.loaded_cookies = {}
+        self.deleted_cookies = {}
 
     def add(self, name, value, **options):
         self.cookies.update({name: Cookie(name, value, **options)})
@@ -13,14 +15,15 @@ class CookieJar:
         return self.cookies
 
     def get(self, name):
-        aggregate = self.cookies
-        aggregate.update(self.loaded_cookies)
+        aggregate = self.loaded_cookies
+        aggregate.update(self.cookies)
         return aggregate.get(name)
 
     def exists(self, name):
         return name in self.cookies or name in self.loaded_cookies
 
     def delete(self, name):
+        self.deleted_cookies.update({name: Cookie(name, "", expires=cookie_expire_time("2 months"), timezone="GMT")})
         return self.cookies.pop(name)
 
     def load_cookie(self, key, value):
@@ -37,7 +40,7 @@ class CookieJar:
 
     def load(self, cookie_string):
         for compound_value in cookie_string.split("; "):
-            key, value = compound_value.split("=")
+            key, value = compound_value.split("=", 1)
             self.load_cookie(key, value)
         return self
 

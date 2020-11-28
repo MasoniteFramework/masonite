@@ -26,7 +26,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         if self.app.make("Request").get_cookie("token") and auth_model:
             return auth_model.where(
                 "remember_token", self.app.make("Request").get_cookie("token")
-            ).first()
+            ).first() or False
 
         return False
 

@@ -142,7 +142,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         self.reset(flash_only=True)
         return only_messages
 
-    def get_flashed_messages(self, key, value):
+    def get_flashed_messages(self):
         """Should get and delete the flashed messages
 
         Arguments:

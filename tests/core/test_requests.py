@@ -77,7 +77,6 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.param('value'), 'new')
         self.assertEqual(self.request.param('nullvalue'), False)
 
-
     def test_request_input_can_get_dictionary_elements(self):
         self.request.request_variables = {
             "user": {
@@ -89,7 +88,7 @@ class TestRequest(unittest.TestCase):
         }
         self.assertEqual(self.request.input('user.address.*.id'), [1, 2])
         self.assertEqual(self.request.input('user.address.*.street'), ['A Street', 'B Street'])
-    
+
     def test_request_input_parses_query_string(self):
         query_string = "filter=name"
         self.request._set_standardized_request_variables(query_string)
@@ -125,6 +124,8 @@ class TestRequest(unittest.TestCase):
 
         self.assertEqual(self.request.get_cookie('delete_cookie'), 'value')
         self.request.delete_cookie('delete_cookie')
+        print(self.request.cookie_jar.render_response()[0][1])
+        self.assertTrue('Expires' in self.request.cookie_jar.render_response()[0][1])
         self.assertFalse(self.request.get_cookie('delete_cookie'))
 
     def test_delete_cookie_with_wrong_key(self):
@@ -484,7 +485,7 @@ class TestRequest(unittest.TestCase):
         app.bind('Request', self.request)
         request = app.make('Request').load_app(app)
 
-        request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2", "inner": {"value": "innervalue"}}, {"item3": [1,2]}])
+        request._set_standardized_request_variables([{"key": "val"}, {"item2": "val2", "inner": {"value": "innervalue"}}, {"item3": [1, 2]}])
 
         self.assertEqual(request.input('0.key'), 'val')
         self.assertEqual(request.input('1.item2'), 'val2')
@@ -568,7 +569,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.header('HTTP_test_dict1'), 'test_value1')
 
     def test_request_gets_all_headers(self):
-        
+
         request = self.app.make('Request')
 
         request.header('TEST1', 'set_this_item')
@@ -581,7 +582,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(response.get_status_code(), '200 OK')
 
     def test_request_sets_int_status_code(self):
-        
+
         response = self.app.make(Response)
 
         response.status(500)

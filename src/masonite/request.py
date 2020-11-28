@@ -9,6 +9,7 @@ of this class.
 """
 
 import re
+import cgi
 from cgi import MiniFieldStorage
 from http import cookies
 from urllib.parse import parse_qs, quote
@@ -258,6 +259,9 @@ class Request(Extendable):
         if "QUERY_STRING" in environ and environ["QUERY_STRING"]:
             self.query_params = parse_qs(environ["QUERY_STRING"])
 
+        if self.is_not_get_request():
+            environ["POST_DATA"] = self.get_post_params()
+
         if "POST_DATA" in environ:
             self._set_standardized_request_variables(environ["POST_DATA"])
         elif "QUERY_STRING" in environ and environ["QUERY_STRING"]:
@@ -270,6 +274,47 @@ class Request(Extendable):
             self.__set_request_method()
 
         return self
+
+    def is_not_get_request(self):
+        """Check if current request is not a get request.
+
+        Returns:
+            bool
+        """
+        if not self.environ["REQUEST_METHOD"] == "GET":
+            return True
+
+        return False
+
+    def get_post_params(self):
+        """Return the correct input.
+
+        Returns:
+            dict -- Dictionary of post parameters.
+        """
+        fields = None
+        if (
+            "CONTENT_TYPE" in self.environ
+            and "application/json" in self.environ["CONTENT_TYPE"].lower()
+        ):
+            try:
+                request_body_size = int(self.environ.get("CONTENT_LENGTH", 0))
+            except ValueError:
+                request_body_size = 0
+
+            request_body = self.environ["wsgi.input"].read(request_body_size)
+
+            if isinstance(request_body, bytes):
+                request_body = request_body.decode("utf-8")
+
+            return json.loads(request_body or "{}")
+        else:
+            fields = cgi.FieldStorage(
+                fp=self.environ["wsgi.input"],
+                environ=self.environ,
+                keep_blank_values=1,
+            )
+            return fields
 
     def _set_standardized_request_variables(self, variables):
         """The input data is not perfect so we have to standardize it into a dictionary.
@@ -620,6 +665,7 @@ class Request(Extendable):
         if expires:
             expires = cookie_expire_time(expires)
 
+        print('adding cookie', key, expires)
         self.cookie_jar.add(
             key, value, expires=expires, http_only=http_only, path=path, timezone="GMT"
         )
@@ -720,8 +766,8 @@ class Request(Extendable):
         Returns:
             app.User.User|None -- Returns None if the user is not loaded or logged in.
         """
-        if self.app().has("User"):
-            return self.app().make("User")
+        # if self.app().has("User") and self.app().make("User"):
+        #     return self.app().make("User")
         return self.user_model
 
     def redirect(

@@ -73,6 +73,8 @@ class ExceptionHandler:
         for stack in stacktraceback[::-1]:
             if "site-packages" not in stack[0]:
                 return (stack[0], stack[1])
+            
+            return (0,0)
 
     def handle(self, exception):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.

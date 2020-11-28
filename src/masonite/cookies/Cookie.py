@@ -15,9 +15,10 @@ class Cookie:
             response += "HttpOnly;"
         if self.expires:
             if self.timezone:
-                response += f"{self.expires} {self.timezone};"
+                response += f"Expires={self.expires} {self.timezone};"
+                print(response)
             else:
-                response += f"{self.expires};"
+                response += f"Expires={self.expires};"
         if self.path:
             response += f"Path={self.path};"
 

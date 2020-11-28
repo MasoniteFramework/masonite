@@ -66,7 +66,7 @@ class Response(Extendable):
         header = self.header_bag
         self.header_bag = HeaderBag()
         self._status = None
-        return header.render()
+        return header.render() + self.request.cookie_jar.render_response()
 
     def get_response_content(self):
         return self.data()

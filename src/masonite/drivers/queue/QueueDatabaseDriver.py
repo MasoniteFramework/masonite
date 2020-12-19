@@ -9,6 +9,7 @@ from ...contracts import QueueContract
 from ...drivers import BaseQueueDriver
 from ...helpers import HasColoredCommands, parse_human_time
 from ...queues import Queueable
+from .QueueJobsModel import QueueJobsModel
 
 
 class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
@@ -39,6 +40,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
         callback = options.get("callback", "handle")
         wait = options.get("wait", None)
         connection = options.get("connection", None)
+        queue = options.get("queue", "default")
 
         if connection:
             schema = schema.connection(connection)
@@ -51,6 +53,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 payload = pickle.dumps(
                     {"obj": job, "args": args, "kwargs": kwargs, "callback": callback}
                 )
+
                 schema.get_query_builder().table("queue_jobs").create(
                     {
                         "name": str(job),
@@ -58,38 +61,38 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         "created_at": pendulum.now().to_datetime_string(),
                         "attempts": 0,
                         "ran_at": None,
-                        "wait_until": wait,
+                        "queue": queue,
+                        "available_at": wait,
                     }
                 )
 
     def consume(self, channel, **options):  # skipcq
-        from config.database import DB as schema, DATABASES
+        from config.database import DB, DATABASES
         from wsgi import container
-
-        if not channel or channel == "default":
-            channel = DATABASES["default"]
 
         self.info(
             '[*] Waiting to process jobs from the "queue_jobs" table on the "{}" connection. To exit press CTRL + C'.format(
                 channel
             )
         )
-        schema = schema.connection(channel)
+
+        schema = DB.get_schema_builder(connection=channel)
+        builder = QueueJobsModel
         while True:
-            builder = schema.table("queue_jobs")
             jobs = (
                 builder.where_null("ran_at")
-                .where(
-                    schema.table("queue_jobs")
-                    .where_null("wait_until")
-                    .or_where("wait_until", "<=", pendulum.now().to_datetime_string())
-                )
-                .limit(1)
+                .where_null("reserved_at")
+                .where(lambda q: q.where_null("available_at").or_where("available_at", "<=", pendulum.now().to_datetime_string()))
+                .limit(5)
+                .order_by('id')
                 .get()
             )
 
+            builder.where_in('id', jobs.pluck('id')).update({'reserved_at': pendulum.now().to_datetime_string()})
+
             if not jobs.count():
-                time.sleep(5)
+                time.sleep(int(options.get("poll")) or 1)
+                continue
 
             for job in jobs:
                 builder.where("id", job["id"]).update(
@@ -97,11 +100,11 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         "ran_at": pendulum.now().to_datetime_string(),
                     }
                 )
-                unserialized = pickle.loads(job.serialized)
+                unserialized = pickle.loads(job['serialized'])
                 obj = unserialized["obj"]
                 args = unserialized["args"]
                 callback = unserialized["callback"]
-                ran = job.attempts
+                ran = job['attempts']
 
                 try:
                     try:
@@ -155,6 +158,4 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         if hasattr(obj, "failed"):
                             getattr(obj, "failed")(unserialized, str(e))
 
-                        self.add_to_failed_queue_table(unserialized, driver="database")
-
-            time.sleep(5)
+                        self.add_to_failed_queue_table(unserialized, channel=channel, driver="database")

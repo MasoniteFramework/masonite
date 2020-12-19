@@ -9,8 +9,8 @@ from ...helpers import HasColoredCommands
 
 
 class BaseQueueDriver(BaseDriver, HasColoredCommands):
-    def add_to_failed_queue_table(self, payload, driver="amqp"):
-        from config.database import DB as schema
+    def add_to_failed_queue_table(self, payload, channel=None, driver="amqp"):
+        from config.database import DB
         from config import queue
 
         if "amqp" in queue.DRIVERS:
@@ -18,13 +18,15 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
         else:
             listening_channel = "default"
 
-        if schema.get_schema_builder().has_table("failed_jobs"):
-            schema.table("failed_jobs").insert(
+        schema = DB.get_schema_builder()
+
+        if schema.has_table("failed_jobs"):
+            DB.get_query_builder().table("failed_jobs").create(
                 {
                     "driver": driver,
-                    "channel": listening_channel,
+                    "queue": channel,
                     "payload": pickle.dumps(payload),
-                    "failed_at": pendulum.now(),
+                    "failed_at": pendulum.now().to_datetime_string(),
                 }
             )
 

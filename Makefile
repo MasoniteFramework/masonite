@@ -1,4 +1,5 @@
 init:
+	python -m pip install --upgrade pip
 	pip install -r requirements.txt --user
 	pip install -e .
 	pip install pytest

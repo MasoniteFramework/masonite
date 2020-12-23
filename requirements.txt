@@ -7,7 +7,6 @@ cryptography>=2.3,<2.4
 flake8
 hupper>=1.0,<2.0
 Jinja2>=2,<3
-masonite-entry>=0.0.0,<=0.9.99
 masonite-events>=1.0,<2
 masonite-scheduler>=1.0.0,<=1.0.99
 masonite-orm==0.8.0b1

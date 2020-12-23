@@ -10,6 +10,7 @@ of this class.
 
 import re
 import cgi
+import json
 from cgi import MiniFieldStorage
 from http import cookies
 from urllib.parse import parse_qs, quote

@@ -117,13 +117,10 @@ class TestExtends(unittest.TestCase):
 
     def test_hidden_form_request_method_changes_request_method(self):
         app = App()
+        wsgi_request = generate_wsgi()
         wsgi_request['POST_DATA'] = '__method=PUT'
         request_class = Request(wsgi_request)
-
-        app.bind('Request', request_class)
-        request = app.make('Request').load_app(app)
-
-        self.assertEqual(request.environ['REQUEST_METHOD'], 'PUT')
+        self.assertEqual(request_class.environ['REQUEST_METHOD'], 'PUT')
 
     def test_get_json_input(self):
         json_wsgi = wsgi_request

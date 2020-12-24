@@ -242,30 +242,6 @@ class TestRoutes(TestCase):
         self.assertEqual(routes[3].route_url, '/dashboard/test/1')
         self.assertEqual(routes[3].named_route, 'post.update')
 
-    def test_correctly_parses_json_with_dictionary(self):
-        environ = generate_wsgi()
-        environ['CONTENT_TYPE'] = 'application/json'
-        environ['REQUEST_METHOD'] = 'POST'
-        environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "conta_corrente": {\n        "ocultar": false,\n        "visao_geral": true,\n        "extrato": true\n    }\n}')
-        route = Route(environ)
-        self.assertEqual(route.environ['POST_DATA'], {
-            "conta_corrente": {
-                "ocultar": False,
-                "visao_geral": True,
-                "extrato": True
-            }
-        })
-
-    def test_correctly_parses_json_with_list(self):
-        environ = generate_wsgi()
-        environ['CONTENT_TYPE'] = 'application/json'
-        environ['REQUEST_METHOD'] = 'POST'
-        environ['wsgi.input'] = WsgiInputTestClass().load(b'{\n    "options": ["foo", "bar"]\n}')
-        route = Route(environ)
-        self.assertEqual(route.environ['POST_DATA'], {
-            "options": ["foo", "bar"]
-        })
-
     def test_redirect_route(self):
         route = Redirect('/test1', '/test2')
         # request = Request(generate_wsgi())

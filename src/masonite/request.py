@@ -666,7 +666,7 @@ class Request(Extendable):
         if expires:
             expires = cookie_expire_time(expires)
 
-        print('adding cookie', key, expires)
+        print("adding cookie", key, expires)
         self.cookie_jar.add(
             key, value, expires=expires, http_only=http_only, path=path, timezone="GMT"
         )

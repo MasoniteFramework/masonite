@@ -9,7 +9,6 @@ from ..request import Request
 
 
 class RequestHelpersProvider(ServiceProvider):
-
     def register(self):
         pass
 

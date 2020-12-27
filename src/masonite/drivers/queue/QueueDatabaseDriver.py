@@ -39,7 +39,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
         callback = options.get("callback", "handle")
         wait = options.get("wait", None)
-        connection = options.get("connection", 'default')
+        connection = options.get("connection", "default")
         queue = options.get("queue", "default")
 
         if wait:
@@ -79,13 +79,19 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             jobs = (
                 builder.where_null("ran_at")
                 .where_null("reserved_at")
-                .where(lambda q: q.where_null("available_at").or_where("available_at", "<=", pendulum.now().to_datetime_string()))
+                .where(
+                    lambda q: q.where_null("available_at").or_where(
+                        "available_at", "<=", pendulum.now().to_datetime_string()
+                    )
+                )
                 .limit(5)
-                .order_by('id')
+                .order_by("id")
                 .get()
             )
 
-            builder.where_in('id', jobs.pluck('id')).update({'reserved_at': pendulum.now().to_datetime_string()})
+            builder.where_in("id", jobs.pluck("id")).update(
+                {"reserved_at": pendulum.now().to_datetime_string()}
+            )
 
             if not jobs.count():
                 time.sleep(int(options.get("poll")) or 1)
@@ -97,11 +103,11 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         "ran_at": pendulum.now().to_datetime_string(),
                     }
                 )
-                unserialized = pickle.loads(job['serialized'])
+                unserialized = pickle.loads(job["serialized"])
                 obj = unserialized["obj"]
                 args = unserialized["args"]
                 callback = unserialized["callback"]
-                ran = job['attempts']
+                ran = job["attempts"]
 
                 try:
                     try:
@@ -155,4 +161,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         if hasattr(obj, "failed"):
                             getattr(obj, "failed")(unserialized, str(e))
 
-                        self.add_to_failed_queue_table(unserialized, channel=channel, driver="database")
+                        self.add_to_failed_queue_table(
+                            unserialized, channel=channel, driver="database"
+                        )

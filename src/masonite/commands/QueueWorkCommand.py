@@ -29,4 +29,6 @@ class QueueWorkCommand(Command):
             queue.run_failed_jobs()
             return
 
-        queue.connect().consume(self.option("channel"), fair=self.option("fair"), poll=self.option("poll"))
+        queue.connect().consume(
+            self.option("channel"), fair=self.option("fair"), poll=self.option("poll")
+        )

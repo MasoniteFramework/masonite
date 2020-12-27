@@ -9,7 +9,7 @@ hupper>=1.0,<2.0
 Jinja2>=2,<3
 masonite-events>=1.0,<2
 masonite-scheduler>=1.0.0,<=1.0.99
-masonite-orm==0.8.0b1
+https://github.com/masoniteframework/orm/archive/0.9.zip
 passlib>=1.7,<1.8
 pendulum>=2.1
 pika

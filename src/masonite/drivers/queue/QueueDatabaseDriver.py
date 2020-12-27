@@ -39,22 +39,19 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
 
         callback = options.get("callback", "handle")
         wait = options.get("wait", None)
-        connection = options.get("connection", None)
+        connection = options.get("connection", 'default')
         queue = options.get("queue", "default")
-
-        if connection:
-            schema = schema.connection(connection)
 
         if wait:
             wait = parse_human_time(wait).to_datetime_string()
 
         for job in objects:
-            if schema.get_schema_builder().has_table("queue_jobs"):
+            if schema.get_schema_builder(connection).has_table("queue_jobs"):
                 payload = pickle.dumps(
                     {"obj": job, "args": args, "kwargs": kwargs, "callback": callback}
                 )
 
-                schema.get_query_builder().table("queue_jobs").create(
+                schema.get_query_builder(connection).table("queue_jobs").create(
                     {
                         "name": str(job),
                         "serialized": payload,

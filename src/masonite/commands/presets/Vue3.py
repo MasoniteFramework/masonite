@@ -32,9 +32,7 @@ class Vue3(Preset):
 
         packages["vue"] = "^3.0.4"
         packages["@vue/compiler-sfc"] = "^3.0.4"
-        packages["laravel-mix"] = "^6.0.5"
         packages["vue-loader"] = "^16.1.2"
-        packages["postcss"] = "^8.2.1"
 
         return packages
 

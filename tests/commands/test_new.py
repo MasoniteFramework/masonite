@@ -33,11 +33,6 @@ class TestNewCommand(unittest.TestCase):
         # ensure cleaning even if test suite fails
         shutil.rmtree(cls.test_project_dir, ignore_errors=True)
 
-    def test_cannot_craft_to_not_empty_directory(self):
-        # run command without arguments, target is the current directory which is not empty
-        with self.assertRaises(ProjectTargetNotEmpty):
-            self.command_tester.execute()
-
     def test_handle_not_implemented_provider(self):
         self.command_tester.execute("new_project --provider bitbucket")
         self.assertEqual("'provider' option must be in github,gitlab\n", self.command_tester.io.fetch_error())

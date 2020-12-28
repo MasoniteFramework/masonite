@@ -13,11 +13,6 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
         from config.database import DB
         from config import queue
 
-        if "amqp" in queue.DRIVERS:
-            listening_channel = queue.DRIVERS["amqp"]["channel"]
-        else:
-            listening_channel = "default"
-
         schema = DB.get_schema_builder()
 
         if schema.has_table("failed_jobs"):

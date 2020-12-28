@@ -30,11 +30,11 @@ class Vue3(Preset):
         for package in ["@babel/preset-react", "react", "react-dom"]:
             packages.pop(package, None)
 
-        packages["vue"] = "^3.0.0"
-        packages["@vue/compiler-sfc"] = "^3.0.0"
-        packages["laravel-mix"] = "^6.0.0-beta.7"
-        packages["vue-loader"] = "^16.0.0-beta.8"
-        packages["postcss"] = "^8.1.1"
+        packages["vue"] = "^3.0.4"
+        packages["@vue/compiler-sfc"] = "^3.0.4"
+        packages["laravel-mix"] = "^6.0.5"
+        packages["vue-loader"] = "^16.1.2"
+        packages["postcss"] = "^8.2.1"
 
         return packages
 

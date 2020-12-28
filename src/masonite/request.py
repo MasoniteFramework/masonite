@@ -276,17 +276,6 @@ class Request(Extendable):
 
         return self
 
-    def is_not_get_request(self):
-        """Check if current request is not a get request.
-
-        Returns:
-            bool
-        """
-        if not self.environ["REQUEST_METHOD"] == "GET":
-            return True
-
-        return False
-
     def get_post_params(self):
         """Return the correct input.
 

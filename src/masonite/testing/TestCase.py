@@ -253,6 +253,7 @@ class TestCase(unittest.TestCase):
         try:
             for provider in self.container.make("WSGIProviders"):
                 self.container.resolve(provider.boot)
+                self.container.make("Request")._test_user = self.acting_user
         except Exception as e:  # skipcq
             if self._exception_handling:
                 self.container.make("ExceptionHandler").load_exception(e)

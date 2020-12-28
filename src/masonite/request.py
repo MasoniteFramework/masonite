@@ -10,6 +10,7 @@ of this class.
 
 import re
 import cgi
+import json
 from cgi import MiniFieldStorage
 from http import cookies
 from urllib.parse import parse_qs, quote
@@ -274,17 +275,6 @@ class Request(Extendable):
             self.__set_request_method()
 
         return self
-
-    def is_not_get_request(self):
-        """Check if current request is not a get request.
-
-        Returns:
-            bool
-        """
-        if not self.environ["REQUEST_METHOD"] == "GET":
-            return True
-
-        return False
 
     def get_post_params(self):
         """Return the correct input.
@@ -665,7 +655,7 @@ class Request(Extendable):
         if expires:
             expires = cookie_expire_time(expires)
 
-        print('adding cookie', key, expires)
+        print("adding cookie", key, expires)
         self.cookie_jar.add(
             key, value, expires=expires, http_only=http_only, path=path, timezone="GMT"
         )

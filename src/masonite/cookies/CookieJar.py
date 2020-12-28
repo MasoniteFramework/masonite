@@ -23,7 +23,13 @@ class CookieJar:
         return name in self.cookies or name in self.loaded_cookies
 
     def delete(self, name):
-        self.deleted_cookies.update({name: Cookie(name, "", expires=cookie_expire_time("2 months"), timezone="GMT")})
+        self.deleted_cookies.update(
+            {
+                name: Cookie(
+                    name, "", expires=cookie_expire_time("2 months"), timezone="GMT"
+                )
+            }
+        )
         return self.cookies.pop(name)
 
     def load_cookie(self, key, value):

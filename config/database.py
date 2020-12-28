@@ -2,7 +2,10 @@
 from masonite import env
 from masoniteorm.query import QueryBuilder
 from masoniteorm.connections import ConnectionResolver
+from masonite.environment import LoadEnvironment
 
+
+LoadEnvironment()
 
 """
 |--------------------------------------------------------------------------

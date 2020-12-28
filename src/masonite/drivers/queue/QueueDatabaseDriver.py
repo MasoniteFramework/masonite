@@ -73,7 +73,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             )
         )
 
-        schema = DB.get_schema_builder(connection=channel)
         builder = QueueJobsModel
         while True:
             jobs = (

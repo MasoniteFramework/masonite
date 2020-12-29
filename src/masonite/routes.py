@@ -316,7 +316,6 @@ class BaseHttpRoute:
                 middleware_to_run = arg
                 arguments = []
 
-            print("rrr", self.request.app().make("RouteMiddleware"))
             middleware_to_run = self.request.app().make("RouteMiddleware")[
                 middleware_to_run
             ]

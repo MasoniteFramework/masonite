@@ -16,7 +16,6 @@ class Cookie:
         if self.expires:
             if self.timezone:
                 response += f"Expires={self.expires} {self.timezone};"
-                print(response)
             else:
                 response += f"Expires={self.expires};"
         if self.path:

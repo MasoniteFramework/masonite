@@ -124,7 +124,6 @@ class TestRequest(unittest.TestCase):
 
         self.assertEqual(self.request.get_cookie('delete_cookie'), 'value')
         self.request.delete_cookie('delete_cookie')
-        print(self.request.cookie_jar.render_response()[0][1])
         self.assertTrue('Expires' in self.request.cookie_jar.render_response()[0][1])
         self.assertFalse(self.request.get_cookie('delete_cookie'))
 

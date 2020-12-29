@@ -10,11 +10,9 @@ class TestVue(unittest.TestCase):
 
     def test_update_package_array(self):
         expected_packages = {
-            'vue': '^3.0.0',
-            '@vue/compiler-sfc': '^3.0.0',
-            'laravel-mix': '^6.0.0-beta.7',
-            'vue-loader': '^16.0.0-beta.8',
-            'postcss': '^8.1.1'
+            'vue': '^3.0.4',
+            '@vue/compiler-sfc': '^3.0.4',
+            'vue-loader': '^16.1.2',
         }
         # Verify it works with no existing packages
         self.assertDictEqual(expected_packages, Vue3().update_package_array())

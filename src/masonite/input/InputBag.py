@@ -5,34 +5,33 @@ import json
 import cgi
 import re
 from ..helpers import Dot as DictDot, clean_request_input
-from ..helpers.routes import query_parse
+
 
 class InputBag:
-
     def __init__(self):
         self.query_string = {}
         self.post_data = {}
         self.environ = {}
-    
+
     def load(self, environ):
         self.environ = environ
         self.query_string = {}
         self.post_data = {}
         self.parse(environ)
         return self
-    
+
     def parse(self, environ):
         if "QUERY_STRING" in environ:
-            
-            self.query_string = self.query_parse(environ['QUERY_STRING'])
+
+            self.query_string = self.query_parse(environ["QUERY_STRING"])
         if "wsgi.input" in environ:
-            if 'application/json' in environ.get('CONTENT_TYPE', ''):
+            if "application/json" in environ.get("CONTENT_TYPE", ""):
                 try:
-                    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
                 except (ValueError):
                     request_body_size = 0
 
-                request_body = environ['wsgi.input'].read(request_body_size)
+                request_body = environ["wsgi.input"].read(request_body_size)
                 if isinstance(request_body, bytes):
                     request_body = request_body.decode("utf-8")
 
@@ -42,22 +41,22 @@ class InputBag:
                 else:
                     for name, value in json.loads(request_body or "{}").items():
                         self.post_data.update({name: Input(name, value)})
-            elif 'application/x-www-form-urlencoded' in environ.get('CONTENT_TYPE', ''):
+            elif "application/x-www-form-urlencoded" in environ.get("CONTENT_TYPE", ""):
                 try:
-                    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
                 except (ValueError):
                     request_body_size = 0
 
-                request_body = environ['wsgi.input'].read(request_body_size)
+                request_body = environ["wsgi.input"].read(request_body_size)
                 if isinstance(request_body, bytes):
                     request_body = request_body.decode("utf-8")
 
-                for parts in request_body.split('&'):
-                    name, value = parts.split('=', 1)
+                for parts in request_body.split("&"):
+                    name, value = parts.split("=", 1)
                     self.post_data.update({name: Input(name, value)})
-            elif 'multipart/form-data' in environ.get('CONTENT_TYPE', ''):
+            elif "multipart/form-data" in environ.get("CONTENT_TYPE", ""):
                 try:
-                    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
                 except (ValueError):
                     request_body_size = 0
 
@@ -71,24 +70,24 @@ class InputBag:
                     self.post_data.update({name: Input(name, fields.getvalue(name))})
             else:
                 try:
-                    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
                 except (ValueError):
                     request_body_size = 0
 
-                request_body = environ['wsgi.input'].read(request_body_size)
+                request_body = environ["wsgi.input"].read(request_body_size)
 
     def get(self, name, default=None):
-        
+
         input = DictDot().dot(name, self.all(), default=default)
         if isinstance(input, (dict, str)):
             return input
-        elif hasattr(input, 'value'):
+        elif hasattr(input, "value"):
             return input.value
         else:
             return input
 
         return default
-    
+
     def has(self, *names):
         return all((name in self.all()) for name in names)
 
@@ -101,13 +100,13 @@ class InputBag:
         all.update(qs)
         all.update(self.post_data)
         return all
-    
+
     def all_as_values(self, internal_variables=False):
         all = self.all()
         new = {}
         for name, input in all.items():
             if not internal_variables:
-                if name.startswith('__'):
+                if name.startswith("__"):
                     continue
             new.update({name: self.get(name)})
 

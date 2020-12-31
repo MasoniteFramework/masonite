@@ -51,3 +51,8 @@ class TestCookies(unittest.TestCase):
         cookiejar.load("csrf_token=tok")
         self.assertEqual(cookiejar.render_response(), [('Set-Cookie', "cookie1=name;")])
         self.assertEqual(cookiejar.get('csrf_token').value, 'tok')
+
+    def test_cookie_can_make_secure_cookies(self):
+        cookiejar = CookieJar()
+        cookiejar.add("cookie1", "name", http_only=False, secure=True)
+        self.assertEqual(cookiejar.render_response(), [('Set-Cookie', "cookie1=name;Secure;")])

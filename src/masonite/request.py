@@ -628,7 +628,7 @@ class Request(Extendable):
         return False
 
     def cookie(
-        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=None
+        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=None, secure=True
     ):
         """Set a cookie in the browser.
 
@@ -656,7 +656,7 @@ class Request(Extendable):
             expires = cookie_expire_time(expires)
 
         self.cookie_jar.add(
-            key, value, expires=expires, http_only=http_only, path=path, timezone="GMT"
+            key, value, expires=expires, http_only=http_only, secure=secure, path=path, timezone="GMT"
         )
 
         return self

@@ -30,7 +30,8 @@ class CookieJar:
                 )
             }
         )
-        return self.cookies.pop(name)
+        if name in self.cookies:
+            return self.cookies.pop(name)
 
     def load_cookie(self, key, value):
         self.loaded_cookies.update({key: Cookie(key, value)})

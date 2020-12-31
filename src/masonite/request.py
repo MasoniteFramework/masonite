@@ -628,7 +628,7 @@ class Request(Extendable):
         return False
 
     def cookie(
-        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=None, secure=True
+        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=None, secure=False
     ):
         """Set a cookie in the browser.
 
@@ -647,6 +647,11 @@ class Request(Extendable):
         Returns:
             self
         """
+
+        if self.environ.get('SECURE_COOKIES') == 'True':
+            secure = True
+
+        
         if encrypt:
             value = Sign(self.encryption_key).sign(value)
         else:

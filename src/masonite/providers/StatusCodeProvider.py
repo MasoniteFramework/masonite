@@ -14,7 +14,7 @@ class ServerErrorExceptionHook:
         if application.DEBUG:
             return
 
-        request = app.make(Response)
+        response = app.make(Response)
 
         response.status(500)
         if app.make("ViewClass").exists("errors/500"):
@@ -27,7 +27,7 @@ class ServerErrorExceptionHook:
                 {"code": "500 Internal Server Error"},
             )
 
-        request.app().make(Response).view(rendered_view)
+        response.view(rendered_view)
 
 
 class StatusCodeProvider(ServiceProvider):

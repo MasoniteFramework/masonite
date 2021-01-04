@@ -20,6 +20,7 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
                 {
                     "driver": driver,
                     "queue": channel,
+                    "channel": channel,
                     "payload": pickle.dumps(payload),
                     "failed_at": pendulum.now().to_datetime_string(),
                 }
@@ -45,7 +46,7 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
     def connect(self):
         return self
 
-    def consume(self, channel, fair=False):
+    def consume(self, channel, **options):
         raise NotImplementedError(
             "The {} driver does not implement consume".format(self.__class__.__name__)
         )

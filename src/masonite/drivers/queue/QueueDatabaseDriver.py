@@ -60,6 +60,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         "ran_at": None,
                         "queue": queue,
                         "available_at": wait,
+                        "reserved_at": None,
                     }
                 )
 
@@ -119,47 +120,18 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                         obj(*args)
 
                     try:
-                        # attempts = 1
-                        builder.where("id", job["id"]).update(
-                            {
-                                "ran_at": pendulum.now().to_datetime_string(),
-                                "attempts": job["attempts"] + 1,
-                            }
-                        )
                         self.success("[\u2713] Job Successfully Processed")
                     except UnicodeEncodeError:
                         self.success("[Y] Job Successfully Processed")
+                    builder.where("id", job["id"]).delete()
                 except Exception as e:  # skipcq
                     self.danger("Job Failed: {}".format(str(e)))
 
-                    if not obj.run_again_on_fail:
-                        # ch.basic_ack(delivery_tag=method.delivery_tag)
-                        builder.where("id", job["id"]).update(
-                            {
-                                "ran_at": pendulum.now().to_datetime_string(),
-                                "failed": 1,
-                                "attempts": job["attempts"] + 1,
-                            }
-                        )
+                    # if not obj.run_again_on_fail:
+                    builder.where("id", job["id"]).delete()
 
-                    if ran < obj.run_times and isinstance(obj, Queueable):
-                        time.sleep(1)
-                        builder.where("id", job["id"]).update(
-                            {"attempts": job["attempts"] + 1}
-                        )
-                        continue
-                    else:
-                        builder.where("id", job["id"]).update(
-                            {
-                                "attempts": job["attempts"] + 1,
-                                "ran_at": pendulum.now().to_datetime_string(),
-                                "failed": 1,
-                            }
-                        )
-
-                        if hasattr(obj, "failed"):
-                            getattr(obj, "failed")(unserialized, str(e))
-
-                        self.add_to_failed_queue_table(
-                            unserialized, channel=channel, driver="database"
-                        )
+                    if hasattr(obj, "failed"):
+                        getattr(obj, "failed")(unserialized, str(e))
+                    self.add_to_failed_queue_table(
+                        unserialized, channel=channel, driver="database"
+                    )

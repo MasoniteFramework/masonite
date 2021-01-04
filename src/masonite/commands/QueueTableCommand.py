@@ -22,5 +22,5 @@ class QueueTableCommand(Command):
         if self.option("jobs"):
             copy_migration("masonite/snippets/migrations/create_queue_jobs_table.py")
             self.info("Jobs queue table migration created successfully")
-        
+
         self.line("<error>Please specify the --failed or --jobs flags</error>")

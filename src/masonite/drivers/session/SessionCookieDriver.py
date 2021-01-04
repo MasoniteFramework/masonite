@@ -45,7 +45,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         if value:
             self.delete_flash(key)
             return value
-        
+
         return None
 
     def set(self, key, value):

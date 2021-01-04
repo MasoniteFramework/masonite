@@ -88,7 +88,7 @@ class SessionMemoryDriver(SessionContract, BaseDriver):
         if value:
             self.delete_flash(key)
             return value
-        
+
         return None
 
     def get_error_messages(self):

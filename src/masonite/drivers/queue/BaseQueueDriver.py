@@ -39,9 +39,9 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
 
             self.success(f"Found {len(jobs)} jobs")
             for job in builder.table("failed_jobs").get():
-                payload = pickle.loads(job['payload'])
+                payload = pickle.loads(job["payload"])
 
-                builder.table("failed_jobs").where("payload", job['payload']).delete()
+                builder.table("failed_jobs").where("payload", job["payload"]).delete()
                 self.push(
                     payload["obj"], args=payload["args"], callback=payload["callback"]
                 )

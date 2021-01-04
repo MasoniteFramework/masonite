@@ -1,6 +1,13 @@
 class Cookie:
     def __init__(
-        self, name, value, expires=None, http_only=True, path=None, timezone=None, secure=False
+        self,
+        name,
+        value,
+        expires=None,
+        http_only=True,
+        path=None,
+        timezone=None,
+        secure=False,
     ):
         self.name = name
         self.value = value

@@ -27,17 +27,27 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
             )
 
     def run_failed_jobs(self):
-        from config.database import DB as schema
+        from config.database import DB
 
+        schema = DB.get_schema_builder()
         try:
             self.success("Attempting to send failed jobs back to the queue ...")
-            for job in schema.table("failed_jobs").get():
-                payload = pickle.loads(job.payload)
-                schema.table("failed_jobs").where("payload", job.payload).delete()
+            builder = DB.get_query_builder()
+            jobs = builder.table("failed_jobs").get()
+            if not jobs:
+                return self.success("No failed jobs found")
+
+            self.success(f"Found {len(jobs)} jobs")
+            for job in builder.table("failed_jobs").get():
+                payload = pickle.loads(job['payload'])
+
+                builder.table("failed_jobs").where("payload", job['payload']).delete()
                 self.push(
                     payload["obj"], args=payload["args"], callback=payload["callback"]
                 )
-        except Exception:
+            self.success("Jobs successfully added back to the queue.")
+        except Exception as e:
+            raise e
             self.danger("Could not get the failed_jobs table")
 
     def push(self, *objects, args=(), callback="handle", ran=1, channel=None):

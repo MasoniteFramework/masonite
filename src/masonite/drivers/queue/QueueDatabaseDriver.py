@@ -107,7 +107,6 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
                 obj = unserialized["obj"]
                 args = unserialized["args"]
                 callback = unserialized["callback"]
-                ran = job["attempts"]
 
                 try:
                     try:

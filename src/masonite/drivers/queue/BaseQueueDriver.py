@@ -29,7 +29,6 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
     def run_failed_jobs(self):
         from config.database import DB
 
-        schema = DB.get_schema_builder()
         try:
             self.success("Attempting to send failed jobs back to the queue ...")
             builder = DB.get_query_builder()

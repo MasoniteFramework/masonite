@@ -595,6 +595,7 @@ class Request(Extendable):
         self.reset_headers()
         self.url_params = {}
         self.cookies = []
+        self.query_params = {}
         return headers
 
     def set_params(self, params):

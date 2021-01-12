@@ -20,6 +20,7 @@ class HTTPRoute:
 
     def name(self, name):
         self._name = name
+        return self
 
     def middleware(self, *args):
         """Load a list of middleware to run.
@@ -212,6 +213,10 @@ class Route:
             if options.get('prefix'):
                 route.url = options.get('prefix') + route.url
                 route.compile_route_to_regex()
+
+            if options.get('name'):
+                route._name = options.get('name') + route._name
+
             self.routes.append(route)
         return self
 
@@ -276,6 +281,17 @@ class TestRoutes(TestCase):
         )
 
         route = Route().find("/testing/group", "GET")
+        self.assertTrue(route)
+
+    def test_group_naming(self):
+        Route.group(
+            Route.get('/group', 'TestController@show').name(".index"),
+            Route.post('/login', 'TestController@show').name(".index"),
+            prefix="/testing",
+            name="dashboard"
+        )
+
+        route = Route().find_by_name("dashboard.index")
         self.assertTrue(route)
 
     def test_compile_year(self):

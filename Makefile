@@ -1,4 +1,5 @@
 init:
+	python -m pip install --upgrade pip
 	pip install -r requirements.txt --user
 	pip install -e .
 	pip install pytest
@@ -18,6 +19,12 @@ coverage:
 	python -m pytest --cov-report term --cov-report xml --cov=src/masonite tests/
 	python -m coveralls
 publish:
+	make test
+	pip install 'twine>=1.5.0'
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
+	rm -fr build dist .egg masonite.egg-info
+pub:
 	pip install 'twine>=1.5.0'
 	python setup.py sdist bdist_wheel
 	twine upload dist/*

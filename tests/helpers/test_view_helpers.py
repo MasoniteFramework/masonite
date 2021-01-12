@@ -2,7 +2,7 @@
 import unittest
 
 from src.masonite.app import App
-from src.masonite.providers import HelpersProvider
+from src.masonite.providers import HelpersProvider, RequestHelpersProvider
 from src.masonite.request import Request
 from src.masonite.testing import generate_wsgi
 from src.masonite.view import View
@@ -15,7 +15,9 @@ class TestViewHelpers(unittest.TestCase):
         self.view = View(self.app)
         self.request = Request(generate_wsgi()).load_app(self.app)
         self.provider = HelpersProvider()
-        self.provider.load_app(self.app).boot(self.view, self.request)
+        self.provider.load_app(self.app).boot(self.view)
+        RequestHelpersProvider().load_app(self.app).boot(self.view, self.request)
+        self.provider.load_app(self.app).boot(self.view)
 
     def test_boot_added_view_shares(self):
         self.assertGreater(len(self.view._shared), 1)

@@ -48,41 +48,7 @@ class Route:
         self.environ = environ
         self.url = environ["PATH_INFO"]
 
-        if self.is_not_get_request():
-            self.environ["POST_DATA"] = self.get_post_params()
-
         return self
-
-    def get_post_params(self):
-        """Return the correct input.
-
-        Returns:
-            dict -- Dictionary of post parameters.
-        """
-        fields = None
-        if self.is_not_get_request():
-            if (
-                "CONTENT_TYPE" in self.environ
-                and "application/json" in self.environ["CONTENT_TYPE"].lower()
-            ):
-                try:
-                    request_body_size = int(self.environ.get("CONTENT_LENGTH", 0))
-                except ValueError:
-                    request_body_size = 0
-
-                request_body = self.environ["wsgi.input"].read(request_body_size)
-
-                if isinstance(request_body, bytes):
-                    request_body = request_body.decode("utf-8")
-
-                return json.loads(request_body or "{}")
-            else:
-                fields = cgi.FieldStorage(
-                    fp=self.environ["wsgi.input"],
-                    environ=self.environ,
-                    keep_blank_values=1,
-                )
-                return fields
 
     def is_post(self):
         """Check to see if the current request is a POST request.
@@ -213,7 +179,7 @@ class BaseHttpRoute:
             self.controller = getattr(module, get_controller)
 
             # Set the controller method on class. This is a string
-            self.controller_method = mod[1]
+            self.controller_method = mod[1] if len(mod) == 2 else "__call__"
         except ImportError as e:
             import sys
             import traceback

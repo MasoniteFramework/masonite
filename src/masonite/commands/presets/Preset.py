@@ -38,4 +38,8 @@ class Preset:
         """Create an empty app.scss file"""
         os.makedirs(os.path.realpath("resources/sass"))
         with open(os.path.realpath("resources/sass/app.scss"), "w") as f:
-            f.write("// Add your Sass here")
+            f.write("// Add your Sass here\n")
+            f.write("// For Tailwind CSS\n")
+            f.write("// @import 'tailwindcss/base';\n")
+            f.write("// @import 'tailwindcss/components';\n")
+            f.write("// @import 'tailwindcss/utilities';\n")

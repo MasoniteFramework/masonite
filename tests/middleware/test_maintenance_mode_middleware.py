@@ -3,38 +3,33 @@ import os
 
 from src.masonite.app import App
 from src.masonite.request import Request
+from src.masonite.response import Response
 from src.masonite.middleware import MaintenanceModeMiddleware
 from src.masonite.testing import generate_wsgi
 
 from config import application
 import unittest
+from src.masonite.testing import TestCase
 
 
-class TestMaintenanceModeMiddleware(unittest.TestCase):
+class TestMaintenanceModeMiddleware(TestCase):
 
     def setUp(self):
-        self.request = Request(generate_wsgi())
-        self.middleware = MaintenanceModeMiddleware(self.request)
-        down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
-        down = os.path.exists(down_path)
-        if down:
-            os.remove(down_path)
+        super().setUp()
+        self.withHttpMiddleware([MaintenanceModeMiddleware])
+        self.down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
 
     def test_maintenance_mode_middleware(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('StatusCode', '200 OK')
-        request = app.make('Request').load_app(app)
-        down_path = os.path.join(application.BASE_DIRECTORY, 'bootstrap/down')
-        down = open(down_path, 'w+')
+        down = open(self.down_path, 'w+')
         down.close()
-        self.middleware.before()
-        self.assertEqual(request.get_status_code(), '503 Service Unavailable')
+        self.get('/')
+        request = self.container.make('Request')
+        response = self.container.make(Response)
+        self.assertEqual(response.get_status_code(), '503 Service Unavailable')
 
     def test_maintenance_mode_middleware_is_not_down(self):
-        app = App()
-        app.bind('Request', self.request)
-        app.bind('StatusCode', '200 OK')
-        request = app.make('Request').load_app(app)
-        self.middleware.before()
-        self.assertEqual(request.get_status_code(), '200 OK')
+        os.remove(self.down_path)
+        self.get('/')
+        request = self.container.make('Request')
+        response = self.container.make(Response)
+        self.assertEqual(response.get_status_code(), '200 OK')

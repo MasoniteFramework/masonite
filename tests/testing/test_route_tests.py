@@ -8,9 +8,7 @@ class TestUnitTest(TestCase):
 
     def setUp(self):
         super().setUp()
-
         self.routes(web.ROUTES)
-        self.buildOwnContainer()
 
     def setUpFactories(self):
         User.create({

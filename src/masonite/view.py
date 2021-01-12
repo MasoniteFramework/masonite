@@ -195,7 +195,6 @@ class View(Responsable):
         Keyword Arguments:
             loader {jinja2.Loader} -- Type of Jinja2 loader to use. (default: {jinja2.PackageLoader})
         """
-        # print('loading', template_location)
         if loader == PackageLoader:
             template_location = template_location.split(self._splice)
 
@@ -274,7 +273,11 @@ class View(Responsable):
             template {string} -- Creates the cached templates.
         """
         self.container.make("Cache").store_for(
-            template, self.rendered_template, self.cache_time, self.cache_type, ".html",
+            template,
+            self.rendered_template,
+            self.cache_time,
+            self.cache_type,
+            ".html",
         )
 
     def __cached_template_exists(self):

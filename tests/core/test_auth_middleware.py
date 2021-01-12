@@ -29,7 +29,7 @@ class TestAuthMiddleware(TestCase):
             Get('/guard/web', MockController.user).middleware('guard:web'),
             Get('/guard/api', MockController.user).middleware('guard:api')
         ]) 
-    
+
     def test_can_switch_guards(self):
         self.get('/guard/web').assertContains('False')
         self.assertIsInstance(self.container.make(Auth).get(), WebGuard)

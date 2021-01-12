@@ -2,9 +2,8 @@
 
 import inspect
 import pydoc
-import collections
+from collections import MutableMapping
 
-# from orator.support.collection import Collection as collect
 from masoniteorm.collection import Collection as collect
 
 
@@ -80,7 +79,7 @@ class Dot:
         items = []
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
-            if isinstance(v, collections.MutableMapping):
+            if isinstance(v, MutableMapping):
                 items.append((new_key, v))
                 items.extend(self.flatten(v, new_key, sep=sep).items())
             elif isinstance(v, list):

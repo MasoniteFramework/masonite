@@ -9,37 +9,44 @@ from ...helpers import HasColoredCommands
 
 
 class BaseQueueDriver(BaseDriver, HasColoredCommands):
-    def add_to_failed_queue_table(self, payload, driver="amqp"):
-        from config.database import DB as schema
+    def add_to_failed_queue_table(self, payload, channel=None, driver="amqp"):
+        from config.database import DB
         from config import queue
 
-        if "amqp" in queue.DRIVERS:
-            listening_channel = queue.DRIVERS["amqp"]["channel"]
-        else:
-            listening_channel = "default"
+        schema = DB.get_schema_builder()
 
-        if schema.get_schema_builder().has_table("failed_jobs"):
-            schema.table("failed_jobs").insert(
+        if schema.has_table("failed_jobs"):
+            DB.get_query_builder().table("failed_jobs").create(
                 {
                     "driver": driver,
-                    "channel": listening_channel,
+                    "queue": channel,
+                    "channel": channel,
                     "payload": pickle.dumps(payload),
-                    "failed_at": pendulum.now(),
+                    "failed_at": pendulum.now().to_datetime_string(),
                 }
             )
 
     def run_failed_jobs(self):
-        from config.database import DB as schema
+        from config.database import DB
 
         try:
             self.success("Attempting to send failed jobs back to the queue ...")
-            for job in schema.table("failed_jobs").get():
-                payload = pickle.loads(job.payload)
-                schema.table("failed_jobs").where("payload", job.payload).delete()
+            builder = DB.get_query_builder()
+            jobs = builder.table("failed_jobs").get()
+            if not jobs:
+                return self.success("No failed jobs found")
+
+            self.success(f"Found {len(jobs)} jobs")
+            for job in builder.table("failed_jobs").get():
+                payload = pickle.loads(job["payload"])
+
+                builder.table("failed_jobs").where("payload", job["payload"]).delete()
                 self.push(
                     payload["obj"], args=payload["args"], callback=payload["callback"]
                 )
-        except Exception:
+            self.success("Jobs successfully added back to the queue.")
+        except Exception as e:
+            raise e
             self.danger("Could not get the failed_jobs table")
 
     def push(self, *objects, args=(), callback="handle", ran=1, channel=None):
@@ -48,7 +55,7 @@ class BaseQueueDriver(BaseDriver, HasColoredCommands):
     def connect(self):
         return self
 
-    def consume(self, channel, fair=False):
+    def consume(self, channel, **options):
         raise NotImplementedError(
             "The {} driver does not implement consume".format(self.__class__.__name__)
         )

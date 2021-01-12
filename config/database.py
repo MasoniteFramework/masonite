@@ -2,7 +2,10 @@
 from masonite import env
 from masoniteorm.query import QueryBuilder
 from masoniteorm.connections import ConnectionResolver
+from masonite.environment import LoadEnvironment
 
+
+LoadEnvironment()
 
 """
 |--------------------------------------------------------------------------
@@ -54,6 +57,4 @@ DATABASES = {
     },
 }
 
-ConnectionResolver().set_connection_details(DATABASES)
-
-DB = QueryBuilder(connection_details=DATABASES)
+DB = ConnectionResolver().set_connection_details(DATABASES)

@@ -23,6 +23,4 @@ class UploadProvider(ServiceProvider):
     def boot(self, manager: UploadManager, view: View):
         self.app.bind("Upload", manager.driver(config("storage").DRIVER))
         self.app.swap(Upload, manager.driver(config("storage").DRIVER))
-        view.share(
-            {"static": static}
-        )
+        view.share({"static": static})

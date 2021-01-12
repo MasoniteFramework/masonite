@@ -1,18 +1,18 @@
 """SecureHeaders Middleware."""
 
-from ..request import Request
+from ..response import Response
 
 
 class SecureHeadersMiddleware:
     """SecureHeaders Middleware."""
 
-    def __init__(self, request: Request):
+    def __init__(self, response: Response):
         """Inject Any Dependencies From The Service Container.
 
         Arguments:
-            Request {masonite.request.Request} -- The Masonite request object
+            Response {masonite.response.Response} -- The Masonite response object
         """
-        self.request = request
+        self.response = response
         self.headers = {
             "Strict-Transport-Security": "max-age=63072000; includeSubdomains",
             "X-Frame-Options": "SAMEORIGIN",
@@ -37,4 +37,4 @@ class SecureHeadersMiddleware:
         except AttributeError:
             pass
 
-        self.request.header(self.headers)
+        self.response.header(self.headers)

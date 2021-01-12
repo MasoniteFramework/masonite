@@ -6,7 +6,7 @@ from app.http.controllers.subdirectory.deep.DeepController import DeepController
 from src.masonite.app import App
 from src.masonite.exceptions import (InvalidRouteCompileException,
                                      RouteException)
-from src.masonite.helpers.routes import create_matchurl, flatten_routes, group
+from src.masonite.helpers.routes import create_matchurl, flatten_routes
 from src.masonite.request import Request
 from src.masonite.response import Response
 from src.masonite.routes import (Connect, Delete, Get, Head, Match, Options,
@@ -113,10 +113,10 @@ class TestRoutes(TestCase):
             self.assertEqual(Match('get').route('test/url', 'TestController@show').method_type, ['GET', 'POST'])
 
     def test_group_route(self):
-        routes = group('/example', [
+        routes = RouteGroup([
             Get('/test/1', 'TestController@show'),
             Get('/test/2', 'TestController@show')
-        ])
+        ], prefix="/example")
 
         self.assertEqual(routes[0].route_url, '/example/test/1')
         self.assertEqual(routes[1].route_url, '/example/test/2')

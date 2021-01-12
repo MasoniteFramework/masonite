@@ -89,7 +89,8 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         serialized_dictionary = model.serialize()
         serialized_dictionary.update({"expired": cookie_expire_time("5 minutes")})
         token = self.jwt.encode(serialized_dictionary, KEY, algorithm="HS256")
-        token = bytes(token).decode("utf-8")
+        if isinstance(token, bytes):
+            token = bytes(token).decode("utf-8")
         self.request.cookie("token", token)
 
     def delete(self):

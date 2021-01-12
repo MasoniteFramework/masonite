@@ -4,15 +4,22 @@ from src.masonite.exceptions import InvalidRouteCompileException, RouteMiddlewar
 
 class HTTPRoute:
 
-    def __init__(self, url, controller=None, request_method=["get"]):
+    def __init__(self, url, controller=None, request_method=["get"], name=None):
         self.url = url
         self.controller = controller
+        self._name = name
         self.request_method = [x.lower() for x in request_method]
         self.list_middleware = []
         self.compile_route_to_regex()
 
     def match(self, path, request_method):
         return (re.match(self._compiled_regex, path) or re.match(self._compiled_regex_end, path) and request_method.lower() in self.request_method)
+
+    def match_name(self, name):
+        return name == self._name
+
+    def name(self, name):
+        self._name = name
 
     def middleware(self, *args):
         """Load a list of middleware to run.
@@ -213,6 +220,11 @@ class Route:
             if route.match(path, request_method):
                 return route
 
+    def find_by_name(self, name):
+        for route in self.routes:
+            if route.match_name(name):
+                return route
+
     @classmethod
     def compile(self, key, to=""):
         self.compilers.update({key: to})
@@ -271,5 +283,11 @@ class TestRoutes(TestCase):
         Route.get('/year/@date:year', 'TestController@show')
 
         route = Route().find("/year/2005", "GET")
+        self.assertTrue(route)
+
+    def test_find_by_name(self):
+        Route.get('/getname', 'TestController@show').name("testname")
+
+        route = Route().find_by_name("testname")
         self.assertTrue(route)
 

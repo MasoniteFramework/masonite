@@ -986,11 +986,11 @@ class Request(Extendable):
         redirect_url = self.input("__back")
 
         if not redirect_url and default:
-            return self.redirect(default)
+            return self.redirect(url=default)
         elif not redirect_url and not default:
-            return self.redirect(self.path)  # Some global default?
+            return self.redirect(url=self.path)
 
-        return self.redirect(redirect_url)
+        return self.redirect(url=redirect_url)
 
     def then_back(self):
         self.session.set("__intend", self.path)

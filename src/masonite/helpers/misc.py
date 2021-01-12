@@ -105,6 +105,8 @@ class Compact:
 
 
 def deprecated(message):
+    warnings.simplefilter("default", DeprecationWarning)
+
     def deprecated_decorator(func):
         def deprecated_func(*args, **kwargs):
             warnings.warn(
@@ -112,7 +114,6 @@ def deprecated(message):
                 category=DeprecationWarning,
                 stacklevel=2,
             )
-            warnings.simplefilter("default", DeprecationWarning)
             return func(*args, **kwargs)
 
         return deprecated_func

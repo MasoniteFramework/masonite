@@ -6,10 +6,11 @@ from ..provider import ServiceProvider
 
 class CsrfProvider(ServiceProvider):
 
-    wsgi = False
+    wsgi = True
 
     def register(self):
-        self.app.bind("Csrf", Csrf(self.app.make("Request")))
+        pass
 
     def boot(self):
+        self.app.bind("Csrf", Csrf(self.app.make("Request")))
         pass

@@ -1,4 +1,4 @@
-from orator.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateFailedJobsTable(Migration):
@@ -6,6 +6,7 @@ class CreateFailedJobsTable(Migration):
         """Run the migrations."""
         with self.schema.create("failed_jobs") as table:
             table.increments("id")
+            table.string("queue")
             table.string("driver")
             table.string("channel")
             table.binary("payload")

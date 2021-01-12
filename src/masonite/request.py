@@ -9,6 +9,8 @@ of this class.
 """
 
 import re
+import cgi
+import json
 from cgi import MiniFieldStorage
 from http import cookies
 from urllib.parse import parse_qs, quote
@@ -23,6 +25,9 @@ from .helpers.Extendable import Extendable
 from .helpers.routes import compile_route_to_regex, query_parse
 from .helpers.status import response_statuses
 from .helpers.time import cookie_expire_time
+from .cookies import CookieJar
+from .headers import HeaderBag, Header
+from .response import Response
 
 
 class Request(Extendable):
@@ -36,8 +41,6 @@ class Request(Extendable):
         have the ability to extend another class at runtime.
     """
 
-    statuses = response_statuses()
-
     def __init__(self, environ=None):
         """Request class constructor.
 
@@ -47,15 +50,14 @@ class Request(Extendable):
         Keyword Arguments:
             environ {dictionary} -- WSGI environ dictionary. (default: {None})
         """
-        self.cookies = []
-        self._headers = {}
+        self.cookie_jar = CookieJar()
+        self.header_bag = HeaderBag()
         self.url_params = {}
         self.redirect_url = False
         self.redirect_route = False
         self.user_model = None
         self.subdomain = None
         self._activate_subdomains = False
-        self._status = None
         self.request_variables = {}
         self._test_user = False
         self.raw_input = None
@@ -249,6 +251,7 @@ class Request(Extendable):
             self
         """
         self.environ = environ
+        self.header_bag.load(environ)
         self.method = environ["REQUEST_METHOD"]
         self.path = environ["PATH_INFO"]
         self.request_variables = {}
@@ -257,15 +260,51 @@ class Request(Extendable):
         if "QUERY_STRING" in environ and environ["QUERY_STRING"]:
             self.query_params = parse_qs(environ["QUERY_STRING"])
 
+        if self.is_not_get_request():
+            environ["POST_DATA"] = self.get_post_params()
+
         if "POST_DATA" in environ:
             self._set_standardized_request_variables(environ["POST_DATA"])
         elif "QUERY_STRING" in environ and environ["QUERY_STRING"]:
             self._set_standardized_request_variables(environ["QUERY_STRING"])
 
+        if "HTTP_COOKIE" in environ:
+            self.cookie_jar.load(environ["HTTP_COOKIE"])
+
         if self.has("__method"):
             self.__set_request_method()
 
         return self
+
+    def get_post_params(self):
+        """Return the correct input.
+
+        Returns:
+            dict -- Dictionary of post parameters.
+        """
+        fields = None
+        if (
+            "CONTENT_TYPE" in self.environ
+            and "application/json" in self.environ["CONTENT_TYPE"].lower()
+        ):
+            try:
+                request_body_size = int(self.environ.get("CONTENT_LENGTH", 0))
+            except ValueError:
+                request_body_size = 0
+
+            request_body = self.environ["wsgi.input"].read(request_body_size)
+
+            if isinstance(request_body, bytes):
+                request_body = request_body.decode("utf-8")
+
+            return json.loads(request_body or "{}")
+        else:
+            fields = cgi.FieldStorage(
+                fp=self.environ["wsgi.input"],
+                environ=self.environ,
+                keep_blank_values=1,
+            )
+            return fields
 
     def _set_standardized_request_variables(self, variables):
         """The input data is not perfect so we have to standardize it into a dictionary.
@@ -458,26 +497,7 @@ class Request(Extendable):
         Returns:
             self
         """
-        if isinstance(status, str):
-            self.app().bind("StatusCode", status)
-        elif isinstance(status, int):
-            try:
-                text_status = self.statuses[status]
-            except KeyError:
-                raise InvalidHTTPStatusCode
-            self.app().bind("StatusCode", text_status)
-        return self
-
-    def get_status_code(self):
-        """Return the current request status code.
-
-        Returns:
-            string -- Returns the status code (404 Not Found, 200 OK, etc)
-        """
-        return self.app().make("StatusCode")
-
-    def is_status(self, code):
-        return self._get_status_code_by_value(self.get_status_code()) == code
+        return self.app().make(Response).status(status)
 
     def route_exists(self, url):
         web_routes = self.container.make("WebRoutes")
@@ -488,16 +508,6 @@ class Request(Extendable):
 
         return False
 
-    def _get_status_code_by_value(self, value):
-        for key, status in self.statuses.items():
-            if status == value:
-                return key
-
-        return None
-
-    def get_status(self):
-        return self._get_status_code_by_value(self.get_status_code())
-
     def get_request_method(self):
         """Get the current request method.
 
@@ -506,7 +516,7 @@ class Request(Extendable):
         """
         return self.environ["REQUEST_METHOD"]
 
-    def header(self, key, value=None, http_prefix=None):
+    def header(self, key, value=None):
         """Set or gets a header depending on if "value" is passed in or not.
 
         Arguments:
@@ -515,7 +525,6 @@ class Request(Extendable):
 
         Keyword Arguments:
             value {string} -- The value you want to set (default: {None})
-            http_prefix {bool} -- Whether it should have `HTTP_` prefixed to the value being set. (default: {True})
 
         Returns:
             string|None|True -- Either return the value if getting a header,
@@ -523,31 +532,25 @@ class Request(Extendable):
         """
         if isinstance(key, dict):
             for dic_key, dic_value in key.items():
-                self._set_header(dic_key, dic_value, http_prefix)
+                self._set_header(dic_key, dic_value)
             return
 
         # Get Headers
         if value is None:
-            if key in self.environ:
-                return self.environ[key]
-            elif key.upper().replace("-", "_") in self.environ:
-                return self.environ[key.upper().replace("-", "_")]
-            else:
-                return ""
+            header = self.header_bag.get(key)
+            if header:
+                return header.value
+            return ""
 
-        self._set_header(key, value, http_prefix)
+        self._set_header(key, value)
 
-    def _set_header(self, key, value, http_prefix):
+    def _set_header(self, key, value):
         # Set Headers
-        if http_prefix:
-            self.environ["HTTP_{0}".format(key)] = str(value)
-            self._headers.update({"HTTP_{0}".format(key): str(value)})
-        else:
-            self.environ[key] = str(value)
-            self._headers.update({key: str(value)})
+
+        self.header_bag.add(Header(key, value))
 
     def has_raw_header(self, key):
-        return key in self._headers
+        return key in self.header_bag
 
     def get_headers(self):
         """Return all current headers to be set.
@@ -556,7 +559,7 @@ class Request(Extendable):
             list -- List containing a tuple of headers.
         """
 
-        return self._compile_headers_to_tuple() + self.get_cookies()
+        return self._compile_headers_to_tuple() + self.cookie_jar.render_response()
 
     def _compile_headers_to_tuple(self):
         """Compiles the current headers to a list of tuples.
@@ -565,11 +568,7 @@ class Request(Extendable):
             list -- A list of tuples.
         """
 
-        headers = []
-        for key, value in self._headers.items():
-            headers.append((key, value))
-
-        return headers
+        return self.header_bag.render()
 
     def reset_headers(self):
         """Reset all headers being set.
@@ -580,7 +579,7 @@ class Request(Extendable):
         Returns:
             None
         """
-        self._headers = {}
+        self.header_bag = HeaderBag()
 
     def get_and_reset_headers(self):
         """Gets the headers but resets at the same time.
@@ -594,7 +593,7 @@ class Request(Extendable):
         headers = self.get_headers()
         self.reset_headers()
         self.url_params = {}
-        self.cookies = []
+        self.cookie_jar = CookieJar()
         return headers
 
     def set_params(self, params):
@@ -629,7 +628,14 @@ class Request(Extendable):
         return False
 
     def cookie(
-        self, key, value, encrypt=True, http_only="HttpOnly;", path="/", expires=""
+        self,
+        key,
+        value,
+        encrypt=True,
+        http_only="HttpOnly;",
+        path="/",
+        expires=None,
+        secure=False,
     ):
         """Set a cookie in the browser.
 
@@ -648,26 +654,28 @@ class Request(Extendable):
         Returns:
             self
         """
+
+        if self.environ.get("SECURE_COOKIES") == "True":
+            secure = True
+
         if encrypt:
             value = Sign(self.encryption_key).sign(value)
         else:
             value = value
 
         if expires:
-            expires = "Expires={0};".format(cookie_expire_time(expires) + " GMT")
+            expires = cookie_expire_time(expires)
 
-        if not http_only:
-            http_only = ""
+        self.cookie_jar.add(
+            key,
+            value,
+            expires=expires,
+            http_only=http_only,
+            secure=secure,
+            path=path,
+            timezone="GMT",
+        )
 
-        self.append_cookie(
-            "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path)
-        )
-        self.cookies.append(
-            (
-                "Set-Cookie",
-                "{0}={1};{2} {3}Path={4}".format(key, value, expires, http_only, path),
-            )
-        )
         return self
 
     def get_cookies(self):
@@ -676,15 +684,10 @@ class Request(Extendable):
         Returns:
             dict -- Returns all the cookies.
         """
-        return self.cookies
+        return self.cookie_jar
 
     def get_raw_cookie(self, provided_cookie):
-        if "HTTP_COOKIE" in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
-            if provided_cookie in grab_cookie:
-                return grab_cookie[provided_cookie]
-
-        return None
+        return self.cookie_jar.get(provided_cookie)
 
     def get_cookie(self, provided_cookie, decrypt=True):
         """Retrieve a specific cookie from the browser.
@@ -700,21 +703,18 @@ class Request(Extendable):
         Returns:
             string|None -- Returns None if the cookie does not exist.
         """
-        if "HTTP_COOKIE" in self.environ:
-            grab_cookie = cookies.SimpleCookie(self.environ["HTTP_COOKIE"])
-
-            if provided_cookie in grab_cookie:
-                if decrypt:
-                    try:
-                        return Sign(self.encryption_key).unsign(
-                            grab_cookie[provided_cookie].value
-                        )
-                    except InvalidToken:
-                        self.delete_cookie(provided_cookie)
-                        return None
-
-                return grab_cookie[provided_cookie].value
-        return None
+        if decrypt:
+            try:
+                return Sign(self.encryption_key).unsign(
+                    self.cookie_jar.get(provided_cookie).value
+                )
+            except InvalidToken:
+                self.delete_cookie(provided_cookie)
+                return None
+            except AttributeError:
+                pass
+        if self.cookie_jar.exists(provided_cookie):
+            return self.cookie_jar.get(provided_cookie).value
 
     def append_cookie(self, value):
         """Append cookie to the string or create a new string.
@@ -741,24 +741,9 @@ class Request(Extendable):
         Returns:
             bool -- Whether or not the cookie was successfully deleted.
         """
-        for index, cookie in enumerate(self.cookies):
-            if cookie[1].startswith(key + "="):
-                del self.cookies[index]
+        self.cookie_jar.delete(key)
 
         self.cookie(key, "", expires="expired")
-
-        if "HTTP_COOKIE" in self.environ and self.environ["HTTP_COOKIE"]:
-
-            request_cookies = self.environ["HTTP_COOKIE"].split(";")
-            for index, cookie in enumerate(request_cookies):
-                if cookie.startswith(key):
-                    # remove that cookie
-                    del request_cookies[index]
-
-            # put string back together
-            self.environ["HTTP_COOKIE"] = ";".join(request_cookies)
-            return True
-        return False
 
     def set_user(self, user_model):
         """Load the user into the class.
@@ -778,8 +763,7 @@ class Request(Extendable):
         return self
 
     def reset_user(self):
-        """Resets the user back to none
-        """
+        """Resets the user back to none"""
         self.user_model = None
 
     def user(self):
@@ -788,9 +772,13 @@ class Request(Extendable):
         Returns:
             app.User.User|None -- Returns None if the user is not loaded or logged in.
         """
+        # if self.app().has("User") and self.app().make("User"):
+        #     return self.app().make("User")
         return self.user_model
 
-    def redirect(self, route=None, params={}, name=None, controller=None, url=None, status=302):
+    def redirect(
+        self, route=None, params={}, name=None, controller=None, url=None, status=302
+    ):
         """Redirect the user based on the route specified.
 
         Arguments:
@@ -1095,7 +1083,7 @@ class Request(Extendable):
 
     def activate_subdomains(self):
         """Activate subdomains abilities."""
-        self._activate_subdomains = True
+        self.app().bind("Subdomains", True)
 
     def has_subdomain(self):
         """Check if the current URI has a subdomain.
@@ -1103,7 +1091,7 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if self._activate_subdomains:
+        if self.app().has("Subdomains") and self.app().make("Subdomains"):
             url = tldextract.extract(self.environ["HTTP_HOST"])
 
             if url.subdomain:

@@ -14,7 +14,7 @@ class ResponseMiddleware:
             self.response.redirect(self.request.redirect_url, status=302)
             self.request.reset_redirections()
 
-        if self.app.has("Session") and self.request.is_status(200):
+        if self.app.has("Session") and self.response.is_status(200):
             try:
                 self.app.make("Session").driver("memory").reset(flash_only=True)
             except Exception:

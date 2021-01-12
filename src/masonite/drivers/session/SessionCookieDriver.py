@@ -40,6 +40,14 @@ class SessionCookieDriver(SessionContract, BaseDriver):
 
         return None
 
+    def get_flashed(self, key):
+        value = self.get(key)
+        if value:
+            self.delete_flash(key)
+            return value
+
+        return None
+
     def set(self, key, value):
         """Set a vlue in the session.
 
@@ -90,6 +98,23 @@ class SessionCookieDriver(SessionContract, BaseDriver):
 
         return False
 
+    def delete_flash(self, key):
+        """Delete a value in the session by it's key.
+
+        Arguments:
+            key {string} -- The key to find in the session.
+
+        Returns:
+            bool -- If the key was deleted or not
+        """
+        self.__collect_data()
+
+        if self.request.get_cookie("f_{}".format(key)):
+            self.request.delete_cookie("f_{}".format(key))
+            return True
+
+        return False
+
     def __collect_data(self, flash_only=False):
         """Collect data from session and flash data.
 
@@ -97,28 +122,19 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        if (
-            "HTTP_COOKIE" in self.request.environ
-            and self.request.environ["HTTP_COOKIE"]
-        ):
-            cookies_original = self.request.environ["HTTP_COOKIE"].split(";")
-            for cookie in cookies_original:
-                if flash_only:
-                    if cookie.strip().startswith("f_"):
-                        data = cookie.split("=", 1)
-                        cookie_name = (
-                            data[0].replace("s_", "").replace("f_", "").strip()
-                        )
-                        cookies.update({cookie_name: self.get(cookie_name)})
-                else:
-                    if cookie.strip().startswith("s_") or cookie.strip().startswith(
-                        "f_"
-                    ):
-                        data = cookie.split("=", 1)
-                        cookie_name = (
-                            data[0].replace("s_", "").replace("f_", "").strip()
-                        )
-                        cookies.update({cookie_name: self.get(cookie_name)})
+        all_cookies = self.request.get_cookies().to_dict()
+        for key, value in all_cookies.items():
+            if not (key.startswith("f_") or key.startswith("s_")):
+                continue
+
+            if flash_only and not key.startswith("f_"):
+                continue
+
+            key = key.replace("f_", "").replace("s_", "")
+
+            cookies.update({key: self.get(key)})
+        return cookies
+
         return cookies
 
     def flash(self, key, value):
@@ -134,7 +150,6 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         self.request.cookie(
             "f_{0}".format(key),
             value,
-            expires=config("session.drivers.cookie.flash_expires", "2 seconds"),
         )
 
     def get_error_messages(self):
@@ -152,7 +167,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
         self.reset(flash_only=True)
         return only_messages
 
-    def get_flashed_messages(self, key, value):
+    def get_flashed_messages(self):
         """Should get and delete the flashed messages
 
         Arguments:

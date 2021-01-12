@@ -85,13 +85,12 @@ class RouteProvider(ServiceProvider):
                     print(request.get_request_method() + " Route: " + router.url)
 
                 # If no routes have been found and no middleware has changed the status code
-                if not request.get_status():
+                if not response.get_status_code():
 
                     """Get the response from the route and set it on the 'Response' key.
-                        This data is typically the output of the controller method depending
-                        on the type of route.
+                    This data is typically the output of the controller method depending
+                    on the type of route.
                     """
-
                     response.view(route.get_response(), status=200)
 
                 """Execute Route After Route Middleware
@@ -121,5 +120,5 @@ class RouteProvider(ServiceProvider):
         """
         response.view("Route not found. Error 404", status=404)
         # If the route exists but not the method is incorrect
-        if request.is_status(404) and request.route_exists(request.path):
+        if response.is_status(404) and request.route_exists(request.path):
             response.view("Method not allowed", status=405)

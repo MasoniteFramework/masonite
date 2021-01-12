@@ -15,6 +15,7 @@ from app.http.controllers.ConfirmController import \
 from src.masonite.testing import TestCase
 from src.masonite.testing import generate_wsgi
 from src.masonite.view import View
+import random
 
 
 class User(Model, MustVerifyEmail):
@@ -110,11 +111,10 @@ class TestAuth(TestCase):
     def test_logout_user(self):
         for driver in ('cookie', 'jwt'):
             self.auth.driver(driver)
-            self.auth.login('user@email.com', 'secret')
+            self.auth.login("user@email.com", 'secret')
             self.assertTrue(self.request.get_cookie('token'))
             self.assertTrue(self.auth.user())
             self.assertTrue(self.request.user())
-            self.auth.driver('jwt')
             
             self.auth.logout()
             self.assertFalse(self.request.get_cookie('token'))

@@ -44,7 +44,7 @@ def hidden(value, name="hidden-input"):
 
 
 def old(session_key, default=""):
-    """Return the old value submitted by forms validated with Valitators.
+    """Return the old value submitted by forms validated with validators.
 
     Arguments:
         session_key {string} -- The key flashed to session.
@@ -58,5 +58,5 @@ def old(session_key, default=""):
     session_container = container.make("Session")
 
     if session_container.has(session_key):
-        return session_container.get(session_key)
+        return session_container.get_flashed(session_key)
     return default

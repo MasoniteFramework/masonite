@@ -62,10 +62,10 @@ class PresetCommand(Command):
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
         )
 
-    def tailwind(self):
-        """Add Tailwind CSS."""
+    def tailwind2(self):
+        """Add Tailwind CSS 2.X."""
         Tailwind().install()
-        self.info("Tailwind CSS scaffolding installed successfully.")
+        self.info("Tailwind CSS 2 scaffolding installed successfully.")
         self.comment(
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
         )

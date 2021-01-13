@@ -14,8 +14,7 @@ class Tailwind(Preset):
         self.update_packages()
         self.update_webpack_configuration()
         self.create_tailwind_config()
-        self.create_scss_file()
-        self.create_view()
+        self.update_scss_file()
         self.remove_node_modules()
 
     def update_package_array(self, packages={}):
@@ -41,16 +40,9 @@ class Tailwind(Preset):
             "tailwind.config.js"
         )
 
-    def create_scss_file(self):
+    def update_scss_file(self):
         """Create a app.scss file configured for Tailwind."""
         shutil.copyfile(
-            os.path.dirname(__file__) + "/tailwind-stubs/tailwind.css",
-            "resources/css/tailwind.css"
-        )
-
-    def create_view(self):
-        """Copy an example app view with assets included"""
-        shutil.copyfile(
-            os.path.dirname(__file__) + "/tailwind-stubs/tailwind.html",
-            "resources/templates/tailwind.html",
+            os.path.dirname(__file__) + "/tailwind-stubs/style.scss",
+            "storage/static/saas/style.scss"
         )

@@ -9,5 +9,6 @@ include src/masonite/snippets/auth/templates/auth/*
 include src/masonite/commands/presets/bootstrap-stubs/*
 include src/masonite/commands/presets/react-stubs/*
 include src/masonite/commands/presets/remove-stubs/*
-include src/masonite/commands/presets/vue-stubs/*
+include src/masonite/commands/presets/vue3-stubs/*
+include src/masonite/commands/presets/tailwind-stubs/*
 include src/masonite/commands/presets/shared-stubs/*

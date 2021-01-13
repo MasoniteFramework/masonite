@@ -15,6 +15,7 @@ class Tailwind(Preset):
         self.update_webpack_configuration()
         self.create_tailwind_config()
         self.update_scss_file()
+        self.update_base_views()
         self.remove_node_modules()
 
     def update_package_array(self, packages={}):
@@ -45,4 +46,15 @@ class Tailwind(Preset):
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/style.scss",
             "storage/static/sass/style.scss"
+        )
+
+    def update_base_views(self):
+        """Update base views"""
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/tailwind-stubs/base.html",
+            "resources/templates/base.html"
+        )
+        shutil.copyfile(
+            os.path.dirname(__file__) + "/tailwind-stubs/welcome.html",
+            "resources/templates/welcome.html"
         )

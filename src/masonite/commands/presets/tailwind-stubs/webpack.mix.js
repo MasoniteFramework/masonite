@@ -1,5 +1,6 @@
 const mix = require("laravel-mix");
 const path = require("path");
+const tailwindcss = require("tailwindcss")
 
 /*
  |--------------------------------------------------------------------------
@@ -13,13 +14,9 @@ const path = require("path");
  */
 
 mix
-  .js("resources/js/app.js", "storage/compiled/js")
-  .postCss("resources/css/tailwind.css", "storage/compiled/css", [
-    require("tailwindcss"),
-  ])
-
-// For Tailwind CSS, append
-// .options({
-//     processCssUrls: false,
-//     postCss: [ tailwindcss('tailwind.config.js') ],
-//   })
+  .js("storage/static/js/app.js", "storage/compiled/js")
+  .sass("storage/static/sass/style.scss", "storage/compiled/")
+  .options({
+    processCssUrls: false,
+    postCss: [tailwindcss("tailwind.config.js")],
+  })

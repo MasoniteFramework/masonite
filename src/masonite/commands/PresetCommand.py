@@ -19,7 +19,7 @@ class PresetCommand(Command):
     def handle(self):
         self.info("Scaffolding Application ...")
         preset_name = self.argument("name")
-        presets_list = ["react", "vue", "vue3", "remove", "bootstrap"]
+        presets_list = ["react", "vue", "vue3", "remove", "bootstrap", "tailwind2"]
         if preset_name not in presets_list:
             raise ValueError("Invalid preset. Choices are: {0}".format(presets_list))
         return getattr(self, preset_name)()

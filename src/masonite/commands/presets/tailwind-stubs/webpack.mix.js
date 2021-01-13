@@ -23,8 +23,3 @@ mix
 //     processCssUrls: false,
 //     postCss: [ tailwindcss('tailwind.config.js') ],
 //   })
-
-// New Alias plugin
-mix.alias({
-  "@": path.resolve("resources/js"),
-});

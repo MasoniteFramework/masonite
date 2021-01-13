@@ -69,4 +69,3 @@ class PresetCommand(Command):
         self.comment(
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
         )
-        self.comment("Then you can use the view 'tailwind' as demo.")

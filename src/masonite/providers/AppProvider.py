@@ -32,8 +32,8 @@ from ..hook import Hook
 from ..provider import ServiceProvider
 from ..request import Request
 from ..response import Response
-from ..routes import Route
-
+from routes.web import Route
+import pydoc
 
 class AppProvider(ServiceProvider):
 
@@ -41,8 +41,10 @@ class AppProvider(ServiceProvider):
 
     def register(self):
         self.app.bind("HookHandler", Hook(self.app))
-        self.app.bind("WebRoutes", flatten_routes(load("routes.web.routes")))
-        self.app.bind("Route", Route())
+        route = pydoc.locate("routes.web.Route")
+        print('rr', route.routes)
+        self.app.bind("WebRoutes", route.routes)
+        self.app.bind("Route", route)
 
         self.app.bind("Container", self.app)
 
@@ -60,7 +62,7 @@ class AppProvider(ServiceProvider):
     def boot(self, route: Route):
         self.app.bind("Request", Request(self.app.make("Environ")).load_app(self.app))
         self.app.simple(Response(self.app))
-        route.load_environ(self.app.make("Environ"))
+        # route.load_environ(self.app.make("Environ"))
         self.app.bind("ExceptionHandler", ExceptionHandler(self.app))
 
     def _autoload(self, directories):

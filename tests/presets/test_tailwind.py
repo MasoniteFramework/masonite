@@ -24,12 +24,10 @@ class TestTailwind(unittest.TestCase):
     def test_create_tailwind_config(self):
         Tailwind().create_tailwind_config()
         config_file = 'tailwind.config.js'
-        self.assertFalse(os.path.exists(config_file))
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/tailwind-stubs/tailwind.config.js', 'tailwind.config.js'))
         os.remove('tailwind.config.js')
 
     def test_install(self):
-        shutil.copyfile('webpack.mix.js', 'webpack.mix.js.save')
         shutil.copyfile('package.json', 'package.json.save')
         shutil.copyfile('storage/static/sass/style.scss', 'style.scss.save')
         shutil.copyfile('resources/templates/base.html', 'base.html.save')
@@ -41,10 +39,9 @@ class TestTailwind(unittest.TestCase):
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/Tailwind-stubs/base.html', 'resources/templates/base.html'))
         self.assertTrue(filecmp.cmp('src/masonite/commands/presets/Tailwind-stubs/welcome.html', 'resources/templates/welcome.html'))
         os.remove('tailwind.config.js')
+        os.remove('webpack.mix.js')
         shutil.copyfile('package.json.save', 'package.json')
         os.remove('package.json.save')
-        shutil.copyfile('webpack.mix.js.save', 'webpack.mix.js')
-        os.remove('webpack.mix.js.save')
         shutil.copyfile('style.scss.save', 'storage/static/sass/style.scss')
         os.remove('style.scss.save')
         shutil.copyfile('base.html.save', 'resources/templates/base.html')

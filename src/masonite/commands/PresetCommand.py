@@ -5,6 +5,7 @@ from ..commands.presets.Vue import Vue
 from ..commands.presets.Vue3 import Vue3
 from ..commands.presets.Bootstrap import Bootstrap
 from ..commands.presets.Remove import Remove
+from ..commands.presets.Tailwind import Tailwind
 
 
 class PresetCommand(Command):
@@ -60,3 +61,12 @@ class PresetCommand(Command):
         self.comment(
             'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
         )
+
+    def tailwind(self):
+        """Add Tailwind CSS."""
+        Tailwind().install()
+        self.info("Tailwind CSS scaffolding installed successfully.")
+        self.comment(
+            'Please run "npm install && npm run dev" to compile your fresh scaffolding.'
+        )
+        self.comment("Then you can use the view 'tailwind' as demo.")

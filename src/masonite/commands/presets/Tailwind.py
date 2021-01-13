@@ -44,5 +44,5 @@ class Tailwind(Preset):
         """Create a app.scss file configured for Tailwind."""
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/style.scss",
-            "storage/static/saas/style.scss"
+            "storage/static/sass/style.scss"
         )

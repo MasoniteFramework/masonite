@@ -25,6 +25,7 @@ def flatten_routes(routes):
 
     return route_collection
 
+
 def compile_route_to_regex(route):
     """Compile a route to regex.
 

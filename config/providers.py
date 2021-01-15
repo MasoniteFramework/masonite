@@ -7,6 +7,8 @@ from src.masonite.providers import (AppProvider, AuthenticationProvider, Broadca
                                 UploadProvider, ViewProvider,
                                 WhitenoiseProvider)
 
+from masoniteorm.providers.ORMProvider import ORMProvider
+
 """Providers List
 Providers are a simple way to remove or add functionality for Masonite
 The providers in this list are either ran on server start or when a
@@ -17,12 +19,14 @@ learn more more about Service Providers in our documentation
 PROVIDERS = [
     # Framework Providers
     AppProvider,
+    CsrfProvider,
     SessionProvider,
     RouteProvider,
     StatusCodeProvider,
     WhitenoiseProvider,
     ViewProvider,
     AuthenticationProvider,
+    ORMProvider,
 
     # Optional Framework Providers
     MailProvider,
@@ -31,7 +35,6 @@ PROVIDERS = [
     CacheProvider,
     BroadcastProvider,
     CacheProvider,
-    CsrfProvider,
     HelpersProvider,
 
     # Third Party Providers

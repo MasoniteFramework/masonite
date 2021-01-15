@@ -22,7 +22,7 @@ class MockExceptionHandler:
         self.request = request
 
     def handle(self, _):
-        self.request.header('test', 'test', http_prefix=False)
+        self.request.header('test', 'test')
 
 
 class TestException(unittest.TestCase):

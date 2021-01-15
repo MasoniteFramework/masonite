@@ -1,67 +1,60 @@
-"""Database Settings."""
+"""Database Settings """
+from masonite import env
+from masoniteorm.query import QueryBuilder
+from masoniteorm.connections import ConnectionResolver
+from masonite.environment import LoadEnvironment
 
-import logging
-
-from src.masonite import env
-from src.masonite.environment import LoadEnvironment
-from orator import DatabaseManager, Model
-
-"""Load Environment Variables
-Loads in the environment variables when this page is imported.
-"""
 
 LoadEnvironment()
 
-"""Database Settings
-Set connection database settings here as a dictionary. Follow the
-format below to create additional connection settings.
-
-Each key is a connection, not a driver. You may have as many
-connections as you need.
-
-Supported Drivers: 'sqlite', 'mysql', 'postgres'
+"""
+|--------------------------------------------------------------------------
+| Databases connectors details
+|--------------------------------------------------------------------------
+|
+| Setup details of the database connectors you want to use.
+|
 """
 
 DATABASES = {
     'default': env('DB_CONNECTION', 'sqlite'),
     'sqlite': {
         'driver': 'sqlite',
-        'database': env('SQLITE_DB_DATABASE', 'masonite.db'),
-        'log_queries': env('DB_LOG'),
+        'database': env('SQLITE_DB_DATABASE', 'masonite.sqlite3'),
         'prefix': ''
     },
-    'mysql': {
-        'driver': 'mysql',
-        'host': env('DB_HOST'),
-        'database': env('DB_DATABASE'),
-        'port': env('DB_PORT'),
-        'user': env('DB_USERNAME'),
-        'password': env('DB_PASSWORD'),
-        'log_queries': env('DB_LOG'),
+    "mysql": {
+        "driver": "mysql",
+        "host": env('DB_HOST'),
+        "user": env("DB_USERNAME"),
+        "password": env("DB_PASSWORD"),
+        "database": env("DB_DATABASE"),
+        "port": env('DB_PORT'),
+        "prefix": "",
+        "grammar": "mysql",
+        "options": {
+            "charset": "utf8mb4",
+        },
     },
-    'postgres': {
-        'driver': 'postgres',
-        'host': env('DB_HOST'),
-        'database': env('DB_DATABASE'),
-        'port': env('DB_PORT'),
-        'user': env('DB_USERNAME'),
-        'password': env('DB_PASSWORD'),
-        'log_queries': env('DB_LOG'),
+    "postgres": {
+        "driver": "postgres",
+        "host": env('DB_HOST'),
+        "user": env("DB_USERNAME"),
+        "password": env("DB_PASSWORD"),
+        "database": env("DB_DATABASE"),
+        "port": env('DB_PORT'),
+        "prefix": "",
+        "grammar": "postgres",
+    },
+    'mssql': {
+        'driver': 'mssql',
+        'host': env('MSSQL_DATABASE_HOST'),
+        'user': env('MSSQL_DATABASE_USER'),
+        'password': env('MSSQL_DATABASE_PASSWORD'),
+        'database': env('MSSQL_DATABASE_DATABASE'),
+        'port': env('MSSQL_DATABASE_PORT'),
+        'prefix': ''
     },
 }
 
-DB = DatabaseManager(DATABASES)
-Model.set_connection_resolver(DB)
-
-
-logger = logging.getLogger('orator.connection.queries')
-logger.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter(
-    'It took %(elapsed_time)sms to execute the query %(query)s'
-)
-
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-
-logger.addHandler(handler)
+DB = ConnectionResolver().set_connection_details(DATABASES)

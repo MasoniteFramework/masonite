@@ -36,16 +36,14 @@ class TestCookieSigning(unittest.TestCase):
         self.assertEqual(self.request.get_cookie('test'), 'testvalue')
 
     def test_set_and_get_cookie_with_http_only(self):
-        self.request.cookies = []
         self.request.cookie('test', 'testvalue', encrypt=False)
         self.assertEqual(self.request.get_cookie('test', decrypt=False), 'testvalue')
-        self.assertTrue(self.request.get_raw_cookie('test')['httponly'])
-        self.assertIn('/', self.request.get_raw_cookie('test')['path'])
+        self.assertTrue(self.request.get_raw_cookie('test').http_only)
+        self.assertIn('/', self.request.get_raw_cookie('test').path)
         self.assertIn('testvalue', self.request.get_raw_cookie('test').value)
 
     def test_set_and_get_cookie_without_http_only(self):
-        self.request.cookies = []
         self.request.cookie('test', 'testvalue', http_only=False, encrypt=False)
         self.assertEqual(self.request.get_cookie('test', decrypt=False), 'testvalue')
-        self.assertIn('/', self.request.get_raw_cookie('test')['path'])
+        self.assertIn('/', self.request.get_raw_cookie('test').path)
         self.assertIn('testvalue', self.request.get_raw_cookie('test').value)

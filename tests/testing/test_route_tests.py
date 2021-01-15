@@ -8,9 +8,7 @@ class TestUnitTest(TestCase):
 
     def setUp(self):
         super().setUp()
-
         self.routes(web.ROUTES)
-        self.buildOwnContainer()
 
     def setUpFactories(self):
         User.create({
@@ -54,6 +52,7 @@ class TestUnitTest(TestCase):
         )
 
     def test_can_have_user(self):
+
         self.assertTrue(
             self.actingAs(User.find(1)).post('/unit/test/user').contains('Joe')
         )
@@ -121,5 +120,5 @@ class TestUnitTest(TestCase):
     def test_capture_output(self):
         with self.captureOutput() as output:
             print('hello', end='')
-        
+
         self.assertEqual(output.getvalue(), 'hello')

@@ -20,25 +20,24 @@ class HelpersProvider(ServiceProvider):
     def register(self):
         pass
 
-    def boot(self, view: View, request: Request):
+    def boot(self, view: View):
         """Add helper functions to Masonite."""
         builtins.view = view.render
-        builtins.request = request.helper
-        builtins.auth = request.user
+        # builtins.auth = request.user
         builtins.container = self.app.helper
         builtins.env = os.getenv
         builtins.resolve = self.app.resolve
-        builtins.route = request.route
+        # builtins.route = request.route
         if self.app.has(MailManager):
             builtins.mail_helper = self.app.make(MailManager).helper
         builtins.dd = DD(self.app).dump
 
         view.share(
             {
-                "request": request.helper,
-                "auth": request.user,
+                # "request": request.helper,
+                # "auth": request.user,
                 "request_method": set_request_method,
-                "route": request.route,
+                # "route": request.route,
                 "back": back,
                 "sign": sign,
                 "unsign": unsign,
@@ -49,7 +48,7 @@ class HelpersProvider(ServiceProvider):
                 "dd": builtins.dd,
                 "hidden": hidden,
                 "exists": view.exists,
-                "cookie": request.get_cookie,
+                # "cookie": request.get_cookie,
                 "url": lambda name, params={}: request.route(name, params, full=True),
                 "old": old,
             }

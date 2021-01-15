@@ -121,6 +121,8 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
             )
         )
 
+        self.queue = channel
+
         if fair:
             self.channel.basic_qos(prefetch_count=1)
 
@@ -176,6 +178,6 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
                 if hasattr(obj, "failed"):
                     getattr(obj, "failed")(job, str(e))
 
-                self.add_to_failed_queue_table(job)
+                self.add_to_failed_queue_table(job, channel=self.queue)
 
         ch.basic_ack(delivery_tag=method.delivery_tag)

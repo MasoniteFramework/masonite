@@ -7,17 +7,10 @@ from ..commands import (
     ControllerCommand,
     DownCommand,
     InfoCommand,
-    InstallCommand,
     JobCommand,
     KeyCommand,
     MailableCommand,
-    MakeMigrationCommand,
     MiddlewareCommand,
-    MigrateCommand,
-    MigrateRefreshCommand,
-    MigrateResetCommand,
-    MigrateRollbackCommand,
-    MigrateStatusCommand,
     ModelCommand,
     ModelDocstringCommand,
     ProviderCommand,
@@ -26,8 +19,6 @@ from ..commands import (
     QueueTableCommand,
     QueueWorkCommand,
     RoutesCommand,
-    SeedCommand,
-    SeedRunCommand,
     ServeCommand,
     TestCommand,
     TinkerCommand,
@@ -45,14 +36,16 @@ from ..routes import Route
 
 
 class AppProvider(ServiceProvider):
+
+    wsgi = True
+
     def register(self):
         self.app.bind("HookHandler", Hook(self.app))
         self.app.bind("WebRoutes", flatten_routes(load("routes.web.routes")))
         self.app.bind("Route", Route())
-        self.app.bind("Request", Request())
-        self.app.simple(Response(self.app))
+
         self.app.bind("Container", self.app)
-        self.app.bind("ExceptionHandler", ExceptionHandler(self.app))
+
         self.app.bind("ExceptionDumpExceptionHandler", DumpHandler)
 
         self.app.bind("RouteMiddleware", config("middleware.route_middleware"))
@@ -64,10 +57,11 @@ class AppProvider(ServiceProvider):
 
         self._autoload(config("application.autoload"))
 
-    def boot(self, request: Request, route: Route):
-        self.app.bind("StatusCode", None)
+    def boot(self, route: Route):
+        self.app.bind("Request", Request(self.app.make("Environ")).load_app(self.app))
+        self.app.simple(Response(self.app))
         route.load_environ(self.app.make("Environ"))
-        request.load_environ(self.app.make("Environ")).load_app(self.app)
+        self.app.bind("ExceptionHandler", ExceptionHandler(self.app))
 
     def _autoload(self, directories):
         Autoload(self.app).load(directories)
@@ -79,17 +73,10 @@ class AppProvider(ServiceProvider):
             ControllerCommand(),
             DownCommand(),
             InfoCommand(),
-            InstallCommand(),
             JobCommand(),
             KeyCommand(),
             MailableCommand(),
-            MakeMigrationCommand(),
             MiddlewareCommand(),
-            MigrateCommand(),
-            MigrateRefreshCommand(),
-            MigrateResetCommand(),
-            MigrateStatusCommand(),
-            MigrateRollbackCommand(),
             ModelCommand(),
             ModelDocstringCommand(),
             PresetCommand(),
@@ -100,8 +87,6 @@ class AppProvider(ServiceProvider):
             ViewCommand(),
             RoutesCommand(),
             ServeCommand(),
-            SeedCommand(),
-            SeedRunCommand(),
             TestCommand(),
             TinkerCommand(),
             UpCommand(),

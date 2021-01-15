@@ -2,17 +2,17 @@
 
 from ...contracts import AuthContract
 from ...drivers import BaseDriver
-from ...request import Request
+from ...app import App
 
 
 class AuthCookieDriver(BaseDriver, AuthContract):
-    def __init__(self, request: Request):
+    def __init__(self, app: App):
         """AuthCookieDriver initializer.
 
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
         """
-        self.request = request
+        self.app = app
 
     def user(self, auth_model):
         """Gets the user based on this driver implementation
@@ -23,10 +23,13 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             Model|bool
         """
-        if self.request.get_cookie("token") and auth_model:
-            return auth_model.where(
-                "remember_token", self.request.get_cookie("token")
-            ).first()
+        if self.app.make("Request").get_cookie("token") and auth_model:
+            return (
+                auth_model.where(
+                    "remember_token", self.app.make("Request").get_cookie("token")
+                ).first()
+                or False
+            )
 
         return False
 
@@ -41,7 +44,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.request.cookie("token", remember_token)
+        return self.app.make("Request").cookie("token", remember_token)
 
     def delete(self):
         """Deletes the state depending on the implementation of this driver.
@@ -49,7 +52,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return self.request.delete_cookie("token")
+        return self.app.make("Request").delete_cookie("token")
 
     def logout(self):
         """Deletes the state depending on the implementation of this driver.
@@ -58,4 +61,4 @@ class AuthCookieDriver(BaseDriver, AuthContract):
             bool
         """
         self.delete()
-        self.request.reset_user()
+        self.app.make("Request").reset_user()

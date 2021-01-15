@@ -1,7 +1,7 @@
-from orator.orm import Factory
+from masoniteorm.factories import Factory
 from app.User import User
 
-factory = Factory()
+factory = Factory
 
 
 def users_factory(faker):

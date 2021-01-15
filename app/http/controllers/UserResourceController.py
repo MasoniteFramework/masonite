@@ -1,6 +1,6 @@
 """ A UserResourceController Module """
 
-from masonite.controllers import Controller
+from src.masonite.controllers import Controller
 
 
 class UserResourceController(Controller):

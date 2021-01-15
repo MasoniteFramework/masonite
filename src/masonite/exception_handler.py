@@ -74,6 +74,8 @@ class ExceptionHandler:
             if "site-packages" not in stack[0]:
                 return (stack[0], stack[1])
 
+            return (0, 0)
+
     def handle(self, exception):
         """Render an exception view if the DEBUG configuration is True. Else this should not return anything.
 
@@ -85,20 +87,36 @@ class ExceptionHandler:
         self.run_listeners(exception, stacktraceback)
         # Run Any Framework Exception Hooks
         self._app.make("HookHandler").fire("*ExceptionHook")
+        request = self._app.make("Request")
+        response = self._app.make(Response)
 
         # Check if DEBUG is False
         from config import application
 
         if not application.DEBUG:
-            request = self._app.make("Request")
-            request.status(500)
+            response.status(500)
             return
-
-        response = self._app.make(Response)
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())
-        handler.integrate(StackOverflowIntegration(),)
+        handler.integrate(
+            StackOverflowIntegration(),
+        )
+
+        if "application/json" in request.header("Content-Type"):
+            stacktrace = []
+            for trace in handler.stacktrace():
+                stacktrace.append(trace.file + " line " + str(trace.lineno))
+
+            return response.json(
+                {
+                    "Exeption": handler.exception(),
+                    "Message": str(exception),
+                    "traceback": stacktrace,
+                },
+                status=500,
+            )
+
         response.view(handler.render(), status=500)
 
 
@@ -124,7 +142,7 @@ class DumpHandler:
         self.response = response
 
     def handle(self, _):
-        from config.database import Model
+        from masoniteorm.models import Model
 
         self.app.make("HookHandler").fire("*ExceptionHook")
 

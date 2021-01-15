@@ -11,5 +11,6 @@ from .RouteProvider import RouteProvider
 from .SessionProvider import SessionProvider
 from .UploadProvider import UploadProvider
 from .ViewProvider import ViewProvider
+from .RequestHelpersProviders import RequestHelpersProvider
 from .WhitenoiseProvider import WhitenoiseProvider
 from .StatusCodeProvider import StatusCodeProvider

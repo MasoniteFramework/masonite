@@ -1,4 +1,4 @@
-"""Module for the Pusher websocket driver."""
+"""Module for the PubNub websocket driver."""
 
 from ...contracts import BroadcastContract
 from ...drivers import BaseDriver
@@ -6,11 +6,11 @@ from ...exceptions import DriverLibraryNotFound
 from ...helpers import config
 
 
-class BroadcastPusherDriver(BroadcastContract, BaseDriver):
-    """Class for the Pusher websocket driver."""
+class BroadcastPubNubDriver(BroadcastContract, BaseDriver):
+    """Class for the PubNub websocket driver."""
 
     def __init__(self):
-        """Pusher driver constructor.
+        """PubNub driver constructor.
 
         Arguments:
             BroadcastConfig {config.broadcast} -- Broadcast configuration.
@@ -40,35 +40,37 @@ class BroadcastPusherDriver(BroadcastContract, BaseDriver):
             event {string} -- The event you want broadcasted along with your data. (default: {'base-event'})
 
         Raises:
-            DriverLibraryNotFound -- Thrown when pusher is not installed.
+            DriverLibraryNotFound -- Thrown when pubnub is not installed.
 
         Returns:
             string -- Returns the message sent.
         """
         try:
-            import pusher
+            from pubnub.pnconfiguration import PNConfiguration
+            from pubnub.pubnub import PubNub
         except ImportError:
             raise DriverLibraryNotFound(
-                'Could not find the "pusher" library. Please pip install this library running "pip install pusher"'
+                'Could not find the "pubnub" library. Please pip install this library running "pip install pubnub"'
             )
 
-        configuration = config("broadcast.drivers.pusher")
+        configuration = config("broadcast.drivers.pubnub")
+        pnconfig = PNConfiguration()
+        pnconfig.publish_key = configuration["publish_key"]
+        pnconfig.subscribe_key = configuration["subscribe_key"]
+        pnconfig.secret = configuration["secret"]
+        pnconfig.ssl = self.ssl_message
+        pnconfig.uuid = config("application.name")
 
-        pusher_client = pusher.Pusher(
-            app_id=str(configuration["app_id"]),
-            key=configuration["client"],
-            secret=configuration["secret"],
-            cluster=configuration["cluster"],
-            ssl=self.ssl_message,
-        )
+        pubnub = PubNub(pnconfig)
 
         if isinstance(message, str):
             message = {"message": message}
 
-        if isinstance(channels, list):
-            for channel in channels:
-                pusher_client.trigger(channel, event, message)
-        else:
-            pusher_client.trigger(channels, event, message)
+        if isinstance(channels, str):
+            channels = [channels]
 
+        for channel in channels:
+            envelope = pubnub.publish().channel(channel).message(message).sync()
+            if envelope.status.is_error():
+                print("PubNub Broadcast: error sending message to channel {0}.".format(channel))
         return message

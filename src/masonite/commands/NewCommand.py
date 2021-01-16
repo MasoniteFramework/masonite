@@ -11,6 +11,7 @@ from ..exceptions import (
     ProjectProviderHttpError,
     ProjectTargetNotEmpty,
 )
+from .. import __cookie_cutter_version__
 
 
 class NewCommand(Command):
@@ -62,6 +63,10 @@ class NewCommand(Command):
                 )
 
             self.set_api_provider_url_for_repo(provider, repo)
+
+            # find cookie-cutter version to use when doing 'craft new' only
+            if repo == "MasoniteFramework/cookie-cutter" and provider == "github" and branch == "False" and version == "False":
+                branch = __cookie_cutter_version__
 
             if branch != "False":
                 branch_data = self.get_branch_provider_data(provider, branch)

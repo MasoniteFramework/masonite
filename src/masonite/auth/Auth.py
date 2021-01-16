@@ -16,7 +16,7 @@ class Auth:
             Post("/register", "auth.RegisterController@store"),
             Get("/home", "auth.HomeController@show").name("home"),
             Get("/email/verify", "auth.ConfirmController@verify_show").name("verify"),
-            Get("/email/verify/@id:signed", "auth.ConfirmController@confirm_email"),
+            Get("/email/verify/send", "auth.ConfirmController@send_verify_email"),
             Get("/email/verify/@id:signed", "auth.ConfirmController@confirm_email"),
             Get("/password", "auth.PasswordController@forget").name("forgot.password"),
             Post("/password", "auth.PasswordController@send"),

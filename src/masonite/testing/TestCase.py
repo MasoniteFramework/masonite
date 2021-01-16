@@ -30,6 +30,7 @@ class TestCase(unittest.TestCase):
 
         self.container = container
         self._with_subdomains = False
+        self.wsgi_overrides = {}
 
         self.acting_user = False
         self.factory = Factory
@@ -87,6 +88,10 @@ class TestCase(unittest.TestCase):
 
         DB.rollback()
         self.__class__._transaction = False
+
+    def withWSGIOverride(self, wsgi_values={}):
+        self.wsgi_overrides = wsgi_values
+        return self
 
     @classmethod
     def staticStopTransaction(cls):
@@ -192,6 +197,7 @@ class TestCase(unittest.TestCase):
         for route in self.container.make("WebRoutes"):
             matchurl = create_matchurl(url, route)
             if self.container.make("Request").has_subdomain():
+                route.load_request(self.container.make("Request"))
                 # Check if the subdomain matches the correct routes domain
                 if not route.has_required_domain():
                     continue
@@ -225,6 +231,7 @@ class TestCase(unittest.TestCase):
     def run_container(self, wsgi_values={}):
         wsgi = generate_wsgi()
         wsgi.update(wsgi_values)
+        wsgi.update(self.wsgi_overrides)
         self.container.bind("Environ", wsgi)
         self.container.bind("User", self.acting_user)
 

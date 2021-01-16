@@ -45,7 +45,6 @@ class RouteProvider(ServiceProvider):
                 if request.has_subdomain():
                     # Check if the subdomain matches the correct routes domain
                     if not route.has_required_domain():
-                        response.view("Route not found. Error 404")
                         continue
 
                 """Get URL Parameters
@@ -118,7 +117,8 @@ class RouteProvider(ServiceProvider):
 
         """No Response was found in the for loop so let's set an arbitrary response now.
         """
-        response.view("Route not found. Error 404", status=404)
         # If the route exists but not the method is incorrect
-        if response.is_status(404) and request.route_exists(request.path):
+        if request.route_exists(request.path):
             response.view("Method not allowed", status=405)
+        else:
+            response.view("Route not found. Error 404", status=404)

@@ -6,3 +6,5 @@ __version__ = "3.0.1"
 __author__ = "Joseph Mancuso"
 __author_email__ = "joe@masoniteproject.com"
 __licence__ = "MIT"
+
+__cookie_cutter_version__ = "3.0"

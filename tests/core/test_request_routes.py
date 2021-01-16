@@ -90,3 +90,38 @@ class TestRequestRoutes(TestCase):
     def test_route_changes_module_location(self):
         get = Get().module('app.test')
         self.assertEqual(get.module_location, 'app.test')
+
+class TestRequestSubdomains(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        wsgi = generate_wsgi()
+        wsgi.update({"HTTP_HOST": "a.localhost"})
+        self.request = self.container.make('Request').load_environ(wsgi).key(
+            'NCTpkICMlTXie5te9nJniMj9aVbPM6lsjeq5iDZ0dqY=')
+
+        self.request.activate_subdomains()
+
+        self.routes(only=[
+            Get('/', DomainAController.show).domain('a'),
+            Get('/', DomainBController.show).domain('b'),
+        ])
+
+    def test_can_get_correct_domain(self):
+        self.withWSGIOverride({
+            'HTTP_HOST': 'a.localhost.com'
+        }).get('/').assertContains('A')
+
+        self.withWSGIOverride({
+            'HTTP_HOST': 'b.localhost.com'
+        }).get('/').assertContains('B')
+
+class DomainAController:
+
+    def show(self):
+        return 'A'
+
+class DomainBController:
+
+    def show(self):
+        return 'B'

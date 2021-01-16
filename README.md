@@ -22,7 +22,7 @@ Masonite works hard to be fast and easy from install to deployment so developers
 * Having a simple and expressive routing engine
 * Extremely powerful command line helpers called `craft` commands
 * A simple migration system, removing the "magic" and finger crossing of migrations
-* A great Active Record style ORM called Orator
+* A great dedicated Active Record style ORM called Masonite ORM
 * A great filesystem architecture for navigating and expanding your project
 * An extremely powerful Service Container (IOC Container)
 * Service Providers which makes Masonite extremely extendable

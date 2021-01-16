@@ -1,3 +1,7 @@
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
+
+
 from .managers.BroadcastManager import Broadcast
 from .managers.CacheManager import Cache
 from .managers.MailManager import Mail
@@ -15,3 +19,5 @@ from .__version__ import (
     __licence__,
     __cookie_cutter_version__
 )
+
+_file_source = 'masonite'

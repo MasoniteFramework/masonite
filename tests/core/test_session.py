@@ -140,7 +140,7 @@ class TestSession(TestCase):
 
     def test_can_redirect_with_bytes_inputs(self):
         for driver in ('memory', 'cookie'):
-            
+
             request = self.container.make('Request')
             session = self.container.make('SessionManager').driver(driver)
             request.request_variables = {
@@ -166,3 +166,20 @@ class TestSession(TestCase):
         # Assert redirect intended method resets the redirection
         request.redirect_intended()
         self.assertEqual(request.session.get('__intend'), None)
+
+    def test_with_flash(self):
+        request = self.container.make('Request')
+        request.redirect('/dashboard').with_flash('success', 'Ok')
+        self.assertEqual(request.session.get('success'), 'Ok')
+        request.redirect('/dashboard').with_flash('any_key', 'any_value')
+        self.assertEqual(request.session.get('any_key'), 'any_value')
+
+    def test_with_errors(self):
+        request = self.container.make('Request')
+        request.redirect('/dashboard').with_errors('Form error')
+        self.assertEqual(request.session.get('error'), 'Form error')
+
+    def test_with_success(self):
+        request = self.container.make('Request')
+        request.redirect('/dashboard').with_success('Created !')
+        self.assertEqual(request.session.get('success'), 'Created !')

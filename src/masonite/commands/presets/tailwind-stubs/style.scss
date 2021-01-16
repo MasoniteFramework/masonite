@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.links > a {
+  @apply uppercase px-6 font-bold text-xs tracking-widest;
+}

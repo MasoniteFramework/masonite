@@ -13,4 +13,5 @@ from .__version__ import (
     __author__,
     __author_email__,
     __licence__,
+    __cookie_cutter_version__
 )

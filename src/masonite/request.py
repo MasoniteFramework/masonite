@@ -943,7 +943,7 @@ class Request(Extendable):
 
     def with_errors(self, errors):
         """Easily attach errors message to session request."""
-        return self.with_flash("error", errors)
+        return self.with_flash("errors", errors)
 
     def with_success(self, success):
         """Easily attach success message to session request."""

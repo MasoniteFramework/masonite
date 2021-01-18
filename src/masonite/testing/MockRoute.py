@@ -341,5 +341,5 @@ class MockRoute:
 
     def assertViewIs(self, name):
         self.ensure_response_has_view()
-        assert self.route.original == name
+        assert self.route.original.template == name
         return self

@@ -1,5 +1,7 @@
 import json
 
+from masonite.view import View
+
 from ..helpers import Dot
 from ..request import Request
 from ..response import Response
@@ -328,3 +330,16 @@ class MockRoute:
             return json.loads(self.response)
         except ValueError:
             raise ValueError("The response was not json serializable")
+
+    def ensure_response_has_view(self):
+        """Ensure that the response has a view as its original content."""
+        if not self.response_has_view():
+            raise ValueError("The response is not a view")
+
+    def response_has_view(self):
+        return self.route.original and isinstance(self.route.original, View)
+
+    def assertViewIs(self, name):
+        self.ensure_response_has_view()
+        assert self.route.original == name
+        return self

@@ -214,6 +214,8 @@ class BaseHttpRoute:
             getattr(controller, self.controller_method),
             *self.request.url_params.values()
         )
+        # save original content
+        self.original = response
 
         if isinstance(response, View):
             response = response.rendered_template

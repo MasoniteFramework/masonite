@@ -11,7 +11,7 @@ class TestVue(unittest.TestCase):
 
     def test_update_package_array(self):
         expected_packages = {
-            'vue': '^2.5.17'
+            'vue': '^2.6.12'
         }
         # Verify it works with no existing packages
         self.assertDictEqual(expected_packages, Vue().update_package_array())

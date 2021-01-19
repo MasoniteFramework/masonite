@@ -29,7 +29,7 @@ class Vue(Preset):
         for package in ["@babel/preset-react", "react", "react-dom"]:
             packages.pop(package, None)
 
-        packages["vue"] = "^2.5.17"
+        packages["vue"] = "^2.6.12"
         return packages
 
     def update_webpack_configuration(self):

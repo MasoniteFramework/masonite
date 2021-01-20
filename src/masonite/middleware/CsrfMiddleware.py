@@ -74,20 +74,17 @@ class CsrfMiddleware:
         Returns:
             string -- Returns a new token or the current token.
         """
-
-        if self.request.is_post() and not self.in_exempt():
+        if self.request.is_not_get_request() and not self.in_exempt():
             token = (
-                self.request.header("HTTP_X_CSRF_TOKEN")
-                or self.request.header("HTTP_X_XSRF_TOKEN")
+                self.request.header("X-CSRF-TOKEN")
+                or self.request.header("X-XSRF-TOKEN")
                 or self.request.input("__token")
             )
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
             return token
         else:
-            if self.request.get_cookie(
-                "csrf_token", decrypt=False
-            ):
-                return self.request.get_cookie("csrf_token", decrypt=False)
+            if self.request.get_cookie("csrf_token"):
+                return self.request.get_cookie("csrf_token")
             else:
                 return self.generate_token()

@@ -1,6 +1,7 @@
 """CSRF Protection Module."""
 import binascii
 import os
+from hmac import compare_digest
 
 
 class Csrf:
@@ -37,7 +38,7 @@ class Csrf:
         Returns:
             bool
         """
-        if self.request.get_cookie("csrf_token", decrypt=False) == token:
+        if compare_digest(self.request.get_cookie("csrf_token", decrypt=False), token):
             return True
         else:
             return False

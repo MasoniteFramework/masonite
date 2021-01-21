@@ -150,6 +150,9 @@ class TestUnitTest(TestCase):
         with self.assertRaises(ValueError):
             self.get("/json_response").assertViewHasAll(["test"])
 
+        with self.assertRaises(ValueError):
+            self.get("/example/test/1").assertViewMissing(["not in data"])
+
     def test_assert_view_has_all(self):
         self.get("/test/view").assertViewHasAll(["users", "count"])
         self.get("/test/view").assertViewHasAll({"count": 1, "users": ["John", "Joe"]})
@@ -159,3 +162,9 @@ class TestUnitTest(TestCase):
 
         with self.assertRaises(AssertionError):
             self.get("/test/view").assertViewHasAll({"count": 1})
+
+    def test_assert_view_missing(self):
+        self.get("/test/view").assertViewMissing("not in data")
+
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewMissing("users")

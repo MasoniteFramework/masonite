@@ -347,14 +347,14 @@ class MockRoute:
         return self
 
     def assertViewHas(self, key, value=None):
-        """Assert that view contains a given data key (and eventually associated value)."""
+        """Assert that view context contains a given data key (and eventually associated value)."""
         self.ensure_response_has_view()
         assert key in self.route.original.dictionary
         if value:
             assert self.route.original.dictionary[key] == value
 
     def assertViewHasAll(self, keys):
-        """Assert that view contains exactly the data keys (or the complete data dict)."""
+        """Assert that view context contains exactly the data keys (or the complete data dict)."""
         self.ensure_response_has_view()
         if isinstance(keys, list):
             assert set(keys) == set(self.route.original.dictionary.keys()) - set(self.route.original._shared.keys())
@@ -363,3 +363,8 @@ class MockRoute:
             for key in self.route.original._shared:
                 del view_data[key]
             assert keys == view_data
+
+    def assertViewMissing(self, key):
+        """Assert that given data key is not in the view context."""
+        self.ensure_response_has_view()
+        assert key not in self.route.original.dictionary

@@ -1,6 +1,7 @@
 import json
+from collections import Counter
 
-from masonite.view import View
+from src.masonite.view import View
 
 from ..helpers import Dot
 from ..request import Request
@@ -340,6 +341,25 @@ class MockRoute:
         return self.route.original and isinstance(self.route.original, View)
 
     def assertViewIs(self, name):
+        """Assert that request renders the given view name."""
         self.ensure_response_has_view()
         assert self.route.original.template == name
         return self
+
+    def assertViewHas(self, key, value=None):
+        """Assert that view contains a given data key (and eventually associated value)."""
+        self.ensure_response_has_view()
+        assert key in self.route.original.dictionary
+        if value:
+            assert self.route.original.dictionary[key] == value
+
+    def assertViewHasAll(self, keys):
+        """Assert that view contains exactly the data keys (or the complete data dict)."""
+        self.ensure_response_has_view()
+        if isinstance(keys, list):
+            assert set(keys) == set(self.route.original.dictionary.keys()) - set(self.route.original._shared.keys())
+        else:
+            view_data = self.route.original.dictionary
+            for key in self.route.original._shared:
+                del view_data[key]
+            assert keys == view_data

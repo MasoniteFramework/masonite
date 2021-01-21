@@ -23,6 +23,7 @@ ROUTES = [
     Post('/test/json/response/@id', 'TestController@json'),
     Get('/test/set/test/session', 'TestController@session'),
     Get('/test/mail', 'TestController@mail'),
+    Get('/test/view', 'UnitTestController@view'),
     RouteGroup([
         Get('/test/1', 'TestController@show'),
         Get('/test/2', 'TestController@show')
@@ -46,5 +47,5 @@ ROUTES = [
     ], prefix="/unit")
 ]
 
-from src.masonite.auth import Auth 
+from src.masonite.auth import Auth
 ROUTES += Auth.routes()

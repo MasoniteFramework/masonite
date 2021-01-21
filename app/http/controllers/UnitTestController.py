@@ -2,6 +2,7 @@
 
 from src.masonite.request import Request
 from src.masonite.controllers import Controller
+from src.masonite.view import View
 
 
 class UnitTestController(Controller):
@@ -54,3 +55,6 @@ class UnitTestController(Controller):
 
     def param(self):
         return self.request.param('post_id')
+
+    def view(self, view: View):
+        return view.render("test", {"count": 1, "users": ["John", "Joe"]})

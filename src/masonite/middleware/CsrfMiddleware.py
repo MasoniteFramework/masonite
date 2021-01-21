@@ -34,7 +34,7 @@ class CsrfMiddleware:
         """Execute this method before the controller."""
         if not self.request.get_cookie("MSESSID"):
             session_id = bytes(binascii.b2a_hex(os.urandom(self.token_length // 2))).decode("utf-8")
-                        self.request.cookie('MSESSID', session_id, expires="5 minutes")
+            self.request.cookie('MSESSID', session_id, expires="5 minutes")
         token = self.verify_token()
 
         self.view.share(

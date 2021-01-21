@@ -99,7 +99,9 @@ class ExceptionHandler:
 
         handler = Handler(exception)
         handler.integrate(SolutionsIntegration())
-        handler.integrate(StackOverflowIntegration(),)
+        handler.integrate(
+            StackOverflowIntegration(),
+        )
 
         if "application/json" in request.header("Content-Type"):
             stacktrace = []

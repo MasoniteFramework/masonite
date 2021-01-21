@@ -11,7 +11,7 @@
                     </div>
                     <div class="card-body">
                         {% if bag().any() %}
-                            {% for error in bag().messages() %}
+                            {% for error in bag().get_errors() %}
                                 <div class="alert alert-danger" role="alert">
                                     {{ error }}
                                 </div>

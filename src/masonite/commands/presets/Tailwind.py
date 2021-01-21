@@ -29,7 +29,8 @@ class Tailwind(Preset):
     def update_webpack_configuration(self):
         """Copy webpack.mix.js file into application"""
         shutil.copyfile(
-            os.path.dirname(__file__) + "/tailwind-stubs/webpack.mix.js", "webpack.mix.js"
+            os.path.dirname(__file__) + "/tailwind-stubs/webpack.mix.js",
+            "webpack.mix.js",
         )
 
     def create_tailwind_config(self):
@@ -38,23 +39,23 @@ class Tailwind(Preset):
         """
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/tailwind.config.js",
-            "tailwind.config.js"
+            "tailwind.config.js",
         )
 
     def update_scss_file(self):
         """Create a app.scss file configured for Tailwind."""
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/style.scss",
-            "storage/static/sass/style.scss"
+            "storage/static/sass/style.scss",
         )
 
     def update_base_views(self):
         """Update base views"""
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/base.html",
-            "resources/templates/base.html"
+            "resources/templates/base.html",
         )
         shutil.copyfile(
             os.path.dirname(__file__) + "/tailwind-stubs/welcome.html",
-            "resources/templates/welcome.html"
+            "resources/templates/welcome.html",
         )

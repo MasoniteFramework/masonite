@@ -16,6 +16,7 @@ from ..response import Response
 
 from .MockRoute import MockRoute
 from ..helpers import config
+from ..auth import Sign
 
 
 class TestCase(unittest.TestCase):
@@ -142,10 +143,11 @@ class TestCase(unittest.TestCase):
 
         custom_wsgi.update(wsgi)
         if not self._with_csrf:
-            params.update({"__token": "tok"})
+            token = Sign().sign("secret")
+            params.update({"__token": token})
             custom_wsgi.update(
                 {
-                    "HTTP_COOKIE": "csrf_token=tok",
+                    "HTTP_COOKIE": "csrf_token=" + token,
                     "CONTENT_LENGTH": len(str(json.dumps(params))),
                     "wsgi.input": io.BytesIO(bytes(json.dumps(params), "utf-8")),
                 }

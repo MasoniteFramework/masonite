@@ -6,6 +6,8 @@ from ..auth import Csrf
 from ..exceptions import InvalidCSRFToken
 from ..request import Request
 from ..view import View
+import binascii
+import os
 
 
 class CsrfMiddleware:
@@ -30,6 +32,11 @@ class CsrfMiddleware:
 
     def before(self):
         """Execute this method before the controller."""
+        if not self.request.get_cookie("MSESSID"):
+            session_id = bytes(
+                binascii.b2a_hex(os.urandom(self.token_length // 2))
+            ).decode("utf-8")
+            self.request.cookie("MSESSID", session_id, expires="5 minutes")
         token = self.verify_token()
 
         self.view.share(
@@ -74,19 +81,15 @@ class CsrfMiddleware:
         Returns:
             string -- Returns a new token or the current token.
         """
-        if self.request.is_post() and not self.in_exempt():
+        if self.request.is_not_get_request() and not self.in_exempt():
             token = (
-                self.request.header("HTTP_X_CSRF_TOKEN")
-                or self.request.header("HTTP_X_XSRF_TOKEN")
+                self.request.header("X-CSRF-TOKEN")
+                or self.request.header("X-XSRF-TOKEN")
                 or self.request.input("__token")
             )
             if not self.csrf.verify_csrf_token(token):
                 raise InvalidCSRFToken("Invalid CSRF token.")
+
             return token
         else:
-            if not self.every_request and self.request.get_cookie(
-                "csrf_token", decrypt=False
-            ):
-                return self.request.get_cookie("csrf_token", decrypt=False)
-            else:
-                return self.generate_token()
+            return self.generate_token()

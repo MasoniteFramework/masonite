@@ -67,16 +67,5 @@ class TestCSRFMiddleware(TestCase):
 
         self.assertEqual(len(token1), 30)
         self.assertEqual(len(token2), 30)
-        print(token1, token2)
-        self.assertNotEqual(token1, token2)
+        self.assertEqual(token1, token2)
 
-    # def test_does_not_generate_token_every_request(self):
-    #     # self.middleware.every_request = False
-    #     self.get('/test/10')
-    #     self.middleware = self.container.resolve(self.middleware)
-    #     token1 = self.middleware.verify_token()
-    #     token2 = self.middleware.verify_token()
-
-    #     self.assertEqual(len(token1), 30)
-    #     self.assertEqual(len(token2), 30)
-    #     self.assertEqual(token1, token2)

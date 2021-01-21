@@ -6,6 +6,8 @@ from ..auth import Csrf
 from ..exceptions import InvalidCSRFToken
 from ..request import Request
 from ..view import View
+import binascii
+import os
 
 
 class CsrfMiddleware:
@@ -30,6 +32,9 @@ class CsrfMiddleware:
 
     def before(self):
         """Execute this method before the controller."""
+        if not self.request.get_cookie("MSESSID"):
+            session_id = bytes(binascii.b2a_hex(os.urandom(self.token_length // 2))).decode("utf-8")
+            self.request.cookie('MSESSID', session_id)
         token = self.verify_token()
 
         self.view.share(

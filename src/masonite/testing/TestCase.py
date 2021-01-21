@@ -142,7 +142,7 @@ class TestCase(unittest.TestCase):
             params.update({"__token": token})
             custom_wsgi.update(
                 {
-                    "HTTP_COOKIE": "csrf_token="+token,
+                    "HTTP_COOKIE": "csrf_token=" + token,
                     "CONTENT_LENGTH": len(str(json.dumps(params))),
                     "wsgi.input": io.BytesIO(bytes(json.dumps(params), "utf-8")),
                 }

@@ -1,4 +1,5 @@
 from pkgutil import extend_path
+
 __path__ = extend_path(__path__, __name__)
 
 
@@ -19,4 +20,4 @@ from .__version__ import (
     __licence__,
 )
 
-_file_source = 'masonite'
+_file_source = "masonite"

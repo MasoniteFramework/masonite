@@ -40,13 +40,15 @@ class Csrf:
 
         Returns:
             bool
-        """ 
+        """
         try:
             token = Sign().unsign(token)
         except (InvalidToken, TypeError):
             pass
 
-        if self.request.get_cookie("csrf_token") and compare_digest(self.request.get_cookie("csrf_token"), token):
+        if self.request.get_cookie("csrf_token") and compare_digest(
+            self.request.get_cookie("csrf_token"), token
+        ):
             return True
         else:
             return False

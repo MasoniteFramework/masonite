@@ -1,6 +1,10 @@
 """CSRF Protection Module."""
 import binascii
 import os
+from hmac import compare_digest
+from .Sign import Sign
+from ..exceptions import InvalidCSRFToken
+from cryptography.fernet import InvalidToken
 
 
 class Csrf:
@@ -24,8 +28,8 @@ class Csrf:
         Returns:
             string -- Returns token generated.
         """
-        token = bytes(binascii.b2a_hex(os.urandom(length // 2))).decode("utf-8")
-        self.request.cookie("csrf_token", token, encrypt=False)
+        token = self.request.get_cookie("SESSID")
+        self.request.cookie("csrf_token", token)
         return token
 
     def verify_csrf_token(self, token):
@@ -37,7 +41,19 @@ class Csrf:
         Returns:
             bool
         """
-        if self.request.get_cookie("csrf_token", decrypt=False) == token:
+        try:
+            token = Sign().unsign(token)
+        except (InvalidToken, TypeError):
+            pass
+
+        try:
+            csrf_token = Sign().unsign(self.request.get_cookie("csrf_token", decrypt=False))
+        except (InvalidToken, TypeError):
+            csrf_token = False
+
+        if csrf_token and compare_digest(
+            csrf_token, token
+        ):
             return True
         else:
             return False

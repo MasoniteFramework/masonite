@@ -35,6 +35,6 @@ class TestCsrf(TestCase):
     def test_csrf_can_use_header(self):
         (self.withoutCsrf()
             .withHeaders({
-                'X-CSRF-TOKEN': 'tok'
+                'X-CSRF-TOKEN': 'secret'
             })
             .post('/test-route'))

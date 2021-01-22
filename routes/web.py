@@ -24,6 +24,7 @@ ROUTES = [
     Get('/test/set/test/session', 'TestController@session'),
     Get('/test/mail', 'TestController@mail'),
     Get('/test/view', 'UnitTestController@view'),
+    Get('/test/redirect', 'UnitTestController@redirect_view'),
     RouteGroup([
         Get('/test/1', 'TestController@show'),
         Get('/test/2', 'TestController@show')

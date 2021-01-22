@@ -368,3 +368,13 @@ class MockRoute:
         """Assert that given data key is not in the view context."""
         self.ensure_response_has_view()
         assert key not in self.route.original.dictionary
+
+    def assertRedirect(self, uri):
+        """Assert that response is redirection to the given view name or URI or Controller@method."""
+        request = self.container.make('Request')
+        response = self.container.make(Response)
+        self.route.load_request(request)
+        request.load_app(self.container)
+        self.route.get_response()
+        assert response.is_status(302) or response.is_status(301)
+        assert request.redirect_url == uri

@@ -58,3 +58,6 @@ class UnitTestController(Controller):
 
     def view(self, view: View):
         return view.render("test", {"count": 1, "users": ["John", "Joe"]})
+
+    def redirect_view(self):
+        return self.request.redirect_to("v")

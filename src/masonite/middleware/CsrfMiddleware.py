@@ -83,8 +83,8 @@ class CsrfMiddleware:
         """
         if self.request.is_not_get_request() and not self.in_exempt():
             token = (
-                self.request.header("X-CSRF-TOKEN")
-                or self.request.header("X-XSRF-TOKEN")
+                self.request.header("HTTP_X_CSRF_TOKEN")
+                or self.request.header("HTTP_X_XSRF_TOKEN")
                 or self.request.input("__token")
             )
             if not self.csrf.verify_csrf_token(token):

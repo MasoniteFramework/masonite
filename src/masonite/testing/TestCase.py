@@ -180,7 +180,7 @@ class TestCase(unittest.TestCase):
     def post(self, url, params=None):
         call_params = {}
         call_params.update(params or {})
-        
+
         return self.call("POST", url, call_params)
 
     def put(self, url, params={}):

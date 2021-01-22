@@ -28,7 +28,7 @@ class Csrf:
         Returns:
             string -- Returns token generated.
         """
-        token = self.request.get_cookie("MSESSID")
+        token = self.request.get_cookie("SESSID")
         self.request.cookie("csrf_token", token)
         return token
 
@@ -46,8 +46,13 @@ class Csrf:
         except (InvalidToken, TypeError):
             pass
 
-        if self.request.get_cookie("csrf_token") and compare_digest(
-            self.request.get_cookie("csrf_token"), token
+        try:
+            csrf_token = Sign().unsign(self.request.get_cookie("csrf_token", decrypt=False))
+        except (InvalidToken, TypeError):
+            csrf_token = False
+
+        if csrf_token and compare_digest(
+            csrf_token, token
         ):
             return True
         else:

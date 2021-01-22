@@ -133,10 +133,12 @@ class TestCase(unittest.TestCase):
         if self.container.has("Request"):
             self.container.make("Request").get_and_reset_headers()
 
-    def call(self, method, url, params, wsgi={}):
+    def call(self, method, url, params, wsgi=None):
+        call_wsgi = {}
+        call_wsgi.update(wsgi or {})
         custom_wsgi = {"PATH_INFO": url, "REQUEST_METHOD": method}
 
-        custom_wsgi.update(wsgi)
+        custom_wsgi.update(call_wsgi)
         if not self._with_csrf:
             token = Sign().sign("secret")
             params.update({"__token": token})
@@ -175,8 +177,11 @@ class TestCase(unittest.TestCase):
             },
         )
 
-    def post(self, url, params={}):
-        return self.call("POST", url, params)
+    def post(self, url, params=None):
+        call_params = {}
+        call_params.update(params or {})
+        
+        return self.call("POST", url, call_params)
 
     def put(self, url, params={}):
         return self.json("PUT", url, params)

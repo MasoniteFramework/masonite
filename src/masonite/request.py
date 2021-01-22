@@ -153,6 +153,17 @@ class Request(Extendable):
 
         return False
 
+    def is_not_safe(self):
+        """Check if the current request is not a get request.
+
+        Returns:
+            bool
+        """
+        if not self.environ["REQUEST_METHOD"] == "GET" and not self.environ["REQUEST_METHOD"] == "OPTIONS" and not self.environ["REQUEST_METHOD"] == "HEAD":
+            return True
+
+        return False
+
     def __set_request_method(self):
         """Private method for manually setting the request method.
 

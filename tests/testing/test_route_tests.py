@@ -172,4 +172,4 @@ class TestUnitTest(TestCase):
     def test_assert_redirect(self):
         self.get("/test/redirect").assertRedirect("/v")
         with self.assertRaises(AssertionError):
-            self.get("/test/view").assertRedirect("/v")
+            self.get("/test/view").assertRedirect("v")

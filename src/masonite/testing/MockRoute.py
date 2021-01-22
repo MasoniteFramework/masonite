@@ -1,8 +1,6 @@
 import json
-from collections import Counter
 
 from src.masonite.view import View
-
 from ..helpers import Dot
 from ..request import Request
 from ..response import Response
@@ -35,8 +33,11 @@ class MockRoute:
     def hasController(self, controller):
         return self.route.controller == controller
 
+    def ensure_argument_is_controller_name(self, controller_name):
+        return isinstance(controller_name, str) and "@" in controller_name
+
     def assertHasController(self, controller):
-        if isinstance(controller, str) and "@" in controller:
+        if self.ensure_argument_is_controller_name(controller):
             controller, method = controller.split("@")
             assert (
                 self.route.controller.__name__ == controller
@@ -369,12 +370,10 @@ class MockRoute:
         self.ensure_response_has_view()
         assert key not in self.route.original.dictionary
 
-    def assertRedirect(self, uri):
+    def assertRedirect(self, redirect_uri):
         """Assert that response is redirection to the given view name or URI or Controller@method."""
         request = self.container.make('Request')
         response = self.container.make(Response)
-        self.route.load_request(request)
-        request.load_app(self.container)
         self.route.get_response()
         assert response.is_status(302) or response.is_status(301)
-        assert request.redirect_url == uri
+        assert request.redirect_url == redirect_uri

@@ -69,19 +69,19 @@ def parse_human_time(str_time):
         length = str_time.split(" ")[1]
 
         if length in ("second", "seconds"):
-            return pendulum.now("GMT").add(seconds=number)
+            return pendulum.now().add(seconds=number)
         elif length in ("minute", "minutes"):
-            return pendulum.now("GMT").add(minutes=number)
+            return pendulum.now().add(minutes=number)
         elif length in ("hour", "hours"):
-            return pendulum.now("GMT").add(hours=number)
+            return pendulum.now().add(hours=number)
         elif length in ("days", "days"):
-            return pendulum.now("GMT").add(days=number)
+            return pendulum.now().add(days=number)
         elif length in ("week", "weeks"):
-            return pendulum.now("GMT").add(weeks=1)
+            return pendulum.now().add(weeks=1)
         elif length in ("month", "months"):
-            return pendulum.now("GMT").add(months=number)
+            return pendulum.now().add(months=number)
         elif length in ("year", "years"):
-            return pendulum.now("GMT").add(years=number)
+            return pendulum.now().add(years=number)
 
         return None
     else:

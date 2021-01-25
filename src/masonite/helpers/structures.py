@@ -2,7 +2,7 @@
 
 import inspect
 import pydoc
-from collections import MutableMapping
+from collections.abc import MutableMapping
 
 from masoniteorm.collection import Collection as collect
 

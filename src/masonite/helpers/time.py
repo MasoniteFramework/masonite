@@ -19,40 +19,40 @@ def cookie_expire_time(str_time):
         if length in ("second", "seconds"):
             # Sat, 06 Jun 2020 15:36:16 GMT
             return (
-                pendulum.now("GMT")
+                pendulum.now()
                 .add(seconds=number)
                 .format("ddd, DD MMM YYYY H:mm:ss")
             )
         elif length in ("minute", "minutes"):
             return (
-                pendulum.now("GMT")
+                pendulum.now()
                 .add(minutes=number)
                 .format("ddd, DD MMM YYYY H:mm:ss")
             )
         elif length in ("hour", "hours"):
             return (
-                pendulum.now("GMT").add(hours=number).format("ddd, DD MMM YYYY H:mm:ss")
+                pendulum.now().add(hours=number).format("ddd, DD MMM YYYY H:mm:ss")
             )
         elif length in ("days", "days"):
             return (
-                pendulum.now("GMT").add(days=number).format("ddd, DD MMM YYYY H:mm:ss")
+                pendulum.now().add(days=number).format("ddd, DD MMM YYYY H:mm:ss")
             )
         elif length in ("week", "weeks"):
-            return pendulum.now("GMT").add(weeks=1).format("ddd, DD MMM YYYY H:mm:ss")
+            return pendulum.now().add(weeks=1).format("ddd, DD MMM YYYY H:mm:ss")
         elif length in ("month", "months"):
             return (
-                pendulum.now("GMT")
+                pendulum.now()
                 .add(months=number)
                 .format("ddd, DD MMM YYYY H:mm:ss")
             )
         elif length in ("year", "years"):
             return (
-                pendulum.now("GMT").add(years=number).format("ddd, DD MMM YYYY H:mm:ss")
+                pendulum.now().add(years=number).format("ddd, DD MMM YYYY H:mm:ss")
             )
 
         return None
     else:
-        return pendulum.now("GMT").subtract(years=20).format("ddd, DD MMM YYYY H:mm:ss")
+        return pendulum.now().subtract(years=20).format("ddd, DD MMM YYYY H:mm:ss")
 
 
 def parse_human_time(str_time):
@@ -85,4 +85,4 @@ def parse_human_time(str_time):
 
         return None
     else:
-        return pendulum.now("GMT").subtract(years=20)
+        return pendulum.now().subtract(years=20)

@@ -49,3 +49,4 @@ class TestMockQueues(TestCase):
         self.queue.assertNothingPushed()
         self.queue.driver("database").push(JobWithArgs, args=(4,))
         self.queue.assertPushed(JobWithArgs)
+        self.queue.assertPushedWithArgs(JobWithArgs, (4,))

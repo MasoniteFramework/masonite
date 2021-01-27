@@ -78,6 +78,16 @@ class MockQueue(BaseQueueDriver):
             job_channel = matching_jobs[0]["channel"]
             test_method(job, job_args, job_channel)
 
+    def assertPushedWithArgs(self, job, args, count=1):
+        matching_jobs = []
+        for jobs_in_queue in self.queued_jobs.values():
+            matching_jobs += jobs_in_queue.get(str(job.__name__), [])
+        assert len(matching_jobs) == count
+        # check if args are corresponding
+        for job in matching_jobs:
+            job_args = job[0]["args"]
+            assert job_args == args
+
     def assertPushedOn(self, job, queue, count=1):
         # TODO: display easy error message if no jobs pushed on channel
         assert len(self.queued_jobs[queue][str(job.__name__)]) == count

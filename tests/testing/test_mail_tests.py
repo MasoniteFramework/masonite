@@ -8,7 +8,7 @@ class TestMailable(Mailable):
         return (self
             .to('idmann509@gmail.com')
             .send_from('admin@test.com')
-            .view('emails.test')
+            .view('emails.test', {"user": "Sam"})
             .reply_to('customer@email.com')
             .subject('Forgot Password'))
 
@@ -38,4 +38,18 @@ class TestUnitTest(TestCase):
     def test_mailable(self):
         self.mail.driver('smtp').mailable(TestMailable()).send()
         self.mail.driver('smtp').mailable(TestMailable()).send()
-        self.mail.assertSent(TestMailable, 2)
+        self.mail.assertSent(TestMailable, count=2)
+
+    def test_mailable_with_custom_assertions(self):
+        self.mail.driver('smtp').mailable(TestMailable()).send()
+        self.mail.assertSent(
+            TestMailable,
+            lambda mailable: mailable.hasSubject("Forgot Password") \
+                .hasTo('idmann509@gmail.com') \
+                .hasReplyTo('customer@email.com') \
+                .isSentFrom('admin@test.com') \
+                .hasView('emails.test') \
+                .hasInContext('user') \
+                .hasInContext('user', 'Sam') \
+                .hasContext({"user": "Sam"}) \
+        )

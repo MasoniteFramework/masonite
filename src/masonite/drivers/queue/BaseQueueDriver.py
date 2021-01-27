@@ -6,9 +6,17 @@ import pendulum
 
 from ...drivers import BaseDriver
 from ...helpers import HasColoredCommands
+from ...mock import Mockable
 
 
-class BaseQueueDriver(BaseDriver, HasColoredCommands):
+class BaseQueueDriver(BaseDriver, HasColoredCommands, Mockable):
+
+    __service__ = "Queue"
+
+    def get_mock_class():
+        from ...testing.mocks.MockQueue import MockQueue
+        return MockQueue
+
     def add_to_failed_queue_table(self, payload, channel=None, driver="amqp"):
         from config.database import DB
         from config import queue

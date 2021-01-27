@@ -3,18 +3,19 @@
 import copy
 import re
 
-
 from ...app import App
 from ...helpers import config, deprecated
 from ...response import Responsable
 from .. import BaseDriver
-
+from ...mock import Mockable, StaticallyCallable
 
 MAIL_FROM_RE = re.compile(r'(?:"?([^"]*)"?\s)?(?:<?(.+@[^>]+)>?)')
 
 
-class BaseMailDriver(BaseDriver, Responsable):
+class BaseMailDriver(BaseDriver, Responsable, Mockable):
     """Base mail driver class. This class is inherited by all mail drivers."""
+
+    __service__ = "Mail"
 
     def __init__(self, app: App):
         """Base mail driver constructor.
@@ -34,6 +35,10 @@ class BaseMailDriver(BaseDriver, Responsable):
         self.html_content = None
         self.text_content = None
         self._message = None
+
+    def get_mock_class():
+        from ...testing.mocks.MockMail import MockMail
+        return MockMail
 
     def _get_message_for_send_deprecated(self, message_contents):
         """Helper method for backwards compatibility to generate a message from .send()

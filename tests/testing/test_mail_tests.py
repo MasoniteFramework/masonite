@@ -3,6 +3,7 @@ from tests.core.test_mail_log_drivers import UserMock
 from src.masonite.testing import TestCase
 from src.masonite.drivers.mail.BaseMailDriver import BaseMailDriver as Mail
 
+
 class TestMailable(Mailable):
     def build(self):
         return (self
@@ -53,3 +54,18 @@ class TestUnitTest(TestCase):
                 .hasInContext('user', 'Sam') \
                 .hasContext({"user": "Sam"}) \
         )
+
+    def test_assert_sent_to(self):
+        pass
+
+    def test_assert_email_content_unified(self):
+        self.mail.driver('mailgun').to('user@example.com').html('<div>Hello</div>').send()
+        self.mail.assertLast() \
+            .hasTo('user@example.com') \
+            .seeIn('<div>Hello</div>')
+
+        self.mail.driver('smtp').mailable(TestMailable()).send()
+        self.mail.assertLast() \
+            .hasTo('idmann509@gmail.com') \
+            .hasView('emails.test') \
+            .seeIn('testing email')

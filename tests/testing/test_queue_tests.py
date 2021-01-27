@@ -33,12 +33,6 @@ class TestMockQueues(TestCase):
         self.queue.driver("database").push(Job, channel="high")
         self.queue.assertPushedOn(Job, "high")
 
-    def test_mock_with_failing_jobs(self):
-        self.queue.driver("database").push(FailJob)
-        self.queue.assertNothingPushed()
-        self.queue.driver("database").push(FailJob, channel="low")
-        self.queue.assertNothingPushed()
-
     def test_assert_push_two_jobs_in_same_line(self):
         self.queue.assertNothingPushed()
         self.queue.driver("database").push(Job, JobWithArgs)
@@ -55,3 +49,23 @@ class TestMockQueues(TestCase):
         self.queue.assertNothingPushed()
         self.queue.driver("database").push(Job)
         self.queue.assertNotPushed(JobWithArgs)
+
+
+class TestMockQueuesWithRunningTasks(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.queue = Queue.fake(immediate=True)
+
+    def tearDown(self):
+        super().tearDown()
+        self.queue = Queue.restore()
+
+    def test_queue_job_with_success(self):
+        self.queue.driver("database").push(Job)
+        self.queue.assertPushed(Job)
+
+    def test_queue_job_with_error(self):
+        self.queue.driver("database").push(FailJob)
+        self.queue.assertNothingPushed()
+        self.queue.assertPushedAndFail(FailJob)

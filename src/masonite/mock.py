@@ -33,9 +33,9 @@ class Mockable():
         )
 
     @classmethod
-    def fake(cls):
+    def fake(cls, **kwargs):
         from wsgi import container
-        mock_instance = cls.get_mock_class()(container)
+        mock_instance = cls.get_mock_class()(container, **kwargs)
         container.bind(cls.__service__, mock_instance)
         return mock_instance
 

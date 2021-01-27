@@ -13,8 +13,10 @@ def deep_get(dictionary, keys, default=None):
 
 class MockQueue(BaseQueueDriver):
 
-    def __init__(self, container=None):
+    def __init__(self, container=None, immediate=False):
         self.container = container
+        self._run = immediate
+
         self.queued_jobs = makehash()
         self.failed_jobs = makehash()
 
@@ -37,9 +39,10 @@ class MockQueue(BaseQueueDriver):
                 "options": options
             }
             path = f"{queue}.{str(job_name)}"
-            # execute to see if would pass
             try:
-                getattr(job, callback)(*args, **kwargs)
+                # run task immediately if required
+                if self._run:
+                    getattr(job, callback)(*args, **kwargs)
             except:
                 print("Job failed !")
                 self._store_fail(data, path)
@@ -69,6 +72,18 @@ class MockQueue(BaseQueueDriver):
     def assertPushed(self, job, test_method=None, count=1):
         matching_jobs = []
         for jobs_in_queue in self.queued_jobs.values():
+            matching_jobs += jobs_in_queue.get(str(job.__name__), [])
+        assert len(matching_jobs) == count
+        # check if first job pushed pass the test
+        if test_method and count > 0:
+            job = matching_jobs[0]["job"]
+            job_args = matching_jobs[0]["args"]
+            job_channel = matching_jobs[0]["channel"]
+            test_method(job, job_args, job_channel)
+
+    def assertPushedAndFail(self, job, test_method=None, count=1):
+        matching_jobs = []
+        for jobs_in_queue in self.failed_jobs.values():
             matching_jobs += jobs_in_queue.get(str(job.__name__), [])
         assert len(matching_jobs) == count
         # check if first job pushed pass the test

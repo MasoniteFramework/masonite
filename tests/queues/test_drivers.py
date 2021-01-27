@@ -17,6 +17,7 @@ class Job(Queueable):
         print('sending from job handled')
         return 'test'
 
+
 class FailJob(Queueable):
 
     def handle(self):

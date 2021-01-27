@@ -1,8 +1,7 @@
-from ...drivers.mail.Mailable import Mailable
 from ...drivers.mail.BaseMailDriver import BaseMailDriver
 
 
-class MailableAssertions():
+class MailableWithAsserts():
 
     def hasTo(self, to):
         assert to in self._to
@@ -47,7 +46,7 @@ class MailWithAsserts():
         self.mailable = obj._mailable
         if self.mailable:
             # TODO: do this ?
-            MailableAssertions.patch(self.mailable.__class__)
+            MailableWithAsserts.patch(self.mailable.__class__)
             self.context = self.mailable.variables
             self.view = self.mailable.template
             self.to = self.mailable._to
@@ -121,7 +120,7 @@ class MockMail(BaseMailDriver):
         """Mock sending email."""
         if self._mailable:
             # attach mailable tests helpers
-            MailableAssertions.patch(self._mailable.__class__)
+            MailableWithAsserts.patch(self._mailable.__class__)
         mail = MailWithAsserts(self)
         self.mails.append(mail)
 

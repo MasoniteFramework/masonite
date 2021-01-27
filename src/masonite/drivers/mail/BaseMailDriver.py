@@ -35,6 +35,9 @@ class BaseMailDriver(BaseDriver, Responsable, Mockable):
         self.html_content = None
         self.text_content = None
         self._message = None
+        self._template_name = None
+        self._template_context = None
+        self._mailable = None
 
     def get_mock_class():
         from ...testing.mocks.MockMail import MockMail
@@ -148,6 +151,8 @@ class BaseMailDriver(BaseDriver, Responsable, Mockable):
         """
         view = copy.copy(self.app.make("ViewClass"))
         content = view.render(template_name, dictionary).rendered_template
+        self._template_name = template_name
+        self._template_context = dictionary
         if mimetype == "html":
             self.html(content)
         else:
@@ -195,6 +200,7 @@ class BaseMailDriver(BaseDriver, Responsable, Mockable):
             .template(mailable.template, mailable.variables)
             .reply_to(mailable._reply_to)
         )
+        self._mailable = mailable
         return self
 
     def subject(self, subject):

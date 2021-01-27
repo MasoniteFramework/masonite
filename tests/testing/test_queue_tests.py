@@ -50,3 +50,8 @@ class TestMockQueues(TestCase):
         self.queue.driver("database").push(JobWithArgs, args=(4,))
         self.queue.assertPushed(JobWithArgs)
         self.queue.assertPushedWithArgs(JobWithArgs, (4,))
+
+    def test_assert_not_pushed_jobs(self):
+        self.queue.assertNothingPushed()
+        self.queue.driver("database").push(Job)
+        self.queue.assertNotPushed(JobWithArgs)

@@ -79,6 +79,7 @@ class QueueDatabaseDriver(BaseQueueDriver, HasColoredCommands, QueueContract):
             jobs = (
                 builder.where_null("ran_at")
                 .where_null("reserved_at")
+                .where("queue", options.get("queue", "default"))
                 .where(
                     lambda q: q.where_null("available_at").or_where(
                         "available_at", "<=", pendulum.now().to_datetime_string()

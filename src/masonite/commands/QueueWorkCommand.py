@@ -11,6 +11,7 @@ class QueueWorkCommand(Command):
 
     queue:work
         {--c|channel=default : The channel to listen on the queue}
+        {--queue=default : The queue to listen to}
         {--d|driver=default : Specify the driver you would like to connect to}
         {--f|fair : Send jobs to queues that have no jobs instead of randomly selecting a queue}
         {--p|poll=0 : Specify the amount of time a worker should poll}
@@ -30,5 +31,5 @@ class QueueWorkCommand(Command):
             return
 
         queue.connect().consume(
-            self.option("channel"), fair=self.option("fair"), poll=self.option("poll")
+            self.option("channel"), fair=self.option("fair"), poll=self.option("poll"), queue=self.option('queue')
         )

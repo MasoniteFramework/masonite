@@ -1,20 +1,11 @@
 # Security Policy
 
-## Supported Versions
-
-The versions below are the currently supported bug fixes and security fixes.
-
-| Version   | Bug Fixes            | Security Fixes        | End Of Life        |
-| --------- | -------------------- | ----------------------|------------------- |
-| 2.2.x LTS | :white_check_mark:   | :white_check_mark:    | June 2022
-| 2.1.x     | :x:                  | :x:                   | June 2019
-| 2.0.x     | :x:                  | :x:                   | December 2018
-| 1.6.x     | :x:                  | :x:                   | June 2018
-
 ## Reporting a Vulnerability
 
 The best approach to reporting a vulnerability with Masonite is to join the [Slack Channel](http://slack.masoniteproject.com) and messaged
 Joseph Mancuso and tell him about the issue. He will communicate this to his maintainers and get a patch ready and shipped ASAP.
+
+You may also send an email to joe@masoniteproject.com
 
 ## LTS Versions
 

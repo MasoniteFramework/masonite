@@ -114,7 +114,7 @@ class QueueAmqpDriver(BaseQueueDriver, QueueContract, HasColoredCommands):
 
         return self
 
-    def consume(self, channel, fair=False):
+    def consume(self, channel, fair=False, **options):
         self.success(
             '[*] Waiting to process jobs on the "{}" channel. To exit press CTRL+C'.format(
                 channel

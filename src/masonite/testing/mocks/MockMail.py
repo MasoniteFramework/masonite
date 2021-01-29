@@ -49,7 +49,10 @@ class MailWithAsserts():
             MailableWithAsserts.patch(self.mailable.__class__)
             self.context = self.mailable.variables
             self.view = self.mailable.template
-            self.to = self.mailable._to
+            to_addresses = self.mailable._to
+            if not isinstance(to_addresses, list):
+                to_addresses = [to_addresses]
+            self.to = to_addresses
             self.sent_from = self.mailable._from
             self.reply_to = self.mailable._reply_to
             self.subject = self.mailable._subject

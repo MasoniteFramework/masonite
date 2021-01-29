@@ -4,8 +4,14 @@ from abc import abstractmethod
 class StaticallyCallable(type):
     def __getattr__(self, attribute, *args, **kwargs):
         from wsgi import container
+        import pdb; pdb.set_trace()
         instance = container.make(self.__service__)
         return getattr(instance, attribute)
+
+
+# class MyMixin(metaclass=StaticallyCallable):
+#     # __metaclass__ = StaticallyCallable
+#     pass
 
 
 class Mockable():
@@ -20,11 +26,12 @@ class Mockable():
 
     __service__ = ""
 
-    # def __getattr__(self, attribute, *args, **kwargs):
-    #     from wsgi import container
-    #     import pdb ; pdb.set_trace()
-    #     instance = container.make(self.__service__)
-    #     return getattr(instance, attribute)
+    @classmethod
+    def __getattr__(cls, attribute, *args, **kwargs):
+        import pdb ; pdb.set_trace()
+        from wsgi import container
+        instance = container.make(cls.__service__)
+        return getattr(instance, attribute)
 
     @abstractmethod
     def get_mock_class():

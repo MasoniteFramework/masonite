@@ -7,7 +7,7 @@ from ...app import App
 from ...helpers import config, deprecated
 from ...response import Responsable
 from .. import BaseDriver
-from ...mock import Mockable, StaticallyCallable
+from ...mock import Mockable
 
 MAIL_FROM_RE = re.compile(r'(?:"?([^"]*)"?\s)?(?:<?(.+@[^>]+)>?)')
 

@@ -14,7 +14,7 @@ class TestMailable(Mailable):
             .subject('Forgot Password'))
 
 
-class TestUnitTest(TestCase):
+class TestMockMail(TestCase):
 
     def setUp(self):
         super().setUp()
@@ -56,7 +56,13 @@ class TestUnitTest(TestCase):
         )
 
     def test_assert_sent_to(self):
-        pass
+        user = UserMock
+        user.email = 'test@email.com'
+        self.mail.driver('log').to(user).reply_to('reply-to@email.com').send('Masonite')
+        self.mail.assertLast().hasTo(user.email)
+
+        self.mail.driver('smtp').mailable(TestMailable()).send()
+        self.mail.assertSentTo('idmann509@gmail.com', TestMailable)
 
     def test_assert_email_content_unified(self):
         self.mail.driver('mailgun').to('user@example.com').html('<div>Hello</div>').send()
@@ -69,3 +75,6 @@ class TestUnitTest(TestCase):
             .hasTo('idmann509@gmail.com') \
             .hasView('emails.test') \
             .seeIn('testing email')
+
+    def test_static(self):
+        Mail.assertUnknown("arg")

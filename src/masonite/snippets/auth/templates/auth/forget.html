@@ -1,13 +1,13 @@
 {% extends 'auth/base.html' %}
 
 {% block content %}
-<div class="row my-5">
+<div class="my-5 row">
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-6 mx-auto">
-                {% if session().has('error') %}
+            <div class="mx-auto col-md-6">
+                {% if session().has('errors') %}
                 <div class="alert alert-danger" role="alert">
-                    {{ session().get('error') }}
+                    {{ session().get('errors') }}
                 </div>
                 {% endif %}
                 {% if session().has('success') %}
@@ -33,7 +33,7 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
-                            <button type="submit" class="btn btn-success btn-md float-right">Send reset link</button>
+                            <button type="submit" class="float-right btn btn-success btn-md">Send reset link</button>
                         </form>
                     </div>
                 </div>

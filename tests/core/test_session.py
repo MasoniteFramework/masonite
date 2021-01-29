@@ -178,7 +178,7 @@ class TestSession(TestCase):
     def test_with_errors(self):
         request = self.container.make('Request')
         request.redirect('/dashboard').with_errors('Form error')
-        self.assertEqual(request.session.get('error'), 'Form error')
+        self.assertEqual(request.session.get('errors'), 'Form error')
 
     def test_with_success(self):
         request = self.container.make('Request')

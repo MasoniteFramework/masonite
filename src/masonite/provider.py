@@ -47,6 +47,9 @@ class ServiceProvider:
         """
         web_routes = self.app.make("WebRoutes")
         web_routes += routes
+    
+    def views(self, views):
+        pass
 
     def http_middleware(self, middleware):
         """Add HTTP middleware to the container.
@@ -105,7 +108,7 @@ class ServiceProvider:
             publishing_items = self._publishes
 
         for from_location, to_location in publishing_items.items():
-            append_file(from_location, to_location)
+            append_or_create_file(from_location, to_location)
 
     def publish_migrations(self, tag=None):
         if tag is not None:

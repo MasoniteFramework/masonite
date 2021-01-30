@@ -48,6 +48,18 @@ def append_file(from_location, to_location):
     print("\033[92m {} has been appended! \033[0m".format(to_location))
 
 
+def append_or_create_file(from_location, to_location):
+    if not os.path.isfile(to_location):
+        shutil.copyfile(from_location, to_location)
+        print("\033[92m {} has been created! \033[0m".format(to_location))
+    else:
+        with open(from_location, "r") as from_file_pointer, open(
+            os.path.join(os.getcwd(), to_location), "a"
+        ) as to_file_pointer:
+            to_file_pointer.write(from_file_pointer.read())
+
+        print("\033[92m {} has been appended! \033[0m".format(to_location))
+
 def append_api_routes(location):
     # import it into the web.py file
     api_file = os.path.join(os.getcwd(), "routes/api.py")

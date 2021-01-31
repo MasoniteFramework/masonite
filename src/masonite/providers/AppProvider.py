@@ -35,6 +35,7 @@ from ..response import Response
 from routes.web import Route
 import pydoc
 
+
 class AppProvider(ServiceProvider):
 
     wsgi = True
@@ -42,7 +43,7 @@ class AppProvider(ServiceProvider):
     def register(self):
         self.app.bind("HookHandler", Hook(self.app))
         route = pydoc.locate("routes.web.Route")
-        print('rr', route.routes)
+        print("rr", route.routes)
         self.app.bind("WebRoutes", route.routes)
         self.app.bind("Route", route)
 

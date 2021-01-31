@@ -5,11 +5,13 @@ from ..exceptions import InvalidRouteCompileException, RouteMiddlewareNotFound
 
 
 class HTTPRoute:
-
-    def __init__(self, url, controller=None, request_method=["get"], name=None, compilers = None):
+    def __init__(
+        self, url, controller=None, request_method=["get"], name=None, compilers=None
+    ):
         self.url = url
         self.module_location = "app.http.controllers"
         self.controller = controller
+        self._domain = None
         self._name = name
         self.request_method = [x.lower() for x in request_method]
         self.list_middleware = []
@@ -18,17 +20,32 @@ class HTTPRoute:
         self._find_controller(controller)
         self.compile_route_to_regex()
 
-    def match(self, path, request_method):
-        return (re.match(self._compiled_regex, path) or re.match(self._compiled_regex_end, path) and request_method.lower() in self.request_method)
+    def match(self, path, request_method, subdomain=None):
+        route_math = (
+            re.match(self._compiled_regex, path)
+            or re.match(self._compiled_regex_end, path)
+            and request_method.lower() in self.request_method
+        )
+
+        print(subdomain, self._domain)
+        domain_match = subdomain == self._domain
+
+        return route_math and domain_match
 
     def matches(self, path):
-        return re.match(self._compiled_regex, path) or re.match(self._compiled_regex_end, path)
+        return re.match(self._compiled_regex, path) or re.match(
+            self._compiled_regex_end, path
+        )
 
     def match_name(self, name):
         return name == self._name
 
     def name(self, name):
         self._name = name
+        return self
+
+    def domain(self, subdomain):
+        self._domain = subdomain
         return self
 
     def _find_controller(self, controller):
@@ -92,7 +109,7 @@ class HTTPRoute:
             print("\033[93mTrouble importing controller!", str(e), "\033[0m")
         if not self.e:
             self.module_location = module_location
-    
+
     def get_response(self, app=None):
         # Resolve Controller Constructor
         if self.e:
@@ -103,17 +120,17 @@ class HTTPRoute:
                 "\033[0m",
             )
             raise SyntaxError(str(self.e))
-        
+
         if app:
             controller = app.resolve(self.controller_class)
-            print('cc', controller)
+            print("cc", controller)
             # Resolve Controller Method
             response = app.resolve(
                 getattr(controller, self.controller_method),
                 # *self.request.url_params.values() TODO
             )
 
-        if hasattr(response, 'rendered_template'):
+        if hasattr(response, "rendered_template"):
             response = response.rendered_template
 
         return response
@@ -242,7 +259,6 @@ class HTTPRoute:
 
         return regex
 
-
     def extract_parameters(self, path):
         if not path.endswith("/"):
             matching_regex = self._compiled_regex
@@ -261,5 +277,5 @@ class HTTPRoute:
         except AttributeError as e:
             # raise e
             pass
-            
+
         return {}

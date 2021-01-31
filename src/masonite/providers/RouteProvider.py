@@ -27,7 +27,7 @@ class RouteProvider(ServiceProvider):
 
             route.run_middleware("before")
 
-            if application.DEBUG: 
+            if application.DEBUG:
                 # TODO: Extract this out to logging method
                 print(request.get_request_method() + " Route: " + request.path)
 
@@ -37,7 +37,7 @@ class RouteProvider(ServiceProvider):
                 This data is typically the output of the controller method depending
                 on the type of route.
                 """
-                response.view(route.get_response(self.app), status=200)   
+                response.view(route.get_response(self.app), status=200)
 
             route.run_middleware("after")
 
@@ -47,8 +47,7 @@ class RouteProvider(ServiceProvider):
                 if hasattr(located_middleware, "after"):
                     located_middleware.after()
         else:
-            """No Response was found in the for loop so let's set an arbitrary response now.
-            """
+            """No Response was found in the for loop so let's set an arbitrary response now."""
             # If the route exists but not the method is incorrect
             if router.matches(request.path):
                 response.view("Method not allowed", status=405)

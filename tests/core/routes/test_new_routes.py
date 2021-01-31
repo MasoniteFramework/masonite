@@ -291,3 +291,12 @@ class TestRoutes(TestCase):
         route = Route().find_by_name("testparam")
         self.assertEquals(route.extract_parameters('/params/2')['id'], "2")
 
+    def test_domain(self):
+        Route.get('/domain/@id', 'TestController@show').domain("sub")
+
+        route = Route().find("/domain/2", 'get')
+        self.assertIsNone(route)
+
+        route = Route().find("/domain/2", 'get', "sub")
+        self.assertTrue(route)
+

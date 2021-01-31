@@ -3,6 +3,8 @@ import os
 import shutil
 import sys
 
+from src.masonite.helpers.filesystem import make_directory
+
 
 def create_or_append_config(location, name=False):
     if name:
@@ -59,6 +61,7 @@ def append_or_create_file(from_location, to_location):
             to_file_pointer.write(from_file_pointer.read())
 
         print("\033[92m {} has been appended! \033[0m".format(to_location))
+
 
 def append_api_routes(location):
     # import it into the web.py file

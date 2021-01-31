@@ -1,5 +1,7 @@
 import os
 import shutil
+from os.path import isdir
+from distutils.dir_util import copy_tree
 
 
 def make_directory(directory):
@@ -31,3 +33,16 @@ def copy_migration(directory_file, to="databases/migrations"):
     shutil.copyfile(file_path, to_location)
 
     print("\033[92m {} has been created \033[0m".format(to_location))
+
+
+def copy_assets(from_location, to="public", override=True):
+    """Copy asset file/directory to existing directory or new directory.
+    Files will be overriden."""
+    # if needed
+    make_directory(to)
+    if isdir(from_location):
+        copy_tree(from_location, to, update=1 if override else 0)
+    else:
+        shutil.copy2(from_location, to)
+
+    print("\033[92m {} has been created \033[0m".format(to))

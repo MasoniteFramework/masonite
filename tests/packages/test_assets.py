@@ -17,7 +17,7 @@ class TestAssets(PackageTestCase):
         from_location = list(self.test_provider.package.assets.keys())[0]
         to_location = list(self.test_provider.package.assets.values())[0]
         self.assertEqual(to_location, "public/vendor/test-package/package.js")
-        self.assertIn("testpackage/resources/package.js", from_location)
+        self.assertIn("resources/package.js", from_location)
 
     def test_assets_tags_is_created(self):
         self.assertIn("test-package-assets", self.test_provider._publish_assets_tags)
@@ -52,7 +52,7 @@ class TestAdvancedAssets(PackageTestCase):
         from_location = list(self.test_provider.package.assets.keys())[0]
         to_location = list(self.test_provider.package.assets.values())[0]
         self.assertEqual(to_location, "public/vendor/test-package/app.js")
-        self.assertIn("testpackage/resources/package.js", from_location)
+        self.assertIn("resources/package.js", from_location)
 
     def test_add_assets_and_name_override_and_nested_assets(self):
         def configure_override(self):
@@ -72,9 +72,9 @@ class TestAdvancedAssets(PackageTestCase):
         self.assertIn("public/vendor/test-package/app.js", to_locations)
         self.assertIn("public/vendor/test-package/package.css", to_locations)
         self.assertIn("public/vendor/test-package/admin.js", to_locations)
-        self.assertIn(join(package_root_path, "resources/package.js"), from_locations)
-        self.assertIn(join(package_root_path, "resources/package.css"), from_locations)
-        self.assertIn(join(package_root_path, "resources/sub/admin.js"), from_locations)
+        self.assertIn("resources/package.js", from_locations)
+        self.assertIn("resources/package.css", from_locations)
+        self.assertIn("resources/sub/admin.js", from_locations)
 
     def test_adding_assets_not_from_classic_dir(self):
         def configure_override(self):
@@ -92,10 +92,8 @@ class TestAdvancedAssets(PackageTestCase):
         from_locations = list(self.test_provider.package.assets.keys())
         self.assertIn("public/vendor/test-package/app.js", to_locations)
         self.assertIn("public/vendor/test-package/style.css", to_locations)
-        self.assertIn(join(package_root_path, "outside.js"), from_locations)
-        self.assertIn(
-            join(package_root_path, "resources_other/style.css"), from_locations
-        )
+        self.assertIn("outside.js", from_locations)
+        self.assertIn("resources_other/style.css", from_locations)
 
     def test_that_assets_tag_can_be_overriden(self):
         def configure_override(self):

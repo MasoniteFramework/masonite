@@ -9,7 +9,7 @@ class TestConfig(PackageTestCase):
     def configure(self):
         self.name("test-package")
         self.base_path(package_root_path)
-        self.add_config("config/test.py")
+        self.add_config("test")
 
     def test_name(self):
         self.assertEqual(self.test_provider.package.name, "test-package")
@@ -18,7 +18,7 @@ class TestConfig(PackageTestCase):
         self.assertEqual(self.test_provider.package.base_path, package_root_path)
 
     def test_config(self):
-        self.assertEqual(self.test_provider.package.config_name, "test")
+        self.assertEqual(self.test_provider.package.config_name, "test.py")
         self.assertEqual(self.test_provider.package.config_path, "config/test.py")
 
     def test_config_tag_and_publish_path(self):
@@ -54,11 +54,11 @@ class TestAdvancedConfig(PackageTestCase):
         def configure_override(self):
             self.name("test-package")
             self.base_path(package_root_path)
-            self.add_config("config/test.py", "package")
+            self.add_config("test", "package")
 
         self.register_test_provider(configure_override)
 
-        self.assertEqual(self.test_provider.package.config_name, "package")
+        self.assertEqual(self.test_provider.package.config_name, "package.py")
         publish = self.test_provider._publish_tags["test-package-config"]
         self.assertEqual(list(publish.values())[0], "config/package.py")
 
@@ -66,8 +66,29 @@ class TestAdvancedConfig(PackageTestCase):
         def configure_override(self):
             self.name("test-package")
             self.base_path(package_root_path)
-            self.add_config("config/test.py", tag="my-package-settings")
+            self.add_config("test", tag="my-package-settings")
 
         self.register_test_provider(configure_override)
 
         self.assertIn("my-package-settings", self.test_provider._publish_tags)
+
+    def test_that_config_file_can_be_nested(self):
+        def configure_override(self):
+            self.name("test-package")
+            self.base_path(package_root_path)
+            self.add_config("base.package")
+
+        self.register_test_provider(configure_override)
+
+        self.assertIn(self.test_provider.package.config_path, "config/base/package.py")
+        self.assertIn(self.test_provider.package.config_name, "package.py")
+
+    def test_that_config_file_can_be_outside_classic_location(self):
+        def configure_override(self):
+            self.name("test-package")
+            self.base_path(package_root_path)
+            self.add_config("test-config")
+
+        self.register_test_provider(configure_override)
+        self.assertIn(self.test_provider.package.config_path, "test-config.py")
+        self.assertIn(self.test_provider.package.config_name, "test-config.py")

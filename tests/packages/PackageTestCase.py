@@ -38,5 +38,6 @@ class PackageTestCase(TestCase):
 
     def tearDown(self):
         super().tearDown()
-        self.container.make("Providers").remove(self.test_provider)
-        self.test_provider = None
+        if not self.disable_registration:
+            self.container.make("Providers").remove(self.test_provider)
+            self.test_provider = None

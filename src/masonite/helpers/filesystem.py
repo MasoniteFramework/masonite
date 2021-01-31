@@ -41,6 +41,9 @@ def copy_assets(from_location, to="public", override=True):
     # if needed
     make_directory(to)
     if isdir(from_location):
+        import pdb
+
+        pdb.set_trace()
         copy_tree(from_location, to, update=1 if override else 0)
     else:
         shutil.copy2(from_location, to)

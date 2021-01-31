@@ -13,8 +13,9 @@ class TestMigrations(PackageTestCase):
         self.add_migration("2021_01_31_112458_TestPackageModel")
 
     def test_add_migration(self):
-        self.assertIn(
-            "2021_01_31_112458_TestPackageModel", self.test_provider.package.migrations
+        self.assertEqual(
+            self.test_provider.package.migrations[0],
+            "migrations/2021_01_31_112458_TestPackageModel.py",
         )
 
     def test_migrations_tags_is_created(self):
@@ -22,10 +23,10 @@ class TestMigrations(PackageTestCase):
             "test-package-migrations", self.test_provider._publish_migrations_tags
         )
 
-    # def test_publishing_all(self):
-    #     self.publish_command.execute("publish TestPackageProvider")
-    #     self.assertTrue(isdir("databases/migrations/vendor/test-package/"))
-    #     shutil.rmtree("databases/migrations/vendor/test-package/")
+    def test_publishing_all(self):
+        self.publish_command.execute("publish TestPackageProvider")
+        self.assertTrue(isdir("databases/migrations/vendor/test-package/"))
+        shutil.rmtree("databases/migrations/vendor/test-package/")
 
     # def test_publish_migrations_only(self):
     #     self.publish_command.execute(
@@ -55,11 +56,27 @@ class TestAdvancedMigrations(PackageTestCase):
             self.name("test-package")
             self.base_path(package_root_path)
             self.add_migrations(
-                [
-                    "2021_01_31_112458_TestPackageModel",
-                    "2021_01_31_123137_TestOtherModel",
-                ]
+                "2021_01_31_112458_TestPackageModel", "2021_01_31_123137_TestOtherModel"
             )
 
         self.register_test_provider(configure_override)
-        self.assertEqual(len(self.test_provider.package.migrations), 2)
+        self.assertIn(
+            "migrations/2021_01_31_112458_TestPackageModel.py",
+            self.test_provider.package.migrations,
+        )
+        self.assertIn(
+            "migrations/2021_01_31_123137_TestOtherModel.py",
+            self.test_provider.package.migrations,
+        )
+
+    def test_that_migration_file_can_be_outside_classic_location(self):
+        def configure_override(self):
+            self.name("test-package")
+            self.base_path(package_root_path)
+            self.add_migration("db.stable.2021_01_31_112458_TestPackageModel")
+
+        self.register_test_provider(configure_override)
+        self.assertIn(
+            "db/stable/2021_01_31_112458_TestPackageModel.py",
+            self.test_provider.package.migrations,
+        )

@@ -61,8 +61,25 @@ class PackageHelpCommand(Command):
         self.package = package
 
     def handle(self):
-        self.info(f"Help for : {self.package.name}")
-        # self.comment("Test comment")
+        self.comment(f"Package help for : {self.package.name}")
+        self.comment(f"The following modules are registered from {self.package.name}:")
+        self.info("")
+        for from_location, to in self.package.routes.items():
+            self.info(f"{from_location} => {to}")
+        for from_location, to in self.package.assets.items():
+            self.info(f"{from_location} => {to}")
+        for from_location, to in self.package.commands.items():
+            self.info(f"{from_location} => {to}")
+        for migration in self.package.migrations:
+            self.info(f"{migration} => {'TODO'}")
+
+        self.info("")
+        self.info("")
+
+        self.comment(f"The following files can be pusblished from {self.package.name}:")
+        self.info("")
+        for part, tag_name in self.package.tags.items():
+            self.info(f"{part}: 'publish XXX --tag {tag_name}'")
 
 
 class PackageProvider(ServiceProvider):

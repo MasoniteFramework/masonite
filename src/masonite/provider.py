@@ -1,7 +1,7 @@
 """Module for the Service Provider."""
 
 from .helpers import random_string
-from .helpers.filesystem import copy_migration
+from .helpers.filesystem import copy_migration, copy_assets
 from .packages import append_or_create_file
 
 
@@ -18,6 +18,9 @@ class ServiceProvider:
 
         self._publish_migrations = {}
         self._publish_migrations_tags = {}
+
+        self._publish_assets = {}
+        self._publish_assets_tags = {}
 
     def boot(self):
         """Use to boot things into the container. Typically ran after the register method has been ran."""
@@ -96,15 +99,23 @@ class ServiceProvider:
         if tag is not None:
             self._publish_tags.update({tag: dictionary})
 
-    def publishes_migrations(self, migrations, tag=None, to="databases/migrations"):
-        for migration in migrations:
-            self._publish_migrations.update({migration: to})
+    def publishes_assets(self, dictionary, tag=None):
+        self._publish_assets.update(dictionary)
         if tag is not None:
-            self._publish_migrations_tags.update({tag: migrations})
+            self._publish_assets_tags.update({tag: dictionary})
+
+    def publishes_migrations(self, migrations, tag=None, to="databases/migrations"):
+        if tag is not None:
+            self._publish_migrations_tags.update({tag: {}})
+            for migration in migrations:
+                self._publish_migrations_tags[tag].update({migration: to})
+        else:
+            for migration in migrations:
+                self._publish_migrations.update({migration: to})
 
     def publish(self, tag=None):
         if tag is not None:
-            publishing_items = self._publish_tags.get(tag)
+            publishing_items = self._publish_tags.get(tag, {})
         else:
             publishing_items = self._publishes
 
@@ -119,3 +130,12 @@ class ServiceProvider:
 
         for from_location, to_location in publishing_items.items():
             copy_migration(from_location, to=to_location)
+
+    def publish_assets(self, tag=None):
+        if tag is not None:
+            publishing_items = self._publish_assets_tags.get(tag, {})
+        else:
+            publishing_items = self._publish_assets
+
+        for from_location, to_location in publishing_items.items():
+            copy_assets(from_location, to=to_location)

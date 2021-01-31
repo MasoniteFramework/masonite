@@ -35,3 +35,8 @@ class PackageTestCase(TestCase):
         self.test_provider.load_app(self.container).register()
         self.container.make("Providers").append(self.test_provider)
         self.container.resolve(self.test_provider.boot)
+
+    def tearDown(self):
+        super().tearDown()
+        self.container.make("Providers").remove(self.test_provider)
+        self.test_provider = None

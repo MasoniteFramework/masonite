@@ -1,6 +1,6 @@
 """PackageProvider to ease package creations."""
 import warnings
-from os.path import join, basename
+from os.path import isdir, isfile, join, basename
 from ..helpers.routes import flatten_routes
 from ..helpers import load
 from ..provider import ServiceProvider
@@ -50,6 +50,15 @@ class PackageProvider(ServiceProvider):
 
     wsgi = False
     vendor_prefix = "vendor"
+    assets_to = "public"
+    part_prefixes = {
+        "config": "config",
+        "migrations": "migrations",
+        "assets": "resources",
+        "routes": "routes",
+        "views": "templates",
+        "commands": "commands",
+    }
     package = None
 
     def configure(self):
@@ -68,8 +77,8 @@ class PackageProvider(ServiceProvider):
         if self.package.has_config():
             self.publishes(
                 {
-                    self._get_abs_path(
-                        self.package.config_path
+                    self._get_abs_path_dot(
+                        self.package.config_path, "config"
                     ): f"config/{self.package.config_name}.py"
                 },
                 tag=self.package.tag("config"),
@@ -83,17 +92,21 @@ class PackageProvider(ServiceProvider):
                 )
 
         if self.package.has_migrations() and not self._check_migrations_exists():
-            migrations = [self._get_abs_path(m) for m in self.package.migrations]
-            # TODO: register
-            # publish (TODO: check if can pe published with vendor/package prefix)
-            self.publishes_migrations(migrations, tag=self.package.tag("migrations"))
+            migrations = [
+                self._get_abs_path_dot(m, "migrations") for m in self.package.migrations
+            ]
+            self.publishes_migrations(
+                migrations,
+                to=f"databases/migrations/{self._get_package_namespace()}/",
+                tag=self.package.tag("migrations"),
+            )
 
         if self.package.has_assets():
-            assets = {
-                self._get_abs_path(rel_path): to_path
-                for rel_path, to_path in self.package.assets
-            }
-            self.assets(assets)
+            self.assets(self.package.assets)
+            self.publishes_assets(
+                self.package.assets,
+                tag=self.package.tag("assets"),
+            )
 
         if self.package.has_routes():
             # register different files containing routes
@@ -131,18 +144,24 @@ class PackageProvider(ServiceProvider):
         self.package.commands.append({command_name: command})
 
     def add_migration(self, migration, tag=None):
-        self.migrations.append(migration)
+        self.package.migrations.append(migration)
+        self.package.set_tag("migrations", tag)
 
     def add_migrations(self, migrations, tag=None):
-        self.migrations += migrations
+        self.package.migrations += migrations
+        self.package.set_tag("migrations", tag)
 
-    def add_asset(self, relative_path, publish_name):
-        publish_path = join("storage", self.vendor_prefix, self.name, publish_name)
-        self.assets.update({relative_path: publish_path})
+    def add_asset(self, relative_path, publish_name=None, tag=None):
+        from_location = self._get_abs_path(relative_path, "assets")
+        name = publish_name if publish_name else basename(relative_path)
+        to_location = join(self.assets_to, self._get_package_namespace(), name)
+        self.package.assets.update({from_location: to_location})
+        self.package.set_tag("assets", tag)
 
-    def add_assets(self, paths):
+    def add_assets(self, paths={".": None}, tag=None):
         for relative_path, publish_name in paths.items():
             self.add_asset(relative_path, publish_name)
+        self.package.set_tag("assets", tag)
 
     def add_routes(self, routes):
         if not isinstance(routes, list):
@@ -151,6 +170,10 @@ class PackageProvider(ServiceProvider):
 
     def add_views(self, views, tag=None):
         pass
+
+    def _get_package_namespace(self):
+        # TODO: use short name here
+        return join(self.vendor_prefix, self.package.name)
 
     def _check_name(self):
         if not self.package.name:
@@ -165,5 +188,26 @@ class PackageProvider(ServiceProvider):
     def _check_migrations_exists(self):
         pass
 
-    def _get_abs_path(self, relative_path):
-        return join(self.package.base_path, relative_path)
+    def _get_abs_path(self, relative_path, part):
+        # look first in "package" convention location
+        path = join(self.package.base_path, self.part_prefixes[part], relative_path)
+        if not isfile(path) and not isdir(path):
+            # else look at root
+            path = join(self.package.base_path, relative_path)
+
+        return path
+
+    def _get_abs_path_dot(self, relative_path, part, ext="py"):
+        # add extensions
+        if "." in relative_path:
+            # resolve given path
+            path = load(relative_path)
+        else:
+            # look first in "package" convention location
+            basename = (f"{relative_path}.{ext}",)
+            path = join(self.package.base_path, self.part_prefixes[part], basename)
+            if not isfile(path) and not isdir(path):
+                # else look at root
+                path = join(self.package.base_path, basename)
+        # TODO: should we check here to returns human exception ?
+        return path

@@ -130,6 +130,7 @@ class PackageProvider(ServiceProvider):
                     "{}Command".format(cmd_name.replace("Command", "")),
                     cmd_class,
                 )
+
         if self.enable_help:
             self.commands(PackageHelpCommand(self.package))
 
@@ -177,7 +178,17 @@ class PackageProvider(ServiceProvider):
             )
 
         if self.package.has_views():
-            pass
+            abs_views = {
+                self._abs_path(from_location): to
+                for (from_location, to) in self.package.views.items()
+            }
+            # register views
+            self.views(abs_views)
+            # define views as publishable
+            self.publishes(
+                abs_views,
+                tag=self.package.tag("views"),
+            )
 
     def inspect(self):
         """Show what is going to be published by this package."""
@@ -243,11 +254,23 @@ class PackageProvider(ServiceProvider):
             )
         self.package.set_tag("routes", tag)
 
-    def add_views(self, views, tag=None):
-        pass
+    def add_view(self, view_path, publish_name="", tag=None):
+        path, name = self._parse_dotted_path(view_path, publish_name, ext=".html")
+        self.package.views.update(
+            {
+                self._select_path(path, "views"): join(
+                    "templates", self._get_package_namespace(), name
+                )
+            }
+        )
+        self.package.set_tag("views", tag)
+
+    def add_views(self, *views, tag=None):
+        for view in views:
+            self.add_view(view)
+        self.package.set_tag("views", tag)
 
     def _get_package_namespace(self):
-        # TODO: use short name here
         return join(self.vendor_prefix, self.package.name)
 
     def _check_name(self):
@@ -261,27 +284,19 @@ class PackageProvider(ServiceProvider):
             raise NotImplementedError("package root 'path' should be defined !")
 
     def _check_migrations_exists(self):
+        # TODO: should we really check this ?
         pass
-
-    # def _get_abs_path(self, relative_path, part):
-    #     # look first in "package" convention location
-    #     path = join(self.package.base_path, self.part_prefixes[part], relative_path)
-    #     if not isfile(path) and not isdir(path):
-    #         # else look at root
-    #         path = join(self.package.base_path, relative_path)
-
-    #     return path
 
     def _abs_path(self, relative_path):
         return join(self.package.base_path, relative_path)
 
-    def _parse_dotted_path(self, dotted_path, override_name=""):
+    def _parse_dotted_path(self, dotted_path, override_name="", ext=".py"):
         # TODO: make some validations (no / and no py)
-        if dotted_path.endswith(".py") or "/" in dotted_path:
+        if dotted_path.endswith(ext) or "/" in dotted_path:
             raise ValueError(
                 "The input path must be a dotted path without .py extension"
             )
-        if override_name.endswith(".py") or "." in override_name:
+        if override_name.endswith(ext) or "." in override_name:
             raise ValueError(
                 "The name override must be a simple name without .py extension"
             )
@@ -289,8 +304,8 @@ class PackageProvider(ServiceProvider):
             name = override_name
         else:
             name = basename(dotted_path).split(".")[-1]
-        filename = f"{name}.py"
-        relative_path = dotted_path.replace(".", "/") + ".py"
+        filename = f"{name}{ext}"
+        relative_path = dotted_path.replace(".", "/") + ext
         return relative_path, filename
 
     def _select_path(self, path, part):

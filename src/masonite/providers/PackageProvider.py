@@ -1,6 +1,8 @@
 """PackageProvider to ease package creations."""
 import warnings
 from os.path import isdir, isfile, join, basename
+from cleo import Command
+
 import importlib
 from ..helpers.routes import flatten_routes
 from ..helpers import load
@@ -47,9 +49,24 @@ class Package:
         self.tags.update({part: tag})
 
 
+class PackageHelpCommand(Command):
+    """
+    This commands display info/help on your package.
+
+    packagehelp
+    """
+
+    def __init__(self, package):
+        super().__init__()
+        self.package = package
+
+    def handle(self):
+        self.info(f"Help for : {self.package.name}")
+        # self.comment("Test comment")
+
+
 class PackageProvider(ServiceProvider):
 
-    wsgi = False
     vendor_prefix = "vendor"
     assets_to = "public"
     part_prefixes = {
@@ -61,6 +78,10 @@ class PackageProvider(ServiceProvider):
         "commands": "commands",
     }
     routes_variable = "ROUTES"
+    enable_help = False
+
+    # internals
+    wsgi = False
     package = None
 
     def configure(self):
@@ -92,6 +113,8 @@ class PackageProvider(ServiceProvider):
                     "{}Command".format(cmd_name.replace("Command", "")),
                     cmd_class,
                 )
+        if self.enable_help:
+            self.commands(PackageHelpCommand(self.package))
 
         if self.package.has_migrations() and not self._check_migrations_exists():
             migrations = [self._abs_path(m) for m in self.package.migrations]
@@ -148,6 +171,9 @@ class PackageProvider(ServiceProvider):
 
     def base_path(self, base_path):
         self.package.base_path = base_path
+
+    def add_help(self):
+        self.enable_help = True
 
     def add_config(self, config_path, publish_name="", tag=None):
         """Define if package have a config file."""

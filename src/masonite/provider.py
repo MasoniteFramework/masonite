@@ -16,7 +16,7 @@ class ServiceProvider:
         self._publishes = {}
         self._publish_tags = {}
 
-        self._publish_migrations = []
+        self._publish_migrations = {}
         self._publish_migrations_tags = {}
 
     def boot(self):
@@ -96,8 +96,9 @@ class ServiceProvider:
         if tag is not None:
             self._publish_tags.update({tag: dictionary})
 
-    def publishes_migrations(self, migrations, tag=None):
-        self._publish_migrations += migrations
+    def publishes_migrations(self, migrations, tag=None, to="databases/migrations"):
+        for migration in migrations:
+            self._publish_migrations.update({migration: to})
         if tag is not None:
             self._publish_migrations_tags.update({tag: migrations})
 
@@ -116,5 +117,5 @@ class ServiceProvider:
         else:
             publishing_items = self._publish_migrations
 
-        for from_location in publishing_items:
-            copy_migration(from_location)
+        for from_location, to_location in publishing_items.items():
+            copy_migration(from_location, to=to_location)

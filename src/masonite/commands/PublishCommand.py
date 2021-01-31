@@ -19,9 +19,9 @@ class PublishCommand(Command):
                 if self.option("tag") != "None":
                     provider.publish(tag=self.option("tag"))
                     provider.publish_migrations(tag=self.option("tag"))
-
-                provider.publish()
-                provider.publish_migrations()
+                else:
+                    provider.publish()
+                    provider.publish_migrations()
 
                 return
 

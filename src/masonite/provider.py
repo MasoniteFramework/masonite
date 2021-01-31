@@ -112,7 +112,7 @@ class ServiceProvider:
 
     def publish_migrations(self, tag=None):
         if tag is not None:
-            publishing_items = self._publish_migrations_tags.get(tag)
+            publishing_items = self._publish_migrations_tags.get(tag, {})
         else:
             publishing_items = self._publish_migrations
 

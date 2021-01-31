@@ -2,7 +2,7 @@
 
 from .helpers import random_string
 from .helpers.filesystem import copy_migration
-from .packages import append_file
+from .packages import append_or_create_file
 
 
 class ServiceProvider:
@@ -47,7 +47,7 @@ class ServiceProvider:
         """
         web_routes = self.app.make("WebRoutes")
         web_routes += routes
-    
+
     def views(self, views):
         pass
 

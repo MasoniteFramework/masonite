@@ -14,3 +14,4 @@ from .ViewProvider import ViewProvider
 from .RequestHelpersProviders import RequestHelpersProvider
 from .WhitenoiseProvider import WhitenoiseProvider
 from .StatusCodeProvider import StatusCodeProvider
+from .PackageProvider import PackageProvider

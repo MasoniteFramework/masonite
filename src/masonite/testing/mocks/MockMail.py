@@ -1,8 +1,7 @@
 from ...drivers.mail.BaseMailDriver import BaseMailDriver
 
 
-class MailableWithAsserts():
-
+class MailableWithAsserts:
     def hasTo(self, to):
         assert to in self._to
         return self
@@ -37,15 +36,14 @@ class MailableWithAsserts():
     def patch(cls, target):
         for k in cls.__dict__:
             obj = getattr(cls, k)
-            if not k.startswith('_') and callable(obj):
+            if not k.startswith("_") and callable(obj):
                 setattr(target, k, obj)
 
-class MailWithAsserts():
 
+class MailWithAsserts:
     def __init__(self, obj, mailable=None):
         self.mailable = obj._mailable
         if self.mailable:
-            # TODO: do this ?
             MailableWithAsserts.patch(self.mailable.__class__)
             self.context = self.mailable.variables
             self.view = self.mailable.template
@@ -60,7 +58,6 @@ class MailWithAsserts():
             self.context = obj._template_context
             self.view = obj._template_name
             self.to = obj.to_addresses
-            # TODO: check from name and address ? for mailable ?
             self.sent_from = obj.from_name
             self.reply_to = obj.message_reply_to
             self.subject = obj.message_subject
@@ -114,7 +111,6 @@ class MailWithAsserts():
 
 
 class MockMail(BaseMailDriver):
-
     def __init__(self, container):
         super().__init__(container)
         self.mails = []
@@ -149,12 +145,16 @@ class MockMail(BaseMailDriver):
             recipients = [recipients]
         sent_mails = []
         for recipient in recipients:
-            sent_mails += [mail for mail in self.mails if mail._isMailable(mailable_class) and mail.hasTo(recipient)]
+            sent_mails += [
+                mail
+                for mail in self.mails
+                if mail._isMailable(mailable_class) and mail.hasTo(recipient)
+            ]
         assert len(sent_mails) == len(recipients)
         return sent_mails
 
     def assertNotSentTo(self, recipients, mailable_class):
-        # TODO: should this fail for every of the recipient ?
+        # @all: should this fail for every of the recipient ?
         sent_mails = self.assertSentTo(recipients, mailable_class)
         assert len(sent_mails) != len(recipients)
 

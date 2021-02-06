@@ -4,15 +4,20 @@ import inspect
 
 from ...drivers.queue.BaseQueueDriver import BaseQueueDriver
 
+
 def makehash():
     return collections.defaultdict(makehash)
 
+
 def deep_get(dictionary, keys, default=None):
-    return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
+    return reduce(
+        lambda d, key: d.get(key, default) if isinstance(d, dict) else default,
+        keys.split("."),
+        dictionary,
+    )
 
 
 class MockQueue(BaseQueueDriver):
-
     def __init__(self, container=None, immediate=False):
         self.container = container
         self._run = immediate
@@ -32,19 +37,13 @@ class MockQueue(BaseQueueDriver):
                 job_name = job.__class__.__name__
 
             queue = options.get("channel", None) or options.get("queue", None) or "all"
-            data = {
-                "job": job,
-                "queue": queue,
-                "args": args,
-                "options": options
-            }
+            data = {"job": job, "queue": queue, "args": args, "options": options}
             path = f"{queue}.{str(job_name)}"
             try:
                 # run task immediately if required
                 if self._run:
                     getattr(job, callback)(*args, **kwargs)
-            except:
-                print("Job failed !")
+            except:  # noqa: E722
                 self._store_fail(data, path)
             else:
                 self._store_success(data, path)

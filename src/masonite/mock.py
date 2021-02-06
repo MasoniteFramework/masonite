@@ -21,13 +21,6 @@ class Mockable:
 
     __service__ = ""
 
-    @classmethod
-    def __getattr__(cls, attribute, *args, **kwargs):
-        from wsgi import container
-
-        instance = container.make(cls.__service__)
-        return getattr(instance, attribute)
-
     @abstractmethod
     def get_mock_class():
         raise NotImplementedError(

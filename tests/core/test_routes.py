@@ -333,6 +333,15 @@ class TestRouteResources(TestCase):
         self.put('/user/1').assertHasController('UserResourceController@update').assertIsNotNamed()
         self.delete('/user/1').assertHasController('UserResourceController@destroy').assertIsNotNamed()
 
+    def test_has_correct_routes_names(self):
+        self.routes(only=[Resource('/user', 'UserResourceController', names={})])
+        self.get('/user').assertHasController('UserResourceController@index').assertIsNamed('user.index')
+        self.get('/user/create').assertHasController('UserResourceController@create').assertIsNamed('user.create')
+        self.post('/user').assertHasController('UserResourceController@store').assertIsNamed('user.store')
+        self.get('/user/1').assertHasController('UserResourceController@show').assertIsNamed('user.show')
+        self.get('/user/1/edit').assertHasController('UserResourceController@edit').assertIsNamed('user.edit')
+        self.put('/user/1').assertHasController('UserResourceController@update').assertIsNamed('user.update')
+        self.delete('/user/1').assertHasController('UserResourceController@destroy').assertIsNamed('user.destroy')
 
 class WsgiInputTestClass:
 

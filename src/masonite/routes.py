@@ -716,7 +716,7 @@ class Resource:
             base_name = base.replace("/", ".")
             if base_name[0] == ".":
                 base_name = base_name[1:]
-                
+
             names = {
                 "index": "{}.index".format(base_name),
                 "create": "{}.create".format(base_name),
@@ -726,7 +726,7 @@ class Resource:
                 "update": "{}.update".format(base_name),
                 "destroy": "{}.destroy".format(base_name),
             }
-        
+
         routes = []
 
         if "index" in only:

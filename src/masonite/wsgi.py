@@ -47,6 +47,7 @@ def response_handler(environ, start_response):
     """
     return iter([response.get_response_content()])
 
+
 def package_response_handler(environ, start_response):
     """The WSGI Application Server.
 

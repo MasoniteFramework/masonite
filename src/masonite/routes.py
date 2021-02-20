@@ -712,6 +712,21 @@ class Resource:
         only=["index", "create", "store", "show", "edit", "update", "destroy"],
         names={},
     ):
+        if not names:
+            base_name = base.replace("/", ".")
+            if base_name[0] == ".":
+                base_name = base_name[1:]
+
+            names = {
+                "index": "{}.index".format(base_name),
+                "create": "{}.create".format(base_name),
+                "store": "{}.store".format(base_name),
+                "show": "{}.show".format(base_name),
+                "edit": "{}.edit".format(base_name),
+                "update": "{}.update".format(base_name),
+                "destroy": "{}.destroy".format(base_name),
+            }
+
         routes = []
 
         if "index" in only:

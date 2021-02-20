@@ -31,5 +31,8 @@ class QueueWorkCommand(Command):
             return
 
         queue.connect().consume(
-            self.option("channel"), fair=self.option("fair"), poll=self.option("poll"), queue=self.option('queue')
+            self.option("channel"),
+            fair=self.option("fair"),
+            poll=self.option("poll"),
+            queue=self.option("queue"),
         )

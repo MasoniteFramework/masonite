@@ -159,7 +159,11 @@ class Request(Extendable):
         Returns:
             bool
         """
-        if not self.environ["REQUEST_METHOD"] == "GET" and not self.environ["REQUEST_METHOD"] == "OPTIONS" and not self.environ["REQUEST_METHOD"] == "HEAD":
+        if (
+            not self.environ["REQUEST_METHOD"] == "GET"
+            and not self.environ["REQUEST_METHOD"] == "OPTIONS"
+            and not self.environ["REQUEST_METHOD"] == "HEAD"
+        ):
             return True
 
         return False

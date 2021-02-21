@@ -59,7 +59,7 @@ class TestUnitTest(TestCase):
 
     def test_json(self):
         self.assertTrue(self.json('POST', '/unit/test/json', {'test': 'testing'}).contains('testing'))
-    
+
     def test_json_response(self):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson('count', 5))
 
@@ -67,7 +67,7 @@ class TestUnitTest(TestCase):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasJson({
             'count': 5
         }))
-        
+
         self.assertFalse(self.json('GET', '/unit/test/json/response').hasJson({
             'count': 10
         }))
@@ -98,7 +98,7 @@ class TestUnitTest(TestCase):
         self.assertTrue(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 3))
         self.assertFalse(self.json('GET', '/unit/test/json/response').hasAmount('iterable', 2))
 
-        self.json('GET', '/unit/test/json/response').assertHasAmount('iterable', 3) 
+        self.json('GET', '/unit/test/json/response').assertHasAmount('iterable', 3)
         self.json('GET', '/unit/test/json/response').assertNotHasAmount('iterable', 2)
 
     def test_patch(self):
@@ -122,3 +122,54 @@ class TestUnitTest(TestCase):
             print('hello', end='')
 
         self.assertEqual(output.getvalue(), 'hello')
+
+    def test_assert_view_is(self):
+        self.get("/v").assertViewIs("test")
+
+    def test_assert_view_has(self):
+        self.get("/test/view").assertViewHas("count")
+        self.get("/test/view").assertViewHas("count", 1)
+        self.get("/test/view").assertViewHas("users", ["John", "Joe"])
+
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewHas("not_in_view")
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewHas("not_in_view", 3)
+
+    def test_assert_view_helpers_raise_error_if_not_rendering_a_view(self):
+        # json response
+        with self.assertRaises(ValueError):
+            self.get("/json_response").assertViewIs("test")
+        # string response
+        with self.assertRaises(ValueError):
+            self.get("/example/test/1").assertViewIs("test")
+        #
+        with self.assertRaises(ValueError):
+            self.get("/json_response").assertViewHas("not_in_view")
+
+        with self.assertRaises(ValueError):
+            self.get("/json_response").assertViewHasAll(["test"])
+
+        with self.assertRaises(ValueError):
+            self.get("/example/test/1").assertViewMissing(["not in data"])
+
+    def test_assert_view_has_all(self):
+        self.get("/test/view").assertViewHasAll(["users", "count"])
+        self.get("/test/view").assertViewHasAll({"count": 1, "users": ["John", "Joe"]})
+
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewHasAll(["users", "count", "not in data"])
+
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewHasAll({"count": 1})
+
+    def test_assert_view_missing(self):
+        self.get("/test/view").assertViewMissing("not in data")
+
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertViewMissing("users")
+
+    def test_assert_redirect(self):
+        self.get("/test/redirect").assertRedirect("/v")
+        with self.assertRaises(AssertionError):
+            self.get("/test/view").assertRedirect("v")

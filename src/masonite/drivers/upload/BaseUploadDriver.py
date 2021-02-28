@@ -41,7 +41,7 @@ class BaseUploadDriver(BaseDriver):
             FileTypeException -- Thrown if the specified file extension is incorrect.
         """
         if self.accept_file_types is not None:
-            if not filename.endswith(self.accept_file_types):
+            if not filename.lower().endswith(self.accept_file_types):
                 raise FileTypeException("The file extension is not supported.")
 
         return True

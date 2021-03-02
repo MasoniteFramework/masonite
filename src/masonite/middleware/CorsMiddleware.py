@@ -1,7 +1,7 @@
 """CORS Middleware."""
 
 from ..helpers import config
-from ..request import Request
+from ..response import Response
 
 
 class CorsMiddleware:
@@ -11,15 +11,15 @@ class CorsMiddleware:
     middleware config file.
     """
 
-    def __init__(self, request: Request):
+    def __init__(self, response: Response):
         """Inject Any Dependencies From The Service Container.
 
         Arguments:
             Request {masonite.request.Request} -- The Masonite request object
         """
-        self.request = request
+        self.response = response
 
     def before(self):
         """Run This Middleware After The Route Executes."""
         headers = config("middleware.cors") or {}
-        self.request.header(headers)
+        self.response.header(headers)

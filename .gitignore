@@ -27,4 +27,4 @@ tests/uploads
 build
 noorator
 venv3
-
+node_modules

@@ -16,7 +16,7 @@ class CorsProvider(ServiceProvider):
     def boot(self, request: Request, response: Response):
         """Boots services required by the container."""
         headers = config("middleware.cors") or {}
-        request.header(headers)
+        response.header(headers)
 
         if request.get_request_method().lower() == "options":
             response.view("preflight")

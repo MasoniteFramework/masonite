@@ -1,6 +1,6 @@
 import json
 
-from src.masonite.view import View
+from ..view import View
 from ..helpers import Dot
 from ..request import Request
 from ..response import Response
@@ -358,7 +358,9 @@ class MockRoute:
         """Assert that view context contains exactly the data keys (or the complete data dict)."""
         self.ensure_response_has_view()
         if isinstance(keys, list):
-            assert set(keys) == set(self.route.original.dictionary.keys()) - set(self.route.original._shared.keys())
+            assert set(keys) == set(self.route.original.dictionary.keys()) - set(
+                self.route.original._shared.keys()
+            )
         else:
             view_data = self.route.original.dictionary
             for key in self.route.original._shared:
@@ -372,7 +374,7 @@ class MockRoute:
 
     def assertRedirect(self, redirect_uri):
         """Assert that response is redirection to the given view name or URI or Controller@method."""
-        request = self.container.make('Request')
+        request = self.container.make("Request")
         response = self.container.make(Response)
         self.route.get_response()
         assert response.is_status(302) or response.is_status(301)

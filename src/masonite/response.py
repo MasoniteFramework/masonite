@@ -158,7 +158,7 @@ class Response(Extendable):
             return self.json(view.serialize(), status=self.get_status_code())
         elif isinstance(view, int):
             view = str(view)
-        elif isinstance(view, Responsable):
+        elif isinstance(view, Responsable) or hasattr(view, "get_response"):
             view = view.get_response()
         elif isinstance(view, self.request.__class__):
             view = self.data()

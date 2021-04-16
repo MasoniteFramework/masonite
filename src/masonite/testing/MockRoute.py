@@ -1,5 +1,6 @@
 import json
 
+from ..view import View
 from ..helpers import Dot
 from ..request import Request
 from ..response import Response
@@ -32,8 +33,11 @@ class MockRoute:
     def hasController(self, controller):
         return self.route.controller == controller
 
+    def ensure_argument_is_controller_name(self, controller_name):
+        return isinstance(controller_name, str) and "@" in controller_name
+
     def assertHasController(self, controller):
-        if isinstance(controller, str) and "@" in controller:
+        if self.ensure_argument_is_controller_name(controller):
             controller, method = controller.split("@")
             assert (
                 self.route.controller.__name__ == controller
@@ -328,3 +332,50 @@ class MockRoute:
             return json.loads(self.response)
         except ValueError:
             raise ValueError("The response was not json serializable")
+
+    def ensure_response_has_view(self):
+        """Ensure that the response has a view as its original content."""
+        if not self.response_has_view():
+            raise ValueError("The response is not a view")
+
+    def response_has_view(self):
+        return self.route.original and isinstance(self.route.original, View)
+
+    def assertViewIs(self, name):
+        """Assert that request renders the given view name."""
+        self.ensure_response_has_view()
+        assert self.route.original.template == name
+        return self
+
+    def assertViewHas(self, key, value=None):
+        """Assert that view context contains a given data key (and eventually associated value)."""
+        self.ensure_response_has_view()
+        assert key in self.route.original.dictionary
+        if value:
+            assert self.route.original.dictionary[key] == value
+
+    def assertViewHasAll(self, keys):
+        """Assert that view context contains exactly the data keys (or the complete data dict)."""
+        self.ensure_response_has_view()
+        if isinstance(keys, list):
+            assert set(keys) == set(self.route.original.dictionary.keys()) - set(
+                self.route.original._shared.keys()
+            )
+        else:
+            view_data = self.route.original.dictionary
+            for key in self.route.original._shared:
+                del view_data[key]
+            assert keys == view_data
+
+    def assertViewMissing(self, key):
+        """Assert that given data key is not in the view context."""
+        self.ensure_response_has_view()
+        assert key not in self.route.original.dictionary
+
+    def assertRedirect(self, redirect_uri):
+        """Assert that response is redirection to the given view name or URI or Controller@method."""
+        request = self.container.make("Request")
+        response = self.container.make(Response)
+        self.route.get_response()
+        assert response.is_status(302) or response.is_status(301)
+        assert request.redirect_url == redirect_uri

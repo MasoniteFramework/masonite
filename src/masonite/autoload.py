@@ -5,6 +5,7 @@ This class is simply used to point at a directory and retrieve all classes in th
 """
 
 import inspect
+import os
 import pkgutil
 from pydoc import importlib
 
@@ -44,7 +45,8 @@ class Autoload:
             )
 
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
-            search_path = module_loader.path
+            # search_path = module_loader.path
+            search_path = os.path.relpath(module_loader.path)
             for obj in inspect.getmembers(
                 self._get_module_members(module_loader, name)
             ):
@@ -85,7 +87,8 @@ class Autoload:
         self.instantiate = instantiate
 
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
-            search_path = module_loader.path
+            # search_path = module_loader.path
+            search_path = os.path.relpath(module_loader.path)
             for obj in inspect.getmembers(
                 self._get_module_members(module_loader, name)
             ):
@@ -120,7 +123,8 @@ class Autoload:
         self.instantiate = instantiate
 
         for (module_loader, name, _) in pkgutil.iter_modules(directories):
-            search_path = module_loader.path
+            # search_path = module_loader.path
+            search_path = os.path.relpath(module_loader.path)
 
             for obj in inspect.getmembers(
                 self._get_module_members(module_loader, name)
@@ -166,10 +170,8 @@ class Autoload:
         Returns:
             module -- returns the imported module.
         """
-        search_path = module_loader.path
+        # search_path = module_loader.path
+        search_path = os.path.relpath(module_loader.path)
         if search_path.endswith("/"):
             raise InvalidAutoloadPath("Autoload path cannot have a trailing slash")
-
-        return importlib.import_module(
-            module_loader.path.replace("/", ".") + "." + name
-        )
+        return importlib.import_module(search_path.replace("/", ".") + "." + name)

@@ -172,6 +172,6 @@ class Autoload:
         """
         # search_path = module_loader.path
         search_path = os.path.relpath(module_loader.path)
-        if search_path.endswith("/"):
+        if module_loader.path.endswith("/"):
             raise InvalidAutoloadPath("Autoload path cannot have a trailing slash")
         return importlib.import_module(search_path.replace("/", ".") + "." + name)

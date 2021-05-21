@@ -149,6 +149,11 @@ class TestRequest(unittest.TestCase):
         self.request._set_standardized_request_variables(storages)
         self.assertEqual(self.request.input('test'), 'value')
 
+    def test_request_can_get_float_value(self):
+        storages = {'test': 3.1415926}
+        self.request._set_standardized_request_variables(storages)
+        self.assertEqual(self.request.input('test'), 3.1415926)
+
     def test_request_can_get_list_value(self):
         storages = {'test': ['foo', 'bar']}
         self.request._set_standardized_request_variables(storages)

@@ -373,7 +373,7 @@ class Request(Extendable):
 
             return value
 
-        if isinstance(value, (str, int, dict)):
+        if isinstance(value, (str, int, float, dict)):
             return value
 
         if not value.filename:

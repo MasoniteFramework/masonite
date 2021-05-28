@@ -3,7 +3,7 @@
 This contains the class for autoloading classes from directories.
 This class is simply used to point at a directory and retrieve all classes in that directory.
 """
-import os
+
 import inspect
 import pkgutil
 from pydoc import importlib
@@ -170,20 +170,6 @@ class Autoload:
         if search_path.endswith("/"):
             raise InvalidAutoloadPath("Autoload path cannot have a trailing slash")
 
-        '''
-            Get the project root path and then handle import from that specific location.
-        '''
-        project_path = os.path.abspath(os.curdir).split('/')[-1]
-        module_path = module_loader.path.replace("/", ".") + "." + name
-        module_name = (module_path.split(project_path)[-1]).lstrip('.')
-        try:
-            return importlib.import_module(
-                module_name,
-                "app"
-            )
-        except Exception as e:
-            pass
-
         return importlib.import_module(
-            module_path
+            module_loader.path.replace("/", ".") + "." + name
         )

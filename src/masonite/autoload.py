@@ -6,6 +6,7 @@ This class is simply used to point at a directory and retrieve all classes in th
 
 import inspect
 import pkgutil
+import os
 from pydoc import importlib
 
 from .exceptions import AutoloadContainerOverwrite, ContainerError, InvalidAutoloadPath
@@ -170,9 +171,6 @@ class Autoload:
         if search_path.endswith("/"):
             raise InvalidAutoloadPath("Autoload path cannot have a trailing slash")
 
-        if search_path.startswith('/'):
-            search_path = search_path[1:]
-
         return importlib.import_module(
-            search_path.replace("/", ".") + "." + name
+            os.getcwd().replace("/", ".") + "." + name
         )

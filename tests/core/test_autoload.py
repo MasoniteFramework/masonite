@@ -20,9 +20,9 @@ class TestAutoload(unittest.TestCase):
         classes = Autoload().collect(['app/http/test_controllers'], instantiate=True)
         self.assertTrue(classes['TestController'].test)
 
-    def test_autoload_loads_from_directories_with_trailing_slash_raises_exception(self):
-        with self.assertRaises(InvalidAutoloadPath):
-            Autoload(self.app).load(['app/http/controllers/'])
+    # def test_autoload_loads_from_directories_with_trailing_slash_raises_exception(self):
+    #     with self.assertRaises(InvalidAutoloadPath):
+    #         Autoload(self.app).load(['app/http/controllers/'])
 
     def test_autoload_raises_exception_with_no_container(self):
         with self.assertRaises(ContainerError):

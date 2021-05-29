@@ -13,7 +13,7 @@ import cgi
 import json
 from cgi import MiniFieldStorage
 from http import cookies
-from urllib.parse import parse_qs, quote
+from urllib.parse import parse_qs, quote, urlencode
 
 import tldextract
 from cryptography.fernet import InvalidToken
@@ -334,7 +334,6 @@ class Request(Extendable):
         self.raw_input = variables
         if isinstance(variables, list):
             variables = {str(i): v for i, v in enumerate(variables)}
-
         try:
             for name in variables.keys():
                 value = self._get_standardized_value(variables[name])
@@ -911,7 +910,7 @@ class Request(Extendable):
             self._get_route_from_controller(controller).route_url, params
         )
 
-    def route(self, name, params={}, full=False):
+    def route(self, name, params={}, query_string=None, full=False):
         """Get a route URI by its name.
 
         Arguments:
@@ -942,6 +941,16 @@ class Request(Extendable):
             raise RouteException(
                 "Route with the name of '{}' was not found.".format(name)
             )
+
+        if query_string:
+            if isinstance(query_string, str):
+                route = '{}?{}'.format(route, query_string)
+            elif isinstance(query_string, dict):
+                route = '{}?{}'.format(route, urlencode(query_string))
+            else:
+                raise RouteException(
+                    "Invalid type of query string."
+                )
 
         return route
 

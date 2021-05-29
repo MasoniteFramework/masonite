@@ -944,7 +944,10 @@ class Request(Extendable):
 
         if query_string:
             if isinstance(query_string, str):
-                route = '{}?{}'.format(route, query_string)
+                if query_string == 'current':
+                    route = '{}?{}'.format(route, self.query_string())
+                else:
+                    route = '{}?{}'.format(route, query_string)
             elif isinstance(query_string, dict):
                 route = '{}?{}'.format(route, urlencode(query_string))
             else:

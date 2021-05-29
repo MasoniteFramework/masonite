@@ -305,6 +305,8 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.route('test.id', [1]), '/test/url/1')
         self.assertEqual(request.route('test.id', query_string='email=joe@masoniteproject.com'), '/test/url/1?email=joe@masoniteproject.com')
         self.assertEqual(request.route('test.id', query_string={'email': 'joe@masoniteproject.com'}), '/test/url/1?email=joe@masoniteproject.com')
+        self.assertEqual(request.route('test.id', query_string='current'), '/test/url/1?application=Masonite')
+
 
         with self.assertRaises(RouteException):
             self.assertTrue(request.route('not.exists', [1]))

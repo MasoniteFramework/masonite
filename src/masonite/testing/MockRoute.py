@@ -379,11 +379,17 @@ class MockRoute:
         self.route.get_response()
         assert response.is_status(302) or response.is_status(301)
         assert request.redirect_url == redirect_uri
-        
+
     def assertDatabaseHas(self, schema, value):
         from masoniteorm.query import QueryBuilder
 
-        table = schema.split(".")[0]
-        column = schema.split(".")[1]
+        table, column, *rest = schema.split(".")
 
-        assert QueryBuilder().table(table).where(column, value).first() != None
+        assert QueryBuilder().table(table).where(column, value).first() is not None
+
+    def assertDatabaseNotHas(self, schema, value):
+        from masoniteorm.query import QueryBuilder
+
+        table, column, *rest = schema.split(".")
+
+        assert QueryBuilder().table(table).where(column, value).first() is None

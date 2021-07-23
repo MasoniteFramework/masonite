@@ -28,3 +28,4 @@ build
 noorator
 venv3
 node_modules
+.masonite.sqlite3

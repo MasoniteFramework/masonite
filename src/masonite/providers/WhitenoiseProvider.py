@@ -1,30 +1,26 @@
-"""A WhiteNoiseProvider Service Provider."""
-
+from .Provider import Provider
 from whitenoise import WhiteNoise
-
-from ..provider import ServiceProvider
-from ..helpers import config
+import os
 
 
-class WhitenoiseProvider(ServiceProvider):
-
-    wsgi = False
+class WhitenoiseProvider(Provider):
+    def __init__(self, application):
+        self.application = application
 
     def register(self):
-        pass
 
-    def boot(self):
-        """Wrap the WSGI server in a whitenoise container."""
-        from config import application
-
-        self.app.bind(
-            "WSGI",
-            WhiteNoise(
-                self.app.make("WSGI"),
-                root=config("application.static_root"),
-                autorefresh=application.DEBUG,
-            ),
+        response_handler = WhiteNoise(
+            self.application.get_response_handler(),
+            root=self.application.get_storage_path(),
+            autorefresh=True,
         )
 
-        for location, alias in self.app.make("staticfiles").items():
-            self.app.make("WSGI").add_files(location, prefix=alias)
+        for location, alias in (
+            self.application.make("storage_capsule").get_storage_assets().items()
+        ):
+            response_handler.add_files(location, prefix=alias)
+
+        self.application.set_response_handler(response_handler)
+
+    def boot(self):
+        return

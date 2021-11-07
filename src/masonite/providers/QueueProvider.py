@@ -1,23 +1,18 @@
-"""A RedirectionProvider Service Provider."""
+from ..drivers.queue import DatabaseDriver, AsyncDriver, AMQPDriver
+from ..queues import Queue
+from ..configuration import config
 
 
-from ..drivers import QueueAsyncDriver, QueueAmqpDriver, QueueDatabaseDriver
-from ..managers import QueueManager
-from ..provider import ServiceProvider
-from .. import Queue
-from ..helpers import config
-
-
-class QueueProvider(ServiceProvider):
-
-    wsgi = False
+class QueueProvider:
+    def __init__(self, application):
+        self.application = application
 
     def register(self):
-        self.app.bind("QueueAsyncDriver", QueueAsyncDriver)
-        self.app.bind("QueueAmqpDriver", QueueAmqpDriver)
-        self.app.bind("QueueDatabaseDriver", QueueDatabaseDriver)
-        self.app.bind("QueueManager", QueueManager)
+        queue = Queue(self.application).set_configuration(config("queue.drivers"))
+        queue.add_driver("database", DatabaseDriver(self.application))
+        queue.add_driver("async", AsyncDriver(self.application))
+        queue.add_driver("amqp", AMQPDriver(self.application))
+        self.application.bind("queue", queue)
 
-    def boot(self, queue: QueueManager):
-        self.app.bind("Queue", queue.driver(config("queue.driver")))
-        self.app.swap(Queue, queue.driver(config("queue.driver")))
+    def boot(self):
+        pass

@@ -36,5 +36,12 @@ class HeaderBag:
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
 
+    def to_dict(self):
+        dic = {}
+        for name, header in self.bag.items():
+            dic.update({name: header.value})
+
+        return dic
+
     def __getitem__(self, key):
         return self.bag[self.convert_name(key)]

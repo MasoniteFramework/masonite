@@ -28,7 +28,7 @@ class InstallCommand(Command):
                     call(["pipenv", "install"])
 
                 if not self.option("no-key"):
-                    call(["pipenv", "shell", "craft", "key", "--store"])
+                    call(["pipenv", "shell", "new", "key", "--store"])
 
                 return
             except Exception:
@@ -42,10 +42,10 @@ class InstallCommand(Command):
             raise OSError("Could not find a Pipfile or a requirements.txt file")
         if not self.option("no-key"):
             try:
-                call(["craft", "key", "--store"])
+                self.call("key", "--store")
             except Exception:
                 self.line_error(
-                    "Could not successfully install Masonite. This could happen for several reasons but likely because of how craft is installed on your system and you could be hitting permission issues when craft is fetching required modules."
+                    "Could not successfully install Masonite. This could happen for several reasons but likely because of how Masonite is installed on your system and you could be hitting permission issues when Masonite is fetching required modules."
                     " If you have correctly followed the installation instructions then you should try everything again but start inside an virtual environment first to avoid any permission issues. If that does not work then seek help in"
                     " the Masonite Slack channel. Links can be found on GitHub in the main Masonite repo."
                 )

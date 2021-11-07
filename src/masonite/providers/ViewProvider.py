@@ -1,20 +1,16 @@
-"""A View Service Provider."""
-
-from jinja2 import FileSystemLoader
-
-from ..provider import ServiceProvider
-from ..view import View
+from ..views import View
+from .Provider import Provider
 
 
-class ViewProvider(ServiceProvider):
-
-    wsgi = False
+class ViewProvider(Provider):
+    def __init__(self, app):
+        self.application = app
 
     def register(self):
-        view = View(self.app)
-        self.app.bind("ViewClass", view)
-        self.app.bind("View", view.render)
+        view = View(self.application)
+        view.add_location(self.application.make("views.location"))
 
-    def boot(self, view: View):
-        view.add_environment("src/masonite/snippets", loader=FileSystemLoader)
-        self.publishes_migrations(["storage/append_from.txt"])
+        self.application.bind("view", view)
+
+    def boot(self):
+        pass

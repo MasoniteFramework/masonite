@@ -1,28 +1,22 @@
-"""A Mail Service Provider."""
-
-from ..drivers import (
-    MailMailgunDriver,
-    MailSmtpDriver,
-    MailLogDriver,
-    MailTerminalDriver,
-)
-from ..managers import MailManager
-from ..provider import ServiceProvider
-from .. import Mail
-from ..helpers import config
+from .Provider import Provider
+from ..mail import Mail
+from ..mail.drivers import SMTPDriver, TerminalDriver, MailgunDriver
+from ..utils.structures import load
+from ..mail import MockMail
+from ..facades import Config
 
 
-class MailProvider(ServiceProvider):
-
-    wsgi = False
+class MailProvider(Provider):
+    def __init__(self, application):
+        self.application = application
 
     def register(self):
-        self.app.bind("MailSmtpDriver", MailSmtpDriver)
-        self.app.bind("MailMailgunDriver", MailMailgunDriver)
-        self.app.bind("MailLogDriver", MailLogDriver)
-        self.app.bind("MailTerminalDriver", MailTerminalDriver)
-        self.app.bind("MailManager", MailManager(self.app))
+        mail = Mail(self.application).set_configuration(Config.get("mail.drivers"))
+        mail.add_driver("smtp", SMTPDriver(self.application))
+        mail.add_driver("mailgun", MailgunDriver(self.application))
+        mail.add_driver("terminal", TerminalDriver(self.application))
+        self.application.bind("mail", mail)
+        self.application.bind("mock.mail", MockMail)
 
-    def boot(self, manager: MailManager):
-        self.app.bind("Mail", manager.driver(config("mail.driver")))
-        self.app.swap(Mail, manager.driver(config("mail.driver")))
+    def boot(self):
+        pass

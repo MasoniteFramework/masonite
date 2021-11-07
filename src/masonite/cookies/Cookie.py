@@ -5,7 +5,7 @@ class Cookie:
         value,
         expires=None,
         http_only=True,
-        path=None,
+        path="/",
         timezone=None,
         secure=False,
     ):

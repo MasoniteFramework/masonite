@@ -1,25 +1,22 @@
-"""A RedirectionProvider Service Provider."""
-
-from ..drivers import SessionCookieDriver, SessionMemoryDriver
-from ..managers import SessionManager
-from ..provider import ServiceProvider
-from ..view import View
-from ..request import Request
-from .. import Session
-from ..helpers import config
+from .Provider import Provider
+from ..sessions import Session
+from ..drivers.session import CookieDriver
+from ..utils.structures import load
+from ..configuration import config
 
 
-class SessionProvider(ServiceProvider):
+class SessionProvider(Provider):
+    def __init__(self, application):
+        self.application = application
+
     def register(self):
-        # from config import session
-        # self.app.bind('SessionConfig', session)
-        self.app.bind("SessionMemoryDriver", SessionMemoryDriver)
-        self.app.bind("SessionCookieDriver", SessionCookieDriver)
-        self.app.bind("SessionManager", SessionManager(self.app))
+        session = Session(self.application).set_configuration(config("session.drivers"))
+        session.add_driver("cookie", CookieDriver(self.application))
+        self.application.bind("session", session)
+        self.application.make("view").share({"old": self.old})
 
-    def boot(self, request: Request, view: View, session: SessionManager):
-        self.app.bind("Session", session.driver(config("session").DRIVER))
-        self.app.swap(Session, session.driver(config("session").DRIVER))
-        request.session = self.app.make("Session")
+    def boot(self):
+        pass
 
-        view.share({"session": self.app.make("Session").helper})
+    def old(self, key):
+        return self.application.make("session").get(key) or ""

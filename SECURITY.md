@@ -5,7 +5,7 @@
 The best approach to reporting a vulnerability with Masonite is to join the [Slack Channel](http://slack.masoniteproject.com) and messaged
 Joseph Mancuso and tell him about the issue. He will communicate this to his maintainers and get a patch ready and shipped ASAP.
 
-You may also send an email to joe@masoniteproject.com
+You may also send an email to joe@masoniteproject.com.
 
 ## LTS Versions
 

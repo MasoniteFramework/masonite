@@ -1,38 +1,31 @@
-"""A QueueWorkCommand Command."""
-
+"""Queue Work Command."""
 from cleo import Command
-
-from .. import Queue
 
 
 class QueueWorkCommand(Command):
     """
-    Start the queue worker
+    Creates a new queue worker to consume queue jobs
 
     queue:work
-        {--c|channel=default : The channel to listen on the queue}
-        {--queue=default : The queue to listen to}
-        {--d|driver=default : Specify the driver you would like to connect to}
-        {--f|fair : Send jobs to queues that have no jobs instead of randomly selecting a queue}
-        {--p|poll=0 : Specify the amount of time a worker should poll}
-        {--failed : Run only the failed jobs}
+        {--c|--connection : Specifies the database connection if using database driver.}
+        {--queue=? : The queue to listen to}
+        {--d|driver=? : Specify the driver you would like to use}
+        {--p|poll=? : Specify the seconds a worker should wait before fetching new jobs}
+        {--attempts=? : Specify the number of times a job should be retried before it fails}
     """
 
+    def __init__(self, application):
+        super().__init__()
+        self.app = application
+
     def handle(self):
-        from wsgi import container
+        options = {}
+        options.update({"driver": self.option("driver")})
+        options.update({"poll": self.option("poll") or "1"})
+        options.update({"attempts": self.option("attempts") or "3"})
+        options.update({"queue": self.option("queue") or "default"})
 
-        if self.option("driver") == "default":
-            queue = container.make(Queue)
-        else:
-            queue = container.make(Queue).driver(self.option("driver"))
+        if self.option("verbose"):
+            options.update({"verbosity": "v" + self.option("verbose")})
 
-        if self.option("failed"):
-            queue.run_failed_jobs()
-            return
-
-        queue.connect().consume(
-            self.option("channel"),
-            fair=self.option("fair"),
-            poll=self.option("poll"),
-            queue=self.option("queue"),
-        )
+        return self.app.make("queue").consume(options)

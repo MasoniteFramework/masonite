@@ -1,55 +1,39 @@
-"""A Helpers Service Provider."""
-
 import builtins
-import os
+from markupsafe import Markup
 
-from ..exception_handler import DD
-from ..helpers.view_helpers import back, set_request_method, hidden, old
-from ..helpers.sign import sign, unsign, decrypt, encrypt
-from ..helpers import config, optional
-from ..provider import ServiceProvider
-from ..view import View
-from ..request import Request
-from ..managers import MailManager
+from ..providers import Provider
+from ..configuration import config
+from ..helpers import UrlsHelper, MixHelper
 
 
-class HelpersProvider(ServiceProvider):
-
-    wsgi = False
+class HelpersProvider(Provider):
+    def __init__(self, application):
+        self.application = application
 
     def register(self):
-        pass
+        builtins.resolve = self.application.resolve
+        builtins.container = lambda: self.application
+        self.application.bind("url", UrlsHelper(self.application))
 
-    def boot(self, view: View):
-        """Add helper functions to Masonite."""
-        builtins.view = view.render
-        # builtins.auth = request.user
-        builtins.container = self.app.helper
-        builtins.env = os.getenv
-        builtins.resolve = self.app.resolve
-        # builtins.route = request.route
-        if self.app.has(MailManager):
-            builtins.mail_helper = self.app.make(MailManager).helper
-        builtins.dd = DD(self.app).dump
+    def boot(self):
+        request = self.application.make("request")
+        urls_helper = self.application.make("url")
 
-        view.share(
+        self.application.make("view").share(
             {
-                # "request": request.helper,
-                # "auth": request.user,
-                "request_method": set_request_method,
-                # "route": request.route,
-                "back": back,
-                "sign": sign,
-                "unsign": unsign,
-                "decrypt": decrypt,
-                "encrypt": encrypt,
+                "request": lambda: request,
+                "session": lambda: request.app.make("session"),
+                "auth": request.user,
+                "cookie": request.cookie,
+                "back": lambda url=request.get_path(): (
+                    Markup(f"<input type='hidden' name='__back' value='{url}' />")
+                ),
+                "asset": urls_helper.asset,
+                "url": urls_helper.url,
+                "mix": MixHelper(self.application).url,
+                "route": urls_helper.route,
                 "config": config,
-                "optional": optional,
-                "dd": builtins.dd,
-                "hidden": hidden,
-                "exists": view.exists,
-                # "cookie": request.get_cookie,
-                "url": lambda name, params={}: request.route(name, params, full=True),
-                "old": old,
+                "can": self.application.make("gate").allows,
+                "cannot": self.application.make("gate").denies,
             }
         )

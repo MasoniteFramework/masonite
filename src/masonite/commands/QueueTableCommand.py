@@ -1,26 +1,36 @@
-"""A QueueTableCommand Command"""
-
-
+"""New Queue Table Command."""
 from cleo import Command
+import os
 
-from ..helpers.filesystem import copy_migration
+from ..utils.filesystem import make_directory, get_module_dir
+from ..utils.time import migration_timestamp
+from ..utils.location import base_path
 
 
 class QueueTableCommand(Command):
     """
-    Create migration files for the queue feature
+    Creates the jobs table
 
     queue:table
-        {--failed : Created the queue failed table}
-        {--jobs : Created the queue failed table}
+        {--d|--directory=databases/migrations : Specifies the directory to create the migration in}
     """
 
     def handle(self):
-        if self.option("failed"):
-            copy_migration("masonite/snippets/migrations/create_failed_jobs_table.py")
-            self.info("Failed queue table migration created successfully")
-        if self.option("jobs"):
-            copy_migration("masonite/snippets/migrations/create_queue_jobs_table.py")
-            self.info("Jobs queue table migration created successfully")
+        with open(
+            os.path.join(
+                get_module_dir(__file__), "../stubs/queue/create_queue_jobs_table.py"
+            )
+        ) as fp:
+            output = fp.read()
 
-        self.line("<error>Please specify the --failed or --jobs flags</error>")
+        relative_filename = os.path.join(
+            self.option("directory"),
+            f"{migration_timestamp()}_create_queue_jobs_table.py",
+        )
+        filepath = base_path(relative_filename)
+        make_directory(filepath)
+
+        with open(filepath, "w") as fp:
+            fp.write(output)
+
+        self.info(f"Migration file created: {relative_filename}")

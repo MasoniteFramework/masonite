@@ -22,8 +22,8 @@ class KeyCommand(Command):
             data = file.readlines()
 
         for line_number, line in enumerate(data):
-            if line.startswith("KEY="):
-                data[line_number] = "KEY={}\n".format(key)
+            if line.startswith("APP_KEY="):
+                data[line_number] = "APP_KEY={}\n".format(key)
                 break
 
         with open(".env", "w") as file:

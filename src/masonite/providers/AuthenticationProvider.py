@@ -1,20 +1,21 @@
-"""An Authentication Service Provider."""
+from ..foundation import response_handler
+from ..request import Request
+from ..response import Response
+from ..authentication import Auth
+from ..authentication.guards import WebGuard
+from ..configuration import config
+from .Provider import Provider
 
-from ..auth.guards import Guard, WebGuard
-from ..auth import Auth
-from ..helpers import config
-from ..provider import ServiceProvider
 
-
-class AuthenticationProvider(ServiceProvider):
-
-    wsgi = False
+class AuthenticationProvider(Provider):
+    def __init__(self, application):
+        self.application = application
 
     def register(self):
-        guard = Guard(self.app)
-        guard.register_guard("web", WebGuard)
-        self.app.simple(guard)
-        self.app.swap(Auth, guard)
+        auth = Auth(self.application).set_configuration(config("auth.guards"))
+        auth.add_guard("web", WebGuard(self.application))
 
-    def boot(self, auth: Auth):
-        auth.set(config("auth.auth.defaults.guard"))
+        self.application.bind("auth", auth)
+
+    def boot(self):
+        pass

@@ -1,3 +1,0 @@
-ROUTES += [
-    Get('/some/appended/url', 'ControllerTest@show')
-]

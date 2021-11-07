@@ -1,31 +1,39 @@
 init:
-	python -m pip install --upgrade pip
-	pip install -r requirements.txt --user
-	pip install -e .
-	pip install pytest
+	pip install -r requirements.txt
+	pip install '.[test]'
+	# Create MySQL Database
+	# Create Postgres Database
 test:
 	python -m pytest tests
 ci:
-	make test
-	make lint
+	python -m pytest tests -m "not integrations"
 lint:
-	python -m flake8 src/masonite/ --ignore=E501,F401,E128,E402,E731,F821,E712,W503
+	python -m flake8 src/masonite/ --ignore=E501,F401,E203,E128,E402,E731,F821,E712,W503,F811
 format:
 	black src/masonite
-deepsource:
-	curl https://deepsource.io/cli | sh
-	./bin/deepsource report --analyzer test-coverage --key python --value-file ./coverage.xml
+	black tests/
+	make lint
+sort:
+	isort tests
+	isort src/masonite
 coverage:
 	python -m pytest --cov-report term --cov-report xml --cov=src/masonite tests/
 	python -m coveralls
+show:
+	python -m pytest --cov-report term --cov-report html --cov=src/masonite tests/
+cov:
+	python -m pytest --cov-report term --cov-report xml --cov=src/masonite tests/
 publish:
+	pip install twine
 	make test
-	pip install 'twine>=1.5.0'
-	python setup.py sdist bdist_wheel
+	python setup.py sdist
 	twine upload dist/*
 	rm -fr build dist .egg masonite.egg-info
+	rm -rf dist/*
 pub:
-	pip install 'twine>=1.5.0'
-	python setup.py sdist bdist_wheel
+	python setup.py sdist
 	twine upload dist/*
 	rm -fr build dist .egg masonite.egg-info
+	rm -rf dist/*
+pypirc:
+	cp .pypirc ~/.pypirc

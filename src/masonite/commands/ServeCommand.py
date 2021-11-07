@@ -1,11 +1,8 @@
-import time
-import os
+import sys
 
-from hupper.logger import DefaultLogger, LogLevel
-from hupper.reloader import Reloader, find_default_monitor_factory
+import hupper
+import waitress
 from cleo import Command
-from ..exceptions import DriverLibraryNotFound
-from ..helpers import has_unmigrated_migrations
 
 
 class ServeCommand(Command):
@@ -21,25 +18,22 @@ class ServeCommand(Command):
         {--l|live-reload : Make the server automatically refresh your web browser}
     """
 
-    def handle(self):
-        if has_unmigrated_migrations():
-            self.comment(
-                "\nYou have unmigrated migrations. Run 'craft migrate' to migrate them\n"
-            )
+    def __init__(self, application):
+        super().__init__()
+        self.app = application
 
+    def handle(self):
         if self.option("live-reload"):
             try:
                 from livereload import Server
             except ImportError:
-                raise DriverLibraryNotFound(
+                raise ImportError(
                     "Could not find the livereload library. Install it by running 'pip install livereload==2.5.1'"
                 )
 
-            from wsgi import container
-            from config import application
             import glob
 
-            server = Server(container.make("WSGI"))
+            server = Server(self.app)
             for filepath in glob.glob("resources/templates/**/*/"):
                 server.watch(filepath)
 
@@ -49,52 +43,33 @@ class ServeCommand(Command):
                 "This will only work for templates. Changes to Python files may require a browser refresh."
             )
             self.line("")
-            application = server.serve(
+            server.serve(
                 port=self.option("port"),
                 restart_delay=self.option("reload-interval"),
                 liveport=5500,
-                root=application.BASE_DIRECTORY,
+                root=self.app.base_path,
                 debug=True,
             )
             return
 
-        if not self.option("dont-reload"):
-            logger = DefaultLogger(LogLevel.INFO)
+        reloader = hupper.start_reloader(self.app.make("server.runner"))
 
-            # worker args are pickled and then passed to the new process
-            worker_args = [
-                self.option("host"),
-                self.option("port"),
-                "wsgi:application",
-            ]
+        # monitor an extra file
+        reloader.watch_files([".env", self.app.get_storage_path()])
 
-            reloader = Reloader(
-                "masonite.commands._devserver.run",
-                find_default_monitor_factory(logger),
-                logger,
-                worker_args=worker_args,
-            )
 
-            self._run_reloader(reloader, extra_files=[".env", "storage/"])
+def main(args=sys.argv[1:]):
+    from wsgi import application
 
-        else:
-            from wsgi import application
-            from ._devserver import run
+    host = "127.0.0.1"
+    port = "8000"
+    if "--host" in args:
+        host = args[args.index("--host") + 1]
+    if "--port" in args:
+        port = args[args.index("--host") + 1]
+    if "-p" in args:
+        port = args[args.index("-p") + 1]
 
-            run(self.option("host"), self.option("port"), application)
-
-    def _run_reloader(self, reloader, extra_files=[]):
-        reloader._capture_signals()
-        reloader._start_monitor()
-        for blob in extra_files:
-            reloader.monitor.add_path(os.path.join(os.getcwd(), blob))
-        try:
-            while True:
-                if not reloader._run_worker():
-                    reloader._wait_for_changes()
-                time.sleep(float(self.option("reload-interval")))
-        except KeyboardInterrupt:
-            pass
-        finally:
-            reloader._stop_monitor()
-            reloader._restore_signals()
+    waitress.serve(
+        application, host=host, port=port, clear_untrusted_proxy_headers=False
+    )

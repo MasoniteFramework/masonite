@@ -122,7 +122,7 @@ class SessionCookieDriver(SessionContract, BaseDriver):
             dict
         """
         cookies = {}
-        all_cookies = self.request.get_cookies().to_dict()
+        all_cookies = self.request.get_cookies()
         for key, value in all_cookies.items():
             if not (key.startswith("f_") or key.startswith("s_")):
                 continue

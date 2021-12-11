@@ -30,7 +30,7 @@ class Authenticates:
         record = self.where(self.get_username_column(), username).first()
         if not record:
             return False
-        
+
         return getattr(record, self.get_username_column())
 
     def register(self, dictionary):

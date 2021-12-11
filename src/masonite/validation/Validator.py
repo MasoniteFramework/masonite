@@ -1188,7 +1188,6 @@ class Validator:
                     rule_errors.update(self.run_enclosure(rule(), dictionary))
                     continue
 
-
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
                     if error not in rule_errors:

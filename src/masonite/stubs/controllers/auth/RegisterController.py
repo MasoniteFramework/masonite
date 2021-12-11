@@ -12,15 +12,17 @@ class RegisterController(Controller):
     def store(
         self, auth: Auth, request: Request, response: Response
     ):  # store register user
-        errors = request.validate({
-            'email': 'required',
-            'name': 'required',
-            'password': 'required|strong|confirmed',
-        })
+        errors = request.validate(
+            {
+                "email": "required",
+                "name": "required",
+                "password": "required|strong|confirmed",
+            }
+        )
 
         if errors:
             return response.back().with_errors(errors)
-        
+
         user = auth.register(request.only("name", "email", "password"))
 
         if not user:

@@ -33,6 +33,7 @@ def controllers_path(relative_path="", absolute=True):
     The relative path can be returned instead by setting absolute=False."""
     return _build_path("controllers.location", relative_path, absolute)
 
+
 def mailables_path(relative_path="", absolute=True):
     """Build the absolute path to the project controllers directory or build the absolute path to a given
     file relative the project controllers directory.

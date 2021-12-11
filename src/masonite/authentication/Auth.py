@@ -87,11 +87,15 @@ class Auth:
         if not auth:
             return (None, None)
         try:
-            existing = self.application.make("builder").new().table(
-                self.guard_config.get("password_reset_table")
-            ).where("email", email).first()
+            existing = (
+                self.application.make("builder")
+                .new()
+                .table(self.guard_config.get("password_reset_table"))
+                .where("email", email)
+                .first()
+            )
             if existing:
-                token = existing['token']
+                token = existing["token"]
             else:
                 self.application.make("builder").new().table(
                     self.guard_config.get("password_reset_table")
@@ -161,10 +165,12 @@ class Auth:
                 "password_reset.store"
             ),
             Route.get(
-                "/change_password/@token", "auth.PasswordResetController@change_password"
+                "/change_password/@token",
+                "auth.PasswordResetController@change_password",
             ).name("change_password"),
             Route.post(
-                "/change_password/@token", "auth.PasswordResetController@store_changed_password"
+                "/change_password/@token",
+                "auth.PasswordResetController@store_changed_password",
             ).name("change_password.store"),
             Route.post("/login", "auth.LoginController@store").name("login.store"),
         ]

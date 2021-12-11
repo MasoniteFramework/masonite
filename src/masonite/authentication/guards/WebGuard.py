@@ -14,6 +14,9 @@ class WebGuard:
             self.application.make("request").set_user(attempt)
             return attempt
 
+    def get_auth_column(self, username):
+        return self.options.get("model")().get_auth_column(username)
+
     def register(self, dictionary):
         try:
             register = self.options.get("model")().register(dictionary)

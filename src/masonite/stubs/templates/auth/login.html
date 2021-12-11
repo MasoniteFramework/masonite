@@ -15,6 +15,20 @@
                 Login
             </h2>
 
+            @if session().has('errors'):
+            <div class="bg-yellow-400">
+                <div class="bg-yellow-200 text-yellow-800 px-4 py-2">
+                    <ul>
+                        @for key, errors_list in session().get('errors').items():
+                            @for errors in errors_list
+                                <li>{{ errors }}</li>
+                            @endfor
+                        @endfor
+                    </ul>
+                </div>
+            </div>
+            @endif
+
             <form class="mt-10" method="POST" action="{{ route('login.store') }}">
                 
                 {{ csrf_field }}

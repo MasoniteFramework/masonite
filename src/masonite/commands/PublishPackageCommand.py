@@ -16,7 +16,7 @@ class PublishPackageCommand(Command):
         self.app = application
 
     def handle(self):
-        from ..packages.providers import PackageProvider
+        from ..packages import PackageProvider
 
         name = self.argument("name")
         selected_provider = None

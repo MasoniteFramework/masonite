@@ -13,7 +13,7 @@ class LoginController(Controller):
         login = auth.attempt(request.input("username"), request.input("password"))
 
         if login:
-            return response.redirect(name="home")
+            return response.redirect(name="auth.home")
 
         # Go back to login page
-        return response.redirect(name="login")
+        return response.redirect(name="login").with_errors(["The email or password is incorrect"])

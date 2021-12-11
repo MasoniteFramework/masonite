@@ -18,6 +18,7 @@ from ..commands import (
     MakeMailableCommand,
     MakeProviderCommand,
     PublishPackageCommand,
+    MakeTestCommand,
 )
 from ..environment import LoadEnvironment
 from ..middleware import MiddlewareCapsule
@@ -71,6 +72,7 @@ class Kernel:
                 MakeMailableCommand(self.application),
                 MakeProviderCommand(self.application),
                 PublishPackageCommand(self.application),
+                MakeTestCommand(self.application),
             ),
         )
 

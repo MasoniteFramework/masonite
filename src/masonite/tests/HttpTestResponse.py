@@ -260,13 +260,7 @@ class HttpTestResponse:
     def assertRouteHasParameter(self, key, value=None):
         assert key in self.route.url_list, "Route does not contain parameter {key}."
         if value is not None:
-            # TODO
-            # @josephmancuso not sure how to check if the route parameter has the given value
-            # 1. play with the compiled regex but not sure how to do it
-            # 2. see below, correct ? after testing it it's not correct, there are several issues with
-            # this. forgot all this
-            # real_url = self.route.url.replace(f"@{key}", str(value))
-            # assert self.route.matches(real_url)
+            assert self.request.param(key) == str(value)
             pass
         return self
 
@@ -278,7 +272,7 @@ class HttpTestResponse:
         except ValueError:
             raise ValueError("The response was not JSON serializable")
 
-    def assertJson(self, data):
+    def assertJson(self, data={}):
         """Assert that response is JSON and contains the given data dictionary. The assertion will
         pass even if it is not an exact match."""
         response_data = self._ensure_response_is_json()

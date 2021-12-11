@@ -1188,6 +1188,7 @@ class Validator:
                     rule_errors.update(self.run_enclosure(rule(), dictionary))
                     continue
 
+
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
                     if error not in rule_errors:
@@ -1215,14 +1216,14 @@ class Validator:
                 rule, args = rule.split(":")[0], rule.split(":")[1:]
                 rule = ValidationFactory().registry[rule](value, *args)
 
-            rule.handle(dictionary)
-            for error, message in rule.errors.items():
-                if error not in rule_errors:
-                    rule_errors.update({error: message})
-                else:
-                    messages = rule_errors[error]
-                    messages += message
-                    rule_errors.update({error: messages})
+                rule.handle(dictionary)
+                for error, message in rule.errors.items():
+                    if error not in rule_errors:
+                        rule_errors.update({error: message})
+                    else:
+                        messages = rule_errors[error]
+                        messages += message
+                        rule_errors.update({error: messages})
 
     def run_enclosure(self, enclosure, dictionary):
         rule_errors = {}

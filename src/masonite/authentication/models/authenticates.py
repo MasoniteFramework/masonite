@@ -17,11 +17,21 @@ class Authenticates:
         record_password = getattr(record, self.get_password_column())
         if not isinstance(record_password, bytes):
             record_password = bytes(record_password or "", "utf-8")
-        if Hash.check(password, record_password):
-            record.set_remember_token().save()
-            return record
+        try:
+            if Hash.check(password, record_password):
+                record.set_remember_token().save()
+                return record
+        except ValueError:
+            pass
 
         return False
+
+    def get_auth_column(self, username):
+        record = self.where(self.get_username_column(), username).first()
+        if not record:
+            return False
+        
+        return getattr(record, self.get_username_column())
 
     def register(self, dictionary):
         dictionary.update(

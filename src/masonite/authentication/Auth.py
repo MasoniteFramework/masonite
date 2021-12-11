@@ -82,26 +82,36 @@ class Auth:
             self
         """
         token = str(uuid.uuid4())
+        auth_config = self.get_config_options()
+        auth = self.get_guard().set_options(auth_config).get_auth_column(email)
+        if not auth:
+            return (None, None)
         try:
-            self.application.make("builder").new().table(
+            existing = self.application.make("builder").new().table(
                 self.guard_config.get("password_reset_table")
-            ).create(
-                {
-                    "email": email,
-                    "token": token,
-                    "expires_at": pendulum.now()
-                    .add(minutes=self.guard_config.get("password_reset_expiration"))
-                    .to_datetime_string()
-                    if self.guard_config.get("password_reset_expiration")
-                    else None,
-                    "created_at": pendulum.now().to_datetime_string(),
-                }
-            )
-        except Exception:
-            return False
+            ).where("email", email).first()
+            if existing:
+                token = existing['token']
+            else:
+                self.application.make("builder").new().table(
+                    self.guard_config.get("password_reset_table")
+                ).create(
+                    {
+                        "email": email,
+                        "token": token,
+                        "expires_at": pendulum.now()
+                        .add(minutes=self.guard_config.get("password_reset_expiration"))
+                        .to_datetime_string()
+                        if self.guard_config.get("password_reset_expiration")
+                        else None,
+                        "created_at": pendulum.now().to_datetime_string(),
+                    }
+                )
+        except Exception as e:
+            return (None, None)
 
         self.application.make("event").fire("auth.password_reset", email, token)
-        return token
+        return auth, token
 
     def reset_password(self, password, token):
         """Logout the current authenticated user.
@@ -117,6 +127,7 @@ class Auth:
             .where("token", token)
             .first()
         )
+
         auth_config = self.get_config_options()
         (
             self.get_guard()
@@ -132,13 +143,17 @@ class Auth:
             .delete()
         )
 
+        return True
+
     @classmethod
     def routes(self):
         return [
             Route.get("/login", "auth.LoginController@show").name("login"),
             Route.get("/home", "auth.HomeController@show").name("auth.home"),
             Route.get("/register", "auth.RegisterController@show").name("register"),
-            Route.post("/register", "auth.RegisterController@store").name("register.store"),
+            Route.post("/register", "auth.RegisterController@store").name(
+                "register.store"
+            ),
             Route.get("/password_reset", "auth.PasswordResetController@show").name(
                 "password_reset"
             ),
@@ -146,10 +161,10 @@ class Auth:
                 "password_reset.store"
             ),
             Route.get(
-                "/change_password", "auth.PasswordResetController@change_password"
+                "/change_password/@token", "auth.PasswordResetController@change_password"
             ).name("change_password"),
             Route.post(
-                "/change_password", "auth.PasswordResetController@store_changed_password"
+                "/change_password/@token", "auth.PasswordResetController@store_changed_password"
             ).name("change_password.store"),
-            Route.post("/login", "auth.LoginController@store").name("login.store")
+            Route.post("/login", "auth.LoginController@store").name("login.store"),
         ]

@@ -6,7 +6,7 @@
   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/MasoniteFramework/masonite/Test%20Application">
   <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/masonite">
-  <img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/python-3.7+-blue.svg" alt="Python Version">
   <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/MasoniteFramework/masonite?include_prereleases">
   <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License">
   <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
@@ -40,11 +40,11 @@ Also be sure to join the [Masonite Slack Community](http://slack.masoniteproject
 
 ## Getting Started Quickly
 
-If you have a working Python 3.6+ getting started is as quick as typing
+If you have a working Python 3.7+ getting started is as quick as typing
 
 ```bash
 pip install masonite
-start project my_project
+start project .
 python craft serve
 ```
 

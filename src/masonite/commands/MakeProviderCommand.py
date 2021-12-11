@@ -10,10 +10,10 @@ from ..utils.location import base_path
 
 class MakeProviderCommand(Command):
     """
-    Creates a new mailable class.
+    Creates a new provider class.
 
     provider
-        {name : Name of the mailable}
+        {name : Name of the provider}
     """
 
     def __init__(self, application):

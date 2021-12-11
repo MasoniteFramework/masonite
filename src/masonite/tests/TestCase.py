@@ -1,8 +1,9 @@
 import json
 import io
+import sys
 import unittest
 import pendulum
-
+from contextlib import contextmanager
 
 from ..routes import Route
 from ..foundation.response_handler import testcase_handler
@@ -47,9 +48,13 @@ class TestCase(unittest.TestCase):
             self.stopTestRun()
 
     def withExceptionsHandling(self):
-        """Enable for the duration of a test the handling of exception through the exception
+        """Enable for the duration of a test the handling of exceptions through the exception
         handler."""
         self._exception_handling = True
+
+    def withoutExceptionsHandling(self):
+        """Disable handling of exceptions."""
+        self._exception_handling = False
 
     def setRoutes(self, *routes):
         self.application.make("router").set(Route.group(*routes, middleware=["web"]))
@@ -94,9 +99,6 @@ class TestCase(unittest.TestCase):
 
         self.application.bind("response", request)
         return request
-
-    def withExceptionsHandling(self):
-        self._exception_handling = True
 
     def fetch(self, route, data=None, method=None):
         if data is None:
@@ -145,6 +147,18 @@ class TestCase(unittest.TestCase):
 
     def mock_start_response(self, *args, **kwargs):
         pass
+
+    @contextmanager
+    def captureOutput(self):
+        new_out, new_err = io.StringIO(), io.StringIO()
+        # save normal system output
+        old_out, old_err = sys.stdout, sys.stderr
+        try:
+            sys.stdout, sys.stderr = new_out, new_err
+            yield sys.stdout
+        finally:
+            # restore system output
+            sys.stdout, sys.stderr = old_out, old_err
 
     def craft(self, command, arguments_str=""):
         """Run a given command in tests and obtain a TestCommand instance to assert command

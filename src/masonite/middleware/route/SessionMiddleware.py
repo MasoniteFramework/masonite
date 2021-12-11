@@ -12,6 +12,7 @@ class SessionMiddleware(Middleware):
         Session.start()
         request.app.make("response").with_input = self.with_input
         request.app.make("response").with_errors = self.with_errors
+        request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
         return request
 
@@ -25,5 +26,17 @@ class SessionMiddleware(Middleware):
         return Response
 
     def with_errors(self, errors):
-        Session.flash("errors", errors)
+        if isinstance(errors, list):
+            Session.flash("errors", {"errors": errors})
+        else:
+            Session.flash("errors", errors)
+
+        return Response
+
+    def with_success(self, success):
+        if isinstance(success, list):
+            Session.flash("success", {"success": success})
+        else:
+            Session.flash("success", success)
+
         return Response

@@ -14,6 +14,7 @@ class Mailable:
         self.text_content = ""
         self.html_content = ""
         self.attachments = []
+        self.headers = {}
 
     def to(self, to):
         self._to = to
@@ -25,6 +26,10 @@ class Mailable:
 
     def bcc(self, bcc):
         self._bcc = bcc
+        return self
+
+    def header(self, key, value):
+        self.headers.update({key: value})
         return self
 
     def set_application(self, application):
@@ -96,6 +101,7 @@ class Mailable:
             "attachments": self.attachments,
             "priority": self._priority,
             "driver": self._driver,
+            "headers": self.headers,
         }
 
     def build(self, *args, **kwargs):

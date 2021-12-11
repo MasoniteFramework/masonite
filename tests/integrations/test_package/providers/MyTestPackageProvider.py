@@ -1,4 +1,4 @@
-from src.masonite.packages.providers import PackageProvider
+from src.masonite.packages import PackageProvider
 from tests.integrations.test_package.commands.Command1 import Command1
 from tests.integrations.test_package.commands.Command2 import Command2
 

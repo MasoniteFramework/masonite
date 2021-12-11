@@ -176,7 +176,10 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request.input('test'), ['1', '2'])
 
     def test_request_get_cookies_returns_cookies(self):
-        self.assertEqual(self.request.get_cookies(), self.request.cookie_jar)
+        wsgi = generate_wsgi()
+        request = Request(wsgi)
+        print(request.get_cookies())
+        self.assertTrue('setcookie' in self.request.get_cookies())
 
     def test_request_set_user_sets_object(self):
         self.assertEqual(self.request.set_user(object), self.request)

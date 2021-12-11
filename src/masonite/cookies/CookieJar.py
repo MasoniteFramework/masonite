@@ -12,7 +12,9 @@ class CookieJar:
         self.cookies.update({name: Cookie(name, value, **options)})
 
     def all(self):
-        return self.cookies
+        cookies = self.loaded_cookies
+        cookies.update(self.cookies)
+        return cookies
 
     def get(self, name):
         aggregate = self.loaded_cookies

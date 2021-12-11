@@ -699,7 +699,7 @@ class Request(Extendable):
         Returns:
             dict -- Returns all the cookies.
         """
-        return self.cookie_jar
+        return self.cookie_jar.all()
 
     def get_raw_cookie(self, provided_cookie):
         return self.cookie_jar.get(provided_cookie)

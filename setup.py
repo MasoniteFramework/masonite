@@ -53,7 +53,7 @@ setup(
         "masonite-orm>=1.0,<1.1",
         "passlib>=1.7,<1.8",
         "pendulum>=2.1,<2.2",
-        "psutil>=5.4,<5.7",
+        "psutil>=5.4,<5.9",
         "python-dotenv>=0.8,<0.11",
         "requests>=2.0,<2.99",
         "tabulate>=0.8,<0.9",

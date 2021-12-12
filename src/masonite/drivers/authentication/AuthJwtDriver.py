@@ -6,17 +6,18 @@ from ...contracts import AuthContract
 from ...drivers import BaseDriver
 from ...exceptions import DriverLibraryNotFound
 from ...helpers import config, cookie_expire_time
-from ...request import Request
+from ...app import App
+
 
 
 class AuthJwtDriver(BaseDriver, AuthContract):
-    def __init__(self, request: Request):
+    def __init__(self, app: App):
         """AuthCookieDriver initializer.
 
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
         """
-        self.request = request
+        self.app = app
         try:
             import jwt
 
@@ -37,11 +38,11 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         """
         from config.application import KEY
 
-        if self.request.get_cookie("token"):
+        if self.app.make('Request').get_cookie("token"):
 
             try:
                 token = self.jwt.decode(
-                    self.request.get_cookie("token"), KEY, algorithms=["HS256"]
+                    self.app.make('Request').get_cookie("token"), KEY, algorithms=["HS256"]
                 )
             except self.jwt.exceptions.DecodeError:
                 self.delete()
@@ -54,7 +55,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
                 return auth_model.hydrate(token)
 
             if config("auth.drivers.jwt.reauthentication", True):
-                auth_model = Auth(self.request).login_by_id(
+                auth_model = Auth(self.app.make('Request')).login_by_id(
                     token[auth_model.__primary_key__]
                 )
             else:
@@ -67,7 +68,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
                     )
                 }
             )
-            self.request.cookie("token", token)
+            self.app.make('Request').cookie("token", token)
             return auth_model
         return False
 
@@ -90,7 +91,7 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         token = self.jwt.encode(serialized_dictionary, KEY, algorithm="HS256")
         if isinstance(token, bytes):
             token = bytes(token).decode("utf-8")
-        self.request.cookie("token", token)
+        self.app.make('Request').cookie("token", token)
 
     def delete(self):
         """Deletes the state depending on the implementation of this driver.
@@ -98,8 +99,8 @@ class AuthJwtDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        self.request.delete_cookie("token")
+        self.app.make('Request').delete_cookie("token")
 
     def logout(self):
         self.delete()
-        self.request.reset_user()
+        self.app.make('Request').reset_user()

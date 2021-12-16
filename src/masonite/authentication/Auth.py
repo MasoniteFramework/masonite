@@ -111,7 +111,7 @@ class Auth:
                         "created_at": pendulum.now().to_datetime_string(),
                     }
                 )
-        except Exception as e:
+        except Exception:
             return (None, None)
 
         self.application.make("event").fire("auth.password_reset", email, token)

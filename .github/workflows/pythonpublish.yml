@@ -23,6 +23,11 @@ jobs:
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
+        MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
+        MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
+        MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
+        DB_CONFIG_PATH: tests/integrations/config/database
       run: |
         python setup.py sdist bdist_wheel
         twine upload dist/*

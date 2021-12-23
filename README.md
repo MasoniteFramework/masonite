@@ -36,7 +36,7 @@ If you find any discrepencies or anything that doesn't make sense, be sure to co
 
 If you are more of a visual learner you can watch Masonite related tutorial videos at [masonitecasts.com](https://masonitecasts.com)
 
-Also be sure to join the [Masonite Slack Community](http://slack.masoniteproject.com/)!
+Also be sure to join the [Masonite Discord Community](https://discord.gg/TwKeFahmPZ)!
 
 ## Getting Started Quickly
 
@@ -52,7 +52,7 @@ python craft serve
 
 Contributing to Masonite is simple:
 
-- Hop on [Masonite Slack Community](http://slack.masoniteproject.com/) to ask any questions you need!
+- Hop on [Masonite Discord Community](https://discord.gg/TwKeFahmPZ) to ask any questions you need!
 - Read the [How To Contribute](https://docs.masoniteproject.com/prologue/how-to-contribute) documentation to see ways to contribute to the project.
 - Read the [Contributing Guide](https://docs.masoniteproject.com/prologue/contributing-guide) to learn how to contribute to the core source code development of the project.
 - [Follow Masonite Framework on Twitter](https://twitter.com/masoniteproject) to get updates about tips and tricks, announcement and releases.

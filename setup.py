@@ -125,6 +125,7 @@ setup(
         "masonite.notification.providers",
         "masonite.notification",
         "masonite.orm",
+        "masonite.orm.commands",
         "masonite.orm.providers",
         "masonite.packages.providers",
         "masonite.packages",

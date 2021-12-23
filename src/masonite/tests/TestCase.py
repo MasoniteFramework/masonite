@@ -16,6 +16,8 @@ from .TestCommand import TestCommand
 
 
 class TestCase(unittest.TestCase):
+    routes_to_restore = ()
+
     def setUp(self):
         LoadEnvironment("testing")
         from wsgi import application
@@ -41,9 +43,14 @@ class TestCase(unittest.TestCase):
                 raise e
             self.application.make("exception_handler").handle(e)
 
+        self.routes_to_restore = set(self.application.make("router").routes)
+
     def tearDown(self):
         # be sure to reset this between each test
         self._exception_handling = False
+        # restore routes
+        if self.routes_to_restore:
+            self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
 
@@ -57,10 +64,12 @@ class TestCase(unittest.TestCase):
         self._exception_handling = False
 
     def setRoutes(self, *routes):
+        """Set all routes of router during lifetime of a test."""
         self.application.make("router").set(Route.group(*routes, middleware=["web"]))
         return self
 
     def addRoutes(self, *routes):
+        """Add routes to router during lifetime of a test."""
         self.application.make("router").add(Route.group(*routes, middleware=["web"]))
         return self
 
@@ -100,7 +109,7 @@ class TestCase(unittest.TestCase):
         self.application.bind("response", request)
         return request
 
-    def fetch(self, route, data=None, method=None):
+    def fetch(self, path, data=None, method=None):
         if data is None:
             data = {}
         if not self._csrf:
@@ -111,7 +120,7 @@ class TestCase(unittest.TestCase):
                     "HTTP_COOKIE": f"SESSID={token}; csrf_token={token}",
                     "CONTENT_LENGTH": len(str(json.dumps(data))),
                     "REQUEST_METHOD": method,
-                    "PATH_INFO": route,
+                    "PATH_INFO": path,
                     "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
                 }
             )
@@ -120,7 +129,7 @@ class TestCase(unittest.TestCase):
                 {
                     "CONTENT_LENGTH": len(str(json.dumps(data))),
                     "REQUEST_METHOD": method,
-                    "PATH_INFO": route,
+                    "PATH_INFO": path,
                     "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
                 }
             )
@@ -138,12 +147,12 @@ class TestCase(unittest.TestCase):
         for name, value in self._test_headers.items():
             request.header(name, value)
 
-        route = self.application.make("router").find(route, method)
+        route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
                 self.application, request, response, route
             )
-        raise Exception(f"No route found for {route}")
+        raise Exception(f"No route found for url {path}")
 
     def mock_start_response(self, *args, **kwargs):
         pass

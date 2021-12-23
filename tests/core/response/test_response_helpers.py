@@ -5,7 +5,7 @@ from src.masonite.routes import Route
 class TestResponseHelpers(TestCase):
     def setUp(self):
         super().setUp()
-        self.setRoutes(
+        self.addRoutes(
             Route.get("/test-with-errors", "WelcomeController@with_errors"),
             Route.get("/test-with-input", "WelcomeController@form_with_input"),
         )

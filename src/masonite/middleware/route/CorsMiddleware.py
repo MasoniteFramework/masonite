@@ -1,4 +1,3 @@
-
 class CorsMiddleware:
 
     headers = {}

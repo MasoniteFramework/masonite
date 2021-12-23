@@ -25,7 +25,7 @@ class HelpersProvider(Provider):
                 "session": lambda: request.app.make("session"),
                 "auth": request.user,
                 "cookie": request.cookie,
-                "back": lambda url=request.get_path(): (
+                "back": lambda url=request.get_path_with_query(): (
                     Markup(f"<input type='hidden' name='__back' value='{url}' />")
                 ),
                 "asset": urls_helper.asset,

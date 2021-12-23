@@ -1,5 +1,7 @@
 from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
 
+from .JsonHandler import JsonHandler
+
 
 class ExceptionHandler:
     def __init__(self, application, driver_config=None):
@@ -33,6 +35,7 @@ class ExceptionHandler:
     def handle(self, exception):
         response = self.application.make("response")
         request = self.application.make("request")
+
         self.application.make("event").fire(
             f"masonite.exception.{exception.__class__.__name__}", exception
         )
@@ -46,10 +49,14 @@ class ExceptionHandler:
             return response.view(exception.get_response(), exception.get_status())
 
         handler = Handler(exception)
+        if "application/json" in str(request.header("Accept")):
+            return response.view(JsonHandler(exception).render(), status=500)
+
         if self.options.get("handlers.stack_overflow"):
             handler.integrate(StackOverflowIntegration())
         if self.options.get("handlers.solutions"):
             handler.integrate(SolutionsIntegration())
+
         handler.context(
             {
                 "WSGI": {

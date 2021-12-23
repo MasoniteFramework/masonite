@@ -38,9 +38,7 @@ class TestTestCase(TestCase):
 
     def test_add_routes(self):
         self.assertEqual(len(self.application.make("router").routes), 1)
-        self.addRoutes(
-            Route.get("/test", "WelcomeController@show").name("test"),
-        )
+        self.addRoutes(Route.get("/some-route", "WelcomeController@show"))
         self.assertEqual(len(self.application.make("router").routes), 2)
 
     def test_use_custom_test_response(self):

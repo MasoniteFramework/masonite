@@ -158,6 +158,7 @@ class Response:
             string|dict|list -- Returns the data to be returned.
         """
         self.original = view
+
         if isinstance(view, tuple):
             view, status = view
             self.status(status)

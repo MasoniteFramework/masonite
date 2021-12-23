@@ -6,6 +6,7 @@ from src.masonite.request import Request
 
 class TestRequest(TestCase):
     def setUp(self):
+        super().setUp()
         self.request = Request(generate_wsgi(path="/test"))
 
     def test_request_no_input_returns_false(self):

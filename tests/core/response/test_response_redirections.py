@@ -7,9 +7,9 @@ from src.masonite.routes import Router, Route
 
 class TestResponseRedirect(TestCase):
     def setUp(self):
-        application = Application(os.getcwd())
-        application.bind("router", Router(Route.get("/", None).name("home")))
-        self.response = Response(application)
+        super().setUp()
+        self.addRoutes(Route.get("/", None).name("home-redirect"))
+        self.response = Response(self.application)
 
     def test_redirect(self):
         self.response.redirect("/")
@@ -17,7 +17,7 @@ class TestResponseRedirect(TestCase):
         self.assertEqual(self.response.header_bag.get("Location").value, "/")
 
     def test_redirect_to_route_named_route(self):
-        self.response.redirect(name="home")
+        self.response.redirect(name="home-redirect")
         self.assertEqual(self.response.get_status(), 302)
         self.assertEqual(self.response.header_bag.get("Location").value, "/")
 

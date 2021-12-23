@@ -23,5 +23,5 @@ class MyTestPackageProvider(PackageProvider):
             .migrations("migrations/create_some_table.py")
             .assets("assets")
             .controllers("controllers")  # ensure this one is done before routes()
-            # .routes("routes/api.py", "routes/web.py")
+            .routes("routes/api.py", "routes/web.py")
         )

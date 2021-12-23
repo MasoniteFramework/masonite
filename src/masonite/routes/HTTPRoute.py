@@ -38,6 +38,9 @@ class HTTPRoute:
         self.controller_bindings = controller_bindings
         self.compile_route_to_regex()
 
+    def __str__(self):
+        return f"<HttpRoute [{self._name}]: {self.url}>"
+
     def match(self, path, request_method, subdomain=None):
 
         route_math = (

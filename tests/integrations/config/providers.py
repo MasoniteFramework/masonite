@@ -15,6 +15,7 @@ from src.masonite.providers import (
     AuthenticationProvider,
     AuthorizationProvider,
     HashServiceProvider,
+    ORMProvider,
 )
 
 
@@ -47,4 +48,5 @@ PROVIDERS = [
     ValidationProvider,
     MyTestPackageProvider,
     AppProvider,
+    ORMProvider,
 ]

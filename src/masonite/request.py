@@ -346,13 +346,17 @@ class Request(Extendable):
         """Get the standardized value based on the type of the value parameter.
 
         Arguments:
-            value {list|dict|cgi.FileStorage|string}
+            value {list|dict|string|float|bool|cgi.FieldStorage}
 
         Returns:
-            string|bool
+            list|dict|string|float|bool|cgi.FieldStorage|None
         """
         if value is None:
             return None
+
+        # MiniFieldStorage without filename
+        if isinstance(value, MiniFieldStorage) and not value.filename:
+            return value.value
 
         if isinstance(value, list):
 
@@ -369,17 +373,9 @@ class Request(Extendable):
                 return values
 
             return value
-
-        if isinstance(value, (str, int, dict)):
-            return value
-
-        if not value.filename:
-            return value.value
-
-        if value.filename:
-            return value
-
-        return False
+        
+        # type is int, bool, float, string, or MiniFieldStorage with filename just return
+        return value
 
     def app(self):
         """Return the application container.

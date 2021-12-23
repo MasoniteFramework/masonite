@@ -1,11 +1,11 @@
 """New Rule Enclosure Command."""
-from cleo import Command
 import inflection
 import os
 
 from ...utils.filesystem import get_module_dir, make_directory, render_stub_file
 from ...utils.location import base_path
 from ...utils.str import as_filepath
+from ...commands.Command import Command
 
 
 class MakeRuleEnclosureCommand(Command):
@@ -14,6 +14,7 @@ class MakeRuleEnclosureCommand(Command):
 
     rule:enclosure
         {name : Name of the rule enclosure}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -28,10 +29,12 @@ class MakeRuleEnclosureCommand(Command):
             as_filepath(self.app.make("validation.location")), name + ".py"
         )
 
-        if os.path.exists(relative_filename):
-            return self.line(
-                f"<error>File ({relative_filename}) already exists</error>"
+        if os.path.exists(relative_filename) and not self.option("force"):
+            self.warning(
+                f"{relative_filename} already exists! Run the command with -f (force) to override."
             )
+            return -1
+
         filepath = base_path(relative_filename)
         make_directory(filepath)
 

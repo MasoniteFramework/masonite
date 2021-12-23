@@ -1,12 +1,11 @@
 """New Task Command """
 import os
 import inflection
-from cleo import Command
-from os.path import exists
 
 from ...utils.filesystem import make_directory, get_module_dir, render_stub_file
 from ...utils.location import base_path
 from ...utils.str import as_filepath
+from ...commands.Command import Command
 
 
 class MakeTaskCommand(Command):
@@ -15,6 +14,7 @@ class MakeTaskCommand(Command):
     task
         {name : Name of the task you want to create}
         {--d|--directory=? : Override the directory to create the task in}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -31,10 +31,11 @@ class MakeTaskCommand(Command):
         )
         filepath = base_path(relative_file_name)
 
-        if exists(relative_file_name):
-            return self.line_error(
-                f"Task already exists at: {relative_file_name}", style="error"
+        if os.path.exists(relative_file_name) and not self.option("force"):
+            self.warning(
+                f"{relative_file_name} already exists! Run the command with -f (force) to override."
             )
+            return -1
 
         make_directory(filepath)
         with open(filepath, "w") as fp:

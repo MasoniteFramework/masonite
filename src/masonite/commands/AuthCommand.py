@@ -1,10 +1,10 @@
 """Scaffold Auth Command."""
-from cleo import Command
 from distutils.dir_util import copy_tree
 import os
 
 from ..utils.location import controllers_path, views_path, mailables_path
 from ..utils.filesystem import get_module_dir
+from .Command import Command
 
 
 class AuthCommand(Command):

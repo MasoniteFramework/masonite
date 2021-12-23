@@ -1,10 +1,10 @@
 """New Queue Table Command."""
-from cleo import Command
 import os
 
 from ..utils.filesystem import make_directory, get_module_dir
 from ..utils.time import migration_timestamp
 from ..utils.location import base_path
+from .Command import Command
 
 
 class QueueTableCommand(Command):

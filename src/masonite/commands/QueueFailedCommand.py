@@ -1,10 +1,10 @@
-"""New Key Command."""
-from cleo import Command
+"""Queue Failed Command."""
 import os
 
 from ..utils.filesystem import make_directory, get_module_dir
 from ..utils.time import migration_timestamp
 from ..utils.location import base_path
+from .Command import Command
 
 
 class QueueFailedCommand(Command):
@@ -18,7 +18,7 @@ class QueueFailedCommand(Command):
     def handle(self):
         with open(
             os.path.join(
-                get_module_dir(__file__), "stubs/queue/create_failed_jobs_table.py"
+                get_module_dir(__file__), "../stubs/queue/create_failed_jobs_table.py"
             )
         ) as fp:
             output = fp.read()

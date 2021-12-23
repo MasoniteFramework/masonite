@@ -1,10 +1,10 @@
 """New Key Command."""
-from cleo import Command
 import inflection
 import os
 
 from ..utils.filesystem import make_directory, render_stub_file, get_module_dir
 from ..utils.location import jobs_path
+from .Command import Command
 
 
 class MakeJobCommand(Command):
@@ -13,6 +13,7 @@ class MakeJobCommand(Command):
 
     job
         {name : Name of the job}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -26,7 +27,11 @@ class MakeJobCommand(Command):
         filename = f"{name}.py"
         filepath = jobs_path(filename)
         make_directory(filepath)
-
+        if os.path.exists(filepath) and not self.option("force"):
+            self.warning(
+                f"{filepath} already exists! Run the command with -f (force) to override."
+            )
+            return -1
         with open(filepath, "w") as f:
             f.write(content)
         self.info(f"Job Created ({jobs_path(filename, absolute=False)})")

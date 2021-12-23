@@ -1,4 +1,3 @@
-from cleo import Command
 import os
 import shutil
 import zipfile
@@ -12,6 +11,7 @@ from ..exceptions import (
     ProjectProviderHttpError,
     ProjectTargetNotEmpty,
 )
+from .Command import Command
 
 
 class ProjectCommand(Command):
@@ -54,7 +54,7 @@ class ProjectCommand(Command):
 
         try:
             if repo and provider not in self.providers:
-                return self.line_error(
+                return self.error(
                     "'provider' option must be in {}".format(",".join(self.providers))
                 )
 
@@ -72,7 +72,7 @@ class ProjectCommand(Command):
             if branch != "False":
                 branch_data = self.get_branch_provider_data(provider, branch)
                 if "name" not in branch_data:
-                    return self.line_error("Branch {0} does not exist.".format(branch))
+                    return self.error("Branch {0} does not exist.".format(branch))
 
                 zipball = self.get_branch_archive_url(provider, repo, branch)
             elif version != "False":
@@ -89,9 +89,7 @@ class ProjectCommand(Command):
                         )
                         break
                 if zipball is False:
-                    return self.line_error(
-                        "Version {0} could not be found".format(version)
-                    )
+                    return self.error("Version {0} could not be found".format(version))
             else:
                 tags_data = self.get_releases_provider_data(provider)
 
@@ -126,7 +124,7 @@ class ProjectCommand(Command):
                 )
             )
         except Exception as e:
-            self.line_error(
+            self.error(
                 "The following error happened when crafting your project. Verify options are correct else open an issue at https://github.com/MasoniteFramework/masonite."
             )
             raise e
@@ -148,7 +146,7 @@ class ProjectCommand(Command):
                 )
             success = True
         except Exception as e:
-            self.line_error("An error occured when downloading {0}".format(zipurl))
+            self.error("An error occured when downloading {0}".format(zipurl))
             raise e
 
         if success:

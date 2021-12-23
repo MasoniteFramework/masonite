@@ -2,7 +2,7 @@ import sys
 
 import hupper
 import waitress
-from cleo import Command
+from .Command import Command
 
 
 class ServeCommand(Command):

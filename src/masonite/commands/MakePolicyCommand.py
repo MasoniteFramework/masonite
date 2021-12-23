@@ -1,9 +1,9 @@
 """New Policy Command."""
 import inflection
 import os
-from cleo import Command
 
 from ..utils.filesystem import make_directory
+from .Command import Command
 
 
 class MakePolicyCommand(Command):
@@ -12,7 +12,8 @@ class MakePolicyCommand(Command):
 
     policy
         {name : Name of the policy}
-        {--model=? : Create a policy for a model with a set of predefined methods}
+        {--m|model=? : Create a policy for a model with a set of predefined methods}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -38,6 +39,11 @@ class MakePolicyCommand(Command):
         )
 
         make_directory(file_name)
+        if os.path.exists(file_name) and not self.option("force"):
+            self.warning(
+                f"{file_name} already exists! Run the command with -f (force) to override."
+            )
+            return -1
 
         with open(file_name, "w") as f:
             f.write(content)

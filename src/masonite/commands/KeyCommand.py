@@ -1,6 +1,7 @@
 """New Key Command."""
-from cleo import Command
 from cryptography.fernet import Fernet
+
+from .Command import Command
 
 
 class KeyCommand(Command):

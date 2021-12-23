@@ -61,4 +61,5 @@ class MiddlewareCapsule:
                     request, response, *arguments
                 )
                 if middleware_response != request:
-                    break
+                    return False
+            return True

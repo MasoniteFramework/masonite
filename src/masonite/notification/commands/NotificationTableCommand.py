@@ -12,7 +12,7 @@ class NotificationTableCommand(Command):
     Creates the notifications table needed for storing notifications in the database.
 
     notification:table
-        {--d|--directory=database/migrations : Specifies the directory to create the migration in}
+        {--d|--directory=databases/migrations : Specifies the directory to create the migration in}
     """
 
     def handle(self):

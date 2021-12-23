@@ -1,9 +1,9 @@
 """New Test Command."""
-from cleo import Command
 import inflection
 import os
 
 from ..utils.filesystem import make_directory, render_stub_file, get_module_dir
+from .Command import Command
 
 
 class MakeTestCommand(Command):
@@ -13,6 +13,7 @@ class MakeTestCommand(Command):
     test
         {name : Name of the test case (CamelCase) }
         {--d|--directory=tests/unit : Directory to create the test file}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -27,6 +28,11 @@ class MakeTestCommand(Command):
 
         filepath = os.path.join(directory, test_filename)
         make_directory(filepath)
+        if os.path.exists(filepath) and not self.option("force"):
+            self.warning(
+                f"{filepath} already exists! Run the command with -f (force) to override."
+            )
+            return -1
         with open(filepath, "w") as f:
             f.write(content)
         self.info(f"Test Created ({filepath})")

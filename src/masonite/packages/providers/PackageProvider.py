@@ -131,9 +131,7 @@ class PackageProvider(Provider):
         self.package.add_routes(*routes)
         for route_group in self.package.routes:
             self.application.make("router").add(
-                Route.group(
-                    load(route_group, "ROUTES", []),
-                )
+                Route.group(load(route_group, "ROUTES", []), middleware=["web"])
             )
         return self
 

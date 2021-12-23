@@ -1,10 +1,10 @@
 """New Controller Command."""
-from cleo import Command
 import inflection
 import os
 
 from ..utils.location import controllers_path
 from ..utils.filesystem import get_module_dir, render_stub_file
+from .Command import Command
 
 
 class MakeControllerCommand(Command):
@@ -14,6 +14,7 @@ class MakeControllerCommand(Command):
     controller
         {name : Name of the controller}
         {--r|--resource : Create a "resource" controller with the usual CRUD methods}
+        {--f|force=? : Force overriding file if already exists}
     """
 
     def __init__(self, application):
@@ -34,7 +35,14 @@ class MakeControllerCommand(Command):
         content = render_stub_file(stub_path, name)
 
         filename = f"{name}.py"
-        with open(controllers_path(filename), "w") as f:
+        path = controllers_path(filename)
+        if os.path.exists(path) and not self.option("force"):
+            self.warning(
+                f"{path} already exists! Run the command with -f (force) to override."
+            )
+            return -1
+
+        with open(path, "w") as f:
             f.write(content)
 
         self.info(f"Controller Created ({controllers_path(filename, absolute=False)})")

@@ -1,4 +1,4 @@
-from cleo import Command
+from .Command import Command
 
 
 class PublishPackageCommand(Command):
@@ -24,9 +24,7 @@ class PublishPackageCommand(Command):
             if isinstance(provider, PackageProvider) and provider.package.name == name:
                 selected_provider = provider
         if not selected_provider:
-            self.line_error(
-                f"No package has been registered under the name {name}.", style="error"
-            )
+            self.error(f"No package has been registered under the name {name}.")
             return
 
         if self.option("resources"):

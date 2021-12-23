@@ -1,5 +1,5 @@
 """Queue Work Command."""
-from cleo import Command
+from .Command import Command
 
 
 class QueueWorkCommand(Command):

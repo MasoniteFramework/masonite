@@ -3,7 +3,6 @@ import os
 import code
 import sys
 import pendulum
-from cleo import Command
 
 from ..environment import env
 from ..configuration import config
@@ -12,6 +11,7 @@ from ..utils.structures import load, data_get
 from ..utils.location import base_path, config_path, models_path
 from ..helpers import optional, url
 from ..facades import Loader
+from .Command import Command
 
 
 BANNER = """Masonite Python \033[92m {} \033[0m Console

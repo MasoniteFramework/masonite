@@ -1,5 +1,5 @@
-"""New Key Command."""
-from cleo import Command
+"""Queue Retry Command."""
+from .Command import Command
 
 
 class QueueRetryCommand(Command):

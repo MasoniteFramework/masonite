@@ -11,6 +11,7 @@ from masoniteorm.commands import (
     SeedRunCommand,
 )
 
+from ..commands import DbShellCommand
 from ...providers import Provider
 from ...utils.location import migrations_path, models_path
 
@@ -38,6 +39,7 @@ class ORMProvider(Provider):
             MigrateRefreshCommand(directory=migrations_dir, seed_directory=seeds_dir),
             MigrateRollbackCommand(directory=migrations_dir),
             SeedRunCommand(directory=seeds_dir),
+            DbShellCommand(),
         )
 
     def boot(self):

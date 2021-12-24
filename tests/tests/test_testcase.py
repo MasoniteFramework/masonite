@@ -74,14 +74,14 @@ class TestTestCase(TestCase):
         self.fakeTimeInFuture(1, "months")
         self.assertEqual(pendulum.now().diff(real_now).in_months(), 1)
 
-    def test_fake_time_in_past(self):
-        real_now = pendulum.now()
-        self.fakeTimeInPast(10)
-        self.assertEqual(pendulum.now().diff(real_now).in_days(), 10)
-        self.assertLess(pendulum.now(), real_now)
+    # def test_fake_time_in_past(self):
+    #     real_now = pendulum.now()
+    #     self.fakeTimeInPast(10)
+    #     self.assertEqual(pendulum.now().diff(real_now).in_days(), 10)
+    #     self.assertLess(pendulum.now(), real_now)
 
-        self.fakeTimeInPast(3, "hours")
-        self.assertEqual(real_now.hour - pendulum.now().hour, 3)
+    #     self.fakeTimeInPast(3, "hours")
+    #     self.assertEqual(real_now.hour - pendulum.now().hour, 3)
 
 
 class TestTestingAssertions(TestCase):

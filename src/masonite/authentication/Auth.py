@@ -43,6 +43,10 @@ class Auth:
         auth_config.update({"once": once})
         return self.get_guard().set_options(auth_config).attempt(email, password)
 
+    def attempt_by_token(self, token):
+        auth_config = self.get_config_options()
+        return self.get_guard().set_options(auth_config).attempt_by_token(token)
+
     def attempt_by_id(self, user_id, once=False):
         auth_config = self.get_config_options()
         auth_config.update({"once": once})

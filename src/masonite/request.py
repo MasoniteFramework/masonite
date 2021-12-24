@@ -373,7 +373,7 @@ class Request(Extendable):
                 return values
 
             return value
-        
+
         # type is int, bool, float, string, or MiniFieldStorage with filename just return
         return value
 

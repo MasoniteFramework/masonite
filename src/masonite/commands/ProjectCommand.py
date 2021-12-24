@@ -18,7 +18,7 @@ class ProjectCommand(Command):
     """
     Creates a new Masonite project
 
-    project
+    start
         {target? : Path of you Masonite project}
         {--b|--branch=False : Specify which branch from the Masonite repo you would like to install}
         {--r|--release=False : Specify which version of Masonite you would like to install}

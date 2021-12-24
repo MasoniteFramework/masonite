@@ -21,6 +21,9 @@ jobs:
         MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
         DB_CONFIG_PATH: tests/integrations/config/database
       run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine
+        make init
         make ci
     - name: Build and publish
       env:

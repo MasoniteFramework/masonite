@@ -18,7 +18,7 @@ def random_string(length=4):
 
 
 def modularize(file_path, suffix=".py"):
-    """Transforms a file path to a dotted path.
+    """Transforms a file path to a dotted path. On UNIX paths contains / and on Windows \\.
 
     Keyword Arguments:
         file_path {str} -- A file path such app/controllers
@@ -27,7 +27,7 @@ def modularize(file_path, suffix=".py"):
         value {str} -- a dotted path such as app.controllers
     """
     # if the file had the .py extension remove it as it's not needed for a module
-    return removesuffix(file_path.replace("/", "."), suffix)
+    return removesuffix(file_path.replace("/", ".").replace("\\", "."), suffix)
 
 
 def as_filepath(dotted_path):

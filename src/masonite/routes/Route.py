@@ -150,6 +150,26 @@ class Route:
         return inner
 
     @classmethod
+    def resource(self, base_url, controller):
+        return [
+            self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
+            self.get(f"/{base_url}/create", f"{controller}@create").name(
+                f"{base_url}.create"
+            ),
+            self.post(f"/{base_url}", f"{controller}@store").name(f"{base_url}.store"),
+            self.get(f"/{base_url}/@id", f"{controller}@show").name(f"{base_url}.show"),
+            self.get(f"/{base_url}/@id/edit", f"{controller}@edit").name(
+                f"{base_url}.edit"
+            ),
+            self.match(
+                ["put", "patch"], f"/{base_url}/@id", f"{controller}@update"
+            ).name(f"{base_url}.update"),
+            self.delete(f"/{base_url}/@id", f"{controller}@destroy").name(
+                f"{base_url}.destroy"
+            ),
+        ]
+
+    @classmethod
     def compile(self, key, to=""):
         self.compilers.update({key: to})
         return self

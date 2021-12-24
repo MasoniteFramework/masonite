@@ -5,7 +5,7 @@ from masonite.api.facades import Api
 
 class JWTAuthenticationMiddleware(Middleware):
     def before(self, request, response):
-        token = request.input("token")
+        token = Api.get_token()
         if not token:
             return response.json(
                 {"message": "Authentication token missing"}, status="401"

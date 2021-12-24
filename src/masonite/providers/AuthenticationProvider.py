@@ -1,3 +1,4 @@
+from ..api.guards.JWTGuard import JWTGuard
 from ..foundation import response_handler
 from ..request import Request
 from ..response import Response
@@ -14,6 +15,7 @@ class AuthenticationProvider(Provider):
     def register(self):
         auth = Auth(self.application).set_configuration(config("auth.guards"))
         auth.add_guard("web", WebGuard(self.application))
+        auth.add_guard("jwt", JWTGuard(self.application))
 
         self.application.bind("auth", auth)
 

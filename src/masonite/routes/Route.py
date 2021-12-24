@@ -27,7 +27,7 @@ class Route:
             request_method=["get"],
             compilers=self.compilers,
             controllers_locations=module_location or self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -38,7 +38,7 @@ class Route:
             request_method=["post"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -49,7 +49,7 @@ class Route:
             request_method=["put"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -60,7 +60,7 @@ class Route:
             request_method=["patch"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -71,7 +71,7 @@ class Route:
             request_method=["delete"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -82,7 +82,7 @@ class Route:
             request_method=["options"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -98,7 +98,7 @@ class Route:
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
             controller_bindings=[new_url, options.get("status", 302)],
-            **options
+            **options,
         )
 
     @classmethod
@@ -110,7 +110,7 @@ class Route:
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
             controller_bindings=[new_url, 301],
-            **options
+            **options,
         )
 
     @classmethod
@@ -121,7 +121,7 @@ class Route:
             request_method=request_methods,
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod

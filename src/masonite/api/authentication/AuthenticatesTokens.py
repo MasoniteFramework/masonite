@@ -13,4 +13,4 @@ class AuthenticatesTokens:
         return token
 
     def attempt_by_token(self, token):
-        return self.where(self.__TOKEN_COLUMN__, token).first();
+        return self.where(self.__TOKEN_COLUMN__, token).first()

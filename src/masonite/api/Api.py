@@ -20,21 +20,23 @@ class Api:
             expire_minutes = (
                 pendulum.now(tz="GMT").add(minutes=expire_minutes).to_datetime_string()
             )
-        token = jwt.encode({"expires": expire_minutes, "version": version}, secret, algorithm=algorithm)
+        token = jwt.encode(
+            {"expires": expire_minutes, "version": version}, secret, algorithm=algorithm
+        )
 
         return token
 
     def get_token(self):
-        request = self.application.make('request')
-        token = request.input('token')
+        request = self.application.make("request")
+        token = request.input("token")
 
         if token:
             return token
-        
-        header = request.header('Authorization')
+
+        header = request.header("Authorization")
 
         if header:
-            return header.replace('Bearer ', '')
+            return header.replace("Bearer ", "")
 
     def validate_token(self, token):
         secret = self.config.get("jwt").get("secret")
@@ -63,7 +65,7 @@ class Api:
 
         if authenticates:
             return self.attempt_by_token(token)
-        
+
         return True
 
     def regenerate_token(self, token):
@@ -77,7 +79,7 @@ class Api:
             pass
 
         return False
-    
+
     def attempt_by_token(self, token):
         model = self.config.get("jwt").get("model")()
         return model.attempt_by_token(token)

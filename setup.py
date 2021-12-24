@@ -8,7 +8,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="4.0.0",
+    version="4.0.1",
     package_dir={"": "src"},
     description="The Masonite Framework",
     long_description=long_description,
@@ -187,7 +187,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         "console_scripts": [
-            "start = masonite.commands.Entry:application.run",
+            "project = masonite.commands.Entry:application.run",
         ],
     },
 )

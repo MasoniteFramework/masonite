@@ -1,6 +1,7 @@
 import jwt
 import pendulum
-from masonite.facades import Auth
+from ..routes import Route
+from .controllers import AuthenticationController
 
 
 class Api:
@@ -83,3 +84,10 @@ class Api:
     def attempt_by_token(self, token):
         model = self.config.get("jwt").get("model")()
         return model.attempt_by_token(token)
+
+    @classmethod
+    def routes(cls, auth_route="/api/auth", reauth_route="/api/reauth"):
+        return [
+            Route.post('/api/auth', AuthenticationController.auth),
+            Route.post('/api/reauth', AuthenticationController.reauth),
+        ]

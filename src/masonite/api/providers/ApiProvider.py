@@ -15,7 +15,9 @@ class ApiProvider(Provider):
         self.application.bind("api", api)
         self.application.make("router").add(
             Route.group(
-                load(self.application.make("routes.api.location"), "ROUTES"), middleware=["api"], prefix="/api"
+                load(self.application.make("routes.api.location"), "ROUTES"),
+                middleware=["api"],
+                prefix="/api",
             )
         )
 

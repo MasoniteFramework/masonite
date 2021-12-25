@@ -44,7 +44,7 @@ If you have a working Python 3.7+ getting started is as quick as typing
 
 ```bash
 pip install masonite
-start project .
+project start .
 python craft serve
 ```
 

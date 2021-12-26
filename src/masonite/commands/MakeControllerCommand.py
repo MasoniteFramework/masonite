@@ -2,7 +2,7 @@
 import inflection
 import os
 
-from ..utils.location import controllers_path
+from ..utils.location import controllers_path, config_path
 from ..utils.filesystem import get_module_dir, render_stub_file
 from .Command import Command
 
@@ -35,7 +35,7 @@ class MakeControllerCommand(Command):
         content = render_stub_file(stub_path, name)
 
         filename = f"{name}.py"
-        path = controllers_path(filename)
+        path = config_path(filename)
         if os.path.exists(path) and not self.option("force"):
             self.warning(
                 f"{path} already exists! Run the command with -f (force) to override."

@@ -1,10 +1,11 @@
+from ..commands.APIInstallCommand import APIInstallCommand
 from ...configuration.helpers import config
 from ...providers import Provider
 from ..Api import Api
 
-from ...facades import Config
 from ...routes import Route
 from ...utils.structures import load
+import os
 
 
 class ApiProvider(Provider):
@@ -21,6 +22,7 @@ class ApiProvider(Provider):
                 prefix="/api",
             )
         )
+        self.application.make("commands").add(APIInstallCommand(self.application))
 
     def boot(self):
         pass

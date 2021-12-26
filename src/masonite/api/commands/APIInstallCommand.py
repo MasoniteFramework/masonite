@@ -1,0 +1,42 @@
+"""Scaffold Auth Command."""
+from distutils.dir_util import copy_tree
+import os
+from ...utils.filesystem import render_stub_file, get_module_dir
+from ...utils.location import controllers_path, config_path
+
+
+from ...commands.Command import Command
+
+
+class APIInstallCommand(Command):
+    """
+    Creates a new authentication scaffold.
+
+    api:install
+        {--f|force=? : Force overriding file if already exists}
+    """
+
+    def __init__(self, application):
+        super().__init__()
+        self.app = application
+
+    def handle(self):
+        stub_path = self.get_stub_config_path()
+
+        content = render_stub_file(stub_path, "api.py")
+        print(content)
+
+        path = config_path("api.py")
+        if os.path.exists(path) and not self.option("force"):
+            self.warning(
+                f"{path} already exists! Run the command with -f (force) to override."
+            )
+            return -1
+
+        with open(path, "w") as f:
+            f.write(content)
+
+        self.info(f"Controller Created ({config_path('api.py', absolute=False)})")
+
+    def get_stub_config_path(self):
+        return os.path.join(get_module_dir(__file__), "../stubs/api.py")

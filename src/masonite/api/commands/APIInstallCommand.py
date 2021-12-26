@@ -1,8 +1,8 @@
 """Scaffold Auth Command."""
-from distutils.dir_util import copy_tree
 import os
 from ...utils.filesystem import render_stub_file, get_module_dir
-from ...utils.location import controllers_path, config_path
+from ...utils.location import config_path
+from ...utils.str import random_string
 
 
 from ...commands.Command import Command
@@ -36,7 +36,22 @@ class APIInstallCommand(Command):
         with open(path, "w") as f:
             f.write(content)
 
-        self.info(f"Controller Created ({config_path('api.py', absolute=False)})")
+        path = config_path("api.py")
+        if os.path.exists(path) and not self.option("force"):
+            self.warning(
+                f"{path} already exists! Run the command with -f (force) to override."
+            )
+            return -1
+
+        with open(path, "w") as f:
+            f.write(content)
+
+        secret = random_string(25)
+
+        self.info(f"API Installed: ({config_path('api.py', absolute=False)})")
+        self.info(
+            f"JWT Secret Key Is: {secret}. You should store this in an environment variable called JWT_SECRET."
+        )
 
     def get_stub_config_path(self):
         return os.path.join(get_module_dir(__file__), "../stubs/api.py")

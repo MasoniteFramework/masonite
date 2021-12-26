@@ -170,6 +170,20 @@ class Route:
         ]
 
     @classmethod
+    def api(self, base_url, controller):
+        return [
+            self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
+            self.post(f"/{base_url}", f"{controller}@store").name(f"{base_url}.store"),
+            self.get(f"/{base_url}/@id", f"{controller}@show").name(f"{base_url}.show"),
+            self.match(
+                ["put", "patch"], f"/{base_url}/@id", f"{controller}@update"
+            ).name(f"{base_url}.update"),
+            self.delete(f"/{base_url}/@id", f"{controller}@destroy").name(
+                f"{base_url}.destroy"
+            ),
+        ]
+
+    @classmethod
     def compile(self, key, to=""):
         self.compilers.update({key: to})
         return self

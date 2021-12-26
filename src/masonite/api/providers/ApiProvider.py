@@ -12,7 +12,7 @@ class ApiProvider(Provider):
         self.application = application
 
     def register(self):
-        api = Api(self.application).set_configuration(config('api.drivers'))
+        api = Api(self.application).set_configuration(config("api.drivers"))
         self.application.bind("api", api)
         self.application.make("router").add(
             Route.group(

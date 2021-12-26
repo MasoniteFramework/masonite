@@ -50,5 +50,5 @@ PROVIDERS = [
     MyTestPackageProvider,
     AppProvider,
     ORMProvider,
-    ApiProvider
+    ApiProvider,
 ]

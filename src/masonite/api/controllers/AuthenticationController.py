@@ -1,8 +1,8 @@
-from masonite.controllers import Controller
-from masonite.request import Request
-from masonite.response import Response
-from masonite.authentication import Auth
-from masonite.api.facades import Api
+from ...controllers import Controller
+from ...request import Request
+from ...response import Response
+from ...authentication import Auth
+from ..facades import Api
 
 
 class AuthenticationController(Controller):

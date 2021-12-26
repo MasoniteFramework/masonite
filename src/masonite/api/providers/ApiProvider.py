@@ -1,3 +1,4 @@
+from ...configuration.helpers import config
 from ...providers import Provider
 from ..Api import Api
 
@@ -11,7 +12,7 @@ class ApiProvider(Provider):
         self.application = application
 
     def register(self):
-        api = Api(self.application).set_configuration(Config.get("api.drivers"))
+        api = Api(self.application).set_configuration(config('api.drivers'))
         self.application.bind("api", api)
         self.application.make("router").add(
             Route.group(

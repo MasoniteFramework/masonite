@@ -19,7 +19,7 @@ class Api:
         version = self.config.get("jwt").get("version")
         if expire_minutes:
             expire_minutes = (
-                pendulum.now(tz="GMT").add(minutes=expire_minutes).to_datetime_string()
+                pendulum.now(tz="UTC").add(minutes=expire_minutes).to_datetime_string()
             )
         token = jwt.encode(
             {"expires": expire_minutes, "version": version}, secret, algorithm=algorithm
@@ -47,7 +47,7 @@ class Api:
         version = self.config.get("jwt").get("version")
         if expire_minutes:
             expire_minutes = (
-                pendulum.now(tz="GMT").add(minutes=expire_minutes).to_datetime_string()
+                pendulum.now(tz="UTC").add(minutes=expire_minutes).to_datetime_string()
             )
 
         unencrypted_token = jwt.decode(token, secret, algorithms=[algorithm])
@@ -55,7 +55,7 @@ class Api:
         if not expires:
             return True
 
-        expired = pendulum.parse(expires, tz="GMT").is_past()
+        expired = pendulum.parse(expires, tz="UTC").is_past()
 
         if expired:
             return False

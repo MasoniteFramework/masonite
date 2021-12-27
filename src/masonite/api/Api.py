@@ -52,13 +52,6 @@ class Api:
 
         unencrypted_token = jwt.decode(token, secret, algorithms=[algorithm])
         expires = unencrypted_token.get("expires")
-        if not expires:
-            return True
-
-        expired = pendulum.parse(expires, tz="UTC").is_past()
-
-        if expired:
-            return False
 
         if version:
             if unencrypted_token["version"] != version:
@@ -66,6 +59,14 @@ class Api:
 
         if authenticates:
             return self.attempt_by_token(token)
+
+        if not expires:
+            return True
+
+        expired = pendulum.parse(expires, tz="UTC").is_past()
+
+        if expired:
+            return False
 
         return True
 

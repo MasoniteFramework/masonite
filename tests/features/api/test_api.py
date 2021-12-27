@@ -10,7 +10,7 @@ class TestApiModule(TestCase):
 
         self.assertEqual(Api.get_token(), "secret")
 
-    def test_can_can_token_from_input_from_header(self):
+    def test_can_get_token_from_header(self):
         request = self.make_request()
         request.header_bag.add(Header("Authorization", "Bearer secret-header-key"))
 

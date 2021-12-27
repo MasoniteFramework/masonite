@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://masoniteframework.github.io/img/logo.png" width="160px">
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4trhpkkdbbzutc5ufxi9.png" width="160px">
   <h1 align="center">Masonite</h1>
 </p>
 <p align="center">

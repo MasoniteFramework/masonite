@@ -1,3 +1,6 @@
+from ..facades import Api
+
+
 class JWTGuard:
     def __init__(self, application):
         self.application = application
@@ -28,12 +31,10 @@ class JWTGuard:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
-        token = self.application.make("request").cookie("token")
+        # token = self.application.make("request").cookie("token")
+        token = Api.get_token()
         if token and self.options.get("model")():
-            return (
-                self.options.get("model")().where("remember_token", token).first()
-                or False
-            )
+            return self.options.get("model")().attempt_by_token(token) or False
 
         return False
 

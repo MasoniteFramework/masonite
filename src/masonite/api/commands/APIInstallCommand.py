@@ -10,7 +10,7 @@ from ...commands.Command import Command
 
 class APIInstallCommand(Command):
     """
-    Creates a new authentication scaffold.
+    Adds required files for building API's
 
     api:install
         {--f|force=? : Force overriding file if already exists}

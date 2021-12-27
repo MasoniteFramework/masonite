@@ -1,3 +1,4 @@
+from ..guards import JWTGuard
 from ..commands.APIInstallCommand import APIInstallCommand
 from ...configuration.helpers import config
 from ...providers import Provider
@@ -23,6 +24,7 @@ class ApiProvider(Provider):
             )
         )
         self.application.make("commands").add(APIInstallCommand(self.application))
+        self.application.make('auth').add_guard("jwt", JWTGuard(self.application))
 
     def boot(self):
         pass

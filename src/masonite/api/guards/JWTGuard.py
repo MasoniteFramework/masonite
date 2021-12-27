@@ -50,7 +50,6 @@ class JWTGuard:
         attempt = self.options.get("model")().attempt_by_id(user_id)
 
         if attempt and not self.options.get("once"):
-            self.application.make("request").cookie("token", attempt.remember_token)
             self.application.make("request").set_user(attempt)
             return attempt
 

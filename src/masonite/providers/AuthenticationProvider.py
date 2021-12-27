@@ -15,8 +15,6 @@ class AuthenticationProvider(Provider):
     def register(self):
         auth = Auth(self.application).set_configuration(config("auth.guards"))
         auth.add_guard("web", WebGuard(self.application))
-        auth.add_guard("jwt", JWTGuard(self.application))
-
         self.application.bind("auth", auth)
 
     def boot(self):

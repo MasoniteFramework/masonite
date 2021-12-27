@@ -50,7 +50,10 @@ class Api:
                 pendulum.now(tz="UTC").add(minutes=expire_minutes).to_datetime_string()
             )
 
-        unencrypted_token = jwt.decode(token, secret, algorithms=[algorithm])
+        try:
+            unencrypted_token = jwt.decode(token, secret, algorithms=[algorithm])
+        except (jwt.InvalidSignatureError, jwt.DecodeError):
+            return False
         expires = unencrypted_token.get("expires")
 
         if version:

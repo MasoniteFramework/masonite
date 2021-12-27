@@ -9,16 +9,8 @@ class JWTGuard:
 
     def attempt(self, username, password):
         attempt = self.options.get("model")().attempt(username, password)
-        if attempt and not self.options.get("once"):
-            self.application.make("response").cookie("token", attempt.remember_token)
-            self.application.make("request").set_user(attempt)
-            return attempt
-
-    def attempt_by_token(self, token):
-        attempt = self.options.get("model")().where("api_token", token).first()
         if attempt:
             return attempt
-        return False
 
     def get_auth_column(self, username):
         return self.options.get("model")().get_auth_column(username)

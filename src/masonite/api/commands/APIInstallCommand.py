@@ -24,7 +24,6 @@ class APIInstallCommand(Command):
         stub_path = self.get_stub_config_path()
 
         content = render_stub_file(stub_path, "api.py")
-        print(content)
 
         path = config_path("api.py")
         if os.path.exists(path) and not self.option("force"):

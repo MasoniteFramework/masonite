@@ -4,7 +4,6 @@
 </p>
 <p align="center">
   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/MasoniteFramework/masonite/Test%20Application">
-  <img src="https://coveralls.io/repos/github/MasoniteFramework/core/badge.svg?branch=master#" alt="License">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/masonite">
   <img src="https://img.shields.io/badge/python-3.7+-blue.svg" alt="Python Version">
   <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/MasoniteFramework/masonite?include_prereleases">

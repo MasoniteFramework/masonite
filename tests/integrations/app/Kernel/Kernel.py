@@ -93,6 +93,7 @@ class Kernel:
                 middleware=["web"],
             )
         )
+        self.application.bind("routes.api.location", "tests/integrations/routes/api")
 
     def register_templates(self):
         self.application.bind("views.location", "tests/integrations/templates")

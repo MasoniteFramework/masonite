@@ -187,3 +187,7 @@ class InputBag:
                 new_dict.update({name: value})
 
         return new_dict
+
+    def add_post(self, key, value):
+        self.post_data.update({key: value})
+        return value

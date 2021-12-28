@@ -24,3 +24,5 @@ include src/masonite/stubs/tests/*
 include src/masonite/stubs/validation/*
 include src/masonite/validation/snippets/*
 include src/masonite/templates/*
+include src/masonite/api/stubs/*
+include src/masonite/api/stubs/routes/*

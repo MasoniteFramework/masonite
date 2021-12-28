@@ -27,7 +27,7 @@ class Route:
             request_method=["get"],
             compilers=self.compilers,
             controllers_locations=module_location or self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -38,7 +38,7 @@ class Route:
             request_method=["post"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -49,7 +49,7 @@ class Route:
             request_method=["put"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -60,7 +60,7 @@ class Route:
             request_method=["patch"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -71,7 +71,7 @@ class Route:
             request_method=["delete"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -82,7 +82,7 @@ class Route:
             request_method=["options"],
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -98,7 +98,7 @@ class Route:
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
             controller_bindings=[new_url, options.get("status", 302)],
-            **options
+            **options,
         )
 
     @classmethod
@@ -110,7 +110,7 @@ class Route:
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
             controller_bindings=[new_url, 301],
-            **options
+            **options,
         )
 
     @classmethod
@@ -121,7 +121,7 @@ class Route:
             request_method=request_methods,
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
-            **options
+            **options,
         )
 
     @classmethod
@@ -148,6 +148,40 @@ class Route:
             inner.append(route)
         self.routes = inner
         return inner
+
+    @classmethod
+    def resource(self, base_url, controller):
+        return [
+            self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
+            self.get(f"/{base_url}/create", f"{controller}@create").name(
+                f"{base_url}.create"
+            ),
+            self.post(f"/{base_url}", f"{controller}@store").name(f"{base_url}.store"),
+            self.get(f"/{base_url}/@id", f"{controller}@show").name(f"{base_url}.show"),
+            self.get(f"/{base_url}/@id/edit", f"{controller}@edit").name(
+                f"{base_url}.edit"
+            ),
+            self.match(
+                ["put", "patch"], f"/{base_url}/@id", f"{controller}@update"
+            ).name(f"{base_url}.update"),
+            self.delete(f"/{base_url}/@id", f"{controller}@destroy").name(
+                f"{base_url}.destroy"
+            ),
+        ]
+
+    @classmethod
+    def api(self, base_url, controller):
+        return [
+            self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
+            self.post(f"/{base_url}", f"{controller}@store").name(f"{base_url}.store"),
+            self.get(f"/{base_url}/@id", f"{controller}@show").name(f"{base_url}.show"),
+            self.match(
+                ["put", "patch"], f"/{base_url}/@id", f"{controller}@update"
+            ).name(f"{base_url}.update"),
+            self.delete(f"/{base_url}/@id", f"{controller}@destroy").name(
+                f"{base_url}.destroy"
+            ),
+        ]
 
     @classmethod
     def compile(self, key, to=""):

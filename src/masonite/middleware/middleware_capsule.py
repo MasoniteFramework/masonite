@@ -62,4 +62,4 @@ class MiddlewareCapsule:
                 )
                 if middleware_response != request:
                     return False
-            return True
+        return True

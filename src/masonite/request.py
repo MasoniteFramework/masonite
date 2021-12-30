@@ -309,9 +309,6 @@ class Request(Extendable):
 
             request_body = self.environ["wsgi.input"].read(request_body_size)
 
-            if isinstance(request_body, bytes):
-                request_body = request_body.decode("utf-8")
-
             return json.loads(request_body or "{}")
         else:
             fields = cgi.FieldStorage(
@@ -349,13 +346,17 @@ class Request(Extendable):
         """Get the standardized value based on the type of the value parameter.
 
         Arguments:
-            value {list|dict|cgi.FileStorage|string}
+            value {list|dict|string|float|bool|cgi.FieldStorage}
 
         Returns:
-            string|bool
+            list|dict|string|float|bool|cgi.FieldStorage|None
         """
         if value is None:
             return None
+
+        # MiniFieldStorage without filename
+        if isinstance(value, MiniFieldStorage) and not value.filename:
+            return value.value
 
         if isinstance(value, list):
 
@@ -373,16 +374,8 @@ class Request(Extendable):
 
             return value
 
-        if isinstance(value, (str, int, dict)):
-            return value
-
-        if not value.filename:
-            return value.value
-
-        if value.filename:
-            return value
-
-        return False
+        # type is int, bool, float, string, or MiniFieldStorage with filename just return
+        return value
 
     def app(self):
         """Return the application container.

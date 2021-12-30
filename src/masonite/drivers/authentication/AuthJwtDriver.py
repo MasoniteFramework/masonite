@@ -9,7 +9,6 @@ from ...helpers import config, cookie_expire_time
 from ...app import App
 
 
-
 class AuthJwtDriver(BaseDriver, AuthContract):
     def __init__(self, app: App):
         """AuthCookieDriver initializer.

@@ -495,6 +495,23 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(request.input('2.item3.0'), 1)
         self.assertEqual(request.input('3.item3'), False)
 
+    def test_json_payload_gets_correct_type(self):
+        app = App()
+        wsgi_environ = generate_wsgi()
+        wsgi_environ['REQUEST_METHOD'] = 'POST'
+        wsgi_environ['CONTENT_TYPE'] = 'application/json'
+
+        route_class = Route()
+        request_class = Request()
+        app.bind('Request', request_class)
+        app.bind('Route', route_class)
+        route = app.make('Route')
+        request = app.make('Request').load_app(app)
+        wsgi_environ['wsgi.input'] = MockWsgiInput('{"int": 1, "float": 3.1415, "bool": false, "null": null}')
+        route.load_environ(wsgi_environ)
+        request.load_environ(wsgi_environ)
+        self.assertEqual(request.all(), {"int": 1, "float": 3.1415, "bool": False, "null": None})
+
     def test_list_as_root_payload_reset_between_requests(self):
         app = App()
         wsgi_environ = generate_wsgi()

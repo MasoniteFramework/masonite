@@ -65,8 +65,10 @@ def main(args=sys.argv[1:]):
     port = "8000"
     if "--host" in args:
         host = args[args.index("--host") + 1]
+    if "-b" in args:
+        host = args[args.index("-b") + 1]
     if "--port" in args:
-        port = args[args.index("--host") + 1]
+        port = args[args.index("--port") + 1]
     if "-p" in args:
         port = args[args.index("-p") + 1]
 

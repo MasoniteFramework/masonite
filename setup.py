@@ -44,6 +44,7 @@ setup(
         "tldextract>=2.2,<2.3",
         "hfilesize>=0.1",
         "dotty_dict>=1.3.0<1.40",
+        "pyjwt>=2.3,<2.4",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

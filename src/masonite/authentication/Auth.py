@@ -55,7 +55,7 @@ class Auth:
             self
         """
         self.application.make("request").remove_user()
-        return self.application.make("request").delete_cookie("token")
+        return self.application.make("response").delete_cookie("token")
 
     def user(self):
         """Logout the current authenticated user.
@@ -153,6 +153,7 @@ class Auth:
     def routes(self):
         return [
             Route.get("/login", "auth.LoginController@show").name("login"),
+            Route.get("/logout", "auth.LoginController@logout").name("logout"),
             Route.get("/home", "auth.HomeController@show").name("auth.home"),
             Route.get("/register", "auth.RegisterController@show").name("register"),
             Route.post("/register", "auth.RegisterController@store").name(

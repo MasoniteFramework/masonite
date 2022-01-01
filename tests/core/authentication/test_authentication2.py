@@ -28,7 +28,9 @@ class TestAuthentication(TestCase):
         self.assertTrue(self.application.make("response").cookie("token"))
 
         self.application.make("auth").guard("web").logout()
-        self.assertTrue(self.application.make("response").cookie_jar.deleted_cookies['token'])
+        self.assertTrue(
+            self.application.make("response").cookie_jar.deleted_cookies["token"]
+        )
 
     def test_attempt_by_id(self):
         self.application.make("auth").guard("web").attempt_by_id(1)

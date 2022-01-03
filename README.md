@@ -25,15 +25,15 @@ Stop using old frameworks with just a few confusing features. Masonite is the de
 
 ## Learning Masonite
 
-New to Masonite ? Please first read the [Official Documentation](https://docs.masoniteproject.com/).
-Masonite strives to have extremely comprehensive documentation 😃. It would be wise to go through the tutorials there.
-If you find any discrepencies or anything that doesn't make sense, be sure to comment directly on the documentation to start a discussion!
+New to Masonite? Read the [Official Documentation](https://docs.masoniteproject.com/).
+Masonite strives to have extremely clear documentation 😃. It would be wise to go through the tutorials there.
+If you find any discrepencies or anything that doesn't make sense, please open an issue and we will get it cleared up!
 
 Have questions or want to talk? Be sure to join the [Masonite Discord Community](https://discord.gg/TwKeFahmPZ)!
 
 ## Getting Started Quickly
 
-If you have a working Python 3.7+ getting started is as quick as typing
+Create and activate a virtual environment and if you have a working Python 3.7+ installation then getting started is as quick as typing
 
 ```bash
 pip install masonite

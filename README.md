@@ -13,7 +13,7 @@
 
 ## About Masonite
 
-Stop using old frameworks with a few confusing features. Masonite is the developer focused dev tool with all the features you need for the rapid development you deserve. Masonite is perfect for beginners getting their first web app deployed or advanced developers and businesses that need to reach for the full fleet of features available. A short list of the available features are:
+Stop using old frameworks with few confusing features. Masonite is the developer focused dev tool with all the features you need for the rapid development you deserve. Masonite is perfect for beginners getting their first web app deployed or advanced developers and businesses that need to reach for the full fleet of features available. A short list of the available features are:
 
 * Mail support for sending emails quickly.
 * Queue support to speed your application up by sending jobs to run on a queue or asynchronously.

@@ -78,7 +78,7 @@ class PackageProvider(Provider):
         Config.merge_with(self.package.name, self.package.config)
         if publish:
             resource = PublishableResource("config")
-            config_abs_path = self.package._build_path(self.config)
+            config_abs_path = self.package._build_path(self.package.config)
             resource.add(config_abs_path, config_path(f"{self.package.name}.py"))
             self.files.update({resource.key: resource.files})
         return self

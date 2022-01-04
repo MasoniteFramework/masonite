@@ -29,7 +29,6 @@ class PackageProvider(Provider):
         self.application = application
         # TODO: the default here could be set auto by deciding that its the dirname containing the provider !
         self.package = Package()
-        self.files = {}
         self.default_resources = ["config", "views", "migrations", "assets"]
 
     def register(self):
@@ -47,7 +46,7 @@ class PackageProvider(Provider):
         resources_list = resources or self.default_resources
         published_resources = defaultdict(lambda: [])
         for resource in resources_list:
-            resource_files = self.files.get(resource, [])
+            resource_files = self.pacakge.files.get(resource, [])
             for source, dest in resource_files:
                 if not dry:
                     shutil.copy(source, dest)
@@ -77,10 +76,9 @@ class PackageProvider(Provider):
         self.package.add_config(config_filepath)
         Config.merge_with(self.package.name, self.package.config)
         if publish:
-            resource = PublishableResource("config")
-            config_abs_path = self.package._build_path(self.package.config)
-            resource.add(config_abs_path, config_path(f"{self.package.name}.py"))
-            self.files.update({resource.key: resource.files})
+            self.package.add_publishable_resource(
+                "config", config_filepath, config_path(f"{self.package.name}.py")
+            )
         return self
 
     def views(self, *locations, publish=False):
@@ -94,12 +92,12 @@ class PackageProvider(Provider):
         )
 
         if publish:
-            resource = PublishableResource("views")
-            for location in self.package.views:
+            for location in locations:
                 location_abs_path = self.package._build_path(location)
                 for dirpath, _, filenames in os.walk(location_abs_path):
                     for f in filenames:
-                        resource.add(
+                        self.package.add_publishable_resource(
+                            "views",
                             abspath(join(dirpath, f)),
                             views_path(
                                 join(
@@ -110,7 +108,7 @@ class PackageProvider(Provider):
                                 )
                             ),
                         )
-            self.files.update({resource.key: resource.files})
+
         return self
 
     def commands(self, *commands):

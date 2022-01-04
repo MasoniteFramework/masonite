@@ -1,1 +1,2 @@
-PARAM_1 = 0
+PARAM_1 = "test"
+PARAM_2 = 1

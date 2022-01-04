@@ -4,11 +4,9 @@ from tests import TestCase
 
 
 class TestPackageProvider(TestCase):
-    def test_config_is_loaded(self):
-        self.assertEqual(config("test_package.param_2"), 1)
-
     def test_config_is_merged(self):
-        self.assertEqual(config("test_package.param_1"), 0)
+        self.assertEqual(config("test_package.param_1"), "test")
+        self.assertEqual(config("test_package.param_2"), 0)
 
     def test_views_are_registered(self):
         self.application.make("view").exists("test_package:package")

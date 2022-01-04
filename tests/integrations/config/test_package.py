@@ -1,2 +1,1 @@
-PARAM_1 = "test"
-PARAM_2 = 1
+PARAM_2 = 0

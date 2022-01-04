@@ -12,7 +12,7 @@ include src/masonite/stubs/presets/base/*
 include src/masonite/stubs/presets/tailwind/*
 include src/masonite/stubs/presets/vue/*
 include src/masonite/stubs/presets/react/*
-include src/masonite/stubs/presets/boostrap/*
+include src/masonite/stubs/presets/bootstrap/*
 include src/masonite/stubs/providers/*
 include src/masonite/stubs/queue/*
 include src/masonite/stubs/scheduling/*

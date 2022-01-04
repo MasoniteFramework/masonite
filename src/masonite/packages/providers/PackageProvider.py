@@ -1,6 +1,6 @@
 import os
 from collections import defaultdict
-from os.path import relpath, join, abspath, basename, isdir, isfile, dirname
+from os.path import relpath, join, basename, isdir, isfile, dirname
 import shutil
 
 from ...providers.Provider import Provider
@@ -128,9 +128,6 @@ class PackageProvider(Provider):
                 migration,
                 migrations_path(f"{migration_timestamp()}_{basename(migration)}"),
             )
-        import pdb
-
-        pdb.set_trace()
         return self
 
     def routes(self, *routes):

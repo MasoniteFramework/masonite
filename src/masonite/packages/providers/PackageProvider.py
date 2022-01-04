@@ -1,6 +1,6 @@
 import os
 from collections import defaultdict
-from os.path import relpath, join, abspath, basename, isdir, isfile
+from os.path import relpath, join, abspath, basename, isdir, isfile, dirname
 import shutil
 from ...providers.Provider import Provider
 from ...exceptions import InvalidPackageName
@@ -54,9 +54,10 @@ class PackageProvider(Provider):
                 published_resources[resource].append(relpath(dest, project_root))
         return published_resources
 
-    def root(self, abs_root_dir):
-        # TODO ensure abs path here!
-        self.package.root_dir = abs_root_dir
+    def root(self, relative_dir):
+        module = load(relative_dir)
+        self.package.module_root = relative_dir
+        self.package.abs_root = dirname(module.__file__)
         return self
 
     def name(self, name):
@@ -77,7 +78,8 @@ class PackageProvider(Provider):
         Config.merge_with(self.package.name, self.package.config)
         if publish:
             resource = PublishableResource("config")
-            resource.add(self.package.config, config_path(f"{self.package.name}.py"))
+            config_abs_path = self.package._build_path(self.config)
+            resource.add(config_abs_path, config_path(f"{self.package.name}.py"))
             self.files.update({resource.key: resource.files})
         return self
 
@@ -94,8 +96,8 @@ class PackageProvider(Provider):
         if publish:
             resource = PublishableResource("views")
             for location in self.package.views:
-                # views = get all files in this folder
-                for dirpath, _, filenames in os.walk(location):
+                location_abs_path = self.package._build_path(location)
+                for dirpath, _, filenames in os.walk(location_abs_path):
                     for f in filenames:
                         resource.add(
                             abspath(join(dirpath, f)),
@@ -119,8 +121,9 @@ class PackageProvider(Provider):
         self.package.add_migrations(*migrations)
         resource = PublishableResource("migrations")
         for migration in self.package.migrations:
+            migration_abs_path = self.package._build_path(migration)
             resource.add(
-                migration,
+                migration_abs_path,
                 migrations_path(f"{migration_timestamp()}_{basename(migration)}"),
             )
         self.files.update({resource.key: resource.files})
@@ -144,12 +147,12 @@ class PackageProvider(Provider):
         self.package.add_assets(*assets)
         resource = PublishableResource("assets")
         for asset_dir_or_file in self.package.assets:
-            # views = get all files in this folder
-            if isdir(asset_dir_or_file):
+            abs_path = self.package._build_path(asset_dir_or_file)
+            if isdir(abs_path):
                 for dirpath, _, filenames in os.walk(asset_dir_or_file):
                     for f in filenames:
                         resource.add(
-                            abspath(join(dirpath, f)),
+                            join(dirpath, f),
                             resources_path(
                                 join(
                                     self.vendor_prefix,
@@ -161,7 +164,7 @@ class PackageProvider(Provider):
                         )
             elif isfile(asset_dir_or_file):
                 resource.add(
-                    abspath(asset_dir_or_file),
+                    abs_path,
                     resources_path(
                         join(
                             self.vendor_prefix,

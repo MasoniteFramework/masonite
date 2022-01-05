@@ -133,6 +133,7 @@ setup(
         "masonite.pipeline.tasks",
         "masonite.pipeline",
         "masonite.presets",
+        "masonite.presets.providers",
         "masonite.providers",
         "masonite.queues",
         "masonite.request",

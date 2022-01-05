@@ -27,3 +27,10 @@ class TestPackageProvider(TestCase):
     def test_routes_are_registered(self):
         self.get("/package/test/").assertContains("index")
         self.get("/api/package/test/").assertCreated()
+
+    def test_presets_are_registered(self):
+        output = self.craft("preset", "--list")
+        # verify that the "test" preset has been registered
+        output.assertOutputContains("test")
+        # verify that the "test" preset can be ran
+        self.craft("preset", "test").assertSuccess()

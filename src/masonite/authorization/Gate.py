@@ -1,5 +1,4 @@
 from inspect import isclass, signature
-from masoniteorm import Model
 
 from .AuthorizationResponse import AuthorizationResponse
 from ..exceptions.exceptions import GateDoesNotExist, PolicyDoesNotExist
@@ -35,11 +34,11 @@ class Gate:
         return self
 
     def get_policy_for(self, instance):
-        if isinstance(instance, Model):
-            policy = self.policies.get(instance.__class__, None)
-        elif isclass(instance):
+        if isclass(instance):
             policy = self.policies.get(instance, None)
-        elif isinstance(instance, str):
+        elif hasattr(instance, "policies"):
+            policy = self.policies.get(instance.__class__, None)
+        else:
             # TODO: load model from str, get class and get policies
             policy = None
         if policy:

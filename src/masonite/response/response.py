@@ -129,6 +129,10 @@ class Response:
         Returns:
             string -- Returns a string representation of the response
         """
+
+        if isinstance(self.content, str):
+            return bytes(self.content, "utf-8")
+
         return self.content
 
     def converted_data(self):
@@ -179,10 +183,7 @@ class Response:
                 "Responses cannot be of type: None. Did you return anything in your responsable method?"
             )
 
-        if isinstance(view, str):
-            self.content = bytes(view, "utf-8")
-        else:
-            self.content = view
+        self.content = view
 
         self.make_headers()
 

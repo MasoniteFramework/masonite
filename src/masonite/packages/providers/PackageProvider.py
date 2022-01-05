@@ -1,7 +1,8 @@
 import os
 from collections import defaultdict
-from os.path import relpath, join, abspath, basename, isdir, isfile
+from os.path import relpath, join, basename, isdir, isfile, dirname
 import shutil
+
 from ...providers.Provider import Provider
 from ...exceptions import InvalidPackageName
 from ...utils.location import (
@@ -15,10 +16,10 @@ from ...facades import Config
 from ...utils.time import migration_timestamp
 from ...routes import Route
 from ...utils.structures import load
+from ...utils.filesystem import make_directory
 
 from ..reserved_names import PACKAGE_RESERVED_NAMES
 from ..Package import Package
-from ..PublishableResource import PublishableResource
 
 
 class PackageProvider(Provider):
@@ -27,9 +28,9 @@ class PackageProvider(Provider):
 
     def __init__(self, application):
         self.application = application
-        # TODO: the default here could be set auto by deciding that its the dirname containing the provider !
+        # TODO: the default here could be set auto by deciding that its the dirname
+        # containing the provider !
         self.package = Package()
-        self.files = {}
         self.default_resources = ["config", "views", "migrations", "assets"]
 
     def register(self):
@@ -47,16 +48,20 @@ class PackageProvider(Provider):
         resources_list = resources or self.default_resources
         published_resources = defaultdict(lambda: [])
         for resource in resources_list:
-            resource_files = self.files.get(resource, [])
-            for source, dest in resource_files:
+            resource = self.package.resources.get(resource)
+            if not resource:
+                continue
+            for source, dest in resource.files:
                 if not dry:
+                    make_directory(dest)
                     shutil.copy(source, dest)
-                published_resources[resource].append(relpath(dest, project_root))
+                published_resources[resource.key].append(relpath(dest, project_root))
         return published_resources
 
-    def root(self, abs_root_dir):
-        # TODO ensure abs path here!
-        self.package.root_dir = abs_root_dir
+    def root(self, relative_dir):
+        module = load(relative_dir)
+        self.package.module_root = relative_dir
+        self.package.abs_root = dirname(module.__file__)
         return self
 
     def name(self, name):
@@ -76,9 +81,9 @@ class PackageProvider(Provider):
         self.package.add_config(config_filepath)
         Config.merge_with(self.package.name, self.package.config)
         if publish:
-            resource = PublishableResource("config")
-            resource.add(self.package.config, config_path(f"{self.package.name}.py"))
-            self.files.update({resource.key: resource.files})
+            self.package.add_publishable_resource(
+                "config", config_filepath, config_path(f"{self.package.name}.py")
+            )
         return self
 
     def views(self, *locations, publish=False):
@@ -92,23 +97,23 @@ class PackageProvider(Provider):
         )
 
         if publish:
-            resource = PublishableResource("views")
-            for location in self.package.views:
-                # views = get all files in this folder
-                for dirpath, _, filenames in os.walk(location):
+            for location in locations:
+                location_abs_path = self.package._build_path(location)
+                for dirpath, _, filenames in os.walk(location_abs_path):
                     for f in filenames:
-                        resource.add(
-                            abspath(join(dirpath, f)),
+                        view_abs_path = join(dirpath, f)
+                        self.package.add_publishable_resource(
+                            "views",
+                            view_abs_path,
                             views_path(
                                 join(
                                     self.vendor_prefix,
                                     self.package.name,
-                                    relpath(dirpath, location),
-                                    f,
+                                    relpath(view_abs_path, location_abs_path),
                                 )
                             ),
                         )
-            self.files.update({resource.key: resource.files})
+
         return self
 
     def commands(self, *commands):
@@ -117,13 +122,12 @@ class PackageProvider(Provider):
 
     def migrations(self, *migrations):
         self.package.add_migrations(*migrations)
-        resource = PublishableResource("migrations")
-        for migration in self.package.migrations:
-            resource.add(
+        for migration in migrations:
+            self.package.add_publishable_resource(
+                "migrations",
                 migration,
                 migrations_path(f"{migration_timestamp()}_{basename(migration)}"),
             )
-        self.files.update({resource.key: resource.files})
         return self
 
     def routes(self, *routes):
@@ -142,26 +146,27 @@ class PackageProvider(Provider):
 
     def assets(self, *assets):
         self.package.add_assets(*assets)
-        resource = PublishableResource("assets")
-        for asset_dir_or_file in self.package.assets:
-            # views = get all files in this folder
-            if isdir(asset_dir_or_file):
-                for dirpath, _, filenames in os.walk(asset_dir_or_file):
+        for asset_dir_or_file in assets:
+            abs_path = self.package._build_path(asset_dir_or_file)
+            if isdir(abs_path):
+                for dirpath, _, filenames in os.walk(abs_path):
                     for f in filenames:
-                        resource.add(
-                            abspath(join(dirpath, f)),
+                        asset_abs_path = join(dirpath, f)
+                        self.package.add_publishable_resource(
+                            "assets",
+                            asset_abs_path,
                             resources_path(
                                 join(
                                     self.vendor_prefix,
                                     self.package.name,
-                                    relpath(dirpath, asset_dir_or_file),
-                                    f,
+                                    relpath(asset_abs_path, abs_path),
                                 )
                             ),
                         )
-            elif isfile(asset_dir_or_file):
-                resource.add(
-                    abspath(asset_dir_or_file),
+            elif isfile(abs_path):
+                self.package.add_publishable_resource(
+                    "assets",
+                    abs_path,
                     resources_path(
                         join(
                             self.vendor_prefix,
@@ -170,5 +175,5 @@ class PackageProvider(Provider):
                         )
                     ),
                 )
-        self.files.update({resource.key: resource.files})
+
         return self

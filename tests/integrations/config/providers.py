@@ -16,6 +16,7 @@ from src.masonite.providers import (
     AuthorizationProvider,
     HashServiceProvider,
     ORMProvider,
+    PresetsProvider,
 )
 
 
@@ -50,5 +51,6 @@ PROVIDERS = [
     MyTestPackageProvider,
     AppProvider,
     ORMProvider,
+    PresetsProvider,
     ApiProvider,
 ]

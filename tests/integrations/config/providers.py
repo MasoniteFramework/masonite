@@ -48,9 +48,9 @@ PROVIDERS = [
     AuthenticationProvider,
     AuthorizationProvider,
     ValidationProvider,
+    PresetsProvider,
     MyTestPackageProvider,
     AppProvider,
     ORMProvider,
-    PresetsProvider,
     ApiProvider,
 ]

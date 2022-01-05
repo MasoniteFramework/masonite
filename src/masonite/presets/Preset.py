@@ -61,9 +61,6 @@ class Preset:
     def update_js(self):
         """Create/Override an app.js file configured for the preset."""
         make_full_directory(resources_path("js"))
-        import pdb
-
-        pdb.set_trace()
         shutil.copyfile(self.get_template_path("app.js"), resources_path("js/app.js"))
         shutil.copyfile(
             self.get_base_template_path("bootstrap.js"),

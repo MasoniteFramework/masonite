@@ -2,7 +2,7 @@
 import uuid
 
 from ..exceptions.exceptions import NotificationException
-from ..queues import ShouldQueue
+from ..utils.collections import Collection
 from .AnonymousNotifiable import AnonymousNotifiable
 
 
@@ -73,8 +73,6 @@ class NotificationManager:
         return results[0] if len(results) == 1 else results
 
     def _format_notifiables(self, notifiables):
-        from masoniteorm.collection import Collection
-
         if isinstance(notifiables, (list, tuple, Collection)):
             return notifiables
         else:

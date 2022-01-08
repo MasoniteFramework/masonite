@@ -24,3 +24,6 @@ class File:
 
     def hash_name(self):
         return hashlib.sha1(bytes(self.name(), "utf-8")).hexdigest()
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(name={self.name()})"

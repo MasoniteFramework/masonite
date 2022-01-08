@@ -36,3 +36,6 @@ class TestLocalStorage(TestCase):
     def test_can_append_file(self):
         self.driver.append("world.log", "hello")
         self.driver.prepend("world.log", "world")
+
+    def test_can_get_contents_of_directory(self):
+        self.driver.get_files()

@@ -1,6 +1,7 @@
 import os
 from shutil import copyfile, move
 from ..FileStream import FileStream
+from ..File import File
 import uuid
 
 
@@ -144,3 +145,18 @@ class AmazonS3Driver:
             return True
 
         return False
+
+    def get_files(self, directory=None):
+        bucket = self.get_connection().resource("s3").Bucket(self.get_bucket())
+
+        if directory:
+            objects = bucket.objects.all().filter(Prefix=directory)
+        else:
+            objects = bucket.objects.all()
+
+        files = []
+        for my_bucket_object in objects.all():
+            if "/" not in my_bucket_object.key:
+                files.append(File(my_bucket_object, my_bucket_object.key))
+
+        return files

@@ -2,7 +2,6 @@
 import uuid
 
 from ..exceptions.exceptions import NotificationException
-from ..queues import ShouldQueue
 from .AnonymousNotifiable import AnonymousNotifiable
 
 

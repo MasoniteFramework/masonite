@@ -1,8 +1,4 @@
 from tests import TestCase
-from src.masonite.foundation import Application
-import os
-from masoniteorm.models import Model
-from src.masonite.authentication import Authenticates, Auth
 
 
 class TestAuthentication(TestCase):

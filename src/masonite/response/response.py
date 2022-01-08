@@ -129,7 +129,6 @@ class Response:
         Returns:
             string -- Returns a string representation of the response
         """
-
         if isinstance(self.content, str):
             return bytes(self.content, "utf-8")
 

@@ -33,14 +33,14 @@ class Gate:
             self.policies[model_class] = policy_class
         return self
 
-    def get_policy_for(self, instance):
-        if isclass(instance):
-            policy = self.policies.get(instance, None)
-        elif hasattr(instance, "policies"):
-            policy = self.policies.get(instance.__class__, None)
-        else:
+    def get_policy_for(self, instance_or_class):
+        if isinstance(instance_or_class, str):
             # TODO: load model from str, get class and get policies
             policy = None
+        elif isclass(instance_or_class):
+            policy = self.policies.get(instance_or_class, None)
+        else:
+            policy = self.policies.get(instance_or_class.__class__, None)
         if policy:
             return policy()
         else:

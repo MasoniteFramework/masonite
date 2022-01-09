@@ -51,7 +51,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def get_request_method(self):
         return self.environ.get("REQUEST_METHOD")
 
-    def input(self, name, default=False):
+    def input(self, name, default=""):
         """Get a specific input value.
 
         Arguments:

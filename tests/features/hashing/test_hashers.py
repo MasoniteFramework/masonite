@@ -33,7 +33,7 @@ class TestHashers(TestCase):
         assert Hash.needs_rehash(hashed, driver="argon2")
 
     def test_should_return_hash_content_as_string(self):
-      
+
         drivers = ["argon2", "bcrypt"]
 
         for driver in drivers:

@@ -31,3 +31,12 @@ class TestHashers(TestCase):
         # Here argon2 method is invoked without custom options and will
         # use default argon2 configuration, so rehash will be needed
         assert Hash.needs_rehash(hashed, driver="argon2")
+
+    def test_should_return_hash_content_as_string(self):
+      
+        drivers = ["argon2", "bcrypt"]
+
+        for driver in drivers:
+            with self.subTest(driver=driver):
+                hashed = Hash.make("masonite", driver=driver)
+                assert type(hashed) == str

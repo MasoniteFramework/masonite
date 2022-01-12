@@ -34,7 +34,7 @@ class TestHashers(TestCase):
 
     def test_should_return_hash_content_as_string(self):
 
-        drivers = ["argon2", "bcrypt"]
+        drivers = Hash.drivers.keys()
 
         for driver in drivers:
             with self.subTest(driver=driver):

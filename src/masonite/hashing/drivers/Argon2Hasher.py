@@ -22,8 +22,11 @@ class Argon2Hasher:
         )
 
     def make(self, string):
+        return self.make_bytes(string).decode("utf-8")
+
+    def make_bytes(self, string):
         ph = self._get_password_hasher()
-        return str(ph.hash(bytes(string, "utf-8")))
+        return bytes(ph.hash(bytes(string, "utf-8")), "utf-8")
 
     def check(self, plain_string, hashed_string):
         ph = self._get_password_hasher()

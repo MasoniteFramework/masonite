@@ -10,9 +10,12 @@ class BcryptHasher:
         return self
 
     def make(self, string):
+        return self.make_bytes(string).decode("utf-8")
+
+    def make_bytes(self, string):
         rounds = self.options.get("rounds", 12)
         salt = bcrypt.gensalt(rounds=rounds)
-        return bcrypt.hashpw(bytes(string, "utf-8"), salt).decode("utf-8")
+        return bcrypt.hashpw(bytes(string, "utf-8"), salt)
 
     def check(self, plain_string, hashed_string):
         if not isinstance(hashed_string, bytes):

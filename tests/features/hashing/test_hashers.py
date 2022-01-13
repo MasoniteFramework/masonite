@@ -3,20 +3,17 @@ from src.masonite.facades import Hash
 
 
 class TestHashers(TestCase):
-    def test_bcrypt_hasher(self):
-        hashed = Hash.make("masonite")
-        assert hashed != "masonite"
-        assert Hash.check("masonite", hashed)
+    def test_should_hash_and_check_using_hasher(self):
+
+        for driver in Hash.drivers.keys():
+            hashed = Hash.make("masonite", driver=driver)
+            assert hashed != "masonite"
+            assert Hash.check("masonite", hashed, driver=driver)
 
     def test_bcrypt_needs_rehash(self):
         hashed = Hash.make("masonite", options={"rounds": 5})
         # here no options is given so default rounds will be used (10 in tests config)
         assert Hash.needs_rehash(hashed)
-
-    def test_argon2_hasher(self):
-        hashed = Hash.make("masonite", driver="argon2")
-        assert hashed != "masonite"
-        assert Hash.check("masonite", hashed, driver="argon2")
 
     def test_argon2_needs_rehash(self):
         hashed = Hash.make(

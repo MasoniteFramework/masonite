@@ -34,9 +34,12 @@ class TestHashers(TestCase):
 
     def test_should_return_hash_content_as_string(self):
 
-        drivers = Hash.drivers.keys()
+        for driver in Hash.drivers.keys():
+            hashed = Hash.make("masonite", driver=driver)
+            assert type(hashed) == str
 
-        for driver in drivers:
-            with self.subTest(driver=driver):
-                hashed = Hash.make("masonite", driver=driver)
-                assert type(hashed) == str
+    def test_should_return_hash_content_as_bytes(self):
+
+        for driver in Hash.drivers.keys():
+            hashed = Hash.make_bytes("masonite", driver=driver)
+            assert type(hashed) == bytes

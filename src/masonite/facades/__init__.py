@@ -11,3 +11,4 @@ from .Auth import Auth
 from .Config import Config
 from .Loader import Loader
 from .Notification import Notification
+from .Storage import Storage

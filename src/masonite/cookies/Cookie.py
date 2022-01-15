@@ -8,6 +8,7 @@ class Cookie:
         path="/",
         timezone=None,
         secure=False,
+        samesite='Strict',
     ):
         self.name = name
         self.value = value
@@ -15,6 +16,7 @@ class Cookie:
         self.secure = secure
         self.expires = expires
         self.timezone = timezone
+        self.samesite = samesite
         self.path = path
 
     def render(self):
@@ -30,5 +32,7 @@ class Cookie:
                 response += f"Expires={self.expires};"
         if self.path:
             response += f"Path={self.path};"
+        if self.samesite:
+            response += f"SameSite={self.samesite};"
 
         return response

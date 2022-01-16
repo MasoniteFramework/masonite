@@ -75,6 +75,7 @@ setup(
     # simple. Or you can use find_packages().
     packages=[
         "masonite",
+        "masonite.api",
         "masonite.api.authentication",
         "masonite.api.commands",
         "masonite.api.controllers",

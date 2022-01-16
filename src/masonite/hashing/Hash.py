@@ -23,11 +23,19 @@ class Hash:
         return self.driver_config.get(driver, {})
 
     def make(self, string, options={}, driver=None):
-        """Hash a string based on configured hashing protocol."""
+        """Hash a string and return as string based on configured hashing protocol."""
         return (
             self.get_driver(driver)
             .set_options(options or self.get_config_options(driver))
             .make(string)
+        )
+
+    def make_bytes(self, string, options={}, driver=None):
+        """Hash a string and return as bytes based on configured hashing protocol."""
+        return (
+            self.get_driver(driver)
+            .set_options(options or self.get_config_options(driver))
+            .make_bytes(string)
         )
 
     def check(self, plain_string, hashed_string, options={}, driver=None):

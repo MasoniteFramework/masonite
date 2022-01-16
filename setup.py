@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 
 meta = {}
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'src/masonite', '__version__.py'), 'r') as f:
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'src/masonite', '__init__.py'), 'r') as f:
     exec(f.read(), meta)
 
 with open("README.md", "r") as fh:
@@ -80,6 +80,16 @@ setup(
     # simple. Or you can use find_packages().
     packages=[
         "masonite",
+        "masonite.api",
+        "masonite.api.authentication",
+        "masonite.api.commands",
+        "masonite.api.controllers",
+        "masonite.api.facades",
+        "masonite.api.guards",
+        "masonite.api.middleware",
+        "masonite.api.providers",
+        "masonite.api.stubs",
+        "masonite.api.stubs.routes",
         "masonite.auth",
         "masonite.authentication.guards",
         "masonite.authentication.models",

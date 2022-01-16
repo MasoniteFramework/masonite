@@ -1,4 +1,9 @@
 from setuptools import setup
+import os
+
+meta = {}
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'src/masonite', '__version__.py'), 'r') as f:
+    exec(f.read(), meta)
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -8,7 +13,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="4.1.3",
+    version=meta["__version__"],
     package_dir={"": "src"},
     description="The Masonite Framework",
     long_description=long_description,

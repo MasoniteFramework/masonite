@@ -20,7 +20,8 @@ class TestCookies(unittest.TestCase):
         cookiejar = CookieJar()
         cookiejar.add("cookie", "name", http_only=False)
         self.assertEqual(
-            cookiejar.render_response(), [("Set-Cookie", "cookie=name;Path=/;SameSite=Strict;")]
+            cookiejar.render_response(),
+            [("Set-Cookie", "cookie=name;Path=/;SameSite=Strict;")],
         )
 
     def test_cookie_jar_can_render_multiple_cookies(self):
@@ -49,7 +50,12 @@ class TestCookies(unittest.TestCase):
         cookiejar.add("cookie1", "name", path="/", expires=time, timezone="GMT")
         self.assertEqual(
             cookiejar.render_response(),
-            [("Set-Cookie", f"cookie1=name;HttpOnly;Expires={time} GMT;Path=/;SameSite=Strict;")],
+            [
+                (
+                    "Set-Cookie",
+                    f"cookie1=name;HttpOnly;Expires={time} GMT;Path=/;SameSite=Strict;",
+                )
+            ],
         )
 
     def test_cookie_with_expired_already(self):
@@ -58,7 +64,12 @@ class TestCookies(unittest.TestCase):
         cookiejar.add("cookie1", "name", path="/", expires=time, timezone="GMT")
         self.assertEqual(
             cookiejar.render_response(),
-            [("Set-Cookie", f"cookie1=name;HttpOnly;Expires={time} GMT;Path=/;SameSite=Strict;")],
+            [
+                (
+                    "Set-Cookie",
+                    f"cookie1=name;HttpOnly;Expires={time} GMT;Path=/;SameSite=Strict;",
+                )
+            ],
         )
 
     def test_cookie_can_load(self):
@@ -66,7 +77,8 @@ class TestCookies(unittest.TestCase):
         cookiejar.add("cookie1", "name", http_only=False)
         cookiejar.load("csrf_token=tok")
         self.assertEqual(
-            cookiejar.render_response(), [("Set-Cookie", "cookie1=name;Path=/;SameSite=Strict;")]
+            cookiejar.render_response(),
+            [("Set-Cookie", "cookie1=name;Path=/;SameSite=Strict;")],
         )
         self.assertEqual(cookiejar.get("csrf_token").value, "tok")
 
@@ -74,5 +86,6 @@ class TestCookies(unittest.TestCase):
         cookiejar = CookieJar()
         cookiejar.add("cookie1", "name", http_only=False, secure=True)
         self.assertEqual(
-            cookiejar.render_response(), [("Set-Cookie", "cookie1=name;Secure;Path=/;SameSite=Strict;")]
+            cookiejar.render_response(),
+            [("Set-Cookie", "cookie1=name;Secure;Path=/;SameSite=Strict;")],
         )

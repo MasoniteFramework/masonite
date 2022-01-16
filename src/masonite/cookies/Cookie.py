@@ -8,7 +8,7 @@ class Cookie:
         path="/",
         timezone=None,
         secure=False,
-        samesite='Strict',
+        samesite="Strict",
     ):
         self.name = name
         self.value = value

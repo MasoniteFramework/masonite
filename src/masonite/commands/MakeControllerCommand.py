@@ -5,7 +5,6 @@ from ..utils.location import controllers_path
 from ..utils.filesystem import get_module_dir, render_stub_file
 from .Command import Command
 
-
 class MakeControllerCommand(Command):
     """
     Creates a new controller class.
@@ -22,7 +21,19 @@ class MakeControllerCommand(Command):
         self.app = application
 
     def handle(self):
-        name = inflection.camelize(self.argument("name"))
+
+        full_path = self.argument("name")
+
+        if "/" in full_path:
+            name = inflection.camelize(os.path.basename(full_path))
+            parent_directory = os.path.dirname(full_path)
+        else:
+            name = inflection.camelize(full_path)
+            parent_directory = ""
+        
+        folder_controller = controllers_path(parent_directory)
+        os.makedirs(folder_controller, exist_ok=True)
+        
         if not name.endswith("Controller"):
             name += "Controller"
 
@@ -37,17 +48,19 @@ class MakeControllerCommand(Command):
         content = render_stub_file(stub_path, name)
 
         filename = f"{name}.py"
-        path = controllers_path(filename)
-        if os.path.exists(path) and not self.option("force"):
+        full_path_with_name = os.path.join(controllers_path(folder_controller), filename)
+
+        if os.path.exists(full_path_with_name) and not self.option("force"):
             self.warning(
                 f"{path} already exists! Run the command with -f (force) to override."
             )
             return -1
 
-        with open(path, "w") as f:
+        with open(full_path_with_name, "w") as f:
             f.write(content)
 
-        self.info(f"Controller Created ({controllers_path(filename, absolute=False)})")
+        file_created = os.path.join(parent_directory, filename)
+        self.info(f"Controller Created ({controllers_path(file_created, absolute=False)})")
 
     def get_basic_controller_path(self):
         return os.path.join(

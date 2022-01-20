@@ -55,7 +55,7 @@ class MakeControllerCommand(Command):
 
         if os.path.exists(full_path_with_name) and not self.option("force"):
             self.warning(
-                f"{path} already exists! Run the command with -f (force) to override."
+                f"{filename} already exists! Run the command with -f (force) to override."
             )
             return -1
 

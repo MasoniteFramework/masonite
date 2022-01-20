@@ -92,9 +92,10 @@ class PackageProvider(Provider):
         """
         self.package.add_views(*locations)
         # register views into project
-        self.application.make("view").add_namespace(
-            self.package.name, self.package.views[0]
-        )
+        for view in self.package.views:
+            self.application.make("view").add_namespaced_location(
+                self.package.name, view
+            )
 
         if publish:
             for location in locations:

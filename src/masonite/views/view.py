@@ -183,13 +183,6 @@ class View:
     def add_from_package(self, package_name, path_in_package):
         self.environments.append(PackageLoader(package_name, path_in_package))
 
-    def add_namespace(self, namespace, path):
-        self.namespaces[namespace].append(
-            views_path(f"vendor/{namespace}/", absolute=False)
-        )
-        # put this one in 2nd as project (overriden) views must be used first
-        self.namespaces[namespace].append(path)
-
     def filter(self, name, function):
         """Use to add filters to views.
 

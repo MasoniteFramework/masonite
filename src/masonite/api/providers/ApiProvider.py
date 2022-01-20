@@ -6,7 +6,6 @@ from ..Api import Api
 
 from ...routes import Route
 from ...utils.structures import load
-import os
 
 
 class ApiProvider(Provider):

@@ -34,7 +34,7 @@ class Package:
 
     def add_views(self, location):
         views_folder = self._build_module_path(location)
-        if not os.path.isdir(views_folder):
+        if not os.path.isdir(self._build_path(location)):
             raise ValueError(
                 "views() first argument must be a folder containing all package views."
             )

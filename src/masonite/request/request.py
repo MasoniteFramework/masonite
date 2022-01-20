@@ -23,6 +23,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.input_bag = InputBag()
         self.params = {}
         self._user = None
+        self._subdomains_activated = False
         self.load()
 
     def load(self):
@@ -128,6 +129,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
         return regex.match(self.get_path())
 
     def get_subdomain(self, exclude_www=True):
+        if not self._subdomains_activated:
+            return None
+
         url = tldextract.extract(self.get_host())
         if url.subdomain == "" or (
             url.subdomain and exclude_www and url.subdomain == "www"
@@ -138,3 +142,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
     def get_host(self):
         return self.environ.get("HTTP_HOST")
+
+    def activate_subdomains(self):
+        self._subdomains_activated = True
+        return self

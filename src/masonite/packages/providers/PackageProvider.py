@@ -86,34 +86,32 @@ class PackageProvider(Provider):
             )
         return self
 
-    def views(self, *locations, publish=False):
+    def views(self, location, publish=False):
         """Register views location in the project.
         locations must be a folder containinng the views you want to publish.
         """
-        self.package.add_views(*locations)
+        self.package.add_views(location)
         # register views into project
-        for view in self.package.views:
-            self.application.make("view").add_namespaced_location(
-                self.package.name, view
-            )
+        self.application.make("view").add_namespaced_location(
+            self.package.name, self.package.views
+        )
 
         if publish:
-            for location in locations:
-                location_abs_path = self.package._build_path(location)
-                for dirpath, _, filenames in os.walk(location_abs_path):
-                    for f in filenames:
-                        view_abs_path = join(dirpath, f)
-                        self.package.add_publishable_resource(
-                            "views",
-                            view_abs_path,
-                            views_path(
-                                join(
-                                    self.vendor_prefix,
-                                    self.package.name,
-                                    relpath(view_abs_path, location_abs_path),
-                                )
-                            ),
-                        )
+            location_abs_path = self.package._build_path(location)
+            for dirpath, _, filenames in os.walk(location_abs_path):
+                for f in filenames:
+                    view_abs_path = join(dirpath, f)
+                    self.package.add_publishable_resource(
+                        "views",
+                        view_abs_path,
+                        views_path(
+                            join(
+                                self.vendor_prefix,
+                                self.package.name,
+                                relpath(view_abs_path, location_abs_path),
+                            )
+                        ),
+                    )
 
         return self
 

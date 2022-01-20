@@ -32,9 +32,13 @@ class Package:
         self.config = self._build_module_path(config_path)
         return self
 
-    def add_views(self, *locations):
-        for location in locations:
-            self.views.append(self._build_module_path(location))
+    def add_views(self, location):
+        views_folder = self._build_module_path(location)
+        if not os.path.isdir(views_folder):
+            raise ValueError(
+                "views() first argument must be a folder containing all package views."
+            )
+        self.views = views_folder
         return self
 
     def add_migrations(self, *migrations):

@@ -184,7 +184,6 @@ class View:
         self.environments.append(PackageLoader(package_name, path_in_package))
 
     def add_namespace(self, namespace, path):
-        # TODO: if views have been published, add an other path corresponding to this namespace
         self.namespaces[namespace].append(
             views_path(f"vendor/{namespace}/", absolute=False)
         )

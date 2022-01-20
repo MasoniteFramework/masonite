@@ -87,9 +87,7 @@ class PackageProvider(Provider):
         return self
 
     def views(self, location, publish=False):
-        """Register views location in the project.
-        locations must be a folder containinng the views you want to publish.
-        """
+        """Register views location in the project. location must be a folder containinng the views you want to publish."""
         self.package.add_views(location)
         # register views into project
         self.application.make("view").add_namespaced_location(

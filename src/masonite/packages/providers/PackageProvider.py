@@ -98,7 +98,11 @@ class PackageProvider(Provider):
             location_abs_path = self.package._build_path(location)
             for dirpath, _, filenames in os.walk(location_abs_path):
                 for f in filenames:
+                    # don't add other files than templates
                     view_abs_path = join(dirpath, f)
+                    _, ext = os.path.splitext(view_abs_path)
+                    if ext != ".html":
+                        continue
                     self.package.add_publishable_resource(
                         "views",
                         view_abs_path,

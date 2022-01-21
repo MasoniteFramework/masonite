@@ -16,8 +16,8 @@ DISKS = {
     },
     "azure": {
         "driver": "azure",
-        "account_name": os.getenv("AZURE_ACCOUNT_NAME"),
+        "account_url": os.getenv("AZURE_ACCOUNT_URL"),
         "access_key": os.getenv("AZURE_ACCESS_KEY"),
-        "share": os.getenv("AZURE_SHARE"),
+        "container": os.getenv("AZURE_CONTAINER"),
     },
 }

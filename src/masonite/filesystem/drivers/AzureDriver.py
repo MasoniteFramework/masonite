@@ -17,19 +17,22 @@ class AzureDriver:
 
     def get_connection(self):
         try:
-            from azure.storage.file import FileService
+            from azure.storage.blob import BlobServiceClient
         except ImportError:
             raise ModuleNotFoundError(
-                "Could not find the 'azure-storage-file' library. Run 'pip install azure-storage-file' to fix this."
+                "Could not find the 'azure-storage-blob' library. Run 'pip install azure-storage-blob' to fix this."
             )
 
         if not self.connection:
-            self.connection = FileService(
-                account_name=self.options.get("account_name"),
-                account_key=self.options.get("access_key"),
+            self.connection = BlobServiceClient(
+                account_url=self.options.get("account_url"),
+                credential=self.options.get("access_key"),
             )
 
         return self.connection
+
+    def get_container(self):
+        return self.options.get("container")
 
     def get_share(self):
         return self.options.get("share")
@@ -39,10 +42,18 @@ class AzureDriver:
         return f"{alias}{extension}"
 
     def put(self, file_path, content):
-        directory, filename = os.path.split(file_path)
-        self.get_connection().create_file_from_bytes(
-            self.get_share(), directory, filename, content
+        # Create blob with same name as local file name
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=file_path
         )
+
+        # Create blob on storage
+        # Overwrite if it already exists!
+        blob_client.upload_blob(
+            content,
+            overwrite=True,
+        )
+
         return content
 
     def put_file(self, file_path, content, name=None):
@@ -51,17 +62,23 @@ class AzureDriver:
         if hasattr(content, "get_content"):
             content = content.get_content()
 
-        self.get_connection().create_file_from_bytes(
-            self.get_share(), file_path, file_name, content
+        # Create blob with same name as local file name
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=file_path
         )
+
+        # Create blob on storage
+        # Overwrite if it already exists!
+        blob_client.upload_blob(content, overwrite=True)
+
         return os.path.join(file_path, file_name)
 
     def get(self, file_path):
-        directory, filename = os.path.split(file_path)
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=file_path
+        )
         try:
-            return self.get_connection().get_file_to_bytes(
-                self.get_share(), directory, filename
-            )
+            return blob_client.download_blob().readall().decode("utf-8")
         except self.missing_file_exceptions():
             pass
 
@@ -71,24 +88,21 @@ class AzureDriver:
         return (azure.core.exceptions.ResourceNotFoundError,)
 
     def exists(self, file_path):
-        directory, filename = os.path.split(file_path)
-        try:
-            self.get_connection().get_file_to_bytes(
-                self.get_share(), directory, filename
-            )
-            return True
-        except self.missing_file_exceptions():
-            return False
+        return (
+            self.get_connection()
+            .get_blob_client(container=self.get_container(), blob=file_path)
+            .exists()
+        )
 
     def missing(self, file_path):
         return not self.exists(file_path)
 
     def stream(self, file_path):
-        directory, filename = os.path.split(file_path)
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=file_path
+        )
         return FileStream(
-            self.get_connection().get_file_to_bytes(
-                self.get_share(), directory, filename
-            ),
+            blob_client.download_blob().readall(),
             file_path,
         )
 
@@ -111,15 +125,19 @@ class AzureDriver:
         self.put(file_path, content)
 
     def delete(self, file_path):
-        directory, filename = os.path.split(file_path)
-        return self.get_connection().delete_file(self.get_share(), directory, filename)
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=file_path
+        )
+        return blob_client.delete_blob()
 
     def store(self, file, name=None):
         full_path = name or file.hash_path_name()
-        directory, filename = os.path.split(full_path)
-        self.get_connection().create_file_from_stream(
-            self.get_share(), directory, filename, file.stream()
+
+        blob_client = self.get_connection().get_blob_client(
+            container=self.get_container(), blob=full_path
         )
+        blob_client.upload_blob(file.stream(), overwrite=True)
+
         return full_path
 
     def make_file_path_if_not_exists(self, file_path):
@@ -133,11 +151,15 @@ class AzureDriver:
         return False
 
     def get_files(self, directory=None):
-        files_generator = self.get_connection().list_directories_and_files(
-            self.get_share(), directory_name=directory
+        container_client = self.get_connection().get_container_client(
+            container=self.get_container()
         )
+        if directory:
+            objects = container_client.walk_blobs(name_starts_with=directory)
+        else:
+            objects = container_client.walk_blobs()
         files = []
-        for obj in files_generator:
+        for obj in objects:
             files.append(File(obj, obj.name))
 
         return files

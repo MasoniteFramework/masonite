@@ -114,6 +114,14 @@ class NotificationException(Exception):
     pass
 
 
+class NotFoundException(Exception):
+    def get_response(self):
+        return "404 Not Found"
+
+    def get_status(self):
+        return 404
+
+
 class AuthorizationException(Exception):
     def __init__(self, message, status):
         super().__init__(self)

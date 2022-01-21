@@ -30,4 +30,5 @@ from .exceptions import (
     LoaderNotFound,
     QueueException,
     AmbiguousError,
+    NotFoundException,
 )

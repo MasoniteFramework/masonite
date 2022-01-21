@@ -1,7 +1,7 @@
 from ...providers import Provider
 from ..Storage import Storage
 from ...configuration import config
-from ..drivers import LocalDriver, AmazonS3Driver
+from ..drivers import LocalDriver, AmazonS3Driver, AzureDriver
 
 
 class StorageProvider(Provider):
@@ -14,6 +14,7 @@ class StorageProvider(Provider):
         )
         storage.add_driver("file", LocalDriver(self.application))
         storage.add_driver("s3", AmazonS3Driver(self.application))
+        storage.add_driver("azure", AzureDriver(self.application))
         self.application.bind("storage", storage)
 
     def boot(self):

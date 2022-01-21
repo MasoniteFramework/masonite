@@ -155,9 +155,9 @@ class AzureDriver:
             container=self.get_container()
         )
         if directory:
-            objects = container_client.walk_blobs(name_starts_with=directory)
+            objects = container_client.list_blobs(name_starts_with=directory)
         else:
-            objects = container_client.walk_blobs()
+            objects = container_client.list_blobs()
         files = []
         for obj in objects:
             files.append(File(obj, obj.name))

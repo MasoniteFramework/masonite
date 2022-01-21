@@ -40,4 +40,4 @@ class TestAzureStorage(TestCase):
         self.driver.prepend("world.log", "world")
 
     def test_can_get_contents_of_directory(self):
-        self.driver.get_files("myshare/")
+        self.driver.get_files()

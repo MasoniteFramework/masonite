@@ -86,33 +86,34 @@ class PackageProvider(Provider):
             )
         return self
 
-    def views(self, *locations, publish=False):
-        """Register views location in the project.
-        locations must be a folder containinng the views you want to publish.
-        """
-        self.package.add_views(*locations)
+    def views(self, location, publish=False):
+        """Register views location in the project. location must be a folder containinng the views you want to publish."""
+        self.package.add_views(location)
         # register views into project
-        self.application.make("view").add_namespace(
-            self.package.name, self.package.views[0]
+        self.application.make("view").add_namespaced_location(
+            self.package.name, self.package.views
         )
 
         if publish:
-            for location in locations:
-                location_abs_path = self.package._build_path(location)
-                for dirpath, _, filenames in os.walk(location_abs_path):
-                    for f in filenames:
-                        view_abs_path = join(dirpath, f)
-                        self.package.add_publishable_resource(
-                            "views",
-                            view_abs_path,
-                            views_path(
-                                join(
-                                    self.vendor_prefix,
-                                    self.package.name,
-                                    relpath(view_abs_path, location_abs_path),
-                                )
-                            ),
-                        )
+            location_abs_path = self.package._build_path(location)
+            for dirpath, _, filenames in os.walk(location_abs_path):
+                for f in filenames:
+                    # don't add other files than templates
+                    view_abs_path = join(dirpath, f)
+                    _, ext = os.path.splitext(view_abs_path)
+                    if ext != ".html":
+                        continue
+                    self.package.add_publishable_resource(
+                        "views",
+                        view_abs_path,
+                        views_path(
+                            join(
+                                self.vendor_prefix,
+                                self.package.name,
+                                relpath(view_abs_path, location_abs_path),
+                            )
+                        ),
+                    )
 
         return self
 

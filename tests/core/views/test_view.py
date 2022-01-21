@@ -121,3 +121,4 @@ class TestView(TestCase):
         self.assertIn(url.url("welcome"), content)
         self.assertIn(old("username"), content)
         self.assertIn(optional(obj).value, content)
+        self.assertIn("auth/base template exists", content)

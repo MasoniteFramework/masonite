@@ -36,5 +36,6 @@ class HelpersProvider(Provider):
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,
                 "optional": optional,
+                "exists": self.application.make("view").exists,
             }
         )

@@ -1,10 +1,15 @@
 import os
-from ..FileStream import FileStream
-from ..File import File
 import uuid
 
+from ..FileStream import FileStream
+from ..File import File
 
-class AmazonS3Driver:
+
+class OpenStackDriver:
+    """Driver for OpenStack Object Storage.
+    API Doc: https://docs.openstack.org/openstacksdk/latest//user/proxies/object_store.html
+    """
+
     def __init__(self, application):
         self.application = application
         self.options = {}
@@ -16,70 +21,71 @@ class AmazonS3Driver:
 
     def get_connection(self):
         try:
-            import boto3
+            import openstack
         except ImportError:
             raise ModuleNotFoundError(
-                "Could not find the 'boto3' library. Run 'pip install boto3' to fix this."
+                "Could not find 'openstacksdk' library. Run 'pip install openstacksdk' to fix this."
             )
 
         if not self.connection:
-            self.connection = boto3.Session(
-                aws_access_key_id=self.options.get("client"),
-                aws_secret_access_key=self.options.get("secret"),
+            self.connection = openstack.connect(
+                auth_url=self.options.get("auth_url"),
+                project_name=self.options.get("project_name"),
+                username=self.options.get("username"),
+                password=self.options.get("password"),
                 region_name=self.options.get("region"),
+                user_domain_name=self.options.get("user_domain"),
+                project_domain_name=self.options.get("project_domain"),
+                app_name=self.options.get("app_name"),
+                app_version=self.options.get("app_version"),
             )
 
         return self.connection
 
-    def get_bucket(self):
-        return self.options.get("bucket")
+    def get_container(self):
+        return self.options.get("container")
 
     def get_name(self, path, alias):
         extension = os.path.splitext(path)[1]
         return f"{alias}{extension}"
 
     def put(self, file_path, content):
-        self.get_connection().resource("s3").Bucket(self.get_bucket()).put_object(
-            Key=file_path, Body=content
+        self.get_connection().object_store.create_object(
+            self.get_container(), file_path, data=content
         )
         return content
 
     def put_file(self, file_path, content, name=None):
         file_name = self.get_name(content.name, name or str(uuid.uuid4()))
+        abs_file_path = os.path.join(file_path, file_name)
 
         if hasattr(content, "get_content"):
             content = content.get_content()
 
-        self.get_connection().resource("s3").Bucket(self.get_bucket()).put_object(
-            Key=os.path.join(file_path, file_name), Body=content
+        self.get_connection().object_store.create_object(
+            self.get_container(), abs_file_path, data=content
         )
-        return os.path.join(file_path, file_name)
+
+        return abs_file_path
 
     def get(self, file_path):
         try:
-            return (
-                self.get_connection()
-                .resource("s3")
-                .Bucket(self.get_bucket())
-                .Object(file_path)
-                .get()
-                .get("Body")
-                .read()
-                .decode("utf-8")
+            return self.get_connection().object_store.get_object(
+                self.get_container(), file_path
             )
         except self.missing_file_exceptions():
             pass
 
     def missing_file_exceptions(self):
-        import boto3
+        import openstack
 
-        return (boto3.exceptions.botocore.errorfactory.ClientError,)
+        return (openstack.exceptions.ResourceNotFound,)
 
     def exists(self, file_path):
         try:
-            self.get_connection().resource("s3").Bucket(self.get_bucket()).Object(
-                file_path
-            ).get().get("Body").read()
+            self.get_connection().object_store.get_object(
+                self.get_container(), file_path
+            )
             return True
         except self.missing_file_exceptions():
             return False
@@ -89,21 +95,15 @@ class AmazonS3Driver:
 
     def stream(self, file_path):
         return FileStream(
-            self.get_connection()
-            .resource("s3")
-            .Bucket(self.get_bucket())
-            .Object(file_path)
-            .get()
-            .get("Body")
-            .read(),
+            self.get_connection().object_store.stream_object(
+                self.get_container(), file_path
+            ),
             file_path,
         )
 
     def copy(self, from_file_path, to_file_path):
-        copy_source = {"Bucket": self.get_bucket(), "Key": from_file_path}
-        self.get_connection().resource("s3").meta.client.copy(
-            copy_source, self.get_bucket(), to_file_path
-        )
+        # TODO: try to understand how to implement this
+        raise NotImplementedError("OpenStackDriver.copy() is not implemented for now.")
 
     def move(self, from_file_path, to_file_path):
         self.copy(from_file_path, to_file_path)
@@ -121,17 +121,14 @@ class AmazonS3Driver:
         self.put(file_path, content)
 
     def delete(self, file_path):
-        return (
-            self.get_connection()
-            .resource("s3")
-            .Object(self.get_bucket(), file_path)
-            .delete()
+        return self.get_connection().object_store.delete_object(
+            self.get_container(), file_path
         )
 
     def store(self, file, name=None):
         full_path = name or file.hash_path_name()
-        self.get_connection().resource("s3").Bucket(self.get_bucket()).put_object(
-            Key=full_path, Body=file.stream()
+        self.get_connection().object_store.create_object(
+            self.get_container(), full_path, data=file.stream()
         )
         return full_path
 
@@ -146,16 +143,17 @@ class AmazonS3Driver:
         return False
 
     def get_files(self, directory=None):
-        bucket = self.get_connection().resource("s3").Bucket(self.get_bucket())
-
-        if directory:
-            objects = bucket.objects.all().filter(Prefix=directory)
-        else:
-            objects = bucket.objects.all()
-
         files = []
-        for my_bucket_object in objects.all():
-            if "/" not in my_bucket_object.key:
-                files.append(File(my_bucket_object, my_bucket_object.key))
+        for obj in self.get_connection().object_store.list_objects(
+            self.get_container()
+        ):
+            if directory:
+                head, _ = os.path.split(obj.name)
+                if head:
+                    dirs = head.split("/")
+                    if dirs[0] == directory:
+                        files.append(File(obj.data, obj.name))
+            else:
+                files.append(File(obj.data, obj.name))
 
         return files

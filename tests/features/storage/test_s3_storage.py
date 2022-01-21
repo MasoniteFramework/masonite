@@ -1,12 +1,11 @@
-from tests import TestCase
-import os
-import time
-from src.masonite.filesystem import File
 import pytest
+
+from tests import TestCase
+from src.masonite.filesystem import File
 
 
 @pytest.mark.integrations
-class TestLocalStorage(TestCase):
+class TestS3Storage(TestCase):
     def setUp(self):
         super().setUp()
         self.application.make("storage")

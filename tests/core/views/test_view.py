@@ -1,5 +1,5 @@
 from src.masonite.configuration import config
-from src.masonite.helpers import url
+from src.masonite.helpers import url, optional, old
 from tests import TestCase
 
 
@@ -106,10 +106,18 @@ class TestView(TestCase):
         self.assertIn("Welcome", self.view.render("auth:home").get_content())
 
     def test_can_access_shared_helpers(self):
-        content = self.view.render("test_helpers").get_content()
+        class SomeObject:
+            value = "object_value"
+
+        obj = SomeObject()
+        self.application.make("session").flash("username", "Sam")
+
+        content = self.view.render("test_helpers", {"obj": obj}).get_content()
         self.assertIn(
             config("application.app_url"),
             content,
         )
         self.assertIn(url.asset("local", "avatar.jpg"), content)
         self.assertIn(url.url("welcome"), content)
+        self.assertIn(old("username"), content)
+        self.assertIn(optional(obj).value, content)

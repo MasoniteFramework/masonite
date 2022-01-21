@@ -3,7 +3,7 @@ from markupsafe import Markup
 
 from ..providers import Provider
 from ..configuration import config
-from ..helpers import UrlsHelper, MixHelper
+from ..helpers import UrlsHelper, MixHelper, optional
 
 
 class HelpersProvider(Provider):
@@ -35,5 +35,6 @@ class HelpersProvider(Provider):
                 "config": config,
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,
+                "optional": optional,
             }
         )

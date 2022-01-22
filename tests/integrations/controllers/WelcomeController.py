@@ -1,4 +1,5 @@
 from src.masonite.controllers import Controller
+from src.masonite.helpers.orm import find_or_fail
 from src.masonite.views import View
 from src.masonite.response.response import Response
 from src.masonite.request import Request
@@ -147,3 +148,10 @@ class WelcomeController(Controller):
 
     def authorizations(self, view: View):
         return view.render("authorizations")
+
+    def show_user(self, request: Request, view: View):
+        user = find_or_fail("tests.integrations.app.User", request.input("id"))
+        import pdb
+
+        pdb.set_trace()
+        return view.render("welcome")

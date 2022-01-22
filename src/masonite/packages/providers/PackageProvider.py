@@ -60,8 +60,13 @@ class PackageProvider(Provider):
         return published_resources
 
     def root(self, relative_dir):
-        # TODO: clean this, but this works
+        """Define python package module root path and absolute package root path.
+        It works when installing the package locally with: pip install . or pip install -e .
+        and when installing the package from production release with: pip install package-name
+        """
+        # load module provider
         provider_module = load(self.__module__)
+        # get relative module path to package root
         relative_module_path = modularize(relative_dir)
         self.package.module_root = self.__module__[
             0 : self.__module__.find(relative_module_path) + len(relative_module_path)

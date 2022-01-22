@@ -71,7 +71,15 @@ class RouteException(Exception):
 
 
 class RouteNotFoundException(Exception):
-    pass
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message or "Route Not Found"
+
+    def get_response(self):
+        return self.message
+
+    def get_status(self):
+        return 404
 
 
 class DebugException(Exception):

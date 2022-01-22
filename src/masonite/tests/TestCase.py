@@ -12,6 +12,7 @@ from ..request import Request
 from ..response import Response
 from ..environment import LoadEnvironment
 from ..providers.RouteProvider import RouteProvider
+from ..exceptions import RouteNotFoundException
 from .TestCommand import TestCommand
 
 
@@ -152,7 +153,7 @@ class TestCase(unittest.TestCase):
             return self.application.make("tests.response").build(
                 self.application, request, response, route
             )
-        raise Exception(f"No route found for url {path}")
+        raise RouteNotFoundException(f"No route found for url {path}")
 
     def mock_start_response(self, *args, **kwargs):
         pass

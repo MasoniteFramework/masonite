@@ -50,7 +50,10 @@ class Application(Container):
 
     def is_dev(self):
         """Check if app is running in development mode."""
-        return os.getenv("APP_ENV") in ["development", "local"]
+        return not self.is_running_tests() and os.getenv("APP_ENV") in [
+            "development",
+            "local",
+        ]
 
     def is_production(self):
         """Check if app is running in production mode."""

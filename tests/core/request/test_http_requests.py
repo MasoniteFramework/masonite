@@ -11,7 +11,11 @@ class TestHttpRequests(TestCase):
 
     def test_route_not_found_throw_exception_in_dev_mode(self):
         os.environ["APP_ENV"] = "development"
+
         with self.assertRaises(RouteNotFoundException) as e:
             self.get("/unknown/route")
 
         self.assertEqual(str(e.exception), "GET /unknown/route : 404 Not Found")
+
+    def test_route_not_found_has_404_status(self):
+        self.get("/unknown/route").assertNotFound()

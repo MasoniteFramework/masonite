@@ -16,6 +16,7 @@ from ...facades import Config
 from ...utils.time import migration_timestamp
 from ...routes import Route
 from ...utils.structures import load
+from ...utils.str import modularize
 from ...utils.filesystem import make_directory
 
 from ..reserved_names import PACKAGE_RESERVED_NAMES
@@ -59,9 +60,15 @@ class PackageProvider(Provider):
         return published_resources
 
     def root(self, relative_dir):
-        module = load(relative_dir)
-        self.package.module_root = relative_dir
-        self.package.abs_root = dirname(module.__file__)
+        # TODO: clean this, but this works
+        provider_module = load(self.__module__)
+        relative_module_path = modularize(relative_dir)
+        self.package.module_root = self.__module__[
+            0 : self.__module__.find(relative_module_path) + len(relative_module_path)
+        ]
+        self.package.abs_root = provider_module.__file__[
+            0 : provider_module.__file__.find(relative_dir) + len(relative_dir)
+        ]
         return self
 
     def name(self, name):

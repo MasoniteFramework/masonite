@@ -5,7 +5,7 @@ import re
 import tldextract
 from .validation import ValidatesRequest
 from ..authorization import AuthorizesRequest
-from ..helpers import old as old_helper
+from ..sessions import old as old_helper
 
 
 class Request(ValidatesRequest, AuthorizesRequest):

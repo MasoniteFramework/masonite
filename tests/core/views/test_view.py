@@ -1,5 +1,6 @@
 from src.masonite.configuration import config
-from src.masonite.helpers import url, optional, old
+from src.masonite.helpers import url, optional
+from src.masonite.sessions import old
 from tests import TestCase
 
 

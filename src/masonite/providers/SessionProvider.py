@@ -2,7 +2,7 @@ from .Provider import Provider
 from ..sessions import Session
 from ..drivers.session import CookieDriver
 from ..configuration import config
-from ..helpers import old
+from ..sessions import old
 
 
 class SessionProvider(Provider):

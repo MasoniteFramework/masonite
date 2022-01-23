@@ -174,3 +174,23 @@ class TestRoutes(TestCase):
 
         route = router.find("/test/1", "post")
         self.assertIsNone(route)
+
+    def test_can_exclude_middleware_from_route(self):
+        router = Router(
+            Route.group(
+                Route.get("/group", "WelcomeController@show")
+                .name("one")
+                .middleware("web"),
+                Route.post("/login", "WelcomeController@show")
+                .name("two")
+                .exclude_middleware("api"),
+                Route.post("/", "WelcomeController@show")
+                .name("three")
+                .exclude_middleware("api", "test"),
+                middleware=["api", "test"],
+            )
+        )
+
+        self.assertEqual(len(router.find_by_name("one").get_middlewares()), 3)
+        self.assertEqual(router.find_by_name("two").get_middlewares(), ["test"])
+        self.assertEqual(router.find_by_name("three").get_middlewares(), [])

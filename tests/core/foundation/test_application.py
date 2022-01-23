@@ -15,3 +15,7 @@ class TestApplication(TestCase):
         self.assertFalse(self.application.is_debug())
 
         Config.set("application.debug", original_value)
+
+    def test_is_production(self):
+        with self.env("production"):
+            self.assertTrue(self.application.is_production())

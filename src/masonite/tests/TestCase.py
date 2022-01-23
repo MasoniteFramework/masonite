@@ -1,5 +1,6 @@
 import json
 import io
+import os
 import sys
 import unittest
 import pendulum
@@ -11,6 +12,7 @@ from ..utils.http import generate_wsgi
 from ..request import Request
 from ..response import Response
 from ..environment import LoadEnvironment
+from ..facades import Config
 from ..providers.RouteProvider import RouteProvider
 from ..exceptions import RouteNotFoundException
 from .TestCommand import TestCommand
@@ -153,7 +155,15 @@ class TestCase(unittest.TestCase):
             return self.application.make("tests.response").build(
                 self.application, request, response, route
             )
-        raise RouteNotFoundException(f"No route found for url {path}")
+
+        exception = RouteNotFoundException(f"No route found for url {path}")
+        if self._exception_handling:
+            response = self.application.make("exception_handler").handle(exception)
+            return self.application.make("tests.response").build(
+                self.application, request, response, route
+            )
+        else:
+            raise exception
 
     def mock_start_response(self, *args, **kwargs):
         pass
@@ -169,6 +179,20 @@ class TestCase(unittest.TestCase):
         finally:
             # restore system output
             sys.stdout, sys.stderr = old_out, old_err
+
+    @contextmanager
+    def debugMode(self):
+        old_debug_mode = Config.get("application.debug")
+        Config.set("application.debug", True)
+        yield
+        Config.set("application.debug", old_debug_mode)
+
+    @contextmanager
+    def env(self, environment):
+        old_env = os.getenv("APP_ENV")
+        os.environ["APP_ENV"] = environment
+        yield
+        os.environ["APP_ENV"] = old_env
 
     def craft(self, command, arguments_str=""):
         """Run a given command in tests and obtain a TestCommand instance to assert command

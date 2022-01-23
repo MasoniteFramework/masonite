@@ -1,4 +1,5 @@
 import pendulum
+import os
 import pytest
 
 from tests import TestCase
@@ -82,6 +83,16 @@ class TestTestCase(TestCase):
 
     #     self.fakeTimeInPast(3, "hours")
     #     self.assertEqual(real_now.hour - pendulum.now().hour, 3)
+
+    def test_env_context_manager(self):
+        initial = os.getenv("APP_ENV")
+        with self.env("custom_env_for_this_test"):
+            assert os.getenv("APP_ENV") == "custom_env_for_this_test"
+        assert os.getenv("APP_ENV") == initial
+
+    def test_debugMode_context_manager(self):
+        with self.debugMode():
+            self.assertTrue(self.application.is_debug())
 
 
 class TestTestingAssertions(TestCase):

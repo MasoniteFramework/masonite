@@ -1,6 +1,5 @@
 from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
 
-from ..facades import View
 from .JsonHandler import JsonHandler
 
 
@@ -42,12 +41,9 @@ class ExceptionHandler:
         )
 
         if self.application.has(f"{exception.__class__.__name__}Handler"):
-            handler_response = self.application.make(
+            return self.application.make(
                 f"{exception.__class__.__name__}Handler"
             ).handle(exception)
-            # continue handling exception if handler did not return a response
-            if handler_response:
-                return handler_response
 
         if "application/json" in str(request.header("Accept")):
             return response.view(JsonHandler(exception).render(), status=500)
@@ -56,11 +52,11 @@ class ExceptionHandler:
             # for HTTP error codes (500, 404, 403...) a specific page should be displayed
             if hasattr(exception, "is_http_exception"):
                 return self.application.make("HttpExceptionHandler").handle(exception)
-
+            # if a renderable exception is raised let it be displayed
             if hasattr(exception, "get_response"):
                 return response.view(exception.get_response(), exception.get_status())
 
-            # as fallback any unknown exception should be displayed as a 500 error
+            # else fallback to an unknown exception should be displayed as a 500 error
             exception.get_status = lambda: 500
             exception.get_response = lambda: str(exception) or "Unknown error"
             return self.application.make("HttpExceptionHandler").handle(exception)

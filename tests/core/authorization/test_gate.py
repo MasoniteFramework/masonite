@@ -102,18 +102,20 @@ class TestGate(TestCase):
         self.assertFalse(self.gate.has("view-user"))
 
     def test_authorize(self):
+        self.withExceptionsHandling()
         self.gate.define("display-admin", lambda user: False)
-        with self.assertRaises(AuthorizationException) as e:
-            self.gate.authorize("display-admin")
-            exception = e.exception
-        self.assertEqual(e.exception.message, "Action not authorized")
-        self.assertEqual(e.exception.status, 403)
+        with self.debugMode():
+            with self.assertRaises(AuthorizationException) as e:
+                self.gate.authorize("display-admin")
+                exception = e.exception
+            self.assertEqual(e.exception.message, "Action not authorized")
+            self.assertEqual(e.exception.status, 403)
 
     def test_authorize_in_controller(self):
         self.withExceptionsHandling()  # this will allow exception to be handled and rendered
         self.gate.define("display-admin", lambda user: False)
         self.get("/not-authorized").assertForbidden().assertContains(
-            "Action not authorized"
+            "Permission Denied"
         )
 
     def test_inspect(self):

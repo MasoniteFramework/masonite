@@ -127,10 +127,10 @@ class NotificationException(Exception):
 class AuthorizationException(Exception):
     is_http_exception = True
 
-    def __init__(self, message="Action not authorized", status=403):
+    def __init__(self, message="", status=403):
         super().__init__(message)
-        self.message = message
-        self.status = status
+        self.message = message or "Action not authorized"
+        self.status = status or 403
 
     def get_response(self):
         return self.message

@@ -34,7 +34,6 @@ class WelcomeController(Controller):
 
     def show(self, request: Request, view: View):
         request.app.make("session").flash("test", "value")
-        raise AuthorizationException()
         return view.render("welcome")
 
     def flash_data(self, request: Request, response: Response, view: View):
@@ -150,3 +149,6 @@ class WelcomeController(Controller):
 
     def authorizations(self, view: View):
         return view.render("authorizations")
+
+    def server_error(self, view: View):
+        raise Exception("unknown error")

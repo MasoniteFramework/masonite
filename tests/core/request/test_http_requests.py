@@ -1,7 +1,6 @@
-from src.masonite.exceptions.exceptions import RouteNotFoundException
-
 from tests import TestCase
 from src.masonite.routes import Route
+from src.masonite.exceptions.exceptions import RouteNotFoundException
 
 
 class TestHttpRequests(TestCase):
@@ -23,17 +22,17 @@ class TestHttpRequests(TestCase):
 
             self.assertEqual(str(e.exception), "GET /unknown/route : 404 Not Found")
 
-    def test_route_not_found_with_debug_disabled(self):
+    def test_route_not_found_with_debug_off(self):
         self.withExceptionsHandling()  # enable exception handler
         with self.debugMode(False):
             self.get("/unknown/route").assertNotFound().assertViewIs("errors:404")
 
-    def test_server_error_with_debug_disabled(self):
+    def test_server_error_with_debug_off(self):
         self.withExceptionsHandling()  # enable exception handler
         with self.debugMode(False):
             self.get("/server-error").assertError().assertViewIs("errors:500")
 
-    def test_server_error_in_debug_mode(self):
+    def test_server_error_with_debug_on(self):
         with self.debugMode():
             with self.assertRaises(Exception):
                 self.get("/server-error")

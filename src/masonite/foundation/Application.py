@@ -54,7 +54,7 @@ class Application(Container):
         """Check if debug mode is enabled."""
         # For now keep those two lines
         if Config.has("application.debug"):
-            return Config.get("application.debug")
+            return bool(Config.get("application.debug"))
         else:
             return env("APP_DEBUG", True)
 

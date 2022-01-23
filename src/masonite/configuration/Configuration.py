@@ -64,7 +64,7 @@ class Configuration:
         self._config[path] = value
 
     def has(self, path):
-        return path in self._config[path]
+        return path in self._config
 
     def get(self, path, default=None):
         try:

@@ -163,7 +163,6 @@ setup(
         "masonite.scheduling.providers",
         "masonite.scheduling",
         "masonite.sessions",
-        "masonite.sessions.helpers",
         "masonite.storage",
         "masonite.templates",
         "masonite.tests",

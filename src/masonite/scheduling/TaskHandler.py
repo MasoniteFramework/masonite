@@ -1,4 +1,3 @@
-import pendulum
 import inspect
 
 
@@ -13,7 +12,7 @@ class TaskHandler:
     def add(self, *tasks):
         self.tasks += list(tasks)
 
-    def run(self, run_name=None):
+    def run(self, run_name=None, force=False):
         app = self.application
         for task_class in self.tasks:
             # Resolve the task with the container
@@ -26,5 +25,5 @@ class TaskHandler:
                 task = task_class
 
             # If the class should run then run it
-            if task.should_run():
+            if task.should_run() or force:
                 task.handle()

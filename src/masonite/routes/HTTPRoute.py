@@ -32,6 +32,7 @@ class HTTPRoute:
         self._name = name
         self.request_method = [x.lower() for x in request_method]
         self.list_middleware = []
+        self.excluded_middlewares = []
         self.e = None
         self.compilers = compilers or {}
         self._find_controller(controller)
@@ -203,7 +204,17 @@ class HTTPRoute:
         for arg in args:
             if arg and arg not in self.list_middleware:
                 self.list_middleware.append(arg)
+        return self
 
+    def get_middlewares(self):
+        """Get all the middlewares to run for this route."""
+        return list(set(self.list_middleware) - set(self.excluded_middlewares))
+
+    def exclude_middleware(self, *args):
+        """Remove a list of middleware for this route. It can be useful when
+        using Route group middleware to override middleware for a given route in the group."""
+        for middleware in args:
+            self.excluded_middlewares.append(middleware)
         return self
 
     def compile_route_to_regex(self):

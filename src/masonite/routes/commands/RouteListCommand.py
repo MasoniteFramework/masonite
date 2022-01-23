@@ -65,6 +65,6 @@ class RouteListCommand(Command):
             route.get_name() or "",
             "/".join(map(lambda m: m.upper(), route.request_method)),
             controller,
-            ",".join(route.list_middleware),
+            ",".join(route.get_middlewares()),
         ]
         return row

@@ -2,7 +2,12 @@ from setuptools import setup
 import os
 
 meta = {}
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'src/masonite', '__init__.py'), 'r') as f:
+with open(
+    os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), "src/masonite", "__init__.py"
+    ),
+    "r",
+) as f:
     exec(f.read(), meta)
 
 with open("README.md", "r") as fh:

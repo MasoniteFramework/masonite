@@ -11,10 +11,16 @@ from ..utils.structures import load, data_get
 from ..utils.location import base_path, config_path, models_path
 from ..helpers import optional, url
 from ..facades import Loader
+from .. import __version__
 from .Command import Command
 
 
-BANNER = """Masonite Python \033[92m {} \033[0m Console
+BANNER = """ -------------------------------
+| Masonite Python \033[92m{}\033[0m Console |
+ -------------------------------
+Masonite Version: \033[92m{}\033[0m,
+Environment: \033[92m{}\033[0m,
+Debug Mode: \033[92m{}\033[0m,
 This interactive console has the following things imported:
     -\033[92m app (container), \033[0m
     - Utils:\033[92m {} \033[0m
@@ -36,7 +42,7 @@ class TinkerCommand(Command):
         from wsgi import application
         from masoniteorm.models import Model
 
-        version = "{}.{}.{}".format(
+        python_version = "{}.{}.{}".format(
             sys.version_info.major, sys.version_info.minor, sys.version_info.micro
         )
         models_directory = self.option("directory") or models_path()
@@ -57,7 +63,10 @@ class TinkerCommand(Command):
             "config_path": config_path,
         }
         banner = BANNER.format(
-            version,
+            python_version,
+            __version__,
+            os.getenv("APP_ENV"),
+            "on" if application.is_debug() else "off",
             ", ".join(list(helpers.keys())[1:]),
             ", ".join(models.keys()),
         )

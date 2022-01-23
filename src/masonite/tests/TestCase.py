@@ -189,7 +189,7 @@ class TestCase(unittest.TestCase):
 
     @contextmanager
     def env(self, environment):
-        old_env = os.getenv("APP_ENV")
+        old_env = os.getenv("APP_ENV", "")
         os.environ["APP_ENV"] = environment
         yield
         os.environ["APP_ENV"] = old_env

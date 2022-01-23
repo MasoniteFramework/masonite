@@ -181,9 +181,9 @@ class TestCase(unittest.TestCase):
             sys.stdout, sys.stderr = old_out, old_err
 
     @contextmanager
-    def debugMode(self):
+    def debugMode(self, enabled=True):
         old_debug_mode = Config.get("application.debug")
-        Config.set("application.debug", True)
+        Config.set("application.debug", enabled)
         yield
         Config.set("application.debug", old_debug_mode)
 

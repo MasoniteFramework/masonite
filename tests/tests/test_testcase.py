@@ -93,6 +93,8 @@ class TestTestCase(TestCase):
     def test_debugMode_context_manager(self):
         with self.debugMode():
             self.assertTrue(self.application.is_debug())
+        with self.debugMode(False):
+            self.assertFalse(self.application.is_debug())
 
 
 class TestTestingAssertions(TestCase):

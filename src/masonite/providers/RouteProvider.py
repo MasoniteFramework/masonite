@@ -60,12 +60,9 @@ class RouteProvider(Provider):
                     )
 
             else:
-                if self.application.is_dev():
-                    raise RouteNotFoundException(
-                        f"{request.get_request_method()} {request.get_path()} : 404 Not Found"
-                    )
-                else:
-                    response.view("route not found", status=404)
+                raise RouteNotFoundException(
+                    f"{request.get_request_method()} {request.get_path()} : 404 Not Found"
+                )
 
         Pipeline(request, response).through(
             self.application.make("middleware").get_http_middleware(),

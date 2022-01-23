@@ -1,8 +1,15 @@
 import builtins
 
+
 from .Provider import Provider
-from ..exceptions import ExceptionHandler, DumpExceptionHandler, DD
+from ..exceptions import (
+    ExceptionHandler,
+    DumpExceptionHandler,
+    DD,
+    HttpExceptionHandler,
+)
 from ..configuration import config
+from ..utils.location import views_path
 
 
 class ExceptionProvider(Provider):
@@ -15,6 +22,12 @@ class ExceptionProvider(Provider):
         self.application.bind("exception_handler", handler)
         self.application.bind(
             "DumpExceptionHandler", DumpExceptionHandler(self.application)
+        )
+        self.application.bind(
+            "HttpExceptionHandler", HttpExceptionHandler(self.application)
+        )
+        self.application.make("view").add_namespaced_location(
+            "errors", views_path("errors", absolute=False)
         )
 
     def boot(self):

@@ -71,6 +71,8 @@ class RouteException(Exception):
 
 
 class RouteNotFoundException(Exception):
+    is_http_exception = True
+
     def __init__(self, message):
         super().__init__(message)
         self.message = message or "Route Not Found"
@@ -123,10 +125,12 @@ class NotificationException(Exception):
 
 
 class AuthorizationException(Exception):
-    def __init__(self, message, status):
-        super().__init__(self)
-        self.message = message or "Action not authorized"
-        self.status = status or 403
+    is_http_exception = True
+
+    def __init__(self, message="Action not authorized", status=403):
+        super().__init__(message)
+        self.message = message
+        self.status = status
 
     def get_response(self):
         return self.message

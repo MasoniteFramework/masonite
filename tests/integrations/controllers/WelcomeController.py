@@ -1,4 +1,6 @@
+from multiprocessing import AuthenticationError
 from src.masonite.controllers import Controller
+from src.masonite.exceptions.exceptions import AuthorizationException
 from src.masonite.views import View
 from src.masonite.response.response import Response
 from src.masonite.request import Request
@@ -32,6 +34,7 @@ class WelcomeController(Controller):
 
     def show(self, request: Request, view: View):
         request.app.make("session").flash("test", "value")
+        raise AuthorizationException()
         return view.render("welcome")
 
     def flash_data(self, request: Request, response: Response, view: View):

@@ -151,7 +151,4 @@ class WelcomeController(Controller):
 
     def show_user(self, request: Request, view: View):
         user = find_or_fail("tests.integrations.app.User", request.input("id"))
-        import pdb
-
-        pdb.set_trace()
         return view.render("welcome")

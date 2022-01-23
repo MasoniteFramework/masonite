@@ -1,10 +1,10 @@
 from ..facades import Loader
-from ..exceptions import NotFoundException
+from ..exceptions import RecordNotFoundException
 
 
 def find_or_fail(model, pk):
     """
-    Find model instance or raise 404 error.
+    Find model instance or raise RecordNotFoundException which will be rendered as HTTP 404 error.
 
     model: instance or string
     pk: model primary key
@@ -17,6 +17,6 @@ def find_or_fail(model, pk):
 
     record = model_class.find(pk)
     if not record:
-        raise NotFoundException()
+        raise RecordNotFoundException()
 
     return record

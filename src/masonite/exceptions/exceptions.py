@@ -114,9 +114,11 @@ class NotificationException(Exception):
     pass
 
 
-class NotFoundException(Exception):
+class RecordNotFoundException(Exception):
+    is_http_exception = True
+
     def get_response(self):
-        return "404 Not Found"
+        return "Record Not Found"
 
     def get_status(self):
         return 404

@@ -40,7 +40,7 @@ class RouteProvider(Provider):
                 route_middleware = self.application.make(
                     "middleware"
                 ).run_route_middleware(
-                    route.list_middleware, request, response, callback="before"
+                    route.get_middlewares(), request, response, callback="before"
                 )
 
                 if route_middleware:
@@ -56,7 +56,7 @@ class RouteProvider(Provider):
                         exception = e
 
                     self.application.make("middleware").run_route_middleware(
-                        route.list_middleware, request, response, callback="after"
+                        route.get_middlewares(), request, response, callback="after"
                     )
 
             else:

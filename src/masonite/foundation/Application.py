@@ -1,6 +1,7 @@
 import os
 import sys
 from ..container import Container
+from ..configuration import config
 
 
 class Application(Container):
@@ -47,6 +48,10 @@ class Application(Container):
 
     def __call__(self, *args, **kwargs):
         return self.response_handler(*args, **kwargs)
+
+    def is_debug(self):
+        """Check if debug mode is enabled."""
+        return bool(config("application.debug"))
 
     def is_dev(self):
         """Check if app is running in development mode."""

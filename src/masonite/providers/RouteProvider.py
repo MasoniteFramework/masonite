@@ -6,6 +6,7 @@ from .Provider import Provider
 from ..routes import Route
 from ..routes.commands import RouteListCommand
 from ..pipeline import Pipeline
+from ..facades import View
 
 
 class RouteProvider(Provider):
@@ -59,7 +60,7 @@ class RouteProvider(Provider):
                     )
 
             else:
-                response.view("route not found", status=404)
+                response.view(View.render("404"), status=404)
 
         Pipeline(request, response).through(
             self.application.make("middleware").get_http_middleware(),

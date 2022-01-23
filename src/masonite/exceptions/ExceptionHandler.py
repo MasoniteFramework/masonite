@@ -1,5 +1,6 @@
 from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
 
+from ..facades import View
 from .JsonHandler import JsonHandler
 
 
@@ -49,8 +50,12 @@ class ExceptionHandler:
             return response.view(exception.get_response(), exception.get_status())
 
         handler = Handler(exception)
+
         if "application/json" in str(request.header("Accept")):
             return response.view(JsonHandler(exception).render(), status=500)
+
+        if not self.application.is_debug():
+            return response.view(View.render("500"), status=500)
 
         if self.options.get("handlers.stack_overflow"):
             handler.integrate(StackOverflowIntegration())

@@ -13,6 +13,6 @@ class TestHttpRequests(TestCase):
         self.withoutCsrf()
         return self.post("/").assertContains("Welcome")
 
-    def test_find_or_fail(self):
+    def test_find_or_fail_during_request(self):
         self.get("/test/users/1").assertOk()
         self.get("/test/users/10").assertNotFound()

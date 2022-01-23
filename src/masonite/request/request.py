@@ -5,6 +5,7 @@ import re
 import tldextract
 from .validation import ValidatesRequest
 from ..authorization import AuthorizesRequest
+from ..sessions import old as old_helper
 
 
 class Request(ValidatesRequest, AuthorizesRequest):
@@ -97,6 +98,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
     def only(self, *inputs):
         return self.input_bag.only(*inputs)
+
+    def old(self, key):
+        return old_helper(key)
 
     def is_not_safe(self):
         """Check if the current request is not a get request.

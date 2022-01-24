@@ -54,11 +54,17 @@ class RouteListCommand(Command):
 
     def format_route_as_row(self, route):
         """Format a Route object as a table row."""
+        # format controller name
+        if callable(route.controller):
+            # ControllerClassName.index -> ControllerClassName@index
+            controller = route.controller.__qualname__.replace(".", "@")
+        else:
+            controller = str(route.controller)
         row = [
             route.url,
             route.get_name() or "",
             "/".join(map(lambda m: m.upper(), route.request_method)),
-            route.controller,
-            ",".join(route.list_middleware),
+            controller,
+            ",".join(route.get_middlewares()),
         ]
         return row

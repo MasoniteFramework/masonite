@@ -6,7 +6,6 @@ from ..Api import Api
 
 from ...routes import Route
 from ...utils.structures import load
-import os
 
 
 class ApiProvider(Provider):
@@ -24,7 +23,7 @@ class ApiProvider(Provider):
             )
         )
         self.application.make("commands").add(APIInstallCommand(self.application))
-        self.application.make('auth').add_guard("jwt", JWTGuard(self.application))
+        self.application.make("auth").add_guard("jwt", JWTGuard(self.application))
 
     def boot(self):
         pass

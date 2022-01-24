@@ -16,6 +16,7 @@ from ...facades import Config
 from ...utils.time import migration_timestamp
 from ...routes import Route
 from ...utils.structures import load
+from ...utils.str import modularize
 from ...utils.filesystem import make_directory
 
 from ..reserved_names import PACKAGE_RESERVED_NAMES
@@ -59,9 +60,20 @@ class PackageProvider(Provider):
         return published_resources
 
     def root(self, relative_dir):
-        module = load(relative_dir)
-        self.package.module_root = relative_dir
-        self.package.abs_root = dirname(module.__file__)
+        """Define python package module root path and absolute package root path.
+        It works when installing the package locally with: pip install . or pip install -e .
+        and when installing the package from production release with: pip install package-name
+        """
+        # load module provider
+        provider_module = load(self.__module__)
+        # get relative module path to package root
+        relative_module_path = modularize(relative_dir)
+        self.package.module_root = self.__module__[
+            0 : self.__module__.find(relative_module_path) + len(relative_module_path)
+        ]
+        self.package.abs_root = provider_module.__file__[
+            0 : provider_module.__file__.find(relative_dir) + len(relative_dir)
+        ]
         return self
 
     def name(self, name):
@@ -86,33 +98,34 @@ class PackageProvider(Provider):
             )
         return self
 
-    def views(self, *locations, publish=False):
-        """Register views location in the project.
-        locations must be a folder containinng the views you want to publish.
-        """
-        self.package.add_views(*locations)
+    def views(self, location, publish=False):
+        """Register views location in the project. location must be a folder containinng the views you want to publish."""
+        self.package.add_views(location)
         # register views into project
-        self.application.make("view").add_namespace(
-            self.package.name, self.package.views[0]
+        self.application.make("view").add_namespaced_location(
+            self.package.name, self.package.views
         )
 
         if publish:
-            for location in locations:
-                location_abs_path = self.package._build_path(location)
-                for dirpath, _, filenames in os.walk(location_abs_path):
-                    for f in filenames:
-                        view_abs_path = join(dirpath, f)
-                        self.package.add_publishable_resource(
-                            "views",
-                            view_abs_path,
-                            views_path(
-                                join(
-                                    self.vendor_prefix,
-                                    self.package.name,
-                                    relpath(view_abs_path, location_abs_path),
-                                )
-                            ),
-                        )
+            location_abs_path = self.package._build_path(location)
+            for dirpath, _, filenames in os.walk(location_abs_path):
+                for f in filenames:
+                    # don't add other files than templates
+                    view_abs_path = join(dirpath, f)
+                    _, ext = os.path.splitext(view_abs_path)
+                    if ext != ".html":
+                        continue
+                    self.package.add_publishable_resource(
+                        "views",
+                        view_abs_path,
+                        views_path(
+                            join(
+                                self.vendor_prefix,
+                                self.package.name,
+                                relpath(view_abs_path, location_abs_path),
+                            )
+                        ),
+                    )
 
         return self
 

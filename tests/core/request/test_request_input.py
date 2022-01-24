@@ -9,8 +9,8 @@ class TestRequest(TestCase):
         super().setUp()
         self.request = Request(generate_wsgi(path="/test"))
 
-    def test_request_no_input_returns_false(self):
-        self.assertEqual(self.request.input("notavailable"), False)
+    def test_request_no_input_returns_empty_string(self):
+        self.assertEqual(self.request.input("notavailable"), "")
 
     def test_request_can_get_string_value(self):
         self.request.input_bag.query_string = {"test": "value"}

@@ -5,6 +5,7 @@ import re
 import tldextract
 from .validation import ValidatesRequest
 from ..authorization import AuthorizesRequest
+from ..sessions import old as old_helper
 
 
 class Request(ValidatesRequest, AuthorizesRequest):
@@ -23,6 +24,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.input_bag = InputBag()
         self.params = {}
         self._user = None
+        self._subdomains_activated = False
         self.load()
 
     def load(self):
@@ -51,7 +53,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def get_request_method(self):
         return self.environ.get("REQUEST_METHOD")
 
-    def input(self, name, default=False):
+    def input(self, name, default=""):
         """Get a specific input value.
 
         Arguments:
@@ -97,6 +99,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def only(self, *inputs):
         return self.input_bag.only(*inputs)
 
+    def old(self, key):
+        return old_helper(key)
+
     def is_not_safe(self):
         """Check if the current request is not a get request.
 
@@ -128,6 +133,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
         return regex.match(self.get_path())
 
     def get_subdomain(self, exclude_www=True):
+        if not self._subdomains_activated:
+            return None
+
         url = tldextract.extract(self.get_host())
         if url.subdomain == "" or (
             url.subdomain and exclude_www and url.subdomain == "www"
@@ -138,3 +146,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
     def get_host(self):
         return self.environ.get("HTTP_HOST")
+
+    def activate_subdomains(self):
+        self._subdomains_activated = True
+        return self

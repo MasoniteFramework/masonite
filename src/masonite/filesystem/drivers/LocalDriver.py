@@ -1,8 +1,10 @@
 import os
 from shutil import copyfile, move
 from ..FileStream import FileStream
+from ..File import File
 import uuid
 import os
+from os.path import isfile, join
 
 
 class LocalDriver:
@@ -103,3 +105,14 @@ class LocalDriver:
             return True
 
         return False
+
+    def get_files(self, directory=""):
+        file_path = self.get_path(directory)
+        files = []
+        for f in os.listdir(file_path):
+            if not isfile(join(file_path, f)):
+                continue
+
+            files.append(File(self.get(f), f))
+
+        return files

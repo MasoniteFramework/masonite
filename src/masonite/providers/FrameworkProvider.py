@@ -1,3 +1,6 @@
+from email.mime import application
+import time
+
 from ..request import Request
 from ..response import Response
 from ..providers import Provider
@@ -11,14 +14,6 @@ class FrameworkProvider(Provider):
         self.application = application
 
     def register(self):
-        pass
-
-    def boot(self):
-        request = Request(self.application.make("environ"))
-        request.app = self.application
-        self.application.bind("request", request)
-        self.application.bind("response", Response(self.application))
-
         # @M5 remove this and add PresetsProvider in default project
         presets = PresetsCapsule()
         presets.add(Bootstrap())
@@ -26,3 +21,13 @@ class FrameworkProvider(Provider):
         presets.add(Vue())
         presets.add(React())
         self.application.bind("presets", presets)
+
+    def boot(self):
+        request = Request(self.application.make("environ"))
+        request.app = self.application
+        if self.application.has('activate.subdomains') and self.application.make('activate.subdomains'):
+            request.activate_subdomains()
+        self.application.bind("request", request)
+        self.application.bind("response", Response(self.application))
+
+        self.application.bind("start_time", time.time())

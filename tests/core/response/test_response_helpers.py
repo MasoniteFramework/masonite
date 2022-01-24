@@ -11,9 +11,7 @@ class TestResponseHelpers(TestCase):
         )
 
     def test_with_input(self):
-        res = self.get("/test-with-input", {"name": "Sam"}).assertSessionHas(
-            "name", "Sam"
-        )
+        self.get("/test-with-input", {"name": "Sam"}).assertSessionHas("name", "Sam")
 
     def test_with_errors(self):
         self.get("/test-with-errors").assertSessionHasErrors().assertSessionHasErrors(

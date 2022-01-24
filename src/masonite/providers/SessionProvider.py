@@ -1,8 +1,8 @@
 from .Provider import Provider
 from ..sessions import Session
 from ..drivers.session import CookieDriver
-from ..utils.structures import load
 from ..configuration import config
+from ..sessions import old
 
 
 class SessionProvider(Provider):
@@ -13,10 +13,7 @@ class SessionProvider(Provider):
         session = Session(self.application).set_configuration(config("session.drivers"))
         session.add_driver("cookie", CookieDriver(self.application))
         self.application.bind("session", session)
-        self.application.make("view").share({"old": self.old})
+        self.application.make("view").share({"old": old})
 
     def boot(self):
         pass
-
-    def old(self, key):
-        return self.application.make("session").get(key) or ""

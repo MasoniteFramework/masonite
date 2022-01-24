@@ -1,6 +1,6 @@
-from masoniteorm import connections
-from masoniteorm.models import Model
 import pendulum
+
+from masoniteorm.models import Model
 
 from tests import TestCase
 from src.masonite.tests import DatabaseTransactions

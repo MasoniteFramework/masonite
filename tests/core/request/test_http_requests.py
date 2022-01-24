@@ -25,12 +25,12 @@ class TestHttpRequests(TestCase):
     def test_route_not_found_with_debug_off(self):
         self.withExceptionsHandling()  # enable exception handler
         with self.debugMode(False):
-            self.get("/unknown/route").assertNotFound().assertViewIs("errors:404")
+            self.get("/unknown/route").assertNotFound().assertViewIs("errors/404")
 
     def test_server_error_with_debug_off(self):
         self.withExceptionsHandling()  # enable exception handler
         with self.debugMode(False):
-            self.get("/server-error").assertError().assertViewIs("errors:500")
+            self.get("/server-error").assertError().assertViewIs("errors/500")
 
     def test_server_error_with_debug_on(self):
         with self.debugMode():

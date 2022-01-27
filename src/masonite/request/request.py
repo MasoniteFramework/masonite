@@ -24,6 +24,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.input_bag = InputBag()
         self.params = {}
         self._user = None
+        self.route = None
         self._subdomains_activated = False
         self.load()
 
@@ -40,6 +41,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
     def param(self, param, default=""):
         return self.params.get(param, default)
+
+    def get_route(self):
+        return self.route
 
     def get_path(self):
         return self.environ.get("PATH_INFO")

@@ -25,8 +25,9 @@ class RouteProvider(Provider):
             request.get_path(), request.get_request_method(), request.get_subdomain()
         )
 
-        # Run before middleware
+        request.route = route
 
+        # Run before middleware
         before_middleware = Pipeline(request, response).through(
             self.application.make("middleware").get_http_middleware(),
             handler="before",

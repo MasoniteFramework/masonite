@@ -12,3 +12,4 @@ from .Config import Config
 from .Loader import Loader
 from .Notification import Notification
 from .Storage import Storage
+from .Queue import Queue

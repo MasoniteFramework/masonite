@@ -1,7 +1,10 @@
 import inspect
+from deprecated import deprecated
+
 from .exceptions import DumpException
 
 
+@deprecated("DD class will be removed in Masonite 5. Please use Dump facade instead.")
 class DD:
     def __init__(self, container):
         self.app = container

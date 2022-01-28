@@ -4,55 +4,88 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>dd() - {{ dumps|count }} dump(s)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            padding: 5px
-        }
-
-        .obj {
-            color: #e00000;
-        }
-
-        .obj-property-name {
-            margin-left: 1em;
-            color: #922b92;
-        }
-
-        .obj-property-type {
-            color: #e00000;
-        }
-
-        .obj-propert-type-item {
-            margin-left: 3em;
-            line-height: 26px;
-        }
-    </style>
+    {{ styles|safe }}
 </head>
 
 <body>
-    <div class="container-fluid">
-        {% if objs|count > 1 %}
-        <div class="row">Showing {{ objs|count }} objects:</div>
-        {% endif %}
-        {% for o in objs %}
-            {% set obj = o.obj %}
-            {% set members = o.members %}
-            {% set properties = o.properties %}
-        <div class="row">
-            <span class="obj">{{ obj.__class__.__name__}}</span> {{ obj }}
-        </div>
-        {% for key, property in properties %}
-            {% include 'obj_loop.html' %}
-        {% endfor %}
-            {% if not loop.last %}
-            <hr>
+    <div class="p-4 container mx-auto">
+        <div class="mb-6 font-medium text-lg">
+            {% if dumps|count > 1 %}
+            <h1>
+                dump and die : {{ dumps|count }} dumps
+            </h1>
+            {% else %}
+            <h1>
+                dump and die : no dumps.
+            </h1>
             {% endif %}
+        </div>
+
+        {% for dump in dumps %}
+        <div class="mb-4">
+            <div class="flex items-center mb-2">
+                <span
+                    class="dump-timestamp inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 mr-2">{{
+                    dump.timestamp }}</span>
+                <span
+                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">{{
+                    dump.filename }} : {{ dump.line }}</span>
+                <span class="text-xs font-medium ml-4">in {{ dump.method }}()</span>
+            </div>
+            <div class="grid gap-y-2 gap-x-1 grid-cols-12 py-2 border-t border-gray-300">
+                {% for object_name, object in dump.objects.items() %}
+                <span class="text-black self-start text-sm col-span-3 truncate">{{ object_name }}</span>
+                <div class="col-span-9 ">
+                    <!-- obj value -->
+                    <pre class="break-all leading-tight text-xs grow" style="white-space: unset;">
+                            <code class="language-python rounded-md">{{ object.value }}</code>
+                        </pre>
+                    <!-- obj props -->
+                    {% if object.properties.public or objects.properties.private %}
+                    <p class="text-gray-500 text-sm mt-2">Public Properties</p>
+                    <div class="grid gap-y-2 gap-x-1 grid-cols-12 py-2">
+                        {% for prop_name, prop in object.properties.public.items() %}
+                        <span class="text-black self-baseline text-sm col-span-3 truncate">{{ prop_name }}</span>
+                        <div class="col-span-9">
+                            <pre class="break-all leading-tight text-xs grow" style="white-space: unset;">
+                                <code class="language-python rounded-md">{{ prop }}</code>
+                            </pre>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <p class="text-gray-500 text-sm mt-2">Private Properties</p>
+                    <div class="grid gap-y-2 gap-x-1 grid-cols-12 py-2">
+                        {% for prop_name, prop in object.properties.private.items() %}
+                        <span class="text-black self-baseline text-sm col-span-3 truncate">{{ prop_name }}</span>
+                        <div class="col-span-9">
+                            <pre class="break-all leading-tight text-xs grow" style="white-space: unset;">
+                                <code class="language-python rounded-md">{{ prop }}</code>
+                            </pre>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
     </div>
+    {{ scripts|safe }}
+    <script>
+        /* highlight dumped code */
+        hljs.highlightAll()
 
-
+        /* display dump time in locale */
+        function getLocalTime(timestamp) {
+            return new Date(timestamp * 1000).toLocaleTimeString()
+        }
+        document.querySelectorAll('.dump-timestamp').forEach(function (el) {
+            el.innerHTML = getLocalTime(parseInt(el.innerText))
+        });
+    </script>
 </body>
 
 </html>

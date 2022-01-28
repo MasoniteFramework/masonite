@@ -17,8 +17,9 @@ class ExceptionProvider(Provider):
         # dumper
         dumper = Dumper(self.application)
         self.application.bind("dumper", dumper)
-        builtins.dd = dumper.die_and_dump
+        builtins.dd = dumper.dd
         builtins.dump = dumper.dump
+        builtins.clear_dump = dumper.clear
         self.application.bind(
             "DumpExceptionHandler", DumpExceptionHandler(self.application)
         )

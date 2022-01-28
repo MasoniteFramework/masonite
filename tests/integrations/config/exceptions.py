@@ -1,1 +1,1 @@
-HANDLERS = {"stack_overflow": True, "solutions": True}
+HANDLERS = {"stack_overflow": False, "solutions": False}

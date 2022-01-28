@@ -31,7 +31,11 @@ class WelcomeController(Controller):
         return view.render("welcome")
 
     def show(self, request: Request, view: View):
+        request.app.make("dumper").clear()
+        dump(request)
         request.app.make("session").flash("test", "value")
+        dd({"test": "value"})
+
         return view.render("welcome")
 
     def flash_data(self, request: Request, response: Response, view: View):

@@ -116,6 +116,7 @@ setup(
         "masonite.drivers.queue",
         "masonite.drivers.session",
         "masonite.drivers",
+        "masonite.dumps",
         "masonite.environment",
         "masonite.essentials.helpers",
         "masonite.essentials.middleware",

@@ -18,22 +18,28 @@
             : {{ len(getattr(obj, key)) }}
             {% if len(getattr(obj, key)) %}
                 <br>
-                {% for key, value in getattr(obj, key).items() %}
+                <pre><code class="language-python">{{ obj | safe }}</code></pre>
+
+                {# {% for key, value in getattr(obj, key).items() %}
                     <div class="obj-propert-type-item">{{ key }}: {{ value }}<br></div>
-                {% endfor %}
+                {% endfor %} #}
             {% endif %}
             {% elif type(getattr(obj, key)) == list %}
             : {{ len(getattr(obj, key)) }}
                 {% if len(getattr(obj, key)) %}
+                <pre><code class="language-python">{{ obj | safe }}</code></pre>
                 <br>
+                {#
                     {% for key in getattr(obj, key) %}
                         {% if hasattr(key, 'serialize') %}
-                            <div class="obj-propert-type-item">{{ key.serialize() }}<br></div>
+                            <div class="obj-propert-type-item">
+                                <code language="python">{{ key.serialize() | safe }}</code><br></div>
                         {% endif %}
                     {% endfor %}
+                #}
                 {% endif %}
                 {% else %}
-                    {{ property }}
+                    <pre><code class="language-python">{{ property | safe }}</code></pre>
                 {% endif %}
             {% endif %}
             {% endif %}

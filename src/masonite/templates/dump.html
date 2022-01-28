@@ -43,7 +43,7 @@
                             <code class="language-python rounded-md">{{ object.value }}</code>
                         </pre>
                     <!-- obj props -->
-                    {% if object.properties.public or objects.properties.private %}
+                    {% if object.properties.public %}
                     <p class="text-gray-500 text-sm mt-2">Public Properties</p>
                     <div class="grid gap-y-2 gap-x-1 grid-cols-12 py-2">
                         {% for prop_name, prop in object.properties.public.items() %}
@@ -55,6 +55,8 @@
                         </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
+                    {% if object.properties.private %}
                     <p class="text-gray-500 text-sm mt-2">Private Properties</p>
                     <div class="grid gap-y-2 gap-x-1 grid-cols-12 py-2">
                         {% for prop_name, prop in object.properties.private.items() %}

@@ -13,3 +13,4 @@ from .Loader import Loader
 from .Notification import Notification
 from .Storage import Storage
 from .Dump import Dump
+from .Queue import Queue

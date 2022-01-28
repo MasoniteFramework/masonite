@@ -1,10 +1,15 @@
 import inspect
-from deprecated import deprecated
+import warnings
 
 from .exceptions import DumpException
 
 
-@deprecated("DD class will be removed in Masonite 5. Please use Dump facade instead.")
+warnings.warn(
+    "DD class will be removed in Masonite 5. Please use Dump facade instead.",
+    DeprecationWarning,
+)
+
+
 class DD:
     def __init__(self, container):
         self.app = container

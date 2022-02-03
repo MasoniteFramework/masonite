@@ -1,7 +1,7 @@
 from src.masonite.packages import PackageProvider
 from tests.integrations.test_package.commands.Command1 import Command1
 from tests.integrations.test_package.commands.Command2 import Command2
-
+from ..TestPreset import TestPreset
 
 """
 .../mypackage/templates/
@@ -24,4 +24,5 @@ class MyTestPackageProvider(PackageProvider):
             .assets("assets")
             .controllers("controllers")  # ensure this one is done before routes()
             .routes("routes/api.py", "routes/web.py")
+            .presets(TestPreset())
         )

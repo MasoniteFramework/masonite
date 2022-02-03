@@ -3,7 +3,7 @@ import shutil
 import json
 
 from ..utils.location import base_path, resources_path
-from ..utils.filesystem import get_module_dir
+from ..utils.filesystem import get_module_dir, make_full_directory
 
 
 class Preset:
@@ -53,12 +53,14 @@ class Preset:
 
     def update_css(self):
         """Create/Override an app.css file configured for the preset."""
+        make_full_directory(resources_path("css"))
         shutil.copyfile(
             self.get_base_template_path("app.css"), resources_path("css/app.css")
         )
 
     def update_js(self):
         """Create/Override an app.js file configured for the preset."""
+        make_full_directory(resources_path("js"))
         shutil.copyfile(self.get_template_path("app.js"), resources_path("js/app.js"))
         shutil.copyfile(
             self.get_base_template_path("bootstrap.js"),

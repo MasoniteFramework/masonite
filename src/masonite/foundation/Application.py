@@ -1,6 +1,8 @@
 import os
 import sys
 from ..container import Container
+from ..facades import Config
+from ..environment import env
 
 
 class Application(Container):
@@ -48,9 +50,20 @@ class Application(Container):
     def __call__(self, *args, **kwargs):
         return self.response_handler(*args, **kwargs)
 
+    def is_debug(self):
+        """Check if debug mode is enabled."""
+        # For now keep those two lines
+        if Config.has("application.debug"):
+            return bool(Config.get("application.debug"))
+        else:
+            return env("APP_DEBUG", True)
+
     def is_dev(self):
         """Check if app is running in development mode."""
-        return os.getenv("APP_ENV") == "development"
+        return not self.is_running_tests() and os.getenv("APP_ENV") in [
+            "development",
+            "local",
+        ]
 
     def is_production(self):
         """Check if app is running in production mode."""

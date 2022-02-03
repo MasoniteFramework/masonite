@@ -1,4 +1,6 @@
+from multiprocessing import AuthenticationError
 from src.masonite.controllers import Controller
+from src.masonite.exceptions.exceptions import AuthorizationException
 from src.masonite.views import View
 from src.masonite.response.response import Response
 from src.masonite.request import Request
@@ -152,3 +154,6 @@ class WelcomeController(Controller):
         dump({"test": "value"})
         dd(request)
         return ""
+
+    def server_error(self, view: View):
+        raise Exception("unknown error")

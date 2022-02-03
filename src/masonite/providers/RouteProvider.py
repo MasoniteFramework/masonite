@@ -6,6 +6,7 @@ from .Provider import Provider
 from ..routes import Route
 from ..routes.commands import RouteListCommand
 from ..pipeline import Pipeline
+from ..exceptions import RouteNotFoundException
 
 
 class RouteProvider(Provider):
@@ -60,7 +61,9 @@ class RouteProvider(Provider):
                     )
 
             else:
-                response.view("route not found", status=404)
+                raise RouteNotFoundException(
+                    f"{request.get_request_method()} {request.get_path()} : 404 Not Found"
+                )
 
         Pipeline(request, response).through(
             self.application.make("middleware").get_http_middleware(),

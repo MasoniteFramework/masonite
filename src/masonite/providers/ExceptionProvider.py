@@ -1,7 +1,12 @@
 import builtins
 
 from .Provider import Provider
-from ..exceptions import ExceptionHandler, DumpExceptionHandler
+from ..exceptions import (
+    ExceptionHandler,
+    DumpExceptionHandler,
+    DD,
+    HttpExceptionHandler,
+)
 from ..configuration import config
 from ..dumps import Dumper
 
@@ -22,6 +27,9 @@ class ExceptionProvider(Provider):
         builtins.clear_dumps = dumper.clear
         self.application.bind(
             "DumpExceptionHandler", DumpExceptionHandler(self.application)
+        )
+        self.application.bind(
+            "HttpExceptionHandler", HttpExceptionHandler(self.application)
         )
 
     def boot(self):

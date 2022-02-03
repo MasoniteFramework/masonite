@@ -1,11 +1,13 @@
+from multiprocessing import AuthenticationError
 from src.masonite.controllers import Controller
 from src.masonite.helpers.orm import find_or_fail
+from src.masonite.exceptions.exceptions import AuthorizationException
 from src.masonite.views import View
 from src.masonite.response.response import Response
 from src.masonite.request import Request
 from src.masonite.filesystem import Storage
 from src.masonite.broadcasting import Broadcast, Channel
-from src.masonite.facades import Session, Config, Gate
+from src.masonite.facades import Session, Config, Gate, Dump
 
 
 class CanBroadcast:
@@ -152,3 +154,11 @@ class WelcomeController(Controller):
     def show_user(self, request: Request, view: View):
         user = find_or_fail("tests.integrations.app.User", request.input("id"))
         return view.render("welcome")
+
+    def dd(self, request: Request):
+        dump({"test": "value"})
+        dd(request)
+        return ""
+
+    def server_error(self, view: View):
+        raise Exception("unknown error")

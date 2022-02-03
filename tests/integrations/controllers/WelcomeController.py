@@ -4,7 +4,7 @@ from src.masonite.response.response import Response
 from src.masonite.request import Request
 from src.masonite.filesystem import Storage
 from src.masonite.broadcasting import Broadcast, Channel
-from src.masonite.facades import Session, Config, Gate
+from src.masonite.facades import Session, Config, Gate, Dump
 
 
 class CanBroadcast:
@@ -147,3 +147,8 @@ class WelcomeController(Controller):
 
     def authorizations(self, view: View):
         return view.render("authorizations")
+
+    def dd(self, request: Request):
+        dump({"test": "value"})
+        dd(request)
+        return ""

@@ -133,6 +133,11 @@ class PackageProvider(Provider):
         self.application.make("commands").add(*commands)
         return self
 
+    def presets(self, *presets):
+        for preset in presets:
+            self.application.make("presets").add(preset)
+        return self
+
     def migrations(self, *migrations):
         self.package.add_migrations(*migrations)
         for migration in migrations:

@@ -7,3 +7,6 @@ from .route.LoadUserMiddleware import LoadUserMiddleware
 from .route.MaintenanceModeMiddleware import MaintenanceModeMiddleware
 from .route.GuardMiddleware import GuardMiddleware
 from .route.AuthenticationMiddleware import AuthenticationMiddleware
+from .route.ClearDumpsBetweenRequestsMiddleware import (
+    ClearDumpsBetweenRequestsMiddleware,
+)

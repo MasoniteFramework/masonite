@@ -20,3 +20,4 @@ from .HashServiceProvider import HashServiceProvider
 from ..validation.providers import ValidationProvider
 from ..configuration.providers import ConfigurationProvider
 from ..orm.providers import ORMProvider
+from ..presets.providers import PresetsProvider

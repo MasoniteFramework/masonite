@@ -91,6 +91,9 @@ class HttpTestResponse:
     def assertForbidden(self):
         return self.assertIsStatus(403)
 
+    def assertError(self):
+        return self.assertIsStatus(500)
+
     def assertHasHeader(self, name, value=None):
         header_value = self.response.header(name)
         assert header_value, f"Could not find the header {name}"

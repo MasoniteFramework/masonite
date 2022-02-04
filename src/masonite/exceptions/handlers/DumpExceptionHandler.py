@@ -1,7 +1,7 @@
 import inspect
 import os
 
-from ..utils.filesystem import get_module_dir
+from ...utils.filesystem import get_module_dir
 
 
 def is_property(obj):

@@ -1,6 +1,4 @@
-from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
-
-from .JsonHandler import JsonHandler
+from .handlers.JsonHandler import JsonHandler
 
 
 class ExceptionHandler:
@@ -62,23 +60,7 @@ class ExceptionHandler:
             return self.application.make("HttpExceptionHandler").handle(exception)
 
         # else display exceptionite error page
-        handler = Handler(exception)
-
-        if self.options.get("handlers.stack_overflow"):
-            handler.integrate(StackOverflowIntegration())
-        if self.options.get("handlers.solutions"):
-            handler.integrate(SolutionsIntegration())
-
-        handler.context(
-            {
-                "WSGI": {
-                    "Path": request.get_path(),
-                    "Input": request.input_bag.all_as_values() or None,
-                    # 'Parameters': request.url_params,
-                    "Request Method": request.get_request_method(),
-                },
-                "Headers": request.header_bag.to_dict(),
-            }
-        )
-
-        return response.view(handler.render(), status=500)
+        exceptionite = self.get_driver("exceptionite")
+        exceptionite.start(exception)
+        exceptionite.render("terminal")
+        return response.view(exceptionite.render("javascript"), status=500)

@@ -63,4 +63,4 @@ class ExceptionHandler:
         exceptionite = self.get_driver("exceptionite")
         exceptionite.start(exception)
         exceptionite.render("terminal")
-        return response.view(exceptionite.render("javascript"), status=500)
+        return response.view(exceptionite.render("web"), status=500)

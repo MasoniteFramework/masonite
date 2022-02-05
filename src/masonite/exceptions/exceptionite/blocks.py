@@ -1,12 +1,11 @@
 from exceptionite.tabs import Block
-from exceptionite.tabs.blocks.StackOverflow import StackOverflow
 
 from ... import __version__
 from ...helpers import optional
 
 
 class AppBlock(Block):
-
+    id = "application"
     name = "Application"
     icon = "DesktopComputerIcon"
     component = "KeyValBlockWithSections"
@@ -51,7 +50,7 @@ class AppBlock(Block):
 
 
 class RequestBlock(Block):
-
+    id = "request"
     name = "Request"
     icon = "SwitchHorizontalIcon"
     component = "KeyValBlockWithSections"

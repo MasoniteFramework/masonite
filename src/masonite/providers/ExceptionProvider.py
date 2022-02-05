@@ -9,8 +9,9 @@ from ..exceptions.ExceptionHandler import ExceptionHandler
 from ..dumps import Dumper
 from ..exceptions import DumpExceptionHandler, HttpExceptionHandler
 from ..exceptions.exceptionite.controllers import ExceptioniteController
-from ..exceptions.exceptionite.tabs import DumpsTab, SolutionsTab
-from ..exceptions.exceptionite.blocks import StackOverflow, RequestBlock, AppBlock
+from ..exceptions.exceptionite.tabs import DumpsTab
+from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock
+from ..exceptions.exceptionite import solutions
 from ..exceptions.exceptionite.actions import (
     MasoniteDebugAction,
     PostStackOverflowAction,
@@ -37,12 +38,14 @@ class ExceptionProvider(Provider):
             )
         )
         exceptionite.add_tab(DumpsTab)
-        exceptionite.add_tab(SolutionsTab)
-        exceptionite.get_tab("solutions").add_block(StackOverflow)
         exceptionite.get_tab("context").add_block(RequestBlock).add_block(AppBlock)
         exceptionite.add_action(MasoniteDebugAction)
         exceptionite.add_action(PostStackOverflowAction)
         exceptionite.add_action(CreateMasoniteIssueAction)
+
+        exceptionite.get_tab("solutions").get_block("possible_solutions").register(
+            solutions.TableNotFound()
+        )
 
         exception_handler = ExceptionHandler(self.application)
         exception_handler.add_driver("exceptionite", exceptionite)

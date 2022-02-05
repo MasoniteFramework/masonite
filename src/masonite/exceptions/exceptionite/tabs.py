@@ -16,18 +16,3 @@ class DumpsTab(Tab):
 
     def has_content(self):
         return len(self.handler.app.make("dumper").get_dumps()) > 0
-
-
-class RecommendationsTab(Tab):
-    id = "recommendations"
-    name = "Recommendations"
-    icon = "CheckCircleIcon"
-    advertise_content = True
-
-
-class SolutionsTab(Tab):
-    id = "solutions"
-    name = "Solutions"
-    icon = "SparklesIcon"
-    component = "SolutionsTab"
-    advertise_content = True

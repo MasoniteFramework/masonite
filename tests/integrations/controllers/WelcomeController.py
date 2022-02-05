@@ -34,7 +34,6 @@ class WelcomeController(Controller):
 
     def show(self, request: Request, view: View):
         request.app.make("session").flash("test", "value")
-        raise Exception("test error")
         return view.render("welcome")
 
     def flash_data(self, request: Request, response: Response, view: View):

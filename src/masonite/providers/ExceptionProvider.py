@@ -25,7 +25,32 @@ class ExceptionProvider(Provider):
 
     def register(self):
         exceptionite = Handler()
-        exceptionite.set_options(config("exceptions"))
+        # To remove in Masonite 5:
+        # old project will not have correct config for exceptions so use default instead
+        options = config("exceptions")
+        if not options.get("editor"):  # that's an old project
+            options = {
+                "editor": "vscode",
+                "search_url": "https://www.google.com/search?q=",
+                "links": {
+                    "doc": "https://docs.masoniteproject.com",
+                    "repo": "https://github.com/MasoniteFramework/masonite",
+                },
+                "stack": {"offset": 10, "shorten": True},
+                "tabs": {
+                    "context": True,
+                    "dumps": True,
+                    "solutions": True,
+                    "recommendations": True,
+                },
+                "blocks": {
+                    "packages_updates": {
+                        "list": ["exceptionite", "masonite", "masonite-orm"]
+                    },
+                    "stackoverflow": True,
+                },
+            }
+        exceptionite.set_options(options)
         # configure exceptionite for Masonite specifically
         exceptionite.app = self.application
         self.application.make("router").add(

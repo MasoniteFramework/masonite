@@ -1,7 +1,6 @@
 from tests import TestCase
 from src.masonite.request import Request
 from src.masonite.utils.http import generate_wsgi
-import os
 
 
 class TestRequest(TestCase):
@@ -22,3 +21,7 @@ class TestRequest(TestCase):
 
         request = Request(generate_wsgi(path="/test/admin/user"))
         self.assertTrue(request.contains("*"))
+
+    def test_request_ip(self):
+        request = Request(generate_wsgi({"REMOTE_ADDR": "192.167.2.1"}))
+        self.assertEqual(request.ip(), "192.167.2.1")

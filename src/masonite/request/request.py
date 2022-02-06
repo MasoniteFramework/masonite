@@ -154,3 +154,6 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def activate_subdomains(self):
         self._subdomains_activated = True
         return self
+
+    def ip(self):
+        return self.environ.get("REMOTE_ADDR")

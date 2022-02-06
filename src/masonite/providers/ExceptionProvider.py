@@ -14,8 +14,6 @@ from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock
 from ..exceptions.exceptionite import solutions
 from ..exceptions.exceptionite.actions import (
     MasoniteDebugAction,
-    PostStackOverflowAction,
-    CreateMasoniteIssueAction,
 )
 
 
@@ -65,8 +63,6 @@ class ExceptionProvider(Provider):
         exceptionite.add_tab(DumpsTab)
         exceptionite.get_tab("context").add_block(RequestBlock).add_block(AppBlock)
         exceptionite.add_action(MasoniteDebugAction)
-        exceptionite.add_action(PostStackOverflowAction)
-        exceptionite.add_action(CreateMasoniteIssueAction)
 
         exceptionite.get_tab("solutions").get_block("possible_solutions").register(
             solutions.TableNotFound()

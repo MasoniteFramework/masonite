@@ -1,4 +1,6 @@
 from exceptionite.actions import Action
+from masonite.utils.structures import data as data_dot
+import requests
 
 
 class MasoniteDebugAction(Action):
@@ -8,31 +10,30 @@ class MasoniteDebugAction(Action):
     component = "MasoniteSupport"
 
     def run(self, options={}):
-        data = self.handler.get_last_exception_data()
-        id = "123456"
-        return (
-            f"Error page has been shared at https://debug.masoniteproject.com/{id}/ !"
+        api_url = "http://localhost:8001/api/tickets/"
+        options = data_dot(options)
+        all_data = self.handler.get_last_exception_data()
+        # token = self.handler.app.make("request").cookie("SESSID")
+        data = {}
+        if options.get("options.exception.show", False):
+            data.update(
+                {
+                    "exception": all_data.get("exception").get("type"),
+                    "message": all_data.get("exception").get("message"),
+                }
+            )
+        if options.get("options.stacktrace.show", False):
+            data.update({"stack": all_data.get("exception").get("stacktrace")})
+        response = requests.post(
+            api_url,
+            json=data,
+            headers={
+                "Content-type": "application/json",
+                "Accept": "application/json",
+                # "X-CSRF-TOKEN": token,
+            },
         )
-
-
-class PostStackOverflowAction(Action):
-    name = "Post on Stackoverflow"
-    icon = "ChatAlt2Icon"
-    id = "masonite-stackoverflow"
-    component = "MasoniteSupport"
-
-    def run(self, options={}):
-        return f"Stack overflow !"
-
-
-class CreateMasoniteIssueAction(Action):
-    name = "Report issue on Masonite GitHub"
-    icon = "ExclamationCircleIcon"
-    id = "masonite-github-report"
-    component = "GitHubSupport"
-
-    def run(self, options={}):
-        import pdb
-
-        pdb.set_trace()
-        return f"GitHub !"
+        if response.status_code == 201:
+            return response.json()
+        else:
+            return {"message": "An error happened"}

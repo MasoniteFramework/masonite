@@ -8,6 +8,6 @@ class ExceptioniteController(Controller):
         handler = request.app.make("exception_handler").get_driver("exceptionite")
         data = handler.run_action(request.input("action_id"), request.input("options"))
         try:
-            return response.json({"message": data}, 200)
+            return response.json({"message": "ok", "data": data}, 200)
         except:
-            return response.json({"message": "An error happened"}, 400)
+            return response.json({"message": "An error happened", "data": data}, 400)

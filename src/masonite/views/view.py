@@ -88,8 +88,8 @@ class View:
                 # Try rendering the direct template the user has supplied
                 if self.exists(self.template):
                     raise TemplateNotFound(
-                        "Included template from view could not be found"
-                    ) from e
+                        f"One of the included templates in the '{self.template}' view could not be found"
+                    )
                 else:
                     raise TemplateNotFound(
                         f"Template '{self.template}' not found"

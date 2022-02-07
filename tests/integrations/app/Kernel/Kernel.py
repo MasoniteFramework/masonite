@@ -12,6 +12,7 @@ from src.masonite.middleware import (
     LoadUserMiddleware,
     MaintenanceModeMiddleware,
     ClearDumpsBetweenRequestsMiddleware,
+    ThrottleRequestsMiddleware,
 )
 from src.masonite.routes import Route
 from src.masonite.utils.structures import load
@@ -30,7 +31,8 @@ class Kernel:
             SessionMiddleware,
             LoadUserMiddleware,
             VerifyCsrfToken,
-        ]
+        ],
+        "throttle": [ThrottleRequestsMiddleware],
     }
 
     def __init__(self, app):

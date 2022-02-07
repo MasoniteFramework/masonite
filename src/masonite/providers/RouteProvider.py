@@ -7,6 +7,7 @@ from ..routes import Route
 from ..routes.commands import RouteListCommand
 from ..pipeline import Pipeline
 from ..exceptions import RouteNotFoundException
+from ..rates import RateLimiter
 
 
 class RouteProvider(Provider):
@@ -16,6 +17,9 @@ class RouteProvider(Provider):
     def register(self):
         Route.set_controller_locations(self.application.make("controllers.location"))
         self.application.make("commands").add(RouteListCommand(self.application))
+        # register rate limiter
+        rate_limiter = RateLimiter(self.application)
+        self.application.bind("rate", rate_limiter)
 
     def boot(self):
         router = self.application.make("router")

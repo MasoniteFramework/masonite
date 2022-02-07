@@ -152,7 +152,7 @@ class WelcomeController(Controller):
         return view.render("authorizations")
 
     def show_user(self, request: Request, view: View):
-        user = find_or_fail("tests.integrations.app.User", request.input("id"))
+        user = find_or_fail("tests.integrations.app.User", request.param("id"))
         return view.render("welcome")
 
     def dd(self, request: Request):

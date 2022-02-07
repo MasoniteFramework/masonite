@@ -157,4 +157,5 @@ class Request(ValidatesRequest, AuthorizesRequest):
         return self
 
     def ip(self) -> "str|None":
+        """Return the request IP by processing the different headers setup in IpMiddleware."""
         return self._ip

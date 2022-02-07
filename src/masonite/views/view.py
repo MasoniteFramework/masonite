@@ -82,7 +82,18 @@ class View:
             return self.env.get_template(self.filename).render(self.dictionary)
         except TemplateNotFound:
             # Try rendering the direct template the user has supplied
-            return self.env.get_template(self.template).render(self.dictionary)
+            try:
+                return self.env.get_template(self.template).render(self.dictionary)
+            except TemplateNotFound as e:
+                # Try rendering the direct template the user has supplied
+                if self.exists(self.template):
+                    raise TemplateNotFound(
+                        f"One of the included templates in the '{self.template}' view could not be found"
+                    )
+                else:
+                    raise TemplateNotFound(
+                        f"Template '{self.template}' not found"
+                    ) from e
 
     def hydrate_from_composers(self):
         """Add data into the view from specified composers."""

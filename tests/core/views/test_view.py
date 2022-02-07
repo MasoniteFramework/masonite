@@ -2,6 +2,7 @@ from src.masonite.configuration import config
 from src.masonite.helpers import url, optional
 from src.masonite.sessions import old
 from tests import TestCase
+from jinja2 import TemplateNotFound
 
 
 class TestView(TestCase):
@@ -32,6 +33,18 @@ class TestView(TestCase):
         self.assertFalse(
             self.view.exists("/tests/integrations/templates/not_available")
         )
+
+    def test_exception_view_not_found(self):
+        with self.assertRaises(TemplateNotFound) as context:
+            self.view.render('not_found')
+
+        self.assertEqual(context.exception.message, "Template 'not_found' not found")
+
+    def test_exception_include_not_found(self):
+        with self.assertRaises(TemplateNotFound) as context:
+            self.view.render('include')
+
+        self.assertEqual(context.exception.message, "One of the included templates in the 'include' view could not be found")
 
     def test_view_gets_global_template(self):
         self.assertEqual(

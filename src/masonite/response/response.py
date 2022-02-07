@@ -2,6 +2,7 @@
 
 import json
 import mimetypes
+from typing import Union, Any
 from pathlib import Path
 
 from ..routes.Router import Router
@@ -21,13 +22,13 @@ class Response:
     def __init__(self, app):
         self.app = app
         self.content = ""
-        self._status = None
+        self._status: str = None
         self.statuses = HTTP_STATUS_CODES
         self.header_bag = HeaderBag()
         self.cookie_jar = CookieJar()
         self.original = None
 
-    def json(self, payload, status=200):
+    def json(self, payload: Any, status: int = 200):
         """Gets the response ready for a JSON response.
 
         Arguments:
@@ -42,7 +43,7 @@ class Response:
 
         return self.data()
 
-    def make_headers(self, content_type="text/html; charset=utf-8"):
+    def make_headers(self, content_type="text/html; charset=utf-8") -> None:
         """Make the appropriate headers based on changes made in controllers or middleware.
 
         Keyword Arguments:
@@ -53,7 +54,7 @@ class Response:
         # If the user did not change it directly
         self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
 
-    def header(self, name, value=None):
+    def header(self, name, value=None) -> Union[None, str]:
         if value is None and isinstance(name, dict):
             for name, value in name.items():
                 self.header_bag.add(Header(name, str(value)))
@@ -68,7 +69,7 @@ class Response:
     def get_headers(self):
         return self.header_bag.render()
 
-    def cookie(self, name, value=None, **options):
+    def cookie(self, name, value=None, **options) -> Union[None, str]:
         if value is None:
             cookie = self.cookie_jar.get(name)
             if not cookie:
@@ -77,14 +78,14 @@ class Response:
 
         return self.cookie_jar.add(name, value, **options)
 
-    def delete_cookie(self, name):
+    def delete_cookie(self, name) -> "Response":
         self.cookie_jar.delete(name)
         return self
 
     def get_response_content(self):
         return self.data()
 
-    def status(self, status):
+    def status(self, status: Union[str, int]) -> "Response":
         """Set the HTTP status code.
 
         Arguments:
@@ -102,10 +103,10 @@ class Response:
                 raise InvalidHTTPStatusCode
         return self
 
-    def is_status(self, code):
+    def is_status(self, code: int) -> bool:
         return self._get_status_code_by_value(self.get_status_code()) == code
 
-    def _get_status_code_by_value(self, value):
+    def _get_status_code_by_value(self, value: int) -> Union[str, None]:
         for key, status in self.statuses.items():
             if status == value:
                 return key
@@ -123,7 +124,7 @@ class Response:
     def get_status(self):
         return self._get_status_code_by_value(self.get_status_code())
 
-    def data(self):
+    def data(self) -> bytes:
         """Get the data that will be returned to the WSGI server.
 
         Returns:
@@ -134,7 +135,7 @@ class Response:
 
         return self.content
 
-    def converted_data(self):
+    def converted_data(self) -> "str | bytes":
         """Converts the data appropriately so the WSGI server can handle it.
 
         Returns:
@@ -145,7 +146,7 @@ class Response:
         else:
             return self.data()
 
-    def view(self, view, status=200):
+    def view(self, view, status: int = 200):
         """Set a string or view to be returned.
 
         Arguments:

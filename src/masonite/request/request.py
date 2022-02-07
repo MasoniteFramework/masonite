@@ -22,6 +22,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.cookie_jar = CookieJar()
         self.header_bag = HeaderBag()
         self.input_bag = InputBag()
+        self._ip = None
         self.params = {}
         self._user = None
         self.route = None
@@ -155,5 +156,5 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self._subdomains_activated = True
         return self
 
-    def ip(self):
-        return self.environ.get("REMOTE_ADDR")
+    def ip(self) -> "str|None":
+        return self._ip

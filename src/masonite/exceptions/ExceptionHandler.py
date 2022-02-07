@@ -80,5 +80,8 @@ class ExceptionHandler:
                 "Headers": request.header_bag.to_dict(),
             }
         )
-
-        return response.view(handler.render(), status=500)
+        if hasattr(exception, "get_status"):
+            status = exception.get_status()
+        else:
+            status = 500
+        return response.view(handler.render(), status=status)

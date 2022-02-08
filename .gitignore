@@ -4,6 +4,7 @@ venv
 .env.*
 .env
 **/storage/framework/cache
+.pytest_cache/
 **/storage/framework/filesystem
 src/masonite.egg-info/*
 .vscode

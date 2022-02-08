@@ -3,8 +3,8 @@ venv
 **/*.DS_Store
 .env.*
 .env
-storage/framework/cache
-storage/framework/filesystem
+**/storage/framework/cache
+**/storage/framework/filesystem
 src/masonite.egg-info/*
 .vscode
 build/

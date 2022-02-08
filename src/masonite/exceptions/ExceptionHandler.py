@@ -40,6 +40,11 @@ class ExceptionHandler:
             f"masonite.exception.{exception.__class__.__name__}", exception
         )
 
+        # add headers to response if any
+        if hasattr(exception, "get_headers"):
+            headers = exception.get_headers()
+            response.with_headers(headers)
+
         if self.application.has(f"{exception.__class__.__name__}Handler"):
             return self.application.make(
                 f"{exception.__class__.__name__}Handler"
@@ -54,6 +59,7 @@ class ExceptionHandler:
                 return self.application.make("HttpExceptionHandler").handle(exception)
             # if a renderable exception is raised let it be displayed
             if hasattr(exception, "get_response"):
+
                 return response.view(exception.get_response(), exception.get_status())
 
             # else fallback to an unknown exception should be displayed as a 500 error
@@ -80,5 +86,4 @@ class ExceptionHandler:
                 "Headers": request.header_bag.to_dict(),
             }
         )
-
         return response.view(handler.render(), status=500)

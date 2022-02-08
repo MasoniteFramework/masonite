@@ -1,5 +1,5 @@
 from .Facade import Facade
 
 
-class Rate(metaclass=Facade):
+class RateLimiter(metaclass=Facade):
     key = "rate"

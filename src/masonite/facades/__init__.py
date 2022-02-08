@@ -14,4 +14,4 @@ from .Notification import Notification
 from .Storage import Storage
 from .Dump import Dump
 from .Queue import Queue
-from .Rate import Rate
+from .RateLimiter import RateLimiter

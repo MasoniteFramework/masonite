@@ -6,14 +6,15 @@ successfully import commands for you.
 """
 
 from cleo import Application
+
+from .. import __version__
 from .ProjectCommand import (
     ProjectCommand,
 )
-
 from .KeyCommand import KeyCommand
 from .InstallCommand import InstallCommand
 
-application = Application("Masonite Starter Version:", 4.0)
+application = Application("Masonite Starter", __version__)
 
 application.add(ProjectCommand())
 application.add(KeyCommand())

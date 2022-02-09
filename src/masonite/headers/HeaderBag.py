@@ -1,49 +1,48 @@
-from typing import List, Dict
+from inflection import titleize
 
 from .Header import Header
-from inflection import titleize
 
 
 class HeaderBag:
     def __init__(self):
-        self.bag = {}
+        self.bag: dict = {}
 
-    def add(self, header) -> None:
+    def add(self, header: "Header") -> None:
         self.bag.update({self.convert_name(header.name): header})
 
-    def add_if_not_exists(self, header) -> None:
+    def add_if_not_exists(self, header: "Header") -> None:
         if self.convert_name(header.name) in self.bag:
             return None
 
         self.bag.update({self.convert_name(header.name): header})
 
-    def get(self, name):
+    def get(self, name: str) -> "Header":
         return self.bag.get(self.convert_name(name), "")
 
-    def render(self) -> List:
+    def render(self) -> list:
         response = []
         for name, header in self.bag.items():
             response.append((name, header.value))
 
         return response
 
-    def __contains__(self, name):
+    def __contains__(self, name: str) -> bool:
         return self.convert_name(name) in self.bag.keys()
 
-    def convert_name(self, name) -> str:
+    def convert_name(self, name: str) -> str:
         return titleize(name.replace("HTTP_", "")).replace(" ", "-")
 
-    def load(self, environ) -> None:
+    def load(self, environ: dict) -> None:
         for key, value in environ.items():
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         dic = {}
         for name, header in self.bag.items():
             dic.update({name: header.value})
 
         return dic
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> "Header":
         return self.bag[self.convert_name(key)]

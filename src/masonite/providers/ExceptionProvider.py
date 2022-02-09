@@ -10,7 +10,7 @@ from ..dumps import Dumper
 from ..exceptions import DumpExceptionHandler, HttpExceptionHandler
 from ..exceptions.exceptionite.controllers import ExceptioniteController
 from ..exceptions.exceptionite.tabs import DumpsTab
-from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock
+from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock, ConfigBlock
 from ..exceptions.exceptionite import solutions
 from ..exceptions.exceptionite.actions import (
     MasoniteDebugAction,
@@ -61,11 +61,16 @@ class ExceptionProvider(Provider):
             )
         )
         exceptionite.add_tab(DumpsTab)
-        exceptionite.get_tab("context").add_block(RequestBlock).add_block(AppBlock)
+        exceptionite.get_tab("context").add_block(RequestBlock).add_block(
+            AppBlock
+        ).add_block(ConfigBlock)
         exceptionite.add_action(MasoniteDebugAction)
 
         exceptionite.get_tab("solutions").get_block("possible_solutions").register(
-            solutions.TableNotFound()
+            solutions.TableNotFound(),
+            solutions.MissingCSRFToken(),
+            solutions.InvalidCSRFToken(),
+            solutions.TemplateNotFound(),
         )
 
         exception_handler = ExceptionHandler(self.application)

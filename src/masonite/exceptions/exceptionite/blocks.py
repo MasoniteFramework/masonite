@@ -1,5 +1,6 @@
+import json
+import pdb
 from exceptionite.tabs import Block
-
 from ... import __version__
 from ...helpers import optional
 
@@ -65,3 +66,38 @@ class RequestBlock(Block):
             },
             "Headers": request.header_bag.to_dict(),
         }
+
+
+# import pprint
+
+# printer = pprint.PrettyPrinter(indent=2)
+
+
+def recursive_serializer(data):
+    # TODO: add get_serialize/serialize
+    if isinstance(data, (int, bool, str, bytes)):
+        return data
+    elif isinstance(data, (list, tuple)):
+        return [recursive_serializer(item) for item in data]
+    elif isinstance(data, dict):
+        return {key: recursive_serializer(val) for key, val in data.items()}
+        # return printer.pformat(data)
+    elif callable(data):
+        return str(data)
+    else:
+        print(type(data))
+        return str(data)
+
+
+class ConfigBlock(Block):
+    id = "config"
+    name = "Configuration"
+    icon = "CogIcon"
+    component = "KeyValBlockWithSections"
+
+    def build(self):
+        data = {}
+        for section, config_data in self.handler.app.make("config").all().items():
+            section_name = section.title()
+            data[section_name] = recursive_serializer(config_data)
+        return data

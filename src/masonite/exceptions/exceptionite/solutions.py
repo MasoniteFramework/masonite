@@ -7,3 +7,37 @@ class TableNotFound:
 
     def regex(self):
         return r"no such table: (?P<table>(\w+))"
+
+
+class MissingCSRFToken:
+    def title(self):
+        return "Missing CSRF Token"
+
+    def description(self):
+        return "You are trying to make a sensitive request without providing a CSRF token. Your request might be vulnerable to Cross Site Request Forgery. To resolve this issue you should use {{ csrf_field }} in HTML forms or add X-CSRF-TOKEN header in AJAX requests."
+
+    def regex(self):
+        return r"Missing CSRF Token"
+
+
+class InvalidCSRFToken:
+    def title(self):
+        return "Invalid CSRF Token"
+
+    def description(self):
+        return "TODO"
+
+    def regex(self):
+        return r"Invalid CSRF Token"
+
+
+class TemplateNotFound:
+    def title(self):
+        return "Template Not Found"
+
+    def description(self):
+        return """':template.html' view file has not been found in registered view locations. Please verify the spelling of the template and that it exists in locations declared in Kernel file. You can check
+        available view locations with app.make('view.locations')."""
+
+    def regex(self):
+        return r"(?P<template>(\w+))"

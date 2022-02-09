@@ -1,6 +1,8 @@
+from __future__ import annotations
 import os
 import sys
-from typing import Callable, List, Tuple, TYPE_CHECKING, Iterator
+from typing import Callable, List, Tuple, TYPE_CHECKING, Iterator, Type
+
 from ..container import Container
 from ..facades import Config
 from ..environment import env
@@ -24,7 +26,7 @@ class Application(Container):
     def get_response_handler(self) -> ResponseHandler:
         return self.response_handler
 
-    def register_providers(self, *providers: type["Provider"]) -> "Application":
+    def register_providers(self, *providers: Type["Provider"]) -> "Application":
         for provider_class in providers:
             provider = provider_class(self)
             provider.register()
@@ -36,7 +38,7 @@ class Application(Container):
     def get_storage_path(self) -> str:
         return self.storage_path
 
-    def add_providers(self, *providers: type["Provider"]) -> "Application":
+    def add_providers(self, *providers: Type["Provider"]) -> "Application":
         for provider_class in providers:
             provider = provider_class(self)
             provider.register()

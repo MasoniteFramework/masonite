@@ -29,14 +29,7 @@ class Response:
         self.original = None
 
     def json(self, payload: Any, status: int = 200) -> bytes:
-        """Gets the response ready for a JSON response.
-
-        Arguments:
-            payload {dict|list} -- Either a dictionary or a list.
-
-        Returns:
-            string -- Returns a string representation of the data
-        """
+        """Set the response as a JSON response."""
         self.content = bytes(json.dumps(payload), "utf-8")
         self.make_headers(content_type="application/json; charset=utf-8")
         self.status(status)
@@ -44,13 +37,14 @@ class Response:
         return self.data()
 
     def make_headers(self, content_type: str = "text/html; charset=utf-8") -> None:
-        """Make the appropriate headers based on changes made in controllers or middleware."""
+        """Recompute Content-Length of the response after modyifing it."""
         self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
 
         # If the user did not change it directly
         self.header_bag.add_if_not_exists(Header("Content-Type", content_type))
 
     def header(self, name: str, value: str = None) -> "None|str":
+        """Get response header for the given name if no value provided or add headers to response."""
         if value is None and isinstance(name, dict):
             for name, value in name.items():
                 self.header_bag.add(Header(name, str(value)))
@@ -63,9 +57,12 @@ class Response:
         return self.header_bag.add(Header(name, value))
 
     def get_headers(self) -> list:
+        """Get all response headers."""
         return self.header_bag.render()
 
     def cookie(self, name: str, value: str = None, **options) -> "None|str":
+        """Get response cookie for the given name if no value provided or add cookie to
+        the response with the given name, value and options."""
         if value is None:
             cookie = self.cookie_jar.get(name)
             if not cookie:
@@ -75,14 +72,16 @@ class Response:
         return self.cookie_jar.add(name, value, **options)
 
     def delete_cookie(self, name: str) -> "Response":
+        """Delete the cookie with the given name from the response."""
         self.cookie_jar.delete(name)
         return self
 
     def get_response_content(self) -> bytes:
+        """Get response content."""
         return self.data()
 
     def status(self, status: "str|int") -> "Response":
-        """Set the HTTP status code of the response."""
+        """Set HTTP status code of the response."""
         if isinstance(status, str):
             self._status = status
         elif isinstance(status, int):
@@ -93,6 +92,7 @@ class Response:
         return self
 
     def is_status(self, code: int) -> bool:
+        """Check if response has the given status code."""
         return self._get_status_code_by_value(self.get_status_code()) == code
 
     def _get_status_code_by_value(self, value: int) -> "str|None":
@@ -110,25 +110,21 @@ class Response:
         return self._get_status_code_by_value(self.get_status_code())
 
     def data(self) -> bytes:
-        """Get the data that will be returned to the WSGI server.
-
-        Returns:
-            string -- Returns a string representation of the response
-        """
+        """Get the response content as bytes."""
         if isinstance(self.content, str):
             return bytes(self.content, "utf-8")
 
         return self.content
 
     def converted_data(self) -> "str|bytes":
-        """Get the response output as string or bytes so that the WSGI server handles it."""
+        """Get the response content as string or bytes so that the WSGI server handles it."""
         if isinstance(self.data(), (dict, list)):
             return json.dumps(self.data())
         else:
             return self.data()
 
     def view(self, view: Any, status: int = 200) -> "bytes|Response":
-        """Set a string or view to be returned."""
+        """Set the response as a string or view."""
         self.original = view
 
         if isinstance(view, tuple):
@@ -158,6 +154,8 @@ class Response:
         return self
 
     def back(self) -> "Response":
+        """Set the response as a redirect response back to previous path defined from the
+        request."""
         return self.redirect(url=self.app.make("request").get_back_path())
 
     def redirect(
@@ -168,7 +166,7 @@ class Response:
         url: str = None,
         status: int = 302,
     ) -> "Response":
-        """Transform the response as a redirect response. The redirection location can be defined
+        """Set the response as a redirect response. The redirection location can be defined
         with the location URL or with a route name. If a route name is used, route params can
         be provided."""
 
@@ -195,6 +193,7 @@ class Response:
         return self.converted_data()
 
     def download(self, name: str, location: str, force: bool = False) -> "Response":
+        """Set the response as a file download response."""
         if force:
             self.header("Content-Type", "application/octet-stream")
             self.header(

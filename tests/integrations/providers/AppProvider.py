@@ -1,6 +1,6 @@
 from src.masonite.providers import Provider
 from src.masonite.facades import Gate, RateLimiter
-from src.masonite.rates import GlobalRate, LimitedForGuestsRate
+from src.masonite.rates import GuestsOnlyLimiter
 
 
 class AppProvider(Provider):
@@ -13,7 +13,7 @@ class AppProvider(Provider):
         Gate.define("display-admin", lambda user: user.email == "admin@gmail.com")
 
         # Register rate limits for api
-        RateLimiter.register("api", LimitedForGuestsRate("5/hour"))
+        RateLimiter.register("api", GuestsOnlyLimiter("5/hour"))
 
     def boot(self):
         pass

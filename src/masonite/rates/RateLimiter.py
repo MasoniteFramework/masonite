@@ -1,39 +1,49 @@
 import pendulum
+from typing import TYPE_CHECKING, Any, Callable
+
+if TYPE_CHECKING:
+    from ..foundation import Application
+    from .limiters import Limiter
+    from ..request import Request
 
 
 class RateLimiter:
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
-        self.limiters = {}
+        self.limiters: dict = {}
 
-    def register(self, name, callback):
+    def register(self, name, callback) -> "RateLimiter":
         self.limiters[name] = callback
         return self
 
     @property
-    def cache(self):
+    def cache(self) -> Any:
         """Get default cache driver"""
         return self.application.make("cache").store()
 
-    def attempts(self, key):
+    def attempts(self, key: str) -> int:
         key = self.clean_key(key)
         return int(self.cache.get(key, default=0))
 
-    def clean_key(self, key):
+    def clean_key(self, key: str) -> str:
         """Clean the rate limiter key from unicode characters."""
         if isinstance(key, bytes):
             return key.decode("utf-8")
         return key
 
-    def get_limiter(self, name):
+    def get_limiter(self, name: str) -> "Limiter":
         return self.limiters[name]
 
-    def attempt(self, key, request):
-        # limiter = self.limiters[name]
-        # limit = limiter.allow(request)
-        pass
+    def attempt(self, key: str, callback: Callable, max_attempts: int, delay: int = 60):
+        # don't execute callback if key limited
+        if self.too_many_attempts(key, max_attempts):
+            return False
 
-    def too_many_attempts(self, key, max_attempts):
+        result = callback()
+        self.hit(key, delay)
+        return result
+
+    def too_many_attempts(self, key: str, max_attempts: int) -> bool:
         key = self.clean_key(key)
         if self.attempts(key) >= max_attempts:
             # trigger remove of cache value if needed
@@ -43,7 +53,7 @@ class RateLimiter:
             self.reset_attempts(key)
         return False
 
-    def hit(self, key, delay):
+    def hit(self, key: str, delay: int) -> int:
         key = self.clean_key(key)
         # store timestamp when key limit be available again
         available_at = pendulum.now().add(seconds=delay).int_timestamp
@@ -53,30 +63,30 @@ class RateLimiter:
         hits = self.cache.increment(key)
         return hits
 
-    def reset_attempts(self, key):
+    def reset_attempts(self, key: str) -> bool:
         key = self.clean_key(key)
         return self.cache.forget(key)
 
-    def clear(self, key):
+    def clear(self, key: str) -> bool:
         key = self.clean_key(key)
         self.reset_attempts(key)
         return self.cache.forget(f"{key}:timer")
 
-    def available_at(self, key):
-        """Get UNIX timestamp at which key will be available again."""
+    def available_at(self, key: str) -> int:
+        """Get UNIX integer timestamp at which key will be available again."""
         key = self.clean_key(key)
         timestamp = int(self.cache.get(f"{key}:timer", 0))
         return timestamp
 
-    def available_in(self, key):
+    def available_in(self, key: str) -> int:
         """Get seconds in which key will be available again."""
         timestamp = self.available_at(key)
         if not timestamp:
             return 0
         else:
             return max(0, timestamp - pendulum.now().int_timestamp)
-            # return pendulum.from_timestamp(timestamp).second
 
-    def remaining(self, key, max_attempts):
+    def remaining(self, key: str, max_attempts: int) -> int:
+        """Get remaining attempts before limitation."""
         key = self.clean_key(key)
         return max_attempts - self.attempts(key)

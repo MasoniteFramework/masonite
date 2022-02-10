@@ -1,4 +1,5 @@
 import json
+
 from ..views import View
 from ..controllers import Controller
 from ..utils.structures import data_get
@@ -77,6 +78,9 @@ class HttpTestResponse:
     def assertCreated(self):
         return self.assertIsStatus(201)
 
+    def assertLimited(self) -> "HttpTestResponse":
+        return self.assertIsStatus(429)
+
     def assertSuccessful(self):
         assert 200 <= self.response.get_status_code() < 300
         return self
@@ -98,10 +102,14 @@ class HttpTestResponse:
         header_value = self.response.header(name)
         assert header_value, f"Could not find the header {name}"
         if value:
-            assert value == header_value, f"Header '{name}' does not equal {value}"
+            assert (
+                value == header_value
+            ), f"Header '{name}' does not equal {value} but {header_value}"
+        return self
 
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
+        return self
 
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)

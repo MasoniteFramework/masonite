@@ -255,6 +255,9 @@ class View:
             extensions=self._jinja_extensions,
             line_statement_prefix="@",
         )
+        # add container to environment so that extensions can use it
+        self.env.application = self.application
+
         # add filters to environment
         self.env.filters.update(self._filters)
 

@@ -40,4 +40,16 @@ class TemplateNotFound:
         available view locations with app.make('view.locations')."""
 
     def regex(self):
-        return r"(?P<template>(\w+))"
+        return r"Template '(?P<template>(\w+))' not found"
+
+
+class NoneResponse:
+    def title(self):
+        return "Response cannot be None"
+
+    def description(self):
+        return """Ensure that the controller method used in this request returned something. A controller method cannot return None or nothing.
+        If you don't want to return a value you can return an empty string ''."""
+
+    def regex(self):
+        return r"Responses cannot be of type: None."

@@ -1,5 +1,3 @@
-import json
-import pdb
 from exceptionite.tabs import Block
 from ... import __version__
 from ...helpers import optional
@@ -28,9 +26,9 @@ class AppBlock(Block):
             data.update(
                 {
                     "Route": {
-                        "controller": route.controller,
-                        "route_name": route._name,
-                        "route_middlewares": route.get_middlewares(),
+                        "Controller": route.controller,
+                        "Name": route._name,
+                        "Middlewares": route.get_middlewares(),
                     }
                 }
             )
@@ -41,7 +39,7 @@ class AppBlock(Block):
             data.update(
                 {
                     "User": {
-                        "email": optional(user).email,
+                        "E-mail": optional(user).email,
                         "ID": optional(user).id,
                     }
                 }
@@ -68,11 +66,6 @@ class RequestBlock(Block):
         }
 
 
-# import pprint
-
-# printer = pprint.PrettyPrinter(indent=2)
-
-
 def recursive_serializer(data):
     # TODO: add get_serialize/serialize
     if isinstance(data, (int, bool, str, bytes)):
@@ -81,11 +74,9 @@ def recursive_serializer(data):
         return [recursive_serializer(item) for item in data]
     elif isinstance(data, dict):
         return {key: recursive_serializer(val) for key, val in data.items()}
-        # return printer.pformat(data)
     elif callable(data):
         return str(data)
     else:
-        print(type(data))
         return str(data)
 
 

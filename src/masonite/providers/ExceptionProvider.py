@@ -26,26 +26,26 @@ class ExceptionProvider(Provider):
         # To remove in Masonite 5:
         # old project will not have correct config for exceptions so use default instead
         options = config("exceptions")
-        if not options.get("editor"):  # that's an old project
+        if not options.get("options.editor"):  # that's an old project
             options = {
-                "editor": "vscode",
-                "search_url": "https://www.google.com/search?q=",
-                "links": {
-                    "doc": "https://docs.masoniteproject.com",
-                    "repo": "https://github.com/MasoniteFramework/masonite",
+                "options": {
+                    "editor": "vscode",
+                    "search_url": "https://www.google.com/search?q=",
+                    "links": {
+                        "doc": "https://docs.masoniteproject.com",
+                        "repo": "https://github.com/MasoniteFramework/masonite",
+                    },
+                    "stack": {"offset": 10, "shorten": True},
                 },
-                "stack": {"offset": 10, "shorten": True},
-                "tabs": {
+                "handlers": {
                     "context": True,
                     "dumps": True,
-                    "solutions": True,
-                    "recommendations": True,
-                },
-                "blocks": {
-                    "packages_updates": {
-                        "list": ["exceptionite", "masonite", "masonite-orm"]
+                    "solutions": {"stackoverflow": False, "possible_solutions": True},
+                    "recommendations": {
+                        "packages_updates": {
+                            "list": ["exceptionite", "masonite", "masonite-orm"]
+                        }
                     },
-                    "stackoverflow": True,
                 },
             }
         exceptionite.set_options(options)
@@ -64,13 +64,16 @@ class ExceptionProvider(Provider):
         exceptionite.get_tab("context").add_block(RequestBlock).add_block(
             AppBlock
         ).add_block(ConfigBlock)
-        exceptionite.add_action(MasoniteDebugAction)
+
+        # release this later when debug service will be deployed
+        # exceptionite.add_action(MasoniteDebugAction)
 
         exceptionite.get_tab("solutions").get_block("possible_solutions").register(
             solutions.TableNotFound(),
             solutions.MissingCSRFToken(),
             solutions.InvalidCSRFToken(),
             solutions.TemplateNotFound(),
+            solutions.NoneResponse(),
         )
 
         exception_handler = ExceptionHandler(self.application)

@@ -22,6 +22,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.cookie_jar = CookieJar()
         self.header_bag = HeaderBag()
         self.input_bag = InputBag()
+        self._ip = None
         self.params = {}
         self._user = None
         self.route = None
@@ -154,3 +155,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def activate_subdomains(self):
         self._subdomains_activated = True
         return self
+
+    def ip(self) -> "str|None":
+        """Return the request IP by processing the different headers setup in IpMiddleware."""
+        return self._ip

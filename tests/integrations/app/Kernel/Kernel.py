@@ -1,5 +1,3 @@
-import os
-
 from src.masonite.auth import Sign
 from src.masonite.foundation import response_handler
 from src.masonite.storage import StorageCapsule
@@ -13,6 +11,7 @@ from src.masonite.middleware import (
     MaintenanceModeMiddleware,
     ClearDumpsBetweenRequestsMiddleware,
     ThrottleRequestsMiddleware,
+    IpMiddleware,
 )
 from src.masonite.routes import Route
 from src.masonite.utils.structures import load
@@ -24,6 +23,7 @@ class Kernel:
     http_middleware = [
         EncryptCookies,
         ClearDumpsBetweenRequestsMiddleware,
+        IpMiddleware,
         MaintenanceModeMiddleware,
     ]
     route_middleware = {

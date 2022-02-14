@@ -2,6 +2,7 @@ import os
 from cleo import Application as CommandApplication
 
 from .response_handler import response_handler
+from .. import __version__
 from ..commands import (
     TinkerCommand,
     CommandCapsule,
@@ -63,7 +64,7 @@ class Kernel:
     def register_commands(self):
         self.application.bind(
             "commands",
-            CommandCapsule(CommandApplication("Masonite Version:", "4.0")).add(
+            CommandCapsule(CommandApplication("Masonite", __version__)).add(
                 TinkerCommand(),
                 KeyCommand(),
                 ServeCommand(self.application),

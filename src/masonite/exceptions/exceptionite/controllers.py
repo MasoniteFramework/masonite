@@ -9,5 +9,5 @@ class ExceptioniteController(Controller):
         data = handler.run_action(request.input("action_id"), request.input("options"))
         try:
             return response.json({"message": "ok", "data": data}, 200)
-        except:
+        except:  # noqa: E722
             return response.json({"message": "An error happened", "data": data}, 400)

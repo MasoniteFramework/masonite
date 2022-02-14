@@ -17,16 +17,13 @@ class TestHashID(TestCase):
         assert not hashid("B8I6ub", decode=True)
 
     def test_hashid_can_decode_dictionary(self):
-        assert (
-            hashid(
-                {
-                    "id": "l9avmeG",
-                    "name": "Joe",
-                },
-                decode=True,
-            )
-            == {"id": 10, "name": "Joe"}
-        )
+        assert hashid(
+            {
+                "id": "l9avmeG",
+                "name": "Joe",
+            },
+            decode=True,
+        ) == {"id": 10, "name": "Joe"}
 
     def test_middleware(self):
         request = self.make_request(query_string="id=l9avmeG&name=Joe")

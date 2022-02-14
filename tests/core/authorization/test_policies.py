@@ -2,6 +2,7 @@ from tests import TestCase
 from masoniteorm.models import Model
 
 from tests.integrations.policies.PostPolicy import PostPolicy
+from tests.integrations.policies.UserPolicy import UserPolicy
 from src.masonite.exceptions.exceptions import PolicyDoesNotExist
 
 
@@ -27,11 +28,12 @@ class TestPolicies(TestCase):
         self.gate.permissions = {}
 
     def test_can_register_policies(self):
-        self.gate.register_policies([(Post, PostPolicy)])
-        self.assertEqual(self.gate.policies[Post], PostPolicy)
+        self.gate.register_policies(PostPolicy(Post), UserPolicy(User))
+        self.assertEqual(type(self.gate.policies[Post]), type(PostPolicy(Post)))
+        self.assertEqual(type(self.gate.policies[User]), type(UserPolicy(User)))
 
     def test_using_policies_with_argument(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         post = Post()
         post.user_id = 1
         # authenticates user 1
@@ -39,14 +41,14 @@ class TestPolicies(TestCase):
         self.assertTrue(self.gate.allows("update", post))
 
     def test_using_policies_without_argument(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         # authenticates user 1
         self.application.make("auth").attempt("idmann509@gmail.com", "secret")
 
         self.assertTrue(self.gate.allows("create", Post))
 
     def test_using_policy_returning_response(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         # authenticates user 1
         self.application.make("auth").attempt("idmann509@gmail.com", "secret")
         post = Post()
@@ -65,11 +67,11 @@ class TestPolicies(TestCase):
         self.assertTrue(self.gate.allows("update", post))
 
     def test_that_policy_can_allow_guest_users(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         self.assertTrue(self.gate.allows("view_any", Post))
 
     def test_any_on_policy(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         post = Post()
         post.user_id = 1
         # authenticates user 1
@@ -77,6 +79,6 @@ class TestPolicies(TestCase):
         self.assertTrue(self.gate.any(["update", "delete"], post))
 
     def test_unknown_policy_method_raises_exception(self):
-        self.gate.register_policies([(Post, PostPolicy)])
+        self.gate.register_policies(PostPolicy(Post))
         with self.assertRaises(PolicyDoesNotExist):
             self.gate.allows("can-fly", Post)

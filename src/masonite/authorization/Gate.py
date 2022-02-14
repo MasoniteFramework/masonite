@@ -28,9 +28,9 @@ class Gate:
 
         self.permissions.update({permission: condition})
 
-    def register_policies(self, policies):
-        for model_class, policy_class in policies:
-            self.policies[model_class] = policy_class
+    def register_policies(self, *policies):
+        for policy_class in policies:
+            self.policies[policy_class.model] = policy_class
         return self
 
     def get_policy_for(self, instance_or_class):
@@ -41,8 +41,9 @@ class Gate:
             policy = self.policies.get(instance_or_class, None)
         else:
             policy = self.policies.get(instance_or_class.__class__, None)
+       
         if policy:
-            return policy()
+            return policy
         else:
             return None
 

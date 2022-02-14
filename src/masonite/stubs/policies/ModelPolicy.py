@@ -2,10 +2,9 @@ from masonite.authorization import Policy
 
 
 class __class__(Policy):
-
     def __init__(self, model):
         self.model = model
-        
+
     def create(self, user):
         return False
 

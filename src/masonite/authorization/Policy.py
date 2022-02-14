@@ -2,7 +2,6 @@ from .AuthorizationResponse import AuthorizationResponse
 
 
 class Policy:
-    
     def __init__(self, model):
         self.model = model
 

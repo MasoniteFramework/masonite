@@ -41,7 +41,7 @@ class Gate:
             policy = self.policies.get(instance_or_class, None)
         else:
             policy = self.policies.get(instance_or_class.__class__, None)
-       
+
         if policy:
             return policy
         else:

@@ -1,4 +1,4 @@
-from masonite.environment import env
+from src.masonite.environment import env
 
 KEY = env("APP_KEY", "-RkDOqXojJIlsF_I8wWiUq_KRZ0PtGWTOZ676u5HtLg=")
 

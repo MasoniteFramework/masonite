@@ -126,6 +126,8 @@ setup(
         "masonite.events.providers",
         "masonite.events",
         "masonite.exceptions",
+        "masonite.exceptions.exceptionite",
+        "masonite.exceptions.handlers",
         "masonite.facades",
         "masonite.filesystem.drivers",
         "masonite.filesystem.providers",

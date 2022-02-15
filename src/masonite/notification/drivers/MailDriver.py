@@ -1,6 +1,7 @@
 """Mail notification driver."""
 
 from .BaseDriver import BaseDriver
+from ...configuration import config
 
 
 class MailDriver(BaseDriver):
@@ -18,12 +19,4 @@ class MailDriver(BaseDriver):
         if not mailable._to:
             recipients = notifiable.route_notification_for("mail")
             mailable = mailable.to(recipients)
-        """
-            if mail driver is set in options then use that
-            else use terminal as default driver.
-        """
-        return (
-            self.application.make("mail")
-            .mailable(mailable)
-            .send(driver=self.options.get("driver", "terminal"))
-        )
+        return self.application.make("mail").mailable(mailable).send()

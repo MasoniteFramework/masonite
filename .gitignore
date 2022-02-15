@@ -11,4 +11,3 @@ src/masonite.egg-info/*
 .vscode
 build/
 venv4
-config/

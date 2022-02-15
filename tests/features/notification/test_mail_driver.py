@@ -1,6 +1,7 @@
 from tests import TestCase
 from src.masonite.notification import Notification, Notifiable
 from src.masonite.mail import Mailable
+from src.masonite.facades import Config
 from masoniteorm.models import Model
 
 
@@ -41,6 +42,13 @@ class TestMailDriver(TestCase):
     def setUp(self):
         super().setUp()
         self.notification = self.application.make("notification")
+        # use terminal driver as email driver for testing
+        self.default_driver = Config.get("mail.drivers.default")
+        Config.set("mail.drivers.default", "terminal")
+
+    def tearDown(self):
+        super().tearDown()
+        Config.set("mail.drivers.default", self.default_driver)
 
     def test_send_to_anonymous(self):
         self.notification.route("mail", "test@mail.com").send(WelcomeNotification())

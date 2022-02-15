@@ -201,12 +201,14 @@ class TestRoutes(TestCase):
                 Route.get("/group", "WelcomeController@show")
                 .name("one")
                 .middleware("web"),
-            middleware=["api", "test"],
+                middleware=["api", "test"],
             )
         )
 
         self.assertEqual(len(router.find_by_name("one").get_middlewares()), 3)
-        self.assertEqual(router.find_by_name("one").get_middlewares(), ["api", "test", "web"])
+        self.assertEqual(
+            router.find_by_name("one").get_middlewares(), ["api", "test", "web"]
+        )
 
     def test_can_set_multiple_middleware_in_correct_order(self):
         router = Router(
@@ -214,9 +216,11 @@ class TestRoutes(TestCase):
                 Route.get("/group", "WelcomeController@show")
                 .name("one")
                 .middleware("m3", "m4"),
-            middleware=["m1", "m2"],
+                middleware=["m1", "m2"],
             )
         )
 
         self.assertEqual(len(router.find_by_name("one").get_middlewares()), 4)
-        self.assertEqual(router.find_by_name("one").get_middlewares(), ["m1", "m2", "m3", "m4"])
+        self.assertEqual(
+            router.find_by_name("one").get_middlewares(), ["m1", "m2", "m3", "m4"]
+        )

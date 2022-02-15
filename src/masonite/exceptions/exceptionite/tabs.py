@@ -1,4 +1,4 @@
-from exceptionite.tabs import Tab
+from exceptionite import Tab
 
 
 class DumpsTab(Tab):

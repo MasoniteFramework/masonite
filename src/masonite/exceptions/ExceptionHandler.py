@@ -1,6 +1,3 @@
-from .handlers.JsonHandler import JsonHandler
-
-
 class ExceptionHandler:
     def __init__(self, application, driver_config=None):
         self.application = application
@@ -43,8 +40,11 @@ class ExceptionHandler:
                 f"{exception.__class__.__name__}Handler"
             ).handle(exception)
 
+        exceptionite = self.get_driver("exceptionite")
+
         if "application/json" in str(request.header("Accept")):
-            return response.view(JsonHandler(exception).render(), status=500)
+            exceptionite.start(exception)
+            return response.view(exceptionite.render("json"), status=500)
 
         if not self.application.is_debug():
             # for HTTP error codes (500, 404, 403...) a specific page should be displayed
@@ -60,7 +60,6 @@ class ExceptionHandler:
             return self.application.make("HttpExceptionHandler").handle(exception)
 
         # else display exceptionite error page
-        exceptionite = self.get_driver("exceptionite")
         exceptionite.start(exception)
         exceptionite.render("terminal")
         return response.view(exceptionite.render("web"), status=500)

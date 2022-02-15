@@ -1,6 +1,8 @@
 import builtins
 
 from exceptionite import Handler
+from exceptionite.options import DEFAULT_OPTIONS
+from exceptionite.renderers import JSONRenderer
 
 from .Provider import Provider
 from ..routes import Route
@@ -12,9 +14,6 @@ from ..exceptions.exceptionite.controllers import ExceptioniteController
 from ..exceptions.exceptionite.tabs import DumpsTab
 from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock, ConfigBlock
 from ..exceptions.exceptionite import solutions
-from ..exceptions.exceptionite.actions import (
-    MasoniteDebugAction,
-)
 
 
 class ExceptionProvider(Provider):
@@ -23,32 +22,13 @@ class ExceptionProvider(Provider):
 
     def register(self):
         exceptionite = Handler()
-        # To remove in Masonite 5:
-        # old project will not have correct config for exceptions so use default instead
         options = config("exceptions")
-        if not options.get("options.editor"):  # that's an old project
-            options = {
-                "options": {
-                    "editor": "vscode",
-                    "search_url": "https://www.google.com/search?q=",
-                    "links": {
-                        "doc": "https://docs.masoniteproject.com",
-                        "repo": "https://github.com/MasoniteFramework/masonite",
-                    },
-                    "stack": {"offset": 10, "shorten": True},
-                },
-                "handlers": {
-                    "context": True,
-                    "dumps": True,
-                    "solutions": {"stackoverflow": False, "possible_solutions": True},
-                    "recommendations": {
-                        "packages_updates": {
-                            "list": ["exceptionite", "masonite", "masonite-orm"]
-                        }
-                    },
-                },
-            }
+        # @removed:5.0.0
+        # old project won't have new options for exceptions
+        if not options.get("options.editor"):
+            options = DEFAULT_OPTIONS
         exceptionite.set_options(options)
+
         # configure exceptionite for Masonite specifically
         exceptionite.app = self.application
         self.application.make("router").add(
@@ -60,15 +40,14 @@ class ExceptionProvider(Provider):
                 ]
             )
         )
-        exceptionite.add_tab(DumpsTab)
-        exceptionite.get_tab("context").add_block(RequestBlock).add_block(
-            AppBlock
-        ).add_block(ConfigBlock)
-
-        # release this later when debug service will be deployed
-        # exceptionite.add_action(MasoniteDebugAction)
-
-        exceptionite.get_tab("solutions").get_block("possible_solutions").register(
+        exceptionite.add_renderer("json", JSONRenderer)
+        exceptionite.renderer("web").add_tabs(DumpsTab)
+        exceptionite.renderer("web").tab("context").add_blocks(
+            RequestBlock, AppBlock, ConfigBlock
+        )
+        exceptionite.renderer("web").tab("solutions").block(
+            "possible_solutions"
+        ).register(
             solutions.TableNotFound(),
             solutions.MissingCSRFToken(),
             solutions.InvalidCSRFToken(),

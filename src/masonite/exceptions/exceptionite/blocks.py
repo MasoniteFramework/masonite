@@ -1,4 +1,4 @@
-from exceptionite.tabs import Block
+from exceptionite import Block
 from ... import __version__
 from ...helpers import optional
 
@@ -15,7 +15,7 @@ class AppBlock(Block):
 
         data = {
             "Info": {
-                "Masonite version": __version__,
+                "Masonite Version": __version__,
                 "Environment": self.handler.app.environment(),
                 "Debug": self.handler.app.is_debug(),
             }
@@ -67,7 +67,6 @@ class RequestBlock(Block):
 
 
 def recursive_serializer(data):
-    # TODO: add get_serialize/serialize
     if isinstance(data, (int, bool, str, bytes)):
         return data
     elif isinstance(data, (list, tuple)):
@@ -76,6 +75,8 @@ def recursive_serializer(data):
         return {key: recursive_serializer(val) for key, val in data.items()}
     elif callable(data):
         return str(data)
+    elif hasattr(data, "serialize"):
+        return data.serialize()
     else:
         return str(data)
 

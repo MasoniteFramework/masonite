@@ -206,6 +206,17 @@ class HTTPRoute:
                 self.list_middleware.append(arg)
         return self
 
+    def prepend_middleware(self, *args):
+        """Load a list of middleware to run.
+
+        Returns:
+            self
+        """
+        for arg in args:
+            if arg and arg not in self.list_middleware:
+                self.list_middleware.insert(0, arg)
+        return self
+
     def get_middlewares(self):
         """Get all the middlewares to run for this route."""
         return list(set(self.list_middleware) - set(self.excluded_middlewares))
@@ -295,4 +306,5 @@ class HTTPRoute:
             matching_regex = self._compiled_regex
         else:
             matching_regex = self._compiled_regex_end
+        # print('zzz', matching_regex.match(path))
         return dict(zip(self.url_list, matching_regex.match(path).groups()))

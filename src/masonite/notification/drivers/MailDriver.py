@@ -1,7 +1,6 @@
 """Mail notification driver."""
 
 from .BaseDriver import BaseDriver
-from ...configuration import config
 
 
 class MailDriver(BaseDriver):

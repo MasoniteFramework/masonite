@@ -36,7 +36,6 @@ body:
     label: Would this be a breaking change ?
     options:
       - label: "Yes"
-      - label: "No"
 - type: textarea
   attributes:
     label: Anything else ?

@@ -1,6 +1,6 @@
 name: Bug report
 description: Create a report to help us improve
-title: "<title>"
+title: ""
 labels: [bug]
 body:
 - type: markdown
@@ -42,10 +42,10 @@ body:
     description: What operating system are you running?
     multiple: false
     options:
-      - label: Linux
-      - label: macOS
-      - label: Windows
-      - label: Other
+      - Linux
+      - macOS
+      - Windows
+      - Other
   validations:
     required: true
 - type: input

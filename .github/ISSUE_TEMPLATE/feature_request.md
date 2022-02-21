@@ -1,25 +1,45 @@
----
 name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: enhancement
-assignees: ''
-
----
-
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**What do we currently have to do now?** 
-Give some examples or code snippets on the current way of doing things.
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-- [ ] Is this a breaking change?
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+description: Suggest an idea for this project
+labels: [enhancement]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this feature request.
+- type: textarea
+  attributes:
+    label: Is your feature request related to a problem?
+    description: A clear and concise description of what the problem is.
+    placeholder: I'm always frustrated when ...
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: What do we currently have to do now?
+    description: Give some examples or code snippets on the current way of doing things.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Describe the solution you'd like
+    description: A clear and concise description of what you want to happen.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Describe alternatives you've considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
+  validations:
+    required: false
+- type: checkboxes
+  attributes:
+    label: Would this be a breaking change ?
+    options:
+      - Yes
+      - No
+- type: textarea
+  attributes:
+    label: Anything else ?
+    description: Add any other context or screenshots about the feature request here.
+  validations:
+    required: false

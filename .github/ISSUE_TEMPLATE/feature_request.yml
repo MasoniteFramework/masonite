@@ -35,8 +35,8 @@ body:
   attributes:
     label: Would this be a breaking change ?
     options:
-      - Yes
-      - No
+      - label: Yes
+      - label: No
 - type: textarea
   attributes:
     label: Anything else ?

@@ -44,4 +44,4 @@ class MakeTaskCommand(Command):
         self.info(f"Task Created ({relative_file_name})")
 
     def get_stub_task_path(self):
-        return os.path.join(get_module_dir(__file__), "../../stubs/scheduling/task.py")
+        return os.path.join(get_module_dir(__file__), "../../stubs/scheduling/Task.py")

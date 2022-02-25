@@ -105,12 +105,12 @@ class InputBag:
             return rendered
         elif hasattr(input, "value"):
             if isinstance(input.value, list) and len(input.value) == 1:
-                """ 
+                """
                 return input.value[0]
-                
+
                     This line is converting request input list to object if the input is a list having only one item
-                    
-                    Problem: 
+
+                    Problem:
                         1. This will make validations and request input confusing as a developer is sending array where as
                             they will get dict in controller, this is actually a bug rather than a feature
                         2. In case of nested validations, this will make the validation to fail
@@ -126,9 +126,9 @@ class InputBag:
                                     }
                                 }
                                 validation => validate.required(["test.*.foo"])
-                                
+
                             In above example `test` and `test_1` are not same but this code `input.value[0]` will make them treat as same
-                            
+
                     Solution:
                         return the input value without removing anything...
                 """

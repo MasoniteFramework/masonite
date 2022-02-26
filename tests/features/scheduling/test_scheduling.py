@@ -2,13 +2,13 @@ import pendulum
 from masonite.tests import TestCase
 from src.masonite.scheduling import Task
 
+
 class MockTask(Task):
     run_every = "5 minutes"
     timezone = "America/New_York"
 
 
 class TestScheduler(TestCase):
-
     def setUp(self):
         super().setUp()
         self.task = MockTask()

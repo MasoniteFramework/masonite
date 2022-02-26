@@ -80,7 +80,7 @@ class InputBag:
                         )
                     elif isinstance(value, bytes):
                         self.post_data.update(
-                            {name: UploadedFile(fields[name].filename, value)}
+                            {name: [UploadedFile(fields[name].filename, value)]}
                         )
                     else:
                         self.post_data.update({name: Input(name, value)})
@@ -104,6 +104,9 @@ class InputBag:
         if isinstance(input, (str,)):
             return input
         if isinstance(input, list) and len(input) == 1:
+            if name.endswith("[]"):
+                return input
+
             return input[0]
         elif isinstance(input, (dict,)):
             rendered = {}

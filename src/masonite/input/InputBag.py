@@ -69,7 +69,16 @@ class InputBag:
 
                 for name in fields:
                     value = fields.getvalue(name)
-                    if isinstance(value, bytes):
+                    if isinstance(value, list):
+                        files = []
+                        k = 0
+                        for item in value:
+                            files.append(UploadedFile(fields[name][k].filename, value[k]))
+                            k += 1
+                        self.post_data.update(
+                            {name: files}
+                        )
+                    elif isinstance(value, bytes):
                         self.post_data.update(
                             {name: UploadedFile(fields[name].filename, value)}
                         )

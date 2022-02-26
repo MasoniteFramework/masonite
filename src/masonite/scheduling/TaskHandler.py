@@ -16,7 +16,8 @@ class TaskHandler:
         app = self.application
         for task_class in self.tasks:
             # Resolve the task with the container
-            if run_name and run_name != task_class.name:
+            task_identifier = [task_class.name, task_class.__class__.__name__]
+            if run_name and run_name not in task_identifier:
                 continue
 
             if inspect.isclass(task_class):

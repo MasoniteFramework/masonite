@@ -1,5 +1,5 @@
 """Task Module Description"""
-from masonite.scheduling import Task
+from src.masonite.scheduling import Task
 
 
 class TaskTest(Task):

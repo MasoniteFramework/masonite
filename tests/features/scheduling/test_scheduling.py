@@ -1,5 +1,5 @@
 import pendulum
-from masonite.tests import TestCase
+from src.masonite.tests import TestCase
 from src.masonite.scheduling import Task
 
 

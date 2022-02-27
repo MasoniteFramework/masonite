@@ -99,6 +99,9 @@ class InputBag:
                     )
 
     def get(self, name, default=None, clean=True, quote=True):
+        if isinstance(name, str) and name.endswith("[]"):
+            default = []
+
         input = data_get(self.all(), name, default)
 
         if isinstance(input, (str,)):

@@ -45,6 +45,13 @@ class TestInput(TestCase):
         """
         self.assertEqual(bag.all_as_values(), {"hello": "you"})
 
+    def test_can_get_defaults(self):
+        bag = InputBag()
+        bag.load({"QUERY_STRING": ""})
+        self.assertEqual(bag.get("hello", "default"), "default")
+        self.assertEqual(bag.get("hello"), None) #TODO: This should probably return a blank string instead of None
+        self.assertEqual(bag.get("hello[]"), []) 
+
     def test_all_without_internal_values(self):
         bag = InputBag()
         bag.load({"QUERY_STRING": "hello=you&__token=tok"})

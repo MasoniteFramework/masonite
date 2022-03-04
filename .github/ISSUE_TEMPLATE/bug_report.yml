@@ -1,0 +1,78 @@
+name: Bug report
+description: Create a report to help us improve
+labels: [bug]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this bug report.
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: A clear and concise description of what the bug is.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Expected behaviour
+    description: A clear and concise description of what you expected to happen.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Steps to reproduce the bug
+    description: Describe the steps which can allow us to reproduce the bug
+    placeholder: |
+      1. Go to '...'
+      2. Click on '....'
+      3. Scroll down to '....'
+      4. See error
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Screenshots
+    description: If applicable, add screenshots to help explain your problem.
+  validations:
+    required: false
+- type: dropdown
+  attributes:
+    label: OS
+    description: What operating system are you running?
+    multiple: false
+    options:
+      - Linux
+      - macOS
+      - Windows
+      - Other
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: OS version
+    description: What is your operating system version ?
+    placeholder: Monterey 12.2
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: Browser
+    description: Please enter your browser name and version
+    placeholder: Firefox 98.0
+  validations:
+    required: false
+- type: input
+  attributes:
+    label: Masonite Version
+    description: Please enter Masonite version
+    placeholder: 4.6.1
+    value: 4.6.1
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Anything else ?
+    description: Anything that will give us more context about the issue you are encountering!
+  validations:
+    required: false
+ 

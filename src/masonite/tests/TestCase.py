@@ -224,9 +224,10 @@ class TestCase(unittest.TestCase):
 
     def actingAs(self, user):
         self.make_request()
-        self.application.make("auth").guard("web").login_by_id(
+        self.application.make("auth").guard("web").attempt_by_id(
             user.get_primary_key_value()
         )
+        return self
 
     def restore(self, binding):
         """Restore the service previously mocked to the original one."""

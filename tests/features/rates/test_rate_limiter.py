@@ -31,7 +31,6 @@ class TestRateLimiter(TestCase):
         RateLimiter.attempt("test_key", my_function, 2)
         assert Cache.store().get("test_key") == "1"
         RateLimiter.reset_attempts("test_key")
-        # TODO: fix this, reset should set attempts to 0 and not forget key IMO
         assert Cache.store().get("test_key") == "0"
 
     def test_attempts(self):

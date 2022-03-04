@@ -65,12 +65,12 @@ class RateLimiter:
 
     def reset_attempts(self, key: str) -> bool:
         key = self.clean_key(key)
-        return self.cache.forget(key)
+        return self.cache.put(key, 0)
 
-    def clear(self, key: str) -> bool:
+    def clear(self, key: str):
         key = self.clean_key(key)
-        self.reset_attempts(key)
-        return self.cache.forget(f"{key}:timer")
+        self.cache.forget(key)
+        self.cache.forget(f"{key}:timer")
 
     def available_at(self, key: str) -> int:
         """Get UNIX integer timestamp at which key will be available again."""

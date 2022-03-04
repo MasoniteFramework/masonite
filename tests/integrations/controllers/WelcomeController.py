@@ -138,6 +138,9 @@ class WelcomeController(Controller):
 
     def auth(self, request: Request):
         request.app.make("auth").guard("web").attempt("idmann509@gmail.com", "secret")
+        import pdb
+
+        pdb.set_trace()
         return "logged in"
 
     def not_authorized(self):

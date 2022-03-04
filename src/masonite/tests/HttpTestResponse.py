@@ -231,6 +231,9 @@ class HttpTestResponse:
         return self
 
     def assertAuthenticatedAs(self, user):
+        import pdb
+
+        pdb.set_trace()
         logged_user = self.application.make("auth").guard("web").user()
         assert logged_user
         assert user.get_id() == logged_user.get_id()

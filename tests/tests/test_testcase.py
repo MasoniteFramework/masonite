@@ -255,19 +255,11 @@ class TestTestingAssertions(TestCase):
     def test_assert_guest(self):
         self.get("/test").assertGuest()
 
-    @pytest.mark.skip(
-        reason="Assertion code looks okay, but test is still failing ? What's the problem ?"
-    )
+    # @pytest.mark.skip(
+    #     reason="Assertion code looks okay, but test is still failing ? What's the problem ?"
+    # )
     def test_assert_authenticated(self):
         self.get("/test-authenticates").assertAuthenticated()
-
-    def test_assert_authenticated_as(self):
-        self.make_request()
-        self.application.make("auth").guard("web").attempt(
-            "idmann509@gmail.com", "secret"
-        )
-        user = User.find(1)
-        self.get("/test").assertAuthenticatedAs(user)
 
     def test_assert_has_controller(self):
         self.get("/test").assertHasController("WelcomeController@show")

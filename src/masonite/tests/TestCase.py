@@ -29,6 +29,7 @@ class TestCase(unittest.TestCase):
         self.original_class_mocks = {}
         self._test_cookies = {}
         self._test_headers = {}
+        self._acting_as_user = None
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
@@ -51,6 +52,7 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         # be sure to reset this between each test
         self._exception_handling = False
+        self._acting_as_user = None
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
@@ -149,7 +151,13 @@ class TestCase(unittest.TestCase):
         # add eventual headers added inside the test
         for name, value in self._test_headers.items():
             request.header(name, value)
+        # add logged in user
+        self.application.make("auth").guard("web").attempt_by_id(
+            self._acting_as_user.get_primary_key_value()
+        )
+        import pdb
 
+        pdb.set_trace()
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
@@ -223,10 +231,11 @@ class TestCase(unittest.TestCase):
         return self
 
     def actingAs(self, user):
-        self.make_request()
-        self.application.make("auth").guard("web").attempt_by_id(
-            user.get_primary_key_value()
-        )
+        # self.make_request()
+        self._acting_as_user = user
+        # self.application.make("auth").guard("web").attempt_by_id(
+        #     user.get_primary_key_value()
+        # )
         return self
 
     def restore(self, binding):

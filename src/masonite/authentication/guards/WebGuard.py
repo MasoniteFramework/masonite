@@ -30,7 +30,7 @@ class WebGuard:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
-        token = self.application.make("request").cookie("token")
+        token = self.application.make("response").cookie("token")
         if token and self.options.get("model")():
             return (
                 self.options.get("model")().where("remember_token", token).first()

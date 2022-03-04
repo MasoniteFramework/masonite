@@ -151,13 +151,13 @@ class TestCase(unittest.TestCase):
         # add eventual headers added inside the test
         for name, value in self._test_headers.items():
             request.header(name, value)
-        # add logged in user
-        self.application.make("auth").guard("web").attempt_by_id(
-            self._acting_as_user.get_primary_key_value()
-        )
-        import pdb
 
-        pdb.set_trace()
+        # log user in if requested
+        if self._acting_as_user:
+            self.application.make("auth").guard("web").attempt_by_id(
+                self._acting_as_user.get_primary_key_value()
+            )
+
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(

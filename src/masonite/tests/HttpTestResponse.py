@@ -231,13 +231,15 @@ class HttpTestResponse:
         return self
 
     def assertAuthenticatedAs(self, user):
-        assert (
-            user.get_id() == self.application.make("auth").guard("web").user().get_id()
-        )
+        logged_user = self.application.make("auth").guard("web").user()
+        assert logged_user
+        assert user.get_id() == logged_user.get_id()
         return self
 
     def assertRequestAuthenticatedAs(self, user):
-        assert user.get_id() == self.request.user().get_id()
+        logged_user = self.request.user()
+        assert logged_user
+        assert user.get_id() == logged_user.get_id()
         return self
 
     def assertHasHttpMiddleware(self, middleware):

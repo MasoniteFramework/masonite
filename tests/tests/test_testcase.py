@@ -4,14 +4,9 @@ import pytest
 
 from tests import TestCase
 from tests.integrations.controllers.WelcomeController import WelcomeController
-from masoniteorm.models import Model
+from tests.integrations.app.User import User
 from src.masonite.routes import Route
-from src.masonite.authentication import Authenticates
 from src.masonite.middleware import EncryptCookies
-
-
-class User(Model, Authenticates):
-    pass
 
 
 class CustomTestResponse:

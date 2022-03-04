@@ -235,6 +235,10 @@ class HttpTestResponse:
         assert user == user
         return self
 
+    def assertRequestAuthenticatedAs(self, user):
+        assert user == self.request.user()
+        return self
+
     def assertHasHttpMiddleware(self, middleware):
         """Assert that the request/response cycle has the given middleware. The HTTP middleware
         class should be given."""

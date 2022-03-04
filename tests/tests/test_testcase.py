@@ -96,6 +96,12 @@ class TestTestCase(TestCase):
         with self.debugMode(False):
             self.assertFalse(self.application.is_debug())
 
+    def test_acting_as_log_user_during_request(self):
+        user = User.first()
+        self.actingAs(user).get("/").assertAuthenticatedAs(
+            user
+        ).assertRequestAuthenticatedAs(user)
+
 
 class TestTestingAssertions(TestCase):
     def setUp(self):

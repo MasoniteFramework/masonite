@@ -7,6 +7,7 @@ from jinja2.exceptions import TemplateNotFound
 from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
+from ..validation import MessageBag
 
 
 def path_to_package(path, separator="/"):
@@ -279,3 +280,9 @@ class View:
     def test(self, key, obj):
         self._tests.update({key: obj})
         return self
+
+    def reset_vaidation_errors(self):
+        """This will reset the validation errors for the current request.
+        Used MessageBag() here because if there're no any validation errors using errors.has('key') in frontend will give error without MessageBag()
+        """
+        self._shared["errors"] = MessageBag()

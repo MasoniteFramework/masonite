@@ -28,23 +28,6 @@
     @else
     No errors
     @endif
-
-    @if session().has('errors'):
-    <div class="bg-yellow-400">
-        <div class="bg-yellow-200 text-yellow-800 px-4 py-2">
-            <ul>
-                @for key, error_list in session().get('errors').items():
-                @for error in error_list
-                <li>{{ error }}</li>
-                @endfor
-                @endfor
-            </ul>
-        </div>
-    </div>
-    @endif
-    <hr>
-
-    <hr>
     <div class="flex flex-row justify-center">
         <form method="post" action="/contact">
             {{ csrf_field }}

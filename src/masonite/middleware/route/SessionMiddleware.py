@@ -1,7 +1,6 @@
 from .. import Middleware
 from ...utils.str import random_string
 from ...facades import Request, Session, Response
-from ...validation import MessageBag
 
 
 class SessionMiddleware(Middleware):
@@ -15,19 +14,6 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_errors = self.with_errors
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
-
-        """This part verifies if there are any validation_errors stored in Session.
-        If there is a validation error then it shares the "errors" key to display the errors in frontend
-        else it will return an empty MessageBag object.
-        """
-        if Session.get("validation_errors"):
-            request.app.make("view").share(
-                {
-                    "errors": MessageBag(Session.pull("validation_errors")),
-                }
-            )
-        else:
-            request.app.make("view").reset_vaidation_errors()
 
         return request
 
@@ -45,8 +31,6 @@ class SessionMiddleware(Middleware):
             Session.flash("errors", {"errors": errors})
         else:
             Session.flash("errors", errors)
-
-        Session.set("validation_errors", errors)
 
         return Response
 

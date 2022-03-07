@@ -6,6 +6,7 @@ from src.masonite.configuration import Configuration, config
 from src.masonite.middleware import (
     VerifyCsrfToken,
     SessionMiddleware,
+    ShareErrorsInSessionMiddleware,
     EncryptCookies,
     LoadUserMiddleware,
     MaintenanceModeMiddleware,
@@ -28,6 +29,7 @@ class Kernel:
     route_middleware = {
         "web": [
             SessionMiddleware,
+            ShareErrorsInSessionMiddleware,
             LoadUserMiddleware,
             VerifyCsrfToken,
         ]

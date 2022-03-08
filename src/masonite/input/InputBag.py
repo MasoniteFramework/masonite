@@ -83,7 +83,7 @@ class InputBag:
                             {name: [UploadedFile(fields[name].filename, value)]}
                         )
                     else:
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
                 self.post_data = self.parse_dict(self.post_data)
             else:

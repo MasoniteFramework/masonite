@@ -42,7 +42,7 @@ class InputBag:
                     pass
                 else:
                     for name, value in json.loads(request_body or "{}").items():
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
             elif "application/x-www-form-urlencoded" in environ.get("CONTENT_TYPE", ""):
                 try:
@@ -73,11 +73,11 @@ class InputBag:
                         files = []
                         k = 0
                         for item in value:
-                            files.append(UploadedFile(fields[name][k].filename, value[k]))
+                            files.append(
+                                UploadedFile(fields[name][k].filename, value[k])
+                            )
                             k += 1
-                        self.post_data.update(
-                            {name: files}
-                        )
+                        self.post_data.update({name: files})
                     elif isinstance(value, bytes):
                         self.post_data.update(
                             {name: [UploadedFile(fields[name].filename, value)]}
@@ -102,6 +102,9 @@ class InputBag:
         if isinstance(name, str) and name.endswith("[]"):
             default = []
 
+        import pdb
+
+        pdb.set_trace()
         input = data_get(self.all(), name, default)
 
         if isinstance(input, (str,)):

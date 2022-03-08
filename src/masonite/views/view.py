@@ -280,9 +280,3 @@ class View:
     def test(self, key, obj):
         self._tests.update({key: obj})
         return self
-
-    def reset_vaidation_errors(self):
-        """This will reset the validation errors for the current request.
-        Used MessageBag() here because if there're no any validation errors using errors.has('key') in frontend will give error without MessageBag()
-        """
-        self._shared["errors"] = MessageBag()

@@ -23,3 +23,8 @@ class TestRequest(TestCase):
     def test_request_can_get_float_value(self):
         self.request.input_bag.query_string = {"test": 3.1415926}
         self.assertEqual(self.request.input("test"), 3.1415926)
+
+    def test_request_can_get_nested_value(self):
+        # from query string
+        self.request.input_bag.query_string = {"key": "val", "a": {"b": {"c": 1}}}
+        self.assertEqual(self.request.input("a.b.c"), 1)

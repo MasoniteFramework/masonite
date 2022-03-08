@@ -49,8 +49,10 @@ class TestInput(TestCase):
         bag = InputBag()
         bag.load({"QUERY_STRING": ""})
         self.assertEqual(bag.get("hello", "default"), "default")
-        self.assertEqual(bag.get("hello"), None) #TODO: This should probably return a blank string instead of None
-        self.assertEqual(bag.get("hello[]"), []) 
+        self.assertEqual(
+            bag.get("hello"), None
+        )  # TODO: This should probably return a blank string instead of None
+        self.assertEqual(bag.get("hello[]"), [])
 
     def test_all_without_internal_values(self):
         bag = InputBag()
@@ -107,5 +109,15 @@ class TestInput(TestCase):
         self.assertEqual(
             inputs, {"user": {"email": "joe@masoniteproject.com", "name": "Joe"}}
         )
-        # inputs = bag.parse_dict({'user[options][name]': ['Joe'], 'user[options][email]': ['joe@masoniteproject.com']})
-        # self.assertEqual(inputs, {'user': {"options": {'email': 'joe@masoniteproject.com', 'name': 'Joe'}}}
+
+    def test_can_parse_nested_post_data(self):
+        data = {"key": "val", "a": {"b": {"c": 1}}}
+        bag = InputBag()
+        bag.load(
+            {
+                "CONTENT_LENGTH": len(str(json.dumps(data))),
+                "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
+            }
+        )
+        self.assertEqual(bag.get("key"), "val")
+        self.assertEqual(bag.get("a.b.c"), 1)

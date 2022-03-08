@@ -102,9 +102,6 @@ class InputBag:
         if isinstance(name, str) and name.endswith("[]"):
             default = []
 
-        import pdb
-
-        pdb.set_trace()
         input = data_get(self.all(), name, default)
 
         if isinstance(input, (str,)):

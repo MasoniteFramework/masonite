@@ -115,6 +115,7 @@ class TestInput(TestCase):
         bag = InputBag()
         bag.load(
             {
+                "CONTENT_TYPE": "application/json",
                 "CONTENT_LENGTH": len(str(json.dumps(data))),
                 "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
             }

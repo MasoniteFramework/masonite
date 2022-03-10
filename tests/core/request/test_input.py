@@ -103,12 +103,20 @@ class TestInput(TestCase):
         bag.load({"QUERY_STRING": "user[user1]=value&user[user2]=value"})
         self.assertEqual(bag.get("user"), {"user1": "value", "user2": "value"})
 
-    def test_can_parse_post_params(self):
+    def test_can_parse_text_plain_content_type(self):
+        post_data = MockInput(
+            '{"param": "hey", "foo": [9, 8, 7, 6], "bar": "baz"}'.encode("utf-8")
+        )
+        bag = InputBag()
+        bag.load({"wsgi.input": post_data, "CONTENT_TYPE": "text/plain"})
+        self.assertEqual(bag.get("param"), "hey")
+
+    def test_can_parse_application_json_content_type(self):
         bag = InputBag()
         bag.load({"wsgi.input": self.post_data, "CONTENT_TYPE": "application/json"})
         self.assertEqual(bag.get("param"), "hey")
 
-    def test_can_parse_post_params_from_url_encoded(self):
+    def test_can_parse_form_urlencoded_content_type(self):
         bag = InputBag()
         bag.load(
             {
@@ -117,6 +125,21 @@ class TestInput(TestCase):
             }
         )
         self.assertEqual(bag.get("jack"), "Daniels")
+
+    def test_can_parse_multipart_formdata_content_type(self):
+        data, content_type = encode_multipart_formdata({"key": "value", "test": 1})
+        bag = InputBag()
+        bag.load(
+            {
+                "REQUEST_METHOD": "POST",
+                "CONTENT_TYPE": content_type,
+                "CONTENT_LENGTH": str(len(data.encode("latin-1"))),
+                "wsgi.input": io.BytesIO(data.encode("latin-1")),
+            }
+        )
+
+        self.assertEqual(bag.get("key"), "value")
+        self.assertEqual(bag.get("test"), "1")
 
     def test_advanced_dict_parse(self):
         bag = InputBag()
@@ -146,18 +169,3 @@ class TestInput(TestCase):
         )
         self.assertEqual(bag.get("key"), "val")
         self.assertEqual(bag.get("a.b.c"), 1)
-
-        # multipart/form-data
-        data, content_type = encode_multipart_formdata({"key": "value", "test": 1})
-        bag = InputBag()
-        bag.load(
-            {
-                "REQUEST_METHOD": "POST",
-                "CONTENT_TYPE": content_type,
-                "CONTENT_LENGTH": str(len(data.encode("latin-1"))),
-                "wsgi.input": io.BytesIO(data.encode("latin-1")),
-            }
-        )
-
-        self.assertEqual(bag.get("key"), "value")
-        self.assertEqual(bag.get("test"), "1")

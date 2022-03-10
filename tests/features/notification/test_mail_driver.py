@@ -75,3 +75,4 @@ class TestMailDriver(TestCase):
         mail = self.fake("mail")
         self.notification.route("mail", "test@mail.com").send(CustomNotification())
         mail.seeDriverWas("mailgun")
+        self.restore("mail")

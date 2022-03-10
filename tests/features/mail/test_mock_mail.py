@@ -33,7 +33,6 @@ class TestSMTPDriver(TestCase):
         self.restore("mail")
 
     def test_mock_mail(self):
-        self.fake("mail")
         welcome_email = self.application.make("mail").mailable(Welcome()).send()
         (
             welcome_email.seeEmailCc("")
@@ -47,11 +46,9 @@ class TestSMTPDriver(TestCase):
         )
 
     def test_mock_mail_sending(self):
-        self.fake("mail")
         welcome_email = self.application.make("mail").mailable(Welcome())
         (welcome_email.seeEmailWasNotSent().send().seeEmailWasSent())
 
     def test_mock_can_also_handle_options(self):
-        self.fake("mail")
         other_email = self.application.make("mail").mailable(Other())
         other_email.send().seeEmailFrom("no-reply@masonite.com")

@@ -148,7 +148,7 @@ class TestInput(TestCase):
         self.assertEqual(bag.get("a.b.c"), 1)
 
         # multipart/form-data
-        data, content_type = encode_multipart_formdata({"key": "value"})
+        data, content_type = encode_multipart_formdata({"key": "value", "test": 1})
         bag = InputBag()
         bag.load(
             {

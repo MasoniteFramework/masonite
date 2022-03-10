@@ -201,9 +201,9 @@ class InputBag:
                     else:
                         d.setdefault(gd["name"], {})[gd["value"]] = value[0]
                 else:
-                    try:
+                    if isinstance(value, (list, tuple)):
                         d.update({name: value[0]})
-                    except TypeError:
+                    else:
                         d.update({name: value})
 
         new_dict = {}

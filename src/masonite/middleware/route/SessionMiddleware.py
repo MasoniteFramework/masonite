@@ -14,7 +14,6 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_errors = self.with_errors
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
-
         return request
 
     def after(self, request, _):

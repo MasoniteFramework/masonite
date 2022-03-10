@@ -56,11 +56,6 @@ class InputBag:
                 self.post_data = self.parse_dict(parsed_request_body)
 
             elif "multipart/form-data" in environ.get("CONTENT_TYPE", ""):
-                try:
-                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
-                except (ValueError):
-                    request_body_size = 0
-
                 fields = cgi.FieldStorage(
                     fp=environ["wsgi.input"],
                     environ=environ,

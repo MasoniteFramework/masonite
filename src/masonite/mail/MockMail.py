@@ -8,6 +8,10 @@ class MockMail(Mail):
         self.count = 0
         self.driver = None
 
+    def reset(self):
+        self.count = 0
+        self.driver = None
+
     def send(self, driver=None):
         if driver:
             self.driver = driver
@@ -15,9 +19,11 @@ class MockMail(Mail):
             self.driver = self.options.get("driver", None) or config(
                 "mail.drivers.default"
             )
-        if not self.options.get("from"):
-            self.options.pop("from")
-        self.options.update(self.get_config_options(self.driver))
+
+        config_options = self.get_config_options(self.driver)
+        if self.options.get("from"):
+            config_options.pop("from", None)
+        self.options.update(config_options)
         self.count += 1
         return self
 

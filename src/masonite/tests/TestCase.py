@@ -1,7 +1,7 @@
 import json
 import io
 import os
-import sys
+import pytest
 import unittest
 import pendulum
 from contextlib import contextmanager
@@ -33,6 +33,10 @@ class TestCase(unittest.TestCase):
             self.startTestRun()
         self.withoutCsrf()
         self._exception_handling = False
+
+        self._console_out = None
+        self._console_err = None
+
         # boot providers as they won't not be loaded if the test is not doing a request
         self.application.bind("environ", generate_wsgi())
         try:
@@ -56,6 +60,52 @@ class TestCase(unittest.TestCase):
             self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
+        # restore console output
+        self._console_out = None
+        self._console_err = None
+
+    @pytest.fixture(autouse=True)
+    def _pass_fixtures(self, capsys):
+        """Add all useful pytest fixtures to unittest."""
+        # 'capsys' fixture allow to read output/error from stdout/stderr
+        self.capsys = capsys
+
+    def _readConsoleOutput(self):
+        if self._console_out is None and self._console_err is None:
+            output = self.capsys.readouterr()
+            self._console_out = output.out
+            self._console_err = output.err
+
+    def assertConsoleEmpty(self):
+        """Assert that nothing (output or error) has been printed to the console."""
+        self._readConsoleOutput()
+        self.assertEqual("", self._console_out)
+        self.assertEqual("", self._console_err)
+        return self
+
+    def assertConsoleOutput(self, output):
+        """Assert that console standard output is equal to given output."""
+        self._readConsoleOutput()
+        self.assertEqual(output, self._console_out)
+        return self
+
+    def assertConsoleOutputContains(self, output):
+        """Assert that console standard output contains given output."""
+        self._readConsoleOutput()
+        self.assertIn(output, self._console_out)
+        return self
+
+    def assertConsoleError(self, error):
+        """Assert that console standard error is equal to given error."""
+        self._readConsoleOutput()
+        self.assertEqual(error, self._console_err)
+        return self
+
+    def assertConsoleErrorContains(self, error):
+        """Assert that console standard error contains given error."""
+        self._readConsoleOutput()
+        self.assertIn(error, self._console_err)
+        return self
 
     def withExceptionsHandling(self):
         """Enable for the duration of a test the handling of exceptions through the exception
@@ -167,18 +217,6 @@ class TestCase(unittest.TestCase):
 
     def mock_start_response(self, *args, **kwargs):
         pass
-
-    @contextmanager
-    def captureOutput(self):
-        new_out, new_err = io.StringIO(), io.StringIO()
-        # save normal system output
-        old_out, old_err = sys.stdout, sys.stderr
-        try:
-            sys.stdout, sys.stderr = new_out, new_err
-            yield sys.stdout
-        finally:
-            # restore system output
-            sys.stdout, sys.stderr = old_out, old_err
 
     @contextmanager
     def debugMode(self, enabled=True):

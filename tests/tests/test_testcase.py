@@ -1,6 +1,7 @@
 import pendulum
 import os
 import pytest
+import sys
 
 from tests import TestCase
 from tests.integrations.controllers.WelcomeController import WelcomeController
@@ -337,3 +338,27 @@ class TestTestingAssertions(TestCase):
         self.assertDatabaseMissing(
             "users", {"name": "John", "email": "john@example.com"}
         )
+
+    def test_assertConsoleEmpty(self):
+        self.assertConsoleEmpty()
+
+    def test_assertConsoleOutput(self):
+        print("Hello World !")
+        self.assertConsoleOutput("Hello World !\n")
+
+    def test_assertConsoleOutputContains(self):
+        print("Hello World !")
+        self.assertConsoleOutputContains("Hello")
+
+    def test_assertConsoleError(self):
+        print("Fatal Error !", file=sys.stderr)
+        self.assertConsoleError("Fatal Error !\n")
+
+    def test_assertConsoleErrorContains(self):
+        print("Fatal Error !", file=sys.stderr)
+        self.assertConsoleErrorContains("Error")
+
+    def test_make_multiple_output_assertions(self):
+        print("Hello World !")
+        self.assertConsoleOutput("Hello World !\n")
+        self.assertConsoleOutputContains("Hello")

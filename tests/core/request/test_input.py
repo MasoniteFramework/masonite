@@ -1,7 +1,30 @@
+import binascii
+import os
+import json
+import io
+
 from src.masonite.input import InputBag
 from src.masonite.tests import MockInput
 from tests import TestCase
-import json, io
+
+
+def encode_multipart_formdata(fields):
+    boundary = binascii.hexlify(os.urandom(16)).decode("ascii")
+
+    body = (
+        "".join(
+            "--%s\r\n"
+            'Content-Disposition: form-data; name="%s"\r\n'
+            "\r\n"
+            "%s\r\n" % (boundary, field, value)
+            for field, value in fields.items()
+        )
+        + "--%s--\r\n" % boundary
+    )
+
+    content_type = "multipart/form-data; boundary=%s" % boundary
+
+    return body, content_type
 
 
 class TestInput(TestCase):
@@ -111,8 +134,9 @@ class TestInput(TestCase):
         )
 
     def test_can_parse_nested_post_data(self):
-        data = {"key": "val", "a": {"b": {"c": 1}}}
+        # application/json
         bag = InputBag()
+        data = {"key": "val", "a": {"b": {"c": 1}}}
         bag.load(
             {
                 "CONTENT_TYPE": "application/json",
@@ -122,3 +146,18 @@ class TestInput(TestCase):
         )
         self.assertEqual(bag.get("key"), "val")
         self.assertEqual(bag.get("a.b.c"), 1)
+
+        # multipart/form-data
+        data, content_type = encode_multipart_formdata({"key": "value"})
+        bag = InputBag()
+        bag.load(
+            {
+                "REQUEST_METHOD": "POST",
+                "CONTENT_TYPE": content_type,
+                "CONTENT_LENGTH": str(len(data.encode("latin-1"))),
+                "wsgi.input": io.BytesIO(data.encode("latin-1")),
+            }
+        )
+
+        self.assertEqual(bag.get("key"), "value")
+        self.assertEqual(bag.get("test"), "1")

@@ -133,8 +133,8 @@ class TestInput(TestCase):
             {
                 "REQUEST_METHOD": "POST",
                 "CONTENT_TYPE": content_type,
-                "CONTENT_LENGTH": str(len(data.encode("latin-1"))),
-                "wsgi.input": io.BytesIO(data.encode("latin-1")),
+                "CONTENT_LENGTH": str(len(data.encode("utf-8"))),
+                "wsgi.input": io.BytesIO(data.encode("utf-8")),
             }
         )
 

@@ -9,6 +9,7 @@ class MockMail(Mail):
         self.driver = None
 
     def reset(self):
+        """Reset mock implementation."""
         self.count = 0
         self.driver = None
 

@@ -10,12 +10,12 @@ class ShareErrorsInSessionMiddleware(Middleware):
     """
 
     def before(self, request, _):
+        return request
+
+    def after(self, request, _):
         request.app.make("view").share(
             {
                 "errors": MessageBag(Session.pull("errors") or {}),
             }
         )
-        return request
-
-    def after(self, request, _):
         return request

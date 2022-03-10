@@ -1,3 +1,4 @@
+from src.masonite.validation import MessageBag
 from .. import Middleware
 from ...utils.str import random_string
 from ...facades import Request, Session, Response
@@ -28,9 +29,15 @@ class SessionMiddleware(Middleware):
     def with_errors(self, errors):
         if isinstance(errors, list):
             Session.flash("errors", {"errors": errors})
+        # we could do this but don't want to as we want to keep MessageBag instance to ease retrieving
+        # error message in views
+        # elif isinstance(errors, MessageBag):
+        #     Session.flash("errors", errors.all())
         else:
             Session.flash("errors", errors)
+        import pdb
 
+        pdb.set_trace()
         return Response
 
     def with_success(self, success):

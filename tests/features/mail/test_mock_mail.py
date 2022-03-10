@@ -13,6 +13,16 @@ class Welcome(Mailable):
         )
 
 
+class Other(Mailable):
+    def build(self):
+        return (
+            self.to("idmann509@gmail.com")
+            .subject("Masonite 4")
+            .text("text from Masonite!")
+            .html("<h1>Hello from Masonite!</h1>")
+        )
+
+
 class TestSMTPDriver(TestCase):
     def setUp(self):
         super().setUp()
@@ -40,3 +50,8 @@ class TestSMTPDriver(TestCase):
         self.fake("mail")
         welcome_email = self.application.make("mail").mailable(Welcome())
         (welcome_email.seeEmailWasNotSent().send().seeEmailWasSent())
+
+    def test_mock_can_also_handle_options(self):
+        self.fake("mail")
+        other_email = self.application.make("mail").mailable(Other())
+        other_email.send().seeEmailFrom("no-reply@masonite.com")

@@ -7,7 +7,7 @@ DRIVERS = {
     "default": env("MAIL_DRIVER", "terminal"),
     "smtp": {
         "host": env("MAIL_HOST"),
-        "port": env("MAIL_PORT"),
+        "port": env("MAIL_PORT", "587"),
         "username": env("MAIL_USERNAME"),
         "password": env("MAIL_PASSWORD"),
         "from": FROM_EMAIL,

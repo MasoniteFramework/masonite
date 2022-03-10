@@ -9,8 +9,15 @@ class MockMail(Mail):
         self.driver = None
 
     def send(self, driver=None):
-        self.driver = config("mail.drivers.default")
-        self.driver = driver or self.options.get("driver", None)
+        if driver:
+            self.driver = driver
+        else:
+            self.driver = self.options.get("driver", None) or config(
+                "mail.drivers.default"
+            )
+        if not self.options.get("from"):
+            self.options.pop("from")
+        self.options.update(self.get_config_options(self.driver))
         self.count += 1
         return self
 
@@ -105,5 +112,7 @@ class MockMail(Mail):
         return self
 
     def seeDriverWas(self, name):
-        assert self.driver == name, f"Expected email driver to be {name} but it was {self.driver}"
+        assert (
+            self.driver == name
+        ), f"Expected email driver to be {name} but it was {self.driver}"
         return self

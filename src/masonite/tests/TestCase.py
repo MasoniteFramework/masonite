@@ -71,6 +71,7 @@ class TestCase(unittest.TestCase):
         self.capsys = capsys
 
     def _readConsoleOutput(self):
+        """Read console output if it has not been read yet."""
         if self._console_out is None and self._console_err is None:
             output = self.capsys.readouterr()
             self._console_out = output.out

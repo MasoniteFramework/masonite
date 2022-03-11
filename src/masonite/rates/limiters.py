@@ -38,4 +38,4 @@ class GuestsOnlyLimiter(Limiter):
         if request.user():
             return Limit.unlimited()
         else:
-            return Limit.from_str(self.limit).by("127.0.0.1")
+            return Limit.from_str(self.limit).by(request.ip())

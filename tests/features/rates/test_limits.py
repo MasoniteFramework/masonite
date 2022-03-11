@@ -61,13 +61,24 @@ class TestLimiters(TestCase):
     def test_guests_only(self):
         # request as guest
         request = self.make_request()
+        request._ip = "127.0.0.1"
+
         limiter = GuestsOnlyLimiter("2/hour")
         limit = limiter.allow(request)
         assert not limit.is_unlimited()
         assert limit.max_attempts == 2
         assert limit.delay == 60
-        # request as authenticated user
+        assert limit.key == "127.0.0.1"
+
+        request._ip = "192.168.0.1"
+        limit = limiter.allow(request)
+        assert limit.key == "192.168.0.1"
+
+    def test_guests_only_with_authenticated_user(self):
+        limiter = GuestsOnlyLimiter("2/hour")
         user = User.find(1)
+        # request as authenticated user
+        request = self.make_request()
         request.set_user(user)
         limit = limiter.allow(request)
         assert limit.is_unlimited()

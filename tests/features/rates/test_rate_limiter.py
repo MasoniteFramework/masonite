@@ -13,6 +13,8 @@ class TestRateLimiter(TestCase):
         super().tearDown()
         # delete cache entries between tests for idempotent tests
         self.application.make("cache").store().flush()
+        # always restore time if it has been faked
+        self.restoreTime()
 
     def test_attempt(self):
         self.assertEqual(RateLimiter.attempt("test_attempt", my_function, 2), "done")

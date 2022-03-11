@@ -84,7 +84,13 @@ class TestCase(unittest.TestCase):
         self.assertEqual("", self._console_err)
         return self
 
-    def assertConsoleOutput(self, output):
+    def assertConsoleNotEmpty(self):
+        """Assert that something (output or error) has been printed to the console."""
+        self._readConsoleOutput()
+        assert self._console_out != "" or self._console_err != ""
+        return self
+
+    def assertConsoleExactOutput(self, output):
         """Assert that console standard output is equal to given output."""
         self._readConsoleOutput()
         self.assertEqual(output, self._console_out)
@@ -96,7 +102,19 @@ class TestCase(unittest.TestCase):
         self.assertIn(output, self._console_out)
         return self
 
-    def assertConsoleError(self, error):
+    def assertConsoleOutputMissing(self, output):
+        """Assert that console standard output does not contain the given output."""
+        self._readConsoleOutput()
+        self.assertNotIn(output, self._console_out)
+        return self
+
+    def assertConsoleHasErrors(self):
+        """Assert that something has been output to console standard error."""
+        self._readConsoleOutput()
+        self.assertNotEqual(self._console_err, "")
+        return self
+
+    def assertConsoleExactError(self, error):
         """Assert that console standard error is equal to given error."""
         self._readConsoleOutput()
         self.assertEqual(error, self._console_err)

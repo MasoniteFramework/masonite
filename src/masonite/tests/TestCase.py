@@ -66,7 +66,9 @@ class TestCase(unittest.TestCase):
 
     @pytest.fixture(autouse=True)
     def _pass_fixtures(self, capsys):
-        """Add all useful pytest fixtures to unittest."""
+        """Add all useful pytest fixtures to unittest.
+        In the future, when needed more pytest fixtures could be integrated to Masonite TestCase.
+        """
         # 'capsys' fixture allow to read output/error from stdout/stderr
         self.capsys = capsys
 
@@ -77,50 +79,50 @@ class TestCase(unittest.TestCase):
             self._console_out = output.out
             self._console_err = output.err
 
-    def assertConsoleEmpty(self):
+    def assertConsoleEmpty(self) -> "TestCase":
         """Assert that nothing (output or error) has been printed to the console."""
         self._readConsoleOutput()
         self.assertEqual("", self._console_out)
         self.assertEqual("", self._console_err)
         return self
 
-    def assertConsoleNotEmpty(self):
+    def assertConsoleNotEmpty(self) -> "TestCase":
         """Assert that something (output or error) has been printed to the console."""
         self._readConsoleOutput()
         assert self._console_out != "" or self._console_err != ""
         return self
 
-    def assertConsoleExactOutput(self, output):
+    def assertConsoleExactOutput(self, output: str) -> "TestCase":
         """Assert that console standard output is equal to given output."""
         self._readConsoleOutput()
         self.assertEqual(output, self._console_out)
         return self
 
-    def assertConsoleOutputContains(self, output):
+    def assertConsoleOutputContains(self, output: str) -> "TestCase":
         """Assert that console standard output contains given output."""
         self._readConsoleOutput()
         self.assertIn(output, self._console_out)
         return self
 
-    def assertConsoleOutputMissing(self, output):
+    def assertConsoleOutputMissing(self, output: str) -> "TestCase":
         """Assert that console standard output does not contain the given output."""
         self._readConsoleOutput()
         self.assertNotIn(output, self._console_out)
         return self
 
-    def assertConsoleHasErrors(self):
+    def assertConsoleHasErrors(self) -> "TestCase":
         """Assert that something has been output to console standard error."""
         self._readConsoleOutput()
         self.assertNotEqual(self._console_err, "")
         return self
 
-    def assertConsoleExactError(self, error):
+    def assertConsoleExactError(self, error: str) -> "TestCase":
         """Assert that console standard error is equal to given error."""
         self._readConsoleOutput()
         self.assertEqual(error, self._console_err)
         return self
 
-    def assertConsoleErrorContains(self, error):
+    def assertConsoleErrorContains(self, error: str) -> "TestCase":
         """Assert that console standard error contains given error."""
         self._readConsoleOutput()
         self.assertIn(error, self._console_err)

@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Any, Callable
 if TYPE_CHECKING:
     from ..foundation import Application
     from .limiters import Limiter
-    from ..request import Request
 
 
 class RateLimiter:
@@ -12,7 +11,7 @@ class RateLimiter:
         self.application = application
         self.limiters: dict = {}
 
-    def register(self, name, callback) -> "RateLimiter":
+    def register(self, name, callback: "Limiter") -> "RateLimiter":
         self.limiters[name] = callback
         return self
 

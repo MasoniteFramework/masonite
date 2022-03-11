@@ -1,7 +1,7 @@
 from typing import Any, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .limiters import Limiter
+    from ..rates.limiters import Limiter
 
 class RateLimiter:
     """Rate Limiter facades to add rate limiting to your functions."""

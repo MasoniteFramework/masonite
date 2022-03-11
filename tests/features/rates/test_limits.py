@@ -1,7 +1,8 @@
 import sys
 from tests import TestCase
 
-from src.masonite.rates import UnlimitedLimiter, GlobalLimiter, GuestsOnlyLimiter, Limit
+from src.masonite.rates import UnlimitedLimiter, GlobalLimiter, Limit, GuestsOnlyLimiter
+from tests.integrations.app.User import User
 
 
 class TestLimits(TestCase):
@@ -58,4 +59,15 @@ class TestLimiters(TestCase):
         assert limit.delay == 24 * 60
 
     def test_guests_only(self):
-        pass
+        # request as guest
+        request = self.make_request()
+        limiter = GuestsOnlyLimiter("2/hour")
+        limit = limiter.allow(request)
+        assert not limit.is_unlimited()
+        assert limit.max_attempts == 2
+        assert limit.delay == 60
+        # request as authenticated user
+        user = User.find(1)
+        request.set_user(user)
+        limit = limiter.allow(request)
+        assert limit.is_unlimited()

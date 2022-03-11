@@ -3,7 +3,7 @@ from src.masonite.broadcasting import Broadcast
 from src.masonite.authentication import Auth
 
 ROUTES = [
-    Route.get("/", "WelcomeController@show").name("welcome").middleware("throttle:api"),
+    Route.get("/", "WelcomeController@show").name("welcome"),
     Route.get("/flash_data", "WelcomeController@flash_data"),
     Route.get("/sessions", "WelcomeController@play_with_session").name(
         "play_with_session"
@@ -16,6 +16,7 @@ ROUTES = [
     Route.get("/view", "WelcomeController@view"),
     Route.get("/mail", "MailableController@view"),
     Route.get("/users/@id", "WelcomeController@test").name("users.profile"),
+    Route.get("/api/uploads/", "WelcomeController@test").middleware("throttle:api"),
 ]
 
 Broadcast.routes()

@@ -49,6 +49,7 @@ class WebGuard:
             object|False -- Returns the current authenticated user object or False or None if there is none.
         """
         attempt = self.options.get("model")().attempt_by_id(user_id)
+
         if attempt and not self.options.get("once"):
             self.application.make("response").cookie("token", attempt.remember_token)
             self.application.make("request").set_user(attempt)

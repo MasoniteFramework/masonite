@@ -59,7 +59,6 @@ class ExceptionHandler:
                 return self.application.make("HttpExceptionHandler").handle(exception)
             # if a renderable exception is raised let it be displayed
             if hasattr(exception, "get_response"):
-
                 return response.view(exception.get_response(), exception.get_status())
 
             # else fallback to an unknown exception should be displayed as a 500 error

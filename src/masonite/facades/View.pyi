@@ -1,9 +1,10 @@
 from typing import Callable, Any
+from jinja2 import PackageLoader, BaseLoader
 
 class View:
     """View facade."""
 
-    def render(self, template: str, dictionary: dict = {}) -> "View":
+    def render(template: str, dictionary: dict = {}) -> "View":
         """Render the given template name with the given context as string."""
         ...
     def get_content(self) -> str:
@@ -12,44 +13,42 @@ class View:
     def hydrate_from_composers(self):
         """Add data into the view from specified composers."""
         ...
-    def composer(self, composer_name: str, dictionary: dict) -> "View":
+    def composer(composer_name: str, dictionary: dict) -> "View":
         """Add/Update composer with the given name and data."""
         ...
-    def share(self, dictionary: dict) -> "View":
+    def share(dictionary: dict) -> "View":
         """Share data to all templates."""
         ...
-    def exists(self, template: str) -> bool:
+    def exists(template: str) -> bool:
         """Check if a template with the given name exists."""
         ...
-    def add_location(
-        self, template_location: str, loader: "BaseLoader" = PackageLoader
-    ):
+    def add_location(template_location: str, loader: "BaseLoader" = PackageLoader):
         """Add location directory from which view templates can be loaded. The Jinja2 loader type
         can be specified."""
         ...
-    def add_namespaced_location(self, namespace: str, template_location: str):
+    def add_namespaced_location(namespace: str, template_location: str):
         """Add namespaced location directory from which view templates can be loaded."""
         ...
-    def add_from_package(self, package_name: str, path_in_package: str): ...
-    def filter(self, name: str, function: Callable):
+    def add_from_package(package_name: str, path_in_package: str): ...
+    def filter(name: str, function: Callable):
         """Add filter functions to views with the given name."""
         ...
-    def add_extension(self, extension: str) -> "View":
+    def add_extension(extension: str) -> "View":
         """Register Jinja2 extension to views."""
         ...
-    def load_template(self, template: str):
+    def load_template(template: str):
         """Private method for loading all the locations into the current environment."""
         ...
     def get_current_loaders(self):
         """Get all enabled Jinja2 loaders."""
         ...
-    def set_separator(self, token: str) -> "View":
+    def set_separator(token: str) -> "View":
         """Change separator for view names (default is /)."""
         ...
-    def set_file_extension(self, extension: str) -> "View":
+    def set_file_extension(extension: str) -> "View":
         """Change file view extension (default is .html)."""
         ...
     def get_response(self) -> str:
         """Get the rendered content as string."""
         ...
-    def test(self, key: str, obj: Any) -> "View": ...
+    def test(key: str, obj: Any) -> "View": ...

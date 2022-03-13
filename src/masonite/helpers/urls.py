@@ -1,21 +1,25 @@
 from os.path import join
+from typing import TYPE_CHECKING
 from ..configuration import config
+
+if TYPE_CHECKING:
+    from ..foundation import Application
 
 
 class UrlsHelper:
     """URLs helper provide handy functions to build URLs."""
 
-    def __init__(self, app):
+    def __init__(self, app: "Application"):
         self.app = app
 
-    def url(self, path=""):
+    def url(self, path: str = "") -> str:
         """Generates a fully qualified url to the given path. If no path is given this will return
         the base url domain."""
         # ensure that no slash is prefixing the relative path
         relative_path = path.lstrip("/")
         return join(config("application.app_url"), relative_path)
 
-    def asset(self, alias, filename):
+    def asset(self, alias: str, filename: str) -> str:
         """Generates a fully qualified URL for the given asset using the given disk
         Example:
             asset("local", "avatar.jpg") (take first pat)
@@ -34,7 +38,7 @@ class UrlsHelper:
                 location = list(location.values())[0]
         return join(location, filename)
 
-    def route(self, name, params={}, absolute=True):
+    def route(self, name: str, params: dict = {}, absolute: bool = True) -> str:
         """Generates a fully qualified URL to the given route name.
         Example:
             route("users.home") : http://masonite.app/dashboard/

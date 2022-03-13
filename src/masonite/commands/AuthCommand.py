@@ -1,5 +1,5 @@
 """Scaffold Auth Command."""
-from distutils.dir_util import copy_tree
+from shutil import copytree
 import os
 
 from ..utils.location import controllers_path, views_path, mailables_path
@@ -19,13 +19,13 @@ class AuthCommand(Command):
         self.app = application
 
     def handle(self):
-        copy_tree(
+        copytree(
             self.get_template_path(),
             views_path("auth"),
         )
-        copy_tree(self.get_controllers_path(), controllers_path("auth"))
+        copytree(self.get_controllers_path(), controllers_path("auth"))
 
-        copy_tree(self.mailables_path(), mailables_path())
+        copytree(self.mailables_path(), mailables_path())
 
         self.info("Auth scaffolded successfully!")
 

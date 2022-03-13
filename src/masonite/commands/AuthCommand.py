@@ -1,6 +1,7 @@
 """Scaffold Auth Command."""
 from shutil import copytree
 import os
+import sys
 
 from ..utils.location import controllers_path, views_path, mailables_path
 from ..utils.filesystem import get_module_dir
@@ -19,13 +20,21 @@ class AuthCommand(Command):
         self.app = application
 
     def handle(self):
-        copytree(
-            self.get_template_path(),
-            views_path("auth"),
-        )
-        copytree(self.get_controllers_path(), controllers_path("auth"))
+        # dirs_exist_ok option is available in Python 3.8+
+        # https://docs.python.org/3/library/shutil.html#shutil.copytree
+        if sys.version_info.minor >= 8:
+            copytree(self.get_template_path(), views_path("auth"), dirs_exist_ok=True)
+            copytree(
+                self.get_controllers_path(),
+                controllers_path("auth"),
+                dirs_exist_ok=True,
+            )
 
-        copytree(self.mailables_path(), mailables_path())
+            copytree(self.mailables_path(), mailables_path(), dirs_exist_ok=True)
+        else:
+            copytree(self.get_template_path(), views_path("auth"))
+            copytree(self.get_controllers_path(), controllers_path("auth"))
+            copytree(self.mailables_path(), mailables_path())
 
         self.info("Auth scaffolded successfully!")
 

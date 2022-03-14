@@ -24,7 +24,10 @@ class TestRequest(TestCase):
         self.request.input_bag.query_string = {"test": 3.1415926}
         self.assertEqual(self.request.input("test"), 3.1415926)
 
-    def test_request_can_get_nested_value(self):
-        # from query string
+    def test_request_can_get_nested_value_from_query_string(self):
         self.request.input_bag.query_string = {"key": "val", "a": {"b": {"c": 1}}}
+        self.assertEqual(self.request.input("a.b.c"), 1)
+
+    def test_request_can_get_nested_value_from_post_data(self):
+        self.request.input_bag.post_data = {"key": "val", "a": {"b": {"c": 1}}}
         self.assertEqual(self.request.input("a.b.c"), 1)

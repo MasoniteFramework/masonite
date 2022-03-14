@@ -8,9 +8,23 @@ class MockMail(Mail):
         self.count = 0
         self.driver = None
 
+    def reset(self):
+        """Reset mock implementation."""
+        self.count = 0
+        self.driver = None
+
     def send(self, driver=None):
-        self.driver = config("mail.drivers.default")
-        self.driver = driver or self.options.get("driver", None)
+        if driver:
+            self.driver = driver
+        else:
+            self.driver = self.options.get("driver", None) or config(
+                "mail.drivers.default"
+            )
+
+        config_options = self.get_config_options(self.driver)
+        if self.options.get("from"):
+            config_options.pop("from", None)
+        self.options.update(config_options)
         self.count += 1
         return self
 
@@ -105,5 +119,7 @@ class MockMail(Mail):
         return self
 
     def seeDriverWas(self, name):
-        assert self.driver == name, f"Expected email driver to be {name} but it was {self.driver}"
+        assert (
+            self.driver == name
+        ), f"Expected email driver to be {name} but it was {self.driver}"
         return self

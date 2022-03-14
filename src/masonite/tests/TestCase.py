@@ -270,6 +270,8 @@ class TestCase(unittest.TestCase):
         )
         # mock by overriding with mocked version
         mock = self.application.make(f"mock.{binding}", self.application)
+        if hasattr(mock, "reset"):
+            mock.reset()
         self.application.bind(binding, mock)
         return mock
 

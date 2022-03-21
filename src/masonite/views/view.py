@@ -7,6 +7,7 @@ from jinja2.exceptions import TemplateNotFound
 from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
+import logging
 
 
 def path_to_package(path, separator="/"):
@@ -56,12 +57,14 @@ class View:
                     type(dictionary).__name__
                 )
             )
-
+        
         self.load_template(template)
 
         # prepare template context
         self.dictionary = {}
+        variables = dictionary
         self.dictionary.update(dictionary)
+
         self.dictionary.update(self._shared)
         if self.composers:
             self.hydrate_from_composers()
@@ -70,6 +73,15 @@ class View:
             self.env.tests.update(self._tests)
 
         self.rendered_template = self._render()
+
+        logger = logging.getLogger("masonite.views.render")
+        logger.propagate = False
+        logger.setLevel(logging.DEBUG)
+
+        logger.debug("View Rendered", extra={
+            "template_name": template,
+            "variables": variables,
+        })
 
         return self
 

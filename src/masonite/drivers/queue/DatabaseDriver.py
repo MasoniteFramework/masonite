@@ -101,6 +101,8 @@ class DatabaseDriver(HasColoredOutput):
                     self.danger(
                         f"[{job['id']}][{pendulum.now(tz=self.options.get('tz', 'UTC')).to_datetime_string()}] Job Failed"
                     )
+                    
+                    job["attempts"] = int(job["attempts"])
 
                     if job["attempts"] + 1 < self.options.get("attempts", 1):
                         builder.where("id", job["id"]).table(

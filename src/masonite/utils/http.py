@@ -66,7 +66,7 @@ HTTP_STATUS_CODES = {
 }
 
 
-def generate_wsgi(wsgi={}, path="/", query_string="application=Masonite", method="GET"):
+def generate_wsgi(wsgi={}, path="/", query_string="", method="GET"):
     """Generate the WSGI environment dictionary that we receive from a HTTP request."""
     import io
 

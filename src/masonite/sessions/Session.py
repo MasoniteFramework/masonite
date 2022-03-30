@@ -85,7 +85,7 @@ class Session:
         return self.set(key, str(int(self.get(key)) - count))
 
     def has(self, key):
-        return key in self.added or key in self.flashed
+        return key in self.added or key in self.flashed or key in self.data
 
     def get(self, key):
         if key in self.flashed:

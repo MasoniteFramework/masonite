@@ -42,7 +42,7 @@ class AMQPDriver(HasColoredOutput):
     def publish(self, payload):
         pika = self.get_package_library()
         self.publishing_channel.basic_publish(
-            exchange="",
+            exchange=self.options.get("exchange"),
             routing_key=self.options.get("queue"),
             body=pickle.dumps(payload),
             properties=pika.BasicProperties(

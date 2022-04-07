@@ -19,6 +19,7 @@ DRIVERS = {
         "port": "5672",
         "vhost": "",
         "host": "localhost",
+        "exchange": "",
         "connection_options": {},
         "channel": "default",
         "queue": "masonite4",

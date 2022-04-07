@@ -1,4 +1,6 @@
 from os.path import join
+from urllib import parse
+
 from ..configuration import config
 
 
@@ -8,11 +10,23 @@ class UrlsHelper:
     def __init__(self, app):
         self.app = app
 
-    def url(self, path=""):
+    def url(self, path: str = "", query_params: dict = {}) -> str:
         """Generates a fully qualified url to the given path. If no path is given this will return
-        the base url domain."""
+        the base url domain. A query parameters dictionary can be provided to add query parameters
+        to the url."""
         # ensure that no slash is prefixing the relative path
-        relative_path = path.lstrip("/")
+        path_result = parse.urlsplit(path.lstrip("/"))
+
+        # parse existing query parameters
+        existing_query_params = dict(parse.parse_qsl(path_result.query))
+        all_query_params = {**existing_query_params, **query_params}
+
+        relative_path = path_result.path
+
+        # add query parameters to url if any
+        if all_query_params:
+            relative_path += "?" + parse.urlencode(all_query_params)
+
         return join(config("application.app_url"), relative_path)
 
     def asset(self, alias, filename):

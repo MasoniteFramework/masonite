@@ -22,10 +22,11 @@ class Router:
             if route.match_name(name):
                 return route
 
-    def route(self, name, parameters={}):
+    def route(self, name: str, parameters: dict = {}, query_params: dict = {}) -> str:
+        """Return URL string from given route name and parameters."""
         route = self.find_by_name(name)
         if route:
-            return route.to_url(parameters)
+            return route.to_url(parameters, query_params)
         raise RouteNotFoundException(f"Could not find route with the name '{name}'")
 
     def set_controller_locations(self, location):

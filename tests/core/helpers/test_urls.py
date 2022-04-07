@@ -36,6 +36,11 @@ class TestUrlsHelper(TestCase):
         )
         self.assertEqual(url.route("upload"), "http://localhost:8000/upload")
         self.assertEqual(url.route("upload", absolute=False), "/upload")
+        # with query parameters
+        self.assertEqual(
+            url.route("upload", query_params={"force": 1}),
+            "http://localhost:8000/upload?force=1",
+        )
 
     def test_asset(self):
         self.assertTrue(

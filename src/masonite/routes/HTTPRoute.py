@@ -1,5 +1,5 @@
 import re
-import os
+from urllib import parse
 
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
@@ -72,7 +72,8 @@ class HTTPRoute:
         self._domain = subdomain
         return self
 
-    def to_url(self, parameters={}):
+    def to_url(self, parameters: dict = {}, query_params: dict = {}) -> str:
+        """Transform route to a URL string with the given url and query parameters."""
 
         # Split the url into a list
         split_url = self.url.split("/")
@@ -107,6 +108,9 @@ class HTTPRoute:
         if "//" in compiled_url:
             compiled_url = compiled_url.replace("//", "/")
 
+        # Add eventual query parameters
+        if query_params:
+            compiled_url += "?" + parse.urlencode(query_params)
         return compiled_url
 
     def _find_controller(self, controller):

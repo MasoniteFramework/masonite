@@ -48,15 +48,19 @@ class UrlsHelper:
                 location = list(location.values())[0]
         return join(location, filename)
 
-    def route(self, name, params={}, absolute=True):
+    def route(
+        self, name: str, params: dict = {}, absolute=True, query_params: dict = {}
+    ) -> str:
         """Generates a fully qualified URL to the given route name.
         Example:
             route("users.home") : http://masonite.app/dashboard/
             route("users.profile", {"id": 1}) : http://masonite.app/users/1/profile/
+            route("users.profile", {"id": 1}, query_params={"section": "infos"}) :
+                http://masonite.app/users/1/profile/?section=info
             route("users.profile", {"id": 1}, absolute=False) : /users/1/profile/
         """
 
-        relative_url = self.app.make("router").route(name, params)
+        relative_url = self.app.make("router").route(name, params, query_params)
         if absolute:
             return self.url(relative_url)
         else:

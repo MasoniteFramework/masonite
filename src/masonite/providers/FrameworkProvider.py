@@ -1,12 +1,13 @@
-from email.mime import application
 import time
 
 from ..request import Request
 from ..response import Response
 from .Provider import Provider
 
+from ..configuration import config
 from ..presets.PresetsCapsule import PresetsCapsule
 from ..presets import Tailwind, Vue, React, Bootstrap
+from ..cors import Cors
 
 
 class FrameworkProvider(Provider):
@@ -21,6 +22,10 @@ class FrameworkProvider(Provider):
         presets.add(Vue())
         presets.add(React())
         self.application.bind("presets", presets)
+
+        # @M5 remove this and add CorsProvider in default project
+        cors = Cors(self.application).set_options(config("cors"))
+        self.application.bind("cors", cors)
 
     def boot(self):
         request = Request(self.application.make("environ"))

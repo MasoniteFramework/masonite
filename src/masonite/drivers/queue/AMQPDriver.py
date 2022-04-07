@@ -1,6 +1,8 @@
 import pickle
 import pendulum
 import inspect
+from urllib import parse
+
 from ...utils.console import HasColoredOutput
 
 
@@ -67,20 +69,18 @@ class AMQPDriver(HasColoredOutput):
             raise ModuleNotFoundError(
                 "Could not find the 'pika' library. Run 'pip install pika' to fix this."
             )
-
-        self.connection = pika.BlockingConnection(
-            pika.URLParameters(
-                "amqp://{}:{}@{}{}/{}".format(
-                    self.options.get("username"),
-                    self.options.get("password"),
-                    self.options.get("host"),
-                    ":" + str(self.options.get("port"))
-                    if self.options.get("port")
-                    else "",
-                    self.options.get("vhost", "%2F"),
-                )
-            )
+        connection_url = "amqp://{}:{}@{}{}/{}".format(
+            self.options.get("username"),
+            self.options.get("password"),
+            self.options.get("host"),
+            ":" + str(self.options.get("port")) if self.options.get("port") else "",
+            self.options.get("vhost", "%2F"),
         )
+        if self.options.get("connection_options"):
+            connection_url += "?" + parse.urlencode(
+                self.options.get("connection_options")
+            )
+        self.connection = pika.BlockingConnection(pika.URLParameters(connection_url))
 
         self.publishing_channel = self.connection.channel()
 

@@ -11,15 +11,19 @@ DRIVERS = {
     "redis": {
         #
     },
+    # See https://pika.readthedocs.io/en/stable/modules/parameters.html#pika.connection.URLParameters
+    # for valid connection options values
     "amqp": {
         "username": "guest",
         "password": "guest",
         "port": "5672",
         "vhost": "",
         "host": "localhost",
+        "connection_options": {},
         "channel": "default",
         "queue": "masonite4",
         "tz": "UTC",
+        "exchange": "",
     },
     "async": {
         "blocking": True,

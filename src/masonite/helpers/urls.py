@@ -1,6 +1,6 @@
 from os.path import join
-from urllib import parse
 
+from ..utils.str import add_query_params
 from ..configuration import config
 
 
@@ -15,18 +15,12 @@ class UrlsHelper:
         the base url domain. A query parameters dictionary can be provided to add query parameters
         to the url."""
         # ensure that no slash is prefixing the relative path
-        path_result = parse.urlsplit(path.lstrip("/"))
+        relative_path = path.lstrip("/")
 
-        # parse existing query parameters
-        existing_query_params = dict(parse.parse_qsl(path_result.query))
-        all_query_params = {**existing_query_params, **query_params}
+        # add query params if any
+        relative_path = add_query_params(relative_path, query_params)
 
-        relative_path = path_result.path
-
-        # add query parameters to url if any
-        if all_query_params:
-            relative_path += "?" + parse.urlencode(all_query_params)
-
+        # fully qualify the url
         return join(config("application.app_url"), relative_path)
 
     def asset(self, alias, filename):

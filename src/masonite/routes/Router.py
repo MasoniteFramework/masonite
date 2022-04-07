@@ -1,3 +1,4 @@
+from urllib import parse
 from ..utils.collections import flatten
 from ..exceptions import RouteNotFoundException
 
@@ -43,7 +44,7 @@ class Router:
         self.routes = flatten(self.routes)
 
     @classmethod
-    def compile_to_url(cls, uncompiled_route, params={}):
+    def compile_to_url(cls, uncompiled_route, params={}, query_params={}):
         """Compile the route url into a usable url: converts /url/@id into /url/1.
         Used for redirection
 
@@ -51,6 +52,7 @@ class Router:
             route {string} -- An uncompiled route like (/dashboard/@user:string/@id:int)
         Keyword Arguments:
             params {dict} -- Dictionary of parameters to pass to the route (default: {{}})
+            query_params {dict} -- Dictionary of query parameters to pass to the route (default: {{}})
         Returns:
             string -- Returns a compiled string (/dashboard/joseph/1)
         """
@@ -90,5 +92,9 @@ class Router:
         # The loop isn't perfect and may have 2 slashes next to eachother
         if "//" in compiled_url:
             compiled_url = compiled_url.replace("//", "/")
+
+        # Add eventual query parameters
+        if query_params:
+            compiled_url += "?" + parse.urlencode(query_params)
 
         return compiled_url

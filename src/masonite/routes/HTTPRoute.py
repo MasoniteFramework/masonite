@@ -179,6 +179,8 @@ class HTTPRoute:
         self.controller_method = controller_method_str
 
     def get_response(self, app=None):
+        from ..response import Response
+
         # Resolve Controller Constructor
         if self.e:
             print(
@@ -196,14 +198,13 @@ class HTTPRoute:
             # Resolve Controller Method
             response = app.resolve(getattr(controller, self.controller_method), *params)
 
-            # HEAD handling
+            # if request method is HEAD, return a response without content but with
+            # headers that would be returned if request's URL was requested with GET method instead
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
             if app.make("request").get_request_method() == "HEAD":
-                # A response to a HEAD method should not have a body.
-                # The HTTP HEAD method requests the headers that would be returned if the HEAD
-                # request's URL was instead requested with the HTTP GET method
-                response = app.make("response").view(response, status=204)
-                response.content = ""
+                real_response = app.make("response").view(response)
+                response = Response(app).status(204)
+                response.header_bag = real_response.header_bag
             return response
 
         return getattr(self.controller_class(), self.controller_method)()

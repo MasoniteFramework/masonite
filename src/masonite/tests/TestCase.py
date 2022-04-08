@@ -167,6 +167,12 @@ class TestCase(unittest.TestCase):
     def patch(self, route, data=None):
         return self.fetch(route, data, method="PATCH")
 
+    def head(self, route, data=None):
+        return self.fetch(route, data, method="HEAD")
+
+    def options(self, route, data=None):
+        return self.fetch(route, data, method="OPTIONS")
+
     def make_request(
         self, data={}, path="/", query_string="application=Masonite", method="GET"
     ):

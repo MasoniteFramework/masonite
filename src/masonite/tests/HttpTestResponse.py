@@ -105,19 +105,21 @@ class HttpTestResponse:
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
 
-    def dumpHeaders(self):
-        """Dump response headers of a HTTP test response."""
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
         self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
         return self
 
     def ddHeaders(self):
-        """Dump response headers of a HTTP test response."""
-        self.dumpHeaders()
-        import pytest
-
-        # https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
-
-        pytest.exit("ddHeaders() called", 2)
+        """Dump and die request and response headers."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
 
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
@@ -197,9 +199,14 @@ class HttpTestResponse:
         return self
 
     def dumpSession(self):
-        """Dump session data of a HTTP test."""
+        """Dump session data."""
         self.testcase.dump(self.application.make("session").all(), "Session Data")
         return self
+
+    def ddSession(self):
+        """Dump and die session data."""
+        self.dumpSession()
+        self.testcase.stop()
 
     def _ensure_response_has_view(self):
         """Ensure that the response has a view as its original content."""

@@ -32,6 +32,7 @@ class TestCase(unittest.TestCase):
         self.original_class_mocks = {}
         self._test_cookies = {}
         self._test_headers = {}
+        self._test_session = {}
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
@@ -58,11 +59,16 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         # be sure to reset this between each test
         self._exception_handling = False
+        self._test_session = {}
+        self._test_cookies = {}
+        self._test_headers = {}
+
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
+
         # restore console output
         self._console_out = None
         self._console_err = None
@@ -206,14 +212,18 @@ class TestCase(unittest.TestCase):
         for name, value in self._test_cookies.items():
             request_cookies.add(name, value)
 
+        # add data in session from cookies (for now only one session driver is implemented)
+        for name, value in self._test_session.items():
+            request_cookies.add(f"s_{name}", value)
+
         wsgi_request = generate_wsgi(
             {
                 "CONTENT_LENGTH": len(str(json.dumps(data))),
                 "REQUEST_METHOD": method,
                 "PATH_INFO": path,
                 "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                "HTTP_COOKIE": request_cookies.as_header(),
-                **request_headers.as_wsgi(),
+                "HTTP_COOKIE": request_cookies.as_string(),
+                **request_headers.to_dict(server_names=True),
                 **environ,
             }
         )
@@ -285,6 +295,10 @@ class TestCase(unittest.TestCase):
 
     def withHeaders(self, headers_dict):
         self._test_headers = headers_dict
+        return self
+
+    def withSession(self, session_dict):
+        self._test_session = session_dict
         return self
 
     def actingAs(self, user):
@@ -371,3 +385,12 @@ class TestCase(unittest.TestCase):
             if title:
                 print(f"\033[93m> {title}:\033[0m\n")
             pprint(output, width=110)
+
+    def stop(self, msg: str = ""):
+        """Stop current test, a message can be given and will be displayed in the
+        console.
+
+        2 is the pytest exit code for user interruption.
+        https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
+        """
+        return pytest.exit(msg, 2)

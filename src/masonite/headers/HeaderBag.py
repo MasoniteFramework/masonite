@@ -1,5 +1,6 @@
+from inflection import titleize
+
 from .Header import Header
-from inflection import humanize, dasherize, camelize, titleize
 
 
 class HeaderBag:
@@ -32,7 +33,12 @@ class HeaderBag:
         return titleize(name.replace("HTTP_", "")).replace(" ", "-")
 
     def convert_name_back(self, name):
-        name = "HTTP_" + name
+        """Convert a header name back into server header name.
+
+        Example: X-Rate-Limited -> HTTP_X_RATE_LIMITED
+        """
+        if name.lower() not in ["content-type", "remote-addr"]:
+            name = "HTTP_" + name
         return name.replace("-", "_").upper()
 
     def load(self, environ):
@@ -40,18 +46,12 @@ class HeaderBag:
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
 
-    def as_wsgi(self):
+    def to_dict(self, server_names=False):
         dic = {}
         for name, header in self.bag.items():
-            dic.update({self.convert_name_back(name): header.value})
-
-        return dic
-
-    def to_dict(self):
-        dic = {}
-        for name, header in self.bag.items():
+            if server_names:
+                name = self.convert_name_back(name)
             dic.update({name: header.value})
-
         return dic
 
     def __getitem__(self, key):

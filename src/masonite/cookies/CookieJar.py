@@ -1,6 +1,6 @@
 import pendulum
-from .Cookie import Cookie
 
+from .Cookie import Cookie
 from ..utils.time import cookie_expire_time
 
 
@@ -65,7 +65,8 @@ class CookieJar:
                 self.load_cookie(key, value)
         return self
 
-    def as_header(self) -> str:
+    def as_string(self) -> str:
+        """Transform back the cookie jar as a string (as found in HTTP_COOKIE header)."""
         cookie_strings = []
         aggregate = self.cookies
         aggregate.update(self.loaded_cookies)

@@ -1,14 +1,17 @@
 from tests import TestCase
 from src.masonite.routes import Route
+from src.masonite.middleware import CorsMiddleware
 
 
 class TestCors(TestCase):
     def setUp(self):
         super().setUp()
+        # add CorsMiddleware
+        self.application.make("middleware").add([CorsMiddleware])
         self.cors = self.application.make("cors")
         self.cors.set_options(
             {
-                "allowed_origins": "http://localhost",
+                "allowed_origins": ["http://localhost"],
                 "allowed_headers": ["X-Test-1"],
                 "allowed_methods": ["GET", "POST"],
                 "exposed_headers": [],
@@ -29,12 +32,8 @@ class TestCors(TestCase):
         )
 
     def test_todo(self):
-        res = self.withHeaders(
+        self.withHeaders(
             {
-                "HTTP_ORIGIN": "http://localhost",
-                "HTTP_ACCESS_CONTROL_REQUEST_HEADERS": "X-Test-2",
+                "Access-Control-Request-Method": "POST",
             }
-        ).post("/api/test")
-        import pdb
-
-        pdb.set_trace()
+        ).options("/api/test").dumpSession().dumpHeaders().assertNoContent()

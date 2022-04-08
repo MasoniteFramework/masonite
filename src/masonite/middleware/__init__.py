@@ -10,3 +10,4 @@ from .route.ClearDumpsBetweenRequestsMiddleware import (
     ClearDumpsBetweenRequestsMiddleware,
 )
 from .route.IpMiddleware import IpMiddleware
+from .route.CorsMiddleware import CorsMiddleware

@@ -22,14 +22,14 @@ class Cors:
 
         # normalize options
         allowed_headers = list(
-            map(lambda h: h.lower(), self.options.get("allowed_headers", []))
+            map(lambda h: h.lower(), options.get("allowed_headers", []))
         )
         allowed_methods = list(
-            map(lambda h: h.upper(), self.options.get("allowed_methods", []))
+            map(lambda h: h.upper(), options.get("allowed_methods", []))
         )
         self.allow_all_headers = "*" in allowed_headers
         self.allow_all_methods = "*" in allowed_methods
-        self.allow_all_origins = "*" in self.options.get("allowed_origins", [])
+        self.allow_all_origins = "*" in options.get("allowed_origins", [])
 
         self.options = {
             **options,
@@ -79,7 +79,7 @@ class Cors:
 
         if response.header("Access-Control-Allow-Origin"):
             response = self.set_allowed_credentials(response)
-            response = self.set_allowed_methods(response)
+            response = self.set_allowed_methods(request, response)
             response = self.set_allowed_headers(request, response)
             response = self.set_max_age(response)
 
@@ -102,12 +102,13 @@ class Cors:
         return response
 
     def update_vary_header(self, response: "Response", value: str) -> "Response":
-        vary_header = response.header("Vary").split(", ")
-        if not vary_header:
+        if not response.header("Vary"):
             response.header("Vary", value)
-        elif value not in vary_header:
-            vary_header.append(value)
-            response.header("Vary", ", ".join(vary_header))
+        else:
+            vary_header = response.header("Vary").split(", ")
+            if value not in vary_header:
+                vary_header.append(value)
+                response.header("Vary", ", ".join(vary_header))
         return response
 
     def set_allowed_headers(

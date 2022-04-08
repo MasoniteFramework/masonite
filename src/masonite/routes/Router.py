@@ -35,10 +35,13 @@ class Router:
         # if alternative methods have been found, check if current request method is OPTIONS
         # to build a proper reponse else build a method not allowed response
         if request_method == "OPTIONS":
+
             def preflight_response(app):
-                response = app.make("response")
-                response.header("Allow", ", ".join(matched_methods))
-                return response.status(204)
+                return (
+                    app.make("response")
+                    .with_headers({"Allow": ", ".join(matched_methods)})
+                    .status(204)
+                )
 
             preflight_route = HTTPRoute(path, request_method=["options"])
             preflight_route.get_response = preflight_response

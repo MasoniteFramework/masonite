@@ -1,15 +1,18 @@
 import json
 import io
 import os
+from pprint import pprint
 import pytest
 import unittest
 import pendulum
 from contextlib import contextmanager
 
+from ..cookies import CookieJar
 from ..routes import Route
 from ..foundation.response_handler import testcase_handler
 from ..utils.http import generate_wsgi
 from ..request import Request
+from ..headers import HeaderBag, Header
 from ..response import Response
 from ..environment import LoadEnvironment
 from ..facades import Config
@@ -29,6 +32,7 @@ class TestCase(unittest.TestCase):
         self.original_class_mocks = {}
         self._test_cookies = {}
         self._test_headers = {}
+        self._test_session = {}
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
@@ -55,11 +59,16 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         # be sure to reset this between each test
         self._exception_handling = False
+        self._test_session = {}
+        self._test_cookies = {}
+        self._test_headers = {}
+
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
+
         # restore console output
         self._console_out = None
         self._console_err = None
@@ -190,29 +199,40 @@ class TestCase(unittest.TestCase):
         return request
 
     def fetch(self, path, data=None, method=None):
+        environ = {}
         if data is None:
             data = {}
+
         if not self._csrf:
             token = self.application.make("sign").sign("cookie")
             data.update({"__token": "cookie"})
-            wsgi_request = generate_wsgi(
-                {
-                    "HTTP_COOKIE": f"SESSID={token}; csrf_token={token}",
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
-        else:
-            wsgi_request = generate_wsgi(
-                {
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
+            self._test_cookies.update({"SESSID": token, "csrf_token": token})
+
+        # add request headers added inside the test
+        request_headers = HeaderBag()
+        for name, value in self._test_headers.items():
+            request_headers.add(Header(name, value))
+
+        # add request cookies added inside the test (not encrypted to be able to assert value ?)
+        request_cookies = CookieJar()
+        for name, value in self._test_cookies.items():
+            request_cookies.add(name, value)
+
+        # add data in session from cookies (for now only one session driver is implemented)
+        for name, value in self._test_session.items():
+            request_cookies.add(f"s_{name}", value)
+
+        wsgi_request = generate_wsgi(
+            {
+                "CONTENT_LENGTH": len(str(json.dumps(data))),
+                "REQUEST_METHOD": method,
+                "PATH_INFO": path,
+                "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
+                "HTTP_COOKIE": request_cookies.as_string(),
+                **request_headers.to_dict(server_names=True),
+                **environ,
+            }
+        )
 
         request, response = testcase_handler(
             self.application,
@@ -220,24 +240,18 @@ class TestCase(unittest.TestCase):
             self.mock_start_response,
             exception_handling=self._exception_handling,
         )
-        # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
-        for name, value in self._test_cookies.items():
-            request.cookie(name, value)
-        # add eventual headers added inside the test
-        for name, value in self._test_headers.items():
-            request.header(name, value)
 
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
 
         exception = RouteNotFoundException(f"No route found for url {path}")
         if self._exception_handling:
             response = self.application.make("exception_handler").handle(exception)
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
         else:
             raise exception
@@ -287,6 +301,10 @@ class TestCase(unittest.TestCase):
 
     def withHeaders(self, headers_dict):
         self._test_headers = headers_dict
+        return self
+
+    def withSession(self, session_dict):
+        self._test_session = session_dict
         return self
 
     def actingAs(self, user):
@@ -364,3 +382,21 @@ class TestCase(unittest.TestCase):
             .where_not_null(deleted_at_column)
             .get()
         )
+
+    def dump(self, output: str, title: str = ""):
+        """Print output to console during tests. A title can be provided to be displayed at dump
+        start."""
+        with self.capsys.disabled():
+            print("\n")
+            if title:
+                print(f"\033[93m> {title}:\033[0m\n")
+            pprint(output, width=110)
+
+    def stop(self, msg: str = ""):
+        """Stop current test, a message can be given and will be displayed in the
+        console.
+
+        2 is the pytest exit code for user interruption.
+        https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
+        """
+        return pytest.exit(msg, 2)

@@ -89,3 +89,9 @@ class TestCookies(unittest.TestCase):
             cookiejar.render_response(),
             [("Set-Cookie", "cookie1=name;Secure;Path=/;SameSite=Strict;")],
         )
+
+    def test_cookie_can_be_transformed_back_as_a_string(self):
+        cookiejar = CookieJar()
+        cookiejar.add("cookie1", "name", http_only=False)
+        cookiejar.add("cookie2", "other_name", http_only=False)
+        self.assertEqual(cookiejar.as_string(), "cookie1=name; cookie2=other_name")

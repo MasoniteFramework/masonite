@@ -232,7 +232,7 @@ class TestRoutes(TestCase):
             router.find("/home", "POST")
 
         self.assertIn(
-            "Supported methods are: GET, PUT.", str(context.exception.message)
+            "Supported methods are: GET, HEAD, PUT.", str(context.exception.message)
         )
 
     def test_options_method_returns_allowed_methods(self):
@@ -250,4 +250,14 @@ class TestRoutes(TestCase):
 
         self.assertEqual(response.content, "")
         self.assertEqual(response._status, HTTP_STATUS_CODES[204])
-        self.assertEqual(response.header("Allow"), "GET, PUT")
+        self.assertEqual(response.header("Allow"), "GET, HEAD, PUT")
+
+    def test_head_method_is_registered_for_get_routes(self):
+        router = Router(
+            [
+                Route.get("/home", "WelcomeController@show"),
+            ]
+        )
+        route = router.find("/home", "HEAD")
+        self.assertIsNotNone(route)
+        self.assertEqual(route.request_method, ["get", "head"])

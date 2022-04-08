@@ -1,5 +1,6 @@
 import re
-import os
+
+from aiohttp import request
 
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
@@ -30,7 +31,12 @@ class HTTPRoute:
         self.controller_method = None
         self._domain = None
         self._name = name
+
         self.request_method = [x.lower() for x in request_method]
+        # add HEAD method if GET
+        if "get" in self.request_method and "head" not in self.request_method:
+            self.request_method.append("head")
+
         self.list_middleware = []
         self.excluded_middlewares = []
         self.e = None
@@ -191,6 +197,15 @@ class HTTPRoute:
             params = self.extract_parameters(app.make("request").get_path()).values()
             # Resolve Controller Method
             response = app.resolve(getattr(controller, self.controller_method), *params)
+
+            # HEAD handling
+            # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
+            if app.make("request").get_request_method() == "HEAD":
+                # A response to a HEAD method should not have a body.
+                # The HTTP HEAD method requests the headers that would be returned if the HEAD
+                # request's URL was instead requested with the HTTP GET method
+                response = app.make("response").view(response, status=204)
+                response.content = ""
             return response
 
         return getattr(self.controller_class(), self.controller_method)()

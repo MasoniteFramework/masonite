@@ -22,13 +22,13 @@ class Cors:
 
         # normalize options
         allowed_headers = list(
-            map(lambda h: h.lower(), self.options.get("allowed_headers"))
+            map(lambda h: h.lower(), self.options.get("allowed_headers", []))
         )
         allowed_methods = list(
-            map(lambda h: h.upper(), self.options.get("allowed_methods"))
+            map(lambda h: h.upper(), self.options.get("allowed_methods", []))
         )
-        self.allow_all_headers = "*" in self.options.get("allowed_headers", [])
-        self.allow_all_methods = "*" in self.options.get("allowed_methods", [])
+        self.allow_all_headers = "*" in allowed_headers
+        self.allow_all_methods = "*" in allowed_methods
         self.allow_all_origins = "*" in self.options.get("allowed_origins", [])
 
         self.options = {

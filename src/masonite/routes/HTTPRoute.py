@@ -1,7 +1,5 @@
 import re
 
-from aiohttp import request
-
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
 from ..facades import Loader

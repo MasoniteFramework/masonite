@@ -97,14 +97,15 @@ class TestTestCase(TestCase):
         with self.debugMode(False):
             self.assertFalse(self.application.is_debug())
 
-    def test_dump(self):
-        self.dump("test", "dump test")
+    # Skipped to avoid polluting test outputs
+    # def test_dump(self):
+    #     self.dump("test", "dump test")
 
-    def test_dump_session(self):
-        self.get("/").dumpSession()
+    # def test_dump_session(self):
+    #     self.get("/").dumpSession()
 
-    def test_dump_headers(self):
-        self.get("/").dumpRequestHeaders().dumpResponseHeaders()
+    # def test_dump_headers(self):
+    #     self.get("/").dumpRequestHeaders().dumpResponseHeaders()
 
 
 class TestTestingAssertions(TestCase):

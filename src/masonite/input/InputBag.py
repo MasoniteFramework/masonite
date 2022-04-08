@@ -42,7 +42,7 @@ class InputBag:
                     pass
                 else:
                     for name, value in json.loads(request_body or "{}").items():
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
             elif "application/x-www-form-urlencoded" in environ.get("CONTENT_TYPE", ""):
                 try:
@@ -56,11 +56,6 @@ class InputBag:
                 self.post_data = self.parse_dict(parsed_request_body)
 
             elif "multipart/form-data" in environ.get("CONTENT_TYPE", ""):
-                try:
-                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
-                except (ValueError):
-                    request_body_size = 0
-
                 fields = cgi.FieldStorage(
                     fp=environ["wsgi.input"],
                     environ=environ,
@@ -73,17 +68,17 @@ class InputBag:
                         files = []
                         k = 0
                         for item in value:
-                            files.append(UploadedFile(fields[name][k].filename, value[k]))
+                            files.append(
+                                UploadedFile(fields[name][k].filename, value[k])
+                            )
                             k += 1
-                        self.post_data.update(
-                            {name: files}
-                        )
+                        self.post_data.update({name: files})
                     elif isinstance(value, bytes):
                         self.post_data.update(
                             {name: [UploadedFile(fields[name].filename, value)]}
                         )
                     else:
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
                 self.post_data = self.parse_dict(self.post_data)
             else:
@@ -206,9 +201,9 @@ class InputBag:
                     else:
                         d.setdefault(gd["name"], {})[gd["value"]] = value[0]
                 else:
-                    try:
+                    if isinstance(value, (list, tuple)):
                         d.update({name: value[0]})
-                    except TypeError:
+                    else:
                         d.update({name: value})
 
         new_dict = {}

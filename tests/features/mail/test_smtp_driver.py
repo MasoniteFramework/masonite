@@ -1,6 +1,7 @@
+import pytest
+
 from tests import TestCase
 from src.masonite.mail import Mailable
-import pytest
 
 
 class Welcome(Mailable):
@@ -18,4 +19,5 @@ class Welcome(Mailable):
 @pytest.mark.integrations
 class TestSMTPDriver(TestCase):
     def test_send_mailable(self):
-        self.application.make("mail").mailable(Welcome()).send(driver="terminal")
+        with self.assertRaises(ConnectionRefusedError):
+            self.application.make("mail").mailable(Welcome()).send(driver="smtp")

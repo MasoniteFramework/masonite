@@ -50,7 +50,11 @@ class Request(ValidatesRequest, AuthorizesRequest):
         return self.environ.get("PATH_INFO")
 
     def get_path_with_query(self):
-        return self.environ.get("PATH_INFO") + "?" + self.environ.get("QUERY_STRING")
+        query_string = self.environ.get("QUERY_STRING")
+        if query_string:
+            return self.get_path() + "?" + query_string
+        else:
+            return self.get_path()
 
     def get_back_path(self):
         return self.input("__back") or self.get_path_with_query()

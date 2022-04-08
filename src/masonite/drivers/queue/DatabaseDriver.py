@@ -102,17 +102,17 @@ class DatabaseDriver(HasColoredOutput):
                         f"[{job['id']}][{pendulum.now(tz=self.options.get('tz', 'UTC')).to_datetime_string()}] Job Failed"
                     )
 
-                    if job["attempts"] + 1 < self.options.get("attempts", 1):
+                    job["attempts"] = int(job["attempts"])
+
+                    if job["attempts"] + 1 < int(self.options.get("attempts", 1)):
                         builder.where("id", job["id"]).table(
                             self.options.get("table")
                         ).update(
                             {
-                                "attempts": job["attempts"] + 1,
+                                "attempts": int(job["attempts"] + 1),
                             }
                         )
-                    elif job["attempts"] + 1 >= self.options.get(
-                        "attempts", 1
-                    ) and not self.options.get("failed_table"):
+                    elif job["attempts"] + 1 >= int(self.options.get("attempts", 1)) and not self.options.get("failed_table"):
                         # Delete the jobs
                         builder.where("id", job["id"]).table(
                             self.options.get("table")

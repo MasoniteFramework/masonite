@@ -84,6 +84,21 @@ class RouteNotFoundException(Exception):
         return 404
 
 
+class MethodNotAllowedException(Exception):
+    is_http_exception = True
+
+    def __init__(self, allowed_methods, method):
+        message = f"{method} method not allowed for this route. Supported methods are: {', '.join(allowed_methods)}."
+        super().__init__(message)
+        self.message = message
+
+    def get_response(self):
+        return self.message
+
+    def get_status(self):
+        return 405
+
+
 class DebugException(Exception):
     pass
 

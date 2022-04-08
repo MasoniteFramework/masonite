@@ -116,7 +116,7 @@ class HttpTestResponse:
         return self
 
     def ddHeaders(self):
-        """Dump and die request and response headers."""
+        """Dump request and response headers and die."""
         self.dumpRequestHeaders()
         self.dumpResponseHeaders()
         self.testcase.stop()
@@ -204,7 +204,7 @@ class HttpTestResponse:
         return self
 
     def ddSession(self):
-        """Dump and die session data."""
+        """Dump session data and die."""
         self.dumpSession()
         self.testcase.stop()
 

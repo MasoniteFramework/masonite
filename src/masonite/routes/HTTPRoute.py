@@ -201,10 +201,11 @@ class HTTPRoute:
             # if request method is HEAD, return a response without content but with
             # headers that would be returned if request's URL was requested with GET method instead
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
-            if app.make("request").get_request_method() == "HEAD":
+            if app.make("request").get_request_method().upper() == "HEAD":
                 real_response = app.make("response").view(response)
                 response = Response(app).status(204)
                 response.header_bag = real_response.header_bag
+                app.bind("response", response)
             return response
 
         return getattr(self.controller_class(), self.controller_method)()

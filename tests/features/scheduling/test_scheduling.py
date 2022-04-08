@@ -1,5 +1,5 @@
-import pytest
 import pendulum
+from src.masonite.tests import TestCase
 from src.masonite.scheduling import Task
 
 
@@ -8,8 +8,9 @@ class MockTask(Task):
     timezone = "America/New_York"
 
 
-class TestScheduler:
-    def setup_method(self):
+class TestScheduler(TestCase):
+    def setUp(self):
+        super().setUp()
         self.task = MockTask()
 
     def test_scheduler_should_run(self):
@@ -159,3 +160,9 @@ class TestScheduler:
         time = pendulum.now().on(2018, 5, 21).at(22, 5, 5)
         task._date = time
         assert task.should_run(time) == True
+
+    def test_should_run_task_immediately_by_class(self):
+        self.craft("schedule:run", "--task TaskTest --force").assertSuccess()
+
+    def test_should_run_task_immediately_by_name(self):
+        self.craft("schedule:run", "--task task_test --force").assertSuccess()

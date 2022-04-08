@@ -206,9 +206,32 @@ class HTTPRoute:
                 self.list_middleware.append(arg)
         return self
 
+    def prepend_middleware(self, *args):
+        """Load a list of middleware to run.
+
+        Returns:
+            self
+        """
+        for arg in args:
+            if arg and arg not in self.list_middleware:
+                self.list_middleware.insert(0, arg)
+        return self
+
     def get_middlewares(self):
         """Get all the middlewares to run for this route."""
-        return list(set(self.list_middleware) - set(self.excluded_middlewares))
+        middlewares = self.list_middleware
+
+        for middleware in self.excluded_middlewares:
+            if middleware in middlewares:
+                middlewares.remove(middleware)
+
+        return middlewares
+
+    def set_middleware(self, middleware):
+        """Get all the middlewares to run for this route."""
+        self.list_middleware = middleware
+
+        return self
 
     def exclude_middleware(self, *args):
         """Remove a list of middleware for this route. It can be useful when

@@ -143,7 +143,10 @@ class Route:
                 route.domain(options.get("domain"))
 
             if options.get("middleware"):
-                route.middleware(*options.get("middleware", []))
+                middleware = route.list_middleware
+                middleware = options.get("middleware", []) + middleware
+
+                route.set_middleware(middleware)
 
             inner.append(route)
         self.routes = inner

@@ -36,15 +36,18 @@ class TestView(TestCase):
 
     def test_exception_view_not_found(self):
         with self.assertRaises(TemplateNotFound) as context:
-            self.view.render('not_found')
+            self.view.render("not_found")
 
         self.assertEqual(context.exception.message, "Template 'not_found' not found")
 
     def test_exception_include_not_found(self):
         with self.assertRaises(TemplateNotFound) as context:
-            self.view.render('include')
+            self.view.render("include")
 
-        self.assertEqual(context.exception.message, "One of the included templates in the 'include' view could not be found")
+        self.assertEqual(
+            context.exception.message,
+            "One of the included templates in the 'include' view could not be found",
+        )
 
     def test_view_gets_global_template(self):
         self.assertEqual(

@@ -1,12 +1,30 @@
 from .Mail import Mail
+from ..configuration import config
 
 
 class MockMail(Mail):
     def __init__(self, application, *args, **kwargs):
         super().__init__(application, *args, **kwargs)
         self.count = 0
+        self.driver = None
+
+    def reset(self):
+        """Reset mock implementation."""
+        self.count = 0
+        self.driver = None
 
     def send(self, driver=None):
+        if driver:
+            self.driver = driver
+        else:
+            self.driver = self.options.get("driver", None) or config(
+                "mail.drivers.default"
+            )
+
+        config_options = self.get_config_options(self.driver)
+        if self.options.get("from"):
+            config_options.pop("from", None)
+        self.options.update(config_options)
         self.count += 1
         return self
 
@@ -98,4 +116,10 @@ class MockMail(Mail):
 
     def seeEmailWasSent(self):
         assert self.count > 0, "Expected email was not sent but it was sent"
+        return self
+
+    def seeDriverWas(self, name):
+        assert (
+            self.driver == name
+        ), f"Expected email driver to be {name} but it was {self.driver}"
         return self

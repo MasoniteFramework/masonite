@@ -1,4 +1,5 @@
 import pytest
+
 from tests import TestCase
 from src.masonite.mail import Mailable
 
@@ -17,6 +18,13 @@ class Welcome(Mailable):
 @pytest.mark.integrations
 class TestMailgunDriver(TestCase):
     def test_send_mailable(self):
-        self.application.make("mail").mailable(
-            Welcome().attach("invoice", "tests/integrations/storage/invoice.pdf")
+        response = (
+            self.application.make("mail")
+            .mailable(
+                Welcome().attach("invoice", "tests/integrations/storage/invoice.pdf")
+            )
+            .send(driver="mailgun")
         )
+        self.assertEqual(response.status_code, 200)
+        # because domain is not configured we got this funny message !
+        self.assertEqual("Mailgun Magnificent API", response.content.decode("utf-8"))

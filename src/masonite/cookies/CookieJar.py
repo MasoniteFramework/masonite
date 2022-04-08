@@ -65,6 +65,14 @@ class CookieJar:
                 self.load_cookie(key, value)
         return self
 
+    def as_header(self) -> str:
+        cookie_strings = []
+        aggregate = self.cookies
+        aggregate.update(self.loaded_cookies)
+        for name, cookie in aggregate.items():
+            cookie_strings.append(f"{name}={cookie.value}")
+        return "; ".join(cookie_strings)
+
     def render_response(self):
         cookies = []
         for name, cookie in {**self.deleted_cookies, **self.all_added()}.items():

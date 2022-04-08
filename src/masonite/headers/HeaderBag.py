@@ -31,10 +31,21 @@ class HeaderBag:
     def convert_name(self, name):
         return titleize(name.replace("HTTP_", "")).replace(" ", "-")
 
+    def convert_name_back(self, name):
+        name = "HTTP_" + name
+        return name.replace("-", "_").upper()
+
     def load(self, environ):
         for key, value in environ.items():
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
+
+    def as_wsgi(self):
+        dic = {}
+        for name, header in self.bag.items():
+            dic.update({self.convert_name_back(name): header.value})
+
+        return dic
 
     def to_dict(self):
         dic = {}

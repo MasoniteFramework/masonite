@@ -1,15 +1,18 @@
 import json
 import io
 import os
+from pprint import pprint
 import pytest
 import unittest
 import pendulum
 from contextlib import contextmanager
 
+from ..cookies import CookieJar
 from ..routes import Route
 from ..foundation.response_handler import testcase_handler
 from ..utils.http import generate_wsgi
 from ..request import Request
+from ..headers import HeaderBag, Header
 from ..response import Response
 from ..environment import LoadEnvironment
 from ..facades import Config
@@ -184,29 +187,36 @@ class TestCase(unittest.TestCase):
         return request
 
     def fetch(self, path, data=None, method=None):
+        environ = {}
         if data is None:
             data = {}
+
         if not self._csrf:
             token = self.application.make("sign").sign("cookie")
             data.update({"__token": "cookie"})
-            wsgi_request = generate_wsgi(
-                {
-                    "HTTP_COOKIE": f"SESSID={token}; csrf_token={token}",
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
-        else:
-            wsgi_request = generate_wsgi(
-                {
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
+            self._test_cookies.update({"SESSID": token, "csrf_token": token})
+
+        # add request headers added inside the test
+        request_headers = HeaderBag()
+        for name, value in self._test_headers.items():
+            request_headers.add(Header(name, value))
+
+        # add request cookies added inside the test (not encrypted to be able to assert value ?)
+        request_cookies = CookieJar()
+        for name, value in self._test_cookies.items():
+            request_cookies.add(name, value)
+
+        wsgi_request = generate_wsgi(
+            {
+                "CONTENT_LENGTH": len(str(json.dumps(data))),
+                "REQUEST_METHOD": method,
+                "PATH_INFO": path,
+                "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
+                "HTTP_COOKIE": request_cookies.as_header(),
+                **request_headers.as_wsgi(),
+                **environ,
+            }
+        )
 
         request, response = testcase_handler(
             self.application,
@@ -214,24 +224,18 @@ class TestCase(unittest.TestCase):
             self.mock_start_response,
             exception_handling=self._exception_handling,
         )
-        # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
-        for name, value in self._test_cookies.items():
-            request.cookie(name, value)
-        # add eventual headers added inside the test
-        for name, value in self._test_headers.items():
-            request.header(name, value)
 
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
 
         exception = RouteNotFoundException(f"No route found for url {path}")
         if self._exception_handling:
             response = self.application.make("exception_handler").handle(exception)
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
         else:
             raise exception
@@ -358,3 +362,12 @@ class TestCase(unittest.TestCase):
             .where_not_null(deleted_at_column)
             .get()
         )
+
+    def dump(self, output: str, title: str = ""):
+        """Print output to console during tests. A title can be provided to be displayed at dump
+        start."""
+        with self.capsys.disabled():
+            print("\n")
+            if title:
+                print(f"\033[93m> {title}:\033[0m\n")
+            pprint(output, width=110)

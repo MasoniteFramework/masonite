@@ -1,11 +1,13 @@
 import json
+
 from ..views import View
 from ..controllers import Controller
 from ..utils.structures import data_get
 
 
 class HttpTestResponse:
-    def __init__(self, application, request, response, route):
+    def __init__(self, testcase, application, request, response, route):
+        self.testcase = testcase
         self.application = application
         self.request = request
         self.response = response
@@ -103,6 +105,20 @@ class HttpTestResponse:
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
 
+    def dumpHeaders(self):
+        """Dump response headers of a HTTP test response."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump response headers of a HTTP test response."""
+        self.dumpHeaders()
+        import pytest
+
+        # https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
+
+        pytest.exit("ddHeaders() called", 2)
+
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
 
@@ -178,6 +194,11 @@ class HttpTestResponse:
             errors = session.get("errors")
             for key in keys:
                 assert not errors.get(key)
+        return self
+
+    def dumpSession(self):
+        """Dump session data of a HTTP test."""
+        self.testcase.dump(self.application.make("session").all(), "Session Data")
         return self
 
     def _ensure_response_has_view(self):

@@ -3,11 +3,26 @@ from ... import __version__
 from ...helpers import optional
 
 
+def recursive_serializer(data):
+    if isinstance(data, (int, bool, str, bytes)):
+        return data
+    elif isinstance(data, (list, tuple)):
+        return [recursive_serializer(item) for item in data]
+    elif isinstance(data, dict):
+        return {key: recursive_serializer(val) for key, val in data.items()}
+    elif callable(data):
+        return str(data)
+    elif hasattr(data, "serialize"):
+        return data.serialize()
+    else:
+        return str(data)
+
+
 class AppBlock(Block):
     id = "application"
     name = "Application"
     icon = "DesktopComputerIcon"
-    component = "KeyValBlockWithSections"
+    has_sections = True
 
     def build(self):
         request = self.handler.app.make("request")
@@ -27,7 +42,7 @@ class AppBlock(Block):
                 {
                     "Route": {
                         "Controller": route.controller,
-                        "Name": route._name,
+                        "Name": route.get_name(),
                         "Middlewares": route.get_middlewares(),
                     }
                 }
@@ -52,7 +67,7 @@ class RequestBlock(Block):
     id = "request"
     name = "Request"
     icon = "SwitchHorizontalIcon"
-    component = "KeyValBlockWithSections"
+    has_sections = True
 
     def build(self):
         request = self.handler.app.make("request")
@@ -66,26 +81,11 @@ class RequestBlock(Block):
         }
 
 
-def recursive_serializer(data):
-    if isinstance(data, (int, bool, str, bytes)):
-        return data
-    elif isinstance(data, (list, tuple)):
-        return [recursive_serializer(item) for item in data]
-    elif isinstance(data, dict):
-        return {key: recursive_serializer(val) for key, val in data.items()}
-    elif callable(data):
-        return str(data)
-    elif hasattr(data, "serialize"):
-        return data.serialize()
-    else:
-        return str(data)
-
-
 class ConfigBlock(Block):
     id = "config"
     name = "Configuration"
     icon = "CogIcon"
-    component = "KeyValBlockWithSections"
+    has_sections = True
 
     def build(self):
         data = {}

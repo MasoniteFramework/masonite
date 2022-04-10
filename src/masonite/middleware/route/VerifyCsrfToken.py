@@ -46,7 +46,7 @@ class VerifyCsrfToken(Middleware):
                 and compare_digest(token, request.cookie("SESSID"))
             ):
                 return True
-            raise InvalidCSRFToken("Invalid CSRF token.")
+            raise InvalidCSRFToken("Invalid CSRF Token")
         return True
 
     def in_exempt(self, request):

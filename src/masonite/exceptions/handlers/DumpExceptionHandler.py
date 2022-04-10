@@ -1,7 +1,7 @@
 import inspect
 import os
 
-from ..utils.filesystem import get_module_dir
+from ...utils.filesystem import get_module_dir
 
 
 def is_property(obj):
@@ -37,7 +37,9 @@ class DumpExceptionHandler:
     def __init__(self, application):
         self.application = application
 
-        self.assets_path = os.path.join(get_module_dir(__file__), "../templates/assets")
+        self.assets_path = os.path.join(
+            get_module_dir(__file__), "../../templates/assets"
+        )
         self.styles = []
         self.scripts = []
 

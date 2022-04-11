@@ -1,8 +1,3 @@
-from exceptionite.errors import Handler, StackOverflowIntegration, SolutionsIntegration
-
-from .JsonHandler import JsonHandler
-
-
 class ExceptionHandler:
     def __init__(self, application, driver_config=None):
         self.application = application
@@ -45,8 +40,11 @@ class ExceptionHandler:
                 f"{exception.__class__.__name__}Handler"
             ).handle(exception)
 
+        exceptionite = self.get_driver("exceptionite")
+
         if "application/json" in str(request.header("Accept")):
-            return response.view(JsonHandler(exception).render(), status=500)
+            exceptionite.start(exception)
+            return response.view(exceptionite.render("json"), status=500)
 
         if not self.application.is_debug():
             # for HTTP error codes (500, 404, 403...) a specific page should be displayed
@@ -62,26 +60,6 @@ class ExceptionHandler:
             return self.application.make("HttpExceptionHandler").handle(exception)
 
         # else display exceptionite error page
-        handler = Handler(exception)
-
-        if self.options.get("handlers.stack_overflow"):
-            handler.integrate(StackOverflowIntegration())
-        if self.options.get("handlers.solutions"):
-            handler.integrate(SolutionsIntegration())
-
-        handler.context(
-            {
-                "WSGI": {
-                    "Path": request.get_path(),
-                    "Input": request.input_bag.all_as_values() or None,
-                    # 'Parameters': request.url_params,
-                    "Request Method": request.get_request_method(),
-                },
-                "Headers": request.header_bag.to_dict(),
-            }
-        )
-        if hasattr(exception, "get_status"):
-            status = exception.get_status()
-        else:
-            status = 500
-        return response.view(handler.render(), status=status)
+        exceptionite.start(exception)
+        exceptionite.render("terminal")
+        return response.view(exceptionite.render("web"), status=500)

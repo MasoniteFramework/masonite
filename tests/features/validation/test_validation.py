@@ -1753,3 +1753,17 @@ class TestDictValidation(unittest.TestCase):
             "The email is required because one in first_name,nick_name is present.",
             validate.get("email"),
         )
+
+    def test_required_with_nested_validation(self):
+        # with one argument
+        validate = Validator().validate(
+            {"key": [{"foo": "bar"}]}, required(["key.*.foo"])
+        )
+        self.assertEqual(len(validate), 0)
+        validate = Validator().validate(
+            {"key": [{"foo": "bar"}, {"foo1": "bar1"}]}, required(["key.*.foo"])
+        )
+        self.assertEqual(len(validate), 1)
+        self.assertEqual(
+            validate.all()["key.*.foo"], ["The key.*.foo field is required."]
+        )

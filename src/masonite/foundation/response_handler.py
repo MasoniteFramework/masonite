@@ -1,4 +1,14 @@
-def response_handler(environ, start_response):
+from typing import Callable, List, Tuple, Iterator, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .Application import Application
+    from ..request import Request
+    from ..response import Response
+
+ResponseHandler = Callable[[str, List[Tuple]], None]
+
+
+def response_handler(environ: dict, start_response: ResponseHandler) -> Iterator:
     """The WSGI Application Server.
 
     Arguments:
@@ -34,8 +44,8 @@ def response_handler(environ, start_response):
     to return a 302 redirection to where ever the user would like go
     to next.
     """
-
-    _, response = application.make("request"), application.make("response")
+    _ = application.make("request")
+    response: "Response" = application.make("response")
 
     start_response(
         response.get_status_code(),
@@ -49,16 +59,13 @@ def response_handler(environ, start_response):
     return iter([response.get_response_content()])
 
 
-def testcase_handler(application, environ, start_response, exception_handling=True):
-    """The WSGI Application Server.
-
-    Arguments:
-        environ {dict} -- The WSGI environ dictionary
-        start_response {WSGI callable}
-
-    Returns:
-        WSGI Response
-    """
+def testcase_handler(
+    application: "Application",
+    environ: dict,
+    start_response: ResponseHandler,
+    exception_handling: bool = True,
+) -> Tuple["Request", "Response"]:
+    """The WSGI Application Server."""
     from wsgi import application
 
     application.bind("environ", environ)

@@ -42,7 +42,7 @@ class InputBag:
                     pass
                 else:
                     for name, value in json.loads(request_body or "{}").items():
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
             elif "application/x-www-form-urlencoded" in environ.get("CONTENT_TYPE", ""):
                 try:
@@ -56,11 +56,6 @@ class InputBag:
                 self.post_data = self.parse_dict(parsed_request_body)
 
             elif "multipart/form-data" in environ.get("CONTENT_TYPE", ""):
-                try:
-                    request_body_size = int(environ.get("CONTENT_LENGTH", 0))
-                except (ValueError):
-                    request_body_size = 0
-
                 fields = cgi.FieldStorage(
                     fp=environ["wsgi.input"],
                     environ=environ,
@@ -69,12 +64,21 @@ class InputBag:
 
                 for name in fields:
                     value = fields.getvalue(name)
-                    if isinstance(value, bytes):
+                    if isinstance(value, list):
+                        files = []
+                        k = 0
+                        for item in value:
+                            files.append(
+                                UploadedFile(fields[name][k].filename, value[k])
+                            )
+                            k += 1
+                        self.post_data.update({name: files})
+                    elif isinstance(value, bytes):
                         self.post_data.update(
-                            {name: UploadedFile(fields[name].filename, value)}
+                            {name: [UploadedFile(fields[name].filename, value)]}
                         )
                     else:
-                        self.post_data.update({name: Input(name, value)})
+                        self.post_data.update({name: value})
 
                 self.post_data = self.parse_dict(self.post_data)
             else:
@@ -90,11 +94,17 @@ class InputBag:
                     )
 
     def get(self, name, default=None, clean=True, quote=True):
+        if isinstance(name, str) and name.endswith("[]"):
+            default = []
+
         input = data_get(self.all(), name, default)
 
         if isinstance(input, (str,)):
             return input
         if isinstance(input, list) and len(input) == 1:
+            if name.endswith("[]"):
+                return input
+
             return input[0]
         elif isinstance(input, (dict,)):
             rendered = {}
@@ -105,7 +115,34 @@ class InputBag:
             return rendered
         elif hasattr(input, "value"):
             if isinstance(input.value, list) and len(input.value) == 1:
+                """
                 return input.value[0]
+
+                    This line is converting request input list to object if the input is a list having only one item
+
+                    Problem:
+                        1. This will make validations and request input confusing as a developer is sending array where as
+                            they will get dict in controller, this is actually a bug rather than a feature
+                        2. In case of nested validations, this will make the validation to fail
+                            Example:
+                                input => {
+                                    "test": [
+                                        {
+                                            "foo": "bar"
+                                        }
+                                    ],
+                                    "test_1": {
+                                        "foo": "bar"
+                                    }
+                                }
+                                validation => validate.required(["test.*.foo"])
+
+                            In above example `test` and `test_1` are not same but this code `input.value[0]` will make them treat as same
+
+                    Solution:
+                        return the input value without removing anything...
+                """
+                return input.value
             elif isinstance(input.value, dict):
                 return input.value
             return input.value
@@ -164,9 +201,9 @@ class InputBag:
                     else:
                         d.setdefault(gd["name"], {})[gd["value"]] = value[0]
                 else:
-                    try:
+                    if isinstance(value, (list, tuple)):
                         d.update({name: value[0]})
-                    except TypeError:
+                    else:
                         d.update({name: value})
 
         new_dict = {}

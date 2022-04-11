@@ -18,5 +18,4 @@ class MailDriver(BaseDriver):
         if not mailable._to:
             recipients = notifiable.route_notification_for("mail")
             mailable = mailable.to(recipients)
-        # TODO: allow changing driver how ?????
-        return self.application.make("mail").mailable(mailable).send(driver="terminal")
+        return self.application.make("mail").mailable(mailable).send()

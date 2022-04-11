@@ -174,9 +174,7 @@ class ProjectCommand(Command):
                 )
             else:
                 self.info(
-                    "You now will have to go into your new '{}' directory and run `start install` to complete the installation".format(
-                        target
-                    )
+                    f"You now will have to go into your new {target} directory and run `project install` to complete the installation"
                 )
 
             return

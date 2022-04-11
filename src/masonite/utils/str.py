@@ -1,6 +1,7 @@
 """String generators and helpers"""
 import random
 import string
+from urllib import parse
 
 
 def random_string(length=4):
@@ -56,3 +57,20 @@ def removesuffix(string, suffix):
         return string[: -len(suffix)]
     else:
         return string
+
+
+def add_query_params(url: str, query_params: dict) -> str:
+    """Add query params dict to a given url (which can already contain some query parameters)."""
+    path_result = parse.urlsplit(url)
+
+    base_url = path_result.path
+
+    # parse existing query parameters if any
+    existing_query_params = dict(parse.parse_qsl(path_result.query))
+    all_query_params = {**existing_query_params, **query_params}
+
+    # add query parameters to url if any
+    if all_query_params:
+        base_url += "?" + parse.urlencode(all_query_params)
+
+    return base_url

@@ -14,15 +14,24 @@ class SomeClass:
 class TestOptionalHelper(TestCase):
     def test_optional_with_existing(self):
         obj = SomeClass()
-        self.assertEqual(optional(obj).my_attr, 3)
-        self.assertEqual(optional(obj).my_method(), 4)
+        assert optional(obj).my_attr == 3
+        assert optional(obj).my_method() == 4
 
     def test_optional_with_undefined(self):
         obj = SomeClass()
-        self.assertEqual(optional(obj).non_existing_attr, None)
-        self.assertEqual(optional(obj).non_existing_method(), None)
+        assert optional(obj).non_existing_attr is None
+
+        # not beautiful but we can do this to handle calling methods
+        assert optional(optional(obj).non_existing_method)() is None
+
+    def test_optional_with_undefined_on_none(self):
+        obj = None
+        assert optional(obj).non_existing_attr is None
 
     def test_optional_with_default(self):
         obj = SomeClass()
-        self.assertEqual(optional(obj, default=0).non_existing_attr, 0)
-        self.assertEqual(optional(obj, default=0).non_existing_method(), 0)
+        assert optional(obj, 0).non_existing_attr == 0
+
+    def test_optional_with_callable_default(self):
+        obj = SomeClass()
+        assert optional(obj, lambda the_obj: "a").non_existing_attr == "a"

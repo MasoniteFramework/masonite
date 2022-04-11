@@ -1,5 +1,5 @@
 import re
-import os
+from urllib import parse
 
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
@@ -72,7 +72,8 @@ class HTTPRoute:
         self._domain = subdomain
         return self
 
-    def to_url(self, parameters={}):
+    def to_url(self, parameters: dict = {}, query_params: dict = {}) -> str:
+        """Transform route to a URL string with the given url and query parameters."""
 
         # Split the url into a list
         split_url = self.url.split("/")
@@ -107,6 +108,9 @@ class HTTPRoute:
         if "//" in compiled_url:
             compiled_url = compiled_url.replace("//", "/")
 
+        # Add eventual query parameters
+        if query_params:
+            compiled_url += "?" + parse.urlencode(query_params)
         return compiled_url
 
     def _find_controller(self, controller):
@@ -206,9 +210,32 @@ class HTTPRoute:
                 self.list_middleware.append(arg)
         return self
 
+    def prepend_middleware(self, *args):
+        """Load a list of middleware to run.
+
+        Returns:
+            self
+        """
+        for arg in args:
+            if arg and arg not in self.list_middleware:
+                self.list_middleware.insert(0, arg)
+        return self
+
     def get_middlewares(self):
         """Get all the middlewares to run for this route."""
-        return list(set(self.list_middleware) - set(self.excluded_middlewares))
+        middlewares = self.list_middleware
+
+        for middleware in self.excluded_middlewares:
+            if middleware in middlewares:
+                middlewares.remove(middleware)
+
+        return middlewares
+
+    def set_middleware(self, middleware):
+        """Get all the middlewares to run for this route."""
+        self.list_middleware = middleware
+
+        return self
 
     def exclude_middleware(self, *args):
         """Remove a list of middleware for this route. It can be useful when

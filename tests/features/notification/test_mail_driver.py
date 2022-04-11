@@ -1,7 +1,9 @@
+from masoniteorm.models import Model
+
 from tests import TestCase
 from src.masonite.notification import Notification, Notifiable
 from src.masonite.mail import Mailable
-from masoniteorm.models import Model
+from src.masonite.facades import Config
 
 
 class User(Model, Notifiable):
@@ -37,10 +39,30 @@ class WelcomeNotification(Notification):
         return ["mail"]
 
 
+class CustomNotification(Notification, Mailable):
+    def to_mail(self, notifiable):
+        return (
+            self.subject("Masonite 4")
+            .from_("joe@masoniteproject.com")
+            .text("Hello from Masonite!")
+            .driver("mailgun")
+        )
+
+    def via(self, notifiable):
+        return ["mail"]
+
+
 class TestMailDriver(TestCase):
     def setUp(self):
         super().setUp()
         self.notification = self.application.make("notification")
+        # use terminal driver as email driver for testing
+        self.default_driver = Config.get("mail.drivers.default")
+        Config.set("mail.drivers.default", "terminal")
+
+    def tearDown(self):
+        super().tearDown()
+        Config.set("mail.drivers.default", self.default_driver)
 
     def test_send_to_anonymous(self):
         self.notification.route("mail", "test@mail.com").send(WelcomeNotification())
@@ -49,11 +71,8 @@ class TestMailDriver(TestCase):
         user = User.find(1)
         user.notify(WelcomeUserNotification())
 
-    def test_send_and_override_driver(self):
-        # TODO: but I don't really know how to proceed as driver can't be defined anymore
-        # in the Mailable
-        # Some API solutions:
-        # self.notification.route("mail", "test@mail.com").send(WelcomeNotification()).driver("log")
-        # self.notification.route("mail", "test@mail.com").send(WelcomeNotification(), driver="log")
-        # self.notification.route("mail", "test@mail.com", driver="log").send(WelcomeNotification())
-        pass
+    def test_mail_driver_can_be_overriden_in_notification(self):
+        mail = self.fake("mail")
+        self.notification.route("mail", "test@mail.com").send(CustomNotification())
+        mail.seeDriverWas("mailgun")
+        self.restore("mail")

@@ -1,10 +1,19 @@
 import json
 import io
 import os
+import sys
 import pytest
 import unittest
 import pendulum
 from contextlib import contextmanager
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from ..foundation import Application
+    from ..routes import HTTPRoute
+    from .HttpTestResponse import HttpTestResponse
+    from pendulum import DateTime
+    from masoniteorm.models import Model
 
 from ..routes import Route
 from ..foundation.response_handler import testcase_handler
@@ -22,21 +31,22 @@ class TestCase(unittest.TestCase):
     routes_to_restore = ()
 
     def setUp(self):
+        """Define code that should be run before each unit tests."""
         LoadEnvironment("testing")
         from wsgi import application
 
-        self.application = application
+        self.application: "Application" = application
         self.original_class_mocks = {}
         self._test_cookies = {}
         self._test_headers = {}
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
-        self._exception_handling = False
 
         self._console_out = None
         self._console_err = None
 
+        self.withoutExceptionsHandling()
         # boot providers as they won't not be loaded if the test is not doing a request
         self.application.bind("environ", generate_wsgi())
         try:
@@ -53,8 +63,9 @@ class TestCase(unittest.TestCase):
         self.routes_to_restore = set(self.application.make("router").routes)
 
     def tearDown(self):
-        # be sure to reset this between each test
-        self._exception_handling = False
+        """Define code that should be run after each unit tests."""
+        self.withoutCsrf()
+        self.withoutExceptionsHandling()
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
@@ -128,62 +139,72 @@ class TestCase(unittest.TestCase):
         self.assertIn(error, self._console_err)
         return self
 
-    def withExceptionsHandling(self):
-        """Enable for the duration of a test the handling of exceptions through the exception
+    def withExceptionsHandling(self) -> None:
+        """Enable for the duration of a test the handling of exceptions through Masonite exception
         handler."""
         self._exception_handling = True
 
-    def withoutExceptionsHandling(self):
-        """Disable handling of exceptions."""
+    def withoutExceptionsHandling(self) -> None:
+        """Disable handling of exceptions with Masonite exception handler. Exceptions will be
+        raised directly in the tests. This is the default behaviour."""
         self._exception_handling = False
 
-    def setRoutes(self, *routes):
+    def setRoutes(self, *routes: "HTTPRoute") -> None:
         """Set all routes of router during lifetime of a test."""
         self.application.make("router").set(Route.group(*routes, middleware=["web"]))
         return self
 
-    def addRoutes(self, *routes):
+    def addRoutes(self, *routes: "HTTPRoute") -> None:
         """Add routes to router during lifetime of a test."""
         self.application.make("router").add(Route.group(*routes, middleware=["web"]))
         return self
 
-    def withCsrf(self):
+    def withCsrf(self) -> None:
+        """Enable CSRF verification during lifetime of a test"""
         self._csrf = True
         return self
 
-    def withoutCsrf(self):
+    def withoutCsrf(self) -> None:
+        """Disable CSRF verification during lifetime of a test. This is the default behaviour."""
         self._csrf = False
         return self
 
-    def get(self, route, data=None):
+    def get(self, route: str, data=None):
+        """Make a GET request route"""
         return self.fetch(route, data, method="GET")
 
-    def post(self, route, data=None):
+    def post(self, route: str, data=None):
         return self.fetch(route, data, method="POST")
 
-    def put(self, route, data=None):
+    def put(self, route: str, data=None):
         return self.fetch(route, data, method="PUT")
 
-    def patch(self, route, data=None):
+    def patch(self, route: str, data=None):
         return self.fetch(route, data, method="PATCH")
 
     def make_request(
-        self, data={}, path="/", query_string="application=Masonite", method="GET"
-    ):
+        self,
+        data: dict = {},
+        path: str = "/",
+        query_string: str = "application=Masonite",
+        method: str = "GET",
+    ) -> "Request":
         request = Request(generate_wsgi(data, path, query_string, method))
         request.app = self.application
 
         self.application.bind("request", request)
         return request
 
-    def make_response(self, data={}):
-        request = Response(generate_wsgi(data))
-        request.app = self.application
+    def make_response(self, data: dict = {}) -> "Response":
+        response = Response(generate_wsgi(data))
+        response.app = self.application
 
-        self.application.bind("response", request)
-        return request
+        self.application.bind("response", response)
+        return response
 
-    def fetch(self, path, data=None, method=None):
+    def fetch(
+        self, path: str, data: dict = None, method: str = None
+    ) -> "HttpTestResponse":
         if data is None:
             data = {}
         if not self._csrf:
@@ -240,28 +261,44 @@ class TestCase(unittest.TestCase):
         pass
 
     @contextmanager
-    def debugMode(self, enabled=True):
+    def captureOutput(self):
+        """Capture standard output (stdout/stderr) of a Masonite command."""
+        new_out, new_err = io.StringIO(), io.StringIO()
+        # save normal system output
+        old_out, old_err = sys.stdout, sys.stderr
+        try:
+            sys.stdout, sys.stderr = new_out, new_err
+            yield sys.stdout
+        finally:
+            # restore system output
+            sys.stdout, sys.stderr = old_out, old_err
+
+    @contextmanager
+    def debugMode(self, enabled: bool = True):
+        """Set application debug mode."""
         old_debug_mode = Config.get("application.debug")
         Config.set("application.debug", enabled)
         yield
         Config.set("application.debug", old_debug_mode)
 
     @contextmanager
-    def env(self, environment):
+    def env(self, environment: str):
+        """Set application environment."""
         old_env = os.getenv("APP_ENV", "")
         os.environ["APP_ENV"] = environment
         yield
         os.environ["APP_ENV"] = old_env
 
-    def craft(self, command, arguments_str=""):
+    def craft(self, command: str, arguments_str: str = "") -> "TestCommand":
         """Run a given command in tests and obtain a TestCommand instance to assert command
         outputs.
-        self.craft("controller", "Welcome").assertSuccess()
+        Example:
+            self.craft("controller", "Welcome").assertSuccess()
         """
         return TestCommand(self.application).run(command, arguments_str)
 
-    def fake(self, binding):
-        """Mock a service with its mocked implementation or with a given custom
+    def fake(self, binding: "str") -> Any:
+        """Mock a service in the container with its mocked implementation or with a given custom
         one."""
 
         # save original first
@@ -275,73 +312,76 @@ class TestCase(unittest.TestCase):
         self.application.bind(binding, mock)
         return mock
 
-    def withCookies(self, cookies_dict):
+    def withCookies(self, cookies_dict: dict) -> "TestCase":
+        """Add cookies to the request during the lifetime of the test."""
         self._test_cookies = cookies_dict
         return self
 
-    def withHeaders(self, headers_dict):
+    def withHeaders(self, headers_dict: dict) -> "TestCase":
+        """Add headers to the request during the lifetime of the test."""
         self._test_headers = headers_dict
         return self
 
-    def actingAs(self, user):
+    def actingAs(self, user) -> None:
+        """Connect as the given user during the lifetime of the test."""
         self.make_request()
         self.application.make("auth").guard("web").login_by_id(
             user.get_primary_key_value()
         )
 
-    def restore(self, binding):
+    def restore(self, binding: str) -> None:
         """Restore the service previously mocked to the original one."""
         original = self.original_class_mocks.get(binding)
         self.application.bind(binding, original)
 
-    def fakeTime(self, pendulum_datetime):
+    def fakeTime(self, pendulum_datetime: "DateTime") -> None:
         """Set a given pendulum instance to be returned when a "now" (or "today", "tomorrow",
         "yesterday") instance is created. It's really useful during tests to check
         timestamps logic."""
         pendulum.set_test_now(pendulum_datetime)
 
-    def fakeTimeTomorrow(self):
+    def fakeTimeTomorrow(self) -> None:
         """Set the mocked time as tomorrow."""
         self.fakeTime(pendulum.tomorrow())
 
-    def fakeTimeYesterday(self):
+    def fakeTimeYesterday(self) -> None:
         """Set the mocked time as yesterday."""
         self.fakeTime(pendulum.yesterday())
 
-    def fakeTimeInFuture(self, offset, unit="days"):
+    def fakeTimeInFuture(self, offset: int, unit: str = "days") -> None:
         """Set the mocked time as an offset of days in the future. Unit can be specified
         among pendulum units: seconds, minutes, hours, days, weeks, months, years."""
         self.restoreTime()
         datetime = pendulum.now().add(**{unit: offset})
         self.fakeTime(datetime)
 
-    def fakeTimeInPast(self, offset, unit="days"):
+    def fakeTimeInPast(self, offset: int, unit: str = "days") -> None:
         """Set the mocked time as an offset of days in the past. Unit can be specified
         among pendulum units: seconds, minutes, hours, days, weeks, months, years."""
         self.restoreTime()
         datetime = pendulum.now().subtract(**{unit: offset})
         self.fakeTime(datetime)
 
-    def restoreTime(self):
+    def restoreTime(self) -> None:
         """Restore time to correct one, so that pendulum new "now" instance are corrects.
         This method will be typically called in tearDown() method of a test class."""
         # this will clear the mock
         pendulum.set_test_now()
 
-    def assertDatabaseCount(self, table, count):
+    def assertDatabaseCount(self, table: str, count: int) -> None:
         self.assertEqual(self.application.make("builder").table(table).count(), count)
 
-    def assertDatabaseHas(self, table, query_dict):
+    def assertDatabaseHas(self, table: str, query_dict: dict) -> None:
         self.assertGreaterEqual(
             self.application.make("builder").table(table).where(query_dict).count(), 1
         )
 
-    def assertDatabaseMissing(self, table, query_dict):
+    def assertDatabaseMissing(self, table: str, query_dict: dict) -> None:
         self.assertEqual(
             self.application.make("builder").table(table).where(query_dict).count(), 0
         )
 
-    def assertDeleted(self, instance):
+    def assertDeleted(self, instance: "Model") -> None:
         self.assertFalse(
             self.application.make("builder")
             .table(instance.get_table_name())
@@ -349,7 +389,7 @@ class TestCase(unittest.TestCase):
             .get()
         )
 
-    def assertSoftDeleted(self, instance):
+    def assertSoftDeleted(self, instance: "Model") -> None:
         deleted_at_column = instance.get_deleted_at_column()
         self.assertTrue(
             self.application.make("builder")

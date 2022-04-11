@@ -1,5 +1,7 @@
 from os.path import join
 from typing import TYPE_CHECKING
+
+from ..utils.str import add_query_params
 from ..configuration import config
 
 if TYPE_CHECKING:
@@ -12,11 +14,17 @@ class UrlsHelper:
     def __init__(self, app: "Application"):
         self.app = app
 
-    def url(self, path: str = "") -> str:
+    def url(self, path: str = "", query_params: dict = {}) -> str:
         """Generates a fully qualified url to the given path. If no path is given this will return
-        the base url domain."""
+        the base url domain. A query parameters dictionary can be provided to add query parameters
+        to the url."""
         # ensure that no slash is prefixing the relative path
         relative_path = path.lstrip("/")
+
+        # add query params if any
+        relative_path = add_query_params(relative_path, query_params)
+
+        # fully qualify the url
         return join(config("application.app_url"), relative_path)
 
     def asset(self, alias: str, filename: str) -> str:
@@ -38,15 +46,17 @@ class UrlsHelper:
                 location = list(location.values())[0]
         return join(location, filename)
 
-    def route(self, name: str, params: dict = {}, absolute: bool = True) -> str:
+    def route(self, name: str, params: dict = {}, absolute: bool = True, query_params: dict = {}) -> str:
         """Generates a fully qualified URL to the given route name.
         Example:
             route("users.home") : http://masonite.app/dashboard/
             route("users.profile", {"id": 1}) : http://masonite.app/users/1/profile/
+            route("users.profile", {"id": 1}, query_params={"section": "infos"}) :
+                http://masonite.app/users/1/profile/?section=info
             route("users.profile", {"id": 1}, absolute=False) : /users/1/profile/
         """
 
-        relative_url = self.app.make("router").route(name, params)
+        relative_url = self.app.make("router").route(name, params, query_params)
         if absolute:
             return self.url(relative_url)
         else:

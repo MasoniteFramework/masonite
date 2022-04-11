@@ -12,6 +12,7 @@ from ..routes.Router import Router
 from ..exceptions import ResponseError, InvalidHTTPStatusCode
 from ..headers import HeaderBag, Header
 from ..utils.http import HTTP_STATUS_CODES
+from ..utils.str import add_query_params
 from ..cookies import CookieJar
 
 
@@ -165,6 +166,7 @@ class Response:
         params: dict = {},
         url: str = None,
         status: int = 302,
+        query_params={}
     ) -> "Response":
         """Set the response as a redirect response. The redirection location can be defined
         with the location URL or with a route name. If a route name is used, route params can
@@ -173,20 +175,22 @@ class Response:
         self.status(status)
 
         if location:
+            location = add_query_params(location, query_params)
             self.header_bag.add(Header("Location", location))
         elif name:
-            url = self._get_url_from_route_name(name, params)
+            url = self._get_url_from_route_name(name, params, query_params)
             self.header_bag.add(Header("Location", url))
         elif url:
+            url = add_query_params(url, query_params)
             self.header_bag.add(Header("Location", url))
         self.view("Redirecting ...")
         return self
 
-    def _get_url_from_route_name(self, name: str, params: dict = {}) -> str:
+    def _get_url_from_route_name(self, name: str, params: dict = {}, query_params: dict ={}) -> str:
         route = self.app.make("router").find_by_name(name)
         if not route:
             raise ValueError(f"Route with the name '{name}' not found.")
-        return Router.compile_to_url(route.url, params)
+        return Router.compile_to_url(route.url, params, query_params)
 
     def to_bytes(self) -> "bytes":
         """Converts the response to bytes."""

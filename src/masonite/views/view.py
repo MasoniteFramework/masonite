@@ -1,13 +1,22 @@
 """View Module."""
 from collections import defaultdict
 from os.path import split, exists
-from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
+from jinja2 import (
+    ChoiceLoader,
+    Environment,
+    PackageLoader,
+    select_autoescape,
+    BaseLoader,
+)
 from jinja2.exceptions import TemplateNotFound
-
+from typing import TYPE_CHECKING, Callable, Any
 from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
 from ..validation import MessageBag
+
+if TYPE_CHECKING:
+    from ..foundation import Application
 
 
 def path_to_package(path, separator="/"):
@@ -24,7 +33,7 @@ class View:
     separator = "/"
     extension = ".html"
 
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
 
         # specific to given view rendering
@@ -39,18 +48,8 @@ class View:
         self._shared = {}
         self._tests = {}
 
-    def render(self, template, dictionary={}):
-        """Get the string contents of the view.
-
-        Arguments:
-            template {string} -- Name of the template you want to render.
-
-        Keyword Arguments:
-            dictionary {dict} -- Data that you want to pass into your view. (default: {{}})
-
-        Returns:
-            self
-        """
+    def render(self, template: str, dictionary: dict = {}) -> "View":
+        """Render the given template name with the given context as string."""
         if not isinstance(dictionary, dict):
             raise ViewException(
                 "Second parameter to render method needs to be a dictionary, {} passed.".format(
@@ -74,7 +73,8 @@ class View:
 
         return self
 
-    def get_content(self):
+    def get_content(self) -> str:
+        """Get the rendered content as string."""
         return self.rendered_template
 
     def _render(self):
@@ -119,16 +119,8 @@ class View:
                 # Add a slash to symbolize going into a deeper directory structure
                 compiled_string += "/"
 
-    def composer(self, composer_name, dictionary):
-        """Update composer dictionary.
-
-        Arguments:
-            composer_name {string} -- Key to bind dictionary of data to.
-            dictionary {dict} -- Dictionary of data to add to controller.
-
-        Returns:
-            self
-        """
+    def composer(self, composer_name: str, dictionary: dict) -> "View":
+        """Add/Update composer with the given name and data."""
         if isinstance(composer_name, str):
             self.composers[composer_name] = dictionary
 
@@ -138,27 +130,13 @@ class View:
 
         return self
 
-    def share(self, dictionary):
-        """Share data to all templates.
-
-        Arguments:
-            dictionary {dict} -- Dictionary of key value pairs to add to all views.
-
-        Returns:
-            self
-        """
+    def share(self, dictionary: dict) -> "View":
+        """Share data to all templates."""
         self._shared.update(dictionary)
         return self
 
-    def exists(self, template):
-        """Check if a template exists.
-
-        Arguments:
-            template {string} -- Name of the template to check for.
-
-        Returns:
-            bool
-        """
+    def exists(self, template: str) -> bool:
+        """Check if a template with the given name exists."""
         self.load_template(template)
 
         try:
@@ -167,22 +145,19 @@ class View:
         except TemplateNotFound:
             return False
 
-    def add_location(self, template_location, loader=PackageLoader):
-        """Add locations from which view templates can be loaded.
-
-        Arguments:
-            template_location {str} -- Directory location
-
-        Keyword Arguments:
-            loader {jinja2.Loader} -- Type of Jinja2 loader to use. (default: {jinja2.PackageLoader})
-        """
+    def add_location(
+        self, template_location: str, loader: "BaseLoader" = PackageLoader
+    ):
+        """Add location directory from which view templates can be loaded. The Jinja2 loader type
+        can be specified."""
         if loader == PackageLoader:
             package_name, package_path = path_to_package(template_location)
             self.loaders.append(loader(package_name, package_path))
         else:
             self.loaders.append(loader(template_location))
 
-    def add_namespaced_location(self, namespace, template_location):
+    def add_namespaced_location(self, namespace: str, template_location: str):
+        """Add namespaced location directory from which view templates can be loaded."""
         # if views have been published, add the published view directory as a location
         published_path = views_path(f"vendor/{namespace}/", absolute=False)
         if exists(published_path):
@@ -192,28 +167,20 @@ class View:
         # put this one in 2nd as project views must be used first to be able to override package views
         self.namespaces[namespace].append(template_location)
 
-    def add_from_package(self, package_name, path_in_package):
+    def add_from_package(self, package_name: str, path_in_package: str):
         self.environments.append(PackageLoader(package_name, path_in_package))
 
-    def filter(self, name, function):
-        """Use to add filters to views.
-
-        Arguments:
-            name {string} -- Key to bind the filter to.
-            function {object} -- Function used for the template filter.
-        """
+    def filter(self, name: str, function: Callable):
+        """Add filter functions to views with the given name."""
         self._filters.update({name: function})
 
-    def add_extension(self, extension):
+    def add_extension(self, extension: str) -> "View":
+        """Register Jinja2 extension to views."""
         self._jinja_extensions.append(extension)
         return self
 
-    def load_template(self, template):
-        """Private method for loading all the locations into the current environment.
-
-        Arguments:
-            template {string} -- Template to load environment from.
-        """
+    def load_template(self, template: str):
+        """Private method for loading all the locations into the current environment."""
         self.template = template
         # transform given template path into a real file path with the configured extension
         self.filename = (
@@ -263,20 +230,24 @@ class View:
         self.env.filters.update(self._filters)
 
     def get_current_loaders(self):
+        """Get all enabled Jinja2 loaders."""
         if self.env:
             return self.env.loader.loaders
 
-    def set_separator(self, token):
+    def set_separator(self, token: str) -> "View":
+        """Change separator for view names (default is /)."""
         self.separator = token
         return self
 
-    def set_file_extension(self, extension):
+    def set_file_extension(self, extension: str) -> "View":
+        """Change file view extension (default is .html)."""
         self.extension = extension
         return self
 
-    def get_response(self):
+    def get_response(self) -> str:
+        """Get the rendered content as string."""
         return self.rendered_template
 
-    def test(self, key, obj):
+    def test(self, key: str, obj: Any) -> "View":
         self._tests.update({key: obj})
         return self

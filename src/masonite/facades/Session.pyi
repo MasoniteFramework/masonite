@@ -1,0 +1,59 @@
+from typing import Any
+
+class Session:
+    """Session facade."""
+
+    def add_driver(name: str, driver: Any) -> None:
+        """Register a new session driver with the given name."""
+        ...
+    def driver(driver: str) -> Any:
+        """Get a registered session driver with the given name."""
+        ...
+    def set_configuration(config: dict) -> "Session":
+        """Set session driver options."""
+        ...
+    def get_driver(name: str = None) -> Any:
+        """Get the default session driver or the driver with the given name."""
+        ...
+    def get_config_options(driver: str = None) -> dict:
+        """Get the options of the default session driver or of the driver with the given name."""
+        ...
+    def start(driver: str = None) -> "Session":
+        """Initialize session."""
+        ...
+    def get_data(self) -> dict:
+        """Get all session data."""
+        ...
+    def save(driver: str = None) -> None:
+        """Save session data for the default session driver or the given named driver."""
+        ...
+    def set(key: str, value: Any) -> None:
+        """Save value in default session."""
+        ...
+    def increment(key: str, count: int = 1) -> None:
+        """Increment session key with given count."""
+        ...
+    def decrement(key: str, count: int = 1) -> None:
+        """Decrement session key with given count."""
+        ...
+    def has(key: str) -> bool:
+        """Check if key is present in default session."""
+        ...
+    def get(key: str) -> Any:
+        """Get value of the given key in default session."""
+        ...
+    def pull(key: str) -> Any:
+        """Get and remove value for the given key in session."""
+        ...
+    def flush(self) -> None:
+        """Delete all keys from session."""
+        ...
+    def delete(key: str) -> "None|Any":
+        """Delete the given key from session."""
+        ...
+    def flash(key: str, value: Any) -> None:
+        """Save temporary value into session."""
+        ...
+    def all(self) -> dict:
+        """Get all session data."""
+        ...

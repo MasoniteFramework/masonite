@@ -70,17 +70,6 @@ class TestMailable(TestCase):
             "Joseph Mancuso <idmann509@gmail.com>, <joe@masoniteproject.com>",
         )
 
-    def test_recipient(self):
-        to = Recipient("idmann509@gmail.com, joe@masoniteproject.com")
-        self.assertEqual(
-            to.header(), "<idmann509@gmail.com>, <joe@masoniteproject.com>"
-        )
-        to = Recipient("Joseph Mancuso <idmann509@gmail.com>, joe@masoniteproject.com")
-        self.assertEqual(
-            to.header(),
-            "Joseph Mancuso <idmann509@gmail.com>, <joe@masoniteproject.com>",
-        )
-
         to = Recipient(
             ["Joseph Mancuso <idmann509@gmail.com>", "joe@masoniteproject.com"]
         )

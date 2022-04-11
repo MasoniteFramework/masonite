@@ -19,7 +19,8 @@ class TestHttpRequests(TestCase):
     def test_find_or_fail_during_request(self):
         self.get("/test/users/1").assertOk()
         self.withExceptionsHandling()
-        self.get("/test/users/10").assertNotFound()
+        with self.debugMode(False):
+            self.get("/test/users/10").assertNotFound()
 
     def test_route_not_found_throw_exception_in_debug_mode(self):
         with self.debugMode():

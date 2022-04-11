@@ -8,6 +8,7 @@ from ..routes.Router import Router
 from ..exceptions import ResponseError, InvalidHTTPStatusCode
 from ..headers import HeaderBag, Header
 from ..utils.http import HTTP_STATUS_CODES
+from ..utils.str import add_query_params
 from ..cookies import CookieJar
 
 
@@ -191,7 +192,9 @@ class Response:
     def back(self):
         return self.redirect(url=self.app.make("request").get_back_path())
 
-    def redirect(self, location=None, name=None, params={}, url=None, status=302):
+    def redirect(
+        self, location=None, name=None, params={}, url=None, status=302, query_params={}
+    ):
         """Set the redirection on the server.
 
         Keyword Arguments:
@@ -205,20 +208,22 @@ class Response:
         self.status(status)
 
         if location:
+            location = add_query_params(location, query_params)
             self.header_bag.add(Header("Location", location))
         elif name:
-            url = self._get_url_from_route_name(name, params)
+            url = self._get_url_from_route_name(name, params, query_params)
             self.header_bag.add(Header("Location", url))
         elif url:
+            url = add_query_params(url, query_params)
             self.header_bag.add(Header("Location", url))
         self.view("Redirecting ...")
         return self
 
-    def _get_url_from_route_name(self, name, params={}):
+    def _get_url_from_route_name(self, name, params={}, query_params={}):
         route = self.app.make("router").find_by_name(name)
         if not route:
             raise ValueError(f"Route with the name '{name}' not found.")
-        return Router.compile_to_url(route.url, params)
+        return Router.compile_to_url(route.url, params, query_params)
 
     def to_bytes(self):
         """Converts the data to bytes so the WSGI server can handle it.

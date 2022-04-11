@@ -1,13 +1,17 @@
 from os.path import join
+from typing import TYPE_CHECKING
 
 from ..utils.str import add_query_params
 from ..configuration import config
+
+if TYPE_CHECKING:
+    from ..foundation import Application
 
 
 class UrlsHelper:
     """URLs helper provide handy functions to build URLs."""
 
-    def __init__(self, app):
+    def __init__(self, app: "Application"):
         self.app = app
 
     def url(self, path: str = "", query_params: dict = {}) -> str:
@@ -23,7 +27,7 @@ class UrlsHelper:
         # fully qualify the url
         return join(config("application.app_url"), relative_path)
 
-    def asset(self, alias, filename):
+    def asset(self, alias: str, filename: str) -> str:
         """Generates a fully qualified URL for the given asset using the given disk
         Example:
             asset("local", "avatar.jpg") (take first pat)
@@ -43,7 +47,11 @@ class UrlsHelper:
         return join(location, filename)
 
     def route(
-        self, name: str, params: dict = {}, absolute=True, query_params: dict = {}
+        self,
+        name: str,
+        params: dict = {},
+        absolute: bool = True,
+        query_params: dict = {},
     ) -> str:
         """Generates a fully qualified URL to the given route name.
         Example:

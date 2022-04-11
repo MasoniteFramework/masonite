@@ -1,5 +1,9 @@
 import os
 from cleo import Application as CommandApplication
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .Application import Application
 
 from .response_handler import response_handler
 from .. import __version__
@@ -37,19 +41,21 @@ from ..tests.TestResponseCapsule import TestResponseCapsule
 
 
 class Kernel:
-    def __init__(self, app):
+    def __init__(self, app: "Application"):
         self.application = app
 
-    def register(self):
+    def register(self) -> None:
+        """Register core Masonite features in the project."""
         self.load_environment()
         self.register_framework()
         self.register_commands()
         self.register_testing()
 
-    def load_environment(self):
+    def load_environment(self) -> None:
+        """Load environment variables into the application."""
         LoadEnvironment()
 
-    def register_framework(self):
+    def register_framework(self) -> None:
         self.application.set_response_handler(response_handler)
         self.application.use_storage_path(
             os.path.join(self.application.base_path, "storage")
@@ -61,7 +67,7 @@ class Kernel:
         )
         self.application.bind("loader", Loader())
 
-    def register_commands(self):
+    def register_commands(self) -> None:
         self.application.bind(
             "commands",
             CommandCapsule(CommandApplication("Masonite", __version__)).add(
@@ -89,6 +95,6 @@ class Kernel:
             ),
         )
 
-    def register_testing(self):
+    def register_testing(self) -> None:
         test_response = TestResponseCapsule(HttpTestResponse)
         self.application.bind("tests.response", test_response)

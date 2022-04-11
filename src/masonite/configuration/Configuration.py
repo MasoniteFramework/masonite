@@ -66,6 +66,9 @@ class Configuration:
     def has(self, path):
         return path in self._config
 
+    def all(self):
+        return self._config
+
     def get(self, path, default=None):
         try:
             config_at_path = self._config[path]

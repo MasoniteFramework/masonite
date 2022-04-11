@@ -1,23 +1,21 @@
+import re
+import tldextract
+from typing import TYPE_CHECKING, List, Any
+
 from ..cookies import CookieJar
 from ..headers import HeaderBag, Header
 from ..input import InputBag
-import re
-import tldextract
 from .validation import ValidatesRequest
 from ..authorization import AuthorizesRequest
 from ..sessions import old as old_helper
 
+if TYPE_CHECKING:
+    from ..routes import Route
+
 
 class Request(ValidatesRequest, AuthorizesRequest):
-    def __init__(self, environ):
-        """Request class constructor.
-
-        Initializes several properties and sets various methods
-        depending on the environtment.
-
-        Keyword Arguments:
-            environ {dictionary} -- WSGI environ dictionary. (default: {None})
-        """
+    def __init__(self, environ: dict):
+        """Initializes a request with the WSGI environment dictionary."""
         self.environ = environ
         self.cookie_jar = CookieJar()
         self.header_bag = HeaderBag()
@@ -30,57 +28,59 @@ class Request(ValidatesRequest, AuthorizesRequest):
         self.load()
 
     def load(self):
+        """Load request from environment."""
         self.cookie_jar.load(self.environ.get("HTTP_COOKIE", ""))
         self.header_bag.load(self.environ)
         self.input_bag.load(self.environ)
 
-    def load_params(self, params=None):
+    def load_params(self, params: dict = None):
+        """Load request parameters."""
         if not params:
             params = {}
 
         self.params.update(params)
 
-    def param(self, param, default=""):
+    def param(self, param: str, default: str = "") -> str:
+        """Get query string parameter from request."""
         return self.params.get(param, default)
 
-    def get_route(self):
+    def get_route(self) -> "Route":
+        """Get Route associated to request if any."""
         return self.route
 
-    def get_path(self):
+    def get_path(self) -> str:
+        """Get request path (read from PATH_INFO) environment variable without eventual query
+        string parameters."""
         return self.environ.get("PATH_INFO")
 
-    def get_path_with_query(self):
+    def get_path_with_query(self) -> str:
+        """Get request path (read from PATH_INFO) environment variable with eventual query
+        string parameters."""
         query_string = self.environ.get("QUERY_STRING")
         if query_string:
             return self.get_path() + "?" + query_string
         else:
             return self.get_path()
 
-    def get_back_path(self):
+    def get_back_path(self) -> str:
+        """Get previous request path if it has been defined as '__back' input."""
         return self.input("__back") or self.get_path_with_query()
 
-    def get_request_method(self):
+    def get_request_method(self) -> str:
+        """Get request method (read from REQUEST_METHOD environment variable)."""
         return self.environ.get("REQUEST_METHOD")
 
-    def input(self, name, default=""):
-        """Get a specific input value.
-
-        Arguments:
-            name {string} -- Key of the input data
-
-        Keyword Arguments:
-            default {string} -- Default value if input does not exist (default: {False})
-            clean {bool} -- Whether or not the return value should be
-                            cleaned (default: {True})
-
-        Returns:
-            string
-        """
+    def input(self, name: str, default: str = "") -> str:
+        """Get a specific request input value with the given name. If the value does not exist in
+        the request return the default value."""
         name = str(name)
 
         return self.input_bag.get(name, default=default)
 
-    def cookie(self, name, value=None, **options):
+    def cookie(self, name: str, value: str = None, **options) -> None:
+        """If no value provided, read the cookie value with the given name from the request. Else
+        create a cookie in the request with the given name and value.
+        Some options can be passed when creating cookie, refer to CookieJar class."""
         if value is None:
             cookie = self.cookie_jar.get(name)
             if not cookie:
@@ -89,11 +89,14 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
         return self.cookie_jar.add(name, value, **options)
 
-    def delete_cookie(self, name):
+    def delete_cookie(self, name: str) -> "Request":
+        """Delete cookie with the given name from the request."""
         self.cookie_jar.delete(name)
         return self
 
-    def header(self, name, value=None):
+    def header(self, name: str, value: str = None) -> "str|None":
+        """If no value provided, read the header value with the given name from the request. Else
+        add a header in the request with the given name and value."""
         if value is None:
             header = self.header_bag.get(name)
             if not header:
@@ -102,38 +105,43 @@ class Request(ValidatesRequest, AuthorizesRequest):
         else:
             return self.header_bag.add(Header(name, value))
 
-    def all(self):
+    def all(self) -> dict:
+        """Get all inputs from the request as a dictionary."""
         return self.input_bag.all_as_values()
 
-    def only(self, *inputs):
+    def only(self, *inputs: List[str]) -> dict:
+        """Get only the given inputs from the request as a dictionary."""
         return self.input_bag.only(*inputs)
 
-    def old(self, key):
+    def old(self, key: str):
+        """Get value from session for the given key."""
         return old_helper(key)
 
-    def is_not_safe(self):
-        """Check if the current request is not a get request.
-
-        Returns:
-            bool
-        """
+    def is_not_safe(self) -> bool:
+        """Check if the current request is considered 'safe', meaning that the request method is
+        GET, OPTIONS or HEAD."""
         if not self.get_request_method() in ("GET", "OPTIONS", "HEAD"):
             return True
 
         return False
 
-    def user(self):
+    def user(self) -> "None|Any":
+        """Get the current authenticated user if any. LoadUserMiddleware needs to be used for user
+        to be populated in request."""
         return self._user
 
-    def set_user(self, user):
+    def set_user(self, user: Any) -> "Request":
+        """Set the current authenticated user of the request."""
         self._user = user
         return self
 
-    def remove_user(self):
+    def remove_user(self) -> "Request":
+        """Log out user of the current request."""
         self._user = None
         return self
 
-    def contains(self, route):
+    def contains(self, route: str) -> bool:
+        """Check if current request path match the given URL."""
         if not route.startswith("/"):
             route = "/" + route
 
@@ -141,7 +149,8 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
         return regex.match(self.get_path())
 
-    def get_subdomain(self, exclude_www=True):
+    def get_subdomain(self, exclude_www: bool = True) -> "None|str":
+        """Get the request subdomain if subdomains are enabled."""
         if not self._subdomains_activated:
             return None
 
@@ -153,10 +162,12 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
         return url.subdomain
 
-    def get_host(self):
+    def get_host(self) -> str:
+        """Get the request host (from HTTP_HOST environment variable)."""
         return self.environ.get("HTTP_HOST")
 
     def activate_subdomains(self):
+        """Enable subdomains for this request."""
         self._subdomains_activated = True
         return self
 

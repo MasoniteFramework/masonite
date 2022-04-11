@@ -40,7 +40,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         "inflection>=0.3<0.4",
-        "exceptionite>=1.0<1.1",
+        "exceptionite>=2.0<3.0",
         "pendulum>=2,<3",
         "jinja2>=3.0.0<3.1",
         "cleo>=0.8.1,<0.9",
@@ -127,6 +127,8 @@ setup(
         "masonite.events.providers",
         "masonite.events",
         "masonite.exceptions",
+        "masonite.exceptions.exceptionite",
+        "masonite.exceptions.handlers",
         "masonite.facades",
         "masonite.filesystem.drivers",
         "masonite.filesystem.providers",

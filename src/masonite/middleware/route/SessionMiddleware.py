@@ -35,9 +35,6 @@ class SessionMiddleware(Middleware):
         #     Session.flash("errors", errors.all())
         else:
             Session.flash("errors", errors)
-        import pdb
-
-        pdb.set_trace()
         return Response
 
     def with_success(self, success):

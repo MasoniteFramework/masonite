@@ -16,6 +16,3 @@ class TestShareErrorsMiddleware(TestCase):
         response.assertRedirect()
 
         errors = self.application.make("view")._shared.get("errors")
-        import pdb
-
-        pdb.set_trace()

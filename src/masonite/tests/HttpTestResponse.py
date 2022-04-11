@@ -148,9 +148,6 @@ class HttpTestResponse:
         assert session.has(key)
         if value is not None:
             real_value = session.get(key)
-            import pdb
-
-            pdb.set_trace()
             assert (
                 real_value == value
             ), f"Value for {key} is {real_value}, expected {value}"

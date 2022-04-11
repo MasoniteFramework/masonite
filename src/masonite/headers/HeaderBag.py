@@ -32,7 +32,7 @@ class HeaderBag:
     def convert_name(self, name: str) -> str:
         return titleize(name.replace("HTTP_", "")).replace(" ", "-")
 
-    def convert_name_back(self, name:str) -> str:
+    def convert_name_back(self, name: str) -> str:
         """Convert a header name back into server header name.
 
         Example: X-Rate-Limited -> HTTP_X_RATE_LIMITED
@@ -46,7 +46,7 @@ class HeaderBag:
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
 
-    def to_dict(self, server_names:bool=False) -> dict:
+    def to_dict(self, server_names: bool = False) -> dict:
         dic = {}
         for name, header in self.bag.items():
             if server_names:

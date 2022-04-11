@@ -1,13 +1,18 @@
+from typing import TYPE_CHECKING, Type
+
 from ..facades import Loader
 from ..exceptions import RecordNotFoundException
 
+if TYPE_CHECKING:
+    from masoniteorm import Model
 
-def find_or_fail(model, pk):
+
+def find_or_fail(model: "str|Type[Model]", pk: int) -> "Type[Model]":
     """
-    Find model instance or raise RecordNotFoundException which will be rendered as HTTP 404 error.
+    Find model by primary key or raise RecordNotFoundException which will be rendered as
+    HTTP 404 error.
 
-    model: instance or string
-    pk: model primary key
+    model can be a model class or a the python model path relative to project root.
     """
     if isinstance(model, str):
         model_name = model.split(".")[-1]

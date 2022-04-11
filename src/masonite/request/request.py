@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class Request(ValidatesRequest, AuthorizesRequest):
     def __init__(self, environ: dict):
-        """ Initializes a request with the WSGI environment dictionary."""
+        """Initializes a request with the WSGI environment dictionary."""
         self.environ = environ
         self.cookie_jar = CookieJar()
         self.header_bag = HeaderBag()

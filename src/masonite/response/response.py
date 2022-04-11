@@ -166,7 +166,7 @@ class Response:
         params: dict = {},
         url: str = None,
         status: int = 302,
-        query_params={}
+        query_params={},
     ) -> "Response":
         """Set the response as a redirect response. The redirection location can be defined
         with the location URL or with a route name. If a route name is used, route params can
@@ -186,7 +186,9 @@ class Response:
         self.view("Redirecting ...")
         return self
 
-    def _get_url_from_route_name(self, name: str, params: dict = {}, query_params: dict ={}) -> str:
+    def _get_url_from_route_name(
+        self, name: str, params: dict = {}, query_params: dict = {}
+    ) -> str:
         route = self.app.make("router").find_by_name(name)
         if not route:
             raise ValueError(f"Route with the name '{name}' not found.")

@@ -46,7 +46,13 @@ class UrlsHelper:
                 location = list(location.values())[0]
         return join(location, filename)
 
-    def route(self, name: str, params: dict = {}, absolute: bool = True, query_params: dict = {}) -> str:
+    def route(
+        self,
+        name: str,
+        params: dict = {},
+        absolute: bool = True,
+        query_params: dict = {},
+    ) -> str:
         """Generates a fully qualified URL to the given route name.
         Example:
             route("users.home") : http://masonite.app/dashboard/

@@ -77,19 +77,23 @@ class TestExceptionHandler(TestCase):
         pass
 
     def test_raising_simple_exception_renders_500_error_template(self):
-        self.get("/simple").assertError().assertContains("Error 500")
+        with self.debugMode(False):
+            self.get("/simple").assertError().assertContains("Error 500")
 
     def test_raising_http_exception_renders_404_error_page(self):
-        self.get("/http").assertNotFound().assertContains("Page Not Found")
+        with self.debugMode(False):
+            self.get("/http").assertNotFound().assertContains("Page Not Found")
 
     def test_raising_exception_does_not_output_stack_trace_to_console(self):
-        self.get("/simple")
-        self.assertConsoleEmpty()
+        with self.debugMode(False):
+            self.get("/simple")
+            self.assertConsoleEmpty()
 
     @pytest.mark.skip("Waiting for PR #579 to be merged")
     def test_accepting_json_returns_500_error_payload(self):
-        self.withHeaders({"Accept": "application/json"}).get(
-            "/simple"
-        ).assertError().assertJson(
-            {"status": 500, "message": "GET /simple: division by zero"}
-        )
+        with self.debugMode(False):
+            self.withHeaders({"Accept": "application/json"}).get(
+                "/simple"
+            ).assertError().assertJson(
+                {"status": 500, "message": "GET /simple: division by zero"}
+            )

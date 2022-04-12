@@ -174,3 +174,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
     def ip(self) -> "str|None":
         """Return the request IP by processing the different headers setup in IpMiddleware."""
         return self._ip
+
+    def accepts_json(self) -> bool:
+        """Check if request Accept header contains application/json."""
+        return "application/json" in str(self.header("Accept"))

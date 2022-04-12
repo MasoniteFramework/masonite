@@ -35,31 +35,32 @@ class ExceptionHandler:
             f"masonite.exception.{exception.__class__.__name__}", exception
         )
 
+        # if an exception handler is registered for this exception, use it instead
         if self.application.has(f"{exception.__class__.__name__}Handler"):
             return self.application.make(
                 f"{exception.__class__.__name__}Handler"
             ).handle(exception)
 
-        exceptionite = self.get_driver("exceptionite")
-
-        if "application/json" in str(request.header("Accept")):
-            exceptionite.start(exception)
-            return response.view(exceptionite.render("json"), status=500)
-
+        # handle exception in production
         if not self.application.is_debug():
             # for HTTP error codes (500, 404, 403...) a specific page should be displayed
-            if hasattr(exception, "is_http_exception"):
-                return self.application.make("HttpExceptionHandler").handle(exception)
             # if a renderable exception is raised let it be displayed
-            if hasattr(exception, "get_response"):
-                return response.view(exception.get_response(), exception.get_status())
+            if hasattr(exception, "is_http_exception") or hasattr(
+                exception, "get_response"
+            ):
+                return self.application.make("HttpExceptionHandler").handle(exception)
 
-            # else fallback to an unknown exception should be displayed as a 500 error
+            # else fallback to an unknown exception that should be displayed as a 500 error
             exception.get_status = lambda: 500
             exception.get_response = lambda: str(exception) or "Unknown error"
             return self.application.make("HttpExceptionHandler").handle(exception)
 
-        # else display exceptionite error page
+        # handle exception in development mode with Exceptionite
+        exceptionite = self.get_driver("exceptionite")
         exceptionite.start(exception)
         exceptionite.render("terminal")
-        return response.view(exceptionite.render("web"), status=500)
+
+        if request.accepts_json():
+            return response.view(exceptionite.render("json"), status=500)
+        else:
+            return response.view(exceptionite.render("web"), status=500)

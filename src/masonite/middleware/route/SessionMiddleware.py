@@ -17,7 +17,6 @@ class SessionMiddleware(Middleware):
         return request
 
     def after(self, request, _):
-        Session.save()
         return request
 
     def with_input(self):

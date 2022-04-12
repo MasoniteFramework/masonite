@@ -111,3 +111,23 @@ class TestCookieSession(TestCase):
         self.assertEqual(session.get("key"), "test")
         self.assertEqual(session.get("key"), None)
         self.assertEqual(response.cookie("f_key"), None)
+
+    def test_flash_two_keys_does_not_duplicate_data(self):
+        request = self.make_request()
+        response = self.make_response()
+        session = self.application.make("session")
+        session.start()
+        session.flash("key", "test")
+        session.flash("key2", "test2")
+
+        self.assertTrue(session.has("key"))
+        self.assertTrue(session.has("key2"))
+        self.assertTrue(response.cookie_jar.exists("f_key"))
+        self.assertTrue(response.cookie_jar.exists("f_key2"))
+
+        self.assertEqual(session.get("key"), "test")
+
+        self.assertFalse(session.has("key"))
+        self.assertTrue(session.has("key2"))
+        self.assertFalse(response.cookie_jar.exists("f_key"))
+        self.assertTrue(response.cookie_jar.exists("f_key2"))

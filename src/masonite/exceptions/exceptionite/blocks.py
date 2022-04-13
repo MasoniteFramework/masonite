@@ -38,10 +38,14 @@ class AppBlock(Block):
 
         # add app route data
         if route:
+            if isinstance(route.controller, str):
+                controller = route.controller
+            else:
+                controller = route.controller.__qualname__
             data.update(
                 {
                     "Route": {
-                        "Controller": route.controller,
+                        "Controller": controller,
                         "Name": route.get_name(),
                         "Middlewares": route.get_middlewares(),
                     }

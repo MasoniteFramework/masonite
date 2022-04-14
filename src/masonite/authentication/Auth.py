@@ -11,6 +11,8 @@ class Auth:
         self.guard_config = guard_config or {}
         self.options = {}
 
+        self._user = None
+
     def add_guard(self, name, guard):
         self.guards.update({name: guard})
 
@@ -55,16 +57,16 @@ class Auth:
             self
         """
         self.application.make("request").remove_user()
-        return self.application.make("response").delete_cookie("token")
+        self.application.make("response").delete_cookie("token")
+        return self.get_guard().set_options(self.get_config_options()).logout()
 
     def user(self):
-        """Logout the current authenticated user.
+        """Get the current authenticated user.
 
         Returns:
             self
         """
-        auth_config = self.get_config_options()
-        return self.get_guard().set_options(auth_config).user()
+        return self.get_guard().set_options(self.get_config_options()).user()
 
     def register(self, dictionary):
         """Logout the current authenticated user.

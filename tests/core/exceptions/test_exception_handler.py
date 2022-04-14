@@ -50,7 +50,6 @@ class TestExceptionHandlerInDebug(TestCase):
                 "ZeroDivisionError: division by zero"
             ).assertConsoleOutputContains("Stack Trace")
 
-    @pytest.mark.skip("Waiting for PR #579 to be merged")
     def test_accepting_json_returns_debug_error_payload(self):
         with self.debugMode():
             self.withHeaders({"Accept": "application/json"}).get(
@@ -89,7 +88,6 @@ class TestExceptionHandler(TestCase):
             self.get("/simple")
             self.assertConsoleEmpty()
 
-    @pytest.mark.skip("Waiting for PR #579 to be merged")
     def test_accepting_json_returns_500_error_payload(self):
         with self.debugMode(False):
             self.withHeaders({"Accept": "application/json"}).get(

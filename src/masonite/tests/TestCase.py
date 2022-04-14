@@ -37,14 +37,17 @@ class TestCase(unittest.TestCase):
 
         self.application: "Application" = application
         self.original_class_mocks = {}
+
+        self._acting_as = {}
         self._test_cookies = {}
         self._test_headers = {}
+        self._test_session = {}
+        self._console_out = None
+        self._console_err = None
+
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
-
-        self._console_out = None
-        self._console_err = None
 
         self.withoutExceptionsHandling()
         # boot providers as they won't not be loaded if the test is not doing a request
@@ -66,11 +69,17 @@ class TestCase(unittest.TestCase):
         """Define code that should be run after each unit tests."""
         self.withoutCsrf()
         self.withoutExceptionsHandling()
+        self._acting_as = {}
+        self._test_cookies = {}
+        self._test_session = {}
+        self._test_headers = {}
+
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
+
         # restore console output
         self._console_out = None
         self._console_err = None
@@ -205,42 +214,69 @@ class TestCase(unittest.TestCase):
     def fetch(
         self, path: str, data: dict = None, method: str = None
     ) -> "HttpTestResponse":
+        """Run an HTTP request and get a test response on which assertions can be run."""
+        # prepare WSGI request environment
+        environ = {}
+        http_cookie = ""
+
         if data is None:
             data = {}
         if not self._csrf:
             token = self.application.make("sign").sign("cookie")
             data.update({"__token": "cookie"})
-            wsgi_request = generate_wsgi(
-                {
-                    "HTTP_COOKIE": f"SESSID={token}; csrf_token={token}",
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
-        else:
-            wsgi_request = generate_wsgi(
-                {
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
+            http_cookie = f"SESSID={token}; csrf_token={token}"
 
-        request, response = testcase_handler(
-            self.application,
-            wsgi_request,
-            self.mock_start_response,
-            exception_handling=self._exception_handling,
+        environ = generate_wsgi(
+            {
+                "CONTENT_LENGTH": len(str(json.dumps(data))),
+                "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
+                "HTTP_COOKIE": http_cookie,
+            },
+            path=path,
+            method=method,
         )
+        self.application.bind("environ", environ)
+
+        # boot all WSGI providers
+        try:
+            for provider in self.application.get_providers():
+                self.application.resolve(provider.boot)
+        except Exception as e:
+            if not self._exception_handling:
+                raise e
+            self.application.make("exception_handler").handle(e)
+
+        request = self.application.make("request")
+        response = self.application.make("response")
+
         # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
         for name, value in self._test_cookies.items():
             request.cookie(name, value)
+
         # add eventual headers added inside the test
         for name, value in self._test_headers.items():
             request.header(name, value)
+
+        # add eventual session data added inside the test
+        for name, value in self._test_session.items():
+            request.session.set(name, value)
+
+        # log user if required
+        if self._acting_as:
+            user = self._acting_as.get("user")
+            guard = self._acting_as.get("guard")
+            self.application.make("auth").guard(guard).attempt_by_id(
+                user.get_primary_key_value()
+            )
+
+        import pdb
+
+        pdb.set_trace()
+        # run request
+        self.mock_start_response(
+            response.get_status_code(),
+            response.get_headers() + response.cookie_jar.render_response(),
+        )
 
         route = self.application.make("router").find(path, method)
         if route:
@@ -322,12 +358,16 @@ class TestCase(unittest.TestCase):
         self._test_headers = headers_dict
         return self
 
-    def actingAs(self, user) -> None:
-        """Connect as the given user during the lifetime of the test."""
-        self.make_request()
-        self.application.make("auth").guard("web").login_by_id(
-            user.get_primary_key_value()
-        )
+    def withSession(self, session_dict: dict) -> "TestCase":
+        """Add session data to the request during the lifetime of the test."""
+        self._test_session = session_dict
+        return self
+
+    def actingAs(self, user, guard="web") -> None:
+        """Connect as the given user during the lifetime of the test. You can select the auth
+        guard to use to authenticate."""
+        self._acting_as = {"user": user, "guard": guard}
+        return self
 
     def restore(self, binding: str) -> None:
         """Restore the service previously mocked to the original one."""

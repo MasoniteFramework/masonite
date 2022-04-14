@@ -84,7 +84,7 @@ def generate_wsgi(wsgi={}, path="/", query_string="", method="GET"):
         "HTTP_HOST": "127.0.0.1:8000",
         "HTTP_ACCEPT": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "HTTP_UPGRADE_INSECURE_REQUESTS": "1",
-        "HTTP_COOKIE": "setcookie=value",
+        "HTTP_COOKIE": "",
         "HTTP_USER_AGENT": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7",
         "HTTP_ACCEPT_LANGUAGE": "en-us",
         "HTTP_ACCEPT_ENCODING": "gzip, deflate",

@@ -223,17 +223,17 @@ class HttpTestResponse:
         assert not data_get(self.response.original.dictionary, key)
         return self
 
-    def assertAuthenticated(self):
-        assert self.application.make("auth").guard("web").user()
+    def assertGuest(self, guard="web"):
+        assert not self.application.make("auth").guard(guard).user()
         return self
 
-    def assertGuest(self):
-        assert not self.application.make("auth").guard("web").user()
-        return self
-
-    def assertAuthenticatedAs(self, user):
-        user = self.application.make("auth").guard("web").user()
-        assert user == user
+    def assertAuthenticated(self, user=None, guard="web"):
+        """Assert that user is authenticated. If a user a given assert that the given is
+        authenticated."""
+        logged_user = self.application.make("auth").guard(guard).user()
+        assert logged_user
+        if user:
+            assert user.get_id() == logged_user.get_id()
         return self
 
     def assertHasHttpMiddleware(self, middleware):

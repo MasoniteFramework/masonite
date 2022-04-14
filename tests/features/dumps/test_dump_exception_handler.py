@@ -11,9 +11,12 @@ class TestDumpExceptionHandler(TestCase):
             Route.get("/dd", "WelcomeController@dd"),
         )
 
+    def tearDown(self):
+        super().tearDown()
+        Dump.clear()
+
     def test_dd_display_correct_view(self):
         self.withExceptionsHandling()
         self.get("/dd").assertOk().assertViewHas("dumps").assertContains(
             "dump and die : 2 dumps"
         ).assertContains("request").assertContains("test")
-        Dump.clear()

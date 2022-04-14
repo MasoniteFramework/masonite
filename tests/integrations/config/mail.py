@@ -1,16 +1,23 @@
-import os
+from masonite.environment import env
 
+
+FROM_EMAIL = env("MAIL_FROM", "no-reply@masonite.com")
 
 DRIVERS = {
-    "default": "smtp",
+    "default": env("MAIL_DRIVER", "terminal"),
     "smtp": {
-        "host": os.getenv("MAIL_HOST"),
-        "port": os.getenv("MAIL_PORT"),
-        "username": os.getenv("MAIL_USERNAME"),
-        "password": os.getenv("MAIL_PASSWORD"),
+        "host": env("MAIL_HOST"),
+        "port": env("MAIL_PORT", "587"),
+        "username": env("MAIL_USERNAME"),
+        "password": env("MAIL_PASSWORD"),
+        "from": FROM_EMAIL,
     },
     "mailgun": {
-        "domain": os.getenv("MAILGUN_DOMAIN"),
-        "secret": os.getenv("MAILGUN_SECRET"),
+        "domain": env("MAILGUN_DOMAIN"),
+        "secret": env("MAILGUN_SECRET"),
+        "from": FROM_EMAIL,
+    },
+    "terminal": {
+        "from": FROM_EMAIL,
     },
 }

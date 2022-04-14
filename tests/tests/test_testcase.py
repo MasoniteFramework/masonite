@@ -1,6 +1,7 @@
 import pendulum
 import os
 import pytest
+import sys
 
 from tests import TestCase
 from tests.integrations.controllers.WelcomeController import WelcomeController
@@ -327,3 +328,39 @@ class TestTestingAssertions(TestCase):
         self.assertDatabaseMissing(
             "users", {"name": "John", "email": "john@example.com"}
         )
+
+    def test_assert_console_empty(self):
+        self.assertConsoleEmpty()
+
+    def test_assert_console_not_empty(self):
+        print("test")
+        self.assertConsoleNotEmpty()
+
+    def test_assert_console_exact_output(self):
+        print("Hello World !")
+        self.assertConsoleExactOutput("Hello World !\n")
+
+    def test_assert_console_output_missing(self):
+        print("Hello World !")
+        self.assertConsoleOutputMissing("Not there")
+
+    def test_assert_console_output_contains(self):
+        print("Hello World !")
+        self.assertConsoleOutputContains("Hello")
+
+    def test_assert_console_has_errors(self):
+        print("Fatal Error !", file=sys.stderr)
+        self.assertConsoleHasErrors()
+
+    def test_assert_console_exact_error(self):
+        print("Fatal Error !", file=sys.stderr)
+        self.assertConsoleExactError("Fatal Error !\n")
+
+    def test_assert_console_error_contains(self):
+        print("Fatal Error !", file=sys.stderr)
+        self.assertConsoleErrorContains("Error")
+
+    def test_make_multiple_output_assertions(self):
+        print("Hello World !")
+        self.assertConsoleExactOutput("Hello World !\n")
+        self.assertConsoleOutputContains("Hello")

@@ -32,7 +32,7 @@ class LoadEnvironment:
         if environment:
             self._load_environment(environment, override=override)
 
-        if "pytest" in sys.modules:
+        if "PYTEST_CURRENT_TEST" in os.environ:
             self._load_environment("testing", override=override)
 
     def _load_environment(self, environment, override=False):

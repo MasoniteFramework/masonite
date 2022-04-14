@@ -1,6 +1,7 @@
 """API Config"""
-from app.models.User import User
 from masonite.environment import env
+
+from app.models.User import User
 
 DRIVERS = {
     "jwt": {

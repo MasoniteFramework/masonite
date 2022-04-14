@@ -16,7 +16,10 @@ class MailProvider(Provider):
         mail.add_driver("mailgun", MailgunDriver(self.application))
         mail.add_driver("terminal", TerminalDriver(self.application))
         self.application.bind("mail", mail)
-        self.application.bind("mock.mail", MockMail)
+        mocked_mail = MockMail(self.application).set_configuration(
+            Config.get("mail.drivers")
+        )
+        self.application.bind("mock.mail", mocked_mail)
 
     def boot(self):
         pass

@@ -40,7 +40,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         "inflection>=0.3<0.4",
-        "exceptionite>=1.0<1.1",
+        "exceptionite>=2.0<3.0",
         "pendulum>=2,<3",
         "jinja2>=3.0.0<3.1",
         "cleo>=0.8.1,<0.9",
@@ -55,6 +55,7 @@ setup(
         "hfilesize>=0.1",
         "dotty_dict>=1.3.0<1.40",
         "pyjwt>=2.3,<2.4",
+        "pytest>=7<8",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -126,6 +127,8 @@ setup(
         "masonite.events.providers",
         "masonite.events",
         "masonite.exceptions",
+        "masonite.exceptions.exceptionite",
+        "masonite.exceptions.handlers",
         "masonite.facades",
         "masonite.filesystem.drivers",
         "masonite.filesystem.providers",

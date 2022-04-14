@@ -1,18 +1,18 @@
-"""Session Cookie Module."""
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ...request import Request
+    from ...response import Response
 
 
 class CookieDriver:
-    """Cookie Session Driver."""
+    """Session driver used to store data in HTTP cookies."""
 
-    def __init__(self, application):
-        """Cookie Session Constructor.
-
-        Arguments:
-            application {dict} -- The application class
-        """
+    def __init__(self, application: "Application"):
         self.application = application
 
-    def start(self):
+    def start(self) -> dict:
         request = self.get_request()
         data = {}
         flashed = {}
@@ -24,7 +24,9 @@ class CookieDriver:
 
         return {"data": data, "flashed": flashed}
 
-    def save(self, added=None, deleted=None, flashed=None, deleted_flashed=None):
+    def save(
+        self, added=None, deleted=None, flashed=None, deleted_flashed=None
+    ) -> None:
         response = self.get_response()
         if added is None:
             added = {}
@@ -47,12 +49,12 @@ class CookieDriver:
         for key in deleted_flashed:
             response.delete_cookie(f"f_{key}")
 
-    def get_response(self):
+    def get_response(self) -> "Response":
         return self.application.make("response")
 
-    def get_request(self):
+    def get_request(self) -> "Request":
         return self.application.make("request")
 
-    def helper(self):
+    def helper(self) -> "CookieDriver":
         """Use to create builtin helper function."""
         return self

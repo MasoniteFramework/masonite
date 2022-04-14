@@ -269,9 +269,6 @@ class TestCase(unittest.TestCase):
                 user.get_primary_key_value()
             )
 
-        import pdb
-
-        pdb.set_trace()
         # run request
         self.mock_start_response(
             response.get_status_code(),

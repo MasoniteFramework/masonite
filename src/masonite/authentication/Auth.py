@@ -43,12 +43,16 @@ class Auth:
     def attempt(self, email, password, once=False):
         auth_config = self.get_config_options()
         auth_config.update({"once": once})
-        return self.get_guard().set_options(auth_config).attempt(email, password)
+        user = self.get_guard().set_options(auth_config).attempt(email, password)
+        self.set_user(user)
+        return user
 
     def attempt_by_id(self, user_id, once=False):
         auth_config = self.get_config_options()
         auth_config.update({"once": once})
-        return self.get_guard().set_options(auth_config).attempt_by_id(user_id)
+        user = self.get_guard().set_options(auth_config).attempt_by_id(user_id)
+        self.set_user(user)
+        return user
 
     def logout(self):
         """Logout the current authenticated user.
@@ -58,7 +62,8 @@ class Auth:
         """
         self.application.make("request").remove_user()
         self.application.make("response").delete_cookie("token")
-        return self.get_guard().set_options(self.get_config_options()).logout()
+        self.get_guard().set_options(self.get_config_options()).logout()
+        self._user = None
 
     def user(self):
         """Get the current authenticated user.
@@ -66,6 +71,8 @@ class Auth:
         Returns:
             self
         """
+        if self._user:
+            return self._user
         return self.get_guard().set_options(self.get_config_options()).user()
 
     def register(self, dictionary):
@@ -76,6 +83,10 @@ class Auth:
         """
         auth_config = self.get_config_options()
         return self.get_guard().set_options(auth_config).register(dictionary)
+
+    def set_user(self, user):
+        self._user = user
+        return self
 
     def password_reset(self, email):
         """Logout the current authenticated user.

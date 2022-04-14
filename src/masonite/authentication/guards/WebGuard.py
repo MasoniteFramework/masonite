@@ -3,8 +3,6 @@ class WebGuard:
         self.application = application
         self.connection = None
 
-        self._user = None
-
     def set_options(self, options):
         self.options = options
         return self
@@ -14,10 +12,6 @@ class WebGuard:
         if attempt and not self.options.get("once"):
             self.application.make("response").cookie("token", attempt.remember_token)
             self.application.make("request").set_user(attempt)
-            self.set_user(attempt)
-            import pdb
-
-            pdb.set_trace()
             return attempt
 
     def get_auth_column(self, username):
@@ -36,15 +30,12 @@ class WebGuard:
         Returns:
             object|bool -- Returns the current authenticated user object or False or None if there is none.
         """
-        if self._user:
-            return self._user
-
         token = self.application.make("request").cookie("token")
         if token and self.options.get("model")():
-            user = self.options.get("model")().where("remember_token", token).first()
-            if user:
-                self.set_user(user)
-                return user
+            return (
+                self.options.get("model")().where("remember_token", token).first()
+                or False
+            )
 
         return False
 
@@ -62,7 +53,6 @@ class WebGuard:
         if attempt and not self.options.get("once"):
             self.application.make("response").cookie("token", attempt.remember_token)
             self.application.make("request").set_user(attempt)
-            self.set_user(attempt)
             return attempt
 
         return False
@@ -92,10 +82,5 @@ class WebGuard:
         self._once = True
         return self
 
-    def set_user(self, user):
-        self._user = user
-        return self
-
     def logout(self):
-        self._user = None
         return self

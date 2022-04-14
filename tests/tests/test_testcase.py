@@ -1,11 +1,9 @@
 import pendulum
 import os
-import pytest
 import sys
 
 from tests import TestCase
 from tests.integrations.controllers.WelcomeController import WelcomeController
-from tests.integrations.app.User import User
 from src.masonite.routes import Route
 from src.masonite.middleware import EncryptCookies
 
@@ -93,10 +91,10 @@ class TestTestCase(TestCase):
             self.assertFalse(self.application.is_debug())
 
     def test_acting_as_log_user_during_request(self):
+        from tests.integrations.app.User import User
+
         user = User.first()
-        self.actingAs(user).get("/").assertAuthenticatedAs(
-            user
-        ).assertRequestAuthenticatedAs(user)
+        self.actingAs(user).get("/").assertAuthenticated().assertAuthenticated(user)
 
 
 class TestTestingAssertions(TestCase):

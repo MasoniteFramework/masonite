@@ -25,7 +25,6 @@ from ..environment import LoadEnvironment
 from ..facades import Config
 from ..providers.RouteProvider import RouteProvider
 from ..exceptions import RouteNotFoundException
-from ..middleware import EncryptCookies
 from .TestCommand import TestCommand
 
 
@@ -64,9 +63,6 @@ class TestCase(unittest.TestCase):
             self.application.make("exception_handler").handle(e)
 
         self.routes_to_restore = set(self.application.make("router").routes)
-
-        # don't encrypt cookies during tests
-        self.application.make("middleware").remove(EncryptCookies)
 
     def tearDown(self):
         """Define code that should be run after each unit tests."""

@@ -1,5 +1,10 @@
 import time
 import inspect
+from pprint import pformat
+
+
+def color(string):
+    return f"\033[93m{string}\033[0m"
 
 
 def is_property(obj):
@@ -74,6 +79,12 @@ class Dump:
         return self._format()
 
     def _format(self):
-        return f"""DUMP -> {self.filename}: {self.line} in {self.method}()
-        {self.objects}
-        """
+        """Format the dump as string to be printed in console."""
+        output = f"\n{color('>>> DUMP')} from {self.filename}: {color(f'L{self.line}')} in {color(f'{self.method}()')}"
+
+        for name, obj in self.objects.items():
+            output += f"\n\n{color(f'  - {name}:')}\n"
+            output += f"  {pformat(obj, width=110, indent=4)}"
+
+        output += color("\n\n<<< END")
+        return output

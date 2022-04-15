@@ -107,3 +107,9 @@ class TestDumper(TestCase):
         var = "test"
         dump(var)
         assert self.dumper.last().objects.get("var") == "test"
+
+    def test_dump_output_data_in_console(self):
+        var = "test"
+        dump(var)
+        self.assertConsoleOutputContains(">>> DUMP")
+        self.assertConsoleOutputContains("test")

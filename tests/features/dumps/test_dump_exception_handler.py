@@ -20,3 +20,6 @@ class TestDumpExceptionHandler(TestCase):
         self.get("/dd").assertOk().assertViewHas("dumps").assertContains(
             "dump and die : 2 dumps"
         ).assertContains("request").assertContains("test")
+
+        self.assertConsoleOutputContains(">>> DUMP")
+        self.assertConsoleOutputContains("test")

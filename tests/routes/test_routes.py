@@ -159,6 +159,14 @@ class TestRoutes(TestCase):
         route = router.find_by_name("testparam")
         self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
 
+    def test_extract_parameters_ending_in_a_slash(self):
+        router = Router(
+            Route.get("/params/@id/", "WelcomeController@show").name("testparam")
+        )
+
+        route = router.find_by_name("testparam")
+        self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
+
     def test_domain(self):
         router = Router(
             Route.get("/domain/@id", "WelcomeController@show").domain("sub")

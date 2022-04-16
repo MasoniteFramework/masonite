@@ -22,6 +22,8 @@ class HTTPRoute:
     ):
         if not url.startswith("/"):
             url = "/" + url
+        if url.endswith("/") and url != "/":
+            url = url[:-1]
 
         self.url = url
         self.controllers_locations = controllers_locations

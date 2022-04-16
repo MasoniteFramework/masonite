@@ -54,6 +54,7 @@ class ExceptionProvider(Provider):
             solutions.InvalidCSRFToken(),
             solutions.TemplateNotFound(),
             solutions.NoneResponse(),
+            solutions.RouteMiddlewareNotFound(),
             *MasoniteSolutions.get()
         )
 

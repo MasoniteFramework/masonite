@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from ..foundation import Application
 
 from ..routes.Router import Router
-from ..exceptions import ResponseError, InvalidHTTPStatusCode
+from ..exceptions import ResponseError, InvalidHTTPStatusCode, RouteNotFoundException
 from ..headers import HeaderBag, Header
 from ..utils.http import HTTP_STATUS_CODES
 from ..utils.str import add_query_params
@@ -191,7 +191,7 @@ class Response:
     ) -> str:
         route = self.app.make("router").find_by_name(name)
         if not route:
-            raise ValueError(f"Route with the name '{name}' not found.")
+            raise RouteNotFoundException(f"Could not find route with the name '{name}'")
         return Router.compile_to_url(route.url, params, query_params)
 
     def to_bytes(self) -> "bytes":

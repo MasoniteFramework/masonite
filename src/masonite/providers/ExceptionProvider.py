@@ -3,6 +3,7 @@ import builtins
 from exceptionite import Handler
 from exceptionite.options import DEFAULT_OPTIONS
 from exceptionite.renderers import JSONRenderer
+from exceptionite.solutions import MasoniteSolutions
 
 from .Provider import Provider
 from ..routes import Route
@@ -53,6 +54,7 @@ class ExceptionProvider(Provider):
             solutions.InvalidCSRFToken(),
             solutions.TemplateNotFound(),
             solutions.NoneResponse(),
+            *MasoniteSolutions.get()
         )
 
         exception_handler = ExceptionHandler(self.application)

@@ -22,7 +22,7 @@ class HTTPRoute:
     ):
         if not url.startswith("/"):
             url = "/" + url
-        if url.endswith("/"):
+        if url.endswith("/") and url != "/":
             url = url[:-1]
 
         self.url = url

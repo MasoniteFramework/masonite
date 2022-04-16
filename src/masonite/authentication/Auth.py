@@ -154,7 +154,9 @@ class Auth:
         return [
             Route.get("/login", "auth.LoginController@show").name("login"),
             Route.get("/logout", "auth.LoginController@logout").name("logout"),
-            Route.get("/home", "auth.HomeController@show").name("auth.home"),
+            Route.get("/home", "auth.HomeController@show")
+            .name("auth.home")
+            .middleware("auth"),
             Route.get("/register", "auth.RegisterController@show").name("register"),
             Route.post("/register", "auth.RegisterController@store").name(
                 "register.store"

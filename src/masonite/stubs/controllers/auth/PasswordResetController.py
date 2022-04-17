@@ -4,7 +4,6 @@ from masonite.request import Request
 from masonite.response import Response
 from masonite.authentication import Auth
 from masonite.facades import Mail
-from masonite.authentication import Auth
 from app.mailables.ResetPassword import ResetPassword
 
 

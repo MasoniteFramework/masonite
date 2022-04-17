@@ -10,10 +10,8 @@ from app.mailables.ResetPassword import ResetPassword
 
 class PasswordResetController(Controller):
     def show(self, auth: Auth, view: View, response: Response):  # Show password_reset page
-        #If user is logged in, show the password reset page
-        if auth.user():
-            return view.render("auth.password_reset")
-        return response.redirect(name="auth.home")
+        return view.render("auth.password_reset")
+        
 
     def store(self, auth: Auth, request: Request, response: Response):
         email, reset_token = auth.password_reset(request.input("email"))

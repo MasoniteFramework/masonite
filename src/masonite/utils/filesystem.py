@@ -1,5 +1,6 @@
 import os
 import platform
+import pathlib
 
 
 def make_directory(directory):
@@ -70,3 +71,12 @@ def render_stub_file(stub_file, name):
 
 def get_module_dir(module_file):
     return os.path.dirname(os.path.realpath(module_file))
+
+
+def get_extension(filepath: str, without_dot=False) -> str:
+    """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
+    the extension."""
+    extension = "".join(pathlib.Path(filepath).suffixes)
+    if without_dot:
+        return extension[1:]
+    return extension

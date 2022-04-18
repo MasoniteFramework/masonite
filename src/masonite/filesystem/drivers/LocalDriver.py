@@ -1,10 +1,10 @@
 import os
+import uuid
+from os.path import isfile, join
 from shutil import copyfile, move
+
 from ..FileStream import FileStream
 from ..File import File
-import uuid
-import os
-from os.path import isfile, join
 
 
 class LocalDriver:

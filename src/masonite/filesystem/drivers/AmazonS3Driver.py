@@ -1,8 +1,8 @@
 import os
-from shutil import copyfile, move
+import uuid
+
 from ..FileStream import FileStream
 from ..File import File
-import uuid
 
 
 class AmazonS3Driver:

@@ -39,3 +39,10 @@ class TestLocalStorage(TestCase):
 
     def test_can_get_contents_of_directory(self):
         self.driver.get_files()
+
+    def test_get_name(self):
+        name = self.driver.get_name("some_file.txt", "log")
+        self.assertEqual(name, "log.txt")
+
+        name = self.driver.get_name("some_file.tar.gz", "archive")
+        self.assertEqual(name, "archive.tar.gz")

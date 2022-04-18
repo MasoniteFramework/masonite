@@ -3,6 +3,7 @@ import uuid
 
 from ..FileStream import FileStream
 from ..File import File
+from ...utils.filesystem import get_extension
 
 
 class AmazonS3Driver:
@@ -36,7 +37,7 @@ class AmazonS3Driver:
         return self.options.get("bucket")
 
     def get_name(self, path, alias):
-        extension = os.path.splitext(path)[1]
+        extension = get_extension(path)
         return f"{alias}{extension}"
 
     def put(self, file_path, content):

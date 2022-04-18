@@ -124,11 +124,11 @@ class NotificationException(Exception):
     pass
 
 
-class RecordNotFoundException(Exception):
+class ModelNotFoundException(Exception):
     is_http_exception = True
 
     def get_response(self):
-        return "Record Not Found"
+        return "Model Not Found"
 
     def get_status(self):
         return 404

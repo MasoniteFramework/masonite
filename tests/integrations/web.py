@@ -15,7 +15,7 @@ ROUTES = [
     Route.get("/emit", "WelcomeController@emit"),
     Route.get("/view", "WelcomeController@view"),
     Route.get("/mail", "MailableController@view"),
-    Route.get("/users/@id", "WelcomeController@test").name("users.profile"),
+    Route.get("/users/@id", "WelcomeController@show_user").name("users.profile"),
 ]
 
 Broadcast.routes()

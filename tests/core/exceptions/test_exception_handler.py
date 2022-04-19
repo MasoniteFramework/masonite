@@ -1,5 +1,4 @@
-import pytest
-
+from turtle import pd
 from tests import TestCase
 from src.masonite.routes import Route
 from src.masonite.controllers import Controller
@@ -54,11 +53,7 @@ class TestExceptionHandlerInDebug(TestCase):
         with self.debugMode():
             self.withHeaders({"Accept": "application/json"}).get(
                 "/simple"
-            ).assertError().assertJsonPath(
-                "exception.type", "RouteNotFoundException"
-            ).assertJsonPath(
-                "stacktrace"
-            )
+            ).assertError().assertJsonPath("exception.type", "ZeroDivisionError")
 
 
 class TestExceptionHandler(TestCase):
@@ -92,6 +87,4 @@ class TestExceptionHandler(TestCase):
         with self.debugMode(False):
             self.withHeaders({"Accept": "application/json"}).get(
                 "/simple"
-            ).assertError().assertJson(
-                {"status": 500, "message": "GET /simple: division by zero"}
-            )
+            ).assertError().assertJson({"status": 500, "message": "division by zero"})

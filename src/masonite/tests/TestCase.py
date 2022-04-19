@@ -8,6 +8,7 @@ import pendulum
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
+
 if TYPE_CHECKING:
     from ..foundation import Application
     from ..routes import HTTPRoute
@@ -16,13 +17,13 @@ if TYPE_CHECKING:
     from masoniteorm.models import Model
 
 from ..routes import Route
-from ..foundation.response_handler import testcase_handler
 from ..utils.http import generate_wsgi
 from ..request import Request
 from ..response import Response
 from ..environment import LoadEnvironment
 from ..facades import Config
 from ..providers.RouteProvider import RouteProvider
+from ..providers.FrameworkProvider import FrameworkProvider
 from ..exceptions import RouteNotFoundException
 from .TestCommand import TestCommand
 
@@ -83,6 +84,9 @@ class TestCase(unittest.TestCase):
         # restore console output
         self._console_out = None
         self._console_err = None
+
+        # logout users
+        self.application.make("auth").logout()
 
     @pytest.fixture(autouse=True)
     def _pass_fixtures(self, capsys):
@@ -240,36 +244,40 @@ class TestCase(unittest.TestCase):
         # boot all WSGI providers
         try:
             for provider in self.application.get_providers():
-                self.application.resolve(provider.boot)
+                if isinstance(provider, FrameworkProvider):
+                    self.application.resolve(provider.boot)
+                    # now we have a request, response object
+                    request = self.application.make("request")
+                    response = self.application.make("response")
+
+                    # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
+                    for name, value in self._test_cookies.items():
+                        request.cookie(name, value)
+
+                    # add eventual headers added inside the test
+                    for name, value in self._test_headers.items():
+                        request.header(name, value)
+
+                    # this is impossible for now because session is started in the session middleware only...
+                    # # add eventual session data added inside the test
+                    # for name, value in self._test_session.items():
+                    #     request.session.set(name, value)
+
+                    # log user if required
+                    if self._acting_as:
+                        user = self._acting_as.get("user")
+                        guard = self._acting_as.get("guard")
+                        self.application.make("auth").guard(guard).attempt_by_id(
+                            user.get_primary_key_value()
+                        )
+                else:
+                    self.application.resolve(provider.boot)
+
         except Exception as e:
             if not self._exception_handling:
                 raise e
             self.application.make("exception_handler").handle(e)
 
-        request = self.application.make("request")
-        response = self.application.make("response")
-
-        # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
-        for name, value in self._test_cookies.items():
-            request.cookie(name, value)
-
-        # add eventual headers added inside the test
-        for name, value in self._test_headers.items():
-            request.header(name, value)
-
-        # add eventual session data added inside the test
-        for name, value in self._test_session.items():
-            request.session.set(name, value)
-
-        # log user if required
-        if self._acting_as:
-            user = self._acting_as.get("user")
-            guard = self._acting_as.get("guard")
-            self.application.make("auth").guard(guard).attempt_by_id(
-                user.get_primary_key_value()
-            )
-
-        # run request
         self.mock_start_response(
             response.get_status_code(),
             response.get_headers() + response.cookie_jar.render_response(),
@@ -364,6 +372,12 @@ class TestCase(unittest.TestCase):
         """Connect as the given user during the lifetime of the test. You can select the auth
         guard to use to authenticate."""
         self._acting_as = {"user": user, "guard": guard}
+        return self
+
+    def actingAsGuest(self) -> None:
+        """Connect as an unauthenticated user during the lifetime of the test."""
+        self.application.make("auth").logout()
+        self._acting_as = {}
         return self
 
     def restore(self, binding: str) -> None:

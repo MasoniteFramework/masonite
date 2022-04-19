@@ -21,7 +21,7 @@ from ..utils.http import generate_wsgi
 from ..request import Request
 from ..response import Response
 from ..environment import LoadEnvironment
-from ..facades import Config
+from ..facades import Config, Session
 from ..providers.RouteProvider import RouteProvider
 from ..providers.FrameworkProvider import FrameworkProvider
 from ..exceptions import RouteNotFoundException
@@ -260,8 +260,8 @@ class TestCase(unittest.TestCase):
 
                     # this is impossible for now because session is started in the session middleware only...
                     # # add eventual session data added inside the test
-                    # for name, value in self._test_session.items():
-                    #     request.session.set(name, value)
+                    for name, value in self._test_session.items():
+                        Session.set(name, value)
 
                     # log user if required
                     if self._acting_as:
@@ -270,6 +270,9 @@ class TestCase(unittest.TestCase):
                         self.application.make("auth").guard(guard).attempt_by_id(
                             user.get_primary_key_value()
                         )
+                    import pdb
+
+                    pdb.set_trace()
                 else:
                     self.application.resolve(provider.boot)
 

@@ -14,6 +14,9 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_errors = self.with_errors
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
+        import pdb
+
+        pdb.set_trace()
         return request
 
     def after(self, request, _):

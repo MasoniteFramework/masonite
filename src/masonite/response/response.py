@@ -145,7 +145,7 @@ class Response:
             view = view.get_response()
         elif view is None:
             raise ResponseError(
-                "Responses cannot be of type: None. Did you return anything in your responsable method?"
+                "Responses cannot be of type: None. Did you return anything in your responsible method?"
             )
 
         self.content = view

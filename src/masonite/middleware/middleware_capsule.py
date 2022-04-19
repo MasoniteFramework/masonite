@@ -1,3 +1,6 @@
+from ..exceptions import RouteMiddlewareNotFound
+
+
 class MiddlewareCapsule:
     def __init__(self):
         self.route_middleware = {}
@@ -28,7 +31,12 @@ class MiddlewareCapsule:
             keys = []
 
         for key in keys:
-            found = self.route_middleware[key]
+            try:
+                found = self.route_middleware[key]
+            except KeyError:
+                raise RouteMiddlewareNotFound(
+                    f"Could not find the '{key}' middleware key."
+                )
             if isinstance(found, list):
                 middlewares += found
             else:

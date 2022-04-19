@@ -1,4 +1,4 @@
-from masonite.environment import env
+from src.masonite.environment import env
 
 
 FROM_EMAIL = env("MAIL_FROM", "no-reply@masonite.com")

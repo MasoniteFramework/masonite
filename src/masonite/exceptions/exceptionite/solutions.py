@@ -53,3 +53,14 @@ class NoneResponse:
 
     def regex(self):
         return r"Responses cannot be of type: None."
+
+
+class RouteMiddlewareNotFound:
+    def title(self):
+        return "Did you register the middleware key in your Kernel.py file?"
+
+    def description(self):
+        return "Check your Kernel.py file inside your 'route_middleware' attribute and look for a :middleware key"
+
+    def regex(self):
+        return r"Could not find the \'(?P<middleware>(\w+))\' middleware key"

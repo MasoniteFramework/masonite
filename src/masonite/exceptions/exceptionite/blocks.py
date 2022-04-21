@@ -1,6 +1,8 @@
 from exceptionite import Block
+
 from ... import __version__
 from ...helpers import optional
+from ...utils.str import get_controller_name
 
 
 def recursive_serializer(data):
@@ -38,14 +40,10 @@ class AppBlock(Block):
 
         # add app route data
         if route:
-            if isinstance(route.controller, str):
-                controller = route.controller
-            else:
-                controller = route.controller.__qualname__
             data.update(
                 {
                     "Route": {
-                        "Controller": controller,
+                        "Controller": get_controller_name(route.controller),
                         "Name": route.get_name(),
                         "Middlewares": route.get_middlewares(),
                     }

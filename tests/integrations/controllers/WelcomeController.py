@@ -157,3 +157,6 @@ class WelcomeController(Controller):
 
     def server_error(self, view: View):
         raise Exception("unknown error")
+
+    def __call__(self):
+        return "welcome"

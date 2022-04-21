@@ -29,6 +29,7 @@ class HTTPRoute:
         self.controllers_locations = controllers_locations
         self.controller = controller
         self.controller_class = None
+        self.controller_instance = None
         self.controller_method = None
         self._domain = None
         self._name = name

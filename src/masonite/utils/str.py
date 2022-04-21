@@ -2,6 +2,7 @@
 import random
 import string
 from urllib import parse
+from typing import Any
 
 
 def random_string(length=4):
@@ -74,3 +75,20 @@ def add_query_params(url: str, query_params: dict) -> str:
         base_url += "?" + parse.urlencode(all_query_params)
 
     return base_url
+
+
+def get_controller_name(controller: "str|Any") -> str:
+    """Get a controller string name from a controller argument used in routes."""
+    # controller is a class or class.method
+    if hasattr(controller, "__qualname__"):
+        if "." in controller.__qualname__:
+            controller_str = controller.__qualname__.replace(".", "@")
+        else:
+            controller_str = f"{controller.__qualname__}@__call__"
+    # controller is an instance, so the method will automatically be __call__
+    elif not isinstance(controller, str):
+        controller_str = f"{controller.__class__.__qualname__}@__call__"
+    # controller is anything else: "Controller@method"
+    else:
+        controller_str = str(controller)
+    return controller_str

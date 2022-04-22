@@ -50,6 +50,7 @@ class Session:
     # Start of methods
     def start(self, driver: str = None) -> "Session":
         """Initialize session."""
+        self.added = {}
         self.deleted = []
         self.deleted_flashed = []
         started_data = self.get_driver(name=driver).start()

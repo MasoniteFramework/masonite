@@ -363,10 +363,10 @@ class TestCase(unittest.TestCase):
         self._test_headers = headers_dict
         return self
 
-    def withSession(self, session_dict: dict) -> "TestCase":
-        """Add session data to the request during the lifetime of the test."""
-        self._test_session = session_dict
-        return self
+    # def withSession(self, session_dict: dict) -> "TestCase":
+    #     """Add session data to the request during the lifetime of the test."""
+    #     self._test_session = session_dict
+    #     return self
 
     def actingAs(self, user, guard="web") -> None:
         """Connect as the given user during the lifetime of the test. You can select the auth

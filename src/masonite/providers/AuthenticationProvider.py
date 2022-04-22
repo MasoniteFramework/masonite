@@ -14,5 +14,4 @@ class AuthenticationProvider(Provider):
         self.application.bind("auth", auth)
 
     def boot(self):
-        # self.application.make("auth").guard("web").logout()
         pass

@@ -6,7 +6,8 @@ from ..utils.structures import data_get
 
 
 class HttpTestResponse:
-    def __init__(self, application, request, response, route):
+    def __init__(self, testcase, application, request, response, route):
+        self.testcase = testcase
         self.application = application
         self.request = request
         self.response = response
@@ -104,6 +105,22 @@ class HttpTestResponse:
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
 
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump request and response headers and die."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
+
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
 
@@ -180,6 +197,16 @@ class HttpTestResponse:
             for key in keys:
                 assert not errors.get(key)
         return self
+
+    def dumpSession(self):
+        """Dump session data."""
+        self.testcase.dump(self.application.make("session").all(), "Session Data")
+        return self
+
+    def ddSession(self):
+        """Dump session data and die."""
+        self.dumpSession()
+        self.testcase.stop()
 
     def _ensure_response_has_view(self):
         """Ensure that the response has a view as its original content."""

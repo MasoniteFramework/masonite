@@ -7,6 +7,7 @@ import unittest
 import pendulum
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
+from pprint import pprint
 
 if TYPE_CHECKING:
     from ..foundation import Application
@@ -245,14 +246,14 @@ class TestCase(unittest.TestCase):
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
 
         exception = RouteNotFoundException(f"No route found for url {path}")
         if self._exception_handling:
             response = self.application.make("exception_handler").handle(exception)
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
         else:
             raise exception
@@ -398,3 +399,20 @@ class TestCase(unittest.TestCase):
             .where_not_null(deleted_at_column)
             .get()
         )
+
+    def dump(self, output: str, title: str = ""):
+        """Print output to console during tests. A title can be provided to be displayed at dump
+        start."""
+        with self.capsys.disabled():
+            print("\n")
+            if title:
+                print(f"\033[93m> {title}:\033[0m\n")
+            pprint(output, width=110)
+
+    def stop(self, msg: str = ""):
+        """Stop current test, a message can be given and will be displayed in the
+        console.
+        2 is the pytest exit code for user interruption.
+        https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
+        """
+        return pytest.exit(msg, 2)

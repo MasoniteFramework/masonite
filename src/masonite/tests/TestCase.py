@@ -258,10 +258,10 @@ class TestCase(unittest.TestCase):
                     for name, value in self._test_headers.items():
                         request.header(name, value)
 
-                    # this is impossible for now because session is started in the session middleware only...
-                    # # add eventual session data added inside the test
-                    for name, value in self._test_session.items():
-                        Session.set(name, value)
+                    # @dev: this is impossible for now because session is started in the session middleware only...
+                    # add eventual session data added inside the test
+                    # for name, value in self._test_session.items():
+                    #     Session.set(name, value)
 
                     # log user if required
                     if self._acting_as:
@@ -270,9 +270,6 @@ class TestCase(unittest.TestCase):
                         self.application.make("auth").guard(guard).attempt_by_id(
                             user.get_primary_key_value()
                         )
-                    import pdb
-
-                    pdb.set_trace()
                 else:
                     self.application.resolve(provider.boot)
 

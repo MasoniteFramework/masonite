@@ -14,8 +14,8 @@
     {% if can("view-posts") %}
     <p>User can view posts</p>
     {% endif %}
-    {% if cannot("display-admin") %}
-    <p>User cannot display admin</p>
+    {% if can("display-admin") %}
+    <p>User can display admin</p>
     {% endif %}
 </body>
 </html>

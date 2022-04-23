@@ -146,8 +146,9 @@ class WelcomeController(Controller):
 
     def use_authorization_helper(self, request: Request):
         request.authorize("display-admin")
+        return ""
 
-    def authorizations(self, view: View):
+    def authorizations(self, view: View, request: Request):
         return view.render("authorizations")
 
     def dd(self, request: Request):

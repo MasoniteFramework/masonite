@@ -255,7 +255,6 @@ class TestCase(unittest.TestCase):
                     self.application.resolve(provider.boot)
                     # now we have a request, response object
                     request = self.application.make("request")
-                    response = self.application.make("response")
 
                     # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
                     for name, value in self._test_cookies.items():
@@ -284,6 +283,8 @@ class TestCase(unittest.TestCase):
             if not self._exception_handling:
                 raise e
             self.application.make("exception_handler").handle(e)
+
+        response = self.application.make("response")
 
         self.mock_start_response(
             response.get_status_code(),

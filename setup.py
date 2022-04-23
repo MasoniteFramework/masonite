@@ -50,7 +50,7 @@ setup(
         "whitenoise>=5.2,<5.3",
         "python-dotenv>=0.15,<0.16",
         "hashids>=1.3,<1.4",
-        "cryptography>=3.3.1,<4.0",
+        "cryptography>=36<37",
         "tldextract>=2.2,<2.3",
         "hfilesize>=0.1",
         "dotty_dict>=1.3.0<1.40",

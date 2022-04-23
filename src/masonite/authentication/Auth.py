@@ -11,6 +11,8 @@ class Auth:
         self.guard_config = guard_config or {}
         self.options = {}
 
+        self._user = None
+
     def add_guard(self, name, guard):
         self.guards.update({name: guard})
 
@@ -41,12 +43,16 @@ class Auth:
     def attempt(self, email, password, once=False):
         auth_config = self.get_config_options()
         auth_config.update({"once": once})
-        return self.get_guard().set_options(auth_config).attempt(email, password)
+        user = self.get_guard().set_options(auth_config).attempt(email, password)
+        self.set_user(user)
+        return user
 
     def attempt_by_id(self, user_id, once=False):
         auth_config = self.get_config_options()
         auth_config.update({"once": once})
-        return self.get_guard().set_options(auth_config).attempt_by_id(user_id)
+        user = self.get_guard().set_options(auth_config).attempt_by_id(user_id)
+        self.set_user(user)
+        return user
 
     def logout(self):
         """Logout the current authenticated user.
@@ -55,16 +61,19 @@ class Auth:
             self
         """
         self.application.make("request").remove_user()
-        return self.application.make("response").delete_cookie("token")
+        self.application.make("response").delete_cookie("token")
+        self.get_guard().set_options(self.get_config_options()).logout()
+        self._user = None
 
     def user(self):
-        """Logout the current authenticated user.
+        """Get the current authenticated user.
 
         Returns:
             self
         """
-        auth_config = self.get_config_options()
-        return self.get_guard().set_options(auth_config).user()
+        if self._user:
+            return self._user
+        return self.get_guard().set_options(self.get_config_options()).user()
 
     def register(self, dictionary):
         """Logout the current authenticated user.
@@ -74,6 +83,10 @@ class Auth:
         """
         auth_config = self.get_config_options()
         return self.get_guard().set_options(auth_config).register(dictionary)
+
+    def set_user(self, user):
+        self._user = user
+        return self
 
     def password_reset(self, email):
         """Logout the current authenticated user.
@@ -154,7 +167,9 @@ class Auth:
         return [
             Route.get("/login", "auth.LoginController@show").name("login"),
             Route.get("/logout", "auth.LoginController@logout").name("logout"),
-            Route.get("/home", "auth.HomeController@show").name("auth.home"),
+            Route.get("/home", "auth.HomeController@show")
+            .name("auth.home")
+            .middleware("auth"),
             Route.get("/register", "auth.RegisterController@show").name("register"),
             Route.post("/register", "auth.RegisterController@store").name(
                 "register.store"

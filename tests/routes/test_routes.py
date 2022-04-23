@@ -48,6 +48,10 @@ class TestRoutes(TestCase):
         url = router.route("dashboard", [2, 1])
         self.assertEqual(url, "/dashboard/2/1")
 
+        # with query parameters
+        url = router.route("home", {"id": 1}, query_params={"preview": "true"})
+        self.assertEqual(url, "/home/1?preview=true")
+
     def test_can_find_route_optional_params(self):
         router = Router(Route.get("/home/?id", "WelcomeController"))
 
@@ -148,6 +152,14 @@ class TestRoutes(TestCase):
     def test_extract_parameters(self):
         router = Router(
             Route.get("/params/@id", "WelcomeController@show").name("testparam")
+        )
+
+        route = router.find_by_name("testparam")
+        self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
+
+    def test_extract_parameters_ending_in_a_slash(self):
+        router = Router(
+            Route.get("/params/@id/", "WelcomeController@show").name("testparam")
         )
 
         route = router.find_by_name("testparam")

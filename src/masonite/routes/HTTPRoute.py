@@ -1,4 +1,5 @@
 import re
+from urllib import parse
 
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
@@ -21,11 +22,14 @@ class HTTPRoute:
     ):
         if not url.startswith("/"):
             url = "/" + url
+        if url.endswith("/") and url != "/":
+            url = url[:-1]
 
         self.url = url
         self.controllers_locations = controllers_locations
         self.controller = controller
         self.controller_class = None
+        self.controller_instance = None
         self.controller_method = None
         self._domain = None
         self._name = name
@@ -76,7 +80,8 @@ class HTTPRoute:
         self._domain = subdomain
         return self
 
-    def to_url(self, parameters={}):
+    def to_url(self, parameters: dict = {}, query_params: dict = {}) -> str:
+        """Transform route to a URL string with the given url and query parameters."""
 
         # Split the url into a list
         split_url = self.url.split("/")
@@ -111,6 +116,9 @@ class HTTPRoute:
         if "//" in compiled_url:
             compiled_url = compiled_url.replace("//", "/")
 
+        # Add eventual query parameters
+        if query_params:
+            compiled_url += "?" + parse.urlencode(query_params)
         return compiled_url
 
     def _find_controller(self, controller):
@@ -158,8 +166,8 @@ class HTTPRoute:
             except LoaderNotFound as e:
                 self.e = e
                 print("\033[93mTrouble importing controller!", str(e), "\033[0m")
-        # Else it's a controller instance, we don't have to find it, just get the class
-        else:
+        # it's a class or class.method, we don't have to find it, just get the class
+        elif hasattr(controller, "__qualname__"):
             if "." in controller.__qualname__:
                 controller_name, controller_method_str = controller.__qualname__.split(
                     "."
@@ -174,6 +182,10 @@ class HTTPRoute:
             except LoaderNotFound as e:
                 self.e = e
                 print("\033[93mTrouble importing controller!", str(e), "\033[0m")
+        # it's a controller instance
+        else:
+            self.controller_instance = controller
+            controller_method_str = "__call__"
 
         # Set the controller method on class. This is a string
         self.controller_method = controller_method_str
@@ -192,7 +204,12 @@ class HTTPRoute:
             raise SyntaxError(str(self.e))
 
         if app:
-            controller = app.resolve(self.controller_class, *self.controller_bindings)
+            if self.controller_instance:
+                controller = self.controller_instance
+            else:
+                controller = app.resolve(
+                    self.controller_class, *self.controller_bindings
+                )
             # resolve route parameters
             params = self.extract_parameters(app.make("request").get_path()).values()
             # Resolve Controller Method
@@ -208,7 +225,12 @@ class HTTPRoute:
                 app.bind("response", response)
             return response
 
-        return getattr(self.controller_class(), self.controller_method)()
+        if self.controller_instance:
+            controller = self.controller_instance
+        else:
+            controller = self.controller_class()
+
+        return getattr(controller, self.controller_method)()
 
     def middleware(self, *args):
         """Load a list of middleware to run.

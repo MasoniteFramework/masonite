@@ -1,6 +1,13 @@
 from tests import TestCase
 
-from src.masonite.utils.str import random_string, removeprefix, removesuffix
+from src.masonite.utils.str import (
+    random_string,
+    removeprefix,
+    removesuffix,
+    get_controller_name,
+)
+
+from tests.integrations.controllers.api.TestController import TestController
 
 
 class TestStringsUtils(TestCase):
@@ -17,3 +24,14 @@ class TestStringsUtils(TestCase):
     def test_removeprefix(self):
         self.assertEqual(removeprefix("AppEvent", "App"), "Event")
         self.assertEqual(removeprefix("Event", "App"), "Event")
+
+    def test_get_controller_name(self):
+        self.assertEqual(
+            get_controller_name("WelcomeController@show"), "WelcomeController@show"
+        )
+        self.assertEqual(get_controller_name(TestController), "TestController@__call__")
+        self.assertEqual(
+            get_controller_name(TestController.show), "TestController@show"
+        )
+        controller = TestController()
+        self.assertEqual(get_controller_name(controller), "TestController@__call__")

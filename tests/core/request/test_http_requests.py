@@ -7,6 +7,7 @@ class TestHttpRequests(TestCase):
     def setUp(self):
         super().setUp()
         self.addRoutes(
+            Route.get("/test/users/@id", "WelcomeController@show_user"),
             Route.get("/test-with-input", "WelcomeController@form_with_input"),
             Route.get("/server-error", "WelcomeController@server_error"),
         )
@@ -14,6 +15,12 @@ class TestHttpRequests(TestCase):
     def test_csrf_request(self):
         self.withoutCsrf()
         return self.post("/").assertContains("Welcome")
+
+    def test_find_or_fail_during_request(self):
+        self.get("/test/users/1").assertOk()
+        self.withExceptionsHandling()
+        with self.debugMode(False):
+            self.get("/test/users/10").assertNotFound()
 
     def test_route_not_found_throw_exception_in_debug_mode(self):
         with self.debugMode():

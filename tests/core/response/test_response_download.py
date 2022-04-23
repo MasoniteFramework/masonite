@@ -1,13 +1,10 @@
 from tests import TestCase
-from src.masonite.foundation import Application
-import os
-from src.masonite.response import Response
 
 
-class TestResponseRedirect(TestCase):
+class TestResponseDownload(TestCase):
     def setUp(self):
-        application = Application(os.getcwd())
-        self.response = Response(application)
+        super().setUp()
+        self.response = self.make_response()
 
     def test_download(self):
         self.response.download(

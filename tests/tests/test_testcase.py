@@ -97,6 +97,16 @@ class TestTestCase(TestCase):
         with self.debugMode(False):
             self.assertFalse(self.application.is_debug())
 
+    # Skipped to avoid polluting test outputs, but kept there
+    # def test_dump(self):
+    #     self.dump("test", "dump test")
+
+    # def test_dump_session(self):
+    #     self.get("/").dumpSession()
+
+    # def test_dump_headers(self):
+    #     self.get("/").dumpRequestHeaders().dumpResponseHeaders()
+
 
 class TestTestingAssertions(TestCase):
     def setUp(self):
@@ -181,9 +191,12 @@ class TestTestingAssertions(TestCase):
     def test_assert_header_missing(self):
         self.get("/").assertHeaderMissing("X-Test")
 
-    def test_assert_request_with_headers(self):
-        request = self.withHeaders({"X-TEST": "value"}).get("/").request
+    def test_with_headers(self):
+        request = (
+            self.withHeaders({"X-Test": "value", "HTTP_CUSTOM_1": 0}).get("/").request
+        )
         assert request.header("X-Test") == "value"
+        assert request.header("Custom-1") == 0
 
     def test_assert_redirect_to_url(self):
         self.get("/test-redirect-1").assertRedirect("/")
@@ -209,6 +222,9 @@ class TestTestingAssertions(TestCase):
 
     def test_assert_session_missing(self):
         self.get("/").assertSessionMissing("some_test_key")
+
+    # def test_with_session(self):
+    #     self.withSession({"key1": "value1"}).get("/").assertSessionHas("key1", "value1")
 
     def test_assert_view_is(self):
         self.get("/view").assertViewIs("welcome")
@@ -255,19 +271,14 @@ class TestTestingAssertions(TestCase):
     def test_assert_guest(self):
         self.get("/test").assertGuest()
 
-    @pytest.mark.skip(
-        reason="Assertion code looks okay, but test is still failing ? What's the problem ?"
-    )
     def test_assert_authenticated(self):
         self.get("/test-authenticates").assertAuthenticated()
-
-    def test_assert_authenticated_as(self):
-        self.make_request()
-        self.application.make("auth").guard("web").attempt(
-            "idmann509@gmail.com", "secret"
-        )
         user = User.find(1)
-        self.get("/test").assertAuthenticatedAs(user)
+        self.get("/test-authenticates").assertAuthenticated(user)
+
+    def test_acting_as(self):
+        user = User.find(1)
+        self.actingAs(user).get("/test").assertAuthenticated(user)
 
     def test_assert_has_controller(self):
         self.get("/test").assertHasController("WelcomeController@show")

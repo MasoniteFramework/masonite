@@ -1,16 +1,16 @@
 """Notifications Settings."""
-import os
+from src.masonite.environment import env
+
 
 DRIVERS = {
     "slack": {
-        "token": os.getenv("SLACK_TOKEN", ""),  # used for API mode
-        "webhook": os.getenv("SLACK_WEBHOOK", ""),  # used for webhook mode
-        # "mode": os.getenv("SLACK_MODE", "webhook"),  # webhook or api
+        "token": env("SLACK_TOKEN", ""),  # used for API mode
+        "webhook": env("SLACK_WEBHOOK", ""),  # used for webhook mode
     },
     "vonage": {
-        "key": os.getenv("VONAGE_KEY", ""),
-        "secret": os.getenv("VONAGE_SECRET", ""),
-        "sms_from": os.getenv("VONAGE_SMS_FROM", "+33000000000"),
+        "key": env("VONAGE_KEY", ""),
+        "secret": env("VONAGE_SECRET", ""),
+        "sms_from": env("VONAGE_SMS_FROM", "+33000000000"),
     },
     "database": {
         "connection": "sqlite",

@@ -8,6 +8,8 @@ from src.masonite.filesystem import Storage
 from src.masonite.broadcasting import Broadcast, Channel
 from src.masonite.facades import Session, Config, Gate, Dump
 
+from tests.integrations.app.User import User
+
 
 class CanBroadcast:
     def broadcast_on(self):
@@ -150,6 +152,10 @@ class WelcomeController(Controller):
 
     def authorizations(self, view: View, request: Request):
         return view.render("authorizations")
+
+    def show_user(self, request: Request, view: View):
+        user = User.find_or_fail(request.param("id"))
+        return view.render("welcome")
 
     def dd(self, request: Request):
         dump({"test": "value"})

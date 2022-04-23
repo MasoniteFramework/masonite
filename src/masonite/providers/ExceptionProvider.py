@@ -10,7 +10,11 @@ from ..routes import Route
 from ..configuration import config
 from ..exceptions.ExceptionHandler import ExceptionHandler
 from ..dumps import Dumper
-from ..exceptions import DumpExceptionHandler, HttpExceptionHandler
+from ..exceptions import (
+    DumpExceptionHandler,
+    HttpExceptionHandler,
+    ModelNotFoundHandler,
+)
 from ..exceptions.exceptionite.controllers import ExceptioniteController
 from ..exceptions.exceptionite.tabs import DumpsTab
 from ..exceptions.exceptionite.blocks import RequestBlock, AppBlock, ConfigBlock
@@ -73,6 +77,9 @@ class ExceptionProvider(Provider):
         )
         self.application.bind(
             "HttpExceptionHandler", HttpExceptionHandler(self.application)
+        )
+        self.application.bind(
+            "ModelNotFoundHandler", ModelNotFoundHandler(self.application)
         )
 
     def boot(self):

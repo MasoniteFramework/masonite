@@ -124,6 +124,16 @@ class NotificationException(Exception):
     pass
 
 
+class ModelNotFoundException(Exception):
+    is_http_exception = True
+
+    def get_response(self):
+        return "Model Not Found"
+
+    def get_status(self):
+        return 404
+
+
 class AuthorizationException(Exception):
     is_http_exception = True
 

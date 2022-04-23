@@ -21,7 +21,11 @@ class Dumper:
 
     def dump(self, *objects):
         """Dump all provided args and continue code execution. This does not raise a DumpException."""
-        return self._dump(*objects)
+        dumps = self._dump(*objects)
+        # output dumps in console
+        for dump in dumps:
+            print(dump)
+        return dumps
 
     def get_dumps(self, ascending=False):
         """Get all dumps as Dump objects."""

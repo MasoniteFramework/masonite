@@ -9,6 +9,8 @@ from src.masonite.broadcasting import Broadcast, Channel
 from src.masonite.facades import Session, Config, Gate, Dump
 from src.masonite.validation import Validator
 
+from tests.integrations.app.User import User
+
 
 class CanBroadcast:
     def broadcast_on(self):
@@ -159,9 +161,14 @@ class WelcomeController(Controller):
 
     def use_authorization_helper(self, request: Request):
         request.authorize("display-admin")
+        return ""
 
-    def authorizations(self, view: View):
+    def authorizations(self, view: View, request: Request):
         return view.render("authorizations")
+
+    def show_user(self, request: Request, view: View):
+        user = User.find_or_fail(request.param("id"))
+        return view.render("welcome")
 
     def dd(self, request: Request):
         dump({"test": "value"})
@@ -170,3 +177,6 @@ class WelcomeController(Controller):
 
     def server_error(self, view: View):
         raise Exception("unknown error")
+
+    def __call__(self):
+        return "welcome"

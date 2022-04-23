@@ -50,14 +50,12 @@ class Session:
     # Start of methods
     def start(self, driver: str = None) -> "Session":
         """Initialize session."""
-        self.data = {}
         self.added = {}
-        self.flashed = {}
         self.deleted = []
         self.deleted_flashed = []
         started_data = self.get_driver(name=driver).start()
-        self.data = started_data.get("data")
-        self.flashed = started_data.get("flashed")
+        self.data = started_data.get("data", {})
+        self.flashed = started_data.get("flashed", {})
         return self
 
     def get_data(self) -> dict:
@@ -92,7 +90,8 @@ class Session:
         except json.decoder.JSONDecodeError:
             pass
 
-        return self.added.update({key: value})
+        self.added.update({key: value})
+        self.save()
 
     def increment(self, key: str, count: int = 1) -> None:
         """Increment session key with given count."""
@@ -118,6 +117,7 @@ class Session:
                 pass
             self.flashed.pop(key)
             self.deleted_flashed.append(key)
+            self.save()
             return value
 
         value = self.get_data().get(key)
@@ -137,12 +137,14 @@ class Session:
     def flush(self) -> None:
         """Delete all keys from session."""
         self.deleted += list(self.get_data().keys())
+        self.save()
 
     def delete(self, key: str) -> "None|Any":
         """Delete the given key from session."""
         self.deleted.append(key)
         if key in self.flashed:
             self.flashed.pop(key)
+        self.save()
 
     def flash(self, key: str, value: Any) -> None:
         """Save temporary value into session."""
@@ -155,6 +157,7 @@ class Session:
             pass
 
         self.flashed.update({key: value})
+        self.save()
 
     def all(self) -> dict:
         """Get all session data."""

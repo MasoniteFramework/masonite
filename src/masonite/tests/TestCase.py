@@ -7,6 +7,8 @@ import unittest
 import pendulum
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
+from pprint import pprint
+
 
 if TYPE_CHECKING:
     from ..foundation import Application
@@ -16,13 +18,13 @@ if TYPE_CHECKING:
     from masoniteorm.models import Model
 
 from ..routes import Route
-from ..foundation.response_handler import testcase_handler
 from ..utils.http import generate_wsgi
 from ..request import Request
 from ..response import Response
 from ..environment import LoadEnvironment
-from ..facades import Config
+from ..facades import Config, Session
 from ..providers.RouteProvider import RouteProvider
+from ..providers.FrameworkProvider import FrameworkProvider
 from ..exceptions import RouteNotFoundException
 from .TestCommand import TestCommand
 
@@ -37,14 +39,17 @@ class TestCase(unittest.TestCase):
 
         self.application: "Application" = application
         self.original_class_mocks = {}
+
+        self._acting_as = {}
         self._test_cookies = {}
         self._test_headers = {}
+        self._test_session = {}
+        self._console_out = None
+        self._console_err = None
+
         if hasattr(self, "startTestRun"):
             self.startTestRun()
         self.withoutCsrf()
-
-        self._console_out = None
-        self._console_err = None
 
         self.withoutExceptionsHandling()
         # boot providers as they won't not be loaded if the test is not doing a request
@@ -66,14 +71,23 @@ class TestCase(unittest.TestCase):
         """Define code that should be run after each unit tests."""
         self.withoutCsrf()
         self.withoutExceptionsHandling()
+        self._acting_as = {}
+        self._test_cookies = {}
+        self._test_session = {}
+        self._test_headers = {}
+
         # restore routes
         if self.routes_to_restore:
             self.application.make("router").routes = list(self.routes_to_restore)
         if hasattr(self, "stopTestRun"):
             self.stopTestRun()
+
         # restore console output
         self._console_out = None
         self._console_err = None
+
+        # logout users
+        self.application.make("auth").logout()
 
     @pytest.fixture(autouse=True)
     def _pass_fixtures(self, capsys):
@@ -205,54 +219,82 @@ class TestCase(unittest.TestCase):
     def fetch(
         self, path: str, data: dict = None, method: str = None
     ) -> "HttpTestResponse":
+        """Run an HTTP request and get a test response on which assertions can be run."""
+        # prepare WSGI request environment
+        environ = {}
+        http_cookie = ""
+
         if data is None:
             data = {}
         if not self._csrf:
             token = self.application.make("sign").sign("cookie")
             data.update({"__token": "cookie"})
-            wsgi_request = generate_wsgi(
-                {
-                    "HTTP_COOKIE": f"SESSID={token}; csrf_token={token}",
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
-        else:
-            wsgi_request = generate_wsgi(
-                {
-                    "CONTENT_LENGTH": len(str(json.dumps(data))),
-                    "REQUEST_METHOD": method,
-                    "PATH_INFO": path,
-                    "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
-                }
-            )
+            http_cookie = f"SESSID={token}; csrf_token={token}"
 
-        request, response = testcase_handler(
-            self.application,
-            wsgi_request,
-            self.mock_start_response,
-            exception_handling=self._exception_handling,
+        environ = generate_wsgi(
+            {
+                "CONTENT_LENGTH": len(str(json.dumps(data))),
+                "wsgi.input": io.BytesIO(bytes(json.dumps(data), "utf-8")),
+                "HTTP_COOKIE": http_cookie,
+            },
+            path=path,
+            method=method,
         )
-        # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
-        for name, value in self._test_cookies.items():
-            request.cookie(name, value)
-        # add eventual headers added inside the test
-        for name, value in self._test_headers.items():
-            request.header(name, value)
+        self.application.bind("environ", environ)
+
+        # boot all WSGI providers
+        try:
+            for provider in self.application.get_providers():
+                if isinstance(provider, FrameworkProvider):
+                    self.application.resolve(provider.boot)
+                    # now we have a request, response object
+                    request = self.application.make("request")
+                    response = self.application.make("response")
+
+                    # add eventual cookies added inside the test (not encrypted to be able to assert value ?)
+                    for name, value in self._test_cookies.items():
+                        request.cookie(name, value)
+
+                    # add eventual headers added inside the test
+                    for name, value in self._test_headers.items():
+                        request.header(name, value)
+
+                    # @dev: this is impossible for now because session is started in the session middleware only...
+                    # add eventual session data added inside the test
+                    # for name, value in self._test_session.items():
+                    #     Session.set(name, value)
+
+                    # log user if required
+                    if self._acting_as:
+                        user = self._acting_as.get("user")
+                        guard = self._acting_as.get("guard")
+                        self.application.make("auth").guard(guard).attempt_by_id(
+                            user.get_primary_key_value()
+                        )
+                else:
+                    self.application.resolve(provider.boot)
+
+        except Exception as e:
+            if not self._exception_handling:
+                raise e
+            self.application.make("exception_handler").handle(e)
+
+        self.mock_start_response(
+            response.get_status_code(),
+            response.get_headers() + response.cookie_jar.render_response(),
+        )
 
         route = self.application.make("router").find(path, method)
         if route:
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
 
         exception = RouteNotFoundException(f"No route found for url {path}")
         if self._exception_handling:
             response = self.application.make("exception_handler").handle(exception)
             return self.application.make("tests.response").build(
-                self.application, request, response, route
+                self, self.application, request, response, route
             )
         else:
             raise exception
@@ -322,12 +364,22 @@ class TestCase(unittest.TestCase):
         self._test_headers = headers_dict
         return self
 
-    def actingAs(self, user) -> None:
-        """Connect as the given user during the lifetime of the test."""
-        self.make_request()
-        self.application.make("auth").guard("web").login_by_id(
-            user.get_primary_key_value()
-        )
+    # def withSession(self, session_dict: dict) -> "TestCase":
+    #     """Add session data to the request during the lifetime of the test."""
+    #     self._test_session = session_dict
+    #     return self
+
+    def actingAs(self, user, guard="web") -> None:
+        """Connect as the given user during the lifetime of the test. You can select the auth
+        guard to use to authenticate."""
+        self._acting_as = {"user": user, "guard": guard}
+        return self
+
+    def actingAsGuest(self) -> None:
+        """Connect as an unauthenticated user during the lifetime of the test."""
+        self.application.make("auth").logout()
+        self._acting_as = {}
+        return self
 
     def restore(self, binding: str) -> None:
         """Restore the service previously mocked to the original one."""
@@ -398,3 +450,20 @@ class TestCase(unittest.TestCase):
             .where_not_null(deleted_at_column)
             .get()
         )
+
+    def dump(self, output: str, title: str = ""):
+        """Print output to console during tests. A title can be provided to be displayed at dump
+        start."""
+        with self.capsys.disabled():
+            print("\n")
+            if title:
+                print(f"\033[93m> {title}:\033[0m\n")
+            pprint(output, width=110)
+
+    def stop(self, msg: str = ""):
+        """Stop current test, a message can be given and will be displayed in the
+        console.
+        2 is the pytest exit code for user interruption.
+        https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
+        """
+        return pytest.exit(msg, 2)

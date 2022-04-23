@@ -44,3 +44,9 @@ class TestRequest(TestCase):
         )
         request = IpMiddleware().before(request, response)
         self.assertEqual(request.ip(), "127.0.0.1")
+
+    def test_requests_accepts_json(self):
+        request = self.make_request({"HTTP_ACCEPT": "application/json"})
+        self.assertTrue(request.accepts_json())
+        request = self.make_request({"HTTP_ACCEPT": "text/html"})
+        self.assertFalse(request.accepts_json())

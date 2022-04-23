@@ -6,7 +6,8 @@ from ..utils.structures import data_get
 
 
 class HttpTestResponse:
-    def __init__(self, application, request, response, route):
+    def __init__(self, testcase, application, request, response, route):
+        self.testcase = testcase
         self.application = application
         self.request = request
         self.response = response
@@ -104,6 +105,22 @@ class HttpTestResponse:
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
 
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump request and response headers and die."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
+
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
 
@@ -184,6 +201,16 @@ class HttpTestResponse:
                 assert not errors.get(key)
         return self
 
+    def dumpSession(self):
+        """Dump session data."""
+        self.testcase.dump(self.application.make("session").all(), "Session Data")
+        return self
+
+    def ddSession(self):
+        """Dump session data and die."""
+        self.dumpSession()
+        self.testcase.stop()
+
     def _ensure_response_has_view(self):
         """Ensure that the response has a view as its original content."""
         if not (self.response.original and isinstance(self.response.original, View)):
@@ -226,17 +253,17 @@ class HttpTestResponse:
         assert not data_get(self.response.original.dictionary, key)
         return self
 
-    def assertAuthenticated(self):
-        assert self.application.make("auth").guard("web").user()
+    def assertGuest(self, guard="web"):
+        assert not self.application.make("auth").guard(guard).user()
         return self
 
-    def assertGuest(self):
-        assert not self.application.make("auth").guard("web").user()
-        return self
-
-    def assertAuthenticatedAs(self, user):
-        user = self.application.make("auth").guard("web").user()
-        assert user == user
+    def assertAuthenticated(self, user=None, guard="web"):
+        """Assert that user is authenticated. If a user a given assert that the given is
+        authenticated."""
+        logged_user = self.application.make("auth").guard(guard).user()
+        assert logged_user
+        if user:
+            assert user.get_id() == logged_user.get_id()
         return self
 
     def assertHasHttpMiddleware(self, middleware):

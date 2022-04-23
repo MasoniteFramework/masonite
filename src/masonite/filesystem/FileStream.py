@@ -1,5 +1,7 @@
 import os
 
+from ..utils.filesystem import get_extension
+
 
 class FileStream:
     def __init__(self, stream, name=None):
@@ -10,7 +12,7 @@ class FileStream:
         return self.stream.name
 
     def extension(self):
-        return os.path.splitext(self._name or self.path())[1]
+        return get_extension(self._name or self.path())
 
     def name(self):
         return self._name or os.path.basename(self.path())

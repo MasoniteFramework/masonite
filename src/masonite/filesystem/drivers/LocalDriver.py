@@ -1,10 +1,11 @@
 import os
+import uuid
+from os.path import isfile, join
 from shutil import copyfile, move
+
 from ..FileStream import FileStream
 from ..File import File
-import uuid
-import os
-from os.path import isfile, join
+from ...utils.filesystem import get_extension
 
 
 class LocalDriver:
@@ -22,7 +23,7 @@ class LocalDriver:
         return file_path
 
     def get_name(self, path, alias):
-        extension = os.path.splitext(path)[1]
+        extension = get_extension(path)
         return f"{alias}{extension}"
 
     def put(self, file_path, content):

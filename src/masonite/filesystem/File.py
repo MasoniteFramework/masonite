@@ -1,5 +1,6 @@
 import hashlib
-import os
+
+from ..utils.filesystem import get_extension
 
 
 class File:
@@ -11,7 +12,7 @@ class File:
         pass
 
     def extension(self):
-        return os.path.splitext(self.filename)[1]
+        return get_extension(self.filename)
 
     def name(self):
         return self.filename

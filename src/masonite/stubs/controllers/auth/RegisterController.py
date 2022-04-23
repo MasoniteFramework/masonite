@@ -7,10 +7,10 @@ from masonite.authentication import Auth
 
 class RegisterController(Controller):
     def show(self, auth: Auth, view: View, response: Response):  # Show register page
-        #If user is logged in, redirect to home
+        # If user is logged in, redirect to home
         if auth.user():
             return response.redirect(name="auth.home")
-        #Else show register page
+        # Else show register page
         return view.render("auth.register")
 
     def store(

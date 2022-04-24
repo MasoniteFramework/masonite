@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Callable, Any
 from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
+from ..validation import MessageBag
 
 if TYPE_CHECKING:
     from ..foundation import Application

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <style>
+        form label,
+        form input {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Contact Page</h1>
+    @if errors.any()
+    <div class="alert alert-danger">
+        <ul>
+            @for key, message in errors.all().items()
+            <li>{{ message }}</li>
+            @endfor
+        </ul>
+    </div>
+    @else
+    No errors
+    @endif
+    <div class="flex flex-row justify-center">
+        <form method="post" action="/contact">
+            {{ csrf_field }}
+            <div>
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Name">
+                @if errors.has('name')
+                <code>{{ errors.get('name')[0] }}</code>
+                @endif
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="Email">
+            </div>
+            <div>
+                <label for="message">Message</label>
+                <textarea name="message" placeholder="Message"></textarea>
+            </div>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+
+</html>

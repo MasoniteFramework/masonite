@@ -6,3 +6,5 @@
 {% if exists('auth/base') %}
   {{ "auth/base template exists"}}
 {% endif %}
+
+{{ http_method("PATCH") }}

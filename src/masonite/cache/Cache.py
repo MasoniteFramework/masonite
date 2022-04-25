@@ -51,3 +51,6 @@ class Cache:
 
     def flush(self, *args, store=None, **kwargs):
         return self.store(name=store).flush(*args, **kwargs)
+
+    def remember(self, *args, store=None, **kwargs):
+        return self.store(name=store).remember(*args, **kwargs)

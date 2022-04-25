@@ -13,6 +13,7 @@ class TestPackageProviderPublishing(TestCase):
         )
 
         published_migrations = []
+        dump(migrations_path())
         for migration in os.listdir(migrations_path()):
             if migration.startswith(timestamp):
                 published_migrations.append(migration)

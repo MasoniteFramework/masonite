@@ -386,11 +386,14 @@ class TestCase(unittest.TestCase):
         original = self.original_class_mocks.get(binding)
         self.application.bind(binding, original)
 
-    def fakeTime(self, pendulum_datetime: "DateTime") -> None:
+    def fakeTime(self, pendulum_datetime: "DateTime" = None) -> "DateTime":
         """Set a given pendulum instance to be returned when a "now" (or "today", "tomorrow",
         "yesterday") instance is created. It's really useful during tests to check
         timestamps logic."""
+        if pendulum_datetime is None:
+            pendulum_datetime = pendulum.now()
         pendulum.set_test_now(pendulum_datetime)
+        return pendulum_datetime
 
     def fakeTimeTomorrow(self) -> None:
         """Set the mocked time as tomorrow."""

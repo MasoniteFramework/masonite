@@ -1,3 +1,4 @@
+from inspect import isclass
 import re
 from urllib import parse
 
@@ -161,6 +162,11 @@ class HTTPRoute:
             except LoaderNotFound as e:
                 self.e = e
                 print("\033[93mTrouble importing controller!", str(e), "\033[0m")
+        # controller is an instance with a bound method
+        elif hasattr(controller, "__self__"):
+            _, controller_method_str = controller.__qualname__.split(".")
+            self.controller_instance = controller.__self__
+
         # it's a class or class.method, we don't have to find it, just get the class
         elif hasattr(controller, "__qualname__"):
             if "." in controller.__qualname__:
@@ -170,6 +176,7 @@ class HTTPRoute:
             else:
                 controller_name = controller.__qualname__
                 controller_method_str = "__call__"
+
             try:
                 self.controller_class = Loader.get_object(
                     controller.__module__, controller_name, raise_exception=True

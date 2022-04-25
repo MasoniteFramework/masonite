@@ -198,12 +198,19 @@ class TestCase(unittest.TestCase):
 
     def make_request(
         self,
-        data: dict = {},
+        wsgi_data: dict = {},
+        post_data: dict = {},
         path: str = "/",
         query_string: str = "application=Masonite",
         method: str = "GET",
     ) -> "Request":
-        request = Request(generate_wsgi(data, path, query_string, method))
+
+        wsgi_environ = {
+            **wsgi_data,
+            "wsgi.input": io.BytesIO(bytes(json.dumps(post_data), "utf-8")),
+            "CONTENT_LENGTH": len(str(json.dumps(post_data))),
+        }
+        request = Request(generate_wsgi(wsgi_environ, path, query_string, method))
         request.app = self.application
 
         self.application.bind("request", request)

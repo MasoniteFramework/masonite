@@ -29,6 +29,7 @@ class SessionMiddleware(Middleware):
             Session.flash("errors", {"errors": errors})
         else:
             Session.flash("errors", errors)
+
         return Response
 
     def with_success(self, success):

@@ -5,6 +5,9 @@ from tests.integrations.controllers.WelcomeController import WelcomeController
 
 
 class SomeController:
+    def method(self):
+        return "hello from method"
+
     def __call__(self):
         return "hello"
 
@@ -44,3 +47,10 @@ class TestParsingControllerInRoutes(TestCase):
         assert route.controller_instance == controller
         assert route.controller_method == "__call__"
         assert route.get_response() == "hello"
+
+    def test_use_controller_instance_with_method(self):
+        controller = SomeController()
+        route = Route.get("/home", controller.method)
+        assert route.controller_instance == controller
+        assert route.controller_method == "method"
+        assert route.get_response() == "hello from method"

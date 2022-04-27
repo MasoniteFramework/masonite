@@ -34,7 +34,7 @@ class BaseValidation:
         else:
             self.errors.update({key: message})
 
-    def find(self, key, dictionary, default=False):
+    def find(self, key, dictionary, default=""):
         return data_get(dictionary, key, default)
 
     def message(self, key):

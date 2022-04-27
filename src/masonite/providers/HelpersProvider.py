@@ -28,7 +28,7 @@ class HelpersProvider(Provider):
                 "back": lambda url=request.get_path_with_query(): (
                     Markup(f"<input type='hidden' name='__back' value='{url}' />")
                 ),
-                "http_method": lambda method: (
+                "method": lambda method: (
                     Markup(f"<input type='hidden' name='__method' value='{method}' />")
                 ),
                 "asset": urls_helper.asset,

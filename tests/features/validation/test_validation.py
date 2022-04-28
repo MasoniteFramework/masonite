@@ -1,11 +1,8 @@
 import json
 import unittest
-import pytest
-import platform
 import pendulum
 from uuid import uuid1, uuid3, uuid4, uuid5
 
-# from masonite.drivers import SessionCookieDriver
 from tests import TestCase
 
 from src.masonite.validation import RuleEnclosure
@@ -26,6 +23,7 @@ from src.masonite.validation import (
     email,
     equals,
     exists,
+    exists_in_db,
     file,
     greater_than,
     image,
@@ -39,6 +37,7 @@ from src.masonite.validation import (
     postal_code,
     strong,
     regex,
+    unique_in_db,
     uuid,
     video,
 )
@@ -1696,6 +1695,70 @@ class TestValidationProvider(TestCase):
         self.assertIn(
             "The password field has been breached in the past. Try another password",
             password_validation,
+        )
+
+    def test_exists_in_db(self):
+        validate = Validator().validate(
+            {
+                "email": "unknown@gmail.com",
+            },
+            exists_in_db(["email"], "users", "email"),
+        )
+        self.assertIn(
+            "No record found in table users with the same email.",
+            validate.get("email"),
+        )
+
+        validate = Validator().validate(
+            {
+                "email": "idmann509@gmail.com",
+            },
+            exists_in_db(["email"], "users", "email"),
+        )
+        self.assertEqual(len(validate), 0)
+
+    def test_exists_in_db_with_model_path(self):
+        validate = Validator().validate(
+            {
+                "email": "unknown@gmail.com",
+            },
+            exists_in_db(["email"], "tests.integrations.app.User", "email"),
+        )
+        self.assertIn(
+            "No record found in table users with the same email.",
+            validate.get("email"),
+        )
+
+    def test_unique_in_db(self):
+        validate = Validator().validate(
+            {
+                "email": "idmann509@gmail.com",
+            },
+            unique_in_db(["email"], "users", "email"),
+        )
+        self.assertIn(
+            "A record already exists in table users with the same email.",
+            validate.get("email"),
+        )
+
+        validate = Validator().validate(
+            {
+                "email": "unknown@gmail.com",
+            },
+            unique_in_db(["email"], "users", "email"),
+        )
+        self.assertEqual(len(validate), 0)
+
+    def test_unique_in_db_with_model_path(self):
+        validate = Validator().validate(
+            {
+                "email": "idmann509@gmail.com",
+            },
+            unique_in_db(["email"], "tests.integrations.app.User", "email"),
+        )
+        self.assertIn(
+            "A record already exists in table users with the same email.",
+            validate.get("email"),
         )
 
 

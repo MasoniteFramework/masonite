@@ -1,10 +1,13 @@
-from .RuleEnclosure import RuleEnclosure
-from .MessageBag import MessageBag
-from ..utils.structures import data_get
 import inspect
 import re
 import os
 import mimetypes
+
+from .RuleEnclosure import RuleEnclosure
+from .MessageBag import MessageBag
+from ..utils.structures import data_get
+from ..configuration import config
+from ..facades import Loader
 
 
 class BaseValidation:
@@ -328,6 +331,83 @@ class exists(BaseValidation):
 
     def negated_message(self, attribute):
         return "The {} must not exist.".format(attribute)
+
+
+def resolve_model_or_table(string):
+    # it means that a python model path has been given
+    if "." in string:
+        model_name = string.split(".")[-1]
+        model_class = Loader.get_object(string, model_name)
+        table = model_class().get_table_name()
+        return table, model_class
+    else:
+        return string, None
+
+
+class exists_in_db(BaseValidation):
+    """A record with field equal to the given value should exists in the table/model specified."""
+
+    def __init__(
+        self,
+        validations,
+        table_or_model,
+        column=None,
+        connection="default",
+        messages={},
+        raises={},
+    ):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.connection = config("database.db").get_query_builder(connection)
+        self.column = column
+        self.table, self.model = resolve_model_or_table(table_or_model)
+
+    def passes(self, attribute, key, dictionary):
+        column = key if not self.column else self.column
+        count = self.connection.table(self.table).where(column, attribute).count()
+        return count
+
+    def message(self, attribute):
+        return "No record found in table {} with the same {}.".format(
+            self.table, attribute
+        )
+
+    def negated_message(self, attribute):
+        return "A record already exists in table {} with the same {}.".format(
+            self.table, attribute
+        )
+
+
+class unique_in_db(BaseValidation):
+    """No record should exist for the field under validation within the given table/model."""
+
+    def __init__(
+        self,
+        validations,
+        table_or_model,
+        column=None,
+        connection="default",
+        messages={},
+        raises={},
+    ):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.connection = config("database.db").get_query_builder(connection)
+        self.column = column
+        self.table, self.model = resolve_model_or_table(table_or_model)
+
+    def passes(self, attribute, key, dictionary):
+        column = key if not self.column else self.column
+        count = self.connection.table(self.table).where(column, attribute).count()
+        return count == 0
+
+    def message(self, attribute):
+        return "A record already exists in table {} with the same {}.".format(
+            self.table, attribute
+        )
+
+    def negated_message(self, attribute):
+        return "A record should exist in table {} with the same {}.".format(
+            self.table, attribute
+        )
 
 
 class active_domain(BaseValidation):
@@ -1271,6 +1351,7 @@ class ValidationFactory:
             equals,
             email,
             exists,
+            exists_in_db,
             file,
             greater_than,
             image,
@@ -1298,6 +1379,7 @@ class ValidationFactory:
             strong,
             timezone,
             truthy,
+            unique_in_db,
             uuid,
             video,
             when,

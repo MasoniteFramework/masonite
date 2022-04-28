@@ -14,6 +14,7 @@ from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
 
+
 if TYPE_CHECKING:
     from ..foundation import Application
 

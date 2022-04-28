@@ -1,5 +1,3 @@
-import sys
-import hupper
 from werkzeug.serving import run_simple
 
 from .Command import Command
@@ -15,6 +13,7 @@ class ServeCommand(Command):
         {--d|dont-reload : Make the server NOT automatically reload on file changes}
         {--i|reload-interval=1 : Number of seconds to wait to reload after changed are detected}
         {--l|live-reload : Make the server automatically refresh your web browser}
+        {--t|threaded : Handle concurrent requests using threads}
     """
 
     def __init__(self, application):
@@ -51,30 +50,24 @@ class ServeCommand(Command):
             )
             return
 
-        reloader = hupper.start_reloader(self.app.make("server.runner"))
+        use_reloader = True
+        threaded = False
+        extra_files = [".env", self.app.get_storage_path()]
 
-        # monitor an extra file
-        reloader.watch_files([".env", self.app.get_storage_path()])
+        if self.option("dont-reload"):
+            use_reloader = False
 
+        if self.option("threaded"):
+            threaded = True
 
-def main(args=sys.argv[1:]):
-    from wsgi import application
-
-    host = "127.0.0.1"
-    port = "8000"
-    threaded = False
-    if "--host" in args:
-        host = args[args.index("--host") + 1]
-    if "-b" in args:
-        host = args[args.index("-b") + 1]
-    if "--port" in args:
-        port = args[args.index("--port") + 1]
-    if "-p" in args:
-        port = args[args.index("-p") + 1]
-    if "--threaded" in args or "--t" in args or "-t" in args:
-        threaded = True
-
-    # waitress.serve(
-    #     application, host=host, port=port, clear_untrusted_proxy_headers=False
-    # )
-    run_simple(host, int(port), application, use_reloader=False, threaded=threaded)
+        run_simple(
+            self.option("host"),
+            int(self.option("port")),
+            self.app,
+            threaded=threaded,
+            use_reloader=use_reloader,
+            extra_files=extra_files,
+            # reloader_interval=
+            # more efficient than stat
+            reloader_type="watchdog",
+        )

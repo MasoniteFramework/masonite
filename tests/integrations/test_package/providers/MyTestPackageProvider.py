@@ -20,7 +20,9 @@ class MyTestPackageProvider(PackageProvider):
             .config("config/test.py", publish=True)
             .views("templates", publish=True)
             .commands(Command1(), Command2())
-            .migrations("migrations/create_some_table.py")
+            .migrations(
+                "migrations/create_some_table.py", "migrations/create_other_table.py"
+            )
             .assets("assets")
             .controllers("controllers")  # ensure this one is done before routes()
             .routes("routes/api.py", "routes/web.py")

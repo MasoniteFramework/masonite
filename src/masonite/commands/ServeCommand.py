@@ -1,7 +1,7 @@
 import sys
-
 import hupper
-import waitress
+from werkzeug.serving import run_simple
+
 from .Command import Command
 
 
@@ -12,7 +12,6 @@ class ServeCommand(Command):
     serve
         {--p|port=8000 : Specify which port to run the server}
         {--b|host=127.0.0.1 : Specify which ip address to run the server}
-        {--r|reload : Make the server automatically reload on file changes}
         {--d|dont-reload : Make the server NOT automatically reload on file changes}
         {--i|reload-interval=1 : Number of seconds to wait to reload after changed are detected}
         {--l|live-reload : Make the server automatically refresh your web browser}
@@ -63,6 +62,7 @@ def main(args=sys.argv[1:]):
 
     host = "127.0.0.1"
     port = "8000"
+    threaded = False
     if "--host" in args:
         host = args[args.index("--host") + 1]
     if "-b" in args:
@@ -71,9 +71,10 @@ def main(args=sys.argv[1:]):
         port = args[args.index("--port") + 1]
     if "-p" in args:
         port = args[args.index("-p") + 1]
+    if "--threaded" in args or "--t" in args or "-t" in args:
+        threaded = True
 
-    print(f"Serving on : http://{host}:{port}")
-
-    waitress.serve(
-        application, host=host, port=port, clear_untrusted_proxy_headers=False
-    )
+    # waitress.serve(
+    #     application, host=host, port=port, clear_untrusted_proxy_headers=False
+    # )
+    run_simple(host, int(port), application, use_reloader=False, threaded=threaded)

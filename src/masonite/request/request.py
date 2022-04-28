@@ -68,7 +68,7 @@ class Request(ValidatesRequest, AuthorizesRequest):
 
     def get_request_method(self) -> str:
         """Get request method (read from REQUEST_METHOD environment variable)."""
-        return self.environ.get("REQUEST_METHOD")
+        return self.input("__method") or self.environ.get("REQUEST_METHOD")
 
     def input(self, name: str, default: str = "") -> str:
         """Get a specific request input value with the given name. If the value does not exist in

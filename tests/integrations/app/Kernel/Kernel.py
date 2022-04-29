@@ -81,10 +81,6 @@ class Kernel:
             "middlewares.location", "tests/integrations/app/middlewares"
         )
 
-        self.application.bind(
-            "server.runner", "src.masonite.commands.ServeCommand.main"
-        )
-
     def register_middleware(self):
         self.application.make("middleware").add(self.route_middleware).add(
             self.http_middleware

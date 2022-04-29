@@ -1,7 +1,5 @@
-import sys
+from werkzeug.serving import run_simple
 
-import hupper
-import waitress
 from .Command import Command
 
 
@@ -12,10 +10,10 @@ class ServeCommand(Command):
     serve
         {--p|port=8000 : Specify which port to run the server}
         {--b|host=127.0.0.1 : Specify which ip address to run the server}
-        {--r|reload : Make the server automatically reload on file changes}
         {--d|dont-reload : Make the server NOT automatically reload on file changes}
         {--i|reload-interval=1 : Number of seconds to wait to reload after changed are detected}
         {--l|live-reload : Make the server automatically refresh your web browser}
+        {--t|threaded : Handle concurrent requests using threads}
     """
 
     def __init__(self, application):
@@ -52,28 +50,24 @@ class ServeCommand(Command):
             )
             return
 
-        reloader = hupper.start_reloader(self.app.make("server.runner"))
+        use_reloader = True
+        threaded = False
+        extra_files = [".env", self.app.get_storage_path()]
 
-        # monitor an extra file
-        reloader.watch_files([".env", self.app.get_storage_path()])
+        if self.option("dont-reload"):
+            use_reloader = False
 
+        if self.option("threaded"):
+            threaded = True
 
-def main(args=sys.argv[1:]):
-    from wsgi import application
-
-    host = "127.0.0.1"
-    port = "8000"
-    if "--host" in args:
-        host = args[args.index("--host") + 1]
-    if "-b" in args:
-        host = args[args.index("-b") + 1]
-    if "--port" in args:
-        port = args[args.index("--port") + 1]
-    if "-p" in args:
-        port = args[args.index("-p") + 1]
-
-    print(f"Serving on : http://{host}:{port}")
-
-    waitress.serve(
-        application, host=host, port=port, clear_untrusted_proxy_headers=False
-    )
+        run_simple(
+            self.option("host"),
+            int(self.option("port")),
+            self.app,
+            threaded=threaded,
+            use_reloader=use_reloader,
+            extra_files=extra_files,
+            # reloader_interval=
+            # more efficient than stat
+            reloader_type="watchdog",
+        )

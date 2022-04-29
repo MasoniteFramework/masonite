@@ -45,7 +45,6 @@ setup(
         "jinja2>=3.0.0<3.1",
         "cleo>=0.8.1,<0.9",
         "hupper>=1.10,<1.11",
-        "waitress>=2.1,<2.2",
         "bcrypt>=3.2,<3.3",
         "whitenoise>=5.2,<5.3",
         "python-dotenv>=0.15,<0.16",
@@ -56,6 +55,8 @@ setup(
         "dotty_dict>=1.3.0<1.40",
         "pyjwt>=2.3,<2.4",
         "pytest>=7<8",
+        "werkzeug>=2<3",
+        "watchdog>=2<3",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

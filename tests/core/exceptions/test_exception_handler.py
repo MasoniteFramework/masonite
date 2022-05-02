@@ -1,4 +1,3 @@
-from turtle import pd
 from tests import TestCase
 from src.masonite.routes import Route
 from src.masonite.controllers import Controller

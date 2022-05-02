@@ -11,4 +11,4 @@ class TestApiModule(TestCase):
     def test_can_generate_token(self):
         user = MockModel()
 
-        self.assertTrue(len(user.generate_jwt()) == 166)
+        self.assertTrue(len(user.generate_jwt()) == 195)

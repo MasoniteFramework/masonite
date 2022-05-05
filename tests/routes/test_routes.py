@@ -187,8 +187,8 @@ class TestRoutes(TestCase):
         route = router.find("/test/1", "get")
         self.assertTrue(route)
 
-        route = router.find("/test/1", "post")
-        self.assertIsNone(route)
+        with self.assertRaises(MethodNotAllowedException) as e:
+            route = router.find("/test/1", "post")
 
     def test_route_views(self):
         self.get("/test_view").assertContains("111")

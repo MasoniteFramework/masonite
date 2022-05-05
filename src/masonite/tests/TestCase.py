@@ -376,13 +376,13 @@ class TestCase(unittest.TestCase):
     #     self._test_session = session_dict
     #     return self
 
-    def actingAs(self, user, guard="web") -> None:
+    def actingAs(self, user, guard="web") -> "TestCase":
         """Connect as the given user during the lifetime of the test. You can select the auth
         guard to use to authenticate."""
         self._acting_as = {"user": user, "guard": guard}
         return self
 
-    def actingAsGuest(self) -> None:
+    def actingAsGuest(self) -> "TestCase":
         """Connect as an unauthenticated user during the lifetime of the test."""
         self.application.make("auth").logout()
         self._acting_as = {}

@@ -31,6 +31,7 @@ from .exceptions import (
     LoaderNotFound,
     QueueException,
     AmbiguousError,
+    MethodNotAllowedException,
     ModelNotFoundException,
     ThrottleRequestsException,
 )

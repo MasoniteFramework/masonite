@@ -1,17 +1,54 @@
 from urllib import parse
 from ..utils.collections import flatten
-from ..exceptions import RouteNotFoundException
+from ..exceptions import RouteNotFoundException, MethodNotAllowedException
 
 
 class Router:
+
+    http_methods = ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
     def __init__(self, *routes, module_location=None):
         self.routes = flatten(routes)
 
     def find(self, path, request_method, subdomain=None):
+        from .HTTPRoute import HTTPRoute
 
         for route in self.routes:
             if route.match(path, request_method, subdomain=subdomain):
                 return route
+
+        # we did not find a route matching the given path and method.
+        # we will try to find a route matching other methods
+        other_methods = [
+            method for method in self.http_methods if method != request_method
+        ]
+        matched_methods = []
+        for other_method in other_methods:
+            for route in self.routes:
+                if route.match(path, other_method, subdomain=subdomain):
+                    matched_methods.append(other_method)
+                    break
+
+        # we really did not find a route
+        if not matched_methods:
+            return None
+
+        # if alternative methods have been found, check if current request method is OPTIONS
+        # to build a proper reponse else build a method not allowed response
+        if request_method == "OPTIONS":
+
+            def preflight_response(app):
+                return (
+                    app.make("response")
+                    .with_headers({"Allow": ", ".join(matched_methods)})
+                    .status(204)
+                )
+
+            preflight_route = HTTPRoute(path, request_method=["options"])
+            preflight_route.get_response = preflight_response
+            return preflight_route
+        else:
+            raise MethodNotAllowedException(matched_methods, request_method)
 
     def matches(self, path):
         for route in self.routes:

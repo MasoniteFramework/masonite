@@ -103,7 +103,7 @@ class Route:
         )
 
     @classmethod
-    def view(self, url, template, data=None,  **options ):
+    def view(self, url, template, data=None, **options):
         if not data:
             data = {}
 

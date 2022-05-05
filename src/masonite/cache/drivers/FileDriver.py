@@ -25,7 +25,7 @@ class FileDriver:
 
     def get(self, key, default=None, **options):
         if not self.has(key):
-            return None
+            return default
 
         modified_at = self.get_modified_at(os.path.join(self._get_directory(), key))
 

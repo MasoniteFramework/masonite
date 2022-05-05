@@ -32,4 +32,5 @@ from .exceptions import (
     QueueException,
     AmbiguousError,
     ModelNotFoundException,
+    ThrottleRequestsException,
 )

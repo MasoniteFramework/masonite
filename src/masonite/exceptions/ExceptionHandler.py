@@ -36,6 +36,11 @@ class ExceptionHandler:
         )
 
         # if an exception handler is registered for this exception, use it instead
+        # add headers to response if any
+        if hasattr(exception, "get_headers"):
+            headers = exception.get_headers()
+            response.with_headers(headers)
+
         if self.application.has(f"{exception.__class__.__name__}Handler"):
             return self.application.make(
                 f"{exception.__class__.__name__}Handler"

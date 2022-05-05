@@ -56,13 +56,15 @@ class TestEvent(TestCase):
         self.event = self.application.make("event")
         self.event.listen(UserAddedEvent, [SendEmailListener])
 
-    def test_events_registered(self):
-        self.assertEqual(len(self.event.get_events().get(UserAddedEvent)), 2)
-        self.event.listen(UserAddedEvent, [AdminNotificationListener])
-        self.assertEqual(len(self.event.get_events().get(UserAddedEvent)), 3)
+    def tearDown(self):
+        super().tearDown()
+        # reset events listened to
+        self.event.events = {}
 
-    def test_fire_event_class(self):
-        self.event.fire(UserAddedEvent)
+    def test_events_registered(self):
+        self.assertEqual(len(self.event.get_events().get(UserAddedEvent)), 1)
+        self.event.listen(UserAddedEvent, [AdminNotificationListener])
+        self.assertEqual(len(self.event.get_events().get(UserAddedEvent)), 2)
 
     def test_fire_event_string(self):
         self.event.listen("masonite.*.booted", [SendEmailListener])

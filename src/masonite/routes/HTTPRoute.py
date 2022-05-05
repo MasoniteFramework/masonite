@@ -219,7 +219,7 @@ class HTTPRoute:
         if self.controller_instance:
             controller = self.controller_instance
         else:
-            controller = self.controller_class()
+            controller = self.controller_class(*self.controller_bindings)
 
         return getattr(controller, self.controller_method)()
 

@@ -187,6 +187,13 @@ class TestRoutes(TestCase):
         route = router.find("/test/1", "post")
         self.assertIsNone(route)
 
+    def test_route_views(self):
+        router = Router(Route.view("/test/view", "test", {"test": "111"}))
+
+        route = router.find("/test/view", "get")
+        self.assertTrue(route)
+        self.assertTrue(route.get_response().rendered_template == "111")
+
     def test_can_exclude_middleware_from_route(self):
         router = Router(
             Route.group(

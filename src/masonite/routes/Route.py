@@ -1,3 +1,4 @@
+from ..controllers.ViewController import ViewController
 from .HTTPRoute import HTTPRoute
 from ..utils.collections import flatten
 from ..utils.str import modularize
@@ -98,6 +99,21 @@ class Route:
             compilers=self.compilers,
             controllers_locations=self.controllers_locations,
             controller_bindings=[new_url, options.get("status", 302)],
+            **options,
+        )
+
+    @classmethod
+    def view(self, url, template, data=None, **options):
+        if not data:
+            data = {}
+
+        return HTTPRoute(
+            url,
+            ViewController.show,
+            request_method=options.get("method", ["get"]),
+            compilers=self.compilers,
+            controllers_locations=self.controllers_locations,
+            controller_bindings=[template, data],
             **options,
         )
 

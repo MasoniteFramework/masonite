@@ -1,9 +1,10 @@
-from unittest import TestCase
+from tests import TestCase
 from src.masonite.routes import Route, Router
 
 
 class TestRoutes(TestCase):
     def setUp(self):
+        super().setUp()
         Route.set_controller_locations("tests.integrations.controllers")
         pass
 
@@ -188,11 +189,7 @@ class TestRoutes(TestCase):
         self.assertIsNone(route)
 
     def test_route_views(self):
-        router = Router(Route.view("/test/view", "test", {"test": "111"}))
-
-        route = router.find("/test/view", "get")
-        self.assertTrue(route)
-        self.assertTrue(route.get_response().rendered_template == "111")
+        self.get("/test_view").assertContains("111")
 
     def test_can_exclude_middleware_from_route(self):
         router = Router(

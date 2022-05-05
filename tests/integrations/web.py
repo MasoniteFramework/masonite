@@ -18,6 +18,7 @@ ROUTES = [
     Route.get("/view", "WelcomeController@view"),
     Route.get("/mail", "MailableController@view"),
     Route.get("/users/@id", "WelcomeController@show_user").name("users.profile"),
+    Route.view("/test_view", "test_view", {"show": "111"}),
 ]
 
 Broadcast.routes()

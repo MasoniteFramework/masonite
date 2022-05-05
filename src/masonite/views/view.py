@@ -48,7 +48,9 @@ class View:
         self._shared = {}
         self._tests = {}
 
-    def render(self, template: str, dictionary: dict = {}) -> "View":
+    def render(self, template: str, dictionary: dict = None) -> "View":
+        if not dictionary:
+            dictionary = {}
         """Render the given template name with the given context as string."""
         if not isinstance(dictionary, dict):
             raise ViewException(

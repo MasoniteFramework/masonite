@@ -149,6 +149,23 @@ class AuthorizationException(Exception):
         return self.status
 
 
+class ThrottleRequestsException(Exception):
+    def __init__(self, message="Too many attempts", status=429, headers={}):
+        super().__init__(message)
+        self.message = message
+        self.status = status
+        self.headers = headers
+
+    def get_headers(self):
+        return self.headers
+
+    def get_response(self):
+        return self.message
+
+    def get_status(self):
+        return self.status
+
+
 class GateDoesNotExist(Exception):
     pass
 

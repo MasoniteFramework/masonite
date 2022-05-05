@@ -16,6 +16,7 @@ from src.masonite.providers import (
     AuthorizationProvider,
     HashServiceProvider,
     ORMProvider,
+    RateProvider,
 )
 
 
@@ -30,6 +31,7 @@ from tests.integrations.providers import AppProvider
 PROVIDERS = [
     FrameworkProvider,
     HelpersProvider,
+    RateProvider,
     RouteProvider,
     ViewProvider,
     WhitenoiseProvider,

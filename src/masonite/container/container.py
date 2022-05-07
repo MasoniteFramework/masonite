@@ -102,7 +102,10 @@ class Container:
                 if inspect.isclass(obj):
                     obj = self.resolve(obj, *arguments)
             except MissingContainerBindingNotFound:
-                # todo: comment
+                # If we don't find a bound object already in the container,
+                # we can go ahead and fall back on a simple resolve method.
+                # This allows resolving dependencies without explicit
+                # bindings.
                 self.simple(name)
                 obj = self.make(name, *arguments)
             return obj
@@ -190,10 +193,11 @@ class Container:
 
                     continue
                 if ":" in str(value):
-                    # todo: comment
                     try:
                         param = self._find_annotated_parameter(value)
                     except ContainerError:
+                        # This allows resolving dependencies without explicit bindings.
+                        # See `self.make()`.
                         param = value.annotation
                     if inspect.isclass(param):
                         param = self.resolve(param)

@@ -96,11 +96,15 @@ class Container:
         elif name in self.swaps:
             return self.swaps.get(name)
         elif inspect.isclass(name):
-            obj = self._find_obj(name)
-            self.fire_hook("make", name, obj)
-            if inspect.isclass(obj):
-                obj = self.resolve(obj, *arguments)
-            return obj
+            try:
+                obj = self._find_obj(name)
+                self.fire_hook("make", name, obj)
+                if inspect.isclass(obj):
+                    return self.resolve(obj, *arguments)
+            except MissingContainerBindingNotFound:
+                # todo: comment
+                self.simple(name)
+                return self.make(name, *arguments)
 
         raise MissingContainerBindingNotFound(
             "{0} key was not found in the container".format(name)
@@ -185,7 +189,11 @@ class Container:
 
                     continue
                 if ":" in str(value):
-                    param = self._find_annotated_parameter(value)
+                    # todo: comment
+                    try:
+                        param = self._find_annotated_parameter(value)
+                    except ContainerError:
+                        param = value.annotation
                     if inspect.isclass(param):
                         param = self.resolve(param)
                     objects.append(param)

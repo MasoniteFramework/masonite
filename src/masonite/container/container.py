@@ -100,11 +100,12 @@ class Container:
                 obj = self._find_obj(name)
                 self.fire_hook("make", name, obj)
                 if inspect.isclass(obj):
-                    return self.resolve(obj, *arguments)
+                    obj = self.resolve(obj, *arguments)
             except MissingContainerBindingNotFound:
                 # todo: comment
                 self.simple(name)
-                return self.make(name, *arguments)
+                obj = self.make(name, *arguments)
+            return obj
 
         raise MissingContainerBindingNotFound(
             "{0} key was not found in the container".format(name)

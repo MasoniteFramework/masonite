@@ -106,8 +106,7 @@ class Container:
                 # we can go ahead and fall back on a simple resolve method.
                 # This allows resolving dependencies without explicit
                 # bindings.
-                self.simple(name)
-                obj = self.make(name, *arguments)
+                obj = self.resolve(name, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(

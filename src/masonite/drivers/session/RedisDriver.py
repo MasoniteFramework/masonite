@@ -2,6 +2,7 @@ import json
 from typing import TYPE_CHECKING
 
 from ..BaseDriver import BaseDriver
+from ...validation import MessageBag
 
 if TYPE_CHECKING:
     from ...foundation import Application
@@ -69,6 +70,8 @@ class RedisDriver(BaseDriver):
             deleted_flashed = []
 
         for key, value in flashed.items():
+            if isinstance(value, (MessageBag)):
+                value = value.json()
             self.put(f"{self.get_flash_prefix()}{key}", value)
 
         for key, value in added.items():

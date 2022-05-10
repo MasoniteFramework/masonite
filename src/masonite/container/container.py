@@ -96,10 +96,17 @@ class Container:
         elif name in self.swaps:
             return self.swaps.get(name)
         elif inspect.isclass(name):
-            obj = self._find_obj(name)
-            self.fire_hook("make", name, obj)
-            if inspect.isclass(obj):
-                obj = self.resolve(obj, *arguments)
+            try:
+                obj = self._find_obj(name)
+                self.fire_hook("make", name, obj)
+                if inspect.isclass(obj):
+                    obj = self.resolve(obj, *arguments)
+            except MissingContainerBindingNotFound:
+                # If we don't find a bound object already in the container,
+                # we can go ahead and fall back on a simple resolve method.
+                # This allows resolving dependencies without explicit
+                # bindings.
+                obj = self.resolve(name, *arguments)
             return obj
 
         raise MissingContainerBindingNotFound(
@@ -185,7 +192,12 @@ class Container:
 
                     continue
                 if ":" in str(value):
-                    param = self._find_annotated_parameter(value)
+                    try:
+                        param = self._find_annotated_parameter(value)
+                    except ContainerError:
+                        # This allows resolving dependencies without explicit bindings.
+                        # See `self.make()`.
+                        param = value.annotation
                     if inspect.isclass(param):
                         param = self.resolve(param)
                     objects.append(param)

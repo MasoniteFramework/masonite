@@ -898,16 +898,20 @@ class BaseFileValidation(BaseValidation):
         self.all_clear = True
 
     def passes(self, attribute, key, dictionary):
-        if not os.path.isfile(attribute):
+        if isinstance(attribute, str):
+            filepath = attribute
+        else:
+            filepath = attribute.name
+        if not os.path.isfile(filepath):
             self.file_check = False
             return False
         if self.size:
-            file_size = os.path.getsize(attribute)
+            file_size = os.path.getsize(filepath)
             if file_size > self.size:
                 self.size_check = False
                 self.all_clear = False
         if self.allowed_extensions:
-            mimetype, encoding = mimetypes.guess_type(attribute)
+            mimetype, encoding = mimetypes.guess_type(filepath)
             if mimetype not in self.allowed_mimetypes:
                 self.mimes_check = False
                 self.all_clear = False

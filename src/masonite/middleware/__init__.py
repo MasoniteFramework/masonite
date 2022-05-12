@@ -10,4 +10,5 @@ from .route.GuardMiddleware import GuardMiddleware
 from .route.ClearDumpsBetweenRequestsMiddleware import (
     ClearDumpsBetweenRequestsMiddleware,
 )
+from .route.ThrottleRequestsMiddleware import ThrottleRequestsMiddleware
 from .route.IpMiddleware import IpMiddleware

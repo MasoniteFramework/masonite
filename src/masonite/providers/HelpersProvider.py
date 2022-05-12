@@ -4,6 +4,7 @@ from markupsafe import Markup
 from ..providers import Provider
 from ..configuration import config
 from ..helpers import UrlsHelper, MixHelper, optional
+from ..facades import Dump
 
 
 class HelpersProvider(Provider):
@@ -35,6 +36,7 @@ class HelpersProvider(Provider):
                 "url": urls_helper.url,
                 "mix": MixHelper(self.application).url,
                 "route": urls_helper.route,
+                "dd": Dump.dd,
                 "config": config,
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,

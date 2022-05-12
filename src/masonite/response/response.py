@@ -57,8 +57,12 @@ class Response:
 
         return self.header_bag.add(Header(name, value))
 
+    def with_headers(self, headers_dict):
+        for name, value in headers_dict.items():
+            self.header_bag.add(Header(name, str(value)))
+        return self
+
     def get_headers(self) -> list:
-        """Get all response headers."""
         return self.header_bag.render()
 
     def cookie(self, name: str, value: str = None, **options) -> "None|str":

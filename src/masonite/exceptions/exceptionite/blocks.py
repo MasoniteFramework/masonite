@@ -73,10 +73,14 @@ class RequestBlock(Block):
 
     def build(self):
         request = self.handler.app.make("request")
+        # serialize inputs (e.g. in case of file)
+        inputs = {}
+        for name, value in request.all().items():
+            inputs[name] = recursive_serializer(value)
         return {
             "Parameters": {
                 "Path": request.get_path(),
-                "Input": request.input_bag.all_as_values() or None,
+                "Input": inputs or None,
                 "Request Method": request.get_request_method(),
             },
             "Headers": request.header_bag.to_dict(),

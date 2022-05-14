@@ -9,4 +9,3 @@ class BaseDriver:
     def set_options(self, options):
         self.options = options
         return self
-

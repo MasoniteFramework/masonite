@@ -85,7 +85,7 @@ class RedisDriver(BaseDriver):
 
     def get_session_namespace(self, session_id=None):
         if not session_id:
-            request= self.application.make("request")
+            request = self.application.make("request")
             session_id = request.cookie("SESSID")
         ns = self.options.get("namespace", "")
         ns += ":" if ns else ""
@@ -137,7 +137,7 @@ class RedisDriver(BaseDriver):
 
     def get_timeout(self):
         # default timeout of session vars is 24 hrs
-        return self.options.get("timeout", 60*60*24)
+        return self.options.get("timeout", 60 * 60 * 24)
 
     def get_value(self, value):
         value = str(value)

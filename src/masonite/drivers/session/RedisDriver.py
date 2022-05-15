@@ -6,7 +6,6 @@ from ...validation import MessageBag
 
 if TYPE_CHECKING:
     from ...foundation import Application
-    from ...request import Request
 
 
 class RedisDriver(BaseDriver):
@@ -15,6 +14,7 @@ class RedisDriver(BaseDriver):
     def __init__(self, application: "Application"):
         super().__init__(application)
         self.connection = None
+        self.driver_config = {"decode_responses": True}
 
     def get_connection(self):
         try:
@@ -25,10 +25,8 @@ class RedisDriver(BaseDriver):
             )
 
         if not self.connection:
-            driver_config = self.options['driver_config']
-            driver_config.update({"decode_responses": True})
             self.connection = redis.StrictRedis(
-                **driver_config,
+                **self.driver_config,
             )
 
         return self.connection

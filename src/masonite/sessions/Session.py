@@ -1,5 +1,6 @@
 import json
 from typing import TYPE_CHECKING, Any
+
 from ..exceptions import InvalidConfigurationSetup
 
 if TYPE_CHECKING:
@@ -33,6 +34,18 @@ class Session:
 
     def set_configuration(self, config: dict) -> "Session":
         """Set session driver options."""
+
+        # make sure the default drivewr is defined
+        if "default" not in config:
+            raise InvalidConfigurationSetup(
+                "'default' session driver is not defined."
+            )
+        # and has a config
+        if config['default'] not in config:
+            raise InvalidConfigurationSetup(
+                f"'{config['default']}' session driver configuration not defined."
+            )
+
         self.driver_config = config
         return self
 
@@ -55,16 +68,7 @@ class Session:
         self.added = {}
         self.deleted = []
         self.deleted_flashed = []
-
-        # get the default drivewr
-        if not driver:
-            if "default" not in self.driver_config.keys():
-                raise InvalidConfigurationSetup(
-                    "'default' session driver is not defined."
-                )
-            driver = self.get_config_options("default")
-        self._active_driver = driver
-
+        self._active_driver = driver or self.get_config_options("default")
         started_data = self.get_driver(name=self._active_driver).start()
         self.data = started_data.get("data", {})
         self.flashed = started_data.get("flashed", {})

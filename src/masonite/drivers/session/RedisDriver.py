@@ -70,16 +70,16 @@ class RedisDriver(BaseDriver):
         for key, value in flashed.items():
             if isinstance(value, (MessageBag)):
                 value = value.json()
-            self.put(f"{self.get_flash_prefix()}{key}", value)
+            self.set(f"{self.get_flash_prefix()}{key}", value)
 
         for key, value in added.items():
-            self.put(f"{self.get_data_prefix()}{key}", value)
+            self.set(f"{self.get_data_prefix()}{key}", value)
 
         for key in deleted:
-            self.forget(f"{self.get_data_prefix()}{key}")
+            self.delete(f"{self.get_data_prefix()}{key}")
 
         for key in deleted_flashed:
-            self.forget(f"{self.get_flash_prefix()}{key}")
+            self.delete(f"{self.get_flash_prefix()}{key}")
 
     def get_session_namespace(self, session_id=None):
         if not session_id:
@@ -106,8 +106,8 @@ class RedisDriver(BaseDriver):
             self.get_connection().get(key)
         )
 
-    def put(self, key, value, **options):
-        time = self.get_timeout()
+    def set(self, key, value, time: int = None):
+        time = time or self.get_timeout()
 
         if isinstance(value, (dict, list)):
             value = json.dumps(value)
@@ -117,7 +117,7 @@ class RedisDriver(BaseDriver):
     def has(self, key):
         return self.get_connection().get(key)
 
-    def forget(self, key):
+    def delete(self, key):
         return self.get_connection().delete(key)
 
     def flush(self, session_id=None):

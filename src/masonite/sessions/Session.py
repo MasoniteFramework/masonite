@@ -9,11 +9,11 @@ class Session:
     """Session manager which provides a way to store information in a persistent store / backend
     that can be accessed from subsequent requests."""
 
-    def __init__(self, application: "Application", driver_config: dict = {}):
+    def __init__(self, application: "Application", driver_config: dict = None):
         self.application = application
         self.drivers = {}
         self._driver = None
-        self.driver_config = driver_config
+        self.driver_config = driver_config or {}
         self.options = {}
         self.data = {}
         self.added = {}
@@ -23,6 +23,7 @@ class Session:
 
     def add_driver(self, name: str, driver: Any) -> None:
         """Register a new session driver with the given name."""
+        driver.set_options(self.get_config_options(name))
         self.drivers.update({name: driver})
 
     def driver(self, driver: str) -> Any:

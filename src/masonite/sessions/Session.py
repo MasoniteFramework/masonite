@@ -54,7 +54,7 @@ class Session:
         self.added = {}
         self.deleted = []
         self.deleted_flashed = []
-        self._active_driver = driver or "default"
+        self._active_driver = driver or self.get_config_options("default")
         started_data = self.get_driver(name=self._active_driver).start()
         self.data = started_data.get("data", {})
         self.flashed = started_data.get("flashed", {})

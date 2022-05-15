@@ -52,7 +52,7 @@ class MailgunDriver:
             "eu": "https://api.eu.mailgun.net/v3/"
         }
 
-        endpoint = BASE_URL_BY_REGION.get(region.lower(), default=BASE_URL_BY_REGION.get("us"))
+        endpoint = BASE_URL_BY_REGION.get(region.lower(), BASE_URL_BY_REGION.get("us"))
 
         return requests.post(
             f"{endpoint}/{domain}/messages",

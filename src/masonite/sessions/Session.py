@@ -1,5 +1,6 @@
 import json
 from typing import TYPE_CHECKING, Any
+from ..exceptions import InvalidConfigurationSetup
 
 if TYPE_CHECKING:
     from ..foundation import Application
@@ -54,7 +55,16 @@ class Session:
         self.added = {}
         self.deleted = []
         self.deleted_flashed = []
-        self._active_driver = driver or self.get_config_options("default")
+
+        # get the default drivewr
+        if not driver:
+            if "default" not in self.driver_config.keys():
+                raise InvalidConfigurationSetup(
+                    "'default' session driver is not defined."
+                )
+            driver = self.get_config_options("default")
+        self._active_driver = driver
+
         started_data = self.get_driver(name=self._active_driver).start()
         self.data = started_data.get("data", {})
         self.flashed = started_data.get("flashed", {})

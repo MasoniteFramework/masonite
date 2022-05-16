@@ -1255,13 +1255,46 @@ class Validator:
 
     def validate(self, dictionary, *rules):
         rule_errors = {}
+        if not isinstance(rules[0], list):
+            rule_errors = self.parse_legacy_rules(dictionary, *rules)
+            return MessageBag(rule_errors)
+
+        try:
+            rules_list = rules[0]
+            for rule in rules_list:
+                self.parse_rule(rule, dictionary, rule_errors)
+
+            return MessageBag(rule_errors)
+
+        except Exception as e:
+            e.errors = rule_errors
+            raise e
+
+    def parse_rule(self, rule, dictionary, rule_errors):
+        fields, validator, *args = rule
+
+        for field in fields:
+            options = args[0] if args else {}
+            rule = ValidationFactory().registry[valirator](field, **options)
+
+            rule.handle(dictionary)
+            for error, message in rule.errors.items():
+                if error not in rule_errors:
+                    rule_errors.update({error: message})
+                else:
+                    messages = rule_errors[error]
+                    messages += message
+                    rule_errors.update({error: messages})
+
+    def parse_legacy_rules(self, dictionary, *rules):
+        rule_errors = {}
         try:
             for rule in rules:
                 if isinstance(rule, str):
-                    rule = self.parse_string(rule)
+                    rule = self.parse_legacy_string(rule)
                     # continue
                 elif isinstance(rule, dict):
-                    rule = self.parse_dict(rule, dictionary, rule_errors)
+                    rule = self.parse_legacy_dict(rule, dictionary, rule_errors)
                     continue
 
                 elif inspect.isclass(rule) and isinstance(rule(), RuleEnclosure):
@@ -1277,19 +1310,17 @@ class Validator:
                         messages += message
                         rule_errors.update({error: messages})
                 rule.reset()
-            return MessageBag(rule_errors)
+            return rule_errors
 
         except Exception as e:
             e.errors = rule_errors
             raise e
 
-        return MessageBag(rule_errors)
-
-    def parse_string(self, rule):
+    def parse_legacy_string(self, rule):
         rule, parameters = rule.split(":")[0], rule.split(":")[1].split(",")
         return ValidationFactory().registry[rule](parameters)
 
-    def parse_dict(self, rule, dictionary, rule_errors):
+    def parse_legacy_dict(self, rule, dictionary, rule_errors):
         for value, rules in rule.items():
             for rule in rules.split("|"):
                 rule, args = rule.split(":")[0], rule.split(":")[1:]

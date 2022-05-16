@@ -43,7 +43,7 @@ class MailgunDriver:
 
     def send(self):
         domain = self.options["domain"]
-        region = self.options["region"]
+        region = self.options.get("region", "us")
         secret = self.options["secret"]
         attachments = self.get_attachments()
 
@@ -52,7 +52,7 @@ class MailgunDriver:
             "eu": "https://api.eu.mailgun.net/v3/"
         }
 
-        endpoint = BASE_URL_BY_REGION.get(region.lower(), BASE_URL_BY_REGION.get("us"))
+        endpoint = BASE_URL_BY_REGION.get(region.lower())
 
         return requests.post(
             f"{endpoint}/{domain}/messages",

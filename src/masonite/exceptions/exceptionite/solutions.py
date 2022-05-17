@@ -22,10 +22,10 @@ class MissingCSRFToken:
 
 class InvalidCSRFToken:
     def title(self):
-        return "Invalid CSRF Token"
+        return "The session does not match the CSRF token"
 
     def description(self):
-        return "The CSRF tokens found in the user session and in the request do not match. This is flagged as a potential CSRF attack."
+        return "Try clearing your cookies for the localhost domain in your browsers developer tools."
 
     def regex(self):
         return r"Invalid CSRF Token"

@@ -1,6 +1,6 @@
 """Cross-Origin Resource Sharing (CORS) config"""
 
-PATHS = ["api/*", "sanctum/csrf-cookie", "server1.com"]
+PATHS = ["api/*", "server1.com"]
 
 ALLOWED_METHODS = ["*"]
 

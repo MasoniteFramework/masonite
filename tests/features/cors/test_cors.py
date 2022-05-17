@@ -128,16 +128,16 @@ class TestCors(TestCase):
             "Access-Control-Allow-Headers"
         )
 
-    # def test_allow_all_origins_with_wildcard(self):
-    #     self.cors.set_options(
-    #         {**self.default_options, "allowed_origins": ["*.masoniteproject.com"]}
-    #     )
+    def test_allow_all_origins_with_wildcard(self):
+        self.cors.set_options(
+            {**self.default_options, "allowed_origins": ["*.masoniteproject.com"]}
+        )
 
-    #     self.withHeaders(
-    #         {
-    #             "Origin": "https://docs.masoniteproject.com",
-    #             "Access-Control-Request-Method": "POST",
-    #         }
-    #     ).options("/api/test").assertNoContent().dumpResponseHeaders().assertHasHeader(
-    #         "Access-Control-Allow-Origin", "https://docs.masoniteproject.com"
-    #     )
+        self.withHeaders(
+            {
+                "Origin": "https://docs.masoniteproject.com",
+                "Access-Control-Request-Method": "POST",
+            }
+        ).options("/api/test").assertNoContent().dumpResponseHeaders().assertHasHeader(
+            "Access-Control-Allow-Origin", "*.masoniteproject.com"
+        )

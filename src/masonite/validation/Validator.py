@@ -1277,7 +1277,7 @@ class Validator:
             fields = [fields]
         for field in fields:
             options = args[0] if args else {}
-            rule = ValidationFactory().registry[valirator](field, **options)
+            rule = ValidationFactory().registry[validator](field, **options)
 
             rule.handle(dictionary)
             for error, message in rule.errors.items():

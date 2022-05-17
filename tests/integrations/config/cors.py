@@ -1,6 +1,6 @@
 """Cross-Origin Resource Sharing (CORS) config"""
 
-PATHS = ["api/*", "server1.com"]
+PATHS = ["api/*"]
 
 ALLOWED_METHODS = ["*"]
 

@@ -1255,13 +1255,17 @@ class Validator:
 
     def validate(self, dictionary, *rules):
         rule_errors = {}
-        if not isinstance(rules[0], list):
+        if isinstance(rules[0], dict) or isinstance(rules[0], str):
             rule_errors = self.parse_legacy_rules(dictionary, *rules)
             return MessageBag(rule_errors)
 
         try:
             rules_list = rules[0]
             for rule in rules_list:
+                if inspect.isclass(rule) and isinstance(rule(), RuleEnclosure):
+                    rule_errors.update(self.run_enclosure(rule(), dictionary))
+                    continue
+
                 self.parse_rule(rule, dictionary, rule_errors)
 
             return MessageBag(rule_errors)
@@ -1297,10 +1301,6 @@ class Validator:
                     # continue
                 elif isinstance(rule, dict):
                     rule = self.parse_legacy_dict(rule, dictionary, rule_errors)
-                    continue
-
-                elif inspect.isclass(rule) and isinstance(rule(), RuleEnclosure):
-                    rule_errors.update(self.run_enclosure(rule(), dictionary))
                     continue
 
                 rule.handle(dictionary)

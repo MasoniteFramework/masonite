@@ -237,11 +237,6 @@ class TestCase(unittest.TestCase):
     ) -> "HttpTestResponse":
         """Run an HTTP request and get a test response on which assertions can be run."""
         # prepare WSGI request environment
-        environ = {}
-        http_cookie = ""
-
-    def fetch(self, path, data=None, method=None):
-        environ = {}
         if data is None:
             data = {}
 

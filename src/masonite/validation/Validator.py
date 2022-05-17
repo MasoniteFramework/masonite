@@ -1273,6 +1273,8 @@ class Validator:
     def parse_rule(self, rule, dictionary, rule_errors):
         fields, validator, *args = rule
 
+        if isinstance(fields, str):
+            fields = [fields]
         for field in fields:
             options = args[0] if args else {}
             rule = ValidationFactory().registry[valirator](field, **options)

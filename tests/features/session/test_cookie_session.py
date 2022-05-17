@@ -55,7 +55,7 @@ class TestCookieSession(TestCase):
         session = self.application.make("session")
         session.start()
         session.set("key1", "test1")
-        session.save()
+
         self.assertEqual(response.cookie("s_key1"), "test1")
 
     def test_can_delete_session(self):
@@ -70,7 +70,6 @@ class TestCookieSession(TestCase):
         session.delete("key")
         self.assertEqual(session.get("key"), None)
 
-        session.save()
         self.assertEqual(response.cookie("s_key"), None)
         self.assertTrue("s_key" in response.cookie_jar.deleted_cookies)
 
@@ -86,8 +85,6 @@ class TestCookieSession(TestCase):
         key = session.pull("key")
         self.assertEqual(key, "test")
         self.assertEqual(session.get("key"), None)
-
-        session.save()
         self.assertEqual(response.cookie("s_key"), None)
         self.assertTrue("s_key" in response.cookie_jar.deleted_cookies)
 
@@ -102,7 +99,6 @@ class TestCookieSession(TestCase):
 
         session.flush()
         self.assertEqual(session.get("key"), None)
-        session.save()
         self.assertEqual(response.cookie("s_key"), None)
         self.assertTrue("s_key" in response.cookie_jar.deleted_cookies)
 
@@ -114,6 +110,24 @@ class TestCookieSession(TestCase):
         session.flash("key", "test")
         self.assertEqual(session.get("key"), "test")
         self.assertEqual(session.get("key"), None)
-
-        session.save()
         self.assertEqual(response.cookie("f_key"), None)
+
+    def test_flash_two_keys_does_not_duplicate_data(self):
+        request = self.make_request()
+        response = self.make_response()
+        session = self.application.make("session")
+        session.start()
+        session.flash("key", "test")
+        session.flash("key2", "test2")
+
+        self.assertTrue(session.has("key"))
+        self.assertTrue(session.has("key2"))
+        self.assertTrue(response.cookie_jar.exists("f_key"))
+        self.assertTrue(response.cookie_jar.exists("f_key2"))
+
+        self.assertEqual(session.get("key"), "test")
+
+        self.assertFalse(session.has("key"))
+        self.assertTrue(session.has("key2"))
+        self.assertFalse(response.cookie_jar.exists("f_key"))
+        self.assertTrue(response.cookie_jar.exists("f_key2"))

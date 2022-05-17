@@ -7,6 +7,9 @@ from src.masonite.request import Request
 from src.masonite.filesystem import Storage
 from src.masonite.broadcasting import Broadcast, Channel
 from src.masonite.facades import Session, Config, Gate, Dump
+from src.masonite.validation import Validator
+
+from tests.integrations.app.User import User
 
 
 class CanBroadcast:
@@ -35,6 +38,18 @@ class WelcomeController(Controller):
     def show(self, request: Request, view: View):
         request.app.make("session").flash("test", "value")
         return view.render("welcome")
+
+    def contact(self, view: View):
+        return view.render("contact")
+
+    def contact_post(
+        self, request: Request, view: View, validator: Validator, response: Response
+    ):
+        errors = request.validate(validator.required(["name", "email"]))
+        if errors:
+            return response.back().with_errors(errors)
+
+        return view.render("contact")
 
     def flash_data(self, request: Request, response: Response, view: View):
         request.app.make("session").flash("test", "value")
@@ -146,9 +161,14 @@ class WelcomeController(Controller):
 
     def use_authorization_helper(self, request: Request):
         request.authorize("display-admin")
+        return ""
 
-    def authorizations(self, view: View):
+    def authorizations(self, view: View, request: Request):
         return view.render("authorizations")
+
+    def show_user(self, request: Request, view: View):
+        user = User.find_or_fail(request.param("id"))
+        return view.render("welcome")
 
     def dd(self, request: Request):
         dump({"test": "value"})
@@ -157,3 +177,6 @@ class WelcomeController(Controller):
 
     def server_error(self, view: View):
         raise Exception("unknown error")
+
+    def __call__(self):
+        return "welcome"

@@ -2,6 +2,7 @@ import jwt
 import pendulum
 from ..routes import Route
 from .controllers import AuthenticationController
+from ..utils.str import random_string
 
 
 class Api:
@@ -22,7 +23,7 @@ class Api:
                 pendulum.now(tz="UTC").add(minutes=expire_minutes).to_datetime_string()
             )
         token = jwt.encode(
-            {"expires": expire_minutes, "version": version}, secret, algorithm=algorithm
+            {"expires": expire_minutes, "version": version, "random": random_string(10)}, secret, algorithm=algorithm
         )
 
         return token

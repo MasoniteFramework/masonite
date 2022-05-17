@@ -43,11 +43,19 @@ class MailgunDriver:
 
     def send(self):
         domain = self.options["domain"]
+        region = self.options.get("region", "us")
         secret = self.options["secret"]
         attachments = self.get_attachments()
 
+        BASE_URL_BY_REGION = {
+            "us": "https://api.mailgun.net/v3/",
+            "eu": "https://api.eu.mailgun.net/v3/"
+        }
+
+        endpoint = BASE_URL_BY_REGION.get(region.lower())
+
         return requests.post(
-            f"https://api.mailgun.net/v3/{domain}/messages",
+            f"{endpoint}/{domain}/messages",
             auth=("api", secret),
             data=self.get_mime_message(),
             files=attachments,

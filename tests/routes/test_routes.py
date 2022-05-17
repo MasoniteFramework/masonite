@@ -5,6 +5,12 @@ from src.masonite.routes import Route, Router
 
 
 class TestRoutes(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        Route.set_controller_locations("tests.integrations.controllers")
+        pass
+
     def test_can_add_routes(self):
         routes = Route.group(
             [
@@ -47,6 +53,10 @@ class TestRoutes(TestCase):
         self.assertEqual(url, "/dashboard/1/2")
         url = router.route("dashboard", [2, 1])
         self.assertEqual(url, "/dashboard/2/1")
+
+        # with query parameters
+        url = router.route("home", {"id": 1}, query_params={"preview": "true"})
+        self.assertEqual(url, "/home/1?preview=true")
 
     def test_can_find_route_optional_params(self):
         router = Router(Route.get("/home/?id", "WelcomeController"))
@@ -153,6 +163,14 @@ class TestRoutes(TestCase):
         route = router.find_by_name("testparam")
         self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
 
+    def test_extract_parameters_ending_in_a_slash(self):
+        router = Router(
+            Route.get("/params/@id/", "WelcomeController@show").name("testparam")
+        )
+
+        route = router.find_by_name("testparam")
+        self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
+
     def test_domain(self):
         router = Router(
             Route.get("/domain/@id", "WelcomeController@show").domain("sub")
@@ -169,6 +187,12 @@ class TestRoutes(TestCase):
 
         route = router.find("/test/1", "get")
         self.assertTrue(route)
+
+        with self.assertRaises(MethodNotAllowedException) as e:
+            route = router.find("/test/1", "post")
+
+    def test_route_views(self):
+        self.get("/test_view").assertContains("111")
 
     def test_can_exclude_middleware_from_route(self):
         router = Router(

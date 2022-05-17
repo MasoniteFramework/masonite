@@ -1,4 +1,4 @@
-from masonite.environment import env
+from src.masonite.environment import env
 
 
 FROM_EMAIL = env("MAIL_FROM", "no-reply@masonite.com")
@@ -15,6 +15,7 @@ DRIVERS = {
     "mailgun": {
         "domain": env("MAILGUN_DOMAIN"),
         "secret": env("MAILGUN_SECRET"),
+        "region": env("MAILGUN_REGION"),
         "from": FROM_EMAIL,
     },
     "terminal": {

@@ -6,10 +6,12 @@ from src.masonite.configuration import Configuration, config
 from src.masonite.middleware import (
     VerifyCsrfToken,
     SessionMiddleware,
+    ShareErrorsInSessionMiddleware,
     EncryptCookies,
     LoadUserMiddleware,
     MaintenanceModeMiddleware,
     ClearDumpsBetweenRequestsMiddleware,
+    ThrottleRequestsMiddleware,
     IpMiddleware,
 )
 from src.masonite.routes import Route
@@ -28,9 +30,11 @@ class Kernel:
     route_middleware = {
         "web": [
             SessionMiddleware,
+            ShareErrorsInSessionMiddleware,
             LoadUserMiddleware,
             VerifyCsrfToken,
-        ]
+        ],
+        "throttle": [ThrottleRequestsMiddleware],
     }
 
     def __init__(self, app):
@@ -77,10 +81,6 @@ class Kernel:
         self.application.bind("commands.location", "tests/integrations/commands")
         self.application.bind(
             "middlewares.location", "tests/integrations/app/middlewares"
-        )
-
-        self.application.bind(
-            "server.runner", "src.masonite.commands.ServeCommand.main"
         )
 
     def register_middleware(self):

@@ -178,17 +178,27 @@ class TestGate(TestCase):
             self.gate.allows("can-fly")
 
     def test_view_helpers(self):
+        from tests.integrations.app.User import User
+
         self.gate.define("view-posts", lambda user=None: True)
         self.gate.define(
             "display-admin", lambda user: user.email == "idmann509@gmail.com"
         )
-        self.get("/authorizations").assertContains(
-            "User can view posts"
-        ).assertContains("User cannot display admin")
 
-    # def test_can_use_authorize_helper_on_request(self):
-    #     self.gate.define("display-admin", lambda user: True)
-    #     # authenticate user : here it does not work => no user in request inside Gate...
-    #     # something is going on
-    #     self.application.make("auth").attempt("idmann509@gmail.com", "secret")
-    #     self.get("/authorize-helper").assertOk()
+        self.actingAs(User.find(1)).get("/authorizations").assertContains(
+            "User can display admin"
+        ).assertContains("User can view posts")
+
+        self.actingAsGuest().get("/authorizations").assertContains(
+            "User can view posts"
+        ).assertNotContains("User can display admin")
+
+    def test_can_use_authorize_helper_on_request(self):
+        from tests.integrations.app.User import User
+
+        self.gate.define("view-posts", lambda user=None: True)
+        self.gate.define(
+            "display-admin", lambda user: user.email == "idmann509@gmail.com"
+        )
+
+        self.actingAs(User.find(1)).get("/authorize-helper").assertOk()

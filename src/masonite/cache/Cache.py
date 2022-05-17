@@ -17,12 +17,6 @@ class Cache:
             return self.drivers[self.store_config.get("default")]
         return self.drivers[name]
 
-    def get_store_config(self, name=None):
-        if name is None or name == "default":
-            return self.store_config.get(self.store_config.get("default"))
-
-        return self.store_config.get(name)
-
     def get_config_options(self, name=None):
         if name is None or name == "default":
             return self.store_config.get(self.store_config.get("default"))
@@ -57,3 +51,6 @@ class Cache:
 
     def flush(self, *args, store=None, **kwargs):
         return self.store(name=store).flush(*args, **kwargs)
+
+    def remember(self, *args, store=None, **kwargs):
+        return self.store(name=store).remember(*args, **kwargs)

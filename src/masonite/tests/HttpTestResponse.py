@@ -79,6 +79,9 @@ class HttpTestResponse:
     def assertCreated(self):
         return self.assertIsStatus(201)
 
+    def assertLimited(self) -> "HttpTestResponse":
+        return self.assertIsStatus(429)
+
     def assertSuccessful(self):
         assert 200 <= self.response.get_status_code() < 300
         return self
@@ -100,10 +103,30 @@ class HttpTestResponse:
         header_value = self.response.header(name)
         assert header_value, f"Could not find the header {name}"
         if value:
-            assert value == header_value, f"Header '{name}' does not equal {value}"
+            assert (
+                value == header_value
+            ), f"Header '{name}' does not equal {value} but {header_value}"
+        return self
 
     def assertHeaderMissing(self, name):
         assert not self.response.header(name)
+        return self
+
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump request and response headers and die."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
 
     def dumpRequestHeaders(self):
         """Dump request headers."""
@@ -164,7 +187,10 @@ class HttpTestResponse:
         session = self.request.session
         assert session.has(key)
         if value is not None:
-            assert session.get(key) == value
+            real_value = session.get(key)
+            assert (
+                real_value == value
+            ), f"Value for {key} is {real_value}, expected {value}"
         return self
 
     def assertSessionMissing(self, key):
@@ -250,17 +276,17 @@ class HttpTestResponse:
         assert not data_get(self.response.original.dictionary, key)
         return self
 
-    def assertAuthenticated(self):
-        assert self.application.make("auth").guard("web").user()
+    def assertGuest(self, guard="web"):
+        assert not self.application.make("auth").guard(guard).user()
         return self
 
-    def assertGuest(self):
-        assert not self.application.make("auth").guard("web").user()
-        return self
-
-    def assertAuthenticatedAs(self, user):
-        user = self.application.make("auth").guard("web").user()
-        assert user == user
+    def assertAuthenticated(self, user=None, guard="web"):
+        """Assert that user is authenticated. If a user a given assert that the given is
+        authenticated."""
+        logged_user = self.application.make("auth").guard(guard).user()
+        assert logged_user
+        if user:
+            assert user.get_id() == logged_user.get_id()
         return self
 
     def assertHasHttpMiddleware(self, middleware):

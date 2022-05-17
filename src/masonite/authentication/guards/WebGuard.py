@@ -81,3 +81,6 @@ class WebGuard:
         """
         self._once = True
         return self
+
+    def logout(self):
+        return self

@@ -67,7 +67,7 @@ class SlackDriver(BaseDriver):
         for webhook_url in webhook_urls:
             response = requests.post(
                 webhook_url,
-                payload,
+                json=payload,
                 headers={"Content-Type": "application/json"},
             )
             if response.status_code != 200:

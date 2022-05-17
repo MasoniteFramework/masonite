@@ -1,5 +1,6 @@
-import os
 import hashlib
+
+from ..utils.filesystem import get_extension
 
 
 class UploadedFile:
@@ -8,7 +9,7 @@ class UploadedFile:
         self.content = content
 
     def extension(self):
-        return os.path.splitext(self.filename)[1]
+        return get_extension(self.filename)
 
     @property
     def name(self):

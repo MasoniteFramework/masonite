@@ -141,11 +141,13 @@ class PackageProvider(Provider):
 
     def migrations(self, *migrations):
         self.package.add_migrations(*migrations)
-        for migration in migrations:
+        # use same timestamp for all package migrations
+        timestamp = migration_timestamp()
+        for index, migration in enumerate(migrations):
             self.package.add_publishable_resource(
                 "migrations",
                 migration,
-                migrations_path(f"{migration_timestamp()}_{basename(migration)}"),
+                migrations_path(f"{timestamp}_{index + 1}_{basename(migration)}"),
             )
         return self
 

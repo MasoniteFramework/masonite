@@ -88,12 +88,17 @@ class MethodNotAllowedException(Exception):
     is_http_exception = True
 
     def __init__(self, allowed_methods, method):
-        message = f"{method} method not allowed for this route. Supported methods are: {', '.join(allowed_methods)}."
+        allowed_list = ", ".join(allowed_methods)
+        message = f"{method} method not allowed for this route. Supported methods are: {allowed_list}."
         super().__init__(message)
         self.message = message
+        self.headers = {"Allow": allowed_list}
 
     def get_response(self):
         return self.message
+
+    def get_headers(self):
+        return self.headers
 
     def get_status(self):
         return 405
@@ -139,6 +144,16 @@ class NotificationException(Exception):
     pass
 
 
+class ModelNotFoundException(Exception):
+    is_http_exception = True
+
+    def get_response(self):
+        return "Model Not Found"
+
+    def get_status(self):
+        return 404
+
+
 class AuthorizationException(Exception):
     is_http_exception = True
 
@@ -146,6 +161,23 @@ class AuthorizationException(Exception):
         super().__init__(message)
         self.message = message or "Action not authorized"
         self.status = status or 403
+
+    def get_response(self):
+        return self.message
+
+    def get_status(self):
+        return self.status
+
+
+class ThrottleRequestsException(Exception):
+    def __init__(self, message="Too many attempts", status=429, headers={}):
+        super().__init__(message)
+        self.message = message
+        self.status = status
+        self.headers = headers
+
+    def get_headers(self):
+        return self.headers
 
     def get_response(self):
         return self.message

@@ -44,3 +44,17 @@ class TestRequest(TestCase):
         )
         request = IpMiddleware().before(request, response)
         self.assertEqual(request.ip(), "127.0.0.1")
+
+    def test_requests_accepts_json(self):
+        request = self.make_request({"HTTP_ACCEPT": "application/json"})
+        self.assertTrue(request.accepts_json())
+        request = self.make_request({"HTTP_ACCEPT": "text/html"})
+        self.assertFalse(request.accepts_json())
+
+    def test_getting_request_method(self):
+        request = self.make_request(method="POST")
+        self.assertEqual(request.get_request_method(), "POST")
+
+    def test_overriding_request_method_in_form(self):
+        request = self.make_request(post_data={"__method": "PATCH"}, method="POST")
+        self.assertEqual(request.get_request_method(), "PATCH")

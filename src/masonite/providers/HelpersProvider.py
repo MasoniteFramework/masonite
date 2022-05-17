@@ -4,6 +4,7 @@ from markupsafe import Markup
 from ..providers import Provider
 from ..configuration import config
 from ..helpers import UrlsHelper, MixHelper, optional
+from ..facades import Dump
 
 
 class HelpersProvider(Provider):
@@ -28,10 +29,14 @@ class HelpersProvider(Provider):
                 "back": lambda url=request.get_path_with_query(): (
                     Markup(f"<input type='hidden' name='__back' value='{url}' />")
                 ),
+                "method": lambda method: (
+                    Markup(f"<input type='hidden' name='__method' value='{method}' />")
+                ),
                 "asset": urls_helper.asset,
                 "url": urls_helper.url,
                 "mix": MixHelper(self.application).url,
                 "route": urls_helper.route,
+                "dd": Dump.dd,
                 "config": config,
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,

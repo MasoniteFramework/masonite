@@ -1,4 +1,5 @@
 init:
+	cp .env-example .env
 	pip install -r requirements.txt
 	pip install '.[test]'
 	# Create MySQL Database

@@ -25,6 +25,10 @@ class RouteProvider(Provider):
         route = router.find(
             request.get_path(), request.get_request_method(), request.get_subdomain()
         )
+        if not route:
+            raise RouteNotFoundException(
+                f"{request.get_request_method()} {request.get_path()} : 404 Not Found"
+            )
 
         request.route = route
 
@@ -36,33 +40,25 @@ class RouteProvider(Provider):
 
         exception = None
         if before_middleware:
-            if route:
-                request.load_params(route.extract_parameters(request.get_path()))
-                route_middleware = self.application.make(
-                    "middleware"
-                ).run_route_middleware(
-                    route.get_middlewares(), request, response, callback="before"
-                )
+            request.load_params(route.extract_parameters(request.get_path()))
+            route_middleware = self.application.make("middleware").run_route_middleware(
+                route.get_middlewares(), request, response, callback="before"
+            )
 
-                if route_middleware:
-                    try:
-                        data = route.get_response(self.application)
-                        if isinstance(data, Response) or (
-                            isclass(data) and issubclass(data, ResponseFacade)
-                        ):
-                            pass
-                        else:
-                            response.view(data)
-                    except Exception as e:
-                        exception = e
+            if route_middleware:
+                try:
+                    data = route.get_response(self.application)
+                    if isinstance(data, Response) or (
+                        isclass(data) and issubclass(data, ResponseFacade)
+                    ):
+                        pass
+                    else:
+                        response.view(data)
+                except Exception as e:
+                    exception = e
 
-                    self.application.make("middleware").run_route_middleware(
-                        route.get_middlewares(), request, response, callback="after"
-                    )
-
-            else:
-                raise RouteNotFoundException(
-                    f"{request.get_request_method()} {request.get_path()} : 404 Not Found"
+                self.application.make("middleware").run_route_middleware(
+                    route.get_middlewares(), request, response, callback="after"
                 )
 
         Pipeline(request, response).through(

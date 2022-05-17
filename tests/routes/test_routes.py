@@ -1,4 +1,6 @@
+from src.masonite.utils.http import HTTP_STATUS_CODES
 from tests import TestCase
+from src.masonite.exceptions.exceptions import MethodNotAllowedException
 from src.masonite.routes import Route, Router
 
 
@@ -185,8 +187,8 @@ class TestRoutes(TestCase):
         route = router.find("/test/1", "get")
         self.assertTrue(route)
 
-        route = router.find("/test/1", "post")
-        self.assertIsNone(route)
+        with self.assertRaises(MethodNotAllowedException) as e:
+            route = router.find("/test/1", "post")
 
     def test_route_views(self):
         self.get("/test_view").assertContains("111")
@@ -240,3 +242,45 @@ class TestRoutes(TestCase):
         self.assertEqual(
             router.find_by_name("one").get_middlewares(), ["m1", "m2", "m3", "m4"]
         )
+
+    def test_method_not_allowed_raised_if_wrong_method(self):
+        router = Router(
+            [
+                Route.get("/home", "WelcomeController@show"),
+                Route.put("/home", "WelcomeController@show"),
+            ]
+        )
+
+        with self.assertRaises(MethodNotAllowedException) as context:
+            router.find("/home", "POST")
+
+        self.assertIn(
+            "Supported methods are: GET, HEAD, PUT.", str(context.exception.message)
+        )
+
+    def test_options_method_returns_allowed_methods(self):
+
+        router = Router(
+            [
+                Route.get("/home", "WelcomeController@show"),
+                Route.put("/home", "WelcomeController@show"),
+            ]
+        )
+
+        route = router.find("/home", "OPTIONS")
+        self.assertEqual(route.request_method, ["options"])
+        response = route.get_response(self.application)
+
+        self.assertEqual(response.content, "")
+        self.assertEqual(response._status, HTTP_STATUS_CODES[204])
+        self.assertEqual(response.header("Allow"), "GET, HEAD, PUT")
+
+    def test_head_method_is_registered_for_get_routes(self):
+        router = Router(
+            [
+                Route.get("/home", "WelcomeController@show"),
+            ]
+        )
+        route = router.find("/home", "HEAD")
+        self.assertIsNotNone(route)
+        self.assertEqual(route.request_method, ["get", "head"])

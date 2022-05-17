@@ -25,7 +25,7 @@ class InvalidCSRFToken:
         return "Invalid CSRF Token"
 
     def description(self):
-        return "TODO"
+        return "The CSRF tokens found in the user session and in the request do not match. This is flagged as a potential CSRF attack."
 
     def regex(self):
         return r"Invalid CSRF Token"

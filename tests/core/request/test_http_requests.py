@@ -53,3 +53,14 @@ class TestHttpRequests(TestCase):
         self.get("/")
         route = self.application.make("request").get_route()
         assert isinstance(route, HTTPRoute)
+
+    def test_head_route(self):
+        get_response_headers = self.get("/").response.header_bag.to_dict()
+
+        response = self.head("/")
+        response.assertNoContent()
+        for name, value in get_response_headers.items():
+            response.assertHasHeader(name, value)
+
+    def test_options_route(self):
+        self.options("/").assertNoContent().assertHasHeader("Allow", "GET, HEAD, POST")

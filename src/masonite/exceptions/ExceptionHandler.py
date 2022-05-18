@@ -35,6 +35,11 @@ class ExceptionHandler:
             f"masonite.exception.{exception.__class__.__name__}", exception
         )
 
+        # add headers to response if any
+        if hasattr(exception, "get_headers"):
+            headers = exception.get_headers()
+            response.with_headers(headers)
+
         # if an exception handler is registered for this exception, use it instead
         # add headers to response if any
         if hasattr(exception, "get_headers"):

@@ -25,7 +25,7 @@ class Route:
         return HTTPRoute(
             url,
             controller,
-            request_method=["get"],
+            request_method=["get", "head"],
             compilers=self.compilers,
             controllers_locations=module_location or self.controllers_locations,
             **options,

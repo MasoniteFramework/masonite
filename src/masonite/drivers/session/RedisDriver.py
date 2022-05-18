@@ -85,9 +85,9 @@ class RedisDriver(BaseDriver):
         if not session_id:
             request = self.application.make("request")
             session_id = request.cookie("SESSID")
-        ns = self.options.get("namespace", "")
-        ns += ":" if ns else ""
-        return f"{ns}session:{session_id}:"
+        namespace = self.options.get("namespace", "")
+        namespace += ":" if namespace else ""
+        return f"{namespace}session:{session_id}:"
 
     def get_data_prefix(self):
         return f"{self.get_session_namespace()}data:"

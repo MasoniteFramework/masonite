@@ -3,6 +3,8 @@ import re
 import os
 import mimetypes
 
+from src.masonite.filesystem import UploadedFile
+
 from .RuleEnclosure import RuleEnclosure
 from .MessageBag import MessageBag
 from ..utils.structures import data_get
@@ -898,18 +900,22 @@ class BaseFileValidation(BaseValidation):
         self.all_clear = True
 
     def passes(self, attribute, key, dictionary):
-        if isinstance(attribute, str):
-            filepath = attribute
-        else:
+        # Here we can validate on a filepath or an uploaded file (from request)
+        if isinstance(attribute, UploadedFile):
             filepath = attribute.name
-        if not os.path.isfile(filepath):
-            self.file_check = False
-            return False
-        if self.size:
+            file_size = attribute.size
+        else:
+            filepath = attribute
+            if not os.path.isfile(filepath):
+                self.file_check = False
+                return False
             file_size = os.path.getsize(filepath)
+        # validate size
+        if self.size:
             if file_size > self.size:
                 self.size_check = False
                 self.all_clear = False
+        # validate extension
         if self.allowed_extensions:
             mimetype, encoding = mimetypes.guess_type(filepath)
             if mimetype not in self.allowed_mimetypes:

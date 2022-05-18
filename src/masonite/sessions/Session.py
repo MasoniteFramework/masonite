@@ -53,12 +53,13 @@ class Session:
         """Get the default session driver or the driver with the given name."""
         if name is None:
             return self.drivers[self._active_driver]
+
         return self.drivers[name]
 
     def get_config_options(self, driver: str = None) -> dict:
         """Get the options of the default session driver or of the driver with the given name."""
         if driver is None:
-            return self.driver_config[self.driver_config.get(self._active_driver)]
+            return self.driver_config.get(self._active_driver)
 
         return self.driver_config.get(driver, {})
 

@@ -14,7 +14,7 @@ class RedisDriver(BaseDriver):
     def __init__(self, application: "Application"):
         super().__init__(application)
         self.connection = None
-        self.driver_config = {"decode_responses": True}
+        self.options = {"decode_responses": True}
 
     def get_connection(self):
         try:
@@ -25,8 +25,11 @@ class RedisDriver(BaseDriver):
             )
 
         if not self.connection:
-            self.connection = redis.StrictRedis(
-                **self.driver_config,
+            self.connection = redis.Redis(
+                **self.options.get("options", {}),
+                host=self.options.get("host"),
+                port=self.options.get("port", 6379),
+                password=self.options.get("password", None),
             )
 
         return self.connection

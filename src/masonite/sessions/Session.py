@@ -35,7 +35,7 @@ class Session:
     def set_configuration(self, config: dict) -> "Session":
         """Set session driver options."""
 
-        # make sure the default drivewr is defined
+        # make sure the default driver is defined
         if "default" not in config:
             raise InvalidConfigurationSetup(
                 "'default' session driver is not defined."

@@ -23,8 +23,8 @@ class FrameworkProvider(Provider):
         presets.add(React())
         self.application.bind("presets", presets)
 
-        # @M5 remove this and add CorsProvider in default project
-        cors = Cors(self.application).set_options(config("cors"))
+        # @M5 remove this and add SecurityProvider in default project
+        cors = Cors(self.application).set_options(config("security.cors"))
         self.application.bind("cors", cors)
 
     def boot(self):

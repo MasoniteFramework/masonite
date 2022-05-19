@@ -163,6 +163,7 @@ setup(
         "masonite.queues",
         "masonite.request",
         "masonite.response",
+        "masonite.rates",
         "masonite.routes",
         "masonite.routes.commands",
         "masonite.scheduling.commands",

@@ -1,4 +1,5 @@
 from re import L
+from typing import TYPE_CHECKING
 from tests import TestCase
 from tests.integrations.app.SayHi import SayHello
 from tests.integrations.app.GreetingService import GreetingService
@@ -9,6 +10,11 @@ from src.masonite.exceptions import (
     MissingContainerBindingNotFound,
 )
 
+if TYPE_CHECKING:
+    from src.masonite.foundation import Application
+
+from src.masonite.foundation import Application
+
 
 class SomeObject:
 
@@ -16,6 +22,16 @@ class SomeObject:
 
     def __init__(self, attribute):
         self.attribute = attribute
+
+
+class SomeStringTypeHintedAppObject:
+    def __init__(self, app: "Application"):
+        self.app = app
+
+
+class SomeAppObject:
+    def __init__(self, app: Application):
+        self.app = app
 
 
 class TestContainer(TestCase):
@@ -107,10 +123,14 @@ class TestContainer(TestCase):
 
         obj = self.application.resolve(my_method)
 
-    def test_error_when_resolving_annotated_parameter(self):
-        from masonite.response.Response import Response
+    def test_can_resolve_class_with_str_type_hinted_parameters(self):
+        def my_method(test: SomeStringTypeHintedAppObject):
+            return "ok"
 
-        def my_method(response: Response):
+        obj = self.application.resolve(my_method)
+
+    def test_can_resolve_class_with_type_hinted_parameters(self):
+        def my_method(test: SomeAppObject):
             return "ok"
 
         obj = self.application.resolve(my_method)

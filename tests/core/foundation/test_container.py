@@ -108,7 +108,7 @@ class TestContainer(TestCase):
         obj = self.application.resolve(my_method)
 
     def test_error_when_resolving_annotated_parameter(self):
-        from masonite.response import Response
+        from masonite.response.Response import Response
 
         def my_method(response: Response):
             return "ok"

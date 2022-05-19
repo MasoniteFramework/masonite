@@ -1,8 +1,6 @@
-from email.mime import application
 import time
 
 from ..request import Request
-from ..response import Response
 from .Provider import Provider
 
 from ..presets.PresetsCapsule import PresetsCapsule
@@ -23,6 +21,8 @@ class FrameworkProvider(Provider):
         self.application.bind("presets", presets)
 
     def boot(self):
+        from ..response import Response
+
         request = Request(self.application.make("environ"))
         request.app = self.application
         if self.application.has("activate.subdomains") and self.application.make(

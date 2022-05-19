@@ -14,7 +14,7 @@ class RedisDriver(BaseDriver):
     def __init__(self, application: "Application"):
         super().__init__(application)
         self.connection = None
-        self.options = {"decode_responses": True}
+        self.options = {"options": {"decode_responses": True}}
 
     def get_connection(self):
         try:
@@ -51,9 +51,9 @@ class RedisDriver(BaseDriver):
         data_prefix = self.get_data_prefix()
         flash_prefix = self.get_flash_prefix()
         for key, value in session_data.items():
-            if str(key).startswith(data_prefix):
+            if key.startswith(data_prefix):
                 data.update({key.replace(data_prefix, ""): value})
-            elif str(key).startswith(flash_prefix):
+            elif key.startswith(flash_prefix):
                 flashed.update({key.replace(flash_prefix, ""): value})
 
         return {"data": data, "flashed": flashed}

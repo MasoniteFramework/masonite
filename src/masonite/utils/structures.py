@@ -1,6 +1,6 @@
 """Helpers for multiple data structures"""
 import importlib
-from importlib.abc import Loader
+from typing import Any
 from dotty_dict import dotty
 
 from ..exceptions.exceptions import LoaderNotFound
@@ -8,16 +8,16 @@ from ..exceptions.exceptions import LoaderNotFound
 from .str import modularize
 
 
-def load(path, object_name=None, default=None, raise_exception=False):
-    """Load the given object from a Python module located at path and returns a default
-    value if not found. If no object name is provided, loads the module.
-
-    Arguments:
-        path {str} -- A file path or a dotted path of a Python module
-        object {str} -- The object name to load in this module (None)
-        default {str} -- The default value to return if object not found in module (None)
-    Returns:
-        {object} -- The value (or default) read in the module or the module if no object name
+def load(
+    path: str,
+    object_name: str = None,
+    default: Any = None,
+    raise_exception: bool = False,
+) -> Any:
+    """Load the given object from a Python module located at path (can be a dotted path) and
+    returns a default value if not found. If no object name is provided, loads the module.
+    When raise_exception is enabled, exceptions can be raised if an error happens when loading
+    the object.
     """
     # modularize path if needed
     module_path = modularize(path)

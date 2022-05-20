@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class DefaultType:
     def __init__(self, value, obj):
         self.value = value
@@ -27,7 +30,7 @@ class Optional:
     """Optional helper class that allow evaluting an expression which can be undefined without
     raising an expression but returning a default value (None)."""
 
-    def __init__(self, obj, default=None):
+    def __init__(self, obj: Any, default: Any = None):
         self.obj = obj
         self.default = default
 

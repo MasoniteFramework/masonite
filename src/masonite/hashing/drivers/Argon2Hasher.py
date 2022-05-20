@@ -1,8 +1,10 @@
 class Argon2Hasher:
-    def __init__(self, options={}):
+    """Hash driver implementing argon2 hashing protocol."""
+
+    def __init__(self, options: dict = {}):
         self.options = options
 
-    def set_options(self, options):
+    def set_options(self, options: dict) -> "Argon2Hasher":
         self.options = options
         return self
 
@@ -21,17 +23,17 @@ class Argon2Hasher:
             memory_cost=memory, parallelism=threads, time_cost=time
         )
 
-    def make(self, string):
+    def make(self, string: str) -> str:
         return self.make_bytes(string).decode("utf-8")
 
-    def make_bytes(self, string):
+    def make_bytes(self, string: str) -> bytes:
         ph = self._get_password_hasher()
         return bytes(ph.hash(bytes(string, "utf-8")), "utf-8")
 
-    def check(self, plain_string, hashed_string):
+    def check(self, plain_string: str, hashed_string: str) -> bool:
         ph = self._get_password_hasher()
         return ph.verify(hashed_string, bytes(plain_string, "utf-8"))
 
-    def needs_rehash(self, hashed_string):
+    def needs_rehash(self, hashed_string: str) -> bool:
         ph = self._get_password_hasher()
         return ph.check_needs_rehash(hashed_string)

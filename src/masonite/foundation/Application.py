@@ -46,14 +46,6 @@ class Application(Container):
 
         return self
 
-    # @clean looks like that's not used anymore it's done in Route
-    # is it okay ? should not be the application or event the container which holds this info ??
-    # def set_controller_locations(self, location):
-    #     self._controller_locations = location
-
-    # def get_controller_locations(self, location):
-    #     return self._controller_locations
-
     def get_providers(self) -> List["Provider"]:
         return self.providers
 

@@ -1,6 +1,7 @@
 import time
 import inspect
 from pprint import pformat
+from typing import Any, List
 
 
 def color(string):
@@ -41,14 +42,18 @@ def serialize_property(obj):
 
 
 class Dump:
-    def __init__(self, objects, method, filename, line):
+    """Dump class representing a dump made inside the code. It contains the dump location metadata
+    and the dumped objects."""
+
+    def __init__(self, objects: List[Any], method: str, filename: str, line: int):
         self.objects = objects
         self.method = method
         self.filename = filename
         self.line = line
-        self.timestamp = time.time()
+        self.timestamp: float = time.time()
 
-    def serialize(self):
+    def serialize(self) -> dict:
+        """Serialize the dump as a dictionary."""
         objects = {}
         for name, obj in self.objects.items():
             # serialize all obj properties
@@ -78,7 +83,7 @@ class Dump:
     def __str__(self):
         return self._format()
 
-    def _format(self):
+    def _format(self) -> str:
         """Format the dump as string to be printed in console."""
         output = f"\n{color('>>> DUMP')} from {self.filename}: {color(f'L{self.line}')} in {color(f'{self.method}()')}"
 

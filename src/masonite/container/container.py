@@ -292,6 +292,8 @@ class Container:
         Returns:
             object -- Returns the object found in the container.
         """
+        if isinstance(parameter.annotation, str):
+            return
         if parameter.annotation in self.swaps:
             obj = self.swaps[parameter.annotation]
             if callable(obj):
@@ -299,7 +301,6 @@ class Container:
             return obj
 
         for _, provider_class in self.objects.items():
-
             if (
                 parameter.annotation == provider_class
                 or parameter.annotation == provider_class.__class__

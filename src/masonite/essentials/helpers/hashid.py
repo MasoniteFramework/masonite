@@ -1,7 +1,7 @@
 from hashids import Hashids
 
 
-def hashid(*values, decode=False, min_length=7):
+def hashid(*values, decode: bool = False, min_length: int = 7):
     hash_class = Hashids(min_length=min_length)
     if type(values[0]) == dict and decode:
         new_dict = {}

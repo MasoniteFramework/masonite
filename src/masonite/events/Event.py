@@ -1,22 +1,23 @@
-""" Event Module """
-
 import inspect
+from typing import TYPE_CHECKING, Any, List
+
+if TYPE_CHECKING:
+    from ..foundation import Application
 
 
 class Event:
-    def __init__(self, application):
-        """Event contructor
-        Arguments:
-            application - The Masonite application class
-        """
-        self.application = application
-        self.events = {}
+    """Event manager class allowing to fire events, listen to events and register event
+    listeners."""
 
-    def get_events(self):
+    def __init__(self, application: "Application"):
+        self.application = application
+        self.events: dict = {}
+
+    def get_events(self) -> dict:
         return self.events
 
-    def listen(self, event, listeners):
-
+    def listen(self, event: Any, listeners: "List[Any]|Any") -> "Event":
+        """Listen to the given event with the given listener(s)."""
         if not isinstance(listeners, list):
             listeners = [listeners]
 
@@ -27,7 +28,8 @@ class Event:
 
         return self
 
-    def fire(self, event, *args, **kwargs):
+    def fire(self, event: "str|Any", *args, **kwargs) -> List[Any]:
+        """Fire the given event with payload if any."""
         if isinstance(event, str):
             collected_events = self.collect_events(event)
             for collected_event in collected_events:
@@ -45,7 +47,8 @@ class Event:
 
             return [event]
 
-    def collect_events(self, fired_event):
+    def collect_events(self, fired_event: str) -> List[Any]:
+        """Collect all events listened to matching the searched event. Wildcards (*) can be used."""
         collected_events = []
         for stored_event in self.events.keys():
 
@@ -72,10 +75,7 @@ class Event:
 
         return collected_events
 
-    def subscribe(self, *listeners):
-        """Subscribe a specific listener object to the events system
-        Raises:
-            InvalidSubscriptionType -- raises when the subscribe attribute on the listener object is not a class.
-        """
+    def subscribe(self, *listeners) -> None:
+        """Subscribe a specific listener class to the events system."""
         for listener in listeners:
             listener.subscribe(self)

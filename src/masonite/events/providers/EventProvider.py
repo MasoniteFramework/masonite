@@ -4,6 +4,8 @@ from ..commands import MakeListenerCommand, MakeEventCommand
 
 
 class EventProvider(Provider):
+    """Add events handling to your application."""
+
     def __init__(self, application):
         self.application = application
 

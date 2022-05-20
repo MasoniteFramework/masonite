@@ -1,4 +1,5 @@
 import hashlib
+import os
 
 from ..utils.filesystem import get_extension
 
@@ -16,7 +17,7 @@ class UploadedFile:
         return self.filename
 
     def path_name(self):
-        return f"{self.name()}{self.extension()}"
+        return f"{self.name}{self.extension()}"
 
     def hash_path_name(self):
         return f"{self.hash_name()}{self.extension()}"
@@ -29,3 +30,7 @@ class UploadedFile:
 
     def get_content(self):
         return self.content
+
+    @property
+    def size(self):
+        return len(self.content)

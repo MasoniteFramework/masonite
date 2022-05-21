@@ -139,9 +139,6 @@ class TestContainer(TestCase):
         self.assertEquals(obj.app + 1, 2)
 
 
-
-        self.assertIsInstance(obj, Application)
-
     def test_can_resolve_class_with_type_hinted_parameters(self):
         def my_method(test: SomeAppObject):
             return "ok"

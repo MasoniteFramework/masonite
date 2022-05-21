@@ -24,6 +24,7 @@ from src.masonite.validation import (
     equals,
     exists,
     exists_in_db,
+    not_exists_in_db,
     file,
     greater_than,
     image,
@@ -1730,6 +1731,26 @@ class TestValidationProvider(TestCase):
             exists_in_db(["email"], "users", "email"),
         )
         self.assertEqual(len(validate), 0)
+
+    def test_not_exists_in_db(self):
+        validate = Validator().validate(
+            {
+                "email": "unknown@gmail.com",
+            },
+            not_exists_in_db(["email"], "users", "email"),
+        )
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate(
+            {
+                "email": "idmann509@gmail.com",
+            },
+            not_exists_in_db(["email"], "users", "email"),
+        )
+        self.assertIn(
+            "A record already exists in table users with the same email",
+            validate.get("email"),
+        )
 
     def test_exists_in_db_with_model_path(self):
         validate = Validator().validate(

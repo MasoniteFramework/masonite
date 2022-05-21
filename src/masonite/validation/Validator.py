@@ -750,7 +750,7 @@ class strong(BaseValidation):
         if self.special != 0:
             special_chars = "[^A-Za-z0-9]"
             if self.special_chars:
-                special_chars = self.special_chars
+                special_chars = f"[{self.special_chars}]"
             if len(re.findall(special_chars, attribute)) < self.special:
                 self.special_check = False
                 all_clear = False
@@ -783,7 +783,7 @@ class strong(BaseValidation):
         if not self.special_check:
             valid_chars = self.special_chars or "!@#$%^&*()_+"
             message.append(
-                "The {} field must contain {} of these characters: {}".format(
+                "The {} field must contain at least {} of these characters: '{}'".format(
                     attribute, self.special, valid_chars
                 )
             )

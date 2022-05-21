@@ -1,6 +1,8 @@
 import json
 from typing import TYPE_CHECKING
 
+from redis import Redis
+
 from ..BaseDriver import BaseDriver
 from ...validation import MessageBag
 
@@ -16,7 +18,7 @@ class RedisDriver(BaseDriver):
         self.connection = None
         self.options = {"options": {"decode_responses": True}}
 
-    def get_connection(self):
+    def get_connection(self) -> Redis:
         try:
             import redis
         except ImportError:
@@ -25,7 +27,7 @@ class RedisDriver(BaseDriver):
             )
 
         if not self.connection:
-            self.connection = redis.Redis(
+            self.connection = Redis(
                 **self.options.get("options", {}),
                 host=self.options.get("host"),
                 port=self.options.get("port", 6379),

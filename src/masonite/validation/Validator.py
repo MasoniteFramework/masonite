@@ -400,12 +400,12 @@ class not_exists_in_db(BaseValidation):
         return count == 0
 
     def message(self, attribute):
-        return "A record already exists in table {} with the same {}.".format(
+        return "A record already exists in table {} with the same {}".format(
             self.table, attribute
         )
 
     def negated_message(self, attribute):
-        return "No record found in table {} with the same {}.".format(
+        return "No record found in table {} with the same {}".format(
             self.table, attribute
         )
 

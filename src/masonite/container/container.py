@@ -199,7 +199,6 @@ class Container:
                         # See `self.make()`.
                         param = value.annotation
                     if inspect.isclass(param):
-                        print(resolving_arguments)
                         if resolving_arguments:
                             param = self.resolve(param, *resolving_arguments)
                         else:

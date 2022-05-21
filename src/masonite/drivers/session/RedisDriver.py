@@ -86,7 +86,7 @@ class RedisDriver(BaseDriver):
         for key in deleted_flashed:
             self.delete(f"{self.get_flash_prefix()}{key}")
 
-    def get_session_namespace(self, session_id=None):
+    def get_session_namespace(self, session_id=None) -> str:
         if not session_id:
             request = self.application.make("request")
             session_id = request.cookie("SESSID")
@@ -94,17 +94,17 @@ class RedisDriver(BaseDriver):
         namespace += ":" if namespace else ""
         return f"{namespace}session:{session_id}:"
 
-    def get_data_prefix(self):
+    def get_data_prefix(self) -> str:
         return f"{self.get_session_namespace()}data:"
 
-    def get_flash_prefix(self):
+    def get_flash_prefix(self) -> str:
         return f"{self.get_session_namespace()}flash:"
 
     def helper(self) -> "RedisDriver":
         """Use to create builtin helper function."""
         return self
 
-    def get(self, key, default=None, **options):
+    def get(self, key, default=None, **options) -> str:
         if not self.has(key):
             return default
         return self.get_value(
@@ -125,9 +125,9 @@ class RedisDriver(BaseDriver):
     def delete(self, key):
         return self.get_connection().delete(key)
 
-    def flush(self, session_id=None):
+    def flush(self, session_id=None) -> None:
         """
-        Clears all data for the current session id
+        Clears all data for the current (or provided) session id
         """
 
         cursor = '0'
@@ -138,11 +138,11 @@ class RedisDriver(BaseDriver):
             if keys:
                 connection.delete(*keys)
 
-    def get_timeout(self):
+    def get_timeout(self) -> int:
         # default timeout of session vars is 24 hrs
-        return self.options.get("timeout", 60 * 60 * 24)
+        return int(self.options.get("timeout", 60 * 60 * 24))
 
-    def get_value(self, value):
+    def get_value(self, value) -> str:
         value = str(value)
         if value.isdigit():
             return str(value)

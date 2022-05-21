@@ -125,9 +125,20 @@ class TestContainer(TestCase):
 
     def test_can_resolve_class_with_str_type_hinted_parameters(self):
         def my_method(test: SomeStringTypeHintedAppObject):
-            return "ok"
+            return test
 
-        obj = self.application.resolve(my_method)
+        with self.assertRaises(TypeError):
+            self.application.resolve(my_method)
+
+
+    def test_can_resolve_class_with_str_type_hinted_parameters_and_pass_parameter(self):
+        def my_method(test: SomeStringTypeHintedAppObject):
+            return test
+
+        obj = self.application.resolve(my_method, 1)
+        self.assertEquals(obj.app + 1, 2)
+
+
 
     def test_can_resolve_class_with_type_hinted_parameters(self):
         def my_method(test: SomeAppObject):

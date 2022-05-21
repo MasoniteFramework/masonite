@@ -181,7 +181,7 @@ class Container:
                 raise ContainerError(str(e))
         else:
             for _, value in self.get_parameters(obj):
-                if value.annotation in (str, int, dict, list, tuple):
+                if type(value.annotation) in (str, int, dict, list, tuple):
                     # Ignore any times a user is simply type hinting a parameter like (parameter:str).
                     # In this case we don't want to resolve anything but we do want
                     # to insert any passing arguments we passed in
@@ -199,7 +199,11 @@ class Container:
                         # See `self.make()`.
                         param = value.annotation
                     if inspect.isclass(param):
-                        param = self.resolve(param)
+                        print(resolving_arguments)
+                        if resolving_arguments:
+                            param = self.resolve(param, *resolving_arguments)
+                        else:
+                            param = self.resolve(param)
                     objects.append(param)
                 elif "self" in str(value):
                     objects.append(obj)

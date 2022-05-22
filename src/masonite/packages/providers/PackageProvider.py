@@ -1,7 +1,8 @@
 import os
 from collections import defaultdict
-from os.path import relpath, join, basename, isdir, isfile, dirname
+from os.path import relpath, join, basename, isdir, isfile
 import shutil
+from typing import TYPE_CHECKING
 
 from ...providers.Provider import Provider
 from ...exceptions import InvalidPackageName
@@ -18,21 +19,27 @@ from ...routes import Route
 from ...utils.structures import load
 from ...utils.str import modularize, as_filepath
 from ...utils.filesystem import make_directory
-
 from ..reserved_names import PACKAGE_RESERVED_NAMES
 from ..Package import Package
 
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ...commands import Command
+    from ...presets import Preset
+
 
 class PackageProvider(Provider):
+    """Specific Masonite service provider used in Masonite package ecosystem to easily build a
+    package that can register/share config, views, routes, migrations, controllers and assets."""
 
     vendor_prefix = "vendor"
 
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
         # TODO: the default here could be set auto by deciding that its the dirname
         # containing the provider !
         self.package = Package()
-        self.default_resources = ["config", "views", "migrations", "assets"]
+        self.default_resources: list = ["config", "views", "migrations", "assets"]
 
     def register(self):
         self.configure()
@@ -42,9 +49,13 @@ class PackageProvider(Provider):
 
     # api
     def configure(self):
+        """Main method used to configure all resources that need to be registered or published
+        by the package."""
         pass
 
-    def publish(self, resources, dry=False):
+    def publish(self, resources: list, dry: bool = False) -> dict:
+        """Publish given packages resources (or all) to the project. If dry is enabled it will just
+        show what will be published without publishing it really."""
         project_root = base_path()
         resources_list = resources or self.default_resources
         published_resources = defaultdict(lambda: [])
@@ -59,7 +70,7 @@ class PackageProvider(Provider):
                 published_resources[resource.key].append(relpath(dest, project_root))
         return published_resources
 
-    def root(self, relative_dir):
+    def root(self, relative_dir: str) -> "PackageProvider":
         """Define python package module root path and absolute package root path.
         It works when installing the package locally with: pip install . or pip install -e .
         and when installing the package from production release with: pip install package-name
@@ -77,7 +88,7 @@ class PackageProvider(Provider):
         ]
         return self
 
-    def name(self, name):
+    def name(self, name: str) -> "PackageProvider":
         if name in PACKAGE_RESERVED_NAMES:
             raise InvalidPackageName(
                 f"{name} is a reserved name. Please choose another name for your package."
@@ -85,11 +96,14 @@ class PackageProvider(Provider):
         self.package.name = name
         return self
 
-    def vendor_name(self, name):
+    def vendor_name(self, name: str) -> "PackageProvider":
+        """Specify the package vendor name under which resources will be published."""
         self.package.vendor_name = name
         return self
 
-    def config(self, config_filepath, publish=False):
+    def config(self, config_filepath: str, publish: bool = False) -> "PackageProvider":
+        """Specify package configuration file to be registered in project configuration. You can
+        make it publishable by passing publish=True."""
         # TODO: a name must be specified !
         self.package.add_config(config_filepath)
         Config.merge_with(self.package.name, self.package.config)
@@ -99,7 +113,7 @@ class PackageProvider(Provider):
             )
         return self
 
-    def views(self, location, publish=False):
+    def views(self, location: str, publish: bool = False) -> "PackageProvider":
         """Register views location in the project. location must be a folder containinng the views you want to publish."""
         self.package.add_views(location)
         # register views into project
@@ -130,16 +144,20 @@ class PackageProvider(Provider):
 
         return self
 
-    def commands(self, *commands):
+    def commands(self, *commands: "Command") -> "PackageProvider":
+        """Register package commands to the project. This will add the package commands into the
+        list of Masonite project commands."""
         self.application.make("commands").add(*commands)
         return self
 
-    def presets(self, *presets):
+    def presets(self, *presets: "Preset") -> "PackageProvider":
+        """Register package presets to the project."""
         for preset in presets:
             self.application.make("presets").add(preset)
         return self
 
-    def migrations(self, *migrations):
+    def migrations(self, *migrations: str) -> "PackageProvider":
+        """Register package migrations to the project."""
         self.package.add_migrations(*migrations)
         # use same timestamp for all package migrations
         timestamp = migration_timestamp()
@@ -151,8 +169,8 @@ class PackageProvider(Provider):
             )
         return self
 
-    def routes(self, *routes):
-        """Controller locations must have been loaded already !"""
+    def routes(self, *routes: str):
+        """Register package routes to the project. Controller locations must have been loaded already !"""
         self.package.add_routes(*routes)
         for route_group in self.package.routes:
             self.application.make("router").add(
@@ -160,12 +178,16 @@ class PackageProvider(Provider):
             )
         return self
 
-    def controllers(self, *controller_locations):
+    def controllers(self, *controller_locations: str) -> "PackageProvider":
+        """Register package controller locations to the project. This will allow to use route
+        controller string bindings with controllers from the package inside route definition."""
         self.package.add_controller_locations(*controller_locations)
         Route.add_controller_locations(*self.package.controller_locations)
         return self
 
-    def assets(self, *assets):
+    def assets(self, *assets: str) -> "PackageProvider":
+        """Register package assets to the project. This will allow the user to publish assets to
+        the project."""
         self.package.add_assets(*assets)
         for asset_dir_or_file in assets:
             abs_path = self.package._build_path(asset_dir_or_file)

@@ -2,21 +2,27 @@ import pickle
 import pendulum
 import inspect
 from urllib import parse
+from typing import TYPE_CHECKING
 
 from ...utils.console import HasColoredOutput
 
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ...queues import Queueable
+    import pika
+
 
 class AMQPDriver(HasColoredOutput):
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
         self.connection = None
         self.publishing_channel = None
 
-    def set_options(self, options):
+    def set_options(self, options: dict) -> "AMQPDriver":
         self.options = options
         return self
 
-    def push(self, *jobs, args=(), **kwargs):
+    def push(self, *jobs: "Queueable", args=(), **kwargs) -> None:
         for job in jobs:
             payload = {
                 "obj": job,
@@ -30,7 +36,7 @@ class AMQPDriver(HasColoredOutput):
             except (self.get_connection_exceptions()):
                 self.connect().publish(payload)
 
-    def get_connection_exceptions(self):
+    def get_connection_exceptions(self) -> tuple:
         pika = self.get_package_library()
         return (
             pika.exceptions.ConnectionClosed,
@@ -39,7 +45,7 @@ class AMQPDriver(HasColoredOutput):
             pika.exceptions.ChannelWrongStateError,
         )
 
-    def publish(self, payload):
+    def publish(self, payload: dict) -> None:
         pika = self.get_package_library()
         self.publishing_channel.basic_publish(
             exchange=self.options.get("exchange"),
@@ -52,7 +58,7 @@ class AMQPDriver(HasColoredOutput):
         self.publishing_channel.close()
         self.connection.close()
 
-    def get_package_library(self):
+    def get_package_library(self) -> "pika":
         try:
             import pika
         except ImportError:
@@ -62,7 +68,7 @@ class AMQPDriver(HasColoredOutput):
 
         return pika
 
-    def connect(self):
+    def connect(self) -> "AMQPDriver":
         try:
             import pika
         except ImportError:
@@ -88,7 +94,7 @@ class AMQPDriver(HasColoredOutput):
 
         return self
 
-    def consume(self):
+    def consume(self) -> None:
         self.success(
             '[*] Waiting to process jobs on the "{}" queue. To exit press CTRL+C'.format(
                 self.options.get("queue")
@@ -108,7 +114,7 @@ class AMQPDriver(HasColoredOutput):
             self.publishing_channel.close()
             self.connection.close()
 
-    def retry(self):
+    def retry(self) -> None:
         builder = (
             self.application.make("builder")
             .new()
@@ -133,7 +139,7 @@ class AMQPDriver(HasColoredOutput):
             "id", [x["id"] for x in jobs]
         ).delete()
 
-    def work(self, ch, method, _, body):
+    def work(self, ch, method, _, body) -> None:
 
         job = pickle.loads(body)
         obj = job["obj"]

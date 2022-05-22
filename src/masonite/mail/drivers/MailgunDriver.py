@@ -1,18 +1,25 @@
 import requests
+from typing import TYPE_CHECKING, List
+
 from ..Recipient import Recipient
+
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ..MessageAttachment import MessageAttachment
 
 
 class MailgunDriver:
-    def __init__(self, application):
-        self.application = application
-        self.options = {}
-        self.content_type = None
+    """Mailgun driver used to send e-mails from Mailgun service."""
 
-    def set_options(self, options):
+    def __init__(self, application: "Application"):
+        self.application = application
+        self.options: dict = {}
+
+    def set_options(self, options: dict) -> "MailgunDriver":
         self.options = options
         return self
 
-    def get_mime_message(self):
+    def get_mime_message(self) -> dict:
         data = {
             "from": self.options.get("from"),
             "to": Recipient(self.options.get("to")).header(),
@@ -34,14 +41,14 @@ class MailgunDriver:
 
         return data
 
-    def get_attachments(self):
+    def get_attachments(self) -> "List[MessageAttachment]":
         files = []
         for attachment in self.options.get("attachments", []):
             files.append(("attachment", open(attachment.path, "rb")))
 
         return files
 
-    def send(self):
+    def send(self) -> "requests.Response":
         domain = self.options["domain"]
         region = self.options.get("region", "us")
         secret = self.options["secret"]
@@ -49,7 +56,7 @@ class MailgunDriver:
 
         BASE_URL_BY_REGION = {
             "us": "https://api.mailgun.net/v3/",
-            "eu": "https://api.eu.mailgun.net/v3/"
+            "eu": "https://api.eu.mailgun.net/v3/",
         }
 
         endpoint = BASE_URL_BY_REGION.get(region.lower())

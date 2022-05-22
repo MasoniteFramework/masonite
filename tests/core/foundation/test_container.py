@@ -1,4 +1,3 @@
-from re import L
 from typing import TYPE_CHECKING
 from tests import TestCase
 from tests.integrations.app.SayHi import SayHello
@@ -121,7 +120,7 @@ class TestContainer(TestCase):
         def my_method(response: Response):
             return "ok"
 
-        obj = self.application.resolve(my_method)
+        self.application.resolve(my_method)
 
     def test_can_resolve_class_with_str_type_hinted_parameters(self):
         def my_method(test: SomeStringTypeHintedAppObject):
@@ -130,7 +129,6 @@ class TestContainer(TestCase):
         with self.assertRaises(TypeError):
             self.application.resolve(my_method)
 
-
     def test_can_resolve_class_with_str_type_hinted_parameters_and_pass_parameter(self):
         def my_method(test: SomeStringTypeHintedAppObject):
             return test
@@ -138,9 +136,8 @@ class TestContainer(TestCase):
         obj = self.application.resolve(my_method, 1)
         self.assertEquals(obj.app + 1, 2)
 
-
     def test_can_resolve_class_with_type_hinted_parameters(self):
         def my_method(test: SomeAppObject):
-            return "ok"
+            return test.app
 
-        obj = self.application.resolve(my_method)
+        self.application.resolve(my_method)

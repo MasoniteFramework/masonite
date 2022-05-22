@@ -119,7 +119,7 @@ class RedisDriver(BaseDriver):
 
         return self.get_connection().set(key, value, ex=time)
 
-    def has(self, key: str):
+    def has(self, key: str) -> bool:
         return self.get_connection().get(key)
 
     def delete(self, key: str):

@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING, List
 from ..controllers.ViewController import ViewController
 from ..utils.collections import flatten
 from ..utils.str import modularize
+from .HTTPRoute import HTTPRoute
 from ..controllers import RedirectController
 
 if TYPE_CHECKING:
     from ..controllers import Controller
-    from .HTTPRoute import HTTPRoute
 
 
 class Route:

@@ -7,14 +7,14 @@ if TYPE_CHECKING:
 
 
 class TaskHandler:
-    def __init__(self, application: "Application", tasks:"Task"=[]):
+    def __init__(self, application: "Application", tasks: "Task" = []):
         self.tasks = tasks
         self.application = application
 
-    def add(self, *tasks:"Task"):
+    def add(self, *tasks: "Task"):
         self.tasks += list(tasks)
 
-    def run(self, run_name:str=None, force:bool=False) -> None:
+    def run(self, run_name: str = None, force: bool = False) -> None:
         app = self.application
         for task_class in self.tasks:
             # Resolve the task with the container

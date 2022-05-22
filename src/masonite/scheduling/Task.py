@@ -72,8 +72,9 @@ class Task:
         """Fires the task"""
         pass
 
-    def should_run(self) -> bool:
+    def should_run(self, date=None) -> bool:
         """If the task should run"""
+        # @M5 date parameter is not used but some calls are made with this parameter...fix ?
 
         # set the date
         self._set_date()

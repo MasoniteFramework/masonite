@@ -1,16 +1,23 @@
 from urllib import parse
+from typing import TYPE_CHECKING
+
 from ..utils.collections import flatten
 from ..exceptions import RouteNotFoundException, MethodNotAllowedException
+
+if TYPE_CHECKING:
+    from .HTTPRoute import HTTPRoute
 
 
 class Router:
 
     http_methods = ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 
-    def __init__(self, *routes, module_location=None):
+    def __init__(self, *routes: "HTTPRoute"):
         self.routes = flatten(routes)
 
-    def find(self, path, request_method, subdomain=None):
+    def find(
+        self, path: str, request_method: str, subdomain: str = None
+    ) -> "HTTPRoute":
         from .HTTPRoute import HTTPRoute
 
         for route in self.routes:
@@ -50,12 +57,12 @@ class Router:
         else:
             raise MethodNotAllowedException(matched_methods, request_method)
 
-    def matches(self, path):
+    def matches(self, path: str) -> "HTTPRoute":
         for route in self.routes:
             if route.matches(path):
                 return route
 
-    def find_by_name(self, name):
+    def find_by_name(self, name: str) -> "HTTPRoute":
         for route in self.routes:
             if route.match_name(name):
                 return route
@@ -67,32 +74,26 @@ class Router:
             return route.to_url(parameters, query_params)
         raise RouteNotFoundException(f"Could not find route with the name '{name}'")
 
-    def set_controller_locations(self, location):
+    def set_controller_locations(self, location: str) -> "Router":
         self.controller_locations = location
         return self
 
-    def add(self, *routes):
+    def add(self, *routes: "HTTPRoute") -> None:
         self.routes.append(*routes)
         self.routes = flatten(self.routes)
 
-    def set(self, *routes):
+    def set(self, *routes: "HTTPRoute") -> None:
         self.routes = []
         self.routes.append(*routes)
         self.routes = flatten(self.routes)
 
     @classmethod
-    def compile_to_url(cls, uncompiled_route, params={}, query_params={}):
-        """Compile the route url into a usable url: converts /url/@id into /url/1.
-        Used for redirection
+    def compile_to_url(
+        cls, uncompiled_route: str, params: dict = {}, query_params: dict = {}
+    ) -> str:
+        """Compile an uncompiled route url such as /url/@id into /url/1. Route parameters and
+        query parameters can be passed to the route."""
 
-        Arguments:
-            route {string} -- An uncompiled route like (/dashboard/@user:string/@id:int)
-        Keyword Arguments:
-            params {dict} -- Dictionary of parameters to pass to the route (default: {{}})
-            query_params {dict} -- Dictionary of query parameters to pass to the route (default: {{}})
-        Returns:
-            string -- Returns a compiled string (/dashboard/joseph/1)
-        """
         if "http" in uncompiled_route:
             return uncompiled_route
 

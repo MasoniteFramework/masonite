@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING, List
+
 from ..controllers.ViewController import ViewController
-from .HTTPRoute import HTTPRoute
 from ..utils.collections import flatten
 from ..utils.str import modularize
 from ..controllers import RedirectController
+
+if TYPE_CHECKING:
+    from ..controllers import Controller
+    from .HTTPRoute import HTTPRoute
 
 
 class Route:
@@ -21,7 +26,13 @@ class Route:
         pass
 
     @classmethod
-    def get(self, url, controller, module_location=None, **options):
+    def get(
+        self,
+        url: str,
+        controller: "str|Controller",
+        module_location: str = None,
+        **options,
+    ) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -32,7 +43,7 @@ class Route:
         )
 
     @classmethod
-    def post(self, url, controller, **options):
+    def post(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -43,7 +54,7 @@ class Route:
         )
 
     @classmethod
-    def put(self, url, controller, **options):
+    def put(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -54,7 +65,7 @@ class Route:
         )
 
     @classmethod
-    def patch(self, url, controller, **options):
+    def patch(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -65,7 +76,7 @@ class Route:
         )
 
     @classmethod
-    def delete(self, url, controller, **options):
+    def delete(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -76,7 +87,7 @@ class Route:
         )
 
     @classmethod
-    def options(self, url, controller, **options):
+    def options(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -87,11 +98,11 @@ class Route:
         )
 
     @classmethod
-    def default(self, url, controller, **options):
+    def default(self, url: str, controller: "str|Controller", **options) -> "HTTPRoute":
         return self
 
     @classmethod
-    def redirect(self, url, new_url, **options):
+    def redirect(self, url: str, new_url: str, **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             RedirectController.redirect,
@@ -103,7 +114,9 @@ class Route:
         )
 
     @classmethod
-    def view(self, url, template, data=None, **options):
+    def view(
+        self, url: str, template: str, data: dict = None, **options
+    ) -> "HTTPRoute":
         if not data:
             data = {}
 
@@ -118,7 +131,7 @@ class Route:
         )
 
     @classmethod
-    def permanent_redirect(self, url, new_url, **options):
+    def permanent_redirect(self, url: str, new_url: str, **options) -> "HTTPRoute":
         return HTTPRoute(
             url,
             RedirectController.redirect,
@@ -130,7 +143,9 @@ class Route:
         )
 
     @classmethod
-    def match(self, request_methods, url, controller, **options):
+    def match(
+        self, request_methods: list, url: str, controller: "str|Controller", **options
+    ) -> "HTTPRoute":
         return HTTPRoute(
             url,
             controller,
@@ -141,7 +156,7 @@ class Route:
         )
 
     @classmethod
-    def group(self, *routes, **options):
+    def group(self, *routes: "HTTPRoute", **options) -> "List[HTTPRoute]":
         inner = []
         for route in flatten(routes):
             if options.get("prefix"):
@@ -169,7 +184,7 @@ class Route:
         return inner
 
     @classmethod
-    def resource(self, base_url, controller):
+    def resource(self, base_url: str, controller: str) -> "List[HTTPRoute]":
         return [
             self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
             self.get(f"/{base_url}/create", f"{controller}@create").name(
@@ -189,7 +204,7 @@ class Route:
         ]
 
     @classmethod
-    def api(self, base_url, controller):
+    def api(self, base_url: str, controller: str) -> "List[HTTPRoute]":
         return [
             self.get(f"/{base_url}", f"{controller}@index").name(f"{base_url}.index"),
             self.post(f"/{base_url}", f"{controller}@store").name(f"{base_url}.store"),
@@ -203,16 +218,16 @@ class Route:
         ]
 
     @classmethod
-    def compile(self, key, to=""):
+    def compile(self, key: str, to: str = "") -> "HTTPRoute":
         self.compilers.update({key: to})
         return self
 
     @classmethod
-    def set_controller_locations(self, *controllers_locations):
+    def set_controller_locations(self, *controllers_locations: str) -> "HTTPRoute":
         self.controllers_locations = list(map(modularize, controllers_locations))
         return self
 
     @classmethod
-    def add_controller_locations(self, *controllers_locations):
+    def add_controller_locations(self, *controllers_locations: str) -> "HTTPRoute":
         self.controllers_locations.extend(list(map(modularize, controllers_locations)))
         return self

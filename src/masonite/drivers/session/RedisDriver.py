@@ -1,5 +1,5 @@
 import json
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from redis import Redis
 
@@ -61,7 +61,7 @@ class RedisDriver(BaseDriver):
         return {"data": data, "flashed": flashed}
 
     def save(
-        self, added=None, deleted=None, flashed=None, deleted_flashed=None
+            self, added: dict = None, deleted: list = None, flashed: dict = None, deleted_flashed: list = None
     ) -> None:
         if added is None:
             added = {}
@@ -86,7 +86,7 @@ class RedisDriver(BaseDriver):
         for key in deleted_flashed:
             self.delete(f"{self.get_flash_prefix()}{key}")
 
-    def get_session_namespace(self, session_id=None) -> str:
+    def get_session_namespace(self, session_id: str = None) -> str:
         if not session_id:
             request = self.application.make("request")
             session_id = request.cookie("SESSID")
@@ -104,14 +104,14 @@ class RedisDriver(BaseDriver):
         """Use to create builtin helper function."""
         return self
 
-    def get(self, key, default=None, **options) -> str:
+    def get(self, key: str, default: str = None) -> str:
         if not self.has(key):
             return default
         return self.get_value(
             self.get_connection().get(key)
         )
 
-    def set(self, key, value, time: int = None):
+    def set(self, key: str, value: Any, time: int = None):
         time = time or self.get_timeout()
 
         if isinstance(value, (dict, list)):
@@ -119,13 +119,13 @@ class RedisDriver(BaseDriver):
 
         return self.get_connection().set(key, value, ex=time)
 
-    def has(self, key):
+    def has(self, key: str):
         return self.get_connection().get(key)
 
-    def delete(self, key):
+    def delete(self, key: str):
         return self.get_connection().delete(key)
 
-    def flush(self, session_id=None) -> None:
+    def flush(self, session_id: str = None) -> None:
         """
         Clears all data for the current (or provided) session id
         """
@@ -142,7 +142,7 @@ class RedisDriver(BaseDriver):
         # default timeout of session vars is 24 hrs
         return int(self.options.get("timeout", 60 * 60 * 24))
 
-    def get_value(self, value) -> str:
+    def get_value(self, value: Any) -> str:
         value = str(value)
         if value.isdigit():
             return str(value)

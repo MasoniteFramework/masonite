@@ -1,12 +1,22 @@
+from typing import TYPE_CHECKING, List
+
 from ..exceptions import RouteMiddlewareNotFound
+
+if TYPE_CHECKING:
+    from .middleware import Middleware
+    from ..request import Request
+    from ..response import Response
 
 
 class MiddlewareCapsule:
-    def __init__(self):
-        self.route_middleware = {}
-        self.http_middleware = []
+    """MiddlewareCapsule class used to manage all HTTP and routes middleware of the application."""
 
-    def add(self, middleware):
+    def __init__(self):
+        self.route_middleware: dict = {}
+        self.http_middleware: list = []
+
+    def add(self, middleware: "dict|list") -> "MiddlewareCapsule":
+        """Add HTTP or routes middlewares."""
         if isinstance(middleware, dict):
             self.route_middleware.update(middleware)
 
@@ -15,20 +25,19 @@ class MiddlewareCapsule:
 
         return self
 
-    def remove(self, middleware):
+    def remove(self, middleware: "Middleware") -> "MiddlewareCapsule":
+        """Remove a configured Middleware from HTTP or Routes middlewares."""
         if middleware in self.route_middleware:
             self.route_middleware.pop(middleware)
         elif middleware in self.http_middleware:
             self.http_middleware.pop(self.http_middleware.index(middleware))
         return self
 
-    def get_route_middleware(self, keys=None):
+    def get_route_middleware(self, keys: list = None) -> "List[Middleware]":
+        """Get all Route middlewares or a subset of the route middlewares from the given keys."""
         middlewares = []
         if keys is None:
             return self.route_middleware
-
-        if keys is None:
-            keys = []
 
         for key in keys:
             try:
@@ -43,10 +52,18 @@ class MiddlewareCapsule:
                 middlewares += [found]
         return middlewares
 
-    def get_http_middleware(self):
+    def get_http_middleware(self) -> "List[Middleware]":
+        """Get all HTTP middlewares."""
         return self.http_middleware
 
-    def run_route_middleware(self, middlewares, request, response, callback="before"):
+    def run_route_middleware(
+        self,
+        middlewares: "List[Middleware]",
+        request: "Request",
+        response: "Response",
+        callback: str = "before",
+    ) -> bool:
+        """Run the given route middlewares callback. Callback can be 'before' or 'after'."""
         for middleware in middlewares:
             if ":" in middleware:
                 # get list of arguments if any

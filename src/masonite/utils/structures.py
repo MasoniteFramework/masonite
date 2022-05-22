@@ -4,7 +4,6 @@ from typing import Any
 from dotty_dict import dotty
 
 from ..exceptions.exceptions import LoaderNotFound
-
 from .str import modularize
 
 
@@ -43,7 +42,7 @@ def load(
                 return default
 
 
-def data(dictionary={}):
+def data(dictionary: dict = {}) -> dict:
     """Transform the given dictionary to be read/written with dot notation.
 
     Arguments:
@@ -55,7 +54,7 @@ def data(dictionary={}):
     return dotty(dictionary)
 
 
-def data_get(dictionary, key, default=None):
+def data_get(dictionary: dict, key: str, default: Any = None) -> Any:
     """Read dictionary value from key using nested notation.
 
     Arguments:
@@ -71,7 +70,7 @@ def data_get(dictionary, key, default=None):
     return data(dictionary).get(dotty_key, default)
 
 
-def data_set(dictionary, key, value, overwrite=True):
+def data_set(dictionary: dict, key: set, value: Any, overwrite: bool = True) -> dict:
     """Set dictionary value at key using nested notation. Values are overriden by default but
     this behaviour can be changed by passing overwrite=False.
     The dictionary is edited in place but is also returned.

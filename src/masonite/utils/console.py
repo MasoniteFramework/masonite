@@ -1,16 +1,16 @@
 class HasColoredOutput:
     """Add level-colored output print functions to a class."""
 
-    def success(self, message):
+    def success(self, message: str):
         print("\033[92m {0} \033[0m".format(message))
 
-    def warning(self, message):
+    def warning(self, message: str):
         print("\033[93m {0} \033[0m".format(message))
 
-    def danger(self, message):
+    def danger(self, message: str):
         print("\033[91m {0} \033[0m".format(message))
 
-    def info(self, message):
+    def info(self, message: str):
         return self.success(message)
 
 
@@ -20,20 +20,10 @@ class AddCommandColors:
     This mixin add method helper to output errors and warnings.
     """
 
-    def error(self, text):
-        """
-        Write a string as information output.
-
-        :param text: The line to write
-        :type text: str
-        """
+    def error(self, text: str):
+        """Write a string with error output style."""
         self.line(text, "error")
 
-    def warning(self, text):
-        """
-        Write a string as information output.
-
-        :param text: The line to write
-        :type text: str
-        """
+    def warning(self, text: str):
+        """Write a string with warning output style."""
         self.line(text, "c2")

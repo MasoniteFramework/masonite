@@ -379,6 +379,39 @@ class exists_in_db(BaseValidation):
         )
 
 
+class not_exists_in_db(BaseValidation):
+    """A record with field equal to the given value should exists in the table/model specified."""
+
+    def __init__(
+        self,
+        validations,
+        table_or_model,
+        column=None,
+        connection="default",
+        messages={},
+        raises={},
+    ):
+        super().__init__(validations, messages=messages, raises=raises)
+        self.connection = config("database.db").get_query_builder(connection)
+        self.column = column
+        self.table, self.model = resolve_model_or_table(table_or_model)
+
+    def passes(self, attribute, key, dictionary):
+        column = key if not self.column else self.column
+        count = self.connection.table(self.table).where(column, attribute).count()
+        return count == 0
+
+    def message(self, attribute):
+        return "A record already exists in table {} with the same {}".format(
+            self.table, attribute
+        )
+
+    def negated_message(self, attribute):
+        return "No record found in table {} with the same {}".format(
+            self.table, attribute
+        )
+
+
 class unique_in_db(BaseValidation):
     """No record should exist for the field under validation within the given table/model."""
 
@@ -643,8 +676,10 @@ class strong(BaseValidation):
         validations,
         length=8,
         uppercase=2,
+        lowercase=2,
         numbers=2,
         special=2,
+        special_chars=None,
         breach=False,
         messages={},
         raises={},
@@ -652,11 +687,14 @@ class strong(BaseValidation):
         super().__init__(validations, messages=messages, raises=raises)
         self.length = length
         self.uppercase = uppercase
+        self.lowercase = lowercase
         self.numbers = numbers
         self.special = special
+        self.special_chars = special_chars
         self.breach = breach
         self.length_check = True
         self.uppercase_check = True
+        self.lowercase_check = True
         self.numbers_check = True
         self.special_check = True
         self.breach_check = True
@@ -676,6 +714,16 @@ class strong(BaseValidation):
 
             if uppercase < self.uppercase:
                 self.uppercase_check = False
+                all_clear = False
+
+        if self.lowercase != 0:
+            lowercase = 0
+            for letter in attribute:
+                if letter.islower():
+                    lowercase += 1
+
+            if lowercase < self.lowercase:
+                self.lowercase_check = False
                 all_clear = False
 
         if self.numbers != 0:
@@ -702,7 +750,10 @@ class strong(BaseValidation):
                 all_clear = False
 
         if self.special != 0:
-            if len(re.findall("[^A-Za-z0-9]", attribute)) < self.special:
+            special_chars = "[^A-Za-z0-9]"
+            if self.special_chars:
+                special_chars = f"[{self.special_chars}]"
+            if len(re.findall(special_chars, attribute)) < self.special:
                 self.special_check = False
                 all_clear = False
 
@@ -724,10 +775,18 @@ class strong(BaseValidation):
                 )
             )
 
-        if not self.special_check:
+        if not self.lowercase_check:
             message.append(
-                "The {} field must have {} special characters".format(
-                    attribute, self.special
+                "The {} field must have {} lowercase letters".format(
+                    attribute, self.lowercase
+                )
+            )
+
+        if not self.special_check:
+            valid_chars = self.special_chars or "!@#$%^&*()_+"
+            message.append(
+                "The {} field must contain at least {} of these characters: '{}'".format(
+                    attribute, self.special, valid_chars
                 )
             )
 
@@ -832,7 +891,7 @@ class json(BaseValidation):
 
 class phone(BaseValidation):
     def __init__(self, *rules, pattern="123-456-7890", messages={}, raises={}):
-        super().__init__(rules, messages={}, raises={})
+        super().__init__(rules, messages=messages, raises=raises)
         # 123-456-7890
         # (123)456-7890
         self.pattern = pattern
@@ -1362,6 +1421,7 @@ class ValidationFactory:
             email,
             exists,
             exists_in_db,
+            not_exists_in_db,
             file,
             greater_than,
             image,

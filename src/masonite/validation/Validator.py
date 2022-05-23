@@ -3,7 +3,7 @@ import re
 import os
 import mimetypes
 
-from src.masonite.filesystem import UploadedFile
+from ..filesystem import UploadedFile
 
 from .RuleEnclosure import RuleEnclosure
 from .MessageBag import MessageBag

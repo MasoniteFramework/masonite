@@ -162,6 +162,25 @@ class TestRoutes(TestCase):
         route = router.find_by_name("testparam")
         self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
 
+    def test_route_prefix(self):
+        router = Router(
+            Route.get("/params/route", "WelcomeController@show").name("testparam")
+        )
+
+        route = router.find("/params/route", "get")
+        self.assertTrue(route)
+
+        router = Router(
+            Route.group([
+                Route.get("/route", "WelcomeController@show").name("testparam")
+            ], prefix="params")
+            
+        )
+
+        route = router.find("/params/route", "get")
+
+        self.assertTrue(route)
+
     def test_extract_parameters_ending_in_a_slash(self):
         router = Router(
             Route.get("/params/@id/", "WelcomeController@show").name("testparam")

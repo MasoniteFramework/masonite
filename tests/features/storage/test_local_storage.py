@@ -24,6 +24,9 @@ class TestLocalStorage(TestCase):
         self.assertEqual(stream.name(), "key.log")
         self.assertEqual(stream.extension(), ".log")
 
+    def test_can_put_bytes(self):
+        self.driver.put("key.log", b"value")
+
     def test_can_delete(self):
         self.driver.put("delete.log", "value")
         self.assertEqual(self.driver.get("delete.log"), "value")

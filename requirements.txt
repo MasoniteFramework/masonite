@@ -21,4 +21,4 @@ slackblocks
 tldextract>=2.2,<2.3
 waitress>=2.1,<2.2
 whitenoise>=5.2,<5.3
-pyjwt>=2.3,<2.4
+pyjwt>=2.3,<2.5

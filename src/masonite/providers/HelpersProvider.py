@@ -32,15 +32,8 @@ class HelpersProvider(Provider):
                 "method": lambda method: (
                     Markup(f"<input type='hidden' name='__method' value='{method}' />")
                 ),
-                "asset": urls_helper.asset,
-                "url": urls_helper.url,
-                "mix": MixHelper(self.application).url,
-                "route": urls_helper.route,
                 "dd": Dump.dd,
-                "config": config,
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,
-                "optional": optional,
-                "exists": self.application.make("view").exists,
             }
         )

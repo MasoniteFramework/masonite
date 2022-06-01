@@ -163,6 +163,25 @@ class TestRoutes(TestCase):
         route = router.find_by_name("testparam")
         self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
 
+    def test_route_prefix(self):
+        router = Router(
+            Route.get("/params/route", "WelcomeController@show").name("testparam")
+        )
+
+        route = router.find("/params/route", "get")
+        self.assertTrue(route)
+
+        router = Router(
+            Route.group([
+                Route.get("/route", "WelcomeController@show").name("testparam")
+            ], prefix="params")
+            
+        )
+
+        route = router.find("/params/route", "get")
+
+        self.assertTrue(route)
+
     def test_extract_parameters_ending_in_a_slash(self):
         router = Router(
             Route.get("/params/@id/", "WelcomeController@show").name("testparam")
@@ -170,6 +189,42 @@ class TestRoutes(TestCase):
 
         route = router.find_by_name("testparam")
         self.assertEqual(route.extract_parameters("/params/2")["id"], "2")
+
+    def test_casts_parameters_explicitly(self):
+        route = Route.get("/params/@id", "WelcomeController@show").casts({"id": int})
+        params = route.extract_parameters("/params/1")
+        self.assertEqual(params, {"id": 1})
+
+        # test that several params can be cast
+        route = Route.get("/params/@id/@count", "WelcomeController@show").casts(
+            {"id": int, "count": float}
+        )
+        params = route.extract_parameters("/params/1/2.3")
+        self.assertEqual(params, {"id": 1, "count": 2.3})
+
+        # test than callable can be used
+        route = Route.get("/params/@id", "WelcomeController@show").casts(
+            {"id": lambda value: value.upper()}
+        )
+        params = route.extract_parameters("/params/test")
+        self.assertEqual(params, {"id": "TEST"})
+
+    def test_casts_parameters_explicitly_based_on_route_compiler(self):
+        route = Route.get("/params/@id", "WelcomeController@show").casts()
+        params = route.extract_parameters("/params/1")
+        self.assertEqual(params, {"id": "1"})
+
+        route = Route.get("/params/@id:int", "WelcomeController@show").casts()
+        params = route.extract_parameters("/params/1")
+        self.assertEqual(params, {"id": 1})
+        route = Route.get("/params/@id:integer", "WelcomeController@show").casts()
+        params = route.extract_parameters("/params/1")
+        self.assertEqual(params, {"id": 1})
+
+        Route.compile("float", r"(\d+)")
+        route = Route.get("/params/@id:float", "WelcomeController@show").casts()
+        params = route.extract_parameters("/params/2")
+        self.assertEqual(params, {"id": 2.0})
 
     def test_domain(self):
         router = Router(

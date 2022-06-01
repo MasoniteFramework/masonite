@@ -1,6 +1,5 @@
 from inspect import isclass
 
-from ..response import Response
 from ..facades import Response as ResponseFacade
 from .Provider import Provider
 from ..routes import Route
@@ -18,6 +17,8 @@ class RouteProvider(Provider):
         self.application.make("commands").add(RouteListCommand(self.application))
 
     def boot(self):
+        from ..response import Response
+
         router = self.application.make("router")
         request = self.application.make("request")
         response = self.application.make("response")

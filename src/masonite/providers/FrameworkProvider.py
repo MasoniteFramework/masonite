@@ -1,7 +1,6 @@
 import time
 
 from ..request import Request
-from ..response import Response
 from .Provider import Provider
 
 from ..configuration import config
@@ -28,6 +27,8 @@ class FrameworkProvider(Provider):
         self.application.bind("cors", cors)
 
     def boot(self):
+        from ..response import Response
+
         request = Request(self.application.make("environ"))
         request.app = self.application
         if self.application.has("activate.subdomains") and self.application.make(

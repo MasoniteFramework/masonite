@@ -23,7 +23,19 @@ class FrameworkProvider(Provider):
         self.application.bind("presets", presets)
 
         # @M5 remove this and add SecurityProvider in default project
-        cors = Cors(self.application).set_options(config("security.cors"))
+        # @M5 old projects won't have securiy options so put default here. remove this for M5.
+        options = config("security.cors")
+        if not options:
+            options = {
+                "paths": ["api/*"],
+                "allowed_methods": ["*"],
+                "allowed_origins": ["*"],
+                "allowed_headers": ["*"],
+                "exposed_headers": [],
+                "max_age": None,
+                "supports_credentials": False,
+            }
+        cors = Cors(self.application).set_options(options)
         self.application.bind("cors", cors)
 
     def boot(self):

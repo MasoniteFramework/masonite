@@ -18,7 +18,6 @@ class HelpersProvider(Provider):
 
     def boot(self):
         request = self.application.make("request")
-        urls_helper = self.application.make("url")
 
         self.application.make("view").share(
             {

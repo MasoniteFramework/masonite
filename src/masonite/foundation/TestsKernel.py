@@ -36,8 +36,11 @@ from ..middleware import MiddlewareCapsule
 from ..routes import Router
 from ..loader import Loader
 
+from ..tests.HttpTestResponse import HttpTestResponse
+from ..tests.TestResponseCapsule import TestResponseCapsule
 
-class Kernel:
+
+class TestsKernel:
     def __init__(self, app: "Application"):
         self.application = app
 
@@ -46,6 +49,7 @@ class Kernel:
         self.load_environment()
         self.register_framework()
         self.register_commands()
+        self.register_testing()
 
     def load_environment(self) -> None:
         """Load environment variables into the application."""
@@ -90,3 +94,7 @@ class Kernel:
                 PresetCommand(self.application),
             ),
         )
+
+    def register_testing(self) -> None:
+        test_response = TestResponseCapsule(HttpTestResponse)
+        self.application.bind("tests.response", test_response)

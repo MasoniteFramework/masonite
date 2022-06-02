@@ -6,6 +6,7 @@ if TYPE_CHECKING:
 from ..tests.HttpTestResponse import HttpTestResponse
 from ..tests.TestResponseCapsule import TestResponseCapsule
 
+
 class TestsKernel:
     def __init__(self, app: "Application"):
         self.application = app

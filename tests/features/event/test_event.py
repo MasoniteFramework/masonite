@@ -99,7 +99,7 @@ class TestEvent(TestCase):
         self.event.fire(NewUserEvent())
 
     def test_can_subscribe(self):
-        self.event.subscribe(Subscriber())
+        self.event.subscribe(Subscriber(self.application))
         self.assertEqual(
             self.event.fire("masonite.event_handled"), ["masonite.event_handled"]
         )

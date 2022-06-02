@@ -1,7 +1,3 @@
-import time
-
-import pytest
-
 from src.masonite.events import Event
 from tests import TestCase
 
@@ -55,6 +51,9 @@ class AdminNotificationListener:
 
 
 class Subscriber:
+    def __init__(self, application):
+        self.application = application
+
     def handle(self, event):
         pass
 

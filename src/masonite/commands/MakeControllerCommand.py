@@ -62,6 +62,12 @@ class MakeControllerCommand(Command):
         with open(full_path_with_name, "w") as f:
             f.write(content)
 
+        # add class to __init__.py
+        with open(
+            os.path.join(controllers_path(folder_controller), "__init__.py"), "a"
+        ) as f:
+            f.write(f"from .{name} import {name}\n")
+
         file_created = os.path.join(parent_directory, filename)
         self.info(
             f"Controller Created ({controllers_path(file_created, absolute=False)})"

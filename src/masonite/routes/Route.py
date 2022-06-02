@@ -159,11 +159,14 @@ class Route:
     def group(self, *routes: "HTTPRoute", **options) -> "List[HTTPRoute]":
         inner = []
         for route in flatten(routes):
-            if options.get("prefix"):
+            prefix = options.get("prefix")
+            if prefix:
+                if not prefix.startswith("/"):
+                    prefix = "/" + prefix
                 if route.url == "" or route.url == "/":
-                    route.url = options.get("prefix")
+                    route.url = prefix
                 else:
-                    route.url = options.get("prefix") + route.url
+                    route.url = prefix + route.url
 
                 route.compile_route_to_regex()
 

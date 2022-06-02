@@ -36,8 +36,11 @@ class LocalDriver:
         return f"{alias}{extension}"
 
     def put(self, file_path: str, content: str) -> str:
-        """Save content string in file at given path."""
-        with open(self.get_path(os.path.join(file_path)), "w") as f:
+        if isinstance(content, (bytes, bytearray)):
+            write_mode = "wb"
+        else:
+            write_mode = "w"
+        with open(self.get_path(os.path.join(file_path)), write_mode) as f:
             f.write(content)
         return content
 

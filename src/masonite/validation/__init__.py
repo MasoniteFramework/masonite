@@ -18,6 +18,7 @@ from .Validator import (
     equals,
     exists,
     exists_in_db,
+    not_exists_in_db,
     file,
     greater_than,
     image,

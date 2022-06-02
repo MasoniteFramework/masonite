@@ -15,6 +15,15 @@ if TYPE_CHECKING:
 
 
 class HTTPRoute:
+
+    _base_casts_map = {
+        "int": int,
+        "integer": int,
+        "string": str,
+        "str": str,
+        "float": float,
+    }
+
     def __init__(
         self,
         url: str,
@@ -39,6 +48,9 @@ class HTTPRoute:
         self.controller_method = None
         self._domain = None
         self._name = name
+        self._casts_map = {}
+        self._active_regex = {}
+        self._should_cast = False
 
         self.request_method = [x.lower() for x in request_method]
         # add HEAD method if GET
@@ -306,7 +318,11 @@ class HTTPRoute:
             if "@" in regex_route:
                 if ":" in regex_route:
                     try:
-                        regex += self.compilers[regex_route.split(":")[1]]
+                        param_name, compiler_name = regex_route.split(":")
+                        regex += self.compilers[compiler_name]
+                        self._active_regex.update(
+                            {param_name.replace("@", ""): compiler_name}
+                        )
                     except KeyError:
                         raise InvalidRouteCompileException(
                             'Route compiler "{}" is not an available route compiler. '
@@ -329,7 +345,11 @@ class HTTPRoute:
                 if ":" in regex_route:
 
                     try:
-                        regex += self.compilers[regex_route.split(":")[1]] + "*"
+                        param_name, compiler_name = regex_route.split(":")
+                        regex += self.compilers[compiler_name] + "*"
+                        self._active_regex.update(
+                            {param_name.replace("@", ""): compiler_name}
+                        )
                     except KeyError:
                         if self.request:
                             raise InvalidRouteCompileException(
@@ -366,4 +386,19 @@ class HTTPRoute:
             matching_regex = self._compiled_regex
         else:
             matching_regex = self._compiled_regex_end
-        return dict(zip(self.url_list, matching_regex.match(path).groups()))
+        params = dict(zip(self.url_list, matching_regex.match(path).groups()))
+
+        if self._should_cast:
+            for param, value in params.items():
+                # get cast type from cast map if defined else use cast type from compiler else str
+                cast_type = self._casts_map.get(
+                    param,
+                    self._base_casts_map.get(self._active_regex.get(param), str),
+                )
+                params.update({param: cast_type(value)})
+        return params
+
+    def casts(self, _casts_map: dict = {}) -> "HTTPRoute":
+        self._casts_map = _casts_map
+        self._should_cast = True
+        return self

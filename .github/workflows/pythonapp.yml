@@ -36,7 +36,7 @@ jobs:
       - name: Set up latest Python 3.X
         uses: actions/setup-python@v3
         with:
-        python-version: "3.x"
+          python-version: "3.x"
       - name: Install Flake8
         run: |
           pip install flake8

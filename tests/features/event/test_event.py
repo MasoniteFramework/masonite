@@ -23,21 +23,33 @@ class NewUserEvent(Event):
 
 
 class SendEmailListener:
+    def __init__(self, application):
+        self.application = application
+
     def handle(self, event):
         pass
 
 
 class UpdateAdminListener:
+    def __init__(self, application):
+        self.application = application
+
     def handle(self, event, user):
         pass
 
 
 class SendAlert:
+    def __init__(self, application):
+        self.application = application
+
     def handle(self, event):
         pass
 
 
 class AdminNotificationListener:
+    def __init__(self, application):
+        self.application = application
+
     def handle(self):
         pass
 

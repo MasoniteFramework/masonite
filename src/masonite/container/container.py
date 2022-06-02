@@ -181,8 +181,8 @@ class Container:
                 raise ContainerError(str(e))
         else:
             for _, value in self.get_parameters(obj):
-                if type(value.annotation) in (str, int, dict, list, tuple):
-                    # Ignore any times a user is simply type hinting a parameter like (parameter:str).
+                if type(value.annotation) in (str, int, dict, list, tuple) or value.annotation in (str, int, dict, list, tuple):
+                    # Ignore any times a user is simply type hinting a parameter like (parameter:str or parameter:"str").
                     # In this case we don't want to resolve anything but we do want
                     # to insert any passing arguments we passed in
                     try:

@@ -54,7 +54,6 @@ setup(
         "hfilesize>=0.1",
         "dotty_dict>=1.3.0<1.40",
         "pyjwt>=2.3,<2.5",
-        "pytest>=7<8",
         "werkzeug>=2<3",
         "watchdog>=2<3",
     ],
@@ -188,7 +187,9 @@ setup(
     extras_require={
         "test": [
             "coverage",
-            "pytest",
+            "pytest>=7<8",
+            "black",
+            "flake8",
             "redis",
             "boto3",
             "pusher",

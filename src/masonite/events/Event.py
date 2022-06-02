@@ -1,5 +1,4 @@
 """ Event Module """
-
 import inspect
 
 
@@ -32,7 +31,7 @@ class Event:
             collected_events = self.collect_events(event)
             for collected_event in collected_events:
                 for listener in self.events.get(collected_event, []):
-                    listener().handle(event, *args, **kwargs)
+                    listener(self.application).handle(event, *args, **kwargs)
             return collected_events
         else:
             if inspect.isclass(event):
@@ -41,7 +40,7 @@ class Event:
             else:
                 lookup = event.__class__
             for listener in self.events.get(lookup, []):
-                listener().handle(event, *args, **kwargs)
+                listener(self.application).handle(event, *args, **kwargs)
 
             return [event]
 

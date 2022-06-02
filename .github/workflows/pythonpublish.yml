@@ -8,38 +8,38 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      env:
-        MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
-        MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
-        MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
-        MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
-        DB_CONFIG_PATH: tests/integrations/config/database
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-        make init
-        make ci
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
-        MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
-        MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
-        MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
-        DB_CONFIG_PATH: tests/integrations/config/database
-      run: |
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
-    - name: Discord notification
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      uses: Ilshidur/action-discord@master
-      with:
-        args: "{{ EVENT_PAYLOAD.repository.full_name }} {{ EVENT_PAYLOAD.release.tag_name }} has been released. Checkout the full release notes here: {{ EVENT_PAYLOAD.release.html_url }}"
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        env:
+          MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
+          DB_CONFIG_PATH: tests/integrations/config/database
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+          make init
+          make ci
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
+          DB_CONFIG_PATH: tests/integrations/config/database
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "{{ EVENT_PAYLOAD.repository.full_name }} {{ EVENT_PAYLOAD.release.tag_name }} has been released. Checkout the full release notes here: {{ EVENT_PAYLOAD.release.html_url }}"

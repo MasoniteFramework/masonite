@@ -37,11 +37,9 @@ class Session:
 
         # make sure the default driver is defined
         if "default" not in config:
-            raise InvalidConfigurationSetup(
-                "'default' session driver is not defined."
-            )
+            raise InvalidConfigurationSetup("'default' session driver is not defined.")
         # and has a config
-        if config['default'] not in config:
+        if config["default"] not in config:
             raise InvalidConfigurationSetup(
                 f"'{config['default']}' session driver configuration not defined."
             )

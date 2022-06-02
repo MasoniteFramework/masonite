@@ -1,4 +1,5 @@
 from src.masonite.foundation import Application
+from src.masonite.foundation import Kernel
 from src.masonite.foundation.TestsKernel import TestsKernel
 from src.masonite.utils.location import base_path
 from tests.integrations.config.providers import PROVIDERS
@@ -12,6 +13,7 @@ application = Application(base_path("tests/integrations"))
 """
 
 application.register_providers(
+    Kernel,
     TestsKernel,
     ApplicationKernel,
 )

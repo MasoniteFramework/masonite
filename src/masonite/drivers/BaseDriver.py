@@ -1,5 +1,6 @@
 from mergedeep import merge
 
+
 class BaseDriver:
     """Base Session driver"""
 

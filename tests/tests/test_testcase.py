@@ -138,7 +138,10 @@ class TestTestingAssertions(TestCase):
             Route.get("/test-session", "WelcomeController@session").name("session"),
             Route.get(
                 "/test-session-errors", "WelcomeController@session_with_errors"
-            ).name("session"),
+            ).name("session-errors"),
+            Route.post(
+                "/test-session-errors-bag", "WelcomeController@contact_post"
+            ).name("session-errors-bag"),
             Route.get("/test-session-2", "WelcomeController@session2").name("session2"),
             Route.get("/test-authenticates", "WelcomeController@auth").name("auth"),
         )
@@ -215,6 +218,11 @@ class TestTestingAssertions(TestCase):
         self.get("/test-session-errors").assertSessionHasErrors()
         self.get("/test-session-errors").assertSessionHasErrors(["email"])
         self.get("/test-session-errors").assertSessionHasErrors(["email", "password"])
+
+    def test_assert_session_has_errors_when_error_bag_is_used(self):
+        self.post("/test-session-errors-bag").assertSessionHasErrors()
+        self.post("/test-session-errors-bag").assertSessionHasErrors(["email"])
+        self.post("/test-session-errors-bag").assertSessionHasErrors(["email", "name"])
 
     def test_assert_session_has_no_errors(self):
         self.get("/test-session").assertSessionHasNoErrors()

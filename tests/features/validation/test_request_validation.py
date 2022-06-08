@@ -14,7 +14,7 @@ class TestValidation(TestCase):
 
         self.assertEqual(validation.all(), {})
 
-    def test_can_validate_request(self):
+    def test_can_validate_request_with_no_inputs(self):
         request = self.make_request(query_string="")
         validation = request.validate(
             {

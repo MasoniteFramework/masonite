@@ -179,6 +179,27 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(validate.all(), {"terms": ["The terms must be accepted."]})
 
+    def test_boolean(self):
+        validate = Validator().validate({"toggle": "1"}, accepted(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "0"}, accepted(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": True}, accepted(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": False}, accepted(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "test"}, accepted(["toggle"]))
+
+        self.assertEqual(validate.all(), {"terms": ["The toggle must be boolean."]})
+
     def test_ip(self):
         validate = Validator().validate({"ip": "192.168.1.1"}, ip(["ip"]))
 

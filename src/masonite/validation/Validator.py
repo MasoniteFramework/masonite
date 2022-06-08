@@ -165,6 +165,17 @@ class one_of(BaseValidation):
         return "The {} is not required.".format(text)
 
 
+class boolean(BaseValidation):
+    def passes(self, attribute, key, dictionary):
+        return (attribute in [True, False, 0, 1, '0', '1'])
+
+    def message(self, attribute):
+        return "The {} must be boolean.".format(attribute)
+
+    def negated_message(self, attribute):
+        return "The {} must not be boolean.".format(attribute)
+
+
 class accepted(BaseValidation):
     def passes(self, attribute, key, dictionary):
         return (

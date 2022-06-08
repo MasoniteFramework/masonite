@@ -1419,6 +1419,7 @@ class ValidationFactory:
     def __init__(self):
         self.register(
             accepted,
+            boolean,
             active_domain,
             after_today,
             before_today,

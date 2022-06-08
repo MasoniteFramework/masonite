@@ -3,9 +3,7 @@ from tests import TestCase
 
 class TestValidation(TestCase):
     def test_can_validate_request(self):
-        request = self.make_request(
-            data={"QUERY_STRING": "email=joe@masoniteproject.com"}
-        )
+        request = self.make_request(query_string="email=joe@masoniteproject.com")
         validation = request.validate(
             {
                 "email": "required",

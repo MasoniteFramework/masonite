@@ -11,6 +11,7 @@ from src.masonite.validation import (
     ValidationFactory,
     Validator,
     accepted,
+    boolean,
     active_domain,
     after_today,
     before_today,
@@ -180,23 +181,23 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(validate.all(), {"terms": ["The terms must be accepted."]})
 
     def test_boolean(self):
-        validate = Validator().validate({"toggle": "1"}, accepted(["toggle"]))
+        validate = Validator().validate({"toggle": "1"}, boolean(["toggle"]))
 
         self.assertEqual(len(validate), 0)
         
-        validate = Validator().validate({"toggle": "0"}, accepted(["toggle"]))
+        validate = Validator().validate({"toggle": "0"}, boolean(["toggle"]))
 
         self.assertEqual(len(validate), 0)
         
-        validate = Validator().validate({"toggle": True}, accepted(["toggle"]))
+        validate = Validator().validate({"toggle": True}, boolean(["toggle"]))
 
         self.assertEqual(len(validate), 0)
         
-        validate = Validator().validate({"toggle": False}, accepted(["toggle"]))
+        validate = Validator().validate({"toggle": False}, boolean(["toggle"]))
 
         self.assertEqual(len(validate), 0)
         
-        validate = Validator().validate({"toggle": "test"}, accepted(["toggle"]))
+        validate = Validator().validate({"toggle": "test"}, boolean(["toggle"]))
 
         self.assertEqual(validate.all(), {"toggle": ["The toggle must be boolean."]})
 

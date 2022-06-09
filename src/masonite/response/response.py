@@ -125,7 +125,7 @@ class Response:
     def converted_data(self) -> "str|bytes":
         """Get the response content as string or bytes so that the WSGI server handles it."""
         if isinstance(self.data(), (dict, list)):
-            return json.dumps(self.data())
+            return json.dumps(self.data(), ensure_ascii=False)
         else:
             return self.data()
 

@@ -31,7 +31,7 @@ class Response:
 
     def json(self, payload: Any, status: int = 200) -> bytes:
         """Set the response as a JSON response."""
-        self.content = bytes(json.dumps(payload), "utf-8")
+        self.content = bytes(json.dumps(payload, ensure_ascii=False), "utf-8")
         self.make_headers(content_type="application/json; charset=utf-8")
         self.status(status)
 

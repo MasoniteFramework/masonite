@@ -6,10 +6,8 @@ class BaseDriver:
 
     def __init__(self, application: "Application"):
         self.application = application
-        self.default_options = {}
         self.options = {}
 
     def set_options(self, options: dict):
-        # merge options with defaults
-        self.options = merge(self.default_options, self.options, options)
+        self.options = merge(self.options, options)
         return self

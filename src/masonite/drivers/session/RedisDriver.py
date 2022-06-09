@@ -15,7 +15,7 @@ class RedisDriver(BaseDriver):
     def __init__(self, application: "Application"):
         super().__init__(application)
         self.connection = None
-        self.default_options = {"options": {"decode_responses": True}}
+        self.options = {"options": {"decode_responses": True}}
 
     def get_connection(self):
         try:

@@ -170,10 +170,10 @@ class boolean(BaseValidation):
         return (attribute in [True, False, 0, 1, '0', '1'])
 
     def message(self, attribute):
-        return "The {} must be boolean.".format(attribute)
+        return "The {} must be a boolean.".format(attribute)
 
     def negated_message(self, attribute):
-        return "The {} must not be boolean.".format(attribute)
+        return "The {} must not be a boolean.".format(attribute)
 
 
 class accepted(BaseValidation):

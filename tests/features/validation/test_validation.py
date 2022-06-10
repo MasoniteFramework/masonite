@@ -199,7 +199,7 @@ class TestValidation(unittest.TestCase):
         
         validate = Validator().validate({"toggle": "test"}, boolean(["toggle"]))
 
-        self.assertEqual(validate.all(), {"toggle": ["The toggle must be boolean."]})
+        self.assertEqual(validate.all(), {"toggle": ["The toggle must be a boolean."]})
 
     def test_ip(self):
         validate = Validator().validate({"ip": "192.168.1.1"}, ip(["ip"]))

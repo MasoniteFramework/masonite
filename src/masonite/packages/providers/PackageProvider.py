@@ -147,7 +147,7 @@ class PackageProvider(Provider):
             self.package.add_publishable_resource(
                 "migrations",
                 migration,
-                migrations_path(f"{timestamp}_{index + 1}_{basename(migration)}"),
+                migrations_path(f"{timestamp}{index + 1}_{basename(migration)}"),
             )
         return self
 

@@ -109,8 +109,8 @@ class Request(ValidatesRequest, AuthorizesRequest):
         """Get all inputs from the request as a dictionary."""
         return self.input_bag.all_as_values()
 
-    def only(self, *inputs: List[str]) -> dict:
-        """Get only the given inputs from the request as a dictionary."""
+    def only(self, *inputs: str) -> dict:
+        """Pass arguments as string arguments such as request.only("arg1", "arg2") to get back a dictionary of only those inputs."""
         return self.input_bag.only(*inputs)
 
     def old(self, key: str):

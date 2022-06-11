@@ -5,6 +5,7 @@ from .Validator import (
     ValidationFactory,
     Validator,
     accepted,
+    boolean,
     active_domain,
     after_today,
     before_today,

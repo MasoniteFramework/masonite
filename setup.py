@@ -48,6 +48,7 @@ setup(
         "bcrypt>=3.2,<3.3",
         "whitenoise>=5.2,<5.3",
         "python-dotenv>=0.15,<0.16",
+        "masonite-orm>=2.14,<3",
         "hashids>=1.3,<1.4",
         "cryptography>=36<37",
         "tldextract>=2.2,<2.3",

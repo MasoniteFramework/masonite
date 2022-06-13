@@ -9,6 +9,7 @@ from masoniteorm.commands import (
     MakeMigrationCommand,
     MakeSeedCommand,
     SeedRunCommand,
+    MakeModelDocstringCommand,
 )
 
 from ..commands import DbShellCommand
@@ -35,6 +36,7 @@ class ORMProvider(Provider):
             MigrateCommand(directory=migrations_dir),
             MigrateResetCommand(directory=migrations_dir),
             MakeModelCommand(directory=models_dir, migrations_directory=migrations_dir),
+            MakeModelDocstringCommand(),
             MigrateStatusCommand(directory=migrations_dir),
             MigrateRefreshCommand(directory=migrations_dir, seed_directory=seeds_dir),
             MigrateRollbackCommand(directory=migrations_dir),

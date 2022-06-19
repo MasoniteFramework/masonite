@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from masonite.foundation import Application
 
+
 class BaseDriver:
     """Base Session driver"""
 

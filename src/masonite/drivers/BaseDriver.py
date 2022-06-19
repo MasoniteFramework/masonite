@@ -1,5 +1,7 @@
-from mergedeep import merge
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from masonite.foundation import Application
 
 class BaseDriver:
     """Base Session driver"""
@@ -9,5 +11,5 @@ class BaseDriver:
         self.options = {}
 
     def set_options(self, options: dict):
-        self.options = merge(self.options, options)
+        self.options = options
         return self

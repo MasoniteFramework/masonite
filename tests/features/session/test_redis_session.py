@@ -8,7 +8,7 @@ class TestRedisSession(TestCase):
     def setUp(self):
         super().setUp()
         self.session = self.application.make("session")
-        self.driver = self.session.driver('redis')
+        self.driver = self.session.driver("redis")
         self.session.start("redis")
 
     def teardown(self):

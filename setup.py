@@ -116,6 +116,7 @@ setup(
         "masonite.container",
         "masonite.controllers",
         "masonite.cookies",
+        "masonite.cors",
         "masonite.drivers.queue",
         "masonite.drivers.session",
         "masonite.drivers",

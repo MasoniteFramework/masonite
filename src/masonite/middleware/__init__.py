@@ -12,3 +12,4 @@ from .route.ClearDumpsBetweenRequestsMiddleware import (
 )
 from .route.ThrottleRequestsMiddleware import ThrottleRequestsMiddleware
 from .route.IpMiddleware import IpMiddleware
+from .route.CorsMiddleware import CorsMiddleware

@@ -128,6 +128,22 @@ class HttpTestResponse:
         self.dumpResponseHeaders()
         self.testcase.stop()
 
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump request and response headers and die."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
+
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
 

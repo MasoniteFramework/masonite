@@ -60,6 +60,22 @@ def removesuffix(string, suffix):
         return string
 
 
+def match(string: str, ref_string: str) -> str:
+    """Check if a given string matches a reference string. Wildcard '*' can be used at start, end
+    or middle of the string."""
+    if ref_string.startswith("*"):
+        ref_string = ref_string.replace("*", "")
+        return string.endswith(ref_string)
+    elif ref_string.endswith("*"):
+        ref_string = ref_string.replace("*", "")
+        return string.startswith(ref_string)
+    elif "*" in ref_string:
+        split_search = ref_string.split("*")
+        return string.startswith(split_search[0]) and string.endswith(split_search[1])
+    else:
+        return ref_string == string
+
+
 def add_query_params(url: str, query_params: dict) -> str:
     """Add query params dict to a given url (which can already contain some query parameters)."""
     path_result = parse.urlsplit(url)

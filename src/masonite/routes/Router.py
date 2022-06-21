@@ -34,9 +34,8 @@ class Router:
             return None
 
         # if alternative methods have been found, check if current request method is OPTIONS
-        # to build a proper reponse else build a method not allowed response
+        # to build a proper response else build a method not allowed response
         if request_method == "OPTIONS":
-
             def preflight_response(app):
                 return (
                     app.make("response")

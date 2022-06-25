@@ -603,6 +603,10 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(len(validate), 0)
 
+        validate = Validator().validate({"text": "52"}, greater_than(["text"], 25))
+
+        self.assertEqual(len(validate), 0)
+
         validate = Validator().validate({"text": 101}, greater_than(["text"], 150))
 
         self.assertEqual(

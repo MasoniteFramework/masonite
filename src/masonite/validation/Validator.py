@@ -657,7 +657,7 @@ class greater_than(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
-        return attribute > self.value
+        return int(attribute) > int(self.value)
 
     def message(self, attribute):
         return "The {} must be greater than {}.".format(attribute, self.value)

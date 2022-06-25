@@ -54,7 +54,7 @@ class RedisDriver:
         )
 
     def has(self, key):
-        return self.get_connection().get(f"{self.get_name()}_cache_{key}")
+        return self.get_connection().exists(f"{self.get_name()}_cache_{key}")
 
     def increment(self, key, amount=1):
         return self.put(key, str(int(self.get(key)) + amount))

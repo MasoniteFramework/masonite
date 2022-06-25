@@ -53,7 +53,7 @@ class TestCase(unittest.TestCase):
         if hasattr(self, "startTestRun"):
             self.startTestRun()
 
-        if hasattr(self, "connection"):
+        if hasattr(self, "connection") and self.connection:
             self.application.make("resolver")._connection_details["default"] = self.connection
 
         self.withoutCsrf()

@@ -1,6 +1,7 @@
 import json
 import io
 import os
+from pprint import pprint
 import sys
 import pytest
 import unittest
@@ -17,9 +18,11 @@ if TYPE_CHECKING:
     from pendulum import DateTime
     from masoniteorm.models import Model
 
+from ..cookies import CookieJar
 from ..routes import Route
 from ..utils.http import generate_wsgi
 from ..request import Request
+from ..headers import HeaderBag, Header
 from ..response import Response
 from ..environment import LoadEnvironment
 from ..facades import Config, Session
@@ -49,6 +52,10 @@ class TestCase(unittest.TestCase):
 
         if hasattr(self, "startTestRun"):
             self.startTestRun()
+
+        if hasattr(self, "connection") and self.connection:
+            self.application.make("resolver")._connection_details["default"] = self.connection
+
         self.withoutCsrf()
 
         self.withoutExceptionsHandling()
@@ -234,11 +241,9 @@ class TestCase(unittest.TestCase):
     ) -> "HttpTestResponse":
         """Run an HTTP request and get a test response on which assertions can be run."""
         # prepare WSGI request environment
-        environ = {}
-        http_cookie = ""
-
         if data is None:
             data = {}
+
         if not self._csrf:
             token = self.application.make("sign").sign("cookie")
             data.update({"__token": "cookie"})
@@ -480,6 +485,7 @@ class TestCase(unittest.TestCase):
     def stop(self, msg: str = ""):
         """Stop current test, a message can be given and will be displayed in the
         console.
+
         2 is the pytest exit code for user interruption.
         https://docs.pytest.org/en/7.1.x/reference/exit-codes.html
         """

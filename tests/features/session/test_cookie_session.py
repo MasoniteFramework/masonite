@@ -6,42 +6,35 @@ class TestCookieSession(TestCase):
         request = self.make_request()
         session = self.application.make("session")
         request.cookie("s_hello", "test")
-        session.start()
+        session.start("cookie")
         self.assertEqual(session.get("hello"), "test")
 
     def test_can_get_session_dict(self):
         request = self.make_request()
         session = self.application.make("session")
         request.cookie("s_hello", '{"hello": "test"}')
-        session.start()
+        session.start("cookie")
         self.assertEqual(type(session.get("hello")), dict)
 
     def test_can_set_and_get_session_dict(self):
         request = self.make_request()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.set("key1", {"hello": "test"})
         self.assertEqual(type(session.get("key1")), dict)
-        self.assertEqual(session.get("key1")["hello"], "test")
-
-    def test_can_set_and_get_session_dict(self):
-        request = self.make_request()
-        session = self.application.make("session")
-        session.start()
-        session.flash("key1", {"hello": "test"})
         self.assertEqual(session.get("key1")["hello"], "test")
 
     def test_can_set_and_get_session(self):
         self.make_request()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.set("key1", "test1")
         self.assertEqual(session.get("key1"), "test1")
 
     def test_can_increment_and_decrement_session(self):
         self.make_request()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.set("key1", "1")
         session.set("key5", "5")
         session.increment("key1")
@@ -53,7 +46,7 @@ class TestCookieSession(TestCase):
         self.make_request()
         response = self.make_response()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.set("key1", "test1")
 
         self.assertEqual(response.cookie("s_key1"), "test1")
@@ -63,7 +56,7 @@ class TestCookieSession(TestCase):
         response = self.make_response()
         session = self.application.make("session")
         request.cookie("s_key", "test")
-        session.start()
+        session.start("cookie")
 
         self.assertEqual(session.get("key"), "test")
 
@@ -78,7 +71,7 @@ class TestCookieSession(TestCase):
         response = self.make_response()
         session = self.application.make("session")
         request.cookie("s_key", "test")
-        session.start()
+        session.start("cookie")
 
         self.assertEqual(session.get("key"), "test")
 
@@ -93,7 +86,7 @@ class TestCookieSession(TestCase):
         response = self.make_response()
         session = self.application.make("session")
         request.cookie("s_key", "test")
-        session.start()
+        session.start("cookie")
 
         self.assertEqual(session.get("key"), "test")
 
@@ -106,7 +99,7 @@ class TestCookieSession(TestCase):
         request = self.make_request()
         response = self.make_response()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.flash("key", "test")
         self.assertEqual(session.get("key"), "test")
         self.assertEqual(session.get("key"), None)
@@ -116,7 +109,7 @@ class TestCookieSession(TestCase):
         request = self.make_request()
         response = self.make_response()
         session = self.application.make("session")
-        session.start()
+        session.start("cookie")
         session.flash("key", "test")
         session.flash("key2", "test2")
 

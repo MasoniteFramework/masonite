@@ -48,8 +48,8 @@ class MailgunDriver:
         attachments = self.get_attachments()
 
         BASE_URL_BY_REGION = {
-            "us": "https://api.mailgun.net/v3/",
-            "eu": "https://api.eu.mailgun.net/v3/"
+            "us": "https://api.mailgun.net/v3",
+            "eu": "https://api.eu.mailgun.net/v3",
         }
 
         endpoint = BASE_URL_BY_REGION.get(region.lower())

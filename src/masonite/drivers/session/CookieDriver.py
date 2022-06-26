@@ -1,21 +1,24 @@
 from typing import TYPE_CHECKING
 
+from ..BaseDriver import BaseDriver
+
 if TYPE_CHECKING:
     from ...foundation import Application
     from ...request import Request
     from ...response import Response
 
 
-class CookieDriver:
+class CookieDriver(BaseDriver):
     """Session driver used to store data in HTTP cookies."""
 
     def __init__(self, application: "Application"):
-        self.application = application
+        super().__init__(application)
 
     def start(self) -> dict:
         request = self.get_request()
         data = {}
         flashed = {}
+
         for key, value in request.cookie_jar.to_dict().items():
             if key.startswith("s_"):
                 data.update({key.replace("s_", ""): value})

@@ -1,6 +1,9 @@
 import json
 from typing import TYPE_CHECKING, Any
 
+from ..validation import MessageBag
+from ..exceptions import InvalidConfigurationSetup
+
 if TYPE_CHECKING:
     from ..foundation import Application
 
@@ -9,11 +12,11 @@ class Session:
     """Session manager which provides a way to store information in a persistent store / backend
     that can be accessed from subsequent requests."""
 
-    def __init__(self, application: "Application", driver_config: dict = {}):
+    def __init__(self, application: "Application", driver_config: dict = None):
         self.application = application
         self.drivers = {}
-        self._driver = None
-        self.driver_config = driver_config
+        self.driver_config = driver_config or {}
+        self._active_driver = None
         self.options = {}
         self.data = {}
         self.added = {}
@@ -23,6 +26,7 @@ class Session:
 
     def add_driver(self, name: str, driver: Any) -> None:
         """Register a new session driver with the given name."""
+        driver.set_options(self.get_config_options(name))
         self.drivers.update({name: driver})
 
     def driver(self, driver: str) -> Any:
@@ -31,19 +35,30 @@ class Session:
 
     def set_configuration(self, config: dict) -> "Session":
         """Set session driver options."""
+
+        # make sure the default driver is defined
+        if "default" not in config:
+            raise InvalidConfigurationSetup("'default' session driver is not defined.")
+        # and has a config
+        if config["default"] not in config:
+            raise InvalidConfigurationSetup(
+                f"'{config['default']}' session driver configuration not defined."
+            )
+
         self.driver_config = config
         return self
 
     def get_driver(self, name: str = None) -> Any:
         """Get the default session driver or the driver with the given name."""
         if name is None:
-            return self.drivers[self.driver_config.get("default")]
+            return self.drivers[self._active_driver]
+
         return self.drivers[name]
 
     def get_config_options(self, driver: str = None) -> dict:
         """Get the options of the default session driver or of the driver with the given name."""
         if driver is None:
-            return self.driver_config[self.driver_config.get("default")]
+            return self.driver_config.get(self._active_driver)
 
         return self.driver_config.get(driver, {})
 
@@ -53,7 +68,8 @@ class Session:
         self.added = {}
         self.deleted = []
         self.deleted_flashed = []
-        started_data = self.get_driver(name=driver).start()
+        self._active_driver = driver or self.get_config_options("default")
+        started_data = self.get_driver(name=self._active_driver).start()
         self.data = started_data.get("data", {})
         self.flashed = started_data.get("flashed", {})
         return self
@@ -102,16 +118,16 @@ class Session:
         return self.set(key, str(int(self.get(key)) - count))
 
     def has(self, key: str) -> bool:
-        """Check if key is present in default session."""
+        """Check if key is present in active session."""
         return key in self.added or key in self.flashed or key in self.data
 
     def get(self, key: str) -> Any:
-        """Get value of the given key in default session."""
+        """Get value of the given key in active session."""
         if key in self.flashed:
             value = self.flashed.get(key)
 
             try:
-                if value is not None:
+                if value is not None and not isinstance(value, MessageBag):
                     value = json.loads(value)
             except json.decoder.JSONDecodeError:
                 pass
@@ -122,7 +138,7 @@ class Session:
 
         value = self.get_data().get(key)
         try:
-            if value is not None:
+            if value is not None and not isinstance(value, MessageBag):
                 value = json.loads(value)
         except json.decoder.JSONDecodeError:
             pass

@@ -11,6 +11,7 @@ from src.masonite.validation import (
     ValidationFactory,
     Validator,
     accepted,
+    boolean,
     active_domain,
     after_today,
     before_today,
@@ -24,6 +25,7 @@ from src.masonite.validation import (
     equals,
     exists,
     exists_in_db,
+    not_exists_in_db,
     file,
     greater_than,
     image,
@@ -177,6 +179,27 @@ class TestValidation(unittest.TestCase):
         validate = Validator().validate({"terms": "test"}, accepted(["terms"]))
 
         self.assertEqual(validate.all(), {"terms": ["The terms must be accepted."]})
+
+    def test_boolean(self):
+        validate = Validator().validate({"toggle": "1"}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "0"}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": True}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": False}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "test"}, boolean(["toggle"]))
+
+        self.assertEqual(validate.all(), {"toggle": ["The toggle must be a boolean."]})
 
     def test_ip(self):
         validate = Validator().validate({"ip": "192.168.1.1"}, ip(["ip"]))
@@ -577,6 +600,10 @@ class TestValidation(unittest.TestCase):
 
     def test_greater_than(self):
         validate = Validator().validate({"text": 52}, greater_than(["text"], 25))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({"text": "52"}, greater_than(["text"], 25))
 
         self.assertEqual(len(validate), 0)
 
@@ -1627,23 +1654,37 @@ class TestValidationProvider(TestCase):
             {"password": ["The password field must have 2 uppercase letters"]},
         )
 
+        # test number of special characters
         validate = Validator().validate(
             {
                 "password": "secret!",
             },
-            strong(["password"], length=5, uppercase=0, special=2, numbers=0),
+            strong(["password"], length=5, uppercase=0, special=2, numbers=0, lowercase=4),
         )
 
         self.assertEqual(
             validate.all(),
-            {"password": ["The password field must have 2 special characters"]},
+            {"password": ["The password field must contain at least 2 of these characters: '!@#$%^&*()_+'"]},
+        )
+
+        # test custom special characters
+        validate = Validator().validate(
+            {
+                "password": "secret&-",
+            },
+            strong(["password"], length=5, uppercase=0, special=2, special_chars="*&^", numbers=0, lowercase=4),
+        )
+
+        self.assertEqual(
+            validate.all(),
+            {"password": ["The password field must contain at least 2 of these characters: '*&^'"]},
         )
 
         validate = Validator().validate(
             {
                 "password": "secret!",
             },
-            strong(["password"], length=5, uppercase=0, special=0, numbers=2),
+            strong(["password"], length=5, uppercase=0, special=0, numbers=2, lowercase=3),
         )
 
         self.assertEqual(
@@ -1668,7 +1709,7 @@ class TestValidationProvider(TestCase):
         )
 
         self.assertIn(
-            "The password field must have 2 special characters", password_validation
+            "The password field must contain at least 2 of these characters: '!@#$%^&*()_+'", password_validation
         )
 
         validate = Validator().validate(
@@ -1716,6 +1757,26 @@ class TestValidationProvider(TestCase):
             exists_in_db(["email"], "users", "email"),
         )
         self.assertEqual(len(validate), 0)
+
+    def test_not_exists_in_db(self):
+        validate = Validator().validate(
+            {
+                "email": "unknown@gmail.com",
+            },
+            not_exists_in_db(["email"], "users", "email"),
+        )
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate(
+            {
+                "email": "idmann509@gmail.com",
+            },
+            not_exists_in_db(["email"], "users", "email"),
+        )
+        self.assertIn(
+            "A record already exists in table users with the same email",
+            validate.get("email"),
+        )
 
     def test_exists_in_db_with_model_path(self):
         validate = Validator().validate(

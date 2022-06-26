@@ -1,12 +1,11 @@
 from inspect import isclass
 
-from ..response import Response
 from ..facades import Response as ResponseFacade
 from .Provider import Provider
 from ..routes import Route
 from ..routes.commands import RouteListCommand
 from ..pipeline import Pipeline
-from ..exceptions import RouteNotFoundException
+from ..exceptions import RouteNotFoundException, MethodNotAllowedException
 
 
 class RouteProvider(Provider):
@@ -18,6 +17,8 @@ class RouteProvider(Provider):
         self.application.make("commands").add(RouteListCommand(self.application))
 
     def boot(self):
+        from ..response import Response
+
         router = self.application.make("router")
         request = self.application.make("request")
         response = self.application.make("response")

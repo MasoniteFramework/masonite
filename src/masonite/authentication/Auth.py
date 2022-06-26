@@ -71,8 +71,6 @@ class Auth:
         Returns:
             self
         """
-        if self._user:
-            return self._user
         return self.get_guard().set_options(self.get_config_options()).user()
 
     def register(self, dictionary):

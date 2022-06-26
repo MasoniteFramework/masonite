@@ -65,7 +65,7 @@ class Container:
         Returns:
             self
         """
-        
+
         if name not in self.objects:
             return False
 

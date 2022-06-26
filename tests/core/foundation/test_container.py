@@ -107,7 +107,6 @@ class TestContainer(TestCase):
         # All resolved but none bound
         self.assertFalse(self.application.has(GreetingService))
         self.assertFalse(self.application.has(SayHello))
-        self.assertFalse(self.application.has(User))
 
     def test_can_collect_bindings(self):
         bindings = self.application.collect("*.location")

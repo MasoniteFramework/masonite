@@ -56,6 +56,23 @@ class Container:
 
         return self
 
+    def unbind(self, name):
+        """Unbind classes from the container from a key.
+
+        Arguments:
+            name {string} -- Name of the key you want to bind the object to
+
+        Returns:
+            self
+        """
+        
+        if name not in self.objects:
+            return False
+
+        del self.objects[name]
+
+        return self
+
     def simple(self, obj):
         """Easy way to bind classes into the container by using passing the object only.
 

@@ -15,6 +15,13 @@ class RedisDriver:
         return self
 
     def get_connection(self) -> "Redis":
+        try:
+            from redis import Redis
+        except ImportError:
+            raise ModuleNotFoundError(
+                "Could not find the 'redis' library. Run 'pip install redis' to fix this."
+            )
+
         if not self.connection:
             self.connection = Redis(
                 **self.options.get("options", {}),

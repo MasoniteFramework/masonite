@@ -38,7 +38,7 @@ class RedisDriver:
 
         return self.connection
 
-    def _load_from_store(self, connection: Redis = None) -> None:
+    def _load_from_store(self, connection: "Redis" = None) -> None:
         """
         copy all the "cache" key value pairs for faster access
         """

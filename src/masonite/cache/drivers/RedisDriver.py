@@ -1,13 +1,8 @@
 import json
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-try:
+if TYPE_CHECKING:
     from redis import Redis
-except ImportError:
-    raise ModuleNotFoundError(
-        "Could not find the 'redis' library. Run 'pip install redis' to fix this."
-    )
-
 
 class RedisDriver:
     def __init__(self, application):

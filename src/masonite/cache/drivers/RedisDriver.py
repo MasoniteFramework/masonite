@@ -4,6 +4,7 @@ from typing import Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from redis import Redis
 
+
 class RedisDriver:
     def __init__(self, application):
         self.application = application

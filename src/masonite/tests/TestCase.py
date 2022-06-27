@@ -391,6 +391,7 @@ class TestCase(unittest.TestCase):
     def actingAs(self, user, guard="web") -> "TestCase":
         """Connect as the given user during the lifetime of the test. You can select the auth
         guard to use to authenticate."""
+        self.application.bind("test_user", user)
         self._acting_as = {"user": user, "guard": guard}
         return self
 

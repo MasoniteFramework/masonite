@@ -280,7 +280,7 @@ class HttpTestResponse:
         assert not self.application.make("auth").guard(guard).user()
         return self
 
-    def assertAuthenticated(self, user=None, guard="web"):
+    def assertAuthenticated(self, user=None, guard="test"):
         """Assert that user is authenticated. If a user a given assert that the given is
         authenticated."""
         logged_user = self.application.make("auth").guard(guard).user()

@@ -148,8 +148,6 @@ class Container:
             except MissingContainerBindingNotFound:
                 return False
 
-        return False
-
     def helper(self):
         """Add a helper to create builtin functions.
 

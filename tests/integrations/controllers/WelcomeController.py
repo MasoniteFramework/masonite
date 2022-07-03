@@ -152,7 +152,7 @@ class WelcomeController(Controller):
         return ""
 
     def auth(self, request: Request):
-        request.app.make("auth").guard("web").attempt("idmann509@gmail.com", "secret")
+        request.app.make("auth").attempt("idmann509@gmail.com", "secret")
         return "logged in"
 
     def not_authorized(self):

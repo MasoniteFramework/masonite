@@ -89,7 +89,7 @@ class Container:
 
     def singleton(self, name, class_obj):
         """Register a shared binding in the container.
-        
+
         Arguments:
             name {string} -- Name of the key you want to bind the object to
             class_obj {object} -- The object you want to bind

@@ -42,7 +42,7 @@ setup(
         "inflection>=0.3<0.4",
         "exceptionite>=2.2<3.0",
         "pendulum>=2,<3",
-        "jinja2>=3.0.0<3.1",
+        "jinja2<3.1.0",
         "cleo>=0.8.1,<0.9",
         "hupper>=1.10,<1.11",
         "bcrypt>=3.2,<3.3",

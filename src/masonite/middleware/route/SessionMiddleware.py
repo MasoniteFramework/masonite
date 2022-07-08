@@ -3,6 +3,7 @@ from ...utils.str import random_string
 from ...facades import Request, Session, Response
 from ...validation import MessageBag
 
+
 class SessionMiddleware(Middleware):
     def before(self, request, response):
         if not request.cookie("SESSID"):

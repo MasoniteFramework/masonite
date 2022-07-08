@@ -1,7 +1,7 @@
 from .. import Middleware
 from ...utils.str import random_string
 from ...facades import Request, Session, Response
-
+from ...validation import MessageBag
 
 class SessionMiddleware(Middleware):
     def before(self, request, response):
@@ -14,6 +14,9 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_errors = self.with_errors
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
+
+        # TODO: Remove in Masonite 5
+        request.app.make("view").share({"bag": MessageBag(Session.get("errors")).helper})
         return request
 
     def after(self, request, _):

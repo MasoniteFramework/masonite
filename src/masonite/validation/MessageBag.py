@@ -68,7 +68,7 @@ class MessageBag:
         Returns:
             list -- list of errors
         """
-        return self.items[key]
+        return self.items.get(key)
 
     def errors(self):
         """Gets a list of errors"""

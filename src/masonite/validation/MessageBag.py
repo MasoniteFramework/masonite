@@ -118,3 +118,6 @@ class MessageBag:
         from wsgi import application
 
         return MessageBag(application.make("request").session.get("errors") or {})
+
+    def helper(self):
+        return self

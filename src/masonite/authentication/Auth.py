@@ -145,6 +145,9 @@ class Auth:
             .first()
         )
 
+        if not reset_record:
+            return False
+
         auth_config = self.get_config_options()
         (
             self.get_guard()

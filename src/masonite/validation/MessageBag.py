@@ -68,7 +68,7 @@ class MessageBag:
         Returns:
             list -- list of errors
         """
-        return self.items[key]
+        return self.items.get(key)
 
     def errors(self):
         """Gets a list of errors"""
@@ -118,3 +118,6 @@ class MessageBag:
         from wsgi import application
 
         return MessageBag(application.make("request").session.get("errors") or {})
+
+    def helper(self):
+        return self

@@ -484,10 +484,10 @@ class numeric(BaseValidation):
     def passes(self, attribute, key, dictionary):
         if isinstance(attribute, list):
             for value in attribute:
-                if not str(value).isdigit():
+                if not str(value).replace(".", "", 1).isdigit():
                     return False
         else:
-            return str(attribute).isdigit()
+            return str(attribute).replace(".", "", 1).isdigit()
 
         return True
 

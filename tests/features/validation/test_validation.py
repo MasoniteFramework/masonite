@@ -445,7 +445,15 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(len(validate), 0)
 
+        validate = Validator().validate({"test": 1.9}, numeric(["test"]))
+
+        self.assertEqual(len(validate), 0)
+
         validate = Validator().validate({"test": "hey"}, numeric(["test"]))
+
+        self.assertEqual(validate.all(), {"test": ["The test must be a numeric."]})
+
+        validate = Validator().validate({"test": '1..9'}, numeric(["test"]))
 
         self.assertEqual(validate.all(), {"test": ["The test must be a numeric."]})
 

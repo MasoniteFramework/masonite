@@ -72,7 +72,7 @@ def data_get(dictionary, key, default=None):
 
 
 def data_set(dictionary, key, value, overwrite=True):
-    """Set dictionary value at key using nested notation. Values are overriden by default but
+    """Set dictionary value at key using nested notation. Values are overridden by default but
     this behaviour can be changed by passing overwrite=False.
     The dictionary is edited in place but is also returned.
 

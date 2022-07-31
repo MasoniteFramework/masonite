@@ -38,7 +38,7 @@ class Response:
         return self.data()
 
     def make_headers(self, content_type: str = "text/html; charset=utf-8") -> None:
-        """Recompute Content-Length of the response after modyifing it."""
+        """Recompute Content-Length of the response after modifying it."""
         self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
 
         # If the user did not change it directly

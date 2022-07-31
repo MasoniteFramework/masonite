@@ -104,7 +104,7 @@ class View:
         if self.template in self.composers:
             self.dictionary.update(self.composers.get(self.template))
 
-        # Check if there is just an astericks in the composer
+        # Check if there is just an asterisks in the composer
         if "*" in self.composers:
             self.dictionary.update(self.composers.get("*"))
 

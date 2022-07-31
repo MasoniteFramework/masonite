@@ -275,7 +275,7 @@ Notice that theres nothing in the class above that isn't related to sending an e
 
 ### Component Classes
 
-Component classes are another part of this relationship. A component is also a class that does 1 thing and 1 thing only. This class should have a small peice of logic **that is designed to clean up other parts of the code later down the line**. For example, if we want to compile an email from `joe@masoniteproject.com, idmann509@gmail.com` to `<joe@masoniteproject.com>, <idmann509@gmail.com>` we could loop through the emails and append them inside the SMTP driver, right?
+Component classes are another part of this relationship. A component is also a class that does 1 thing and 1 thing only. This class should have a small piece of logic **that is designed to clean up other parts of the code later down the line**. For example, if we want to compile an email from `joe@masoniteproject.com, idmann509@gmail.com` to `<joe@masoniteproject.com>, <idmann509@gmail.com>` we could loop through the emails and append them inside the SMTP driver, right?
 
 This would look kind of messy and with some psuedo code would look like this:
 
@@ -315,7 +315,7 @@ cc_emails = Recipient(cc_emails).header()
 
 The same rules apply to an email attachment.
 
-So these component classes should be used where applicable so we can add features at a central location and it be propogated throughout other drivers. They should also do 1 thing and 1 thing only to not break anything with side effects
+So these component classes should be used where applicable so we can add features at a central location and it be propagated throughout other drivers. They should also do 1 thing and 1 thing only to not break anything with side effects
 
 ### Registering Drivers
 

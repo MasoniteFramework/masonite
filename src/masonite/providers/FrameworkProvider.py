@@ -23,7 +23,7 @@ class FrameworkProvider(Provider):
         self.application.bind("presets", presets)
 
         # @M5 remove this and add SecurityProvider in default project
-        # @M5 old projects won't have securiy options so put default here. remove this for M5.
+        # @M5 old projects won't have security options so put default here. remove this for M5.
         options = config("security.cors")
         if not options:
             options = {

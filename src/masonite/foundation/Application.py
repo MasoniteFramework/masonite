@@ -86,7 +86,7 @@ class Application(Container):
 
     def is_running_in_console(self) -> bool:
         """Check if application is running in console. This is useful to only run some providers
-        logic when used in console. We can differenciate if the application is being served or
+        logic when used in console. We can differentiate if the application is being served or
         if an application command is ran in console."""
         if len(sys.argv) > 1:
             return sys.argv[1] != "serve"

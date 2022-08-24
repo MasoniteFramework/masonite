@@ -35,15 +35,6 @@ class APIInstallCommand(Command):
         with open(path, "w") as f:
             f.write(content)
 
-        if os.path.exists(path) and not self.option("force"):
-            self.warning(
-                f"{path} already exists! Run the command with -f (force) to override."
-            )
-            return -1
-
-        with open(path, "w") as f:
-            f.write(content)
-
         secret = random_string(25)
 
         self.info(f"API Installed: ({config_path('api.py', absolute=False)})")

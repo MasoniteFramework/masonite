@@ -93,6 +93,6 @@ class Api:
     @classmethod
     def routes(cls, auth_route="/api/auth", reauth_route="/api/reauth"):
         return [
-            Route.post("/api/auth", AuthenticationController.auth),
-            Route.post("/api/reauth", AuthenticationController.reauth),
+            Route.post(auth_route, AuthenticationController.auth),
+            Route.post(reauth_route, AuthenticationController.reauth),
         ]

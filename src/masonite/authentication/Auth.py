@@ -11,6 +11,7 @@ class Auth:
         self.guard_config = guard_config or {}
         self.options = {}
 
+        self._id = None
         self._user = None
 
     def add_guard(self, name, guard):
@@ -63,7 +64,18 @@ class Auth:
         self.application.make("request").remove_user()
         self.application.make("response").delete_cookie("token")
         self.get_guard().set_options(self.get_config_options()).logout()
+        self._id = None
         self._user = None
+
+    def id(self):
+        """Get the current authenticated user_id.
+
+        Returns:
+            self
+        """
+        if self._id:
+            return self._id
+        return self.user().id
 
     def user(self):
         """Get the current authenticated user.
@@ -84,7 +96,12 @@ class Auth:
         auth_config = self.get_config_options()
         return self.get_guard().set_options(auth_config).register(dictionary)
 
+    def set_id(self, id):
+        self._id = id
+        return self
+
     def set_user(self, user):
+        self._id = user.id
         self._user = user
         return self
 

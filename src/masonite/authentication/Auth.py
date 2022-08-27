@@ -77,7 +77,7 @@ class Auth:
             return self._id
         user = self.user()
         if user:
-            return user.id
+            return user.get_id()
         return False
 
     def user(self):
@@ -104,7 +104,7 @@ class Auth:
         return self
 
     def set_user(self, user):
-        self._id = user.id
+        self._id = user.get_id()
         self._user = user
         return self
 

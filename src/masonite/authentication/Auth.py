@@ -71,17 +71,20 @@ class Auth:
         """Get the current authenticated user_id.
 
         Returns:
-            self
+            self|bool
         """
         if self._id:
             return self._id
-        return self.user().id
+        user = self.user()
+        if user:
+            return user.id
+        return False
 
     def user(self):
         """Get the current authenticated user.
 
         Returns:
-            self
+            self|bool
         """
         if self._user:
             return self._user

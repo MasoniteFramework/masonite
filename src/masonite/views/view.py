@@ -1,4 +1,6 @@
 """View Module."""
+import gettext
+import os
 from collections import defaultdict
 from os.path import split, exists
 from jinja2 import (
@@ -43,7 +45,10 @@ class View:
         self.loaders = []
         self.namespaces = defaultdict(list)
         self.env = None
-        self._jinja_extensions = ["jinja2.ext.loopcontrols"]
+        self._jinja_extensions = [
+            "jinja2.ext.loopcontrols",
+            "jinja2.ext.i18n",
+        ]
         self._filters = {}
         self._shared = {}
         self._tests = {}
@@ -225,6 +230,16 @@ class View:
             extensions=self._jinja_extensions,
             line_statement_prefix="@",
         )
+
+        # Translations handling
+        self.env.install_gettext_callables(
+            gettext=gettext.gettext, ngettext=gettext.ngettext, newstyle=True
+        )
+        localedir: str = self.application.base_path + "/locales"
+        if os.path.isdir(localedir):
+            translation = gettext.translation("base", localedir=localedir)
+            self.env.install_gettext_translations(translation)
+
         # add container to environment so that extensions can use it
         self.env.application = self.application
 

@@ -59,9 +59,10 @@ class CookieJar:
         return dic
 
     def load(self, cookie_string):
-        for compound_value in cookie_string.split("; "):
+        for compound_value in cookie_string.split(";"):
             if "=" in compound_value:
                 key, value = compound_value.split("=", 1)
+                key, value = key.strip(), value.strip()
                 self.load_cookie(key, value)
         return self
 

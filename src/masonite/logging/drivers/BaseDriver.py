@@ -45,25 +45,7 @@ class BaseDriver:
         self.logging_logger.addHandler(self.logging_handler)
         self.logging_logger.setLevel(self.get_min_level())
 
-    def format_message(self, message, level, timestamp):
-        log_format = self.get_format()
-        # Formatter().format(formatter, )
-        # TODO:
-
-        return message
-
     def send(self, level, message):
-        # if not self.should_send(level):
-        #     return False
-
-        # timestamp = self.get_time()
-        # formatted_message = self.format_message(message, level, timestamp)
-        # return {
-        #     "formatted_message": formatted_message,
-        #     "level": level,
-        #     "message": message,
-        #     "timestamp": timestamp,
-        # }
         raise NotImplementedError()
 
     def log(self, level, message):

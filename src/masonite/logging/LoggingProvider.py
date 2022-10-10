@@ -2,6 +2,7 @@ from ..providers import Provider
 from ..facades import Config
 from .Logger import Logger
 from .drivers import TerminalDriver, DailyFileDriver, SingleFileDriver, StackDriver
+from .LoggerExceptionsListener import LoggerExceptionsListener
 
 
 class LoggingProvider(Provider):
@@ -15,6 +16,10 @@ class LoggingProvider(Provider):
         logger.add_driver("single", SingleFileDriver)
         logger.add_driver("stack", StackDriver)
         self.application.bind("logger", logger)
+
+        self.application.make("event").listen(
+            "masonite.exception.*", [LoggerExceptionsListener]
+        )
 
     def boot(self):
         pass

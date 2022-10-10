@@ -22,13 +22,14 @@ CHANNELS = {
         "keep": 10,
     },
     "all": {"driver": "stack", "channels": ["single", "daily", "console"]},
-    # "syslog": {
-    #     "driver": "syslog",
-    #     # ...syslog options
-    # },
+    "syslog": {"driver": "syslog", "address": "/var/log/system.log"},
+    "papertrail": {
+        "driver": "syslog",
+        "host": "logs.papertrailapp.com",
+        "port": None,  # specify here the port as an integer
+    },
     # "slack": {
     #     "driver": "slack",
     #     # ...slack options
     # },
-    # "papertrail": {"driver": "syslog", "host": "", "port": ""},
 }

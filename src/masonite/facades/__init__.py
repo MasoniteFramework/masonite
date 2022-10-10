@@ -17,3 +17,4 @@ from .Queue import Queue
 from .Cache import Cache
 from .RateLimiter import RateLimiter
 from .Broadcast import Broadcast
+from .Log import Log

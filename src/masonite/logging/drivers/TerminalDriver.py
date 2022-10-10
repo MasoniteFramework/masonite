@@ -17,8 +17,8 @@ class ColorFormatter(logging.Formatter):
     white_fg_red_bg = "\x1b[37;41m"
     reset = "\x1b[0m"
 
-    def __init__(self, fmt=None, datefmt=None, style="%", validate=True):
-        super().__init__(fmt, datefmt, style, validate)
+    def __init__(self, fmt=None, datefmt=None, style="%"):
+        super().__init__(fmt, datefmt, style)
         self.fmt = fmt
         self.style = style
         self.FORMATS = {

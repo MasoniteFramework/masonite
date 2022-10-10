@@ -28,8 +28,8 @@ CHANNELS = {
         "host": "logs.papertrailapp.com",
         "port": None,  # specify here the port as an integer
     },
-    # "slack": {
-    #     "driver": "slack",
-    #     # ...slack options
-    # },
+    "slack": {
+        "driver": "slack",
+        "webhook_url": "",
+    },
 }

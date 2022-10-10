@@ -7,6 +7,7 @@ from .drivers import (
     SingleFileDriver,
     StackDriver,
     SysLogDriver,
+    SlackDriver,
 )
 from .LoggerExceptionsListener import LoggerExceptionsListener
 
@@ -22,6 +23,7 @@ class LoggingProvider(Provider):
         logger.add_driver("single", SingleFileDriver)
         logger.add_driver("stack", StackDriver)
         logger.add_driver("syslog", SysLogDriver)
+        logger.add_driver("slack", SlackDriver)
         self.application.bind("logger", logger)
 
         self.application.make("event").listen(

@@ -58,3 +58,10 @@ class TestRequest(TestCase):
     def test_overriding_request_method_in_form(self):
         request = self.make_request(post_data={"__method": "PATCH"}, method="POST")
         self.assertEqual(request.get_request_method(), "PATCH")
+
+    def test_is_ajax(self):
+        request = self.make_request({"HTTP_X_REQUESTED_WITH": "XMLHttpRequest"})
+        self.assertTrue(request.is_ajax())
+        non_ajax_request = self.make_request()
+        self.assertFalse(non_ajax_request.is_ajax())
+

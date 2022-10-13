@@ -24,10 +24,10 @@ def load(path, object_name=None, default=None, raise_exception=False):
     # module = pydoc.locate(dotted_path)
     try:
         module = importlib.import_module(module_path)
-    except ModuleNotFoundError:
+    except Exception as e:
         if raise_exception:
             raise LoaderNotFound(
-                f"{module_path} not found or error when importing this module."
+                f"'{module_path}' not found OR error when importing this module: {str(e)}"
             )
         return None
 

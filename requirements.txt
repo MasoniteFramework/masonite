@@ -21,5 +21,6 @@ responses
 slackblocks
 tldextract>=2.2,<2.3
 werkzeug>=2<3
+watchdog>=2<3
 whitenoise>=5.2,<5.3
 pyjwt>=2.3,<2.5

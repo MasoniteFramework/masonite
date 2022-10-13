@@ -32,7 +32,7 @@ class Loader:
         return _modules
 
     def find(self, class_instance, paths, class_name, raise_exception=False):
-        _classes = self.find_all(class_instance, paths)
+        _classes = self.find_all(class_instance, paths, raise_exception)
         for name, obj in _classes.items():
             if name == class_name:
                 return obj
@@ -44,7 +44,7 @@ class Loader:
 
     def find_all(self, class_instance, paths, raise_exception=False):
         _classes = {}
-        for module in self.get_modules(paths).values():
+        for module in self.get_modules(paths, raise_exception).values():
             for obj_name, obj in inspect.getmembers(module):
                 # check if obj is the same class as the given one
                 if inspect.isclass(obj) and issubclass(obj, class_instance):

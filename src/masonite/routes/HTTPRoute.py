@@ -177,7 +177,7 @@ class HTTPRoute:
                 )
             except LoaderNotFound as e:
                 self.e = e
-                print("\033[93mTrouble importing controller!", str(e), "\033[0m")
+                print(f"\033[93mTrouble importing controller!\n> {str(e)}\033[0m")
         # controller is an instance with a bound method
         elif hasattr(controller, "__self__"):
             _, controller_method_str = controller.__qualname__.split(".")
@@ -199,7 +199,7 @@ class HTTPRoute:
                 )
             except LoaderNotFound as e:
                 self.e = e
-                print("\033[93mTrouble importing controller!", str(e), "\033[0m")
+                print(f"\033[93mTrouble importing controller!\n> {str(e)}\033[0m")
         # it's a controller instance
         else:
             self.controller_instance = controller

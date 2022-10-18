@@ -76,7 +76,7 @@ def get_module_dir(module_file):
 def get_extension(filepath: str, without_dot=False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
-    extension = "".join(pathlib.Path(filepath).suffixes)
+    extension = os.path.splitext(filepath)[1]
     if without_dot:
         return extension[1:]
     return extension

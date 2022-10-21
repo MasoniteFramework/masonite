@@ -31,3 +31,7 @@ class TestRequest(TestCase):
     def test_request_can_get_nested_value_from_post_data(self):
         self.request.input_bag.post_data = {"key": "val", "a": {"b": {"c": 1}}}
         self.assertEqual(self.request.input("a.b.c"), 1)
+
+    def test_request_can_get_nested_value_from_post_data_using_wildcard(self):
+        self.request.input_bag.post_data = {"key": "val", "a": {"b": [{"i": 1,"c":2} ,{"i":6, "c":8}]}}
+        self.assertEqual(self.request.input("a.b.*.i"), [1,6])

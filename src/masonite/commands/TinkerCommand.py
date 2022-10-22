@@ -4,11 +4,20 @@ import code
 import sys
 import pendulum
 
-from ..environment import env
-from ..utils.collections import collect
 from ..utils.structures import load, data_get
-from ..utils.location import base_path, config_path, models_path
-from ..helpers import optional, url, config
+from ..utils.location import (
+    base_path,
+    config_path,
+    models_path,
+    views_path,
+    controllers_path,
+    mailables_path,
+    resources_path,
+    jobs_path,
+    migrations_path,
+    seeds_path,
+)
+from ..helpers import optional, url, config, collect, env
 from ..facades import Loader
 from .. import __version__
 from .Command import Command
@@ -60,6 +69,13 @@ class TinkerCommand(Command):
             "data_get": data_get,
             "base_path": base_path,
             "config_path": config_path,
+            "views_path": views_path,
+            "controllers_path": controllers_path,
+            "mailables_path": mailables_path,
+            "resources_path": resources_path,
+            "jobs_path": jobs_path,
+            "migrations_path": migrations_path,
+            "seeds_path": seeds_path,
         }
         banner = BANNER.format(
             python_version,

@@ -1,7 +1,8 @@
 from ..views import View
 from .Provider import Provider
-from ..helpers import UrlsHelper, MixHelper, optional
-from ..configuration import config
+from ..helpers import optional, config
+from ..helpers.mix import MixHelper
+from ..helpers.urls import UrlsHelper
 
 
 class ViewProvider(Provider):

@@ -2,7 +2,7 @@ import pathlib
 import json
 from tests import TestCase
 
-from src.masonite.helpers import MixHelper
+from src.masonite.helpers.mix import MixHelper
 from src.masonite.exceptions import MixFileNotFound, MixManifestNotFound
 from src.masonite.facades import Config
 

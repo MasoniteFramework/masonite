@@ -1,6 +1,6 @@
 from ..guards import JWTGuard
 from ..commands.APIInstallCommand import APIInstallCommand
-from ...configuration.helpers import config
+from ...helpers import config
 from ...providers import Provider
 from ..Api import Api
 

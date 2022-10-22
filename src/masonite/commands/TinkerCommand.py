@@ -5,11 +5,10 @@ import sys
 import pendulum
 
 from ..environment import env
-from ..configuration import config
 from ..utils.collections import collect
 from ..utils.structures import load, data_get
 from ..utils.location import base_path, config_path, models_path
-from ..helpers import optional, url
+from ..helpers import optional, url, config
 from ..facades import Loader
 from .. import __version__
 from .Command import Command

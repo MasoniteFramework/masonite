@@ -2,8 +2,8 @@ import builtins
 from markupsafe import Markup
 
 from ..providers import Provider
-from ..configuration import config
-from ..helpers import UrlsHelper, MixHelper, optional
+from ..helpers import optional, config
+from ..helpers.urls import UrlsHelper
 from ..facades import Dump
 
 
@@ -34,5 +34,7 @@ class HelpersProvider(Provider):
                 "dd": Dump.dd,
                 "can": self.application.make("gate").allows,
                 "cannot": self.application.make("gate").denies,
+                "optional": optional,
+                "config": config,
             }
         )

@@ -87,4 +87,3 @@ def get_extension(filepath: str, without_dot=False) -> str:
     if without_dot:
         return extension[1:]
     return extension
-

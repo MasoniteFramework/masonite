@@ -73,10 +73,17 @@ def get_module_dir(module_file):
     return os.path.dirname(os.path.realpath(module_file))
 
 
+def splitext(path):
+    for ext in env('PRESERVE_EXTENSIONS', '').split(','):
+        if path.endswith(ext):
+            return path[:-len(ext)], path[-len(ext):]
+    return os.path.splitext(path)
+
 def get_extension(filepath: str, without_dot=False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
-    extension = os.path.splitext(filepath)[1]
+    extension = splitext(filepath)[1]
     if without_dot:
         return extension[1:]
     return extension
+

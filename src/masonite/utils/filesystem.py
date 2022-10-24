@@ -3,8 +3,6 @@ import platform
 import pathlib
 import mimetypes
 
-mimetypes.init()
-
 
 def make_directory(directory):
     """Create a directory at the given path for a file if it does not exist"""
@@ -74,6 +72,9 @@ def render_stub_file(stub_file, name):
 
 def get_module_dir(module_file):
     return os.path.dirname(os.path.realpath(module_file))
+
+
+mimetypes.init([os.path.join(get_module_dir(__file__), "data/mime.types")])
 
 
 def get_extension(filepath: str, without_dot=False) -> str:

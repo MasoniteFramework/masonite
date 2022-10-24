@@ -47,8 +47,5 @@ class TestLocalStorage(TestCase):
     def test_get_name(self):
         name = self.driver.get_name("some_file.txt", "log")
         self.assertEqual(name, "log.txt")
-        self.dump("TEST****")
-        self.dump(mimetypes.types_map.keys())
-        self.dump(len(mimetypes.types_map.keys()))
         name = self.driver.get_name("some_file.tar.gz", "archive")
         self.assertEqual(name, "archive.tar.gz")

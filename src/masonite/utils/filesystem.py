@@ -81,6 +81,9 @@ def get_extension(filepath: str, without_dot=False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
     extension_parts = pathlib.Path(filepath).suffixes
+    print(extension_parts)
+    print(mimetypes.types_map.keys().get(".tar.gz"))
+    print(mimetypes.types_map.keys().get(".gz"))
     if extension_parts:
         if extension_parts[-1] in mimetypes.types_map.keys():
             extension = extension_parts[-1]

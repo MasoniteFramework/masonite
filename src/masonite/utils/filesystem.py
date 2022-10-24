@@ -1,6 +1,9 @@
 import os
 import platform
 import pathlib
+import mimetypes
+
+mimetypes.init()
 
 
 def make_directory(directory):
@@ -76,7 +79,11 @@ def get_module_dir(module_file):
 def get_extension(filepath: str, without_dot=False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
-    extension = "".join(pathlib.Path(filepath).suffixes)
+    extension_parts = pathlib.Path(filepath).suffixes
+    if extension_parts[-1] in mimetypes.types_map.keys():
+        extension = extension_parts[-1]
+    else:
+        extension = "".join(extension_parts)
     if without_dot:
         return extension[1:]
     return extension

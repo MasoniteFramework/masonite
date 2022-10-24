@@ -80,10 +80,12 @@ def get_extension(filepath: str, without_dot=False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
     extension_parts = pathlib.Path(filepath).suffixes
-    if extension_parts[-1] in mimetypes.types_map.keys():
-        extension = extension_parts[-1]
-    else:
-        extension = "".join(extension_parts)
-    if without_dot:
-        return extension[1:]
-    return extension
+    if extension_parts:
+        if extension_parts[-1] in mimetypes.types_map.keys():
+            extension = extension_parts[-1]
+        else:
+            extension = "".join(extension_parts)
+        if without_dot:
+            return extension[1:]
+        return extension
+    return ""

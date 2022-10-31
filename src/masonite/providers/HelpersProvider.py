@@ -1,7 +1,7 @@
 from ..providers import Provider
 
 from ..helpers.urls import UrlsHelper
-from ..helpers.mix import MixHelper
+from ..helpers.mix_url import MixHelper
 
 
 class HelpersProvider(Provider):

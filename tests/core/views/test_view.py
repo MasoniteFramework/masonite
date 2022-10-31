@@ -127,7 +127,7 @@ class TestView(TestCase):
             value = "object_value"
 
         obj = SomeObject()
-        self.application.make("session").flash("username", "Sam")
+        # self.application.make("session").flash("username", "Sam")
 
         content = self.view.render("test_helpers", {"obj": obj}).get_content()
         self.assertIn(

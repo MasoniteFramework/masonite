@@ -46,7 +46,7 @@ class Loader:
         class_name: str,
         raise_exception: bool = False,
     ):
-        _classes = self.find_all(class_instance, paths)
+        _classes = self.find_all(class_instance, paths, raise_exception)
         for name, obj in _classes.items():
             if name == class_name:
                 return obj
@@ -60,7 +60,7 @@ class Loader:
         self, class_instance: type, paths: "str|List", raise_exception: bool = False
     ):
         _classes = {}
-        for module in self.get_modules(paths).values():
+        for module in self.get_modules(paths, raise_exception).values():
             for obj_name, obj in inspect.getmembers(module):
                 # check if obj is the same class as the given one
                 if inspect.isclass(obj) and issubclass(obj, class_instance):

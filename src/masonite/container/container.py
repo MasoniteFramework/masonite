@@ -56,6 +56,23 @@ class Container:
 
         return self
 
+    def unbind(self, name):
+        """Unbind classes from the container from a key.
+
+        Arguments:
+            name {string} -- Name of the key you want to bind the object to
+
+        Returns:
+            self
+        """
+
+        if name not in self.objects:
+            return False
+
+        del self.objects[name]
+
+        return self
+
     def simple(self, obj):
         """Easy way to bind classes into the container by using passing the object only.
 
@@ -71,6 +88,12 @@ class Container:
         return self
 
     def singleton(self, name, class_obj):
+        """Register a shared binding in the container.
+
+        Arguments:
+            name {string} -- Name of the key you want to bind the object to
+            class_obj {object} -- The object you want to bind
+        """
         obj = self.resolve(class_obj)
         self.bind(name, obj)
 
@@ -130,8 +153,6 @@ class Container:
                 return True
             except MissingContainerBindingNotFound:
                 return False
-
-        return False
 
     def helper(self):
         """Add a helper to create builtin functions.

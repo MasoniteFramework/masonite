@@ -128,6 +128,22 @@ class HttpTestResponse:
         self.dumpResponseHeaders()
         self.testcase.stop()
 
+    def dumpRequestHeaders(self):
+        """Dump request headers."""
+        self.testcase.dump(self.request.header_bag.to_dict(), "Request Headers")
+        return self
+
+    def dumpResponseHeaders(self):
+        """Dump response headers."""
+        self.testcase.dump(self.response.header_bag.to_dict(), "Response Headers")
+        return self
+
+    def ddHeaders(self):
+        """Dump request and response headers and die."""
+        self.dumpRequestHeaders()
+        self.dumpResponseHeaders()
+        self.testcase.stop()
+
     def assertLocation(self, location):
         return self.assertHasHeader("Location", location)
 
@@ -264,7 +280,7 @@ class HttpTestResponse:
         assert not self.application.make("auth").guard(guard).user()
         return self
 
-    def assertAuthenticated(self, user=None, guard="web"):
+    def assertAuthenticated(self, user=None, guard="test"):
         """Assert that user is authenticated. If a user a given assert that the given is
         authenticated."""
         logged_user = self.application.make("auth").guard(guard).user()

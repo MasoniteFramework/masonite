@@ -165,6 +165,17 @@ class one_of(BaseValidation):
         return "The {} is not required.".format(text)
 
 
+class boolean(BaseValidation):
+    def passes(self, attribute, key, dictionary):
+        return (attribute in [True, False, 0, 1, '0', '1'])
+
+    def message(self, attribute):
+        return "The {} must be a boolean.".format(attribute)
+
+    def negated_message(self, attribute):
+        return "The {} must not be a boolean.".format(attribute)
+
+
 class accepted(BaseValidation):
     def passes(self, attribute, key, dictionary):
         return (
@@ -473,10 +484,10 @@ class numeric(BaseValidation):
     def passes(self, attribute, key, dictionary):
         if isinstance(attribute, list):
             for value in attribute:
-                if not str(value).isdigit():
+                if not str(value).replace(".", "", 1).isdigit():
                     return False
         else:
-            return str(attribute).isdigit()
+            return str(attribute).replace(".", "", 1).isdigit()
 
         return True
 
@@ -646,7 +657,7 @@ class greater_than(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
-        return attribute > self.value
+        return int(attribute) > int(self.value)
 
     def message(self, attribute):
         return "The {} must be greater than {}.".format(attribute, self.value)
@@ -1408,6 +1419,7 @@ class ValidationFactory:
     def __init__(self):
         self.register(
             accepted,
+            boolean,
             active_domain,
             after_today,
             before_today,

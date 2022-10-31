@@ -76,6 +76,7 @@ class CookieJar:
         for compound_value in cookie_string.split("; "):
             if "=" in compound_value:
                 key, value = compound_value.split("=", 1)
+                key, value = key.strip(), value.strip()
                 self.load_cookie(key, value)
         return self
 
@@ -93,3 +94,12 @@ class CookieJar:
             cookies.append(("Set-Cookie", cookie.render()))
 
         return cookies
+
+    def as_string(self) -> str:
+        """Transform back the cookie jar as a string (as found in HTTP_COOKIE header)."""
+        cookie_strings = []
+        aggregate = self.cookies
+        aggregate.update(self.loaded_cookies)
+        for name, cookie in aggregate.items():
+            cookie_strings.append(f"{name}={cookie.value}")
+        return "; ".join(cookie_strings)

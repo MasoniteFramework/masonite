@@ -11,6 +11,7 @@ hupper>=1.10,<1.11
 inflection>=0.3,<0.4
 jinja2>=3.0.0,<3.1
 masonite-orm>=2,<3
+masonite>=4,<5
 pendulum>=2,<3
 pwnedapi
 vonage
@@ -19,6 +20,7 @@ python-dotenv>=0.15,<0.16
 responses
 slackblocks
 tldextract>=2.2,<2.3
-waitress>=2.1,<2.2
+werkzeug>=2<3
+watchdog>=2<3
 whitenoise>=5.2,<5.3
 pyjwt>=2.3,<2.5

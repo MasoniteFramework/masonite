@@ -1,6 +1,6 @@
 import re
 import tldextract
-from typing import TYPE_CHECKING, List, Any
+from typing import TYPE_CHECKING, Any
 
 from ..cookies import CookieJar
 from ..headers import HeaderBag, Header
@@ -109,8 +109,8 @@ class Request(ValidatesRequest, AuthorizesRequest):
         """Get all inputs from the request as a dictionary."""
         return self.input_bag.all_as_values()
 
-    def only(self, *inputs: List[str]) -> dict:
-        """Get only the given inputs from the request as a dictionary."""
+    def only(self, *inputs: str) -> dict:
+        """Pass arguments as string arguments such as request.only("arg1", "arg2") to get back a dictionary of only those inputs."""
         return self.input_bag.only(*inputs)
 
     def old(self, key: str):
@@ -124,6 +124,10 @@ class Request(ValidatesRequest, AuthorizesRequest):
             return True
 
         return False
+
+    def is_ajax(self) -> bool:
+        """Check if the current request is an AJAX request."""
+        return self.header("X-Requested-With") == "XMLHttpRequest"
 
     def user(self) -> "None|Any":
         """Get the current authenticated user if any. LoadUserMiddleware needs to be used for user

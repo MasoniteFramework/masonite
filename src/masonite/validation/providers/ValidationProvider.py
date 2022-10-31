@@ -17,19 +17,7 @@ class ValidationProvider(Provider):
             MakeRuleCommand(self.application),
         )
 
-        MessageBag.get_errors = self._get_errors
-        self.application.make("view").share({"bag": MessageBag.view_helper})
         validator.extend(ValidationFactory().registry)
 
     def boot(self):
         pass
-
-    def _get_errors(self):
-        request = self.application.make("request")
-        messages = []
-        for error, message in (
-            request.session.get_flashed_messages().get("errors", {}).items()
-        ):
-            messages += message
-
-        return messages

@@ -5,7 +5,7 @@ from .Provider import Provider
 from ..routes import Route
 from ..routes.commands import RouteListCommand
 from ..pipeline import Pipeline
-from ..exceptions import RouteNotFoundException
+from ..exceptions import RouteNotFoundException, MethodNotAllowedException
 
 
 class RouteProvider(Provider):

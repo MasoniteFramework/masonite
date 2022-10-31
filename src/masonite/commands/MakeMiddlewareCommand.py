@@ -41,6 +41,10 @@ class MakeMiddlewareCommand(Command):
         with open(filepath, "w") as f:
             f.write(content)
 
+        # add class to __init__.py
+        with open(os.path.join(os.path.dirname(filepath), "__init__.py"), "a") as f:
+            f.write(f"from .{name} import {name}\n")
+
         self.info(f"Middleware Created ({relative_filename})")
 
     def get_middleware_path(self):

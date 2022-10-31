@@ -47,6 +47,11 @@ class MakePolicyCommand(Command):
 
         with open(file_name, "w") as f:
             f.write(content)
+
+        # add class to __init__.py
+        with open(os.path.join(os.path.dirname(file_name), "__init__.py"), "a") as f:
+            f.write(f"from .{name} import {name}\n")
+
         self.info(f"Policy Created ({file_name})")
 
     def get_template_path(self):

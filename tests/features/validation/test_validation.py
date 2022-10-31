@@ -11,6 +11,7 @@ from src.masonite.validation import (
     ValidationFactory,
     Validator,
     accepted,
+    boolean,
     active_domain,
     after_today,
     before_today,
@@ -178,6 +179,27 @@ class TestValidation(unittest.TestCase):
         validate = Validator().validate({"terms": "test"}, accepted(["terms"]))
 
         self.assertEqual(validate.all(), {"terms": ["The terms must be accepted."]})
+
+    def test_boolean(self):
+        validate = Validator().validate({"toggle": "1"}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "0"}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": True}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": False}, boolean(["toggle"]))
+
+        self.assertEqual(len(validate), 0)
+        
+        validate = Validator().validate({"toggle": "test"}, boolean(["toggle"]))
+
+        self.assertEqual(validate.all(), {"toggle": ["The toggle must be a boolean."]})
 
     def test_ip(self):
         validate = Validator().validate({"ip": "192.168.1.1"}, ip(["ip"]))
@@ -423,7 +445,15 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(len(validate), 0)
 
+        validate = Validator().validate({"test": 1.9}, numeric(["test"]))
+
+        self.assertEqual(len(validate), 0)
+
         validate = Validator().validate({"test": "hey"}, numeric(["test"]))
+
+        self.assertEqual(validate.all(), {"test": ["The test must be a numeric."]})
+
+        validate = Validator().validate({"test": '1..9'}, numeric(["test"]))
 
         self.assertEqual(validate.all(), {"test": ["The test must be a numeric."]})
 
@@ -578,6 +608,10 @@ class TestValidation(unittest.TestCase):
 
     def test_greater_than(self):
         validate = Validator().validate({"text": 52}, greater_than(["text"], 25))
+
+        self.assertEqual(len(validate), 0)
+
+        validate = Validator().validate({"text": "52"}, greater_than(["text"], 25))
 
         self.assertEqual(len(validate), 0)
 

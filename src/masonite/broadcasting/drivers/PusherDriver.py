@@ -31,6 +31,8 @@ class PusherDriver:
             key=self.options.get("client"),
             secret=self.options.get("secret"),
             cluster=self.options.get("cluster"),
+            host=self.options.get("host"),
+            port=self.options.get("port"),
             ssl=self.options.get("ssl"),
         )
 

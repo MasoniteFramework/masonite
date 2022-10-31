@@ -8,4 +8,3 @@ class TestSession(TestCase):
         session.start("cookie")
         driver = session.get_driver()
         self.assertIsInstance(driver, CookieDriver)
-

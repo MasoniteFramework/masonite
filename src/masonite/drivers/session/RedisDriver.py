@@ -15,7 +15,6 @@ class RedisDriver(BaseDriver):
     def __init__(self, application: "Application"):
         super().__init__(application)
         self.connection = None
-        self.options = {"options": {"decode_responses": True}}
 
     def get_connection(self):
         try:
@@ -31,6 +30,7 @@ class RedisDriver(BaseDriver):
                 host=self.options.get("host"),
                 port=self.options.get("port", 6379),
                 password=self.options.get("password", None),
+                decode_responses=True
             )
 
         return self.connection
@@ -40,10 +40,12 @@ class RedisDriver(BaseDriver):
         flashed = {}
 
         session_data = {}
-        cursor = '0'
-        session_prefix = self.get_session_namespace() + '*'
+        cursor = "0"
+        session_prefix = self.get_session_namespace() + "*"
         while cursor != 0:
-            cursor, keys = self.get_connection().scan(cursor=cursor, match=session_prefix, count=100000)
+            cursor, keys = self.get_connection().scan(
+                cursor=cursor, match=session_prefix, count=100000
+            )
             if keys:
                 values = self.get_connection().mget(*keys)
                 # values = map(int, values)
@@ -60,7 +62,11 @@ class RedisDriver(BaseDriver):
         return {"data": data, "flashed": flashed}
 
     def save(
-            self, added: dict = None, deleted: list = None, flashed: dict = None, deleted_flashed: list = None
+        self,
+        added: dict = None,
+        deleted: list = None,
+        flashed: dict = None,
+        deleted_flashed: list = None,
     ) -> None:
         if added is None:
             added = {}
@@ -106,9 +112,7 @@ class RedisDriver(BaseDriver):
     def get(self, key: str, default: str = None) -> str:
         if not self.has(key):
             return default
-        return self.get_value(
-            self.get_connection().get(key)
-        )
+        return self.get_value(self.get_connection().get(key))
 
     def set(self, key: str, value: Any, time: int = None):
         time = time or self.get_timeout()
@@ -129,11 +133,13 @@ class RedisDriver(BaseDriver):
         Clears all data for the current (or provided) session id
         """
 
-        cursor = '0'
-        session_prefix = self.get_session_namespace(session_id) + '*'
+        cursor = "0"
+        session_prefix = self.get_session_namespace(session_id) + "*"
         connection = self.get_connection()
         while cursor != 0:
-            cursor, keys = connection.scan(cursor=cursor, match=session_prefix, count=100000)
+            cursor, keys = connection.scan(
+                cursor=cursor, match=session_prefix, count=100000
+            )
             if keys:
                 connection.delete(*keys)
 

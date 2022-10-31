@@ -1,6 +1,7 @@
 import json
 from typing import TYPE_CHECKING, Any
 
+from ..validation import MessageBag
 from ..exceptions import InvalidConfigurationSetup
 
 if TYPE_CHECKING:
@@ -37,11 +38,9 @@ class Session:
 
         # make sure the default driver is defined
         if "default" not in config:
-            raise InvalidConfigurationSetup(
-                "'default' session driver is not defined."
-            )
+            raise InvalidConfigurationSetup("'default' session driver is not defined.")
         # and has a config
-        if config['default'] not in config:
+        if config["default"] not in config:
             raise InvalidConfigurationSetup(
                 f"'{config['default']}' session driver configuration not defined."
             )
@@ -128,7 +127,7 @@ class Session:
             value = self.flashed.get(key)
 
             try:
-                if value is not None:
+                if value is not None and not isinstance(value, MessageBag):
                     value = json.loads(value)
             except json.decoder.JSONDecodeError:
                 pass
@@ -139,7 +138,7 @@ class Session:
 
         value = self.get_data().get(key)
         try:
-            if value is not None:
+            if value is not None and not isinstance(value, MessageBag):
                 value = json.loads(value)
         except json.decoder.JSONDecodeError:
             pass

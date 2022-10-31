@@ -31,14 +31,14 @@ class Response:
 
     def json(self, payload: Any, status: int = 200) -> bytes:
         """Set the response as a JSON response."""
-        self.content = bytes(json.dumps(payload), "utf-8")
+        self.content = bytes(json.dumps(payload, ensure_ascii=False), "utf-8")
         self.make_headers(content_type="application/json; charset=utf-8")
         self.status(status)
 
         return self.data()
 
     def make_headers(self, content_type: str = "text/html; charset=utf-8") -> None:
-        """Recompute Content-Length of the response after modyifing it."""
+        """Recompute Content-Length of the response after modifying it."""
         self.header_bag.add(Header("Content-Length", str(len(self.to_bytes()))))
 
         # If the user did not change it directly
@@ -125,7 +125,7 @@ class Response:
     def converted_data(self) -> "str|bytes":
         """Get the response content as string or bytes so that the WSGI server handles it."""
         if isinstance(self.data(), (dict, list)):
-            return json.dumps(self.data())
+            return json.dumps(self.data(), ensure_ascii=False)
         else:
             return self.data()
 

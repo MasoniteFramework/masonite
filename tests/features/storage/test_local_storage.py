@@ -2,6 +2,7 @@ from tests import TestCase
 import os
 import time
 from src.masonite.filesystem import File
+from src.masonite.utils.filesystem import mimetypes
 
 
 class TestLocalStorage(TestCase):
@@ -46,6 +47,5 @@ class TestLocalStorage(TestCase):
     def test_get_name(self):
         name = self.driver.get_name("some_file.txt", "log")
         self.assertEqual(name, "log.txt")
-
         name = self.driver.get_name("some_file.tar.gz", "archive")
         self.assertEqual(name, "archive.tar.gz")

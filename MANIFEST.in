@@ -22,6 +22,7 @@ include src/masonite/stubs/templates/auth/*
 include src/masonite/stubs/templates/auth/mailables/*
 include src/masonite/stubs/tests/*
 include src/masonite/stubs/validation/*
+include src/masonite/utils/data/*
 include src/masonite/validation/snippets/*
 include src/masonite/templates/*
 include src/masonite/templates/assets/*

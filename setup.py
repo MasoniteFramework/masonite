@@ -176,6 +176,7 @@ setup(
         "masonite.templates",
         "masonite.tests",
         "masonite.utils",
+        "masonite.utils.data",
         "masonite.validation.commands",
         "masonite.validation.providers",
         "masonite.validation.resources",

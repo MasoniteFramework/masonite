@@ -4,6 +4,7 @@ from .Response import Response
 from .Mail import Mail
 from .Hash import Hash
 from .Url import Url
+from .Mix import Mix
 from .Session import Session
 from .View import View
 from .Gate import Gate

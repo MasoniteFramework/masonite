@@ -1,15 +1,15 @@
 from .middleware_capsule import MiddlewareCapsule
 from .middleware import Middleware
-from .route.VerifyCsrfToken import VerifyCsrfToken
-from .route.SessionMiddleware import SessionMiddleware
-from .route.ShareErrorsInSessionMiddleware import ShareErrorsInSessionMiddleware
-from .route.EncryptCookies import EncryptCookies
-from .route.LoadUserMiddleware import LoadUserMiddleware
-from .route.MaintenanceModeMiddleware import MaintenanceModeMiddleware
-from .route.GuardMiddleware import GuardMiddleware
-from .route.ClearDumpsBetweenRequestsMiddleware import (
+from .default.VerifyCsrfToken import VerifyCsrfToken
+from .default.SessionMiddleware import SessionMiddleware
+from .default.ShareErrorsInSessionMiddleware import ShareErrorsInSessionMiddleware
+from .default.EncryptCookies import EncryptCookies
+from .default.LoadUserMiddleware import LoadUserMiddleware
+from .default.MaintenanceModeMiddleware import MaintenanceModeMiddleware
+from .default.GuardMiddleware import GuardMiddleware
+from .default.ClearDumpsBetweenRequestsMiddleware import (
     ClearDumpsBetweenRequestsMiddleware,
 )
-from .route.ThrottleRequestsMiddleware import ThrottleRequestsMiddleware
-from .route.IpMiddleware import IpMiddleware
-from .route.CorsMiddleware import CorsMiddleware
+from .default.ThrottleRequestsMiddleware import ThrottleRequestsMiddleware
+from .default.IpMiddleware import IpMiddleware
+from .default.CorsMiddleware import CorsMiddleware

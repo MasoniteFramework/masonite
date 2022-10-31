@@ -1,6 +1,7 @@
-from src.masonite.middleware.route.IpMiddleware import IpMiddleware
 from tests import TestCase
+
 from src.masonite.request import Request
+from src.masonite.middleware import IpMiddleware
 from src.masonite.utils.http import generate_wsgi
 
 
@@ -64,4 +65,3 @@ class TestRequest(TestCase):
         self.assertTrue(request.is_ajax())
         non_ajax_request = self.make_request()
         self.assertFalse(non_ajax_request.is_ajax())
-

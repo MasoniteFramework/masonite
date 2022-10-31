@@ -81,7 +81,6 @@ class RedisDriver:
         if not value:
             return None
 
-
         self.put(key, value, seconds=seconds)
         return value
 
@@ -96,7 +95,7 @@ class RedisDriver:
         store_value = value
         if isinstance(value, (dict, list, tuple)):
             store_value = json.dumps(value)
-        
+
         if not self.has(key):
             self._internal_cache.update({key: value})
         return self.get_connection().set(

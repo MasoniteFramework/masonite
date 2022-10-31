@@ -62,7 +62,7 @@ class HeaderBag:
             if key.startswith("HTTP_"):
                 self.add(Header(key, value))
 
-    def to_dict(self, server_names:bool=False) -> dict:
+    def to_dict(self, server_names: bool = False) -> dict:
         """Render the bag as a dictionary containing all headers."""
         dic = {}
         for name, header in self.bag.items():

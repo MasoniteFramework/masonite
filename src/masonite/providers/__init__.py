@@ -11,6 +11,7 @@ from .SessionProvider import SessionProvider
 from .HelpersProvider import HelpersProvider
 from .QueueProvider import QueueProvider
 from .CacheProvider import CacheProvider
+from .SecurityProvider import SecurityProvider
 from ..events.providers import EventProvider
 from ..filesystem.providers import StorageProvider
 from ..broadcasting.providers import BroadcastProvider

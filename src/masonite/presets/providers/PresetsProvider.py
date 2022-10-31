@@ -4,11 +4,7 @@ from .. import Tailwind, Vue, React, Bootstrap
 
 
 class PresetsProvider(Provider):
-    """
-    @M5
-    This provider will be used in Masonite 5. For now, this code is added
-    into the FrameworkProvider to allow projects without PresetsProvider to
-    work."""
+    """Manage frontend presets."""
 
     def __init__(self, app):
         self.application = app

@@ -62,11 +62,7 @@ class Application(Container):
 
     def is_debug(self) -> bool:
         """Check if debug mode is enabled."""
-        # @removed:5.0.0
-        if Config.has("application.debug"):
-            return bool(Config.get("application.debug"))
-        else:
-            return env("APP_DEBUG", True)
+        return bool(Config.get("application.debug", False))
 
     def is_dev(self) -> bool:
         """Check if app is running in development mode."""

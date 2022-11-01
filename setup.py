@@ -58,6 +58,7 @@ setup(
         "pytest>=7<8",
         "werkzeug>=2<3",
         "watchdog>=2<3",
+        "multipart>=0.2,<0.3",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

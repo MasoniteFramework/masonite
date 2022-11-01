@@ -146,7 +146,7 @@ setup(
         "masonite.loader",
         "masonite.mail.drivers",
         "masonite.mail",
-        "masonite.middleware.route",
+        "masonite.middleware.default",
         "masonite.middleware",
         "masonite.notification.commands",
         "masonite.notification.drivers.vonage",

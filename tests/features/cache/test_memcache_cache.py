@@ -9,7 +9,7 @@ class TestMemcacheCache(TestCase):
     def setUp(self):
         super().setUp()
         self.application.make("cache")
-        self.driver = self.application.make("cache").store("memcache")
+        self.driver = self.application.make("cache").store("memcached")
 
     def test_can_add_file_driver(self):
         self.assertEqual(self.driver.add("add_key", "value"), "value")

@@ -29,7 +29,7 @@ class ProjectCommand(Command):
     providers = ["github", "gitlab"]
     # timeout in seconds for requests made to providers
     TIMEOUT = 20
-    BRANCH = 4.0
+    BRANCH = "4.x"
 
     def __init__(self, *args, **kwargs):
         super().__init__()

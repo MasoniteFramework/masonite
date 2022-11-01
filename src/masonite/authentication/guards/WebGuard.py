@@ -79,7 +79,7 @@ class WebGuard:
         Returns:
             self
         """
-        self._once = True
+        self.options.update({"once": True})
         return self
 
     def logout(self):

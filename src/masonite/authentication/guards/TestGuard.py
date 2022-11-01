@@ -32,7 +32,7 @@ class TestGuard:
         if not self.application.has("test_user"):
             return None
 
-        print('has user', self.application.make("test_user"))
+        print("has user", self.application.make("test_user"))
         return self.application.make("test_user")
 
     def logout(self):
@@ -84,5 +84,5 @@ class TestGuard:
         Returns:
             self
         """
-        self._once = True
+        self.options.update({"once": True})
         return self

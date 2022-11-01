@@ -73,9 +73,8 @@ class Task:
 
         pass
 
-    def should_run(self, date=None):
+    def should_run(self) -> bool:
         """If the task should run"""
-
         # set the date
         self._set_date()
 

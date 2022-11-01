@@ -1,9 +1,17 @@
+from typing import TYPE_CHECKING, Any
+
 from ..facades import Loader
 from ..utils.structures import data
 from ..exceptions import InvalidConfigurationLocation, InvalidConfigurationSetup
 
+if TYPE_CHECKING:
+    from ..foundation import Application
+
 
 class Configuration:
+    """Configuration manager used to load all configuration files and access configuration
+    values."""
+
     # Foundation configuration keys
     reserved_keys = [
         "application",
@@ -19,11 +27,11 @@ class Configuration:
         "session",
     ]
 
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
-        self._config = data()
+        self._config: dict = data()
 
-    def load(self):
+    def load(self) -> None:
         """At boot load configuration from all files and store them in here."""
         config_root = self.application.make("config.location")
         for module_name, module in Loader.get_modules(
@@ -39,7 +47,7 @@ class Configuration:
                 f"Config directory {config_root} does not contain required configuration files."
             )
 
-    def merge_with(self, path, external_config):
+    def merge_with(self, path: str, external_config: dict) -> None:
         """Merge external config at key with project config at same key. It's especially
         useful in Masonite packages in order to merge the configuration default package with
         the package configuration which can be published in project.
@@ -60,16 +68,21 @@ class Configuration:
         merged_config = {**base_config, **self.get(path, {})}
         self.set(path, merged_config)
 
-    def set(self, path, value):
+    def set(self, path: str, value: Any):
+        """Set (or override) a value at the given path (which can be a dotted path)."""
         self._config[path] = value
 
-    def has(self, path):
+    def has(self, path: str) -> bool:
+        """Check if a configuration value exists at the given path (which can be a dotted path)."""
         return path in self._config
 
-    def all(self):
+    def all(self) -> dict:
+        """Get all configuration values as a dictionary."""
         return self._config
 
-    def get(self, path, default=None):
+    def get(self, path: str, default: Any = None) -> Any:
+        """Get the value at given path or default value if path does not exist in
+        configuration file. Path can be a dotted path to access nested values."""
         try:
             config_at_path = self._config[path]
             if isinstance(config_at_path, dict):

@@ -10,7 +10,10 @@ class MixHelper:
     def __init__(self, app):
         self.app = app
 
-    def url(self, path, manifest_dir=""):
+    def url(self, path: str, manifest_dir: str = "") -> str:
+        """Helper allowing to build the path to an asset compiled with Laravel Mix.
+        If the Laravel Mix manifest file is not located in project root you can pass the path to
+        the directory that contains it with manifest_dir."""
         if not path.startswith("/"):
             path = "/" + path
 

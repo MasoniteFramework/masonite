@@ -1,5 +1,4 @@
-"""Masonite Controller Base Class."""
-
-
 class Controller:
+    """Masonite Controller Base Class."""
+
     pass

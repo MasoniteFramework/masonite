@@ -5,7 +5,7 @@ from urllib import parse
 from typing import Any
 
 
-def random_string(length=4):
+def random_string(length: int = 4) -> str:
     """Generate a random string based on the given length.
 
     Keyword Arguments:
@@ -19,7 +19,7 @@ def random_string(length=4):
     )
 
 
-def modularize(file_path, suffix=".py"):
+def modularize(file_path: str, suffix: str = ".py") -> str:
     """Transforms a file path to a dotted path. On UNIX paths contains / and on Windows \\.
 
     Keyword Arguments:
@@ -32,7 +32,7 @@ def modularize(file_path, suffix=".py"):
     return removesuffix(file_path.replace("/", ".").replace("\\", "."), suffix)
 
 
-def as_filepath(dotted_path):
+def as_filepath(dotted_path: str) -> str:
     """Inverse of modularize, transforms a dotted path to a file path (with /).
 
     Keyword Arguments:
@@ -44,7 +44,7 @@ def as_filepath(dotted_path):
     return dotted_path.replace(".", "/")
 
 
-def removeprefix(string, prefix):
+def removeprefix(string: str, prefix: str) -> str:
     """Implementation of str.removeprefix() function available for Python versions lower than 3.9."""
     if string.startswith(prefix):
         return string[len(prefix) :]
@@ -52,7 +52,7 @@ def removeprefix(string, prefix):
         return string
 
 
-def removesuffix(string, suffix):
+def removesuffix(string: str, suffix: str) -> str:
     """Implementation of str.removesuffix() function available for Python versions lower than 3.9."""
     if suffix and string.endswith(suffix):
         return string[: -len(suffix)]

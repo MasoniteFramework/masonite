@@ -1,14 +1,19 @@
+from typing import Any
+
+
 class Cookie:
+    """Class used to represent a HTTP cookie."""
+
     def __init__(
         self,
-        name,
-        value,
+        name: str,
+        value: Any,
         expires=None,
-        http_only=True,
-        path="/",
-        timezone=None,
-        secure=False,
-        samesite="Strict",
+        http_only: bool = True,
+        path: str = "/",
+        timezone: str = None,
+        secure: bool = False,
+        samesite: str = "Strict",
     ):
         self.name = name
         self.value = value
@@ -19,7 +24,8 @@ class Cookie:
         self.samesite = samesite
         self.path = path
 
-    def render(self):
+    def render(self) -> str:
+        """Render the cookie as a string used in the HTTP response."""
         response = f"{self.name}={self.value};"
         if self.http_only:
             response += "HttpOnly;"

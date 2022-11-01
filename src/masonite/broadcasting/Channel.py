@@ -1,6 +1,15 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..foundation import Application
+
+
 class Channel:
-    def __init__(self, name):
+    """Public Broadcast Channel."""
+
+    def __init__(self, name: str):
         self.name = name
 
-    def authorized(self, application):
+    def authorized(self, application: "Application") -> bool:
+        """Define is authorized to broadcast event."""
         return True

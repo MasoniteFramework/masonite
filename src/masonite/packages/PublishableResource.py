@@ -1,9 +1,9 @@
 class PublishableResource:
-    def __init__(self, key):
+    def __init__(self, key: str):
         self.key = key
-        self.files = []
+        self.files: list = []
 
-    def add(self, source, destination):
+    def add(self, source: str, destination: str):
         self.files.append((source, destination))
         return self
 

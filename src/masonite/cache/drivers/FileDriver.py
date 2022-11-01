@@ -1,29 +1,37 @@
 import os
-from ...utils.filesystem import make_full_directory, modified_date
-from pathlib import Path
 import pendulum
 import json
 import glob
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Callable
+
+from ...utils.filesystem import make_full_directory, modified_date
+
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from pendulum.datetime import DateTime
 
 
 class FileDriver:
-    def __init__(self, application):
+    """File cache driver storing data in files on the system."""
+
+    def __init__(self, application: "Application"):
         self.application = application
 
-    def set_options(self, options):
+    def set_options(self, options: dict) -> "FileDriver":
         self.options = options
         if options.get("location"):
             make_full_directory(options.get("location"))
         return self
 
-    def add(self, key, value, seconds=None):
+    def add(self, key: str, value, seconds: int = None) -> Any:
         exists = self.get(key)
         if exists:
             return exists
 
         return self.put(key, str(value), seconds=seconds)
 
-    def get(self, key, default=None, **options):
+    def get(self, key: str, default: Any = None, **options) -> Any:
         if not self.has(key):
             return default
 
@@ -40,7 +48,7 @@ class FileDriver:
 
         return value
 
-    def put(self, key, value, seconds=None, **options):
+    def put(self, key: str, value: Any, seconds: int = None, **options) -> Any:
 
         time = self.get_expiration_time(seconds)
 
@@ -52,16 +60,16 @@ class FileDriver:
 
         return value
 
-    def has(self, key):
+    def has(self, key: str) -> bool:
         return Path(os.path.join(self._get_directory(), key)).exists()
 
-    def increment(self, key, amount=1):
+    def increment(self, key: str, amount: int = 1) -> Any:
         return self.put(key, str(int(self.get(key)) + amount))
 
-    def decrement(self, key, amount=1):
+    def decrement(self, key: str, amount: int = 1) -> Any:
         return self.put(key, str(int(self.get(key)) - amount))
 
-    def remember(self, key, callable):
+    def remember(self, key: str, callable: "Callable") -> Any:
         value = self.get(key)
 
         if value:
@@ -69,31 +77,31 @@ class FileDriver:
 
         callable(self)
 
-    def forget(self, key):
+    def forget(self, key: str) -> bool:
         try:
             os.remove(os.path.join(self._get_directory(), key))
             return True
         except FileNotFoundError:
             return False
 
-    def flush(self):
+    def flush(self) -> None:
         files = glob.glob(f"{self._get_directory()}/*")
         for f in files:
             os.remove(f)
 
-    def _get_directory(self):
+    def _get_directory(self) -> str:
         return self.options.get("location")
 
-    def get_modified_at(self, filename):
+    def get_modified_at(self, filename: str) -> "DateTime":
         return pendulum.from_timestamp(modified_date(filename))
 
-    def get_expiration_time(self, seconds):
+    def get_expiration_time(self, seconds: int) -> int:
         if seconds is None:
             seconds = 31557600 * 10
 
         return seconds
 
-    def get_value(self, value):
+    def get_value(self, value: Any) -> Any:
         value = str(value.split(":", 1)[1])
         if value.isdigit():
             return str(value)
@@ -102,5 +110,5 @@ class FileDriver:
         except json.decoder.JSONDecodeError:
             return value
 
-    def get_cache_expiration(self, value):
+    def get_cache_expiration(self, value: Any) -> int:
         return int(value.split(":", 1)[0])

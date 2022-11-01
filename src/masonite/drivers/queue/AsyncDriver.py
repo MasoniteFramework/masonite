@@ -1,19 +1,24 @@
 import inspect
 import os
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from typing import TYPE_CHECKING
 
 from ...exceptions import QueueException
 
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ...queues import Queueable
+
 
 class AsyncDriver:
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         self.application = application
 
-    def set_options(self, options):
+    def set_options(self, options: dict) -> "AsyncDriver":
         self.options = options
         return self
 
-    def push(self, *jobs, args=(), **kwargs):
+    def push(self, *jobs: "Queueable", args=(), **kwargs) -> None:
         """Push objects onto the async stack.
 
         Arguments:
@@ -47,19 +52,17 @@ class AsyncDriver:
                     ran[job].failed(ran[job], job.exception())
                 print(f"Job Ran: {job}")
 
-    def consume(self, **options):
+    def consume(self, **options) -> None:
         pass
 
-    def retry(self, **options):
+    def retry(self, **options) -> None:
         pass
 
-    def _get_processor(self, mode, max_workers):
-        """Set processor to use either threads or multiprocesses
-
-        Arguments:
-            mode {str} - async mode
-            max_workers {int} - number of threads/processes to use
-        """
+    def _get_processor(
+        self, mode: str, max_workers: int
+    ) -> "ThreadPoolExecutor|ProcessPoolExecutor":
+        """Set processor to use either 'threading' or 'multiprocess' mode. Max number of
+        threads/processes should also be specified."""
 
         if max_workers is None:
             # Use this number because ThreadPoolExecutor is often

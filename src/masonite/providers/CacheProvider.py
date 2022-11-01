@@ -5,6 +5,8 @@ from ..configuration import config
 
 
 class CacheProvider(Provider):
+    """Add Cache feature to your application."""
+
     def __init__(self, application):
         self.application = application
 

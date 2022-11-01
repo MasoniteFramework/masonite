@@ -1,19 +1,25 @@
 import jwt
 import pendulum
+from typing import TYPE_CHECKING, List
+
 from ..routes import Route
 from .controllers import AuthenticationController
 from ..utils.str import random_string
 
+if TYPE_CHECKING:
+    from ..foundation import Application
+
 
 class Api:
-    def __init__(self, application, driver_config=None):
+    def __init__(self, application: "Application"):
         self.application = application
 
-    def set_configuration(self, config):
+    def set_configuration(self, config: dict) -> "Api":
         self.config = config
         return self
 
-    def generate_token(self):
+    def generate_token(self) -> str:
+        """Generate a JWT token according to JWT api configuration."""
         secret = self.config.get("jwt").get("secret")
         algorithm = self.config.get("jwt").get("algorithm")
         expire_minutes = self.config.get("jwt").get("expires")
@@ -23,12 +29,19 @@ class Api:
                 pendulum.now(tz="UTC").add(minutes=expire_minutes).to_datetime_string()
             )
         token = jwt.encode(
-            {"expires": expire_minutes, "version": version, "random": random_string(10)}, secret, algorithm=algorithm
+            {
+                "expires": expire_minutes,
+                "version": version,
+                "random": random_string(10),
+            },
+            secret,
+            algorithm=algorithm,
         )
 
         return token
 
-    def get_token(self):
+    def get_token(self) -> str:
+        """Get token from request."""
         request = self.application.make("request")
         token = request.input("token")
 
@@ -40,7 +53,8 @@ class Api:
         if header:
             return header.replace("Bearer ", "")
 
-    def validate_token(self, token):
+    def validate_token(self, token: str) -> bool:
+        """Check if given token is valid."""
         secret = self.config.get("jwt").get("secret")
         algorithm = self.config.get("jwt").get("algorithm")
         expire_minutes = self.config.get("jwt").get("expires")
@@ -74,7 +88,8 @@ class Api:
 
         return True
 
-    def regenerate_token(self, token):
+    def regenerate_token(self, token: str) -> str:
+        """Re-generate a token based on the given token."""
         # if the token can be decoded, regenerate new token
         secret = self.config.get("jwt").get("secret")
         algorithm = self.config.get("jwt").get("algorithm")
@@ -86,12 +101,15 @@ class Api:
 
         return False
 
-    def attempt_by_token(self, token):
+    def attempt_by_token(self, token: str):
         model = self.config.get("jwt").get("model")()
         return model.attempt_by_token(token)
 
     @classmethod
-    def routes(cls, auth_route="/api/auth", reauth_route="/api/reauth"):
+    def routes(
+        cls, auth_route: str = "/api/auth", reauth_route: str = "/api/reauth"
+    ) -> "List[Route]":
+        """Get api standard authentication routes."""
         return [
             Route.post("/api/auth", AuthenticationController.auth),
             Route.post("/api/reauth", AuthenticationController.reauth),

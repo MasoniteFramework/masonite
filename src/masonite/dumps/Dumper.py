@@ -1,15 +1,22 @@
 import inspect
+from typing import TYPE_CHECKING, List
 
 from ..exceptions import DumpException
 from .Dump import Dump
 
+if TYPE_CHECKING:
+    from ..foundation import Application
+
 
 class Dumper:
-    def __init__(self, application):
-        self.app = application
-        self.dumps = []
+    """Dumper class allowing to dump/dump and die variables in development. Dumps will be
+    saved in the dumper."""
 
-    def clear(self):
+    def __init__(self, application: "Application"):
+        self.app = application
+        self.dumps: list = []
+
+    def clear(self) -> "Dumper":
         """Clear all dumped data"""
         self.dumps = []
         return self
@@ -19,7 +26,7 @@ class Dumper:
         self._dump(*objects)
         raise DumpException()
 
-    def dump(self, *objects):
+    def dump(self, *objects) -> "List[Dump]":
         """Dump all provided args and continue code execution. This does not raise a DumpException."""
         dumps = self._dump(*objects)
         # output dumps in console
@@ -27,8 +34,9 @@ class Dumper:
             print(dump)
         return dumps
 
-    def get_dumps(self, ascending=False):
-        """Get all dumps as Dump objects."""
+    def get_dumps(self, ascending: bool = False) -> "List[Dump]":
+        """Get all dumps as Dump objects ordered from latest to oldest. The order can be reversed
+        by setting ascending=True."""
         if ascending:
             return self.dumps
         else:
@@ -36,12 +44,13 @@ class Dumper:
             new_dumps.reverse()
             return new_dumps
 
-    def last(self):
+    def last(self) -> "Dump":
         """Return last added dump."""
         return self.dumps[-1]
 
-    def get_serialized_dumps(self, ascending=False):
-        """Get all dumps as dict."""
+    def get_serialized_dumps(self, ascending: bool = False) -> "List[dict]":
+        """Get all dumps serialized as a list of dictionary, ordered from latest to oldest. The
+        order can be reversed by setting ascending=True."""
         return list(
             map(lambda dump: dump.serialize(), self.get_dumps(ascending=ascending))
         )

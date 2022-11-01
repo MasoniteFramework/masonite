@@ -1,13 +1,21 @@
-class PusherDriver:
-    def __init__(self, application):
-        self.application = application
-        self.connection = None
+from typing import TYPE_CHECKING, Any
 
-    def set_options(self, options):
+
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from pusher import Pusher
+
+
+class PusherDriver:
+    def __init__(self, application: "Application"):
+        self.application = application
+        self.connection: "Pusher" = None
+
+    def set_options(self, options: dict) -> "PusherDriver":
         self.options = options
         return self
 
-    def get_connection(self):
+    def get_connection(self) -> "Pusher":
         try:
             import pusher
         except ImportError:
@@ -30,8 +38,8 @@ class PusherDriver:
 
         return self.connection
 
-    def channel(self, channel, event, value):
-        return self.get_connection().trigger(channel, event, value)
+    def channel(self, channels: "str|list", event: "str|Any", value: Any):
+        return self.get_connection().trigger(channels, event, value)
 
-    def authorize(self, channel, socket_id):
+    def authorize(self, channel: "str", socket_id: Any) -> dict:
         return self.get_connection().authenticate(channel=channel, socket_id=socket_id)

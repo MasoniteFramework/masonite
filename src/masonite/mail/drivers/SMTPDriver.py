@@ -1,21 +1,28 @@
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
+from typing import TYPE_CHECKING
+
 from ..Recipient import Recipient
-import ssl
+
+if TYPE_CHECKING:
+    from ...foundation import Application
 
 
 class SMTPDriver:
-    def __init__(self, application):
-        self.application = application
-        self.options = {}
+    """Generic SMTP mail driver used to send e-mails from a SMTP mail server."""
 
-    def set_options(self, options):
+    def __init__(self, application: "Application"):
+        self.application = application
+        self.options: dict = {}
+
+    def set_options(self, options: dict) -> "SMTPDriver":
         self.options = options
         return self
 
-    def get_mime_message(self):
+    def get_mime_message(self) -> "MIMEMultipart":
         message = MIMEMultipart("alternative")
 
         message["Subject"] = self.options.get("subject")
@@ -53,7 +60,7 @@ class SMTPDriver:
 
         return message
 
-    def make_connection(self):
+    def make_connection(self) -> "smtplib.SMTP_SSL|smtplib.SMTP":
         options = self.options
         if options.get("ssl"):
             smtp = smtplib.SMTP_SSL("{0}:{1}".format(options["host"], options["port"]))

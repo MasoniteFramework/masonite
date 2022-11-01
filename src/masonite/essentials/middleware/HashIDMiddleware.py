@@ -1,5 +1,4 @@
 from ...middleware import Middleware
-
 from ..helpers import hashid
 
 

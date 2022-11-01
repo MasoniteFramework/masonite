@@ -1,9 +1,15 @@
-from ..exceptions import AmbiguousError
 import inspect
+from typing import Any
+
+from ..exceptions import AmbiguousError
 
 
 class Compact:
-    def __new__(cls, *args):
+    """Compact helper allowing to compile a dictionary from variables:
+    compact(users, articles) will compile to {"users": users, "articles": articles}
+    """
+
+    def __new__(cls, *args: Any) -> dict:
         frame = inspect.currentframe()
 
         cls.dictionary = {}

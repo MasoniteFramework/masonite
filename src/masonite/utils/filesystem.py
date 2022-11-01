@@ -4,8 +4,8 @@ import pathlib
 import mimetypes
 
 
-def make_directory(directory):
-    """Create a directory at the given path for a file if it does not exist"""
+def make_directory(directory: str) -> bool:
+    """Create all directories to the given file directory if they do not exist"""
     if not os.path.isfile(directory):
         if not os.path.exists(os.path.dirname(directory)):
             # Create the path to the model if it does not exist
@@ -16,13 +16,8 @@ def make_directory(directory):
     return False
 
 
-def file_exists(directory):
-    """Create a directory at the given path for a file if it does not exist"""
-    return os.path.exists(os.path.dirname(directory))
-
-
-def make_full_directory(directory):
-    """Create all directories to the given path if they do not exist"""
+def make_full_directory(directory: str) -> bool:
+    """Create all directories to the given path directory if they do not exist"""
     if not os.path.isfile(directory):
         if not os.path.exists(directory):
             # Create the path to the model if it does not exist
@@ -33,7 +28,7 @@ def make_full_directory(directory):
     return False
 
 
-def creation_date(path_to_file):
+def creation_date(path_to_file: str) -> "float|int":
     """Try to get the date that a file was created, falling back to when it was
     last modified if that isn't possible.
     """
@@ -49,7 +44,7 @@ def creation_date(path_to_file):
             return stat.st_mtime
 
 
-def modified_date(path_to_file):
+def modified_date(path_to_file: str) -> "float|int":
     if platform.system() == "Windows":
         return os.path.getmtime(path_to_file)
     else:
@@ -62,7 +57,7 @@ def modified_date(path_to_file):
             return 0
 
 
-def render_stub_file(stub_file, name):
+def render_stub_file(stub_file: str, name: str) -> str:
     """Read stub file, replace placeholders and return content."""
     with open(stub_file, "r") as f:
         content = f.read()
@@ -79,7 +74,7 @@ mimetypes.init([os.path.join(get_module_dir(__file__), "data/mime.types")])
 KNOWN_MIME_TYPES = mimetypes.types_map.keys()
 
 
-def get_extension(filepath: str, without_dot=False) -> str:
+def get_extension(filepath: str, without_dot: bool = False) -> str:
     """Get file extension from a filepath. If without_dot=True the . prefix will be removed from
     the extension."""
     extension_parts = pathlib.Path(filepath).suffixes

@@ -160,7 +160,6 @@ setup(
         "masonite.orm.providers",
         "masonite.packages.providers",
         "masonite.packages",
-        "masonite.pipeline.tasks",
         "masonite.pipeline",
         "masonite.presets",
         "masonite.presets.providers",

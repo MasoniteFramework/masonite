@@ -1,11 +1,17 @@
 import re
 from urllib import parse
+from typing import TYPE_CHECKING, List
 
 from ..utils.str import modularize, removeprefix
 from ..exceptions import InvalidRouteCompileException
 from ..facades import Loader
 from ..controllers import Controller
 from ..exceptions import LoaderNotFound
+
+if TYPE_CHECKING:
+    from ..foundation import Application
+    from ..response import Response
+    from ..middleware import Middleware
 
 
 class HTTPRoute:
@@ -20,13 +26,13 @@ class HTTPRoute:
 
     def __init__(
         self,
-        url,
-        controller=None,
-        request_method=["get"],
-        name=None,
-        compilers=None,
-        controllers_locations=["app.http.controllers"],
-        controller_bindings=[],
+        url: str,
+        controller: "str|Controller" = None,
+        request_method: list = ["get"],
+        name: str = None,
+        compilers: dict = None,
+        controllers_locations: list = ["app.http.controllers"],
+        controller_bindings: list = [],
         **options,
     ):
         if not url.startswith("/"):
@@ -62,33 +68,32 @@ class HTTPRoute:
     def __str__(self):
         return f"<HttpRoute [{self._name}]: {self.url}>"
 
-    def match(self, path, request_method, subdomain=None):
-
-        route_math = (
+    def match(self, path: str, request_method: list, subdomain: str = None) -> bool:
+        route_match = (
             re.match(self._compiled_regex, path)
             or re.match(self._compiled_regex_end, path)
         ) and request_method.lower() in self.request_method
 
         domain_match = subdomain == self._domain
 
-        return route_math and domain_match
+        return route_match and domain_match
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def matches(self, path):
+    def matches(self, path: str) -> "re.Match":
         return re.match(self._compiled_regex, path) or re.match(
             self._compiled_regex_end, path
         )
 
-    def match_name(self, name):
+    def match_name(self, name: str) -> bool:
         return name == self._name
 
-    def name(self, name):
+    def name(self, name: str) -> "HTTPRoute":
         self._name = name
         return self
 
-    def domain(self, subdomain):
+    def domain(self, subdomain: str) -> "HTTPRoute":
         self._domain = subdomain
         return self
 
@@ -133,7 +138,7 @@ class HTTPRoute:
             compiled_url += "?" + parse.urlencode(query_params)
         return compiled_url
 
-    def _find_controller(self, controller):
+    def _find_controller(self, controller: "str|Controller") -> None:
         """Find the controller to attach to the route. Look for controller (str or class) in all
         specified controllers_location.
 
@@ -208,7 +213,7 @@ class HTTPRoute:
         # Set the controller method on class. This is a string
         self.controller_method = controller_method_str
 
-    def get_response(self, app=None):
+    def get_response(self, app: "Application" = None) -> "Response":
         from ..response import Response
 
         # Resolve Controller Constructor
@@ -250,7 +255,7 @@ class HTTPRoute:
 
         return getattr(controller, self.controller_method)()
 
-    def middleware(self, *args):
+    def middleware(self, *args) -> "HTTPRoute":
         """Load a list of middleware to run.
 
         Returns:
@@ -261,7 +266,7 @@ class HTTPRoute:
                 self.list_middleware.append(arg)
         return self
 
-    def prepend_middleware(self, *args):
+    def prepend_middleware(self, *args) -> "HTTPRoute":
         """Load a list of middleware to run.
 
         Returns:
@@ -272,7 +277,7 @@ class HTTPRoute:
                 self.list_middleware.insert(0, arg)
         return self
 
-    def get_middlewares(self):
+    def get_middlewares(self) -> "List[Middleware]":
         """Get all the middlewares to run for this route."""
         middlewares = self.list_middleware
 
@@ -282,20 +287,20 @@ class HTTPRoute:
 
         return middlewares
 
-    def set_middleware(self, middleware):
-        """Get all the middlewares to run for this route."""
-        self.list_middleware = middleware
+    def set_middleware(self, middlewares: "List[Middleware]") -> "HTTPRoute":
+        """Set all the middlewares to run for this route."""
+        self.list_middleware = middlewares
 
         return self
 
-    def exclude_middleware(self, *args):
+    def exclude_middleware(self, *middlewares: "Middleware") -> "HTTPRoute":
         """Remove a list of middleware for this route. It can be useful when
         using Route group middleware to override middleware for a given route in the group."""
-        for middleware in args:
+        for middleware in middlewares:
             self.excluded_middlewares.append(middleware)
         return self
 
-    def compile_route_to_regex(self):
+    def compile_route_to_regex(self) -> str:
         """Compile the given route to a regex string.
 
         Arguments:
@@ -373,7 +378,7 @@ class HTTPRoute:
 
         return regex
 
-    def extract_parameters(self, path):
+    def extract_parameters(self, path: str) -> dict:
         if not self.url_list:
             return {}
 

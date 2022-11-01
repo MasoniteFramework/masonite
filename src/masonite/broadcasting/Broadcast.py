@@ -1,37 +1,50 @@
+from typing import TYPE_CHECKING, Any
+
 from ..routes import Route
+
+if TYPE_CHECKING:
+    from ..foundation import Application
 
 
 class Broadcast:
-    def __init__(self, application, store_config=None):
+    def __init__(self, application: "Application", store_config: dict = {}):
         self.application = application
-        self.drivers = {}
-        self.store_config = store_config or {}
-        self.options = {}
+        self.drivers: dict = {}
+        self.store_config = store_config
+        self.options: dict = {}
 
-    def add_driver(self, name, driver):
+    def add_driver(self, name: str, driver: Any):
         self.drivers.update({name: driver})
 
-    def set_configuration(self, config):
+    def set_configuration(self, config: dict) -> "Broadcast":
         self.store_config = config
         return self
 
-    def get_driver(self, name=None):
+    def get_driver(self, name: str = None) -> Any:
         if name is None:
             return self.drivers[self.store_config.get("default")]
         return self.drivers[name]
 
-    def driver(self, name=None):
+    def driver(self, name: str = None) -> Any:
         store_config = self.get_config_options()
         driver = self.get_driver(None)
         return driver.set_options(store_config)
 
-    def get_config_options(self, name=None):
+    def get_config_options(self, name: str = None) -> dict:
         if name is None or name == "default":
             return self.store_config.get(self.store_config.get("default"))
 
         return self.store_config.get(name)
 
-    def channel(self, channels, event=None, value=None, driver=None):
+    def channel(
+        self,
+        channels: "str|list",
+        event: "str|Any" = None,
+        value: Any = None,
+        driver: Any = None,
+    ):
+        """Broadcast the given event with value on given channels for the specified (or default)
+        driver."""
         store_config = self.get_config_options()
         driver = self.get_driver(driver)
         if not isinstance(event, str):
@@ -58,7 +71,8 @@ class Broadcast:
                 driver.set_options(store_config).channel(channel, event, value)
 
     @classmethod
-    def routes(self, auth_route="/broadcasting/authorize"):
+    def routes(self, auth_route: str = "/broadcasting/authorize") -> list:
+        """Get broadcasting authorization routes list used for private and presence channels."""
         from .controllers import BroadcastingController
 
         return [

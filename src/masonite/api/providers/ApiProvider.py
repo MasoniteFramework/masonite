@@ -3,7 +3,6 @@ from ..commands.APIInstallCommand import APIInstallCommand
 from ...helpers import config
 from ...providers import Provider
 from ..Api import Api
-
 from ...routes import Route
 from ...utils.structures import load
 

@@ -1,59 +1,57 @@
-"""Module for the LoadEnvironment class."""
-
+"""Masonite Environments management."""
 import os
-import sys
 from pathlib import Path
+from typing import Any
 
 
 class LoadEnvironment:
     """This class is used for loading the environment from .env and .env.* files."""
 
-    def __init__(self, environment=None, override=True, only=None):
-        """LoadEnvironment constructor.
-
-        Keyword Arguments:
-            env {string} -- An additional environment file that you want to load. (default: {None})
-            override {bool} -- Whether or not the environment variables found should overwrite existing ones. (default: {False})
-            only {string} -- If this is set then it will only load that environment. (default: {None})
+    def __init__(
+        self, environment: str = None, override: bool = True, only: str = None
+    ):
+        """Load the environment from .env files.
+        - If an environment is provided, .env.{environment} will be loaded additionally
+        - If override is enabled, environment variables will overwrite existing ones
+        - If only is provided, it will only the environment .env.{environment}
         """
         from dotenv import load_dotenv
 
         self.env = load_dotenv
 
+        # load only .env.{only} environment file
         if only:
             self._load_environment(only, override=override)
             return
 
+        # load base .env file
         env_path = str(Path(".") / ".env")
         self.env(env_path, override=override)
 
+        # then load .env.{APP_ENV} if APP_ENV is defined
         if os.environ.get("APP_ENV"):
             self._load_environment(os.environ.get("APP_ENV"), override=override)
+
+        # then load .env.{environment} if defined
         if environment:
             self._load_environment(environment, override=override)
 
+        # then load .env.testing if running unit tests
         if "PYTEST_CURRENT_TEST" in os.environ:
             self._load_environment("testing", override=override)
 
-    def _load_environment(self, environment, override=False):
-        """Load the environment depending on the env file.
-
-        Arguments:
-            environment {string} -- Name of the environment file to load from
-
-        Keyword Arguments:
-            override {bool} -- Whether the environment file should overwrite existing environment keys. (default: {False})
-        """
+    def _load_environment(self, environment: str, override: bool = False) -> None:
+        """Load the environment file named .env.{environment}. If override is enabled, environment
+        variables found in this file will overwrite existing ones."""
         env_path = str(Path(".") / ".env.{}".format(environment))
         self.env(dotenv_path=env_path, override=override)
 
 
-def env(value, default="", cast=True):
-    """Helper to retrieve the value of an environment variable or returns
-    a default value. In addition, if type can be inferred then the value can be casted to the
-    inferred type."""
-    env_var = os.getenv(value, default)
+def env(name: str, default: str = "", cast: bool = True) -> Any:
+    """Get the environment variable with the given name or get the default provided value. If cast
+    is enabled: if type can be inferred then the value will be casted to the inferred type."""
 
+    env_var = os.getenv(name, default)
     if not cast:
         return env_var
 

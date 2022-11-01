@@ -1,17 +1,24 @@
+from typing import TYPE_CHECKING
+
 from ..Recipient import Recipient
+
+if TYPE_CHECKING:
+    from ...foundation import Application
 
 
 class TerminalDriver:
-    def __init__(self, application):
-        self.application = application
-        self.options = {}
-        self.content_type = None
+    """Terminal mail driver used in development mode to send e-mails to the terminal. E-mails will
+    be printed in the terminal. This avoid having to run a real SMTP server locally."""
 
-    def set_options(self, options):
+    def __init__(self, application: "Application"):
+        self.application = application
+        self.options: dict = {}
+
+    def set_options(self, options: dict) -> "TerminalDriver":
         self.options = options
         return self
 
-    def send(self):
+    def send(self) -> None:
         print("-------------------------------------")
         print(f"To: {Recipient(self.options.get('to')).header()}")
         print(f"From: {Recipient(self.options.get('from')).header()}")

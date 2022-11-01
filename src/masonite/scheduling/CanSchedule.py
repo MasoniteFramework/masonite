@@ -1,5 +1,6 @@
+# @M5 remove or fix and document this unused class
 class CanSchedule:
-    def call(self, command):
+    def call(self, command: str):
         command_class = CommandTask(command)
         self.app.make("scheduler").add(command_class)
         return command_class

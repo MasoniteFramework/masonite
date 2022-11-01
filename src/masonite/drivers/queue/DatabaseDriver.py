@@ -1,19 +1,29 @@
 import pickle
 import pendulum
+import time
+from typing import TYPE_CHECKING
+
 from ...utils.console import HasColoredOutput
 from ...utils.time import parse_human_time
-import time
+
+if TYPE_CHECKING:
+    from ...foundation import Application
+    from ...queues import Queueable
+    from masoniteorm.query import QueryBuilder
 
 
 class DatabaseDriver(HasColoredOutput):
-    def __init__(self, application):
+    """Queue database driver using database as a queueing system. Queued jobs will be saved in
+    'jobs' table and failed jobs will stored in 'failed_jobs' table."""
+
+    def __init__(self, application: "Application"):
         self.application = application
 
-    def set_options(self, options):
+    def set_options(self, options: dict) -> "DatabaseDriver":
         self.options = options
         return self
 
-    def push(self, *jobs, args=(), **kwargs):
+    def push(self, *jobs: "Queueable", args=(), **kwargs) -> None:
         builder = self.get_builder()
 
         available_at = parse_human_time(kwargs.get("delay", "now"))
@@ -38,7 +48,7 @@ class DatabaseDriver(HasColoredOutput):
                 }
             )
 
-    def consume(self):
+    def consume(self) -> None:
         print("Listening for jobs on queue: " + self.options.get("queue", "default"))
         builder = self.get_builder()
 
@@ -180,7 +190,7 @@ class DatabaseDriver(HasColoredOutput):
             "id", [x["id"] for x in jobs]
         ).delete()
 
-    def get_builder(self):
+    def get_builder(self) -> "QueryBuilder":
         return (
             self.application.make("builder")
             .new()
@@ -188,7 +198,9 @@ class DatabaseDriver(HasColoredOutput):
             .table(self.options.get("table"))
         )
 
-    def add_to_failed_queue_table(self, builder, name, payload, exception):
+    def add_to_failed_queue_table(
+        self, builder: "QueryBuilder", name: str, payload: dict, exception
+    ) -> None:
         builder.table(self.options.get("failed_table", "failed_jobs")).create(
             {
                 "driver": "database",

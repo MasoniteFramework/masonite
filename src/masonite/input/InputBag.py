@@ -1,26 +1,35 @@
-from .Input import Input
+from typing import Any
 from urllib.parse import parse_qs
 import re
 import json
 import multipart
+
+from .Input import Input
 from ..utils.structures import data_get
 from ..filesystem import UploadedFile
 
 
 class InputBag:
-    def __init__(self):
-        self.query_string = {}
-        self.post_data = {}
-        self.environ = {}
+    """Input bag used to manage HTTP Form Inputs from the request."""
 
-    def load(self, environ):
+    def __init__(self):
+        self.query_string: dict = {}
+        self.post_data: dict = {}
+        self.environ: dict = {}
+
+    def load(self, environ: dict) -> "InputBag":
+        """Load inputs from the WSGI dictionary."""
         self.environ = environ
         self.query_string = {}
         self.post_data = {}
         self.parse(environ)
         return self
 
-    def parse(self, environ):
+    def parse(self, environ: dict) -> None:
+        """Parse request input from the WSGI dictionary. It can be query strings parameters
+        or POST input data with different encodings.
+        """
+
         if "QUERY_STRING" in environ:
             self.query_string = self.query_parse(environ["QUERY_STRING"])
 
@@ -95,7 +104,11 @@ class InputBag:
                         json.loads(bytes(request_body).decode("utf-8"))
                     )
 
-    def get(self, name, default=None, clean=True, quote=True):
+    def get(
+        self, name: str, default: Any = None, clean: bool = True, quote: bool = True
+    ) -> Any:
+        """Get the input value with the given name from the bag else get the given default value."""
+        # @M5 remove or implement clean/quote keyword parameters are there are not used for now
         if isinstance(name, str) and name.endswith("[]"):
             default = []
 
@@ -151,10 +164,12 @@ class InputBag:
 
         return input
 
-    def has(self, *names):
+    def has(self, *names: str) -> bool:
+        """Check if the bag contains the given input name(s)."""
         return all((name in self.all()) for name in names)
 
-    def all(self):
+    def all(self) -> dict:
+        """Get all inputs from the bag as a dictionary including query strings parameters."""
         all = {}
         qs = self.query_string
         if isinstance(qs, list):
@@ -164,7 +179,9 @@ class InputBag:
         all.update(self.post_data)
         return all
 
-    def all_as_values(self, internal_variables=False):
+    def all_as_values(self, internal_variables: bool = False) -> dict:
+        """Get all inputs from the bag as a dictionary including query strings parameters. Inputs
+        starting with __ will be removed from the dictionary unless internal_variables=True."""
         all = self.all()
         new = {}
         for name, input in all.items():
@@ -176,6 +193,7 @@ class InputBag:
         return new
 
     def only(self, *args):
+        """Get onlys inputs with the given names from the bag as a dictionary including query strings parameters."""
         all = self.all()
         new = {}
         for name, input in all.items():
@@ -185,10 +203,12 @@ class InputBag:
 
         return new
 
-    def query_parse(self, query_string):
+    def query_parse(self, query_string: str) -> dict:
+        """Parse a URL query string into a dictionary."""
         return self.parse_dict(parse_qs(query_string))
 
-    def parse_dict(self, dictionary):
+    def parse_dict(self, dictionary: dict) -> dict:
+        """Parse a raw dictionary of form inputs as a dictionary. This will handle arrays values."""
         d = {}
         for name, value in dictionary.items():
             if name.endswith("[]"):
@@ -227,6 +247,7 @@ class InputBag:
 
         return new_dict
 
-    def add_post(self, key, value):
+    def add_post(self, key: str, value: Any) -> Any:
+        """Add POST data to input bag with the given key and value."""
         self.post_data.update({key: value})
         return value

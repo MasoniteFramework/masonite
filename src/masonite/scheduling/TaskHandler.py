@@ -1,18 +1,20 @@
 import inspect
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..foundation import Application
+    from .Task import Task
 
 
 class TaskHandler:
-    def __init__(self, application, tasks=None):
-        if tasks is None:
-            tasks = []
-
+    def __init__(self, application: "Application", tasks: "Task" = []):
         self.tasks = tasks
         self.application = application
 
-    def add(self, *tasks):
+    def add(self, *tasks: "Task"):
         self.tasks += list(tasks)
 
-    def run(self, run_name=None, force=False):
+    def run(self, run_name: str = None, force: bool = False) -> None:
         app = self.application
         for task_class in self.tasks:
             # Resolve the task with the container

@@ -1,4 +1,3 @@
-"""View Module."""
 from collections import defaultdict
 from os.path import split, exists
 from jinja2 import (
@@ -10,6 +9,7 @@ from jinja2 import (
 )
 from jinja2.exceptions import TemplateNotFound
 from typing import TYPE_CHECKING, Callable, Any
+
 from ..exceptions import ViewException
 from ..utils.str import as_filepath
 from ..utils.location import views_path
@@ -28,7 +28,7 @@ def path_to_package(path, separator="/"):
 
 
 class View:
-    """Responsible for handling everything involved with views and view environments."""
+    """View class responsible for handling everything involved with views and view environments."""
 
     separator = "/"
     extension = ".html"

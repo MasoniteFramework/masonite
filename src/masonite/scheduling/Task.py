@@ -2,6 +2,7 @@ import pendulum
 
 
 class Task:
+    """Base Masonite Task class that can be scheduled."""
 
     run_every = False
     run_at = False
@@ -18,76 +19,75 @@ class Task:
         """
         Should only be on the child class. Also needs to be resolved by the container.
         """
-
         pass
 
-    def every(self, time):
+    def every(self, time: str) -> "Task":
         self.run_every = time
         return self
 
-    def every_minute(self):
+    def every_minute(self) -> "Task":
         self.run_every = "1 minute"
         return self
 
-    def every_15_minutes(self):
+    def every_15_minutes(self) -> "Task":
         self.run_every = "15 minutes"
         return self
 
-    def every_30_minutes(self):
+    def every_30_minutes(self) -> "Task":
         self.run_every = "30 minutes"
         return self
 
-    def every_45_minutes(self):
+    def every_45_minutes(self) -> "Task":
         self.run_every = "45 minutes"
         return self
 
-    def hourly(self):
+    def hourly(self) -> "Task":
         self.run_every = "1 hour"
         return self
 
-    def daily(self):
+    def daily(self) -> "Task":
         self.run_every = "1 day"
         return self
 
-    def weekly(self):
+    def weekly(self) -> "Task":
         self.run_every = "1 week"
         return self
 
-    def monthly(self):
+    def monthly(self) -> "Task":
         self.run_every = "1 month"
         return self
 
-    def at(self, run_time):
+    def at(self, run_time: str) -> "Task":
         self.run_at = run_time
         return self
 
-    def at_twice(self, run_time):
+    def at_twice(self, run_time: str) -> "Task":
         self.twice_daily = run_time
         return self
 
     def daily_at(self, run_time):
         return self.daily().at(run_time)
 
-    def handle(self):
+    def handle(self) -> None:
         """Fires the task"""
-
         pass
 
-    def should_run(self, date=None):
+    def should_run(self, date=None) -> bool:
         """If the task should run"""
+        # @M5 date parameter is not used but some calls are made with this parameter...fix ?
 
         # set the date
         self._set_date()
 
         return self._verify_run()
 
-    def _set_date(self):
+    def _set_date(self) -> None:
         if not self._date:
             self._date = pendulum.now()
             if hasattr(self, "timezone"):
                 self._date.in_timezone(self.timezone)
 
-    def _verify_run(self):
+    def _verify_run(self) -> bool:
         if self.run_every:
             length, frequency = self.run_every.split(" ")
 
@@ -136,7 +136,7 @@ class Task:
 
         return False
 
-    def _verify_run_at(self):
+    def _verify_run_at(self) -> bool:
         if self._date.minute < 10:
             minute = f"0{self._date.minute}"
         else:

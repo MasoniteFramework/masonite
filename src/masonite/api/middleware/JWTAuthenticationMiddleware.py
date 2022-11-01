@@ -1,5 +1,4 @@
 from masonite.middleware import Middleware
-
 from masonite.api.facades import Api
 
 

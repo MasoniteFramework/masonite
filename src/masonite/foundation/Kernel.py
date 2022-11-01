@@ -56,6 +56,7 @@ class Kernel:
         LoadEnvironment()
 
     def register_framework(self) -> None:
+        """Register base required Masonite bindings."""
         self.application.set_response_handler(response_handler)
         self.application.use_storage_path(
             os.path.join(self.application.base_path, "storage")
@@ -68,6 +69,7 @@ class Kernel:
         self.application.bind("loader", Loader())
 
     def register_commands(self) -> None:
+        """Register all core Masonite commands."""
         self.application.bind(
             "commands",
             CommandCapsule(CommandApplication("Masonite", __version__)).add(

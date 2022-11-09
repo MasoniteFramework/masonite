@@ -13,6 +13,7 @@ class RedisDriver:
 
     def set_options(self, options: dict) -> "RedisDriver":
         self.options = options
+        self.get_connection()
         return self
 
     def get_connection(self) -> "Redis":

@@ -15,6 +15,10 @@ class Compact:
             found = []
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
+                    if isinstance(value, str):
+                        cls.dictionary.update({key: value})
+                        continue
+
                     for f in found:
                         if value is f and f is not None:
                             raise AmbiguousError(

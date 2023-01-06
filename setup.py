@@ -39,8 +39,8 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        "inflection>=0.3<0.4",
-        "exceptionite>=2.2<3.0",
+        "inflection>=0.3,<0.4",
+        "exceptionite>=2.2,<3.0",
         "pendulum>=2,<3",
         "jinja2<3.1.0",
         "cleo>=0.8.1,<0.9",
@@ -50,14 +50,14 @@ setup(
         "python-dotenv>=0.15,<0.16",
         "masonite-orm>=2.14,<3",
         "hashids>=1.3,<1.4",
-        "cryptography>=36<37",
+        "cryptography>=36,<37",
         "tldextract>=2.2,<2.3",
         "hfilesize>=0.1",
-        "dotty_dict>=1.3.0<1.40",
+        "dotty_dict>=1.3.0,<1.40",
         "pyjwt>=2.3,<2.5",
-        "pytest>=7<8",
-        "werkzeug>=2<3",
-        "watchdog>=2<3",
+        "pytest>=7,<8",
+        "werkzeug>=2,<3",
+        "watchdog>=2,<3",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

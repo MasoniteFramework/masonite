@@ -15,7 +15,7 @@ class Compact:
             found = []
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
-                    if isinstance(value, str):
+                    if isinstance(value, (str, int, float, bytes, bool)):
                         cls.dictionary.update({key: value})
                         continue
 

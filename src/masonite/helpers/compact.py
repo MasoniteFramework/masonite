@@ -8,14 +8,10 @@ class Compact:
 
         cls.dictionary = {}
         for arg in args:
-            if isinstance(arg, dict):
-                cls.dictionary.update(arg)
-                continue
-
             found = []
             for key, value in frame.f_back.f_locals.items():
                 if value == arg:
-                    if isinstance(value, (str, int, float, bytes, bool)):
+                    if isinstance(value, (dict, str, int, float, bytes, bool)):
                         cls.dictionary.update({key: value})
                         continue
 

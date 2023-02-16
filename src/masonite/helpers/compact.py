@@ -26,4 +26,5 @@ class Compact:
 
         if len(args) != len(cls.dictionary):
             raise ValueError("Could not find all variables in this")
+
         return cls.dictionary

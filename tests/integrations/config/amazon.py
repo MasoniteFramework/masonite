@@ -10,6 +10,7 @@ SERVICES = {
             "endpoint_url": "http://localhost:4566",
             "aws_access_key_id": os.getenv("AWS_CLIENT"),
             "aws_secret_access_key": os.getenv("AWS_SECRET"),
+            "region_name": 'us-eat-1',
         },
     },
     # using a more readable alias for the service
@@ -18,6 +19,7 @@ SERVICES = {
         "options": {
             "aws_access_key_id": os.getenv("AWS_CLIENT"),
             "aws_secret_access_key": os.getenv("AWS_SECRET"),
+            "region_name": 'us-eat-1',
         },
     },
     "disabled": {
@@ -30,7 +32,7 @@ SERVICES = {
         "options": {
             "aws_access_key_id": os.getenv("AWS_CLIENT"),
             "aws_secret_access_key": os.getenv("AWS_SECRET"),
+            "region_name": 'us-eat-1',
         },
-
     },
 }

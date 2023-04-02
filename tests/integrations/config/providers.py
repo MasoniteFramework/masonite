@@ -23,6 +23,7 @@ from src.masonite.providers import (
 from src.masonite.scheduling.providers import ScheduleProvider
 from src.masonite.notification.providers import NotificationProvider
 from src.masonite.validation.providers.ValidationProvider import ValidationProvider
+from src.masonite.services.providers import AmazonServicesProvider
 from src.masonite.api.providers import ApiProvider
 from ..test_package import MyTestPackageProvider
 
@@ -49,6 +50,7 @@ PROVIDERS = [
     AuthenticationProvider,
     AuthorizationProvider,
     ValidationProvider,
+    AmazonServicesProvider,
     MyTestPackageProvider,
     AppProvider,
     ORMProvider,

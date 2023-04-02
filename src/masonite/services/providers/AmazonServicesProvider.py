@@ -1,6 +1,6 @@
-from ..AmazonServices import AmazonServices
 from ...configuration import config
 from ...providers import Provider
+from ..AmazonServices import AmazonServices
 
 
 class AmazonServicesProvider(Provider):

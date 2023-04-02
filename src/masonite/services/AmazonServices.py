@@ -1,6 +1,8 @@
 import warnings
 from typing import Any
+
 from botocore.client import BaseClient
+
 from ..exceptions import InvalidConfigurationSetup
 
 
@@ -37,8 +39,8 @@ class AmazonServices:
 
         try:
             warnings.warn(
-                """The 'resource' interface is no longer being updated by Amazon in boto3.\n 
-                It is recommended to use the 'client' interface instead""",
+                "The 'resource' interface is no longer being updated by Amazon in boto3.\n \
+                It is recommended to use the 'client' interface instead",
                 DeprecationWarning,
             )
             return self._resources[name]

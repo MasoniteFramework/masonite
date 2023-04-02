@@ -1,7 +1,8 @@
+import pytest
 from boto3.exceptions import ResourceNotExistsError
+
 from src.masonite.exceptions import InvalidConfigurationSetup
 from tests import TestCase
-import pytest
 
 
 class TestAmazonServices(TestCase):

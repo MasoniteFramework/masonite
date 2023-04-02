@@ -1,3 +1,10 @@
+import os
+
+# defined for testing purposes only
+os.environ.setdefault("AWS_DEFAULT_REGION", "us-east-1")
+os.environ.setdefault("AWS_ACCESS_KEY_ID", os.getenv("AWS_CLIENT"))
+os.environ.setdefault("AWS_SECRET_ACCESS_KEY", os.getenv("AWS_SECRET"))
+
 SERVICES = {
     "s3": {
         "buckets": {

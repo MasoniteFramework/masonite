@@ -1,10 +1,5 @@
 import os
 
-# defined for testing purposes only
-os.environ.setdefault("AWS_DEFAULT_REGION", "us-east-1")
-os.environ.setdefault("AWS_ACCESS_KEY_ID", os.getenv("AWS_CLIENT"))
-os.environ.setdefault("AWS_SECRET_ACCESS_KEY", os.getenv("AWS_SECRET"))
-
 SERVICES = {
     "s3": {
         "buckets": {
@@ -13,11 +8,17 @@ SERVICES = {
         },
         "options": {
             "endpoint_url": "http://localhost:4566",
+            "aws_access_key_id": os.getenv("AWS_CLIENT"),
+            "aws_secret_access_key": os.getenv("AWS_SECRET"),
         },
     },
     # using a more readable alias for the service
     "api_gateway": {
         "service": "apigateway",
+        "options": {
+            "aws_access_key_id": os.getenv("AWS_CLIENT"),
+            "aws_secret_access_key": os.getenv("AWS_SECRET"),
+        },
     },
     "disabled": {
         "active": False,
@@ -26,5 +27,10 @@ SERVICES = {
     "invalid": {
         "active": True,
         "service": "dummy",
+        "options": {
+            "aws_access_key_id": os.getenv("AWS_CLIENT"),
+            "aws_secret_access_key": os.getenv("AWS_SECRET"),
+        },
+
     },
 }

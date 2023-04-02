@@ -9,15 +9,16 @@ from ..exceptions import InvalidConfigurationSetup
 class AmazonServices:
     """Wrapper for AWS services"""
 
-    def __init__(self, application, config=None):
+    def __init__(self, application, services=None, config=None):
         self.application = application
+        self.services = services or {}
         self.config = config or {}
         self._resources = {}
         self._clients = {}
 
     def services(self):
         """list configured service names"""
-        return self.config.keys()
+        return self.services.keys()
 
     def client(self, name=None) -> "BaseClient|None":
         """get a named client interface"""
@@ -60,7 +61,8 @@ class AmazonServices:
                 svc_config = self.service_config(name, True)
 
                 service_name = svc_config.get("service", name)
-                extra_config = svc_config.get("options", {})
+                extra_config = self.config or {}
+                extra_config.update(svc_config.get("options", {}))
 
                 return boto3.client(service_name, **extra_config)
             except UnknownServiceError as error:
@@ -75,16 +77,16 @@ class AmazonServices:
     def service_config(self, name: str, full: bool = False) -> dict:
         """get the service config"""
         try:
-            svc_config: dict = self.config[name]
+            svc_config: dict = self.services[name]
             # services are active by default
             if not svc_config.get("active", True):
                 raise InvalidConfigurationSetup(f"Resource '{name} is not active")
 
             if not full:
                 # remove internal configuration keys (if any)
-                svc_config.pop("service", None)
-                svc_config.pop("options", None)
-                svc_config.pop("active", None)
+                excludes = ["service", "options", "active"]
+                for key in excludes:
+                    svc_config.pop(key, None)
 
             return svc_config
         except KeyError:
@@ -102,7 +104,8 @@ class AmazonServices:
                 svc_config = self.service_config(name, True)
 
                 service_name = svc_config.get("service", name)
-                extra_config = svc_config.get("options", {})
+                extra_config = self.config or {}
+                extra_config.update(svc_config.get("options", {}))
 
                 return boto3.resource(service_name, **extra_config)
             except UnknownServiceError as error:

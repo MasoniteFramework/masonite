@@ -7,9 +7,10 @@ class AmazonServicesProvider(Provider):
     wsgi = False
 
     def register(self):
-        services_config = config("amazon.services")
+        services = config("amazon.services", {})
+        common = config("amazon.common_config", {})
 
-        services = AmazonServices(self.application, services_config)
+        services = AmazonServices(self.application, services, common)
         self.application.bind("amazon", services)
 
     def boot(self):

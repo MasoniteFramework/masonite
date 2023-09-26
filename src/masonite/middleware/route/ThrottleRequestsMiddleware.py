@@ -1,8 +1,6 @@
 import hashlib
 from typing import TYPE_CHECKING
 
-from attr import has
-
 if TYPE_CHECKING:
     from ...request import Request
     from ...response import Response

@@ -1330,16 +1330,19 @@ class distinct(BaseValidation):
 
 
 class Validator:
+    messages = {}
+
     def __init__(self):
         pass
 
-    def validate(self, dictionary, *rules):
+    def validate(self, dictionary, *rules, messages={}):
+        self.messages = messages
         rule_errors = {}
         try:
             for rule in rules:
                 if isinstance(rule, str):
                     rule = self.parse_string(rule)
-                    # continue
+
                 elif isinstance(rule, dict):
                     rule = self.parse_dict(rule, dictionary, rule_errors)
                     continue
@@ -1365,6 +1368,11 @@ class Validator:
 
         return MessageBag(rule_errors)
 
+    def custom_message(self, attribute, rule):
+        if f"{attribute}.{rule}" in self.messages:
+            return [self.messages[f"{attribute}.{rule}"]]
+        return None
+
     def parse_string(self, rule):
         rule, parameters = rule.split(":")[0], rule.split(":")[1].split(",")
         return ValidationFactory().registry[rule](parameters)
@@ -1377,6 +1385,8 @@ class Validator:
 
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
+                    message = self.custom_message(value, rule.__class__.__name__) or message
+
                     if error not in rule_errors:
                         rule_errors.update({error: message})
                     else:
@@ -1389,6 +1399,8 @@ class Validator:
         for rule in enclosure.rules():
             rule.handle(dictionary)
             for error, message in rule.errors.items():
+                message = self.custom_message(error, rule.__class__.__name__) or message
+                
                 if error not in rule_errors:
                     rule_errors.update({error: message})
                 else:

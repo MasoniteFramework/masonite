@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class ValidatesRequest:
     """Request mixin to add inputs validation to requests."""
 
-    def validate(self, *rules: "str|dict|RuleEnclosure") -> "MessageBag":
+    def validate(self, *rules: "str|dict|RuleEnclosure", messages={}) -> "MessageBag":
         """Validate request inputs against the given rules."""
         validator = Validator()
-        return validator.validate(self.all(), *rules)
+        return validator.validate(self.all(), *rules, messages=messages)

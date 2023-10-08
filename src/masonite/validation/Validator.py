@@ -1369,23 +1369,20 @@ class Validator:
 
     def custom_message(self, attribute, rule):
         path = []
-        
-        if rule.__class__.__name__ in ('isnt',):
+        # Check if rule is negated
+        if rule.__class__.__name__ == "isnt":
             for validation in rule.validations:
-                if type(validation) is str:
-                    path.append(validation)
-                else:
-                    validation_name = (
-                        validation.__class__.__name__
-                        if type(validation) is not str
-                        else validation
-                    )
+                validation_name = (
+                    validation.__class__.__name__
+                    if type(validation) is not str
+                    else validation
+                )
 
-                    path.append(
-                        f"isnt_{validation_name}"
-                        if validation.negated
-                        else validation_name
-                    )
+                path.append(
+                    f"isnt_{validation_name}"
+                    if validation.negated
+                    else validation_name
+                )
         else:
             path.append(rule.__class__.__name__)
 

@@ -31,14 +31,14 @@ class TestValidation(TestCase):
             isnt(email("not_email")),
             {
                 "username": "required",
-                "email": "required|email",
+                "valid_email": "required|email",
                 "secondary_email": "required|email",
             },
             messages={
                 "username.required": "Custom Message for required Username.",
                 "not_email.isnt_email": "Custom Message for Email not being an email.",
-                "email.required": "Custom Message for required Email.",
-                "email.email": "Custom Message for Email being a valid email.",
+                "valid_email.required": "Custom Message for required Email.",
+                "valid_email.email": "Custom Message for Email being a valid email.",
                 "age.isnt_is_in.isnt_numeric": "Custom: Age must not be in 20, 21 and must not be numeric.",
             },
         )
@@ -48,8 +48,12 @@ class TestValidation(TestCase):
             validate.get("age"),
         )
         self.assertIn(
+            "Custom Message for required Email.",
+            validate.get("valid_email"),
+        )
+        self.assertIn(
             "Custom Message for Email being a valid email.",
-            validate.get("email"),
+            validate.get("valid_email"),
         )
         self.assertIn(
             "Custom Message for Email not being an email.",

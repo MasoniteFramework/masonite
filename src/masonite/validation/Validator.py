@@ -61,7 +61,6 @@ class BaseValidation:
 
         for key in self.validations:
             if self.negated:
-
                 if self.passes(self.find(key, dictionary), key, dictionary):
                     boolean = False
                     if hasattr(self, "negated_message"):
@@ -167,7 +166,7 @@ class one_of(BaseValidation):
 
 class boolean(BaseValidation):
     def passes(self, attribute, key, dictionary):
-        return (attribute in [True, False, 0, 1, '0', '1'])
+        return attribute in [True, False, 0, 1, "0", "1"]
 
     def message(self, attribute):
         return "The {} must be a boolean.".format(attribute)
@@ -580,7 +579,6 @@ class in_range(BaseValidation):
         self.max = max
 
     def passes(self, attribute, key, dictionary):
-
         attribute = str(attribute)
 
         if attribute.isalpha():
@@ -1353,6 +1351,7 @@ class Validator:
 
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
+                    message = self.custom_message(error, rule) or message
                     if error not in rule_errors:
                         rule_errors.update({error: message})
                     else:
@@ -1369,8 +1368,31 @@ class Validator:
         return MessageBag(rule_errors)
 
     def custom_message(self, attribute, rule):
-        if f"{attribute}.{rule}" in self.messages:
-            return [self.messages[f"{attribute}.{rule}"]]
+        path = []
+        
+        if rule.__class__.__name__ in ('isnt',):
+            for validation in rule.validations:
+                if type(validation) is str:
+                    path.append(validation)
+                else:
+                    validation_name = (
+                        validation.__class__.__name__
+                        if type(validation) is not str
+                        else validation
+                    )
+
+                    path.append(
+                        f"isnt_{validation_name}"
+                        if validation.negated
+                        else validation_name
+                    )
+        else:
+            path.append(rule.__class__.__name__)
+
+        dot_name = ".".join([attribute] + path)
+
+        if dot_name in self.messages:
+            return [self.messages[dot_name]]
         return None
 
     def parse_string(self, rule):
@@ -1385,7 +1407,7 @@ class Validator:
 
                 rule.handle(dictionary)
                 for error, message in rule.errors.items():
-                    message = self.custom_message(value, rule.__class__.__name__) or message
+                    message = self.custom_message(value, rule) or message
 
                     if error not in rule_errors:
                         rule_errors.update({error: message})
@@ -1399,8 +1421,8 @@ class Validator:
         for rule in enclosure.rules():
             rule.handle(dictionary)
             for error, message in rule.errors.items():
-                message = self.custom_message(error, rule.__class__.__name__) or message
-                
+                message = self.custom_message(error, rule) or message
+
                 if error not in rule_errors:
                     rule_errors.update({error: message})
                 else:
@@ -1425,7 +1447,6 @@ class Validator:
 
 
 class ValidationFactory:
-
     registry = {}
 
     def __init__(self):

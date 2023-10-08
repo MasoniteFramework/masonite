@@ -1,4 +1,5 @@
 from tests import TestCase
+from masonite.validation import email, isnt, is_in, numeric
 
 
 class TestValidation(TestCase):
@@ -23,27 +24,36 @@ class TestValidation(TestCase):
         self.assertEqual(validation.all(), {"email": ["The email field is required."]})
 
     def test_custom_messages(self):
-        request = self.make_request(query_string="")
+        request = self.make_request(post_data={"not_email": "joe@masonite.com", "age": 20})
+        # validator = Validator()
         validate = request.validate(
+            isnt(is_in("age", [20, 21]), numeric("age")),
+            isnt(email("not_email")),
             {
-                "email": "required|email",
                 "username": "required",
-                "secondary_email": "required|email"
+                "email": "required|email",
+                "secondary_email": "required|email",
             },
             messages={
+                "username.required": "Custom Message for required Username.",
+                "not_email.isnt_email": "Custom Message for Email not being an email.",
                 "email.required": "Custom Message for required Email.",
-                "email.email": "Custom Message for Email not being an email.",
-                "username.required": "Custom Message for required Username."
+                "email.email": "Custom Message for Email being a valid email.",
+                "age.isnt_is_in.isnt_numeric": "Custom: Age must not be in 20, 21 and must not be numeric.",
             },
         )
 
         self.assertIn(
-            "Custom Message for required Email.",
+            "Custom: Age must not be in 20, 21 and must not be numeric.",
+            validate.get("age"),
+        )
+        self.assertIn(
+            "Custom Message for Email being a valid email.",
             validate.get("email"),
         )
         self.assertIn(
             "Custom Message for Email not being an email.",
-            validate.get("email"),
+            validate.get("not_email"),
         )
         self.assertIn(
             "Custom Message for required Username.",

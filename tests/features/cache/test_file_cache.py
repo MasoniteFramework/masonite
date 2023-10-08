@@ -59,3 +59,10 @@ class TestFileCache(TestCase):
         )
         self.driver.flush()
         self.assertIsNone(self.driver.get("dic"))
+
+    def test_get_can_forget_expired(self): 
+        self.driver.put("forget_expired", "1", 1)
+        time.sleep(1)
+        self.assertEqual(self.driver.get("forget_expired"), None)
+
+

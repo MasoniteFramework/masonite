@@ -207,6 +207,17 @@ class Route:
         ]
 
     @classmethod
+    def fallback(self, controller, module_location=None, **options):
+        return HTTPRoute(
+            url=".*",
+            controller=controller,
+            request_method=["get", "head"],
+            compilers=self.compilers,
+            controllers_locations=module_location or self.controllers_locations,
+            **options,
+        )
+
+    @classmethod
     def compile(self, key, to=""):
         self.compilers.update({key: to})
         return self

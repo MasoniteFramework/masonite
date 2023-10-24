@@ -20,6 +20,9 @@ ROUTES = [
     Route.get("/users/@id", "WelcomeController@show_user").name("users.profile"),
     Route.view("/test_view", "test_view", {"show": "111"}),
     Route.get("/api/uploads/", "WelcomeController@test").middleware("throttle:api"),
+
+
+    Route.fallback("WelcomeController@fallback"),
 ]
 
 Broadcast.routes()

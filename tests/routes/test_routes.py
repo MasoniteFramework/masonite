@@ -175,7 +175,7 @@ class TestRoutes(TestCase):
             Route.group([
                 Route.get("/route", "WelcomeController@show").name("testparam")
             ], prefix="params")
-            
+
         )
 
         route = router.find("/params/route", "get")
@@ -340,3 +340,9 @@ class TestRoutes(TestCase):
         route = router.find("/home", "HEAD")
         self.assertIsNotNone(route)
         self.assertEqual(route.request_method, ["get", "head"])
+
+    def test_can_find_fallback_route(self):
+        router = Router([Route.fallback("WelcomeController")])
+
+        self.assertTrue(router.find("/any_path_i_want", "GET"))
+        self.assertTrue(router.find("/any_path_i_want/nested", "GET"))

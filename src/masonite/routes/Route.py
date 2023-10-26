@@ -207,6 +207,16 @@ class Route:
         ]
 
     @classmethod
+    def any(self, url, controller, module_location=None, **options):
+        return self.match(
+            ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),
+            url,
+            controller,
+            module_location=module_location,
+            **options,
+        )
+
+    @classmethod
     def compile(self, key, to=""):
         self.compilers.update({key: to})
         return self

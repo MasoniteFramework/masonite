@@ -213,7 +213,7 @@ class Route:
             controller=controller,
             request_method=["get", "head"],
             compilers=self.compilers,
-            controllers_locations=module_location or self.controllers_locations,
+            controllers_locations=module_location or self.controllers_locations,)
 
     def any(self, url, controller, module_location=None, **options):
         return self.match(

@@ -22,6 +22,7 @@ ROUTES = [
     Route.get("/api/uploads/", "WelcomeController@test").middleware("throttle:api"),
 
     Route.any("/any", "WelcomeController@any"),
+    Route.fallback("WelcomeController@fallback"),
 ]
 
 Broadcast.routes()

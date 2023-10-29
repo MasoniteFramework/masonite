@@ -350,3 +350,9 @@ class TestRoutes(TestCase):
         route = router.find("/any_method", "GET")
         self.assertIsNotNone(route)
         self.assertEqual(route.request_method, ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'])
+
+    def test_can_find_fallback_route(self):
+        router = Router([Route.fallback("WelcomeController")])
+
+        self.assertTrue(router.find("/any_path_i_want", "GET"))
+        self.assertTrue(router.find("/any_path_i_want/nested", "GET"))

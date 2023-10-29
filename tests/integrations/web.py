@@ -26,3 +26,5 @@ ROUTES = [
 
 Broadcast.routes()
 Auth.routes()
+
+Route.fallback("WelcomeController@fallback")

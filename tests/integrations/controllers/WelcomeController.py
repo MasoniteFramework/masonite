@@ -176,9 +176,6 @@ class WelcomeController(Controller):
     def any(self, request: Request):
         return "any"
 
-    def fallback(self, request: Request):
-        return "fallback"
-
     def dd(self, request: Request):
         dump({"test": "value"})
         dd(request)

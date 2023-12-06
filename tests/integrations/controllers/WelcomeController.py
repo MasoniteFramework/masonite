@@ -170,6 +170,9 @@ class WelcomeController(Controller):
         user = User.find_or_fail(request.param("id"))
         return view.render("welcome")
 
+    def fallback(self, request: Request):
+        return "fallback"
+
     def any(self, request: Request):
         return "any"
 

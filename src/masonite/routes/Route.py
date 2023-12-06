@@ -6,7 +6,6 @@ from ..controllers import RedirectController
 
 
 class Route:
-
     routes = []
     compilers = {
         "int": r"(\d+)",
@@ -14,6 +13,7 @@ class Route:
         "string": r"([a-zA-Z]+)",
         "default": r"([\w.-]+)",
         "signed": r"([\w\-=]+)",
+        "any": r"(.*)",
         "uuid": r"([0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12})",
     }
     controllers_locations = []
@@ -213,6 +213,16 @@ class Route:
             url,
             controller,
             module_location=module_location,
+        )
+
+    @classmethod
+    def fallback(self, controller, module_location=None, **options):
+        return HTTPRoute(
+            url="@route:any",
+            controller=controller,
+            request_method=["get", "head"],
+            compilers=self.compilers,
+            controllers_locations=module_location or self.controllers_locations,
             **options,
         )
 

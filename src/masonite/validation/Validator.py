@@ -1411,6 +1411,12 @@ class Validator:
             self.__dict__.update({obj.__name__: obj})
             ValidationFactory().register(obj)
 
+    def __getattr__(self, name):
+        if name in ValidationFactory().registry:
+            return ValidationFactory().registry[name]
+
+        raise AttributeError("Validator has no attribute {}".format(name))
+
 
 class ValidationFactory:
 

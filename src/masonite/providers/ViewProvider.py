@@ -2,6 +2,7 @@ from ..views import View
 from .Provider import Provider
 from ..helpers import UrlsHelper, MixHelper, optional
 from ..configuration import config
+from ..environment import env
 
 
 class ViewProvider(Provider):
@@ -24,6 +25,7 @@ class ViewProvider(Provider):
                 "config": config,
                 "exists": view.exists,
                 "optional": optional,
+                "env": env,
             }
         )
 

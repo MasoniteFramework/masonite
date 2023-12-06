@@ -1,5 +1,6 @@
 from tests import TestCase
 from masonite.validation import email, isnt, is_in, numeric
+from src.masonite.validation import Validator
 
 
 class TestValidation(TestCase):
@@ -71,3 +72,17 @@ class TestValidation(TestCase):
             "The secondary_email must be a valid email address.",
             validate.get("secondary_email"),
         )
+
+    def test_can_forward_validation_calls(self):
+        request = self.make_request(query_string="")
+        validate = Validator()
+
+        errors = request.validate(
+            validate.required(['user', 'email']),
+            validate.accepted('terms')
+        )
+
+        self.assertIn("The user field is required.", errors.get("user"))
+        self.assertIn("The email field is required.", errors.get("email"))
+        self.assertIn("The terms must be accepted.", errors.get("terms"))
+

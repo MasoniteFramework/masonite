@@ -2,7 +2,7 @@
 **/__pycache__
 .pytest_cache/
 venv
-**/*.DS_Store
+.DS_Store
 .env.*
 .env
 **/storage/framework/cache
@@ -12,3 +12,4 @@ src/masonite.egg-info/*
 .vscode
 build/
 venv4
+database.sqlite3

@@ -70,6 +70,8 @@ class FileDriver:
 
         callable(self)
 
+        return self.get(key)
+
     def forget(self, key):
         try:
             os.remove(os.path.join(self._get_directory(), key))

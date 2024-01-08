@@ -27,6 +27,7 @@ class HTTPRoute:
         compilers=None,
         controllers_locations=["app.http.controllers"],
         controller_bindings=[],
+        is_fallback=False,
         **options,
     ):
         if not url.startswith("/"):
@@ -40,6 +41,7 @@ class HTTPRoute:
         self.controller_class = None
         self.controller_instance = None
         self.controller_method = None
+        self.is_fallback = is_fallback
         self._domain = None
         self._name = name
         self._casts_map = {}

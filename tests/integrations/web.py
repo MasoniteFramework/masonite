@@ -21,9 +21,8 @@ ROUTES = [
     Route.view("/test_view", "test_view", {"show": "111"}),
     Route.get("/api/uploads/", "WelcomeController@test").middleware("throttle:api"),
     Route.any("/any", "WelcomeController@any"),
+    Route.fallback("WelcomeController@fallback")
 ]
 
 Broadcast.routes()
 Auth.routes()
-
-Route.fallback("WelcomeController@fallback")

@@ -80,7 +80,7 @@ def add_query_params(url: str, query_params: dict) -> str:
     """Add query params dict to a given url (which can already contain some query parameters)."""
     path_result = parse.urlsplit(url)
 
-    base_url = f"{path_result.scheme}://{path_result.hostname}"
+    base_url = f"{path_result.scheme}://{path_result.hostname}" if path_result.hostname else ""
     base_path = path_result.path
 
     # parse existing query parameters if any

@@ -123,6 +123,8 @@ class RedisDriver:
 
         callable(self)
 
+        return self.get(key)
+
     def forget(self, key: str) -> None:
         self.get_connection().delete(f"{self.get_cache_namespace()}{key}")
         self._internal_cache.pop(key)

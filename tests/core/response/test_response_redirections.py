@@ -34,3 +34,13 @@ class TestResponseRedirect(TestCase):
         self.assertEqual(
             self.response.header_bag.get("Location").value, "/login?key=value"
         )
+
+    def test_redirect_to_external_url(self):
+        self.response.redirect(url="https://google.cl/login")
+        self.assertEqual(self.response.get_status(), 302)
+        self.assertEqual(self.response.header_bag.get("Location").value, "https://google.cl/login")
+
+        self.response.redirect(url="https://google.cl/login", query_params={"key": "value"})
+        self.assertEqual(
+            self.response.header_bag.get("Location").value, "https://google.cl/login?key=value"
+        )

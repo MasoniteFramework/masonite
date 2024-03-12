@@ -145,6 +145,8 @@ setup(
         "masonite.helpers",
         "masonite.input",
         "masonite.loader",
+        "masonite.logging",
+        "masonite.logging.drivers",
         "masonite.mail.drivers",
         "masonite.mail",
         "masonite.middleware.route",

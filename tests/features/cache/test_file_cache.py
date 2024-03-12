@@ -42,8 +42,8 @@ class TestFileCache(TestCase):
         self.assertEqual(self.driver.get("forget"), None)
 
     def test_remember(self):
-        self.driver.remember("remember", lambda cache: (cache.put("remember", "1", 10)))
-        self.assertEqual(self.driver.get("remember"), "1")
+        data_to_remember = self.driver.remember("remember", lambda cache: (cache.put("remember", "1", 10)))
+        self.assertEqual(data_to_remember, "1")
 
     def test_remember_datatypes(self):
         self.driver.remember(
@@ -59,3 +59,10 @@ class TestFileCache(TestCase):
         )
         self.driver.flush()
         self.assertIsNone(self.driver.get("dic"))
+
+    def test_get_can_forget_expired(self):
+        self.driver.put("forget_expired", "1", 1)
+        time.sleep(1)
+        self.assertEqual(self.driver.get("forget_expired"), None)
+
+

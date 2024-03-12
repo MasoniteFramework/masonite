@@ -1306,8 +1306,7 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(
             validate.get("emails"), ["The emails field has duplicate values."]
         )
-
-
+        
 class TestDotNotationValidation(unittest.TestCase):
     def setUp(self):
         pass

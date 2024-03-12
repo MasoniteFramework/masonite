@@ -68,6 +68,8 @@ class MemcacheDriver:
 
         callable(self)
 
+        return self.get(key)
+
     def forget(self, key):
         return self.get_connection().delete(f"{self.get_name()}_cache_{key}")
 

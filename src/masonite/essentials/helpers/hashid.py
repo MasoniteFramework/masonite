@@ -3,7 +3,7 @@ from hashids import Hashids
 
 def hashid(*values, decode=False, min_length=7):
     hash_class = Hashids(min_length=min_length)
-    if type(values[0]) == dict and decode:
+    if isinstance(values[0], dict) and decode:
         new_dict = {}
         for key, value in values[0].items():
             if hasattr(value, "value"):
@@ -12,7 +12,7 @@ def hashid(*values, decode=False, min_length=7):
             if value and hash_class.decode(value):
                 value = hash_class.decode(value)
 
-            if type(value) == tuple:
+            if isinstance(value, tuple):
                 value = value[0]
             new_dict.update({key: value})
         return new_dict

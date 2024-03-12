@@ -33,6 +33,7 @@ class FileDriver:
             value = f.read()
 
             if modified_at.add(seconds=self.get_cache_expiration(value)).is_past():
+                f.close()
                 self.forget(key)
                 return default
 
@@ -68,6 +69,8 @@ class FileDriver:
             return value
 
         callable(self)
+
+        return self.get(key)
 
     def forget(self, key):
         try:

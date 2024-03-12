@@ -3,7 +3,7 @@
   <h1 align="center">Masonite</h1>
 </p>
 <p align="center">
-  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/MasoniteFramework/masonite/Test%20Application">
+  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/MasoniteFramework/masonite/pythonapp.yml?branch=develop">
   <img src="https://img.shields.io/badge/python-3.7+-blue.svg" alt="Python Version">
   <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/MasoniteFramework/masonite?include_prereleases">
   <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License">

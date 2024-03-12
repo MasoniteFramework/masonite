@@ -171,8 +171,7 @@ class InputBag:
             if not internal_variables:
                 if name.startswith("__"):
                     continue
-            new.update({name: self.get(name)})
-
+            new.update({name: input})
         return new
 
     def only(self, *args):
@@ -181,7 +180,7 @@ class InputBag:
         for name, input in all.items():
             if name not in args:
                 continue
-            new.update({name: self.get(name)})
+            new.update({name: input})
 
         return new
 

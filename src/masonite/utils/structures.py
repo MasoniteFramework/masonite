@@ -1,4 +1,5 @@
 """Helpers for multiple data structures"""
+
 import importlib
 from importlib.abc import Loader
 from dotty_dict import dotty
@@ -25,10 +26,13 @@ def load(path, object_name=None, default=None, raise_exception=False):
     try:
         module = importlib.import_module(module_path)
     except Exception as e:
+        error_message = (
+            f"'{module_path}' not found OR error when importing this module: {str(e)}"
+        )
+        print("Warning: " + error_message)
+
         if raise_exception:
-            raise LoaderNotFound(
-                f"'{module_path}' not found OR error when importing this module: {str(e)}"
-            )
+            raise LoaderNotFound(error_message)
         return None
 
     if object_name is None:

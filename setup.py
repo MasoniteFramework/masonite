@@ -57,7 +57,7 @@ setup(
         "pyjwt>=2.3,<2.5",
         "pytest>=7,<8",
         "werkzeug>=2,<3",
-        "watchdog>=2,<3",
+        "watchdog>=2,<=4",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

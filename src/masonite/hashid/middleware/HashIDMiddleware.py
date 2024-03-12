@@ -1,5 +1,4 @@
 from ...middleware import Middleware
-
 from ..helpers import hashid
 
 
@@ -13,5 +12,4 @@ class HashIDMiddleware(Middleware):
         return request
 
     def after(self, request, response):
-
         return request

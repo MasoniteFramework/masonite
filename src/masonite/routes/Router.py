@@ -14,6 +14,9 @@ class Router:
         from .HTTPRoute import HTTPRoute
 
         for route in self.routes:
+            if route.is_fallback:
+                continue
+
             if route.match(path, request_method, subdomain=subdomain):
                 return route
 
@@ -33,6 +36,11 @@ class Router:
         if not matched_methods:
             return None
 
+        # check if there is a fallback route
+        fallback_route = self.get_fallback_route()
+        if fallback_route:
+            return fallback_route
+
         # if alternative methods have been found, check if current request method is OPTIONS
         # to build a proper response else build a method not allowed response
         if request_method == "OPTIONS":
@@ -48,6 +56,24 @@ class Router:
             return preflight_route
         else:
             raise MethodNotAllowedException(matched_methods, request_method)
+
+    def get_fallback_route(self):
+        """
+        This method is used to get the fallback route from the list of routes.
+
+        The fallback route is the one where the `is_fallback` attribute is True.
+        If there are multiple fallback routes, it returns the first one.
+        If there are no fallback routes, it returns an empty list.
+
+        Returns:
+            fallback_route (Route): The fallback route if it exists, otherwise an empty list.
+        """
+        fallback_route = list(filter(lambda r: r.is_fallback, self.routes))
+
+        if len(fallback_route) > 0:
+            fallback_route = fallback_route[0]
+
+        return fallback_route
 
     def matches(self, path):
         for route in self.routes:

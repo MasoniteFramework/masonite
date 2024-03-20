@@ -223,6 +223,7 @@ class Route:
             request_method=["get", "head"],
             compilers=self.compilers,
             controllers_locations=module_location or self.controllers_locations,
+            is_fallback=True,
             **options,
         )
 

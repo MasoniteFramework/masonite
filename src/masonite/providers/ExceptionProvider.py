@@ -28,10 +28,6 @@ class ExceptionProvider(Provider):
     def register(self):
         exceptionite = Handler()
         options = config("exceptions")
-        # @removed:5.0.0
-        # old project won't have new options for exceptions
-        if not options.get("options.editor"):
-            options = DEFAULT_OPTIONS
         exceptionite.set_options(options)
 
         # configure exceptionite for Masonite specifically

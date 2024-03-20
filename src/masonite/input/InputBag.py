@@ -95,7 +95,7 @@ class InputBag:
                         json.loads(bytes(request_body).decode("utf-8"))
                     )
 
-    def get(self, name, default=None, clean=True, quote=True):
+    def get(self, name, default=None):
         if isinstance(name, str) and name.endswith("[]"):
             default = []
 

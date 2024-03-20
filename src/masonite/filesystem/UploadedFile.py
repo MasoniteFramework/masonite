@@ -26,7 +26,7 @@ class UploadedFile:
         return self.content
 
     def hash_name(self):
-        return hashlib.sha1(bytes(self.name(), "utf-8")).hexdigest()
+        return hashlib.sha1(bytes(self.name, "utf-8")).hexdigest()
 
     def get_content(self):
         return self.content

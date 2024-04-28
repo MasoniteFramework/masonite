@@ -16,8 +16,6 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
 
-        # TODO: Remove in Masonite 5
-        request.app.make("view").share({"bag": MessageBag(Session.get("errors") or {}).helper})
         return request
 
     def after(self, request, _):

@@ -1,5 +1,6 @@
 from masonite.configuration import config
 
+
 class Cookie:
     def __init__(self, name, value, **options):
         self.options = options
@@ -31,7 +32,7 @@ class Cookie:
 
         return response
 
-    def __get_option(self, key: str, default:any):
+    def __get_option(self, key: str, default: any):
         """
             Get cookie options from config/session.py
             if option key found in options then it return that

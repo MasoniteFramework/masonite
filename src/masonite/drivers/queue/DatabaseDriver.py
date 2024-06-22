@@ -89,7 +89,8 @@ class DatabaseDriver(HasColoredOutput):
                         getattr(obj, callback)(*args)
 
                     except AttributeError:
-                        obj(*args)
+                        if callable(obj):
+                            obj(*args)
 
                     self.success(
                         f"[{job['id']}][{pendulum.now(tz=self.options.get('tz', 'UTC')).to_datetime_string()}] Job Successfully Processed"

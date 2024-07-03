@@ -3,7 +3,7 @@
   <h1 align="center">Masonite</h1>
 </p>
 <p align="center">
-  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/MasoniteFramework/masonite/Test%20Application">
+  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/MasoniteFramework/masonite/pythonapp.yml?branch=develop">
   <img src="https://img.shields.io/badge/python-3.7+-blue.svg" alt="Python Version">
   <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/MasoniteFramework/masonite?include_prereleases">
   <img src="https://img.shields.io/github/license/MasoniteFramework/masonite.svg" alt="License">
@@ -47,7 +47,7 @@ Contributing to Masonite is simple:
 - Hop on [Masonite Discord Community](https://discord.gg/TwKeFahmPZ) to ask any questions you need!
 - Read the [How To Contribute](https://docs.masoniteproject.com/prologue/how-to-contribute) documentation to see ways to contribute to the project.
 - Read the [Contributing Guide](https://docs.masoniteproject.com/prologue/contributing-guide) to learn how to contribute to the core source code development of the project.
-- [Follow Masonite Framework on Twitter](https://twitter.com/masoniteproject) to get updates about tips and tricks, announcement and releases.
+- [Follow Masonite Framework on X](https://x.com/masoniteproject) to get updates about tips and tricks, announcement and releases.
 
 ## Core Maintainers
 

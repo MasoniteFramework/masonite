@@ -1,6 +1,6 @@
 import re
 import tldextract
-from typing import TYPE_CHECKING, List, Any
+from typing import TYPE_CHECKING, Any
 
 from ..cookies import CookieJar
 from ..headers import HeaderBag, Header
@@ -124,6 +124,10 @@ class Request(ValidatesRequest, AuthorizesRequest):
             return True
 
         return False
+
+    def is_ajax(self) -> bool:
+        """Check if the current request is an AJAX request."""
+        return self.header("X-Requested-With") == "XMLHttpRequest"
 
     def user(self) -> "None|Any":
         """Get the current authenticated user if any. LoadUserMiddleware needs to be used for user

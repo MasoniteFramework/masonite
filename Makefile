@@ -1,6 +1,6 @@
 init:
 	cp .env-example .env
-	pip install -r requirements.txt
+	pip install --upgrade -r requirements.txt
 	pip install '.[test]'
 	# Create MySQL Database
 	# Create Postgres Database

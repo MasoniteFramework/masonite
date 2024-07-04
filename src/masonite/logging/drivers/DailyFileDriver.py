@@ -1,6 +1,7 @@
-import logging
-from logging.handlers import TimedRotatingFileHandler
 import os
+import logging
+from datetime import datetime
+from logging.handlers import TimedRotatingFileHandler
 from .BaseDriver import BaseDriver
 from ...utils.location import base_path
 
@@ -8,7 +9,10 @@ from ...utils.location import base_path
 class DailyFileDriver(BaseDriver):
     def __init__(self, application, name, options):
         super().__init__(application, name, options)
-        abs_path = base_path(self.options.get("path", "logs/daily.log"))
+
+        file_path = datetime.now().strftime("%Y-%m-%d") + ".log"
+
+        abs_path = base_path(self.options.get("path", "logs/" + file_path))
         if not os.path.exists(os.path.dirname(abs_path)):
             os.makedirs(os.path.dirname(abs_path))
         self.logging_handler = TimedRotatingFileHandler(

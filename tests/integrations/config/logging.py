@@ -1,6 +1,6 @@
 CHANNELS = {
     "default": {
-        "driver": "console",
+        "driver": "single",
         "level": "info",
         "timezone": "UTC",
         "format": "{timestamp} - {levelname}: {message}",
@@ -13,11 +13,10 @@ CHANNELS = {
     },
     "single": {
         "driver": "single",
-        "path": "logs/single.log",
+        "path": "logs/masonite.log",
     },
     "daily": {
         "driver": "daily",
-        "path": "logs/daily.log",
         "days": 7,
         "keep": 10,
     },

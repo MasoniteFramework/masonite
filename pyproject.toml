@@ -24,7 +24,7 @@ hfilesize = ">=0.1"
 dotty_dict = ">=1.3.0,<1.40"
 pyjwt = ">=2.3,<2.5"
 pytest = ">=7,<8"
-werkzeug = ">=2,<3"
+werkzeug = ">=3.0.3,<4"
 watchdog = ">=2,<3"
 
 [tool.poetry.dev-dependencies]

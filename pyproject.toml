@@ -26,9 +26,15 @@ pyjwt = ">=2.3,<2.5"
 pytest = ">=7,<8"
 werkzeug = ">=2,<3"
 watchdog = ">=2,<3"
+multipart = "^0.2.5"
+responses = "^0.25.3"
+argon2-cffi = "^23.1.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.0.0"
+pwnedapi = "^1.0.2"
+vonage = "^3.16.0"
+slackblocks = "^1.0.10"
 
 [build-system]
 requires = ["poetry-core"]

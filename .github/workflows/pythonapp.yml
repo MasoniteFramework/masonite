@@ -16,9 +16,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           path: ~/test
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python -
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
       - name: Install dependencies
         run: |
-          make init
+          make ci
       - name: Test with pytest
         env:
           MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
@@ -27,7 +31,7 @@ jobs:
           MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
           DB_CONFIG_PATH: tests/integrations/config/database
         run: |
-          make ci
+          make ci-test
   lint:
     runs-on: ubuntu-latest
     name: Lint

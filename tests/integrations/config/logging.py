@@ -1,6 +1,6 @@
 CHANNELS = {
     "default": {
-        "driver": "single",
+        "driver": "console",
         "level": "info",
         "timezone": "UTC",
         "format": "{timestamp} - {levelname}: {message}",

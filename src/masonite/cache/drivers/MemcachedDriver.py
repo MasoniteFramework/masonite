@@ -1,7 +1,7 @@
 import json
 
 
-class MemcacheDriver:
+class MemcachedDriver:
     def __init__(self, application):
         self.application = application
         self.connection = None
@@ -67,6 +67,8 @@ class MemcacheDriver:
             return value
 
         callable(self)
+
+        return self.get(key)
 
     def forget(self, key):
         return self.get_connection().delete(f"{self.get_name()}_cache_{key}")

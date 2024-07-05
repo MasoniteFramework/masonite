@@ -2,8 +2,7 @@ from .Input import Input
 from urllib.parse import parse_qs
 import re
 import json
-import cgi
-import re
+import multipart
 from ..utils.structures import data_get
 from ..filesystem import UploadedFile
 
@@ -56,26 +55,29 @@ class InputBag:
                 self.post_data = self.parse_dict(parsed_request_body)
 
             elif "multipart/form-data" in environ.get("CONTENT_TYPE", ""):
-                fields = cgi.FieldStorage(
-                    fp=environ["wsgi.input"],
-                    environ=environ,
-                    keep_blank_values=1,
-                )
 
-                for name in fields:
-                    value = fields.getvalue(name)
+                data, files = multipart.parse_form_data(environ)
+
+                for name, value in data.items():
+                    self.post_data.update({name: value})
+
+                for name, value in files.items():
+                    # self.assertEqual(files['file1'].file.read(), to_bytes('abc'))
+                    # self.assertEqual(files['file1'].filename, 'random.png')
+                    # self.assertEqual(files['file1'].name, 'file1')
+                    # self.assertEqual(files['file1'].content_type, 'image/png')
                     if isinstance(value, list):
                         files = []
-                        k = 0
                         for item in value:
+                            # TODO: should we read it now ?
+                            # later: process value.content_type
                             files.append(
-                                UploadedFile(fields[name][k].filename, value[k])
+                                UploadedFile(value.filename, value.file.read())
                             )
-                            k += 1
                         self.post_data.update({name: files})
-                    elif isinstance(value, bytes):
+                    elif isinstance(value, multipart.MultipartPart):
                         self.post_data.update(
-                            {name: [UploadedFile(fields[name].filename, value)]}
+                            {name: [UploadedFile(value.filename, value.file.read())]}
                         )
                     else:
                         self.post_data.update({name: value})

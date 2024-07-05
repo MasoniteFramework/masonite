@@ -80,7 +80,8 @@ def add_query_params(url: str, query_params: dict) -> str:
     """Add query params dict to a given url (which can already contain some query parameters)."""
     path_result = parse.urlsplit(url)
 
-    base_url = path_result.path
+    base_url = f"{path_result.scheme}://{path_result.hostname}" if path_result.hostname else ""
+    base_path = path_result.path
 
     # parse existing query parameters if any
     existing_query_params = dict(parse.parse_qsl(path_result.query))
@@ -88,9 +89,9 @@ def add_query_params(url: str, query_params: dict) -> str:
 
     # add query parameters to url if any
     if all_query_params:
-        base_url += "?" + parse.urlencode(all_query_params)
+        base_path += "?" + parse.urlencode(all_query_params)
 
-    return base_url
+    return f"{base_url}{base_path}"
 
 
 def get_controller_name(controller: "str|Any") -> str:

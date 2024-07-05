@@ -2,6 +2,7 @@ from tests import TestCase
 from src.masonite.routes import Route
 from src.masonite.controllers import Controller
 from src.masonite.exceptions import RouteNotFoundException
+from src.masonite.facades import Config
 
 
 class TestController(Controller):
@@ -78,9 +79,12 @@ class TestExceptionHandler(TestCase):
             self.get("/http").assertNotFound().assertContains("Page Not Found")
 
     def test_raising_exception_does_not_output_stack_trace_to_console(self):
+        # disable logging
+        Config.set("logging.channels.default.level", "critical")
         with self.debugMode(False):
             self.get("/simple")
             self.assertConsoleEmpty()
+        Config.set("logging.channels.default.level", "info")
 
     def test_accepting_json_returns_500_error_payload(self):
         with self.debugMode(False):

@@ -86,8 +86,8 @@ class RedisDriver:
         if not self.has(key):
             return default or None
 
-        key_expires = self._internal_cache[key].get("expires", None)
-        if key_expires is None:
+        key_expiry = self._internal_cache[key].get("expires", None)
+        if key_expiry is None:
             # the ttl value can also provide info on the
             # existence of the key in the store
             ttl = self.get_connection().ttl(key)
@@ -99,9 +99,9 @@ class RedisDriver:
                 self._internal_cache.pop(key)
                 return default or None
 
-            self._internal_cache[key]["expires"] = self._expires_from_ttl(ttl)
+            key_expiry = self._expires_from_ttl(ttl)
+            self._internal_cache[key]["expires"] = key_expiry
 
-        key_expiry = self._internal_cache[key].get("expires")
         if pdlm.now() > key_expiry:
             # the key has expired so remove it from the cache
             self._internal_cache.pop(key)

@@ -6,7 +6,6 @@ if TYPE_CHECKING:
     from redis import Redis
 
 
-
 class RedisDriver:
     def __init__(self, application):
         self.application = application
@@ -165,7 +164,7 @@ class RedisDriver:
         self._internal_cache.pop(key)
 
     def flush(self) -> None:
-        flushed = self.get_connection().flushall()
+        self.get_connection().flushall()
         self._internal_cache = None
 
     def get_default_timeout(self) -> int:

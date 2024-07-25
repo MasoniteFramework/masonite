@@ -1,15 +1,17 @@
 import json
 from typing import Any, TYPE_CHECKING
 
+import pendulum as pdlm
 if TYPE_CHECKING:
     from redis import Redis
+
 
 
 class RedisDriver:
     def __init__(self, application):
         self.application = application
         self.connection = None
-        self.options = None
+        self.options = {}
         self._internal_cache: dict = None
 
     def set_options(self, options: dict) -> "RedisDriver":
@@ -58,7 +60,12 @@ class RedisDriver:
                 for key, value in store_data.items():
                     key = key.replace(prefix, "")
                     value = self.unpack_value(value)
-                    self._internal_cache.setdefault(key, value)
+                    # we dont load the ttl (expiry)
+                    # because there is an O(N) performance hit
+                    self._internal_cache[key] = {
+                        "value": value,
+                        "expires": None,
+                    }
 
     def get_cache_namespace(self) -> str:
         """
@@ -77,16 +84,36 @@ class RedisDriver:
 
     def get(self, key: str, default: Any = None, **options) -> Any:
         self._load_from_store()
-        if default and not self.has(key):
-            return default
+        if not self.has(key):
+            return default or None
 
-        return self._internal_cache.get(key)
+        key_expires = self._internal_cache[key].get("expires", None)
+        if key_expires is None:
+            # the ttl value can also provide info on the
+            # existence of the key in the store
+            ttl = self.get_connection().ttl(key)
+            if ttl == -1:
+                # key exists but has no set ttl
+                ttl = self.get_default_timeout()
+            elif ttl == -2:
+                # key not found in store
+                self._internal_cache.pop(key)
+                return default or None
+
+            self._internal_cache[key]["expires"] = self._expires_from_ttl(ttl)
+
+        key_expiry = self._internal_cache[key].get("expires")
+        if pdlm.now() > key_expiry:
+            # the key has expired so remove it from the cache
+            self._internal_cache.pop(key)
+            return default or None
+
+        # the key has not yet expired
+        return self._internal_cache.get(key)["value"]
 
     def put(self, key: str, value: Any = None, seconds: int = None, **options) -> Any:
         if not key or value is None:
             return None
-
-        time = seconds or self.get_default_timeout()
 
         store_value = value
         if isinstance(value, (dict, list, tuple)):
@@ -95,10 +122,17 @@ class RedisDriver:
             store_value = str(value)
 
         self._load_from_store()
+        key_ttl = seconds or self.get_default_timeout()
         self.get_connection().set(
-            f"{self.get_cache_namespace()}{key}", store_value, ex=time
+            f"{self.get_cache_namespace()}{key}", store_value, ex=key_ttl
         )
-        self._internal_cache.update({key: value})
+        expires = self._expires_from_ttl(key_ttl)
+        self._internal_cache.update({
+            key: {
+                "value": value,
+                "expires": expires,
+            }
+        })
 
     def has(self, key: str) -> bool:
         self._load_from_store()
@@ -132,10 +166,7 @@ class RedisDriver:
 
     def flush(self) -> None:
         flushed = self.get_connection().flushall()
-        if flushed:
-            self._internal_cache = None
-
-        return flushed
+        self._internal_cache = None
 
     def get_default_timeout(self) -> int:
         # if unset default timeout of cache vars is 1 month
@@ -150,3 +181,6 @@ class RedisDriver:
             return json.loads(value)
         except json.decoder.JSONDecodeError:
             return value
+
+    def _expires_from_ttl(self, ttl: int) -> pdlm.DateTime:
+        return pdlm.now().add(seconds=ttl)

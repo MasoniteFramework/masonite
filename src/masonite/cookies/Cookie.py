@@ -13,6 +13,7 @@ class Cookie:
         self.timezone = self.__get_option('timezone', None)
         self.samesite = self.__get_option('samesite', 'Strict')
         self.path = self.__get_option('path', '/')
+        self.encrypt = self.__get_option('encrypt', True)
 
     def render(self):
         response = f"{self.name}={self.value};"

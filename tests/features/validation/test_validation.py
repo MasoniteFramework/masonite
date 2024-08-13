@@ -1677,14 +1677,26 @@ class TestValidationProvider(TestCase):
         # test custom special characters
         validate = Validator().validate(
             {
-                "password": "secret&-",
+                "password": "$e]cret&-",
             },
-            strong(["password"], length=5, uppercase=0, special=2, special_chars="*&^", numbers=0, lowercase=4),
+            strong(
+                ["password"],
+                length=5,
+                uppercase=0,
+                special=4,
+                special_chars="^$*&()[]",
+                numbers=0,
+                lowercase=4,
+            ),
         )
 
         self.assertEqual(
             validate.all(),
-            {"password": ["The password field must contain at least 2 of these characters: '*&^'"]},
+            {
+                "password": [
+                    "The password field must contain at least 4 of these characters: '^$*&()[]'"
+                ]
+            },
         )
 
         validate = Validator().validate(

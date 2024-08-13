@@ -9,6 +9,7 @@ class Cookie:
         timezone=None,
         secure=False,
         samesite="Strict",
+        encrypt=True,
     ):
         self.name = name
         self.value = value
@@ -18,6 +19,7 @@ class Cookie:
         self.timezone = timezone
         self.samesite = samesite
         self.path = path
+        self.encrypt = encrypt
 
     def render(self):
         response = f"{self.name}={self.value};"

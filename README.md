@@ -32,7 +32,7 @@ Have questions or want to talk? Be sure to join the [Masonite Discord Community]
 
 ## Getting Started Quickly
 
-Create and activate a virtual environment and if you have a working Python 3.7+ installation then getting started is as quick as typing
+Create and activate a virtual environment and if you have a working Python <= 3.11 installation then getting started is as quick as typing
 
 ```bash
 pip install masonite

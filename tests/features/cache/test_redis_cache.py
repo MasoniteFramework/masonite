@@ -11,7 +11,7 @@ class TestRedisCache(TestCase):
         self.application.make("cache")
         self.driver = self.application.make("cache").store("redis")
 
-    def test_can_add_file_driver(self):
+    def test_can_add_redis_driver(self):
         self.assertEqual(self.driver.add("add_key", "value"), "value")
 
     def test_can_get_driver(self):
@@ -23,9 +23,13 @@ class TestRedisCache(TestCase):
         self.driver.put("count", "1")
         self.assertEqual(self.driver.get("count"), "1")
         self.driver.increment("count")
-        self.assertEqual(self.driver.get("count"), "2")
+        self.assertEqual(self.driver.get("count"), 2)
+        self.driver.increment("count", 3)
+        self.assertEqual(self.driver.get("count"), 5)
         self.driver.decrement("count")
-        self.assertEqual(self.driver.get("count"), "1")
+        self.assertEqual(self.driver.get("count"), 4)
+        self.driver.decrement("count", 2)
+        self.assertEqual(self.driver.get("count"), 2)
 
     def test_will_not_get_expired(self):
         self.driver.put("expire", "1", 1)

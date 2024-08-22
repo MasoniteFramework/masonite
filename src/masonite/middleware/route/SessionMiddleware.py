@@ -16,6 +16,12 @@ class SessionMiddleware(Middleware):
         request.app.make("response").with_success = self.with_success
         request.app.make("request").session = Session
 
+        # TODO: Remove in Masonite 5
+        bag = MessageBag(Session.get("errors") or {})
+        request.app.make("view").share({"errors": bag.helper})
+        # errors are stored in session flash so 'getting' them actually clears them
+        # so re-add them to the session as a MessageBag
+        Session.flash('errors', bag)
         return request
 
     def after(self, request, _):

@@ -45,6 +45,9 @@ class TestResponseWithMiddleware(TestCase):
         )
 
     def test_with_errors(self):
-        self.get("/test-with-errors").assertSessionHasErrors().assertSessionHasErrors(
-            ["email"]
+        (
+            self.get("/test-with-errors")
+            .assertSessionHasErrors()
+            .assertSessionHasErrors(["email"])
+            .assertSessionHasNoErrors()
         )

@@ -19,7 +19,8 @@ python-dotenv>=0.15,<0.16
 responses
 slackblocks
 tldextract>=2.2,<2.3
-werkzeug>=3,<4
+werkzeug>=2,<3; python_version < '3.8'
+werkzeug>=3,<4; python_version >= '3.8'
 watchdog>=2,<3
 whitenoise>=5.2,<5.3
 pyjwt>=2.4,<2.5

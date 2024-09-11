@@ -56,7 +56,8 @@ setup(
         "dotty_dict>=1.3.0,<1.40",
         "pyjwt>=2.4,<2.5",
         "pytest>=7,<8",
-        "werkzeug>=3,<4",
+        "werkzeug>=2,<3; python_version < '3.8'",
+        "werkzeug>=3,<4; python_version >= '3.8'",
         "watchdog>=2,<=4",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers

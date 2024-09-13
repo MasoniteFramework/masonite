@@ -241,8 +241,11 @@ class Response:
         # Define the generator to stream the file in chunks
         def file_generator():
             with open(location, "rb") as file:
-                while chunk := file.read(1000):
-                    yield chunk  # Make sure we are yielding bytes
+                while True:
+                    chunk = file.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
 
         # Set the response content as the file generator and return
         self.content = file_generator()

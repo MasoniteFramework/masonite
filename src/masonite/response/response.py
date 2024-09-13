@@ -139,7 +139,7 @@ class Response:
         if isinstance(view, tuple):
             view, status = view
             self.status(status)
-        
+
         if isinstance(view, types.GeneratorType):
             self.status(status)
             return self

@@ -157,7 +157,7 @@ class Route:
                 route.compile_route_to_regex()
 
             if options.get("name"):
-                route._name = options.get("name") + route._name
+                route._name = options.get("name", "") + (route._name or "")
 
             if options.get("domain"):
                 route.domain(options.get("domain"))

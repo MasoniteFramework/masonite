@@ -132,12 +132,14 @@ class TestRoutes(TestCase):
             Route.group(
                 Route.get("/group", "WelcomeController@show").name(".index"),
                 Route.post("/login", "WelcomeController@show").name(".index"),
+                Route.post("/login", "WelcomeController@show"),
                 prefix="/testing",
                 name="dashboard",
             )
         )
 
         route = router.find_by_name("dashboard.index")
+        route = router.find_by_name("dashboard")
         self.assertTrue(route)
 
     def test_compile_year(self):

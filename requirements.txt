@@ -9,9 +9,8 @@ hashids>=1.3,<1.4
 hfilesize>=0.1
 hupper>=1.10,<1.11
 inflection>=0.3,<0.4
-jinja2>=3.0.0,<3.1
+jinja2<3.2
 masonite-orm>=2,<3
-masonite>=4,<5
 pendulum>=2,<3
 pwnedapi
 vonage
@@ -20,7 +19,8 @@ python-dotenv>=0.15,<0.16
 responses
 slackblocks
 tldextract>=2.2,<2.3
-werkzeug>=2,<3
+werkzeug>=2,<3; python_version < '3.8'
+werkzeug>=3,<4; python_version >= '3.8'
 watchdog>=2,<3
 whitenoise>=5.2,<5.3
-pyjwt>=2.3,<2.5
+pyjwt>=2.4,<2.5

@@ -1,5 +1,5 @@
 from tests import TestCase
-from masonite.validation import email, isnt, is_in, numeric
+from src.masonite.validation import email, isnt, is_in, numeric
 from src.masonite.validation import Validator
 
 

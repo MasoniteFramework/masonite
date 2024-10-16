@@ -1,4 +1,4 @@
-from masonite.configuration import config
+from ..configuration import config
 
 
 class Cookie:

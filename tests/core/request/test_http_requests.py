@@ -47,7 +47,7 @@ class TestHttpRequests(TestCase):
     def test_old_helper(self):
         self.get("/test-with-input", {"name": "Sam"})
         assert self.application.make("request").old("name") == "Sam"
-        assert self.application.make("request").old("wrong-input") == ""
+        assert self.application.make("request").old("wrong-input", "default") == "default"
 
     def test_get_route(self):
         self.get("/")

@@ -113,9 +113,9 @@ class Request(ValidatesRequest, AuthorizesRequest):
         """Pass arguments as string arguments such as request.only("arg1", "arg2") to get back a dictionary of only those inputs."""
         return self.input_bag.only(*inputs)
 
-    def old(self, key: str):
+    def old(self, key: str, default: str = "") -> str:
         """Get value from session for the given key."""
-        return old_helper(key)
+        return old_helper(key, default)
 
     def is_not_safe(self) -> bool:
         """Check if the current request is considered 'safe', meaning that the request method is

@@ -759,10 +759,16 @@ class strong(BaseValidation):
                 all_clear = False
 
         if self.special != 0:
-            special_chars = "[^A-Za-z0-9]"
+            # custom specials are just a string of characters
+            # and may contain regex meta chars.
+            # so we search for them differently
             if self.special_chars:
-                special_chars = f"[{self.special_chars}]"
-            if len(re.findall(special_chars, attribute)) < self.special:
+                special_count = sum(attribute.count(c) for c in self.special_chars)
+            else:
+                std_specials = "[^A-Za-z0-9]"
+                special_count = len(re.findall(std_specials, attribute))
+
+            if special_count < self.special:
                 self.special_check = False
                 all_clear = False
 

@@ -1,6 +1,10 @@
 init:
 	cp .env-example .env
 	poetry install
+	pip install -r requirements.txt
+	pip install '.[test]'
+	# Create MySQL Database
+	# Create Postgres Database
 test:
 	python -m pytest tests
 ci:

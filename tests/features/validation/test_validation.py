@@ -1503,7 +1503,7 @@ class TestDotNotationValidation(unittest.TestCase):
             validate.all(),
             {
                 "user.addresses.*.house": [
-                    "The user.addresses.*.house field is required."
+                    "The user.addresses.0.house field is required."
                 ]
             },
         )
@@ -1515,7 +1515,7 @@ class TestDotNotationValidation(unittest.TestCase):
 
         self.assertEqual(
             validate.all(),
-            {"user.addresses.*.id": ["The user.addresses.*.id field is required."]},
+            {"user.addresses.*.id": ["The user.addresses.0.id field is required."]},
         )
 
     def test_dot_error_message_required(self):

@@ -89,8 +89,15 @@ def missing_key(dictionary, key):
     current_dict = dictionary
 
     for index, k in enumerate(keys):
-        if k not in current_dict:
-            return index - 1
+        key = k
+        
+        if k == "*":
+            print('kk', k, index, keys[index+1], k)
+            key = keys[index+1]
+            k = 0
+        
+        if key not in current_dict:
+            return k
         current_dict = current_dict[k]
 
     return None

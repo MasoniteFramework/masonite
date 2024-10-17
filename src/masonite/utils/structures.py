@@ -90,11 +90,11 @@ def missing_key(dictionary, key):
 
     for index, k in enumerate(keys):
         key = k
-        
+
         if k == "*":
-            key = keys[index+1]
+            key = keys[index + 1]
             k = 0
-        
+
         if key not in current_dict:
             return k
         current_dict = current_dict[k]

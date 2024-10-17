@@ -326,15 +326,17 @@ class is_future(BaseValidation):
 
 class email(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return re.compile(
             r"^[^.][^@]*@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$"
         ).match(attribute)
 
     def message(self, attribute):
-        return "The {} must be a valid email address.".format(attribute)
+        return "The {} must be a valid email address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid email address.".format(attribute)
+        return "The {} must not be a valid email address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class matches(BaseValidation):
@@ -343,24 +345,28 @@ class matches(BaseValidation):
         self.match = match
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute == dictionary[self.match]
 
     def message(self, attribute):
-        return "The {} must match {}.".format(attribute, self.match)
+        return "The {} must match {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.match)
 
     def negated_message(self, attribute):
-        return "The {} must not match {}.".format(attribute, self.match)
+        return "The {} must not match {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.match)
 
 
 class exists(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return key in dictionary
 
     def message(self, attribute):
-        return "The {} must exist.".format(attribute)
+        return "The {} must exist.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not exist.".format(attribute)
+        return "The {} must not exist.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 def resolve_model_or_table(string):
@@ -392,18 +398,20 @@ class exists_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count
 
     def message(self, attribute):
         return "No record found in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "A record already exists in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 
@@ -425,18 +433,20 @@ class not_exists_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count == 0
 
     def message(self, attribute):
         return "A record already exists in table {} with the same {}".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "No record found in table {} with the same {}".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 

@@ -1908,5 +1908,5 @@ class TestDictValidation(unittest.TestCase):
         )
         self.assertEqual(len(validate), 1)
         self.assertEqual(
-            validate.all()["key.*.foo"], ["The key.*.foo field is required."]
+            validate.all()["key.*.foo"], ["The key.0.foo field is required."]
         )

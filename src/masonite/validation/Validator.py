@@ -7,7 +7,7 @@ from ..filesystem import UploadedFile
 
 from .RuleEnclosure import RuleEnclosure
 from .MessageBag import MessageBag
-from ..utils.structures import data_get
+from ..utils.structures import data_get, missing_key
 from ..configuration import config
 from ..facades import Loader
 
@@ -98,6 +98,8 @@ class required(BaseValidation):
         Returns:
             bool
         """
+        self.dictionary = dictionary
+        self.key = key
         return self.find(key, dictionary) and attribute
 
     def message(self, key):
@@ -109,7 +111,7 @@ class required(BaseValidation):
         Returns:
             string
         """
-        return "The {} field is required.".format(key)
+        return "The {} field is required.".format(key.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, key):
         """A message to show when this rule is negated using a negation rule like 'isnt()'

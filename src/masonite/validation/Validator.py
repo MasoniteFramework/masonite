@@ -168,13 +168,15 @@ class one_of(BaseValidation):
 
 class boolean(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute in [True, False, 0, 1, "0", "1"]
 
     def message(self, attribute):
-        return "The {} must be a boolean.".format(attribute)
+        return "The {} must be a boolean.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a boolean.".format(attribute)
+        return "The {} must not be a boolean.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class accepted(BaseValidation):
@@ -461,6 +463,8 @@ class unique_in_db(BaseValidation):
 
 class active_domain(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import socket
 
         try:
@@ -477,14 +481,16 @@ class active_domain(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be an active domain name.".format(attribute)
+        return "The {} must be an active domain name.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be an active domain name.".format(attribute)
+        return "The {} must not be an active domain name.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class numeric(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if isinstance(attribute, list):
             for value in attribute:
                 if not str(value).replace(".", "", 1).isdigit():
@@ -495,25 +501,29 @@ class numeric(BaseValidation):
         return True
 
     def message(self, attribute):
-        return "The {} must be a numeric.".format(attribute)
+        return "The {} must be a numeric.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a numeric.".format(attribute)
+        return "The {} must not be a numeric.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_list(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return isinstance(attribute, list)
 
     def message(self, attribute):
-        return "The {} must be a list.".format(attribute)
+        return "The {} must be a list.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a list.".format(attribute)
+        return "The {} must not be a list.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class string(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if isinstance(attribute, list):
             for attr in attribute:
                 if not isinstance(attr, str):
@@ -524,21 +534,23 @@ class string(BaseValidation):
         return isinstance(attribute, str)
 
     def message(self, attribute):
-        return "The {} must be a string.".format(attribute)
+        return "The {} must be a string.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a string.".format(attribute)
+        return "The {} must not be a string.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class none(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute is None
 
     def message(self, attribute):
-        return "The {} must be None.".format(attribute)
+        return "The {} must be None.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be None.".format(attribute)
+        return "The {} must not be None.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class length(BaseValidation):
@@ -552,6 +564,8 @@ class length(BaseValidation):
             self.max = max
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if not hasattr(attribute, "__len__"):
             attribute = str(attribute)
         if self.max:
@@ -561,18 +575,18 @@ class length(BaseValidation):
 
     def message(self, attribute):
         if self.min and not self.max:
-            return "The {} must be at least {} characters.".format(attribute, self.min)
+            return "The {} must be at least {} characters.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min)
         else:
             return "The {} length must be between {} and {}.".format(
-                attribute, self.min, self.max
+                attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
             )
 
     def negated_message(self, attribute):
         if self.min and not self.max:
-            return "The {} must be {} characters maximum.".format(attribute, self.max)
+            return "The {} must be {} characters maximum.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.max)
         else:
             return "The {} length must not be between {} and {}.".format(
-                attribute, self.min, self.max
+                attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
             )
 
 

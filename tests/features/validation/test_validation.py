@@ -1279,7 +1279,7 @@ class TestValidation(unittest.TestCase):
         )
         self.assertEqual(
             validate.get("users.*.last_name"),
-            ["The users.*.last_name field has duplicate values."],
+            ["The users.0.last_name field has duplicate values."],
         )
         validate = Validator().validate(
             {

@@ -92,7 +92,6 @@ def missing_key(dictionary, key):
         key = k
         
         if k == "*":
-            print('kk', k, index, keys[index+1], k)
             key = keys[index+1]
             k = 0
         

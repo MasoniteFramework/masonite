@@ -468,18 +468,20 @@ class unique_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count == 0
 
     def message(self, attribute):
         return "A record already exists in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "A record should exist in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 
@@ -619,6 +621,8 @@ class in_range(BaseValidation):
         self.max = max
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         attribute = str(attribute)
 
         if attribute.isalpha():
@@ -636,11 +640,11 @@ class in_range(BaseValidation):
         return attribute >= self.min and attribute <= self.max
 
     def message(self, attribute):
-        return "The {} must be between {} and {}.".format(attribute, self.min, self.max)
+        return "The {} must be between {} and {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max)
 
     def negated_message(self, attribute):
         return "The {} must not be between {} and {}.".format(
-            attribute, self.min, self.max
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
         )
 
 
@@ -650,13 +654,15 @@ class equals(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute == self.value
 
     def message(self, attribute):
-        return "The {} must be equal to {}.".format(attribute, self.value)
+        return "The {} must be equal to {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not be equal to {}.".format(attribute, self.value)
+        return "The {} must not be equal to {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class contains(BaseValidation):
@@ -665,13 +671,15 @@ class contains(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return self.value in attribute
 
     def message(self, attribute):
-        return "The {} must contain {}.".format(attribute, self.value)
+        return "The {} must contain {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not contain {}.".format(attribute, self.value)
+        return "The {} must not contain {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class is_in(BaseValidation):
@@ -680,13 +688,15 @@ class is_in(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute in self.value
 
     def message(self, attribute):
-        return "The {} must contain an element in {}.".format(attribute, self.value)
+        return "The {} must contain an element in {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not contain an element in {}.".format(attribute, self.value)
+        return "The {} must not contain an element in {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class greater_than(BaseValidation):
@@ -1014,6 +1024,8 @@ class BaseFileValidation(BaseValidation):
         self.all_clear = True
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         # Here we can validate on a filepath or an uploaded file (from request)
         if isinstance(attribute, UploadedFile):
             filepath = attribute.name
@@ -1171,14 +1183,14 @@ class video(BaseFileValidation):
 
             messages.append(
                 "The {} file size exceeds {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
 
         if not self.mimes_check:
             messages.append(
                 "The {} file is not a valid video. Allowed formats are {}.".format(
-                    attribute, ",".join(self.allowed_extensions)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), ",".join(self.allowed_extensions)
                 )
             )
 
@@ -1187,14 +1199,14 @@ class video(BaseFileValidation):
     def negated_message(self, attribute):
         messages = []
         if self.file_check:
-            messages.append("The {} is a valid file.".format(attribute))
+            messages.append("The {} is a valid file.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key)))))
 
         if self.size_check:
             from hfilesize import FileSize
 
             messages.append(
                 "The {} file size is less or equal than {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
 

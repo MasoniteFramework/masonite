@@ -95,6 +95,7 @@ def missing_key(dictionary, key):
 
     return None
 
+
 def data_set(dictionary, key, value, overwrite=True):
     """Set dictionary value at key using nested notation. Values are overridden by default but
     this behaviour can be changed by passing overwrite=False.

@@ -200,6 +200,8 @@ class accepted(BaseValidation):
 
 class ip(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import socket
 
         try:
@@ -209,14 +211,16 @@ class ip(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a valid ipv4 address.".format(attribute)
+        return "The {} must be a valid ipv4 address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid ipv4 address.".format(attribute)
+        return "The {} must not be a valid ipv4 address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class date(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -226,10 +230,10 @@ class date(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a valid date.".format(attribute)
+        return "The {} must be a valid date.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid date.".format(attribute)
+        return "The {} must not be a valid date.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class before_today(BaseValidation):
@@ -238,6 +242,8 @@ class before_today(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -246,10 +252,10 @@ class before_today(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a date before today.".format(attribute)
+        return "The {} must be a date before today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a date before today.".format(attribute)
+        return "The {} must not be a date before today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class after_today(BaseValidation):
@@ -258,6 +264,8 @@ class after_today(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -266,10 +274,10 @@ class after_today(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a date after today.".format(attribute)
+        return "The {} must be a date after today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a date after today.".format(attribute)
+        return "The {} must not be a date after today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_past(BaseValidation):
@@ -278,6 +286,8 @@ class is_past(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -286,10 +296,10 @@ class is_past(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a time in the past.".format(attribute)
+        return "The {} must be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a time in the past.".format(attribute)
+        return "The {} must not be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_future(BaseValidation):
@@ -298,6 +308,8 @@ class is_future(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -306,10 +318,10 @@ class is_future(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a time in the past.".format(attribute)
+        return "The {} must be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a time in the past.".format(attribute)
+        return "The {} must not be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class email(BaseValidation):

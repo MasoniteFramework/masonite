@@ -179,6 +179,8 @@ class boolean(BaseValidation):
 
 class accepted(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return (
             attribute is True
             or attribute == "on"
@@ -188,10 +190,10 @@ class accepted(BaseValidation):
         )
 
     def message(self, attribute):
-        return "The {} must be accepted.".format(attribute)
+        return "The {} must be accepted.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be accepted.".format(attribute)
+        return "The {} must not be accepted.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class ip(BaseValidation):

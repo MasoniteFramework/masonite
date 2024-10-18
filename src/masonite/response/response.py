@@ -4,6 +4,7 @@ import json
 import mimetypes
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
+import types
 
 if TYPE_CHECKING:
     from ..foundation import Application
@@ -119,6 +120,8 @@ class Response:
         """Get the response content as bytes."""
         if isinstance(self.content, str):
             return bytes(self.content, "utf-8")
+        if isinstance(self.content, types.GeneratorType):
+            return b"".join(self.content)
 
         return self.content
 
@@ -136,6 +139,10 @@ class Response:
         if isinstance(view, tuple):
             view, status = view
             self.status(status)
+
+        if isinstance(view, types.GeneratorType):
+            self.status(status)
+            return self
 
         if not self.get_status_code():
             self.status(status)
@@ -218,3 +225,28 @@ class Response:
             data = filelike.read()
 
         return self.view(data)
+
+    def stream(self, name: str, location: str, force: bool = True, chunk_size: int = 8192) -> "Response":
+        """Set the response as a file download response using streaming."""
+        self.status(200)
+
+        # Set content type and disposition headers
+        self.header_bag.add(Header("Content-Type", "application/octet-stream"))
+        self.header_bag.add(Header("Content-Disposition", f'attachment; filename="{name}{Path(location).suffix}"'))
+
+        # Get the file size and set the Content-Length header
+        file_size = Path(location).stat().st_size
+        self.header_bag.add(Header("Content-Length", str(file_size)))
+
+        # Define the generator to stream the file in chunks
+        def file_generator():
+            with open(location, "rb") as file:
+                while True:
+                    chunk = file.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+
+        # Set the response content as the file generator and return
+        self.content = file_generator()
+        return self

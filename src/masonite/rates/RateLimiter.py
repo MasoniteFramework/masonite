@@ -46,8 +46,8 @@ class RateLimiter:
         key = self.clean_key(key)
         if self.attempts(key) >= max_attempts:
             # trigger remove of cache value if needed
-            self.cache.get(f"{key}:timer")
-            if self.cache.has(f"{key}:timer"):
+            self.cache.get(f"{key}-timer")
+            if self.cache.has(f"{key}-timer"):
                 return True
             self.reset_attempts(key)
         return False
@@ -56,7 +56,7 @@ class RateLimiter:
         key = self.clean_key(key)
         # store timestamp when key limit be available again
         available_at = pendulum.now().add(seconds=delay).int_timestamp
-        self.cache.add(f"{key}:timer", available_at, delay)
+        self.cache.add(f"{key}-timer", available_at, delay)
         # ensure key exists
         self.cache.add(key, 0, delay)
         hits = self.cache.increment(key)
@@ -69,12 +69,12 @@ class RateLimiter:
     def clear(self, key: str):
         key = self.clean_key(key)
         self.cache.forget(key)
-        self.cache.forget(f"{key}:timer")
+        self.cache.forget(f"{key}-timer")
 
     def available_at(self, key: str) -> int:
         """Get UNIX integer timestamp at which key will be available again."""
         key = self.clean_key(key)
-        timestamp = int(self.cache.get(f"{key}:timer", 0))
+        timestamp = int(self.cache.get(f"{key}-timer", 0))
         return timestamp
 
     def available_in(self, key: str) -> int:

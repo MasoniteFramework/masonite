@@ -24,9 +24,9 @@ class TestRateLimiter(TestCase):
     def test_clear_remove_cache_keys(self):
         RateLimiter.attempt("test_key", my_function, 2)
         assert Cache.store().has("test_key")
-        assert Cache.store().has("test_key:timer")
+        assert Cache.store().has("test_key-timer")
         RateLimiter.clear("test_key")
-        assert not Cache.store().has("test_key:timer")
+        assert not Cache.store().has("test_key-timer")
         assert not Cache.store().has("test_key")
 
     def test_reset_attempts(self):
@@ -50,7 +50,7 @@ class TestRateLimiter(TestCase):
         should_be_available_at = now.add(seconds=40)
         RateLimiter.hit("test_key", 40)
         assert Cache.store().get("test_key") == "1"
-        assert Cache.store().get("test_key:timer") == str(
+        assert Cache.store().get("test_key-timer") == str(
             should_be_available_at.int_timestamp
         )
 

@@ -41,6 +41,8 @@ class VonageDriver(BaseDriver):
         client = self.get_sms_client()
         recipients = sms._to
         for recipient in recipients:
+            if not self.is_valid_phone_number(recipient):
+                raise NotificationException(f"Invalid phone number: {recipient}")
             payload = sms.to(recipient).build().get_options()
             response = client.send_message(payload)
             self._handle_errors(response)
@@ -67,3 +69,8 @@ class VonageDriver(BaseDriver):
                         status, message["error-text"]
                     )
                 )
+
+    def is_valid_phone_number(self, phone_number):
+        # Add your phone number validation logic here
+        # For example, check if it is a 10-digit number
+        return phone_number.isdigit() and len(phone_number) == 10

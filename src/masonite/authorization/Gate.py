@@ -101,6 +101,7 @@ class Gate:
         if boolean_result:
             return AuthorizationResponse.allow()
         else:
+            self.application.make("response").status(403)
             return AuthorizationResponse.deny()
 
     def check(self, permission, *args):

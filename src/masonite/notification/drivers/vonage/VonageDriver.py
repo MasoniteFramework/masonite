@@ -73,6 +73,9 @@ class VonageDriver(BaseDriver):
                 )
 
     def is_valid_phone_number(self, phone_number):
-        # Add your phone number validation logic here
-        # For example, check if it is a 10-digit number
-        return phone_number.isdigit() and len(phone_number) == 10
+        import phonenumbers
+        try:
+            parsed_number = phonenumbers.parse(phone_number, None)
+            return phonenumbers.is_valid_number(parsed_number)
+        except phonenumbers.NumberParseException:
+            return False

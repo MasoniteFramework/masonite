@@ -56,6 +56,8 @@ class RouteProvider(Provider):
                     else:
                         response.view(data)
                 except Exception as e:
+                    if not response.get_status_code():
+                        response.status(500)
                     exception = e
 
                 self.application.make("middleware").run_route_middleware(

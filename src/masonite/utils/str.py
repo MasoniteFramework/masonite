@@ -1,4 +1,5 @@
 """String generators and helpers"""
+
 import random
 import string
 from urllib import parse
@@ -80,7 +81,9 @@ def add_query_params(url: str, query_params: dict) -> str:
     """Add query params dict to a given url (which can already contain some query parameters)."""
     path_result = parse.urlsplit(url)
 
-    base_url = f"{path_result.scheme}://{path_result.hostname}" if path_result.hostname else ""
+    base_url = (
+        f"{path_result.scheme}://{path_result.hostname}" if path_result.hostname else ""
+    )
     base_path = path_result.path
 
     # parse existing query parameters if any
@@ -91,7 +94,13 @@ def add_query_params(url: str, query_params: dict) -> str:
     if all_query_params:
         base_path += "?" + parse.urlencode(all_query_params)
 
-    return f"{base_url}{base_path}"
+    result_url = f"{base_url}{base_path}"
+
+    # add fragment if exists
+    if path_result.fragment:
+        result_url = f"{result_url}#{path_result.fragment}"
+
+    return result_url
 
 
 def get_controller_name(controller: "str|Any") -> str:

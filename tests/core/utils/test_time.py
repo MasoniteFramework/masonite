@@ -56,5 +56,5 @@ class TestTimeUtils(TestCase):
         self.assertEqual(expiration_time_str, "Thu, 28 Jan 2021 07:28:00")
 
     def test_migration_timestamp(self):
-        self.fakeTime(pendulum.datetime(2021, 10, 25, 8, 12, 54))
+        self.fakeTime(pendulum.datetime(2021, 10, 25, 8, 12, 54, 0, tz="UTC"))
         self.assertEqual(migration_timestamp(), "2021_10_25_081254")

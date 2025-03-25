@@ -45,10 +45,10 @@ setup(
         "jinja2<3.2",
         "cleo>=0.8.1,<0.9",
         "hupper>=1.10,<1.11",
-        "bcrypt>=3.2,<3.3",
+        "bcrypt>=4.3,<4.4",
         "whitenoise>=5.2,<5.3",
         "python-dotenv>=0.15,<0.16",
-        "masonite-orm=<3,<4",
+        "masonite-orm=<3.0,<4.0",
         "hashids>=1.3,<1.4",
         "cryptography>=36,<=44",
         "tldextract>=2.2,<2.3",
@@ -61,6 +61,7 @@ setup(
         "multipart>=0.2,<0.3",
         "watchdog>=2,<=4",
         "phonenumbers>=8.12,<9",
+        "python-multipart>=0.0.20,<1",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

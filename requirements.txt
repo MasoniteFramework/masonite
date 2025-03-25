@@ -10,7 +10,7 @@ hfilesize>=0.1
 hupper>=1.10,<1.11
 inflection>=0.3,<0.4
 jinja2<3.2
-masonite-orm>=2,<3
+masonite-orm>=3,<4
 pendulum>=3,<4
 pwnedapi
 vonage>=3,<4

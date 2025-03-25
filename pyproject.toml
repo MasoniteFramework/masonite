@@ -5,8 +5,10 @@ license = "MIT"
 name = "masonite"
 version = "5.0.0"
 
+
 [tool.poetry.dependencies]
 python = "^3.9"
+python-multipart=">=0.0.20,<1"
 setuptools = "^78" 
 inflection = ">=0.3,<0.4"
 exceptionite = ">=2.2,<3.0"

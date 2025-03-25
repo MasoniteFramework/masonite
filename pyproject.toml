@@ -10,7 +10,7 @@ python = "^3.9"
 setuptools = "^78" 
 inflection = ">=0.3,<0.4"
 exceptionite = ">=2.2,<3.0"
-pendulum = ">=3,<4"
+pendulum = {version = ">=3,<4", extras = ["test"]}
 jinja2 = "<3.1.0"
 cleo = ">=0.8.1,<0.9"
 hupper = ">=1.10,<1.11"

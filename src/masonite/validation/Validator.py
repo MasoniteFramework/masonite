@@ -7,7 +7,7 @@ from ..filesystem import UploadedFile
 
 from .RuleEnclosure import RuleEnclosure
 from .MessageBag import MessageBag
-from ..utils.structures import data_get
+from ..utils.structures import data_get, missing_key
 from ..configuration import config
 from ..facades import Loader
 
@@ -98,6 +98,8 @@ class required(BaseValidation):
         Returns:
             bool
         """
+        self.dictionary = dictionary
+        self.key = key
         return self.find(key, dictionary) and attribute
 
     def message(self, key):
@@ -109,7 +111,7 @@ class required(BaseValidation):
         Returns:
             string
         """
-        return "The {} field is required.".format(key)
+        return "The {} field is required.".format(key.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, key):
         """A message to show when this rule is negated using a negation rule like 'isnt()'
@@ -166,17 +168,21 @@ class one_of(BaseValidation):
 
 class boolean(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute in [True, False, 0, 1, "0", "1"]
 
     def message(self, attribute):
-        return "The {} must be a boolean.".format(attribute)
+        return "The {} must be a boolean.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a boolean.".format(attribute)
+        return "The {} must not be a boolean.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class accepted(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return (
             attribute is True
             or attribute == "on"
@@ -186,14 +192,16 @@ class accepted(BaseValidation):
         )
 
     def message(self, attribute):
-        return "The {} must be accepted.".format(attribute)
+        return "The {} must be accepted.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be accepted.".format(attribute)
+        return "The {} must not be accepted.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class ip(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import socket
 
         try:
@@ -203,14 +211,16 @@ class ip(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a valid ipv4 address.".format(attribute)
+        return "The {} must be a valid ipv4 address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid ipv4 address.".format(attribute)
+        return "The {} must not be a valid ipv4 address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class date(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -220,10 +230,10 @@ class date(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a valid date.".format(attribute)
+        return "The {} must be a valid date.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid date.".format(attribute)
+        return "The {} must not be a valid date.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class before_today(BaseValidation):
@@ -232,6 +242,8 @@ class before_today(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -240,10 +252,10 @@ class before_today(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a date before today.".format(attribute)
+        return "The {} must be a date before today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a date before today.".format(attribute)
+        return "The {} must not be a date before today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class after_today(BaseValidation):
@@ -252,6 +264,8 @@ class after_today(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -260,10 +274,10 @@ class after_today(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a date after today.".format(attribute)
+        return "The {} must be a date after today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a date after today.".format(attribute)
+        return "The {} must not be a date after today.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_past(BaseValidation):
@@ -272,6 +286,8 @@ class is_past(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -280,10 +296,10 @@ class is_past(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a time in the past.".format(attribute)
+        return "The {} must be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a time in the past.".format(attribute)
+        return "The {} must not be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_future(BaseValidation):
@@ -292,6 +308,8 @@ class is_future(BaseValidation):
         self.tz = tz
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import pendulum
 
         try:
@@ -300,23 +318,25 @@ class is_future(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be a time in the past.".format(attribute)
+        return "The {} must be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a time in the past.".format(attribute)
+        return "The {} must not be a time in the past.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class email(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return re.compile(
             r"^[^.][^@]*@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$"
         ).match(attribute)
 
     def message(self, attribute):
-        return "The {} must be a valid email address.".format(attribute)
+        return "The {} must be a valid email address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a valid email address.".format(attribute)
+        return "The {} must not be a valid email address.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class matches(BaseValidation):
@@ -325,24 +345,28 @@ class matches(BaseValidation):
         self.match = match
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute == dictionary[self.match]
 
     def message(self, attribute):
-        return "The {} must match {}.".format(attribute, self.match)
+        return "The {} must match {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.match)
 
     def negated_message(self, attribute):
-        return "The {} must not match {}.".format(attribute, self.match)
+        return "The {} must not match {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.match)
 
 
 class exists(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return key in dictionary
 
     def message(self, attribute):
-        return "The {} must exist.".format(attribute)
+        return "The {} must exist.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not exist.".format(attribute)
+        return "The {} must not exist.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 def resolve_model_or_table(string):
@@ -374,18 +398,20 @@ class exists_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count
 
     def message(self, attribute):
         return "No record found in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "A record already exists in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 
@@ -407,18 +433,20 @@ class not_exists_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count == 0
 
     def message(self, attribute):
         return "A record already exists in table {} with the same {}".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "No record found in table {} with the same {}".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 
@@ -440,23 +468,27 @@ class unique_in_db(BaseValidation):
         self.table, self.model = resolve_model_or_table(table_or_model)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         column = key if not self.column else self.column
         count = self.connection.table(self.table).where(column, attribute).count()
         return count == 0
 
     def message(self, attribute):
         return "A record already exists in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
     def negated_message(self, attribute):
         return "A record should exist in table {} with the same {}.".format(
-            self.table, attribute
+            self.table, attribute.replace("*", str(missing_key(self.dictionary, self.key)))
         )
 
 
 class active_domain(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         import socket
 
         try:
@@ -473,14 +505,16 @@ class active_domain(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} must be an active domain name.".format(attribute)
+        return "The {} must be an active domain name.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be an active domain name.".format(attribute)
+        return "The {} must not be an active domain name.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class numeric(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if isinstance(attribute, list):
             for value in attribute:
                 if not str(value).replace(".", "", 1).isdigit():
@@ -491,25 +525,29 @@ class numeric(BaseValidation):
         return True
 
     def message(self, attribute):
-        return "The {} must be a numeric.".format(attribute)
+        return "The {} must be a numeric.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a numeric.".format(attribute)
+        return "The {} must not be a numeric.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class is_list(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return isinstance(attribute, list)
 
     def message(self, attribute):
-        return "The {} must be a list.".format(attribute)
+        return "The {} must be a list.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a list.".format(attribute)
+        return "The {} must not be a list.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class string(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if isinstance(attribute, list):
             for attr in attribute:
                 if not isinstance(attr, str):
@@ -520,21 +558,23 @@ class string(BaseValidation):
         return isinstance(attribute, str)
 
     def message(self, attribute):
-        return "The {} must be a string.".format(attribute)
+        return "The {} must be a string.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be a string.".format(attribute)
+        return "The {} must not be a string.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class none(BaseValidation):
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute is None
 
     def message(self, attribute):
-        return "The {} must be None.".format(attribute)
+        return "The {} must be None.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} must not be None.".format(attribute)
+        return "The {} must not be None.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class length(BaseValidation):
@@ -548,6 +588,8 @@ class length(BaseValidation):
             self.max = max
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if not hasattr(attribute, "__len__"):
             attribute = str(attribute)
         if self.max:
@@ -557,18 +599,18 @@ class length(BaseValidation):
 
     def message(self, attribute):
         if self.min and not self.max:
-            return "The {} must be at least {} characters.".format(attribute, self.min)
+            return "The {} must be at least {} characters.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min)
         else:
             return "The {} length must be between {} and {}.".format(
-                attribute, self.min, self.max
+                attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
             )
 
     def negated_message(self, attribute):
         if self.min and not self.max:
-            return "The {} must be {} characters maximum.".format(attribute, self.max)
+            return "The {} must be {} characters maximum.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.max)
         else:
             return "The {} length must not be between {} and {}.".format(
-                attribute, self.min, self.max
+                attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
             )
 
 
@@ -579,6 +621,8 @@ class in_range(BaseValidation):
         self.max = max
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         attribute = str(attribute)
 
         if attribute.isalpha():
@@ -596,11 +640,11 @@ class in_range(BaseValidation):
         return attribute >= self.min and attribute <= self.max
 
     def message(self, attribute):
-        return "The {} must be between {} and {}.".format(attribute, self.min, self.max)
+        return "The {} must be between {} and {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max)
 
     def negated_message(self, attribute):
         return "The {} must not be between {} and {}.".format(
-            attribute, self.min, self.max
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.min, self.max
         )
 
 
@@ -610,13 +654,15 @@ class equals(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute == self.value
 
     def message(self, attribute):
-        return "The {} must be equal to {}.".format(attribute, self.value)
+        return "The {} must be equal to {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not be equal to {}.".format(attribute, self.value)
+        return "The {} must not be equal to {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class contains(BaseValidation):
@@ -625,13 +671,15 @@ class contains(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return self.value in attribute
 
     def message(self, attribute):
-        return "The {} must contain {}.".format(attribute, self.value)
+        return "The {} must contain {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not contain {}.".format(attribute, self.value)
+        return "The {} must not contain {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class is_in(BaseValidation):
@@ -640,13 +688,15 @@ class is_in(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         return attribute in self.value
 
     def message(self, attribute):
-        return "The {} must contain an element in {}.".format(attribute, self.value)
+        return "The {} must contain an element in {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
     def negated_message(self, attribute):
-        return "The {} must not contain an element in {}.".format(attribute, self.value)
+        return "The {} must not contain an element in {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.value)
 
 
 class greater_than(BaseValidation):
@@ -974,6 +1024,8 @@ class BaseFileValidation(BaseValidation):
         self.all_clear = True
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         # Here we can validate on a filepath or an uploaded file (from request)
         if isinstance(attribute, UploadedFile):
             filepath = attribute.name
@@ -1013,20 +1065,20 @@ class file(BaseFileValidation):
     def message(self, attribute):
         messages = []
         if not self.file_check:
-            messages.append("The {} is not a valid file.".format(attribute))
+            messages.append("The {} is not a valid file.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key)))))
 
         if not self.size_check:
             from hfilesize import FileSize
 
             messages.append(
                 "The {} file size exceeds {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
         if not self.mimes_check:
             messages.append(
                 "The {} mime type is not valid. Allowed formats are {}.".format(
-                    attribute, ",".join(self.allowed_extensions)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), ",".join(self.allowed_extensions)
                 )
             )
 
@@ -1041,13 +1093,13 @@ class file(BaseFileValidation):
 
             messages.append(
                 "The {} file size is less or equal than {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
         if self.mimes_check:
             messages.append(
                 "The {} mime type is in {}.".format(
-                    attribute, ",".join(self.allowed_extensions)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), ",".join(self.allowed_extensions)
                 )
             )
         return messages
@@ -1068,14 +1120,14 @@ class image(BaseFileValidation):
     def message(self, attribute):
         messages = []
         if not self.file_check:
-            messages.append("The {} is not a valid file.".format(attribute))
+            messages.append("The {} is not a valid file.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key)))))
 
         if not self.size_check:
             from hfilesize import FileSize
 
             messages.append(
                 "The {} file size exceeds {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
 
@@ -1124,21 +1176,21 @@ class video(BaseFileValidation):
     def message(self, attribute):
         messages = []
         if not self.file_check:
-            messages.append("The {} is not a valid file.".format(attribute))
+            messages.append("The {} is not a valid file.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key)))))
 
         if not self.size_check:
             from hfilesize import FileSize
 
             messages.append(
                 "The {} file size exceeds {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
 
         if not self.mimes_check:
             messages.append(
                 "The {} file is not a valid video. Allowed formats are {}.".format(
-                    attribute, ",".join(self.allowed_extensions)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), ",".join(self.allowed_extensions)
                 )
             )
 
@@ -1147,14 +1199,14 @@ class video(BaseFileValidation):
     def negated_message(self, attribute):
         messages = []
         if self.file_check:
-            messages.append("The {} is a valid file.".format(attribute))
+            messages.append("The {} is a valid file.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key)))))
 
         if self.size_check:
             from hfilesize import FileSize
 
             messages.append(
                 "The {} file size is less or equal than {:.02fH}.".format(
-                    attribute, FileSize(self.size)
+                    attribute.replace("*", str(missing_key(self.dictionary, self.key))), FileSize(self.size)
                 )
             )
 
@@ -1187,6 +1239,8 @@ class postal_code(BaseValidation):
                 self.patterns_example.append(pattern_dict["example"])
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         for pattern in self.patterns:
             # check that at least one pattern match attribute
             if re.compile(r"{}".format(pattern)).match(attribute):
@@ -1195,7 +1249,7 @@ class postal_code(BaseValidation):
 
     def message(self, attribute):
         return "The {} is not a valid {} postal code. Valid {} {}.".format(
-            attribute,
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))),
             ",".join(self.locales),
             "examples are" if len(self.locales) > 1 else "example is",
             ",".join(self.patterns_example),
@@ -1213,17 +1267,19 @@ class different(BaseValidation):
         self.other_field = other_field
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         other_value = dictionary.get(self.other_field, None)
         return attribute != other_value
 
     def message(self, attribute):
         return "The {} value must be different than {} value.".format(
-            attribute, self.other_field
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.other_field
         )
 
     def negated_message(self, attribute):
         return "The {} value be the same as {} value.".format(
-            attribute, self.other_field
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.other_field
         )
 
 
@@ -1239,6 +1295,8 @@ class uuid(BaseValidation):
             self.uuid_type = "UUID {0}".format(self.version)
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         from uuid import UUID
 
         try:
@@ -1248,10 +1306,10 @@ class uuid(BaseValidation):
             return False
 
     def message(self, attribute):
-        return "The {} value must be a valid {}.".format(attribute, self.uuid_type)
+        return "The {} value must be a valid {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.uuid_type)
 
     def negated_message(self, attribute):
-        return "The {} value must not be a valid {}.".format(attribute, self.uuid_type)
+        return "The {} value must not be a valid {}.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.uuid_type)
 
 
 class required_if(BaseValidation):
@@ -1264,19 +1322,21 @@ class required_if(BaseValidation):
         self.value = value
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         if dictionary.get(self.other_field, None) == self.value:
-            return required.passes(self, attribute, key, dictionary)
+            return required.passes(self, attribute.replace("*", str(missing_key(self.dictionary, self.key))), key, dictionary)
 
         return True
 
     def message(self, attribute):
         return "The {} is required because {}={}.".format(
-            attribute, self.other_field, self.value
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.other_field, self.value
         )
 
     def negated_message(self, attribute):
         return "The {} is not required because {}={} or {} is not present.".format(
-            attribute, self.other_field, self.value, self.other_field
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))), self.other_field, self.value, self.other_field
         )
 
 
@@ -1295,6 +1355,8 @@ class required_with(BaseValidation):
             self.other_fields = other_fields
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         for field in self.other_fields:
             if field in dictionary:
                 return required.passes(self, attribute, key, dictionary)
@@ -1304,7 +1366,7 @@ class required_with(BaseValidation):
     def message(self, attribute):
         fields = ",".join(self.other_fields)
         return "The {} is required because {} is present.".format(
-            attribute,
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))),
             "one in {}".format(fields)
             if len(self.other_fields) > 1
             else self.other_fields[0],
@@ -1312,7 +1374,7 @@ class required_with(BaseValidation):
 
     def negated_message(self, attribute):
         return "The {} is not required because {} {} is not present.".format(
-            attribute,
+            attribute.replace("*", str(missing_key(self.dictionary, self.key))),
             "none of" if len(self.other_fields) > 1 else "",
             ",".join(self.other_fields),
         )
@@ -1323,14 +1385,16 @@ class distinct(BaseValidation):
     duplicate values."""
 
     def passes(self, attribute, key, dictionary):
+        self.key = key
+        self.dictionary = dictionary
         # check if list contains duplicates
         return len(set(attribute)) == len(attribute)
 
     def message(self, attribute):
-        return "The {} field has duplicate values.".format(attribute)
+        return "The {} field has duplicate values.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
     def negated_message(self, attribute):
-        return "The {} field has only different values.".format(attribute)
+        return "The {} field has only different values.".format(attribute.replace("*", str(missing_key(self.dictionary, self.key))))
 
 
 class Validator:

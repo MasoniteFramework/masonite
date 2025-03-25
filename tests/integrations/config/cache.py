@@ -14,8 +14,8 @@ STORES = {
         "password": "",
         "name": "masonite4",
     },
-    "memcache": {
-        "driver": "memcache",
+    "memcached": {
+        "driver": "memcached",
         "host": "127.0.0.1",
         "port": "11211",
         "password": "",

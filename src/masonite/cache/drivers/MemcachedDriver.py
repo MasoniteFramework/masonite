@@ -1,7 +1,7 @@
 import json
 
 
-class MemcacheDriver:
+class MemcachedDriver:
     def __init__(self, application):
         self.application = application
         self.connection = None

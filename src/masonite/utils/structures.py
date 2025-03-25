@@ -75,6 +75,36 @@ def data_get(dictionary, key, default=None):
     return data(dictionary).get(dotty_key, default)
 
 
+def missing_key(dictionary, key):
+    """Find the first missing element in the dictionary using nested notation.
+
+    Arguments:
+        dictionary {dict} -- a dictionary structure
+        key {str} -- the dotted (or not) key to look for
+
+    Returns:
+        missing_key {str} -- The first missing key in the nested structure
+    """
+    keys = key.split(".")
+    current_dict = dictionary
+
+    for index, k in enumerate(keys):
+        key = k
+
+        if k == "*":
+            if index + 1 < len(keys):
+                key = keys[index + 1]
+            else:
+                return k
+            k = 0
+
+        if key not in current_dict:
+            return k
+        current_dict = current_dict[k]
+
+    return None
+
+
 def data_set(dictionary, key, value, overwrite=True):
     """Set dictionary value at key using nested notation. Values are overridden by default but
     this behaviour can be changed by passing overwrite=False.

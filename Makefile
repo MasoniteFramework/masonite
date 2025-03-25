@@ -1,5 +1,6 @@
 init:
 	cp .env-example .env
+	poetry install
 	pip install -r requirements.txt
 	pip install '.[test]'
 	# Create MySQL Database
@@ -7,7 +8,10 @@ init:
 test:
 	python -m pytest tests
 ci:
-	python -m pytest tests -m "not integrations"
+	cp .env-example .env
+	poetry install
+ci-test:
+	poetry run python -m pytest tests -m "not integrations"
 lint:
 	python -m flake8 src/masonite/ --ignore=E501,F401,E203,E128,E402,E731,F821,E712,W503,F811
 format:

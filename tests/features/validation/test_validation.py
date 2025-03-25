@@ -1279,7 +1279,7 @@ class TestValidation(unittest.TestCase):
         )
         self.assertEqual(
             validate.get("users.*.last_name"),
-            ["The users.*.last_name field has duplicate values."],
+            ["The users.0.last_name field has duplicate values."],
         )
         validate = Validator().validate(
             {
@@ -1503,7 +1503,7 @@ class TestDotNotationValidation(unittest.TestCase):
             validate.all(),
             {
                 "user.addresses.*.house": [
-                    "The user.addresses.*.house field is required."
+                    "The user.addresses.0.house field is required."
                 ]
             },
         )
@@ -1515,7 +1515,7 @@ class TestDotNotationValidation(unittest.TestCase):
 
         self.assertEqual(
             validate.all(),
-            {"user.addresses.*.id": ["The user.addresses.*.id field is required."]},
+            {"user.addresses.*.id": ["The user.addresses.0.id field is required."]},
         )
 
     def test_dot_error_message_required(self):
@@ -1908,5 +1908,5 @@ class TestDictValidation(unittest.TestCase):
         )
         self.assertEqual(len(validate), 1)
         self.assertEqual(
-            validate.all()["key.*.foo"], ["The key.*.foo field is required."]
+            validate.all()["key.*.foo"], ["The key.0.foo field is required."]
         )

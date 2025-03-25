@@ -41,7 +41,7 @@ setup(
     install_requires=[
         "inflection>=0.3,<0.4",
         "exceptionite>=2.2,<3.0",
-        "pendulum>=2,<3",
+        "pendulum>=3,<4",
         "jinja2<3.2",
         "cleo>=0.8.1,<0.9",
         "hupper>=1.10,<1.11",
@@ -50,7 +50,7 @@ setup(
         "python-dotenv>=0.15,<0.16",
         "masonite-orm>=2.14,<3",
         "hashids>=1.3,<1.4",
-        "cryptography>=36,<37",
+        "cryptography>=36,<=44",
         "tldextract>=2.2,<2.3",
         "hfilesize>=0.1",
         "dotty_dict>=1.3.0,<1.40",

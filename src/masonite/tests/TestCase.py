@@ -412,7 +412,7 @@ class TestCase(unittest.TestCase):
         timestamps logic."""
         if pendulum_datetime is None:
             pendulum_datetime = pendulum.now()
-        pendulum.set_test_now(pendulum_datetime)
+        pendulum.travel_to(pendulum_datetime, freeze=True)
         return pendulum_datetime
 
     def fakeTimeTomorrow(self) -> None:
@@ -441,7 +441,7 @@ class TestCase(unittest.TestCase):
         """Restore time to correct one, so that pendulum new "now" instance are corrects.
         This method will be typically called in tearDown() method of a test class."""
         # this will clear the mock
-        pendulum.set_test_now()
+        pendulum.travel_back()
 
     def assertDatabaseCount(self, table: str, count: int) -> None:
         self.assertEqual(self.application.make("builder").table(table).count(), count)

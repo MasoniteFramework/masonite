@@ -612,7 +612,7 @@ files = [
 
 [[package]]
 name = "masonite-orm"
-version = "2.22.1"
+version = "3.0.0"
 description = "The Official Masonite ORM"
 optional = false
 python-versions = "*"

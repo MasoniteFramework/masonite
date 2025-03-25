@@ -21,6 +21,8 @@ class SessionMiddleware(Middleware):
         # actually clears them out of the session
         errors = Session.get("errors")
         request.app.make("view").share({"errors": MessageBag(errors or {}).helper})
+        # TODO: remove this in Masonite 5
+        request.app.make("view").share({"bag": MessageBag(errors or {}).helper})
         # if any errors then re-add them to the session
         if errors:
             Session.flash("errors", errors)

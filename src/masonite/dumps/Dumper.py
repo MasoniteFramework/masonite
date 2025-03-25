@@ -16,11 +16,13 @@ class Dumper:
 
     def dd(self, *objects):
         """Dump all provided args and die, raising a DumpException."""
+        self.app.make('response').status(200)
         self._dump(*objects)
         raise DumpException()
 
     def dump(self, *objects):
         """Dump all provided args and continue code execution. This does not raise a DumpException."""
+        self.app.make('response').status(200)
         dumps = self._dump(*objects)
         # output dumps in console
         for dump in dumps:

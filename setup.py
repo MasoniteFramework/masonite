@@ -60,6 +60,7 @@ setup(
         "watchdog>=2<3",
         "multipart>=0.2,<0.3",
         "watchdog>=2,<=4",
+        "phonenumbers>=8.12,<9",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

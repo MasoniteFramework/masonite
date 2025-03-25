@@ -6,24 +6,28 @@ from ..exceptions.exceptions import NotificationException
 
 
 class Notifiable:
-    """Notifiable mixin allowing to send notification to a model. It's often used with the
+    """Notifiable mixin allowing to send
+    notification to a model. It's often used with the
     User model.
 
     Usage:
         user.notify(WelcomeNotification())
     """
-
     def notify(self, notification, drivers=[], dry=False, fail_silently=False):
         """Send the given notification."""
         from wsgi import application
+
+        if hasattr(notification, "send"):
+            notification.send(notification, drivers, dry, fail_silently)
 
         return application.make("notification").send(
             self, notification, drivers, dry, fail_silently
         )
 
     def route_notification_for(self, driver):
-        """Get the notification routing information for the given driver. If method has not been
-        defined on the model: for mail driver try to use 'email' field of model."""
+        """Get the notification routing information for the given driver.
+        If method has not been defined on the model:
+        for mail driver try to use 'email' field of model."""
         # check if routing has been specified on the model
         method_name = "route_notification_for_{0}".format(driver)
 
@@ -39,7 +43,8 @@ class Notifiable:
                 return self.email
             else:
                 raise NotificationException(
-                    "Notifiable model does not implement {}".format(method_name)
+                    "Notifiable model "
+                    "does not implement {}".format(method_name)
                 )
 
     @has_many("id", "notifiable_id")

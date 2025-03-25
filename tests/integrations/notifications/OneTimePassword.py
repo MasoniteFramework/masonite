@@ -1,9 +1,10 @@
 from src.masonite.notification import Notification, Textable
 from src.masonite.mail import Mailable
 from src.masonite.mail import Mailable
+from src.masonite.queues.Queueable import Queueable
 
 
-class OneTimePassword(Notification, Mailable, Textable):
+class OneTimePassword(Notification, Mailable, Textable, Queueable):
     def to_mail(self, notifiable):
         return (
             self.to(notifiable.email)
@@ -16,4 +17,4 @@ class OneTimePassword(Notification, Mailable, Textable):
         return self.text_message("Welcome !").to("6314870798").from_("33123456789")
 
     def via(self, notifiable):
-        return ["vonage"]
+        return ["mail"]

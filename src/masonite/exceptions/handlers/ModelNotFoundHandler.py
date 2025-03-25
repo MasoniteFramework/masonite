@@ -9,4 +9,5 @@ class ModelNotFoundHandler:
         masonite_exception = ModelNotFoundException(
             "No record found with the given primary key"
         )
+        self.application.make("response").status(404)
         self.application.make("exception_handler").handle(masonite_exception)

@@ -44,7 +44,7 @@
 
                 <!-- Another Auth Routes -->
                 <div class="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm text-center">
-                    <a href="forgot-password" class="flex-2 underline">
+                    <a href="{{ route('password_reset') }}" class="flex-2 underline">
                         Forgot password?
                     </a>
 
@@ -52,7 +52,7 @@
                         or
                     </p>
         
-                    <a href="register" class="flex-2 underline">
+                    <a href="{{ route('register') }}" class="flex-2 underline">
                         Create an Account
                     </a>
                 </div>

@@ -7,7 +7,7 @@ version = "5.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-setuptools = "^65.5.0" 
+setuptools = "^78" 
 inflection = ">=0.3,<0.4"
 exceptionite = ">=2.2,<3.0"
 pendulum = ">=3,<4"

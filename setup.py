@@ -61,6 +61,7 @@ setup(
         "multipart>=0.2,<0.3",
         "watchdog>=2,<=4",
         "phonenumbers>=8.12,<9",
+        "argon2-cffi>=21.3,<24",
         "python-multipart>=0.0.20,<1",
     ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers

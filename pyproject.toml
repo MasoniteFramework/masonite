@@ -11,7 +11,7 @@ setuptools = "^78"
 inflection = ">=0.3,<0.4"
 exceptionite = ">=2.2,<3.0"
 pendulum = {version = ">=3,<4", extras = ["test"]}
-phonenumbers= ">=8,<9"
+phonenumbers = ">=8.12,<9"
 jinja2 = "<3.1.0"
 cleo = ">=0.8.1,<0.9"
 hupper = ">=1.10,<1.11"

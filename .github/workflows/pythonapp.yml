@@ -18,8 +18,7 @@ jobs:
           path: ~/test
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python -
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
+          pip install poetry
       - name: Install dependencies
         run: |
           make ci

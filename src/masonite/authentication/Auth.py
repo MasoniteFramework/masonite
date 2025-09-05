@@ -169,7 +169,7 @@ class Auth:
     def routes(self):
         return [
             Route.get("/login", "auth.LoginController@show").name("login"),
-            Route.get("/logout", "auth.LoginController@logout").name("logout"),
+            Route.post("/logout", "auth.LoginController@logout").name("logout"),
             Route.get("/home", "auth.HomeController@show")
             .name("auth.home")
             .middleware("auth"),

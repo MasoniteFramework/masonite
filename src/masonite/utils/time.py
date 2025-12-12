@@ -55,4 +55,4 @@ def migration_timestamp():
     """Return current time formatted for creating migration filenames.
     Example: 2021_01_09_043202
     """
-    return pendulum.now().format("YYYY_MM_DD_HHmmss")
+    return pendulum.now('UTC').format("YYYY_MM_DD_HHmmss")

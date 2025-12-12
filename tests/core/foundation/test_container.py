@@ -133,7 +133,7 @@ class TestContainer(TestCase):
             return test
 
         obj = self.application.resolve(my_method, 1)
-        self.assertEquals(obj.app + 1, 2)
+        self.assertEqual(obj.app + 1, 2)
 
     def test_can_resolve_class_with_type_hinted_parameters(self):
         def my_method(test: SomeAppObject):

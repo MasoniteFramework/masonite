@@ -21,6 +21,19 @@ class ServeCommand(Command):
         self.app = application
 
     def handle(self):
+        # configure the application url to match the
+        # provided parameters
+        config = self.app.make("config")
+        url_parts = config.get("application.app_url").split(":")
+        # set the domain/ip
+        url_parts[1] = f"//{self.option('host')}"
+        # set the port
+        if len(url_parts) > 2:
+            url_parts[2] = self.option("port")
+        else:
+            url_parts.append(self.option("port"))
+        config.set("application.app_url", ":".join(url_parts))
+
         if self.option("live-reload"):
             try:
                 from livereload import Server

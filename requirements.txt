@@ -1,26 +1,28 @@
-argon2-cffi
-bcrypt>=3.2,<3.3
-black
-cleo>=0.8.1,<0.9
-cryptography>=36,<=44
-dotty_dict>=1.3.0,<1.40
-exceptionite>=2.0,<3
-hashids>=1.3,<1.4
+bcrypt>=5,<6
+cleo>=0.8.1,<2
+cryptography>=36,<=50
+dotty_dict>=1.3,<2
+exceptionite>=3,<4
+hashids>=1.3,<2
 hfilesize>=0.1
-hupper>=1.10,<1.11
-inflection>=0.3,<0.4
-jinja2<3.2
+hupper>=1.10,<2
+inflection>=0.3
+jinja2>=3,<4
 masonite-orm>=3,<4
 pendulum>=3,<4
-pwnedapi
-vonage>=3,<4
-pytest
-python-dotenv>=0.15,<0.16
+python-dotenv>=1,<2
 responses
+werkzeug>=3,<4
+watchdog>=6,<7
+whitenoise>=6,<7
+pyjwt>=2.4,<3
+python-multipart>=0.0.20,<1
+# development
+black
+tldextract>=5,<6
+# testing
+pytest
 slackblocks
-tldextract>=2.2,<2.3
-werkzeug>=2,<3; python_version < '3.8'
-werkzeug>=3,<4; python_version >= '3.8'
-watchdog>=2,<3
-whitenoise>=5.2,<5.3
-pyjwt>=2.4,<2.5
+argon2-cffi
+pwnedapi
+vonage>=4,<5

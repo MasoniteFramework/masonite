@@ -177,9 +177,9 @@ class WelcomeController(Controller):
         return "any"
 
     def dd(self, request: Request):
-        dump({"test": "value"})
-        dd(request)
-        return ""
+        Dump.dump({"test": "value"})
+        Dump.dd(request)
+        # return ""
 
     def server_error(self, view: View):
         raise Exception("unknown error")

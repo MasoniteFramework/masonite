@@ -1744,12 +1744,18 @@ class TestValidationProvider(TestCase):
         )
 
     def test_strong_breach(self):
-        validate = Validator().validate(
-            {
-                "password": "secret",
-            },
-            strong(["password"], breach=True),
-        )
+        from unittest.mock import patch
+        from pwnedapi import Password
+
+        # Mock the external HIBP API call so the test is not network-dependent.
+        # Patch is_pwned on the class so no network request is made.
+        with patch.object(Password, "is_pwned", return_value=True):
+            validate = Validator().validate(
+                {
+                    "password": "secret",
+                },
+                strong(["password"], breach=True),
+            )
 
         password_validation = validate.get("password")
         self.assertIn(

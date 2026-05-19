@@ -1,9 +1,26 @@
 from tests import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from src.masonite.notification import Notification, Notifiable, Sms, Textable
 from src.masonite.exceptions import NotificationException
 
 from masoniteorm.models import Model
+from vonage_sms.responses import SmsResponse, MessageResponse
+from vonage_sms.errors import SmsError
+
+
+def _ok_response():
+    """Build a successful SmsResponse for use in mocks."""
+    return SmsResponse(**{
+        "message-count": "1",
+        "messages": [{
+            "to": "+33123456789",
+            "message-id": "140000012BD37332",
+            "status": "0",
+            "remaining-balance": "1.87440000",
+            "message-price": "0.06280000",
+            "network": "20810",
+        }],
+    })
 
 
 class User(Model, Notifiable):
@@ -42,54 +59,38 @@ class OtherNotification(Notification):
         return ["vonage"]
 
 
-class VonageAPIMock(object):
-    @staticmethod
-    def send_success():
-        return {"hoho": "hihi", "message-count": 1, "messages": [{"status": "0"}]}
-
-    @staticmethod
-    def send_error(error="Missing api_key", status=2):
-        return {
-            "message-count": 1,
-            "messages": [{"status": str(status), "error-text": error}],
-        }
-
-
 class TestVonageDriver(TestCase):
     def setUp(self):
         super().setUp()
         self.notification = self.application.make("notification")
 
     def test_sending_without_credentials(self):
-        with self.assertRaises(NotificationException) as e:
-            self.notification.route("vonage", "+33123456789").send(
-                WelcomeNotification()
-            )
-        error_message = str(e.exception)
-        self.assertIn("Code [2]", error_message)
+        """vonage 4.x raises SmsError on bad credentials; driver wraps it."""
+        with patch(
+            "vonage_sms.sms.Sms.send",
+            side_effect=SmsError(
+                "Sms.send_message method failed with error code 2: Missing api_key"
+            ),
+        ):
+            with self.assertRaises(NotificationException) as ctx:
+                self.notification.route("vonage", "+33123456789").send(
+                    WelcomeNotification()
+                )
+        self.assertIn("Code [2]", str(ctx.exception))
 
     def test_send_to_anonymous(self):
-        with patch("vonage.sms.Sms") as MockSmsClass:
-            MockSmsClass.return_value.send_message.return_value = (
-                VonageAPIMock().send_success()
-            )
+        with patch("vonage_sms.sms.Sms.send", return_value=_ok_response()):
             self.notification.route("vonage", "+33123456789").send(
                 WelcomeNotification()
             )
 
     def test_send_to_notifiable(self):
-        with patch("vonage.sms.Sms") as MockSmsClass:
-            MockSmsClass.return_value.send_message.return_value = (
-                VonageAPIMock().send_success()
-            )
+        with patch("vonage_sms.sms.Sms.send", return_value=_ok_response()):
             user = User.find(1)
             user.notify(WelcomeUserNotification())
 
     def test_send_to_notifiable_with_route_notification_for(self):
-        with patch("vonage.sms.Sms") as MockSmsClass:
-            MockSmsClass.return_value.send_message.return_value = (
-                VonageAPIMock().send_success()
-            )
+        with patch("vonage_sms.sms.Sms.send", return_value=_ok_response()):
             user = User.find(1)
             user.notify(WelcomeNotification())
 

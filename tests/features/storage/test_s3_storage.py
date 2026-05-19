@@ -5,7 +5,17 @@ from src.masonite.filesystem import File
 import pytest
 
 
+def s3_available():
+    """Return True only when real AWS credentials and bucket are configured."""
+    return bool(
+        os.environ.get("AWS_ACCESS_KEY_ID")
+        and os.environ.get("AWS_SECRET_ACCESS_KEY")
+        and os.environ.get("S3_BUCKET")
+    )
+
+
 @pytest.mark.integrations
+@pytest.mark.skipif(not s3_available(), reason="AWS S3 credentials not configured")
 class TestLocalStorage(TestCase):
     def setUp(self):
         super().setUp()

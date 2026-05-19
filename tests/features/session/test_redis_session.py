@@ -3,7 +3,18 @@ import time
 import pytest
 
 
+def redis_available():
+    try:
+        import redis
+        r = redis.Redis(host="127.0.0.1", port=6379, socket_connect_timeout=1)
+        r.ping()
+        return True
+    except Exception:
+        return False
+
+
 @pytest.mark.integrations
+@pytest.mark.skipif(not redis_available(), reason="Redis server not available")
 class TestRedisSession(TestCase):
     def setUp(self):
         super().setUp()
@@ -42,7 +53,6 @@ class TestRedisSession(TestCase):
     def test_can_pull_session(self):
         self.session.set("key", "test")
         self.assertEqual(self.session.get("key"), "test")
-
         key = self.session.pull("key")
         self.assertEqual(key, "test")
         self.assertEqual(self.session.get("key"), None)

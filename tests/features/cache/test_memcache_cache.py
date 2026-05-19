@@ -4,7 +4,21 @@ import time
 import pytest
 
 
+def memcache_available():
+    import socket
+    s = socket.socket()
+    s.settimeout(1)
+    try:
+        s.connect(("127.0.0.1", 11211))
+        return True
+    except Exception:
+        return False
+    finally:
+        s.close()
+
+
 @pytest.mark.integrations
+@pytest.mark.skipif(not memcache_available(), reason="Memcache server not available")
 class TestMemcacheCache(TestCase):
     def setUp(self):
         super().setUp()
@@ -29,7 +43,6 @@ class TestMemcacheCache(TestCase):
 
     def test_will_not_get_expired(self):
         self.driver.put("expire", "1", 1)
-
         time.sleep(2)
         self.assertEqual(self.driver.get("expire"), None)
 

@@ -19,5 +19,8 @@ class Welcome(Mailable):
 @pytest.mark.integrations
 class TestSMTPDriver(TestCase):
     def test_send_mailable(self):
-        with self.assertRaises(ConnectionRefusedError):
+        # Any OS-level connection error is acceptable: ConnectionRefusedError
+        # when nothing is listening, SMTPServerDisconnected when the port
+        # accepts TCP but drops the session, gaierror when DNS fails, etc.
+        with self.assertRaises(OSError):
             self.application.make("mail").mailable(Welcome()).send(driver="smtp")

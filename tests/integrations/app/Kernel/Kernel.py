@@ -106,6 +106,8 @@ class Kernel:
     def register_database(self):
         from masoniteorm.query import QueryBuilder
 
+        # DB_CONFIG_PATH is set by tests/conftest.py before the session starts
+        # so masonite-orm's QueryBuilder.on() can resolve the connection factory.
         self.application.bind(
             "builder",
             QueryBuilder(connection_details=config("database.databases")),

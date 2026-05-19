@@ -8,45 +8,53 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     name: Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v6
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: pyproject.toml
-      - name: Install Poetry
-        run: |
-          pip install poetry
+
       - name: Install dependencies
         run: |
-          make ci
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Copy environment file
+        run: cp .env-example .env
+
       - name: Test with pytest
         env:
+          DB_CONFIG_PATH: tests/integrations/config/database
           MAIL_HOST: ${{ secrets.MAIL_HOST }}
           MAIL_PORT: ${{ secrets.MAIL_PORT }}
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          DB_CONFIG_PATH: tests/integrations/config/database
         run: |
-          make ci-test
+          python -m pytest tests/ -m "not integrations" --tb=short
+
   lint:
     runs-on: ubuntu-latest
     name: Lint
     steps:
       - uses: actions/checkout@v6
-      - name: Set up latest Python 3.X
+
+      - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.x"
           cache: pip
           cache-dependency-path: pyproject.toml
+
       - name: Install Flake8
-        run: |
-          pip install flake8
+        run: pip install flake8
+
       - name: Lint
         run: make lint

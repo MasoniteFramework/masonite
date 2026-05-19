@@ -5,38 +5,65 @@ on:
     types: [created]
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    name: Test Python ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
       - name: Install dependencies
-        env:
-          MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
-          DB_CONFIG_PATH: tests/integrations/config/database
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools wheel twine
-          make init
-          make ci
-      - name: Build and publish
+          pip install -e ".[test]"
+
+      - name: Copy environment file
+        run: cp .env-example .env
+
+      - name: Test with pytest
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-          MAIL_HOST: ${{ github.secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ github.secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ github.secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ github.secrets.MAIL_PASSWORD }}
           DB_CONFIG_PATH: tests/integrations/config/database
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
         run: |
-          python setup.py sdist bdist_wheel
-          twine upload dist/*
+          python -m pytest tests/ -m "not integrations" --tb=short
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    environment: pypi
+    permissions:
+      id-token: write  # required for PyPA trusted publishing
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

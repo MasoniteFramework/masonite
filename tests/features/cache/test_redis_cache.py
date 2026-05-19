@@ -4,7 +4,18 @@ import time
 import pytest
 
 
+def redis_available():
+    try:
+        import redis
+        r = redis.Redis(host="127.0.0.1", port=6379, socket_connect_timeout=1)
+        r.ping()
+        return True
+    except Exception:
+        return False
+
+
 @pytest.mark.integrations
+@pytest.mark.skipif(not redis_available(), reason="Redis server not available")
 class TestRedisCache(TestCase):
     def setUp(self):
         super().setUp()
@@ -33,7 +44,6 @@ class TestRedisCache(TestCase):
 
     def test_will_not_get_expired(self):
         self.driver.put("expire", "1", 1)
-
         time.sleep(2)
         self.assertEqual(self.driver.get("expire"), None)
 

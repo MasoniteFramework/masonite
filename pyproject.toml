@@ -1,46 +1,126 @@
-[tool.poetry]
-authors = ['Joe Mancuso', 'Eduardo Aguad']
-description = "Masonite is a modern and developer centric Python web framework."
-license = "MIT"
-name = "masonite"
-version = "5.0.0"
-
-
-[tool.poetry.dependencies]
-python = "^3.9"
-python-multipart=">=0.0.20,<1"
-setuptools = "^78" 
-inflection = ">=0.3,<0.4"
-exceptionite = ">=2.2,<3.0"
-pendulum = {version = ">=3,<4", extras = ["test"]}
-phonenumbers = ">=8.12,<9"
-jinja2 = "<3.1.0"
-cleo = ">=0.8.1,<0.9"
-hupper = ">=1.10,<1.11"
-bcrypt = "^4.3.0"
-cffi = "^1.14.5"
-whitenoise = ">=5.2,<5.3"
-python-dotenv = ">=0.15,<0.16"
-masonite-orm = ">=3,<4"
-hashids = ">=1.3,<1.4"
-cryptography = ">=36,<=44"
-tldextract = ">=2.2,<2.3"
-hfilesize = ">=0.1"
-dotty_dict = ">=1.3.0,<1.40"
-pyjwt = ">=2.3,<2.5"
-pytest = ">=8,<9"
-werkzeug = ">=2,<3"
-watchdog = ">=2,<3"
-multipart = "^0.2.5"
-responses = "^0.25.3"
-argon2-cffi = "^23.1.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.0.0"
-pwnedapi = "^1.0.2"
-vonage = "^3.16.0"
-slackblocks = "^1.0.10"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# Project metadata  (PEP 621)
+# ---------------------------------------------------------------------------
+[project]
+name = "masonite"
+dynamic = ["version"]
+description = "The Masonite Framework"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Joe Mancuso", email = "joe@masoniteproject.com"},
+]
+keywords = ["Masonite", "MasoniteFramework", "Python", "ORM"]
+requires-python = ">=3.9,<3.14"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# ---------------------------------------------------------------------------
+# Runtime dependencies
+# Pin to a minor floor (tested minimum) and allow up to the next major.
+# ---------------------------------------------------------------------------
+dependencies = [
+    # Core framework utilities
+    "inflection>=0.3,<1",
+    "exceptionite>=3.0,<4",
+    "dotty_dict>=1.3.0,<2",
+    "hfilesize>=0.1",
+
+    # Templating
+    "jinja2>=3.0,<4",
+
+    # ORM  (3.x branch; PyPI 3.0.0 == git 3.x HEAD at time of release)
+    "masonite-orm>=3.0,<4",
+
+    # HTTP / WSGI
+    "werkzeug>=3.0,<4",
+    "whitenoise>=6.0,<7",
+    # File upload parsing (WSGI-native; Marcel Hellkamp's multipart)
+    "multipart>=1.3.1,<2",
+
+    # Security
+    "bcrypt>=4.0,<6",
+    "cryptography>=36",
+    "pyjwt>=2.4,<3",
+    "argon2-cffi>=23.1",
+
+    # File system / domain helpers
+    "tldextract>=5.0,<6",
+    "hashids>=1.3,<2",
+    "phonenumbers>=8.12,<9",
+
+    # CLI & dev-server reload
+    "cleo>=0.8.1,<3",
+    "hupper>=1.10,<2",
+
+    # File watching
+    "watchdog>=6.0,<7",
+
+    # Environment & config
+    "python-dotenv>=0.15,<2",
+
+    # Date/time
+    "pendulum>=3.0,<4",
+]
+
+[project.optional-dependencies]
+# Install with:  pip install masonite[test]
+test = [
+    "pytest>=8.0,<10",
+    "pendulum[test]>3.0,<4",
+    "responses>=0.25",
+    "coverage",
+    "redis>=4.0",
+    "boto3>=1.20",
+    "pusher>=3.0",
+    "pymemcache>=4.0",
+    "vonage>=4.0,<5",
+    "slackblocks>=2.0,<3",
+    "pwnedapi>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/MasoniteFramework/masonite"
+Documentation = "https://docs.masoniteproject.com"
+Repository = "https://github.com/MasoniteFramework/masonite"
+Issues = "https://github.com/MasoniteFramework/masonite/issues"
+
+[project.scripts]
+project = "masonite.commands.Entry:application.run"
+
+# ---------------------------------------------------------------------------
+# Setuptools – src layout + auto-discover all masonite.* packages
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "masonite.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+markers = [
+    "integrations: only run integration tests (deselect with '-m \"not integrations\"')",
+]

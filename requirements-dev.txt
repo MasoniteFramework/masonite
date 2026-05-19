@@ -1,0 +1,13 @@
+# Development / testing extras  (make test)
+# Keep in sync with [project.optional-dependencies] in pyproject.toml
+ pytest>=8.0,<10
+ pendulum[test]>=3.0,<4
+ responses>=0.25
+ coverage
+ redis>=4.0
+ boto3>=1.20
+ pusher>=3.0
+ pymemcache>=4.0
+ vonage>=4.0,<5
+ slackblocks>=2.0,<3
+ pwnedapi>=1.0

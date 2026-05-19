@@ -93,7 +93,14 @@ class TestSlackAPIDriver(TestCase):
         super().setUp()
         self.notification = self.application.make("notification")
 
+    @responses.activate
     def test_sending_without_credentials(self):
+        responses.add(
+            responses.POST,
+            self.url,
+            json={"ok": False, "error": "not_authed"},
+            status=200,
+        )
         with self.assertRaises(NotificationException) as e:
             self.notification.route("slack", "123456").notify(WelcomeNotification())
         self.assertIn("not_authed", str(e.exception))

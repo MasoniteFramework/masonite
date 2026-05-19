@@ -9,5 +9,5 @@
  pusher>=3.0
  pymemcache>=4.0
  vonage>=4.0,<5
- slackblocks>=2.0,<3
+ slackblocks>=1.2.5,<2
  pwnedapi>=1.0

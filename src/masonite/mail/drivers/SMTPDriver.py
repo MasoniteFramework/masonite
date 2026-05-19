@@ -55,10 +55,12 @@ class SMTPDriver:
 
     def make_connection(self):
         options = self.options
+        host = options["host"]
+        port = int(options["port"])
         if options.get("ssl"):
-            smtp = smtplib.SMTP_SSL("{0}:{1}".format(options["host"], options["port"]))
+            smtp = smtplib.SMTP_SSL(host, port)
         else:
-            smtp = smtplib.SMTP("{0}:{1}".format(options["host"], int(options["port"])))
+            smtp = smtplib.SMTP(host, port)
 
         if options.get("tls"):
             context = ssl.create_default_context()

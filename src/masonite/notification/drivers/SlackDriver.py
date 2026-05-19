@@ -84,7 +84,14 @@ class SlackDriver(BaseDriver):
             # set only one recipient at a time
             slack_message.to(channel)
             payload = slack_message.build().get_options()
-            response = requests.post(self.send_url, payload).json()
+            raw = requests.post(self.send_url, payload)
+            try:
+                response = raw.json()
+            except Exception:
+                raise NotificationException(
+                    "Slack API returned a non-JSON response (HTTP {}): {}. "
+                    "Check Slack API docs.".format(raw.status_code, raw.text[:200])
+                )
             if not response["ok"]:
                 raise NotificationException(
                     "{}. Check Slack API docs.".format(response["error"])

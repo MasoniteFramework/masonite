@@ -43,7 +43,7 @@ class MailgunDriver:
 
     def send(self):
         domain = self.options["domain"]
-        region = self.options.get("region", "us")
+        region = self.options.get("region") or "us"
         secret = self.options["secret"]
         attachments = self.get_attachments()
 

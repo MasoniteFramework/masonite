@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 # ---------------------------------------------------------------------------
-# Project metadata  (PEP 621)
+# Project metadata
 # ---------------------------------------------------------------------------
 [project]
 name = "masonite"
@@ -41,40 +41,31 @@ dependencies = [
     "exceptionite>=3.0,<4",
     "dotty_dict>=1.3.0,<2",
     "hfilesize>=0.1",
-
     # Templating
     "jinja2>=3.0,<4",
-
-    # ORM  (3.x branch; PyPI 3.0.0 == git 3.x HEAD at time of release)
+    # ORM
     "masonite-orm>=3.0,<4",
-
     # HTTP / WSGI
     "werkzeug>=3.0,<4",
     "whitenoise>=6.0,<7",
-    # File upload parsing (WSGI-native; Marcel Hellkamp's multipart)
+    # File upload parsing
     "multipart>=1.3.1,<2",
-
     # Security
     "bcrypt>=4.0,<6",
     "cryptography>=36",
     "pyjwt>=2.4,<3",
     "argon2-cffi>=23.1",
-
     # File system / domain helpers
     "tldextract>=5.0,<6",
     "hashids>=1.3,<2",
     "phonenumbers>=8.12,<9",
-
     # CLI & dev-server reload
     "cleo>=0.8.1,<3",
     "hupper>=1.10,<2",
-
     # File watching
     "watchdog>=6.0,<7",
-
     # Environment & config
     "python-dotenv>=0.15,<2",
-
     # Date/time
     "pendulum>=3.0,<4",
 ]
@@ -83,7 +74,7 @@ dependencies = [
 # Install with:  pip install masonite[test]
 test = [
     "pytest>=8.0,<10",
-    "pendulum[test]>3.0,<4",
+    "pendulum[test]",
     "responses>=0.25",
     "coverage",
     "redis>=4.0",
@@ -105,7 +96,7 @@ Issues = "https://github.com/MasoniteFramework/masonite/issues"
 project = "masonite.commands.Entry:application.run"
 
 # ---------------------------------------------------------------------------
-# Setuptools – src layout + auto-discover all masonite.* packages
+# Setuptools – src layout + auto-discover
 # ---------------------------------------------------------------------------
 [tool.setuptools]
 package-dir = {"" = "src"}

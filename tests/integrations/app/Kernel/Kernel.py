@@ -1,5 +1,5 @@
 from src.masonite.auth import Sign
-from src.masonite.foundation import response_handler
+from src.masonite.foundation.response_handler import response_handler
 from src.masonite.storage import StorageCapsule
 from src.masonite.environment import LoadEnvironment
 from src.masonite.configuration import Configuration, config
@@ -18,6 +18,8 @@ from src.masonite.routes import Route
 from src.masonite.utils.structures import load
 from src.masonite.utils.location import base_path
 
+from src.masonite.tests.HttpTestResponse import HttpTestResponse
+from src.masonite.tests.TestResponseCapsule import TestResponseCapsule
 
 class Kernel:
 
@@ -42,6 +44,7 @@ class Kernel:
 
     def register(self):
         self.load_environment()
+        self.register_testing()
         self.register_configurations()
         self.register_middleware()
         self.register_routes()
@@ -51,6 +54,11 @@ class Kernel:
 
     def load_environment(self):
         LoadEnvironment()
+
+    def register_testing(self) -> None:
+        test_response = TestResponseCapsule(HttpTestResponse)
+        self.application.bind("tests.response", test_response)
+
 
     def register_configurations(self):
         # load configuration

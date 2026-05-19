@@ -1,100 +1,65 @@
-import os
-from cleo import Application as CommandApplication
 from typing import TYPE_CHECKING
+
+from .CoreKernel import CoreKernel
 
 if TYPE_CHECKING:
     from .Application import Application
 
-from .response_handler import response_handler
-from .. import __version__
-from ..commands import (
-    TinkerCommand,
-    CommandCapsule,
-    KeyCommand,
-    ServeCommand,
-    QueueWorkCommand,
-    QueueRetryCommand,
-    QueueTableCommand,
-    QueueFailedCommand,
-    AuthCommand,
-    MakePolicyCommand,
-    MakeControllerCommand,
-    MakeJobCommand,
-    MakeMailableCommand,
-    MakeProviderCommand,
-    PublishPackageCommand,
-    MakeTestCommand,
-    DownCommand,
-    UpCommand,
-    MakeCommandCommand,
-    MakeViewCommand,
-    MakeMiddlewareCommand,
-    PresetCommand,
-)
-from ..environment import LoadEnvironment
-from ..middleware import MiddlewareCapsule
-from ..routes import Router
-from ..loader import Loader
 
-from ..tests.HttpTestResponse import HttpTestResponse
-from ..tests.TestResponseCapsule import TestResponseCapsule
-
-
-class Kernel:
+class Kernel(CoreKernel):
     def __init__(self, app: "Application"):
-        self.application = app
+        super().__init__(app)
 
     def register(self) -> None:
-        """Register core Masonite features in the project."""
-        self.load_environment()
-        self.register_framework()
+        """Register Additional Masonite features in the project"""
+        super().register()
         self.register_commands()
-        self.register_testing()
-
-    def load_environment(self) -> None:
-        """Load environment variables into the application."""
-        LoadEnvironment()
-
-    def register_framework(self) -> None:
-        self.application.set_response_handler(response_handler)
-        self.application.use_storage_path(
-            os.path.join(self.application.base_path, "storage")
-        )
-        self.application.bind("middleware", MiddlewareCapsule())
-        self.application.bind(
-            "router",
-            Router(),
-        )
-        self.application.bind("loader", Loader())
 
     def register_commands(self) -> None:
-        self.application.bind(
-            "commands",
-            CommandCapsule(CommandApplication("Masonite", __version__)).add(
-                TinkerCommand(),
-                KeyCommand(),
-                ServeCommand(self.application),
-                QueueWorkCommand(self.application),
-                QueueRetryCommand(self.application),
-                QueueFailedCommand(),
-                QueueTableCommand(),
-                AuthCommand(self.application),
-                MakePolicyCommand(self.application),
-                MakeControllerCommand(self.application),
-                MakeJobCommand(self.application),
-                MakeMailableCommand(self.application),
-                MakeProviderCommand(self.application),
-                PublishPackageCommand(self.application),
-                MakeTestCommand(self.application),
-                DownCommand(),
-                UpCommand(),
-                MakeCommandCommand(self.application),
-                MakeViewCommand(self.application),
-                MakeMiddlewareCommand(self.application),
-                PresetCommand(self.application),
-            ),
+        from ..commands import (
+            AuthCommand,
+            DownCommand,
+            KeyCommand,
+            MakeCommandCommand,
+            MakeControllerCommand,
+            MakeJobCommand,
+            MakeMailableCommand,
+            MakeMiddlewareCommand,
+            MakePolicyCommand,
+            MakeProviderCommand,
+            MakeTestCommand,
+            MakeViewCommand,
+            PresetCommand,
+            PublishPackageCommand,
+            QueueFailedCommand,
+            QueueRetryCommand,
+            QueueTableCommand,
+            QueueWorkCommand,
+            ServeCommand,
+            TinkerCommand,
+            UpCommand,
         )
 
-    def register_testing(self) -> None:
-        test_response = TestResponseCapsule(HttpTestResponse)
-        self.application.bind("tests.response", test_response)
+        self.application.make("commands").add(
+            AuthCommand(self.application),
+            DownCommand(),
+            KeyCommand(),
+            MakeCommandCommand(self.application),
+            MakeControllerCommand(self.application),
+            MakeJobCommand(self.application),
+            MakeMailableCommand(self.application),
+            MakeMiddlewareCommand(self.application),
+            MakePolicyCommand(self.application),
+            MakeProviderCommand(self.application),
+            MakeTestCommand(self.application),
+            MakeViewCommand(self.application),
+            PresetCommand(self.application),
+            PublishPackageCommand(self.application),
+            QueueFailedCommand(),
+            QueueRetryCommand(self.application),
+            QueueTableCommand(),
+            QueueWorkCommand(self.application),
+            ServeCommand(self.application),
+            TinkerCommand(),
+            UpCommand(),
+        )

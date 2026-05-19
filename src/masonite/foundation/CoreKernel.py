@@ -8,8 +8,9 @@ if TYPE_CHECKING:
 class CoreKernel:
     def __init__(self, app: "Application"):
         self.application = app
+        self.register_core()
 
-    def register(self) -> None:
+    def register_core(self) -> None:
         """Register core Masonite features in the project."""
         self.load_environment()
         self.register_framework()

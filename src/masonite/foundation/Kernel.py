@@ -11,11 +11,11 @@ class Kernel(CoreKernel):
         super().__init__(app)
 
     def register(self) -> None:
-        """Register Additional Masonite features in the project"""
-        super().register()
+        """Register Initial Masonite features in the project"""
         self.register_commands()
 
     def register_commands(self) -> None:
+        """Add commands to the app"""
         from ..commands import (
             AuthCommand,
             DownCommand,

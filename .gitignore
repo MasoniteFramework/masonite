@@ -14,4 +14,4 @@ build/
 venv4
 .python-version
 .bootstrapped-*
-*.sqlite3
+database.sqlite3

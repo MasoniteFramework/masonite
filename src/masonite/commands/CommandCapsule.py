@@ -10,9 +10,27 @@ class CommandCapsule:
         self.command_application = command_application
         self.commands = []
         self.command_name = []
+        self._enabled = True
+
+    def enable(self):
+        """
+        Allow command registration.
+        """
+        self._enabled = True
+
+    def disable(self):
+        """
+        Cleari all registered commands and preventing further command registration.
+        """
+        self._enabled = False
+        self.commands = []
+        self.command_name = []
 
     def add(self, *commands: "Command") -> "CommandCapsule":
         """Register new commands in the application."""
+        if not self._enabled:
+            return self
+
         for command in commands:
             command_name = command.config.name
             if command_name in self.command_name:
@@ -24,6 +42,9 @@ class CommandCapsule:
 
     def swap(self, command: "Command") -> None:
         """Swap an (existing) command with the given one."""
+        if not self._enabled:
+            return
+
         command_name = command.config.name
         # if command with same name has been registered remove it
         if self.command_application.find(command_name):

@@ -70,7 +70,10 @@ class Kernel:
     def register_commands(self) -> None:
         self.application.bind(
             "commands",
-            CommandCapsule(CommandApplication("Masonite", __version__)).add(
+            CommandCapsule(
+                CommandApplication("Masonite", __version__),
+                self.application.commands_enabled,
+            ).add(
                 TinkerCommand(),
                 KeyCommand(),
                 ServeCommand(self.application),

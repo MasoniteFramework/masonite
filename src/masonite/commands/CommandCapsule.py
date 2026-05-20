@@ -6,29 +6,15 @@ if TYPE_CHECKING:
 
 
 class CommandCapsule:
-    def __init__(self, command_application: "CommandApplication"):
+    def __init__(self, command_application: "CommandApplication", enabled: bool = True):
         self.command_application = command_application
         self.commands = []
         self.command_name = []
-        self._enabled = True
-
-    def enable(self):
-        """
-        Allow command registration.
-        """
-        self._enabled = True
-
-    def disable(self):
-        """
-        Cleari all registered commands and preventing further command registration.
-        """
-        self._enabled = False
-        self.commands = []
-        self.command_name = []
+        self.enabled = enabled
 
     def add(self, *commands: "Command") -> "CommandCapsule":
         """Register new commands in the application."""
-        if not self._enabled:
+        if not self.enabled:
             return self
 
         for command in commands:
@@ -42,7 +28,7 @@ class CommandCapsule:
 
     def swap(self, command: "Command") -> None:
         """Swap an (existing) command with the given one."""
-        if not self._enabled:
+        if not self.enabled:
             return
 
         command_name = command.config.name

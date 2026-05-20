@@ -20,7 +20,7 @@ class CoreKernel:
     def _register_framework(self) -> None:
         """Register Core Framework requirements"""
         import os
-        from .response_handler import response_handler
+        from . import response_handler
         from ..environment import LoadEnvironment
 
         LoadEnvironment()

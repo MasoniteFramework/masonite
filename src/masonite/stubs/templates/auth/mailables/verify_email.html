@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email Address</title>
+    <style>
+        html { background-color: #CBD5E1; }
+        .button {
+            color: white;
+            padding: 10px 20px;
+            background-color: #1F2937;
+            margin-top: 15px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 98%; background-color: white; margin-right: 10px; padding: 10px">
+        <h4>Hello, {{ name }}</h4>
+        <p>Please click the button below to verify your email address.</p>
+        <a href="{{ link }}" class="button">Verify Email Address</a>
+        <p style="margin-top: 20px; color: #6B7280; font-size: 0.875rem;">
+            If you did not create an account, no further action is required.
+        </p>
+    </div>
+</body>
+</html>

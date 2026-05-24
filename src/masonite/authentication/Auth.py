@@ -192,4 +192,13 @@ class Auth:
                 "auth.PasswordResetController@store_changed_password",
             ).name("change_password.store"),
             Route.post("/login", "auth.LoginController@store").name("login.store"),
+            Route.get("/email/verify/notice", "auth.VerifyEmailController@notice").name(
+                "verification.notice"
+            ),
+            Route.get(
+                "/email/verify/@token", "auth.VerifyEmailController@verify"
+            ).name("verification.verify"),
+            Route.post("/email/resend", "auth.VerifyEmailController@resend")
+            .name("verification.resend")
+            .middleware("auth"),
         ]

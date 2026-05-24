@@ -3,6 +3,7 @@ from masonite.views import View
 from masonite.request import Request
 from masonite.response import Response
 from masonite.authentication import Auth
+from masonite.facades import Mail
 
 
 class RegisterController(Controller):
@@ -27,5 +28,9 @@ class RegisterController(Controller):
 
         if not user:
             return response.redirect("/register")
+
+        if hasattr(user, "verify_email"):
+            user.verify_email(Mail, request)
+            return response.redirect("/email/verify/notice")
 
         return response.redirect("/home")

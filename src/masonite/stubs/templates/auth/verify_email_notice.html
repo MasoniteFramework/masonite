@@ -1,0 +1,27 @@
+{% extends "auth/base.html" %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="max-w-md w-full bg-white rounded shadow p-8">
+        <h2 class="text-2xl font-bold mb-4">Verify Your Email Address</h2>
+
+        {% if session.has('success') %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session.get('success')|join('') }}
+            </div>
+        {% endif %}
+
+        <p class="text-gray-600 mb-6">
+            Before proceeding, please check your email for a verification link.
+            If you did not receive the email, click below to request another.
+        </p>
+
+        <form method="POST" action="/email/resend">
+            {{ csrf_field }}
+            <button type="submit"
+                class="w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">
+                Resend Verification Email
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

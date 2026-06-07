@@ -41,7 +41,7 @@ New to Masonite? Read the [Official Documentation](https://docs.masoniteproject.
 Masonite strives to have extremely clear documentation 😃. It would be wise to go through the tutorials there.
 If you find any discrepencies or anything that doesn't make sense, please open an issue and we will get it cleared up!
 
-Have questions or want to talk? Be sure to join the [Masonite Discord Community](https://discord.gg/TwKeFahmPZ)!
+Have questions or want to talk? Start a thread on [GitHub Discussions](https://github.com/masonitedev/masonite/discussions)!
 
 ## Getting Started Quickly
 
@@ -57,7 +57,7 @@ python craft serve
 
 Contributing to Masonite is simple:
 
-- Hop on [Masonite Discord Community](https://discord.gg/TwKeFahmPZ) to ask any questions you need!
+- Ask any questions you need on [GitHub Discussions](https://github.com/masonitedev/masonite/discussions)!
 - Read the [How To Contribute](https://docs.masoniteproject.com/prologue/how-to-contribute) documentation to see ways to contribute to the project.
 - Read the [Contributing Guide](https://docs.masoniteproject.com/prologue/contributing-guide) to learn how to contribute to the core source code development of the project.
 - [Follow Masonite Framework on X](https://x.com/masoniteproject) to get updates about tips and tricks, announcement and releases.

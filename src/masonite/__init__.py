@@ -1,6 +1,6 @@
 import warnings
 
-__version__ = "4.20.3"
+__version__ = "4.20.4"
 
 warnings.warn(
     "The 'masonite' package is unmaintained and will receive no further updates. "

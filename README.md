@@ -1,3 +1,16 @@
+# ⚠️ This repository is no longer maintained
+
+> **Masonite development continues at [masonitedev/masonite](https://github.com/masonitedev/masonite).**
+> Masonite 5 is published on PyPI as [**`masonite-framework`**](https://pypi.org/project/masonite-framework/).
+> This repository covers Masonite ≤ 4.x and will receive **no further updates** (including security fixes).
+>
+> - 📖 Documentation: <https://docs.masonite.dev>
+> - ⬆️ [Upgrade guide: Masonite 4.0 → 5.0](https://docs.masonite.dev/upgrade-guide/masonite-4.0-to-5.0/)
+>
+> ❤️ In memory of [Joseph "Joe" Mancuso](https://github.com/josephmancuso), creator of Masonite.
+
+---
+
 <p align="center">
   <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4trhpkkdbbzutc5ufxi9.png" width="160px">
   <h1 align="center">Masonite</h1>
